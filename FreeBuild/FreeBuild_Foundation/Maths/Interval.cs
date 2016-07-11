@@ -70,7 +70,7 @@ namespace FreeBuild.Maths
 
         #endregion
 
-        #region Constructor
+        #region Constructors
 
         /// <summary>
         /// Constructor creating a singularity interval with

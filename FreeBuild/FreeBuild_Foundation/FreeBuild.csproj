@@ -7,8 +7,8 @@
     <ProjectGuid>{7635522C-178F-4DB5-9106-FF8DFD4B833B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FreeBuild.Foundation</RootNamespace>
-    <AssemblyName>FreeBuild_Foundation</AssemblyName>
+    <RootNamespace>FreeBuild</RootNamespace>
+    <AssemblyName>FreeBuild</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,9 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interval.cs" />
+    <Compile Include="Geometry\Axis.cs" />
+    <Compile Include="Geometry\ICoordinateSystem.cs" />
+    <Compile Include="Geometry\Plane.cs" />
+    <Compile Include="Maths\Interval.cs" />
+    <Compile Include="Model\IUnique.cs" />
+    <Compile Include="Model\Unique.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Vector.cs" />
+    <Compile Include="Geometry\Vector.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
