@@ -116,6 +116,18 @@ namespace FreeBuild.Geometry
             Z = z;
         }
 
+        /// <summary>
+        /// Create a new vector on the XY plane pointing in the specified
+        /// angle anticlockwise from the global X-axis.
+        /// </summary>
+        /// <param name="angle">The angle, clockwise from the global X axis.  In radians.</param>
+        public Vector(double angle)
+        {
+            X = Math.Cos(angle);
+            Y = Math.Sin(angle);
+            Z = 0;
+        }
+
         #endregion
 
         #region Methods
@@ -261,6 +273,20 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Calculate the cross, or vector, product of this and another vector.
+        /// Creates a new vector perpendicular to both input vectors.
+        /// </summary>
+        /// <param name="other">The vector to cross with this one.</param>
+        /// <returns>The cross-product vector</returns>
+        public Vector Cross(ref Vector other)
+        {
+            return new Vector(
+                Y * other.Z - Z * other.Y,
+                Z * other.X - X * other.Z,
+                X * other.Y - Y * other.X);
+        }
+
+        /// <summary>
         /// Calculate the dot, or scalar, product of this and another vector.
         /// Provides the component of this vector in the direction of (or, the projection onto) the other vector.
         /// </summary>
@@ -308,6 +334,37 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Scale this vector by a factor
+        /// </summary>
+        /// <param name="scalar"></param>
+        /// <returns>A new vector created by scaling all components of this one.</returns>
+        public Vector Scale(double scalar)
+        {
+            return new Vector(X * scalar, Y * scalar, Z * scalar);
+        }
+
+        /// <summary>
+        /// Add another vector to this one and return the result
+        /// </summary>
+        /// <param name="other">Another vector to be added to this one.</param>
+        /// <returns>The combined vector</returns>
+        public Vector Add(Vector other)
+        {
+            return new Vector(X + other.X, Y + other.Y, Z + other.Z);
+        }
+
+        /// <summary>
+        /// Add another vector to this one and return the result.
+        /// Pass-by-reference version.
+        /// </summary>
+        /// <param name="other">Another vector to be added to this one.</param>
+        /// <returns>The combined vector</returns>
+        public Vector Add(ref Vector other)
+        {
+            return new Vector(X + other.X, Y + other.Y, Z + other.Z);
+        }
+
+        /// <summary>
         /// Calculate the (smallest, non-directional) angle between this vector and another.
         /// In the range 0 - PI/2.
         /// </summary>
@@ -320,6 +377,24 @@ namespace FreeBuild.Geometry
             Vector v2 = other.Unitize();
             double dot = v1.Dot(ref v1);
             return Math.Atan(dot);
+        }
+
+        /// <summary>
+        /// Rotate this vector by an angle around an axis,
+        /// following the right-hand rule.
+        /// </summary>
+        /// <param name="axis">A unit vector representing an axis of rotation.</param>
+        /// <param name="angle">The angle of rotation, in radians.
+        /// Counter-clockwise around the axis.</param>
+        /// <returns>A new vector created by rotating this vector anticlockwise about the given axis by the given angle.</returns>
+        /// <remarks>Uses the Rodrigues Rotation Formula - see: 
+        /// https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula </remarks>
+        public Vector Rotate(Vector axis, double angle)
+        {
+            //Rotation formula:
+            //v_rot = v*cos(theta) + (k x v)sin(theta) + k(k*v)(1-cos(theta)
+            return Scale(Math.Cos(angle)).Add(axis.Cross(ref this).Scale(Math.Sin(angle)).Add(
+                axis.Scale(axis.Dot(ref this)).Scale(1 - Math.Cos(angle))));
         }
 
         #endregion

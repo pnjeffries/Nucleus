@@ -100,6 +100,44 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Find the position along this axis that is closest to the specified
+        /// other axis.
+        /// Expressed as a multiplication factor of the direction vector from the origin.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <param name="t">OUTPUT.  The parameter on the other axis.</param>
+        /// <returns>The parameter on this axis describing the closest point to the other axis.
+        /// Use PointAt to resolve this into a vector if required.</returns>
+        /// <remarks>Algorithm based on http://geomalgorithms.com/a07-_distance.html </remarks>
+        public double ClosestPoint(Axis other, out double t)
+        {
+            Vector w0 = Origin - other.Origin; //w0 = P0 - Q0
+            double a = Direction.Dot(Direction); //a = u*u
+            double b = Direction.Dot(other.Direction); //b = u*v
+            double c = other.Direction.Dot(other.Direction); //c = v*v
+            double d = Direction.Dot(w0); //d = u*w0
+            double e = other.Direction.Dot(w0); //e = v*w0
+            double s = (b * e - c * d) / (a * c - b * b); //sc = be-cd/(ac - b^2)
+            t = (a * e - b * d) / (a * c - b * b);//tc = ae-bd/(a*c - b^2)
+            return s;
+        }
+
+        /// <summary>
+        /// Find the position along this axis that is closest to the specified
+        /// other axis.
+        /// Expressed as a multiplication factor of the direction vector from the origin.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns>The parameter on this axis describing the closest point to the other axis.
+        /// Use PointAt to resolve this into a vector if required.</returns>
+        /// <remarks>Algorithm based on http://geomalgorithms.com/a07-_distance.html </remarks>
+        public double ClosestPoint(Axis other)
+        {
+            double t;
+            return ClosestPoint(other, out t);
+        }
+
+        /// <summary>
         /// Find the position along this axis described by a parameter
         /// representing a multiplication of the direction vector from the
         /// origin point.
