@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Model
+namespace FreeBuild.Geometry
 {
     /// <summary>
-    /// A self-contained data structure that represents an entire
-    /// BIM or analysis model.
+    /// Interface for shapes.
+    /// Shapes are geometry defined by and containing a set of vertices.
     /// </summary>
-    public class Model : Unique
+    public interface IShape : IUnique
     {
     }
 }

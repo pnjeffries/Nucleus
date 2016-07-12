@@ -48,11 +48,24 @@
     <Compile Include="Base\ObservableKeyedCollection.cs" />
     <Compile Include="Geometry\Axis.cs" />
     <Compile Include="Geometry\ICoordinateSystem.cs" />
+    <Compile Include="Geometry\IShape.cs" />
     <Compile Include="Geometry\Plane.cs" />
+    <Compile Include="Geometry\PolyShape.cs" />
+    <Compile Include="Geometry\Shape.cs" />
+    <Compile Include="Geometry\ShapeCollection.cs" />
+    <Compile Include="Geometry\SimpleVertex.cs" />
+    <Compile Include="Geometry\VertexCollection.cs" />
     <Compile Include="Maths\Interval.cs" />
-    <Compile Include="Model\IUnique.cs" />
+    <Compile Include="Model\Element.cs" />
+    <Compile Include="Model\ElementComponent.cs" />
+    <Compile Include="Model\ElementVertex.cs" />
+    <Compile Include="Base\IUnique.cs" />
+    <Compile Include="Geometry\IVertex.cs" />
+    <Compile Include="Model\IElement.cs" />
+    <Compile Include="Model\IElementVertex.cs" />
     <Compile Include="Model\Model.cs" />
-    <Compile Include="Model\Unique.cs" />
+    <Compile Include="Base\Unique.cs" />
+    <Compile Include="Base\UniquesCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Geometry\Vector.cs" />
   </ItemGroup>

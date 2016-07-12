@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Model
+namespace FreeBuild.Base
 {
     /// <summary>
     /// Interface for entities which are uniquely identifiable via a GUID

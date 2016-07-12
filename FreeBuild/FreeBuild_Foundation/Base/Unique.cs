@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Model
+namespace FreeBuild.Base
 {
     /// <summary>
     /// Abstract base class implementing the IUnique interface
