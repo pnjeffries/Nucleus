@@ -1,4 +1,5 @@
-﻿using FreeBuild.Geometry;
+﻿using FreeBuild.Base;
+using FreeBuild.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace FreeBuild.Model
     /// The IElement interface provides a simple way of interacting with elements without needing to
     /// define specific generic parameters.
     /// </summary>
-    public interface IElement
+    public interface IElement : IUnique
     {
         /// <summary>
         /// The geometry of this element.

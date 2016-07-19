@@ -23,7 +23,12 @@ namespace FreeBuild.Model
         /// <summary>
         /// The current position of this vertex
         /// </summary>
-        public abstract Vector Position { get; }
+        public abstract Vector Position { get; set; }
+
+        /// <summary>
+        /// The shape this vertex belongs to
+        /// </summary>
+        public IShape Shape { get; set; }
 
         #endregion
 

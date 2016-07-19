@@ -10,6 +10,7 @@ namespace FreeBuild.Base
     /// Reusable base class for objects that raise events.
     /// Provides a protected function which can be used to raise events safely.
     /// </summary>
+    [Serializable]
     public abstract class EventBase
     {
         /// <summary>

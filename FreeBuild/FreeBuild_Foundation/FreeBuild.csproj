@@ -44,31 +44,53 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\EventBase.cs" />
+    <Compile Include="Base\IOwned.cs" />
     <Compile Include="Base\NotifyPropertyChangedBase.cs" />
     <Compile Include="Base\ObservableKeyedCollection.cs" />
+    <Compile Include="Base\OwnedCollection.cs" />
+    <Compile Include="Core\Core.cs" />
+    <Compile Include="Core\IHost.cs" />
     <Compile Include="Geometry\Axis.cs" />
+    <Compile Include="Geometry\Curve.cs" />
     <Compile Include="Geometry\ICoordinateSystem.cs" />
     <Compile Include="Geometry\IShape.cs" />
+    <Compile Include="Geometry\Line.cs" />
     <Compile Include="Geometry\Plane.cs" />
-    <Compile Include="Geometry\PolyShape.cs" />
+    <Compile Include="Geometry\PointVertex.cs" />
+    <Compile Include="Geometry\PolyCurve.cs" />
+    <Compile Include="Geometry\PolyLine.cs" />
     <Compile Include="Geometry\Shape.cs" />
     <Compile Include="Geometry\ShapeCollection.cs" />
-    <Compile Include="Geometry\SimpleVertex.cs" />
+    <Compile Include="Geometry\Vertex.cs" />
+    <Compile Include="Model\ElementCollection.cs" />
+    <Compile Include="Model\LinearElement.cs" />
+    <Compile Include="Model\Node.cs" />
+    <Compile Include="Model\NodeCollection.cs" />
+    <Compile Include="Model\SectionProperty.cs" />
+    <Compile Include="Model\VolumetricProperty.cs" />
+    <Compile Include="Obsolete\SimpleVertex.cs" />
+    <Compile Include="Geometry\Transform.cs" />
     <Compile Include="Geometry\VertexCollection.cs" />
+    <Compile Include="Maths\ArrayMatrix.cs" />
     <Compile Include="Maths\Interval.cs" />
+    <Compile Include="Maths\Matrix.cs" />
+    <Compile Include="Model\Document.cs" />
     <Compile Include="Model\Element.cs" />
-    <Compile Include="Model\ElementComponent.cs" />
-    <Compile Include="Model\ElementVertex.cs" />
+    <Compile Include="Obsolete\ElementComponent.cs" />
+    <Compile Include="Obsolete\ElementVertex.cs" />
     <Compile Include="Base\IUnique.cs" />
-    <Compile Include="Geometry\IVertex.cs" />
+    <Compile Include="Obsolete\IVertex.cs" />
     <Compile Include="Model\IElement.cs" />
-    <Compile Include="Model\IElementVertex.cs" />
+    <Compile Include="Obsolete\IElementVertex.cs" />
     <Compile Include="Model\Model.cs" />
     <Compile Include="Base\Unique.cs" />
     <Compile Include="Base\UniquesCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Geometry\Vector.cs" />
+    <Compile Include="Units\DimensionAttribute.cs" />
+    <Compile Include="Units\DimensionTypes.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

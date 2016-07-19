@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeBuild.Units;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,26 +17,49 @@ namespace FreeBuild.Geometry
     public class Plane :
         ICoordinateSystem
     {
+        #region Constants
+
+        /// <summary>
+        /// A preset plane representing the global XY plane, centered on the global origin.
+        /// </summary>
+        public readonly Plane GlobalXY = new Plane();
+
+        /// <summary>
+        /// A preset plane representing the global YZ plane, centred on the global origin.
+        /// </summary>
+        public readonly Plane GlobalYZ = new Plane(Vector.Zero, Vector.UnitY, Vector.UnitZ);
+
+        /// <summary>
+        /// A present plane representing the global XZ plane, centred on the global origin
+        /// </summary>
+        public readonly Plane GlobalXZ = new Plane(Vector.Zero, Vector.UnitX, Vector.UnitZ);
+
+        #endregion
+
         #region Fields
 
         /// <summary>
         /// The origin point of the plane
         /// </summary>
+        [Dimension(DimensionTypes.Distance)]
         public readonly Vector Origin;
 
         /// <summary>
         /// The unit vector defining the local X-axis of the plane
         /// </summary>
+        [Dimension(DimensionTypes.Distance)]
         public readonly Vector X;
 
         /// <summary>
         /// The unit vector defining the local Y-axis of the plane
         /// </summary>
+        [Dimension(DimensionTypes.Distance)]
         public readonly Vector Y;
 
         /// <summary>
         /// The unit vector normal to the plane that forms the local Z-axis
         /// </summary>
+        [Dimension(DimensionTypes.Distance)]
         public readonly Vector Z;
 
         #endregion

@@ -12,6 +12,7 @@ namespace FreeBuild.Base
     /// Each item must be unique within this collection - duplicate entries are not allowed.
     /// </summary>
     /// <typeparam name="TItem">The type of uniquely identifiable item</typeparam>
+    [Serializable]
     public class UniquesCollection<TItem> : ObservableKeyedCollection<Guid, TItem> where TItem : IUnique
     {
         protected override Guid GetKeyForItem(TItem item)

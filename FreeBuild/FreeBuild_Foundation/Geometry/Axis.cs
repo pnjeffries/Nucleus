@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeBuild.Units;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,11 +19,13 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Position vector describing a point on this axis.
         /// </summary>
+        [Dimension(DimensionTypes.Distance)]
         public readonly Vector Origin;
 
         /// <summary>
         /// Direction vector describing the direction of this axis.
         /// </summary>
+        [Dimension(DimensionTypes.Distance)]
         public readonly Vector Direction;
 
         #endregion
@@ -75,7 +78,7 @@ namespace FreeBuild.Geometry
             Vector normal = plane.Z;
             double directionProjection = Direction.Dot(normal);
 
-            if (directionProjection == 0) return double.NaN;
+            if (directionProjection == 0) turn double.NaN;
             else
             {
                 double originProjection = Origin.Dot(normal);

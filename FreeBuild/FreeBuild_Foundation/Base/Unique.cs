@@ -10,6 +10,7 @@ namespace FreeBuild.Base
     /// <summary>
     /// Abstract base class implementing the IUnique interface
     /// </summary>
+    [Serializable]
     public abstract class Unique : NotifyPropertyChangedBase, IUnique
     {
         /// <summary>

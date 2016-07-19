@@ -13,9 +13,14 @@ namespace FreeBuild.Geometry
     /// </summary>
     public interface IVertex : IUnique
     {
+
+        #region Properties
+
         /// <summary>
         /// The spatial position of the vertex
         /// </summary>
-        Vector Position { get; }
+        Vector Position { get; set; }
+
+        #endregion
     }
 }

@@ -11,6 +11,7 @@ namespace FreeBuild.Base
     /// Reusable base class that provides a basic implementation of the INotifyPropertyChanged interface.
     /// Raises a PropertyChanged event that is used to update bound WPF UI controls
     /// </summary>
+    [Serializable]
     public abstract class NotifyPropertyChangedBase : EventBase, INotifyPropertyChanged
     {
         /// <summary>

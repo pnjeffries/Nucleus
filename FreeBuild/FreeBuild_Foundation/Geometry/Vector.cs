@@ -14,6 +14,8 @@ namespace FreeBuild.Geometry
     /// <remarks>
     /// This type is currently implemented as a structure instead of a class for
     /// reasons of efficiency.  This may be reviewed once benchmarking has been performed, however.
+    /// As the size of this struct exceeds the recommended 16 bytes, it may work out that
+    /// passing vectors around in function arguments etc. is inefficient.  
     /// </remarks>
     [Serializable]
     public struct Vector :
@@ -395,6 +397,50 @@ namespace FreeBuild.Geometry
             //v_rot = v*cos(theta) + (k x v)sin(theta) + k(k*v)(1-cos(theta)
             return Scale(Math.Cos(angle)).Add(axis.Cross(ref this).Scale(Math.Sin(angle)).Add(
                 axis.Scale(axis.Dot(ref this)).Scale(1 - Math.Cos(angle))));
+        }
+
+        /// <summary>
+        /// Apply the specified transformation to this vector and return the result.
+        /// The vector is treated as a column vector for the purposes of this calculation.
+        /// </summary>
+        /// <param name="transform">THe transformation matrix.</param>
+        /// <returns>A new vector representing the result of the transformation on this one.</returns>
+        public Vector Transform(Transform t)
+        {
+            return new Vector(
+                t[0, 0] * X + t[0, 1] * Y + t[0, 2] * Z + t[0, 3],
+                t[1, 0] * X + t[1, 1] * Y + t[1, 2] * Z + t[1, 3],
+                t[2, 0] * X + t[2, 1] * Y + t[2, 2] * Z + t[2, 3]);
+        }
+
+        /// <summary>
+        /// Create a new copy of this vector, but with the specified X coordinate
+        /// </summary>
+        /// <param name="x">The new value of the X coordinate in the copied vector</param>
+        /// <returns>A new vector, copying the components from this one but replacing X</returns>
+        public Vector WithX(double x)
+        {
+            return new Vector(x, Y, Z);
+        }
+
+        /// <summary>
+        /// Create a new copy of this vector, but with the specified Y coordinate
+        /// </summary>
+        /// <param name="y">The new value of the Y coordinate in the copied vector</param>
+        /// <returns>A new vector, copying the components from this one but replacing Y</returns>
+        public Vector WithY(double y)
+        {
+            return new Vector(X, y, Z);
+        }
+
+        /// <summary>
+        /// Create a new copy of this vector, but with the specified Z coordinate
+        /// </summary>
+        /// <param name="z">The new value of the Z coordinate in the copied vector</param>
+        /// <returns>A new vector, copying the components from this one but replacing Z</returns>
+        public Vector WithZ(double z)
+        {
+            return new Vector(X, Y, z);
         }
 
         #endregion

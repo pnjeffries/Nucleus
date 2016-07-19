@@ -16,6 +16,7 @@ namespace FreeBuild.Base
     /// </summary>
     /// <typeparam name="TKey">The key type</typeparam>
     /// <typeparam name="TValue">The item type</typeparam>
+    [Serializable]
     public abstract class ObservableKeyedCollection<TKey, TItem> : KeyedCollection<TKey, TItem>, INotifyCollectionChanged
     {
         #region Events
