@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeBuild.Base;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace FreeBuild.Model
     /// 3D solid object.
     /// </summary>
     [Serializable]
-    public abstract class VolumetricProperty
+    public abstract class VolumetricProperty : Unique
     {
     }
 }

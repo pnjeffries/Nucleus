@@ -38,6 +38,24 @@ namespace FreeBuild.Geometry
 
         #endregion
 
+        #region Constructors
+
+        /// <summary>
+        /// Points constructor.
+        /// Creates a polyline between the specified set of points
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="close"></param>
+        public PolyLine(IEnumerable<Vector> points, bool close = false)
+        {
+            foreach(Vector pt in points)
+            {
+                Vertices.Add(new PointVertex(pt));
+            }
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>

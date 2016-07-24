@@ -15,7 +15,7 @@ namespace FreeBuild.Model
     /// determines how that design representation converts into a 3D solid object.
     /// </summary>
     [Serializable]
-    public abstract class Element<TShape, TProperty> : Unique
+    public abstract class Element<TShape, TProperty> : Unique, IElement
         where TShape : Shape
         where TProperty : VolumetricProperty
     {
@@ -44,6 +44,11 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
+        /// IElement Geometry implementation
+        /// </summary>
+        Shape IElement.Geometry { get { return Geometry; } }
+
+        /// <summary>
         /// Private backing member variable for the Property property
         /// </summary>
         private TProperty _Property;
@@ -62,6 +67,11 @@ namespace FreeBuild.Model
                 NotifyPropertyChanged("Property");
             }
         }
+
+        /// <summary>
+        /// IElement Property implementation
+        /// </summary>
+        VolumetricProperty IElement.Property { get { return Property; } }
 
         #endregion
 

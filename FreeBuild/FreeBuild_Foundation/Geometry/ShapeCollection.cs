@@ -13,7 +13,7 @@ namespace FreeBuild.Geometry
     /// <typeparam name="TShape"></typeparam>
     [Serializable]
     public class ShapeCollection<TShape> : UniquesCollection<TShape>
-        where TShape : IShape
+        where TShape : Shape
     {
     }
 }

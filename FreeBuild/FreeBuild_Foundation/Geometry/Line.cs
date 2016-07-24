@@ -52,6 +52,11 @@ namespace FreeBuild.Geometry
             }
         }
 
+        /// <summary>
+        /// Get the mid-point of the line
+        /// </summary>
+        public Vector MidPoint { get { return StartPoint.Interpolate(EndPoint, 0.5); } }
+
         #endregion
 
         #region Construtors
@@ -93,6 +98,21 @@ namespace FreeBuild.Geometry
         {
             if (index >= 0 && index < SegmentCount) return Vertices.Last();
             else return null;
+        }
+
+        /// <summary>
+        /// Calculate the length of the line
+        /// </summary>
+        /// <returns></returns>
+        public override double CalculateLength()
+        {
+            return Start.Position.DistanceTo(End.Position);
+        }
+
+        public override double CalculateEnclosedArea(out Vector centroid, Plane onPlane = null)
+        {
+            centroid = MidPoint;
+            return 0;
         }
 
         #endregion

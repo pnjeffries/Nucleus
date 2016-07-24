@@ -17,8 +17,18 @@ namespace FreeBuild.Model
     public interface IElement : IUnique
     {
         /// <summary>
-        /// The geometry of this element.
+        /// The set-out geometry of the element.
+        /// Describes the editable control geometry that primarily defines
+        /// the overall geometry of this object.
+        /// The set-out curve of 1D Elements, the surface of slabs, etc.
         /// </summary>
-        IShape Geometry { get; }
+        Shape Geometry { get; }
+
+        /// <summary>
+        /// The volumetric property that describes how the editable set-out 
+        /// geometry of this element should be interpreted to produce a 
+        /// full 3D solid object
+        /// </summary>
+        VolumetricProperty Property { get; }
     }
 }

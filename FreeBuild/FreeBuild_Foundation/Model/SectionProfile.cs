@@ -5,13 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Geometry
+namespace FreeBuild.Model
 {
     /// <summary>
-    /// Interface for shapes.
-    /// Shapes are geometry defined by and containing a set of vertices.
+    /// Base class for objects representing the profile of a SectionProperty
     /// </summary>
-    public interface IShape : IUnique
+    public abstract class SectionProfile : Unique
     {
     }
 }

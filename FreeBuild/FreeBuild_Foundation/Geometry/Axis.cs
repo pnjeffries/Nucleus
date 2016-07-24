@@ -78,7 +78,7 @@ namespace FreeBuild.Geometry
             Vector normal = plane.Z;
             double directionProjection = Direction.Dot(normal);
 
-            if (directionProjection == 0) turn double.NaN;
+            if (directionProjection == 0) return double.NaN;
             else
             {
                 double originProjection = Origin.Dot(normal);

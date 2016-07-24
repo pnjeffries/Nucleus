@@ -14,5 +14,27 @@ namespace FreeBuild.Model
     [Serializable]
     public class SectionProperty : VolumetricProperty
     {
+        #region Properties
+
+        /// <summary>
+        /// Private backing member variable for the Profile property
+        /// </summary>
+        private SectionProfile _Profile = null;
+
+        /// <summary>
+        /// The description of the profile of this section property
+        /// </summary>
+        public SectionProfile Profile
+        {
+            get { return _Profile; }
+            set
+            {
+                _Profile = value;
+                NotifyPropertyChanged("Profile");
+            }
+        }
+
+
+        #endregion
     }
 }

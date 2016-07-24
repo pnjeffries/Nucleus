@@ -27,7 +27,7 @@ namespace FreeBuild.Geometry
         /// A constant value representing an unset, invalid vector.
         /// All components are set to NaN.
         /// </summary>
-        public static readonly Vector Unset = new Vector(double.NaN, double.NaN, double.NaN);
+        public static readonly Vector Unset = new Vector(false);
 
         /// <summary>
         /// Constant value representing a zero-length 3d vector
@@ -119,6 +119,7 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Angle constructor.
         /// Create a new vector on the XY plane pointing in the specified
         /// angle anticlockwise from the global X-axis.
         /// </summary>
@@ -128,6 +129,28 @@ namespace FreeBuild.Geometry
             X = Math.Cos(angle);
             Y = Math.Sin(angle);
             Z = 0;
+        }
+
+        /// <summary>
+        /// Validity constructor.
+        /// If the input boolean is false then the vector will be created as an invalid vector,
+        /// identical to the Vector.Unset constant.  If true, will be initialised as 0,0,0
+        /// </summary>
+        /// <param name="valid">Create a valid vector?</param>
+        public Vector(bool valid)
+        {
+            if (!valid)
+            {
+                X = double.NaN;
+                Y = double.NaN;
+                Z = double.NaN;
+            }
+            else
+            {
+                X = 0;
+                Y = 0;
+                Z = 0;
+            }
         }
 
         #endregion
@@ -233,7 +256,38 @@ namespace FreeBuild.Geometry
         /// <returns>The distance from this point to another, as a double.</returns>
         public double DistanceTo(Vector position)
         {
-            return Math.Sqrt(DistanceToSquared(position));
+            double dX = position.X - X;
+            double dY = position.Y - Y;
+            double dZ = position.Z - Z;
+            return Math.Sqrt(dX * dX + dY * dY + dZ * dZ);
+        }
+
+        /// <summary>
+        /// Calculate the squared distance from this position vector to another
+        /// on the XY plane.
+        /// </summary>
+        /// <param name="position">Another position vector.</param>
+        /// <returns>The squared distance on the XY plane from this point to another,
+        /// as a double.</returns>
+        public double XYDistanceToSquared(Vector position)
+        {
+            double dX = position.X - X;
+            double dY = position.Y - Y;
+            return dX * dX + dY * dY;
+        }
+
+        /// <summary>
+        /// Calculate the distance from this position vector to another
+        /// on the XY plane.
+        /// </summary>
+        /// <param name="position">Another position vector.</param>
+        /// <returns>The distance on the XY plane from this point to another,
+        /// as a double.</returns>
+        public double XYDistanceTo(Vector position)
+        {
+            double dX = position.X - X;
+            double dY = position.Y - Y;
+            return Math.Sqrt(dX * dX + dY * dY);
         }
 
         /// <summary>
@@ -367,6 +421,31 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Add another vector defined as X and Y coordinates to this one
+        /// and return the resultant vector.
+        /// </summary>
+        /// <param name="x">The value to add to the x-component</param>
+        /// <param name="y">The value to add to the y-component</param>
+        /// <returns>The combined vector</returns>
+        public Vector Add(double x, double y)
+        {
+            return new Vector(X + x, Y + y, Z);
+        }
+
+        /// <summary>
+        /// Add another vector defined as X, Y and Z coordinates to this one
+        /// and return the resultant vector.
+        /// </summary>
+        /// <param name="x">The value to add to the x-component</param>
+        /// <param name="y">The value to add to the y-component</param>
+        /// <param name="z">The value to add to the z-component</param>
+        /// <returns>The combined vector</returns>
+        public Vector Add(double x, double y, double z)
+        {
+            return new Vector(X + x, Y + y, Z + z);
+        }
+
+        /// <summary>
         /// Calculate the (smallest, non-directional) angle between this vector and another.
         /// In the range 0 - PI/2.
         /// </summary>
@@ -441,6 +520,16 @@ namespace FreeBuild.Geometry
         public Vector WithZ(double z)
         {
             return new Vector(X, Y, z);
+        }
+
+        /// <summary>
+        /// Create a copy of this vector flattened to the XY plane
+        /// </summary>
+        /// <returns>A new vector with the same X and Y components as this one,
+        /// but with Z set to 0</returns>
+        public Vector XY()
+        {
+            return new Vector(X, Y, 0);
         }
 
         #endregion
