@@ -10,21 +10,33 @@ using System.Threading.Tasks;
 namespace FreeBuild.Geometry
 {
     /// <summary>
-    /// Abstract base class for vertices - positions in space that
+    /// Base class for vertices - positions in space that
     /// form part of the definition (or are themselves derived from)
     /// a particular piece of geometry, and that may have additional
     /// attached data defining properties at that position.
     /// </summary>
     [Serializable]
-    public abstract class Vertex : Unique, IOwned<Shape>
+    public class Vertex : Unique, IOwned<Shape>
     {
         #region Properties
 
         /// <summary>
+        /// Private backing member variable for the Position property
+        /// </summary>
+        private Vector _Position = Vector.Unset;
+
+        /// <summary>
         /// The current position of this vertex.
         /// </summary>
-        [Dimension(DimensionTypes.Distance)]
-        public abstract Vector Position { get; }
+        public Vector Position
+        {
+            get { return _Position; }
+            set
+            {
+                _Position = value;
+                NotifyPropertyChanged("Position");
+            }
+        }
 
         /// <summary>
         /// Private backing member variable for the Shape property
@@ -56,6 +68,20 @@ namespace FreeBuild.Geometry
         {
             get { return _Node; }
             set { _Node = value; NotifyPropertyChanged("Node"); }
+        }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Position constructor.
+        /// Create a vertex with an explicitly defined position.
+        /// </summary>
+        /// <param name="position"></param>
+        public Vertex(Vector position)
+        {
+            _Position = position;
         }
 
         #endregion

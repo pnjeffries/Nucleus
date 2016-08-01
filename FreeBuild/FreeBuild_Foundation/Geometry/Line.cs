@@ -69,8 +69,8 @@ namespace FreeBuild.Geometry
         public Line(Vector startPoint, Vector endPoint)
         {
             Vertices = new VertexCollection(this);
-            Vertices.Add(new PointVertex(startPoint));
-            Vertices.Add(new PointVertex(endPoint));
+            Vertices.Add(new Vertex(startPoint));
+            Vertices.Add(new Vertex(endPoint));
         }
 
         /// <summary>

@@ -50,7 +50,7 @@ namespace FreeBuild.Geometry
         {
             foreach(Vector pt in points)
             {
-                Vertices.Add(new PointVertex(pt));
+                Vertices.Add(new Vertex(pt));
             }
         }
 
