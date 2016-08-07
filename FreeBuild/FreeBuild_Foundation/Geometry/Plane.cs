@@ -14,85 +14,40 @@ namespace FreeBuild.Geometry
     /// Immutable geometric primitive.
     /// </summary>
     [Serializable]
-    public class Plane :
-        ICoordinateSystem
+    public class Plane : 
+        CartesianCoordinateSystem
     {
         #region Constants
 
         /// <summary>
         /// A preset plane representing the global XY plane, centered on the global origin.
         /// </summary>
-        public readonly Plane GlobalXY = new Plane();
+        public static readonly Plane GlobalXY = new Plane();
 
         /// <summary>
         /// A preset plane representing the global YZ plane, centred on the global origin.
         /// </summary>
-        public readonly Plane GlobalYZ = new Plane(Vector.Zero, Vector.UnitY, Vector.UnitZ);
+        public static readonly Plane GlobalYZ = new Plane(Vector.Zero, Vector.UnitY, Vector.UnitZ);
 
         /// <summary>
         /// A present plane representing the global XZ plane, centred on the global origin
         /// </summary>
-        public readonly Plane GlobalXZ = new Plane(Vector.Zero, Vector.UnitX, Vector.UnitZ);
+        public static readonly Plane GlobalXZ = new Plane(Vector.Zero, Vector.UnitX, Vector.UnitZ);
 
         #endregion
-
-        #region Fields
-
-        /// <summary>
-        /// The origin point of the plane
-        /// </summary>
-        [Dimension(DimensionTypes.Distance)]
-        public readonly Vector Origin;
-
-        /// <summary>
-        /// The unit vector defining the local X-axis of the plane
-        /// </summary>
-        [Dimension(DimensionTypes.Distance)]
-        public readonly Vector X;
-
-        /// <summary>
-        /// The unit vector defining the local Y-axis of the plane
-        /// </summary>
-        [Dimension(DimensionTypes.Distance)]
-        public readonly Vector Y;
-
-        /// <summary>
-        /// The unit vector normal to the plane that forms the local Z-axis
-        /// </summary>
-        [Dimension(DimensionTypes.Distance)]
-        public readonly Vector Z;
-
-        #endregion
-
-        #region Properties
-
-        #endregion
-
 
         #region Constructors
 
         /// <summary>
         /// Default constructor.  Plane is initialised as a global XY plane.
         /// </summary>
-        public Plane()
-        {
-            Origin = Vector.Zero;
-            X = Vector.UnitX;
-            Y = Vector.UnitY;
-            Z = Vector.UnitZ;
-        }
+        public Plane() : base() { }
 
         /// <summary>
         /// Constructor creating a global XY plane with its origin at the specified point
         /// </summary>
         /// <param name="origin">The origin point of the new plane</param>
-        public Plane(Vector origin)
-        {
-            Origin = origin;
-            X = Vector.UnitX;
-            Y = Vector.UnitY;
-            Z = Vector.UnitZ;
-        }
+        public Plane(Vector origin) : base(origin) { }
 
         /// <summary>
         /// Constructor creating a plane defined by an origin point and a normal vector.
@@ -101,13 +56,7 @@ namespace FreeBuild.Geometry
         /// <param name="origin">The origin point of the plane</param>
         /// <param name="normal">The normal vector to the plane.  Will become the plane's local Z-axis.
         /// Should be a unit vector if consistent scaling is required.</param>
-        public Plane(Vector origin, Vector normal)
-        {
-            Origin = origin;
-            Z = normal;
-            Y = Z.Cross(Vector.UnitX);
-            X = Y.Cross(Z);
-        }
+        public Plane(Vector origin, Vector normal) : base(origin, normal) { }
 
         /// <summary>
         /// Constructor creating a plane defined by an origin and two vectors on the plane.
@@ -115,41 +64,16 @@ namespace FreeBuild.Geometry
         /// <param name="origin">The origin point of the plane</param>
         /// <param name="xAxis">The first vector that lies on the plane.  Will form the plane local x-axis.</param>
         /// <param name="xyVector">A second vector that lies on the plane but that is not coincident with the first.</param>
-        public Plane(Vector origin, Vector xAxis, Vector xyVector)
-        {
-            Origin = origin;
-            X = xAxis;
-            Z = xAxis.Cross(xyVector);
-            Y = Z.Cross(xAxis);
-        }
+        public Plane(Vector origin, Vector xAxis, Vector xyVector) : base(origin, xAxis, xyVector) { }
+
+        /// <summary>
+        /// Constructor creating a plane from the XY plane of the specified coordinate system
+        /// </summary>
+        /// <param name="cSystem"></param>
+        public Plane(CartesianCoordinateSystem cSystem) : base(cSystem) { }
 
         #endregion
 
-        #region Methods
-
-        /// <summary>
-        /// Convert a vector defined in the global coordinate system into 
-        /// one defined in local coordinates of this coordinate system.
-        /// </summary>
-        /// <param name="vector">A vector in the global coordinate system.</param>
-        /// <returns>A vector in local coordinates</returns>
-        public Vector GlobalToLocal(Vector vector)
-        {
-            Vector relV = vector - Origin;
-            return new Vector(relV.Dot(X), relV.Dot(Y), relV.Dot(Z));
-        }
-
-        /// <summary>
-        /// Convert a vector defined in the local coordinate system into
-        /// one defined in global coordinates
-        /// </summary>
-        /// <param name="vector">A vector in the local coordinate system.</param>
-        /// <returns>A vector in global coordinates</returns>
-        public Vector LocalToGlobal(Vector vector)
-        {
-            return Origin + X * vector.X + Y * vector.Y + Z * vector.Z;
-        }
-
-        #endregion
+        
     }
 }

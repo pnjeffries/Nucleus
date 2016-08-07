@@ -48,8 +48,13 @@
     <Compile Include="Base\NotifyPropertyChangedBase.cs" />
     <Compile Include="Base\ObservableKeyedCollection.cs" />
     <Compile Include="Base\OwnedCollection.cs" />
+    <Compile Include="Exceptions\NonExclusiveGeometryException.cs" />
+    <Compile Include="Geometry\Arc.cs" />
     <Compile Include="Geometry\Axis.cs" />
+    <Compile Include="Geometry\CartesianCoordinateSystem.cs" />
     <Compile Include="Geometry\Curve.cs" />
+    <Compile Include="Geometry\CylindricalCoordinateSystem.cs" />
+    <Compile Include="Geometry\Disk.cs" />
     <Compile Include="Geometry\ICoordinateSystem.cs" />
     <Compile Include="Geometry\Line.cs" />
     <Compile Include="Geometry\Plane.cs" />
@@ -86,7 +91,9 @@
     <Compile Include="Units\DimensionAttribute.cs" />
     <Compile Include="Units\DimensionTypes.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Events\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

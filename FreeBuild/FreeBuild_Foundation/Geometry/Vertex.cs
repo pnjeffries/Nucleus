@@ -35,6 +35,7 @@ namespace FreeBuild.Geometry
             {
                 _Position = value;
                 NotifyPropertyChanged("Position");
+                NotifyOwnerOfPositionUpdate();
             }
         }
 
@@ -82,6 +83,38 @@ namespace FreeBuild.Geometry
         public Vertex(Vector position)
         {
             _Position = position;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Transform this vertex by mapping it from local coordinates on the given system to
+        /// global coordinates
+        /// </summary>
+        /// <param name="cSyatem">The coordinate system to use to map the vertex geometric data</param>
+        public void MapTo(ICoordinateSystem cSystem)
+        {
+            Position = cSystem.LocalToGlobal(Position);
+        }
+
+        // <summary>
+        /// Apply the specified transformation to this vertex, modifying it's geometric data.
+        /// </summary>
+        /// <param name="transform">THe transformation matrix.</param>
+        public void Transform(Transform transform)
+        {
+            Position = Position.Transform(transform);
+        }
+
+        /// <summary>
+        /// Notify the owning shape that the geometry of this vertex has been updated
+        /// </summary>
+        protected void NotifyOwnerOfPositionUpdate()
+        {
+            if (Owner != null)
+                Owner.NotifyGeometryUpdated();
         }
 
         #endregion

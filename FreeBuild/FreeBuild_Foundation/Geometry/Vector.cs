@@ -460,6 +460,7 @@ namespace FreeBuild.Geometry
             return Math.Atan(dot);
         }
 
+
         /// <summary>
         /// Rotate this vector by an angle around an axis,
         /// following the right-hand rule.
@@ -484,12 +485,12 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="transform">THe transformation matrix.</param>
         /// <returns>A new vector representing the result of the transformation on this one.</returns>
-        public Vector Transform(Transform t)
+        public Vector Transform(Transform transform)
         {
             return new Vector(
-                t[0, 0] * X + t[0, 1] * Y + t[0, 2] * Z + t[0, 3],
-                t[1, 0] * X + t[1, 1] * Y + t[1, 2] * Z + t[1, 3],
-                t[2, 0] * X + t[2, 1] * Y + t[2, 2] * Z + t[2, 3]);
+                transform[0, 0] * X + transform[0, 1] * Y + transform[0, 2] * Z + transform[0, 3],
+                transform[1, 0] * X + transform[1, 1] * Y + transform[1, 2] * Z + transform[1, 3],
+                transform[2, 0] * X + transform[2, 1] * Y + transform[2, 2] * Z + transform[2, 3]);
         }
 
         /// <summary>

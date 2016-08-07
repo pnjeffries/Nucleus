@@ -26,5 +26,15 @@ namespace FreeBuild.Geometry
         /// <param name="vector">A vector in the local coordinate system.</param>
         /// <returns>A vector in global coordinates</returns>
         Vector LocalToGlobal(Vector vector);
+
+        /// <summary>
+        /// Convert a set of coordinates defined in the local coordinate system
+        /// into one defined in global coordinates
+        /// </summary>
+        /// <param name="c0">The first coordinate.</param>
+        /// <param name="c1">The second coordinate.</param>
+        /// <param name="c2">The third coordinate.</param>
+        /// <returns>A vector representing a position in the global cartesian coordinate system.</returns>
+        Vector LocalToGlobal(double c0, double c1, double c2 = 0);
     }
 }

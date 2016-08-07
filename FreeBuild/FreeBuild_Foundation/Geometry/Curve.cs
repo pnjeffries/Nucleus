@@ -230,7 +230,7 @@ namespace FreeBuild.Geometry
             for (int i = 0; i < Vertices.Count; i++)
             {
                 Vector start = Vertices[i].Position;
-                Vector end = i == Vertices.Count ? Vertices[0].Position : Vertices[i + 1].Position;
+                Vector end = i == Vertices.Count - 1 ? Vertices[0].Position : Vertices[i + 1].Position;
                 if (onPlane != null)
                 {
                     start = onPlane.GlobalToLocal(start);
@@ -262,6 +262,54 @@ namespace FreeBuild.Geometry
                 (x1 + x0) * 0.5 * areaRectangle + (x0 + (x1 - x0) * 2 / 3) * areaTri,
                 y0 * 0.5 * areaRectangle + (y0 + (y1 - y0) / 3) * areaTri);
             return areaRectangle + areaTri;
+        }
+
+        /// <summary>
+        /// Calculate the second moment of area enclosed by this curve on a the XY about the
+        /// X-axis, were the start and end points joined by a straight line segment.
+        /// A coordinate system may be specified, otherwise by default the global XY plane and
+        /// X-axis will be used.
+        /// </summary>
+        /// <param name="onPlane">The coordinate system in which the second moment of area is
+        /// to be calculated.  The second moment of area will be calculated on the XY plane and
+        /// about the X-axis of this system.</param>
+        /// <returns>The signed second moment of area enclosed by this curve, as a
+        /// double.</returns>
+        public virtual double CalculateEnclosedIxx(ICoordinateSystem onPlane = null)
+        {
+            double result = 0;
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                Vector start = Vertices[i].Position;
+                Vector end = i == Vertices.Count - 1 ? Vertices[0].Position : Vertices[i + 1].Position;
+                if (onPlane != null)
+                {
+                    start = onPlane.GlobalToLocal(start);
+                    end = onPlane.GlobalToLocal(end);
+                }
+                result += IxxUnder(start.X, start.Y, end.X, end.Y);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Calculate the signed second moment of area 'under' the line segment between the
+        /// two specified coordinates on the XY plane about the X-axis
+        /// </summary>
+        /// <param name="x0"></param>
+        /// <param name="y0"></param>
+        /// <param name="x1"></param>
+        /// <param name="y1"></param>
+        /// <returns>The signed Ixx as a double</returns>
+        protected static double IxxUnder(double x0, double y0, double x1, double y1)
+        {
+            double aR = y0 * (x1 - x0); //Area of rectangle
+            double IxxR = ((x1 - x0) * y0*y0*y0 ) / 12; //(bh^3)/12
+            double yCR = y0 / 2; //y of centroid of rectangle
+            double aT = (y1 - y0) * (x1 - x0) * 0.5; //Area of triangle
+            double IxxT = ((x1 - x0) * Math.Pow((y1 - y0),3)) / 36; //(bh^3)/36
+            double yCT = (y0 + (y1 - y0) / 3); //y of centroid triangle
+            return IxxR + aR * yCR * yCR + IxxT + aT * yCT * yCT;
         }
     }
 }

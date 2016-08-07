@@ -1,4 +1,5 @@
 ﻿using FreeBuild.Base;
+using FreeBuild.Exceptions;
 using FreeBuild.Geometry;
 using System;
 using System.Collections.Generic;
@@ -32,14 +33,26 @@ namespace FreeBuild.Model
         /// Describes the editable control geometry that primarily defines
         /// the overall geometry of this object.
         /// The set-out curve of 1D Elements, the surface of slabs, etc.
+        /// The assigned object should not already be assigned to any other
+        /// element.
         /// </summary>
         public TShape Geometry
         {
             get { return _Geometry; }
             set
             {
-                _Geometry = value;
-                NotifyPropertyChanged("Geometry");
+                if (value.Element != null || value.Element != this)
+                {
+                    throw new NonExclusiveGeometryException(
+                        "The set-out geometry of an element cannot be assigned because the geometry object already belongs to another element.");
+                }
+                else
+                {
+                    if (_Geometry != null && _Geometry.Element == this) _Geometry.Element = null;
+                    _Geometry = value;
+                    _Geometry.Element = this;
+                    NotifyPropertyChanged("Geometry");
+                }
             }
         }
 
@@ -75,6 +88,18 @@ namespace FreeBuild.Model
 
         #endregion
 
+        #region Methods
+
+        /// <summary>
+        /// Notify this shape that one or more of its vertices or another aspect
+        /// of it's geometric definition has been altered.
+        /// or has been updated
+        /// </summary>
+        public void NotifyGeometryUpdated()
+        {
+        }
+
+        #endregion
 
     }
 }

@@ -16,7 +16,7 @@ namespace FreeBuild.Base
         /// <summary>
         /// Internal backing member for GUID property
         /// </summary>
-        private Guid _GUID = new Guid();
+        private Guid _GUID = Guid.NewGuid();
 
         /// <summary>
         /// The GUID of this object, which can be used to uniquely identify it. 

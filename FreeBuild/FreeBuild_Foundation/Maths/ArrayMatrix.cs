@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeBuild.Geometry;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -49,6 +50,16 @@ namespace FreeBuild.Maths
         public ArrayMatrix(double[,] values) : base(values.GetLength(0),values.GetLength(1))
         {
             _Values = values;
+        }
+
+        /// <summary>
+        /// Constructor creating a matrix from a vector.
+        /// The vector will be taken as a column vector.
+        /// </summary>
+        /// <param name="columnVector">The vector to convert to a matrix</param>
+        public ArrayMatrix(Vector columnVector) : base(3,1)
+        {
+            _Values = new double[,] { { columnVector.X }, { columnVector.Y }, { columnVector.Z } };
         }
 
         /// <summary>

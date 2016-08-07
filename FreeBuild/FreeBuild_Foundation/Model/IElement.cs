@@ -30,5 +30,10 @@ namespace FreeBuild.Model
         /// full 3D solid object
         /// </summary>
         VolumetricProperty Property { get; }
+
+        /// <summary>
+        /// Notify this element that it's geometric representation has been updated
+        /// </summary>
+        void NotifyGeometryUpdated();
     }
 }
