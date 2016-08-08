@@ -13,6 +13,17 @@ namespace FreeBuild.Geometry
     {
         #region Properties
 
+        /// <summary>
+        /// The full circle that this arc forms part of
+        /// </summary>
+        public Disk Circle
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public override bool Closed
         {
             get
