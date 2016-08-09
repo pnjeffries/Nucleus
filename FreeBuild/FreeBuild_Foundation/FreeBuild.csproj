@@ -48,6 +48,8 @@
     <Compile Include="Base\NotifyPropertyChangedBase.cs" />
     <Compile Include="Base\ObservableKeyedCollection.cs" />
     <Compile Include="Base\OwnedCollection.cs" />
+    <Compile Include="Conversion\ITypeConverter.cs" />
+    <Compile Include="Conversion\MethodTypeConverter.cs" />
     <Compile Include="Events\ElementUpdateEventArgs.cs" />
     <Compile Include="Base\TypeCollection.cs" />
     <Compile Include="Conversion\ConversionLibrary.cs" />

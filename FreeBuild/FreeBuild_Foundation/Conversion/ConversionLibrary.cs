@@ -17,16 +17,11 @@ namespace FreeBuild.Conversion
         #region Properties
 
         /// <summary>
-        /// The classes containing conversion routines that have been loaded so far
-        /// </summary>
-        public TypeCollection LoadedConverters { get; } = new TypeCollection();
-
-        /// <summary>
         /// The dictionary of conversion methods loaded from converters.
         /// Keyed by source type, then by target type.
         /// </summary>
-        public IDictionary<Type, IDictionary<Type, IList<MethodInfo>>> ConversionMethods { get; }
-            = new Dictionary<Type, IDictionary<Type, IList<MethodInfo>>>();
+        public IDictionary<Type, IDictionary<Type, IList<ITypeConverter>>> LoadedConverters { get; }
+            = new Dictionary<Type, IDictionary<Type, IList<ITypeConverter>>>();
 
         #endregion
 
@@ -46,21 +41,35 @@ namespace FreeBuild.Conversion
         /// </summary>
         /// <param name="converterClass"></param>
         /// <returns></returns>
-        public bool LoadConverter(Type converterClass)
+        public bool LoadConverters(Type converterClass)
         {
-            if (!LoadedConverters.Contains(converterClass.GUID))
+            MethodInfo[] methods = converterClass.GetMethods(BindingFlags.Public | BindingFlags.Static);
+            foreach (MethodInfo method in methods)
             {
-                LoadedConverters.Add(converterClass);
-                MethodInfo[] methods = converterClass.GetMethods(BindingFlags.Public | BindingFlags.Static);
-                foreach (MethodInfo method in methods)
+                ParameterInfo[] paras = method.GetParameters();
+                if (paras.Length == 1) //TODO: Or 2, and second is a context object?
                 {
-                    //TODO
+                    Type targetType = method.ReturnType;
+                    if (targetType != typeof(void))
+                    {
+                        Type sourceType = paras[0].ParameterType;
+                        if (!LoadedConverters.ContainsKey(sourceType)) LoadedConverters.Add(sourceType, new Dictionary<Type, IList<ITypeConverter>>());
+                        var targetDictionary = LoadedConverters[sourceType];
+                        if (!targetDictionary.ContainsKey(targetType)) targetDictionary.Add(targetType, new List<ITypeConverter>());
+                        var converterList = targetDictionary[targetType];
+                        //TODO: Test if method already loaded?
+                        converterList.Add(new MethodTypeConverter(method));
+                    }
                 }
-                return true;
             }
-            return false;
+            return true;
         }
 
         #endregion
+
+        public object Convert(object sourceObject, Type toType)
+        {
+
+        }
     }
 }
