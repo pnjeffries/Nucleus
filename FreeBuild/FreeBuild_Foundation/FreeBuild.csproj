@@ -48,12 +48,9 @@
     <Compile Include="Base\NotifyPropertyChangedBase.cs" />
     <Compile Include="Base\ObservableKeyedCollection.cs" />
     <Compile Include="Base\OwnedCollection.cs" />
-<<<<<<< HEAD
     <Compile Include="Events\ElementUpdateEventArgs.cs" />
-=======
     <Compile Include="Base\TypeCollection.cs" />
     <Compile Include="Conversion\ConversionLibrary.cs" />
->>>>>>> d7b3facfab4f3f77116c942442c5a232143f31b8
     <Compile Include="Exceptions\NonExclusiveGeometryException.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Geometry\Arc.cs" />
