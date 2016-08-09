@@ -107,8 +107,8 @@ namespace FreeBuild.Geometry
 
         /// <summary>
         /// Notify this shape that one or more of its vertices or another aspect
-        /// of it's geometric definition has been altered.
-        /// or has been updated
+        /// of it's geometric definition has been altered.  May prompt recalculation
+        /// of certain other properties.
         /// </summary>
         internal void NotifyGeometryUpdated()
         {

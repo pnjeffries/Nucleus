@@ -32,7 +32,8 @@ namespace FreeBuild.Model
         VolumetricProperty Property { get; }
 
         /// <summary>
-        /// Notify this element that it's geometric representation has been updated
+        /// Notify this element that it's geometric representation has been updated.
+        /// This may prompt related properties to be invalidated or updated.
         /// </summary>
         void NotifyGeometryUpdated();
     }

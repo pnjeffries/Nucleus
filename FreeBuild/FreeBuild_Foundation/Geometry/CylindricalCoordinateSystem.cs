@@ -81,6 +81,20 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Create a cylindrical coordinate system defined by an origin point and 
+        /// the longitudinal axis.  The polar axis will be aligned towards the global X-axis.
+        /// </summary>
+        /// <param name="origin"></param>
+        /// <param name="lAxis"></param>
+        public CylindricalCoordinateSystem(Vector origin, Vector lAxis)
+        {
+            Origin = origin;
+            L = lAxis;
+            Vector yTemp = L.Cross(Vector.UnitX);
+            A = yTemp.Cross(L);
+        }
+
+        /// <summary>
         /// Plane constructor.  Creates a cylindrical coordinate system by specifying
         /// the reference plane.  The longitudinal axis will be taken as the local
         /// z-axis of the plane, the polar as the local x and the origin set to the

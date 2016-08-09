@@ -77,7 +77,9 @@ namespace FreeBuild.Geometry
 
         /// <summary>
         /// Constructor creating a coordinate system defined by an origin point and a z-axis vector.
-        /// The X- and Y-axes will be generated perpendicular to the z-axis and with the x-axis orientated as closely as possible to the global x-axis.
+        /// The X- and Y-axes will be generated perpendicular to the z-axis and with the x-axis orientated
+        /// as closely as possible to the global x-axis (unless the specified z-axis already lies in that axis,
+        /// in which case it will be aligned as closely as possible to the global z).
         /// </summary>
         /// <param name="origin">The origin point of the plane</param>
         /// <param name="zAxis">The coordinate system z-axis
@@ -86,7 +88,7 @@ namespace FreeBuild.Geometry
         {
             Origin = origin;
             Z = zAxis;
-            Y = Z.Cross(Vector.UnitX);
+            Y = Z.IsXOnly() ? Z.Cross(Vector.UnitZ) : Z.Cross(Vector.UnitX);
             X = Y.Cross(Z);
         }
 

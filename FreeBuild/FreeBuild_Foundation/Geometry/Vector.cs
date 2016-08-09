@@ -533,6 +533,33 @@ namespace FreeBuild.Geometry
             return new Vector(X, Y, 0);
         }
 
+        /// <summary>
+        /// Does this vector have a non-zero component in the X-axis only?
+        /// </summary>
+        /// <returns>True if only the X-component is non-zero</returns>
+        public bool IsXOnly()
+        {
+            return (X != 0 && Y == 0 && Z == 0);
+        }
+
+        /// <summary>
+        /// Does this vector have a non-zero component in the Y-axis only?
+        /// </summary>
+        /// <returns>True if only the Y-component is non-zero</returns>
+        public bool IsYOnly()
+        {
+            return (X == 0 && Y != 0 && Z == 0);
+        }
+
+        /// <summary>
+        /// Does this vector have a non-zero component in the Z-axis only?
+        /// </summary>
+        /// <returns>True if only the Y-component is non-zero</returns>
+        public bool IsZOnly()
+        {
+            return (X == 0 && Y == 0 && Z != 0);
+        }
+
         #endregion
 
         #region Operators

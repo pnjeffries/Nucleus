@@ -1,4 +1,5 @@
 ﻿using FreeBuild.Base;
+using FreeBuild.Events;
 using FreeBuild.Exceptions;
 using FreeBuild.Geometry;
 using System;
@@ -20,6 +21,15 @@ namespace FreeBuild.Model
         where TShape : Shape
         where TProperty : VolumetricProperty
     {
+        #region Events
+
+        /// <summary>
+        /// Event raised whenever a key part of this element's representative data
+        /// has been updated.
+        /// </summary>
+        public EventHandler<ElementUpdateEventArgs> Updated;
+
+        #endregion
 
         #region Properties
 
@@ -97,6 +107,7 @@ namespace FreeBuild.Model
         /// </summary>
         public void NotifyGeometryUpdated()
         {
+            RaiseEvent(Updated, new ElementUpdateEventArgs());
         }
 
         #endregion
