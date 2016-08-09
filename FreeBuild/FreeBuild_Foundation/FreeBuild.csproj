@@ -53,6 +53,7 @@
     <Compile Include="Events\ElementUpdateEventArgs.cs" />
     <Compile Include="Base\TypeCollection.cs" />
     <Compile Include="Conversion\ConversionLibrary.cs" />
+    <Compile Include="Exceptions\ConversionFailedException.cs" />
     <Compile Include="Exceptions\NonExclusiveGeometryException.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Geometry\Arc.cs" />

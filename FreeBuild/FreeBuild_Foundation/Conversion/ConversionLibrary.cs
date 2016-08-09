@@ -5,6 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using FreeBuild.Extensions;
+using FreeBuild.Exceptions;
 
 namespace FreeBuild.Conversion
 {
@@ -69,7 +71,29 @@ namespace FreeBuild.Conversion
 
         public object Convert(object sourceObject, Type toType)
         {
+            if (sourceObject == null) return null;
 
+            Type sourceType = sourceObject.GetType();
+            if (!LoadedConverters.ContainsKey(sourceType))
+            {
+                sourceType = LoadedConverters.Keys.ClosestAncestor(sourceType);
+            }
+            if (sourceType != null)
+            {
+                var targetDictionary = LoadedConverters[sourceType];
+                Type targetType = toType;
+                if (!targetDictionary.ContainsKey(targetType))
+                {
+                    targetType = targetDictionary.Keys.ClosestDescendent(targetType);
+                }
+                if (targetType != null)
+                {
+                    IList<ITypeConverter> tConverters = targetDictionary[targetType];
+                    ITypeConverter tConverter = tConverters.First();
+                    return tConverter.Convert(sourceObject);
+                }
+            }
+            if (sourceObject is IConvertible) return System.Convert.ChangeType(sourceObject, toType);
         }
     }
 }
