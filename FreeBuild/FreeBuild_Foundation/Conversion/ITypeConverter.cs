@@ -11,11 +11,24 @@ namespace FreeBuild.Conversion
     /// </summary>
     public interface ITypeConverter
     {
+        #region Properties
+
+        /// <summary>
+        /// The description of this converter
+        /// </summary>
+        string Description { get; }
+
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Perform the conversion operation on the specified object
         /// </summary>
         /// <param name="fromObject">The object to be converted</param>
         /// <returns></returns>
         object Convert(object fromObject);
+
+        #endregion
     }
 }

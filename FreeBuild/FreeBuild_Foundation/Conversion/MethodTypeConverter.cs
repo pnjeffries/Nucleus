@@ -18,7 +18,18 @@ namespace FreeBuild.Conversion
         /// <summary>
         /// The method used to perform the conversion
         /// </summary>
-        public MethodInfo Method { get; set; }
+        public MethodInfo Method { get; }
+
+        /// <summary>
+        /// The description text of this converter
+        /// </summary>
+        public string Description
+        {
+            get
+            {
+                return Method.ToString(); //Does this do what I want?
+            }
+        }
 
         #endregion
 

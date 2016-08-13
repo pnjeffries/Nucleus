@@ -34,16 +34,39 @@ namespace FreeBuild.Conversion
         /// </summary>
         public ConversionLibrary() { }
 
+        /// <summary>
+        /// Initialises a new ConversionLibrary, loading in converters from a specified assembly
+        /// </summary>
+        /// <param name="converterAssembly"></param>
+        public ConversionLibrary(Assembly converterAssembly)
+        {
+            LoadConverters(converterAssembly);
+        }
+
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Load all classes containing conversion routines from the specified assembly 
+        /// into the library
+        /// </summary>
+        /// <param name="converterAssembly"></param>
+        public void LoadConverters(Assembly converterAssembly)
+        {
+            IEnumerable<Type> types = converterAssembly.ExportedTypes;
+            foreach(Type type in types)
+            {
+                LoadConverters(type);
+            }
+        }
 
         /// <summary>
         /// Load a class containing conversion routines into the library
         /// </summary>
         /// <param name="converterClass"></param>
         /// <returns></returns>
-        public bool LoadConverters(Type converterClass)
+        public void LoadConverters(Type converterClass)
         {
             MethodInfo[] methods = converterClass.GetMethods(BindingFlags.Public | BindingFlags.Static);
             foreach (MethodInfo method in methods)
@@ -64,11 +87,15 @@ namespace FreeBuild.Conversion
                     }
                 }
             }
-            return true;
         }
 
-        #endregion
-
+        /// <summary>
+        /// Convert the specified object to the specified type, using a previously loaded
+        /// converter.
+        /// </summary>
+        /// <param name="sourceObject"></param>
+        /// <param name="toType"></param>
+        /// <returns></returns>
         public object Convert(object sourceObject, Type toType)
         {
             if (sourceObject == null) return null;
@@ -89,11 +116,45 @@ namespace FreeBuild.Conversion
                 if (targetType != null)
                 {
                     IList<ITypeConverter> tConverters = targetDictionary[targetType];
-                    ITypeConverter tConverter = tConverters.First();
+                    ITypeConverter tConverter = tConverters.First(); //TODO: Try multiple converters if the first is not successful?
                     return tConverter.Convert(sourceObject);
                 }
             }
             if (sourceObject is IConvertible) return System.Convert.ChangeType(sourceObject, toType);
+            return sourceObject; //TODO test if can convert first?
         }
+
+        /// <summary>
+        /// Find all loaded converters that could conceivably be applied to the given pair of types
+        /// </summary>
+        /// <param name="fromType">The type to convert from</param>
+        /// <param name="toType">The type of convert to</param>
+        /// <returns></returns>
+        public IList<ITypeConverter> AllSuitableConverters(Type fromType, Type toType)
+        {
+            var result = new List<ITypeConverter>();
+            foreach(Type sourceType in LoadedConverters.Keys)
+            {
+                if (sourceType.IsAssignableFrom(fromType))
+                {
+                    var targetConverters = LoadedConverters[sourceType];
+                    foreach (Type targetType in targetConverters.Keys)
+                    {
+                        if (toType.IsAssignableFrom(targetType))
+                        {
+                            foreach (ITypeConverter converter in targetConverters[sourceType])
+                            {
+                                result.Add(converter);
+                            }
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
+        #endregion
+
+
     }
 }
