@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,7 @@ namespace FreeBuild.Maths
     /// Base class for matrices of doubles.
     /// </summary>
     [Serializable]
-    public abstract class Matrix
+    public abstract class Matrix : IDuplicatable
     {
         #region Properties
 
@@ -184,13 +185,14 @@ namespace FreeBuild.Maths
                     this[i, j] /= scalar;
                 }
             }
+            this.Duplicate();
         }
 
-        /// <summary>
-        /// Create a duplicate of this matrix
-        /// </summary>
-        /// <returns></returns>
-        public abstract Matrix Duplicate();
+        ///// <summary>
+        ///// Create a duplicate of this matrix
+        ///// </summary>
+        ///// <returns></returns>
+        //public abstract Matrix Duplicate();
 
         #endregion
 

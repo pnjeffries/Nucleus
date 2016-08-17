@@ -1,4 +1,5 @@
-﻿using FreeBuild.Maths;
+﻿using FreeBuild.Base;
+using FreeBuild.Maths;
 using FreeBuild.Model;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace FreeBuild.Geometry
     /// <summary>
     /// An axis-aligned bounding box representing a region in space
     /// </summary>
-    public class BoundingBox
+    public class BoundingBox : IDuplicatable
     {
         #region Properties
 

@@ -26,6 +26,11 @@ using System.Threading.Tasks;
 
 namespace FreeBuild.Base
 {
+    /// <summary>
+    /// A collection of unique objects which may be owned
+    /// </summary>
+    /// <typeparam name="TItem"></typeparam>
+    /// <typeparam name="TOwner"></typeparam>
     public abstract class OwnedCollection<TItem, TOwner> : UniquesCollection<TItem>
         where TItem : IUnique, IOwned<TOwner>
     {

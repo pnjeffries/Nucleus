@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Base;
 using FreeBuild.Units;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace FreeBuild.Geometry
     /// Represents a cartesian coordinate system
     /// </summary>
     public class CartesianCoordinateSystem
-        : ICoordinateSystem
+        : ICoordinateSystem, IDuplicatable
     {
         #region Constants
 

@@ -27,12 +27,14 @@ using System.Threading.Tasks;
 namespace FreeBuild.Base
 {
     /// <summary>
-    /// Interface for objects which are 'owned' by some specific other object
+    /// Interface for objects which may be 'owned' by some specific other object.
+    /// Note that while these objects are capable of being owned it does not follow
+    /// that they always have an owner.
     /// </summary>
     public interface IOwned<TOwner>
     {
         /// <summary>
-        /// This oject that this object 'belongs' to
+        /// This oject that this object 'belongs' to, if any.
         /// </summary>
         TOwner Owner { get; }
     }

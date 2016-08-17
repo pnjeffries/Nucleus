@@ -24,10 +24,10 @@ namespace FreeBuild.Extensions
             string lineSeparator, string startWrapper = null, string endWrapper = null)
         {
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < array.GetLength(0); i++)
+            for (int i = 0; i < array.GetLength(1); i++)
             {
                 if (i > 0) sb.Append(lineSeparator);
-                for (int j = 0; j < array.GetLength(1); j++)
+                for (int j = 0; j < array.GetLength(0); j++)
                 {
                     if (j > 0) sb.Append(entrySeparator);
                     if (startWrapper != null) sb.Append(startWrapper);

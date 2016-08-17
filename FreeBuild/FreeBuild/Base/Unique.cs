@@ -22,6 +22,7 @@ using FreeBuild.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,16 +32,24 @@ namespace FreeBuild.Base
     /// Abstract base class implementing the IUnique interface
     /// </summary>
     [Serializable]
-    public abstract class Unique : NotifyPropertyChangedBase, IUnique
+    public abstract class Unique : NotifyPropertyChangedBase, IUnique, IDuplicatable
     {
+        #region Properties
+
         /// <summary>
         /// Internal backing member for GUID property
         /// </summary>
+        [Copy(CopyBehaviour.DO_NOT_COPY)]
         private Guid _GUID = Guid.NewGuid();
 
         /// <summary>
         /// The GUID of this object, which can be used to uniquely identify it. 
         /// </summary>
-        public Guid GUID { get { return _GUID; } } 
+        public Guid GUID { get { return _GUID; } }
+
+        #endregion
+
+        
+
     }
 }

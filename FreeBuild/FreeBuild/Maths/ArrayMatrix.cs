@@ -143,14 +143,14 @@ namespace FreeBuild.Maths
             return new ArrayMatrix(rows, columns);
         }
 
-        /// <summary>
-        /// Create a duplicate of this matrix.
-        /// </summary>
-        /// <returns>A new ArrayMatrix with the same values as this one.</returns>
-        public override Matrix Duplicate()
-        {
-            return new ArrayMatrix((double[,])_Values.Clone());
-        }
+        ///// <summary>
+        ///// Create a duplicate of this matrix.
+        ///// </summary>
+        ///// <returns>A new ArrayMatrix with the same values as this one.</returns>
+        //public override Matrix Duplicate()
+        //{
+        //    return new ArrayMatrix((double[,])_Values.Clone());
+        //}
 
         #endregion
 

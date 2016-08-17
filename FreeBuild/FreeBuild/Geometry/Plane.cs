@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Base;
 using FreeBuild.Units;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,8 @@ namespace FreeBuild.Geometry
     /// </summary>
     [Serializable]
     public class Plane : 
-        CartesianCoordinateSystem
+        CartesianCoordinateSystem,
+        IDuplicatable
     {
         #region Constants
 

@@ -35,7 +35,7 @@ namespace FreeBuild.Base
     /// be loaded and saved to files.
     /// </summary>
     [Serializable]
-    public abstract class Document
+    public abstract class Document : Unique
     {
         #region Properties
 

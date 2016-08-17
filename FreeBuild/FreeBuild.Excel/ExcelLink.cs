@@ -51,7 +51,6 @@ namespace FreeBuild.Excel
                 if (_ExcelApp == null)
                 {
                     _ExcelApp = new Application();
-                    _ExcelApp.Visible = true;
                 }
                 return _ExcelApp;
             }
@@ -106,6 +105,22 @@ namespace FreeBuild.Excel
         #region Methods
 
         /// <summary>
+        /// Make the Excel application window visible
+        /// </summary>
+        public void ShowExcel()
+        {
+            ExcelApp.Visible = true;
+        }
+
+        /// <summary>
+        /// Make the Excel application window invisible
+        /// </summary>
+        public void HideExcel()
+        {
+            ExcelApp.Visible = false;
+        }
+
+        /// <summary>
         /// Release control over the Excel application.
         /// </summary>
         /// <param name="close">If true, the Excel application will be closed.
@@ -130,6 +145,7 @@ namespace FreeBuild.Excel
         {
             return ExcelApp.Workbooks.Open(filePath);
         }
+
 
         /// <summary>
         /// Create a new excel workbook.
@@ -220,7 +236,8 @@ namespace FreeBuild.Excel
         /// consequently difficult to relate back to the cell numbers.</param>
         /// <param name="sheet">Optional.  The sheet from which values are to be extracted.
         /// If not specified, the currently active worksheet will be used.</param>
-        /// <returns>A two-dimensional array of objects containing everything within the specified cells</returns>
+        /// <returns>A two-dimensional array of objects containing the values of the specified set of cells.
+        /// Note that unlike the Excel data itself, this will be zero-indexed.</returns>
         public object[,] GetCellValues(bool fromStart = false, Worksheet sheet = null)
         {
             if (sheet == null) sheet = ActiveSheet;
@@ -231,7 +248,7 @@ namespace FreeBuild.Excel
                 range = sheet.UsedRange;
             if (range.Cells.Count == 0) return new object[0, 0];
             else if (range.Cells.Count == 1) return new object[1, 1] { { range.Value } };
-            else return range.Value;
+            else return MakeZeroIndexed(range.Value);
         }
 
         /// <summary>
@@ -243,14 +260,15 @@ namespace FreeBuild.Excel
         /// <param name="endColumn">The number of the ending column</param>
         /// <param name="sheet">Optional.  The sheet from which values are to be extracted.
         /// If not specified, the currently active worksheet will be used.</param>
-        /// <returns></returns>
+        /// <returns>A two-dimensional array of objects containing the values of the specified set of cells.
+        /// Note that unlike the Excel data itself, this will be zero-indexed.</returns>
         public object[,] GetCellValues(int startRow, int startColumn, int endRow, int endColumn, Worksheet sheet = null)
         {
             if (sheet == null) sheet = ActiveSheet;
             Range range = sheet.Cells[startRow, startColumn].Resize[endRow - startRow, endColumn - startColumn];
             if (range.Cells.Count == 0) return new object[0, 0];
             else if (range.Cells.Count == 1) return new object[1, 1] { { range.Value } };
-            else return range.Value;
+            else return MakeZeroIndexed(range.Value);
         }
 
         /// <summary
@@ -304,6 +322,25 @@ namespace FreeBuild.Excel
             {
                 sheet.Cells[row, startColumn + count] = value;
             }
+        }
+
+        /// <summary>
+        /// Convert an object array obtained from an Excel range (which will be indexed starting from 1)
+        /// into a normal .NET array starting from 0 (as nature intended)
+        /// </summary>
+        /// <param name="excelData">The data extracted from Range.Value</param>
+        /// <returns></returns>
+        public object[,] MakeZeroIndexed(object[,] excelData)
+        {
+            object[,] result = new object[excelData.GetLength(0), excelData.GetLength(1)];
+            for (int i = 0; i < result.GetLength(0); i++)
+            {
+                for (int j = 0; j < result.GetLength(1); j++)
+                {
+                    result[i, j] = excelData[i + 1, j + 1];
+                }
+            }
+            return result;
         }
 
         #endregion
