@@ -71,7 +71,7 @@ namespace FreeBuild.Model
             get { return _Geometry; }
             set
             {
-                if (value.Element != null || value.Element != this)
+                if (value.Element != null && value.Element != this)
                 {
                     throw new NonExclusiveGeometryException(
                         "The set-out geometry of an element cannot be assigned because the geometry object already belongs to another element.");
@@ -115,6 +115,12 @@ namespace FreeBuild.Model
         /// IElement Property implementation
         /// </summary>
         VolumetricProperty IElement.Property { get { return Property; } }
+
+        /// <summary>
+        /// The orientation description of this element - determines the relative orientation
+        /// of the local coordinate system of this element.
+        /// </summary>
+        public ElementOrientation Orientation { get; set; } = 0.0;
 
         #endregion
 
