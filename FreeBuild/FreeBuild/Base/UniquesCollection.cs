@@ -35,9 +35,28 @@ namespace FreeBuild.Base
     [Serializable]
     public class UniquesCollection<TItem> : ObservableKeyedCollection<Guid, TItem> where TItem : IUnique
     {
+        #region Constructors
+
+        public UniquesCollection() : base() { }
+
+        public UniquesCollection(IEnumerable<IEnumerable<TItem>> toBeCombined) : base(toBeCombined) { }
+
+        #endregion
+
         protected override Guid GetKeyForItem(TItem item)
         {
             return item.GUID;
         }
+    }
+
+    /// <summary>
+    /// A collection of unique objects.
+    /// </summary>
+    [Serializable]
+    public class UniquesCollection : UniquesCollection<IUnique>
+    {
+        public UniquesCollection() : base() { }
+
+        public UniquesCollection(IEnumerable<IEnumerable<IUnique>> toBeCombined) : base(toBeCombined) { }
     }
 }

@@ -46,6 +46,7 @@
     <Compile Include="Base\CopyAttribute.cs" />
     <Compile Include="Base\CopyBehaviour.cs" />
     <Compile Include="Base\EventBase.cs" />
+    <Compile Include="Base\IDeletable.cs" />
     <Compile Include="Base\IDuplicatable.cs" />
     <Compile Include="Base\IOwned.cs" />
     <Compile Include="Base\NotifyPropertyChangedBase.cs" />
@@ -57,6 +58,9 @@
     <Compile Include="Conversion\MethodTypeConverter.cs" />
     <Compile Include="Conversion\PropertyMapping.cs" />
     <Compile Include="Conversion\MappingTypeConverter.cs" />
+    <Compile Include="Events\ModelObjectAddedEventArgs.cs" />
+    <Compile Include="Extensions\ICollectionExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Model\ElementOrientation.cs" />
     <Compile Include="Events\ElementUpdateEventArgs.cs" />
     <Compile Include="Base\TypeCollection.cs" />

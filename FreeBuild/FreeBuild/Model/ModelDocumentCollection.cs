@@ -11,7 +11,7 @@ namespace FreeBuild.Model
     /// A collection of model documents
     /// </summary>
     [Serializable]
-    class ModelDocumentCollection : UniquesCollection<ModelDocument>
+    public class ModelDocumentCollection : UniquesCollection<ModelDocument>
     {
     }
 }
