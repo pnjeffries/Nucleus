@@ -26,6 +26,14 @@ namespace FreeBuild.Base
         public string Path { get; }
 
         /// <summary>
+        /// Is the path a valid file location?
+        /// </summary>
+        public bool IsValid
+        {
+            get { return !string.IsNullOrWhiteSpace(Path); } //TODO: Other checks?
+        }
+
+        /// <summary>
         /// Does the file that this path points to exist?
         /// </summary>
         public bool Exists { get { return File.Exists(Path); } }
@@ -57,7 +65,7 @@ namespace FreeBuild.Base
         /// <param name="path"></param>
         public FilePath(string path)
         {
-            Path = path;
+            Path = path ?? "";
         }
 
         #endregion

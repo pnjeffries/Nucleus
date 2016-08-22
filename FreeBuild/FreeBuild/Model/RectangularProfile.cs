@@ -91,6 +91,11 @@ namespace FreeBuild.Model
             }, true);
         }
 
+        protected override CurveCollection GenerateVoids()
+        {
+            return new CurveCollection();
+        }
+
         #endregion
     }
 }
