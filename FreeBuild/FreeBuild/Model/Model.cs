@@ -19,9 +19,13 @@
 // SOFTWARE.
 
 using FreeBuild.Base;
+using FreeBuild.Events;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,6 +38,25 @@ namespace FreeBuild.Model
     [Serializable]
     public class Model : Unique
     {
+        #region Events
+
+        /// <summary>
+        /// Event raised when an object is added to the model
+        /// </summary>
+        [field:NonSerialized]
+        [field:Copy(CopyBehaviour.DO_NOT_COPY)]
+        public event EventHandler<ModelObjectAddedEventArgs> ObjectAdded;
+
+        /// <summary>
+        /// Event raised when a property of an object in this model is changed.
+        /// Bubbles the property changed event upwards.
+        /// </summary>
+        [field:NonSerialized]
+        [field:Copy(CopyBehaviour.DO_NOT_COPY)]
+        public event PropertyChangedEventHandler ObjectPropertyChanged;
+
+        #endregion
+
         #region Properties
 
         /// <summary>
@@ -47,6 +70,19 @@ namespace FreeBuild.Model
         /// </summary>
         public NodeCollection Nodes { get; }
 
+        /// <summary>
+        /// Get a single flat collection which contains all sub-objects within
+        /// this model.
+        /// </summary>
+        public UniquesCollection Everything
+        {
+            get
+            {
+                return new UniquesCollection( new IEnumerable<IUnique>[]
+                    {Elements, Nodes});
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -56,8 +92,13 @@ namespace FreeBuild.Model
         /// </summary>
         public Model()
         {
+            //Initialise collections
             Elements = new ElementCollection();
             Nodes = new NodeCollection();
+
+            //Attach handlers:
+            Elements.CollectionChanged += HandlesInternalCollectionChanged;
+            Nodes.CollectionChanged += HandlesInternalCollectionChanged;
         }
 
         #endregion
@@ -82,7 +123,53 @@ namespace FreeBuild.Model
             Nodes.Add(node);
         }
 
+        /// <summary>
+        /// Register a new object with this model for event handling
+        /// </summary>
+        /// <param name="unique"></param>
+        protected void Register(Unique unique)
+        {
+            unique.PropertyChanged += HandlesObjectPropertyChanged;
+        }
+
+        /// <summary>
+        /// Called immediately after deserialisation to re-register all objects
+        /// </summary>
+        /// <param name="context"></param>
+        [OnDeserialized]
+        private void OnDeserialisation(StreamingContext context)
+        {
+            foreach (Unique unique in Everything)
+            {
+                Register(unique);
+            }
+        }
+
         #endregion
+
+        #region Event Handlers
+
+        private void HandlesInternalCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            //New item added to a collection
+            foreach (object obj in e.NewItems)
+            {
+                if (obj is Unique)
+                {
+                    Register((Unique)obj);
+                    RaiseEvent(ObjectAdded, new ModelObjectAddedEventArgs((Unique)obj));
+                }
+            }
+        }
+
+        private void HandlesObjectPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            //Bubble property changed events upwards:
+            RaiseEvent(ObjectPropertyChanged, sender, e);
+        }
+
+        #endregion
+
 
     }
 }

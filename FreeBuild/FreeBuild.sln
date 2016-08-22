@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeBuild", "FreeBuild\Free
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeBuild.Excel", "FreeBuild.Excel\FreeBuild.Excel.csproj", "{A86503CF-0FA6-434C-A546-93D12D1AD45C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Freebuild.WPF", "Freebuild.WPF\Freebuild.WPF.csproj", "{E2D93282-51BD-4317-8D13-363347065F8B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A86503CF-0FA6-434C-A546-93D12D1AD45C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A86503CF-0FA6-434C-A546-93D12D1AD45C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A86503CF-0FA6-434C-A546-93D12D1AD45C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2D93282-51BD-4317-8D13-363347065F8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2D93282-51BD-4317-8D13-363347065F8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2D93282-51BD-4317-8D13-363347065F8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2D93282-51BD-4317-8D13-363347065F8B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

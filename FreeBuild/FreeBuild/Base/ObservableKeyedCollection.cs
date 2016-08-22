@@ -96,6 +96,20 @@ namespace FreeBuild.Base
 
         #endregion
 
+        #region Constructors
+
+        protected ObservableKeyedCollection() : base() { }
+
+        protected ObservableKeyedCollection(IEnumerable<IEnumerable<TItem>> toBeCombined) : base()
+        {
+            foreach (IEnumerable<TItem> subCollection in toBeCombined)
+            {
+                TryAddRange(subCollection);
+            }
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>

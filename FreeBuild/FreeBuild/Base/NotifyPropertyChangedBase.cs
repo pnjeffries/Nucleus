@@ -50,15 +50,32 @@ namespace FreeBuild.Base
         }
 
         /// <summary>
-        /// Raise an event
+        /// Raise an event.
+        /// Checks for a null handler before raising.
         /// </summary>
-        /// <param name="handler"></param>
-        /// <param name="args"></param>
-        private void RaiseEvent(PropertyChangedEventHandler handler, PropertyChangedEventArgs args)
+        /// <param name="handler">The event handler</param>
+        /// <param name="args">The event args</param>
+        protected void RaiseEvent(PropertyChangedEventHandler handler, PropertyChangedEventArgs args)
         {
             if (handler != null)
             {
                 handler(this, args);
+            }
+        }
+
+        /// <summary>
+        /// Raise an event, passing through the original sender.
+        /// Checks for a null handler before raising.
+        /// Used to 'bubble' up events from sub-objects
+        /// </summary>
+        /// <param name="handler">The event handler</param>
+        /// <param name="sender">The original sender object</param>
+        /// <param name="args">The event args</param>
+        protected void RaiseEvent(PropertyChangedEventHandler handler, object sender, PropertyChangedEventArgs args)
+        {
+            if (handler != null)
+            {
+                handler(sender, args);
             }
         }
     }
