@@ -30,6 +30,7 @@ namespace FreeBuild.Base
     /// <summary>
     /// A keyed collection of types.
     /// </summary>
+    [Serializable]
     public class TypeCollection : ObservableKeyedCollection<Guid, Type>
     {
         #region Methods

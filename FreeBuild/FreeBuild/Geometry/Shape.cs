@@ -39,6 +39,7 @@ namespace FreeBuild.Geometry
     /// <typeparam name="TParameter">The type of the parameter used to indicate a 
     /// specific position </typeparam>
     [Serializable]
+    [Copy(CopyBehaviour.DUPLICATE)]
     public abstract class Shape : Unique, IOwned<IElement>
     {
         #region Fields
@@ -62,6 +63,7 @@ namespace FreeBuild.Geometry
         /// a maximum of one at any one time.
         /// If this shape does not describe element geometry this will return null.
         /// </summary>
+        [target:field Copy(CopyBehaviour.MAP)]
         public IElement Element { get; internal set; } = null;
 
         IElement IOwned<IElement>.Owner { get { return Element; } }

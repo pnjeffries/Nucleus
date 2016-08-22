@@ -69,6 +69,9 @@ namespace FreeBuild.Base
         /// Popualate the fields of this object by copying them from equivelent fields on 
         /// another object.  The fields to be copied must share names and types in order to
         /// be successfully transferred.
+        /// The CopyAttribute will be used to determine the correct behaviour when copying fields
+        /// accross - first on the field itself and then, if not set, on the type of the field.
+        /// If neither of these is specified the default is to do a 'shallow' or reference-copy.
         /// </summary>
         /// <param name="source">The object to copy fields from.</param>
         /// <param name="objectMap">A map of original objects to their copies.  Used when duplicating multiple
@@ -88,6 +91,9 @@ namespace FreeBuild.Base
                     //Currently this is done on the source field.  Might it also be safer to check the target
                     //field as well, for at least certain values?
                     CopyAttribute copyAtt = sourceField.GetCustomAttribute(typeof(CopyAttribute)) as CopyAttribute;
+                    //If copy attribute is not set on the field, we will try it on the type:
+                    if (copyAtt == null) copyAtt = sourceField.FieldType.GetCustomAttribute(typeof(CopyAttribute)) as CopyAttribute;
+
                     CopyBehaviour behaviour = CopyBehaviour.COPY;
                     if (copyAtt != null) behaviour = copyAtt.Behaviour;
                     if (behaviour != CopyBehaviour.DO_NOT_COPY)

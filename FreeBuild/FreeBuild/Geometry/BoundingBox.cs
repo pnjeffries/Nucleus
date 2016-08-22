@@ -12,6 +12,8 @@ namespace FreeBuild.Geometry
     /// <summary>
     /// An axis-aligned bounding box representing a region in space
     /// </summary>
+    [Serializable]
+    [Copy(CopyBehaviour.DUPLICATE)]
     public class BoundingBox : IDuplicatable
     {
         #region Properties

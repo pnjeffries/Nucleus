@@ -40,29 +40,61 @@ namespace FreeBuild.Base
         #region Properties
 
         /// <summary>
+        /// Private backing field for the FilePath property
+        /// </summary>
+        private FilePath _FilePath = null;
+
+        /// <summary>
         /// The filepath to which the document was last saved
         /// </summary>
-        public string FilePath { get; protected set; } = null;
+        public FilePath FilePath
+        {
+            get { return _FilePath; }
+            protected set { _FilePath = value; NotifyPropertyChanged("FilePath"); }
+        }
 
         #endregion
 
         #region Methods
 
         /// <summary>
+        /// Save this document to the last-saved location, if possible,
+        /// in binary format.
+        /// </summary>
+        /// <returns>True if the file was successfully saved, else false</returns>
+        public virtual bool Save()
+        {
+            if (!string.IsNullOrWhiteSpace(FilePath))
+            {
+                return SaveAs(FilePath);
+            }
+            else return false;
+        }
+
+        /// <summary>
         /// Save this document to the specified location
         /// in binary format.
         /// </summary>
         /// <param name="filePath">The filepath to save the document to</param>
-        /// <returns>True if the file was successfully saved</returns>
+        /// <returns>True if the file was successfully saved, else false</returns>
         public virtual bool SaveAs(string filePath)
         {
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream(filePath,
-                                     FileMode.Create,
-                                     FileAccess.Write, FileShare.None);
-            formatter.Serialize(stream, this);
-            stream.Close();
-            return true;
+            try
+            {
+                IFormatter formatter = new BinaryFormatter();
+                Stream stream = new FileStream(filePath,
+                                         FileMode.Create,
+                                         FileAccess.Write, FileShare.None);
+                formatter.Serialize(stream, this);
+                stream.Close();
+                FilePath = filePath; //Store filepath
+                return true;
+            }
+            catch
+            {
+                //TODO: Notify user of error
+            }
+            return false;
         }
 
         #endregion
@@ -75,15 +107,16 @@ namespace FreeBuild.Base
         /// <param name="filePath">The path of the file to be loaded.</param>
         /// <returns>The loaded document, if a document could indeed be loaded.
         /// Else, null.</returns>
-        public static Document Load(string filePath)
+        public static T Load<T>(string filePath) where T : Document
         {
-            Document result = null;
+            T result = null;
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(filePath,
                                       FileMode.Open,
                                       FileAccess.Read,
                                       FileShare.Read);
-            result = formatter.Deserialize(stream) as Document;
+            result = formatter.Deserialize(stream) as T;
+            result.FilePath = filePath;
             stream.Close();
             return result;
         }

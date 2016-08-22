@@ -39,12 +39,12 @@ namespace FreeBuild.Model
         /// <summary>
         /// Private backing member variable for the Profile property
         /// </summary>
-        private SectionProfile _Profile = null;
+        private Profile _Profile = null;
 
         /// <summary>
         /// The description of the profile of this section property
         /// </summary>
-        public SectionProfile Profile
+        public Profile Profile
         {
             get { return _Profile; }
             set
@@ -53,7 +53,6 @@ namespace FreeBuild.Model
                 NotifyPropertyChanged("Profile");
             }
         }
-
 
         #endregion
     }
