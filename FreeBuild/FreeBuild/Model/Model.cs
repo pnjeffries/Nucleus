@@ -63,12 +63,12 @@ namespace FreeBuild.Model
         /// Get the collection of elements that form the geometric representation 
         /// of this model.
         /// </summary>
-        public ElementCollection Elements { get; }
+        public ElementTable Elements { get; }
 
         /// <summary>
         /// Get the collection of nodes that belong to this model.
         /// </summary>
-        public NodeCollection Nodes { get; }
+        public NodeTable Nodes { get; }
 
         /// <summary>
         /// Get a single flat collection which contains all sub-objects within
@@ -93,8 +93,8 @@ namespace FreeBuild.Model
         public Model()
         {
             //Initialise collections
-            Elements = new ElementCollection();
-            Nodes = new NodeCollection();
+            Elements = new ElementTable();
+            Nodes = new NodeTable();
 
             //Attach handlers:
             Elements.CollectionChanged += HandlesInternalCollectionChanged;
