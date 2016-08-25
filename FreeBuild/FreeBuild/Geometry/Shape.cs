@@ -39,6 +39,7 @@ namespace FreeBuild.Geometry
     /// <typeparam name="TParameter">The type of the parameter used to indicate a 
     /// specific position </typeparam>
     [Serializable]
+    [Copy(CopyBehaviour.DUPLICATE)]
     public abstract class Shape : Unique, IOwned<IElement>
     {
         #region Fields
@@ -57,12 +58,18 @@ namespace FreeBuild.Geometry
         #region Properties
 
         /// <summary>
+        /// Private backing field for Element property
+        /// </summary>
+        [Copy(CopyBehaviour.MAP)]
+        private IElement _Element = null;
+
+        /// <summary>
         /// The element, if any, that this shape describes geometry for.
         /// Shapes can exist independently of any element, but may only belong to
         /// a maximum of one at any one time.
         /// If this shape does not describe element geometry this will return null.
         /// </summary>
-        public IElement Element { get; internal set; } = null;
+        public IElement Element { get { return _Element; } internal set { _Element = value; } }
 
         IElement IOwned<IElement>.Owner { get { return Element; } }
 

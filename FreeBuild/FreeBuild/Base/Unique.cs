@@ -48,8 +48,5 @@ namespace FreeBuild.Base
         public Guid GUID { get { return _GUID; } }
 
         #endregion
-
-        
-
     }
 }

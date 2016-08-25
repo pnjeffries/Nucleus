@@ -91,9 +91,10 @@ namespace FreeBuild.Model
         /// </summary>
         /// <param name="startNode"></param>
         /// <param name="endNode"></param>
-        public LinearElement(Node startNode, Node endNode)
+        public LinearElement(Node startNode, Node endNode, SectionProperty property = null)
         {
             Geometry = new Line(startNode, endNode);
+            Property = property;
         }
 
         #endregion

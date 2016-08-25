@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 namespace FreeBuild.Base
 {
     /// <summary>
-    /// Attribute applied to fields to determine the correct procedure for dealing
+    /// Attribute applied to types and fields to determine the correct procedure for dealing
     /// with them when automatically copying their values to another object.
     /// By default, fields are 'shallow-copied' - i.e. values and references are copied.
     /// It is only necessary to apply this attribute to fields where this behaviour should
-    /// be changed.
+    /// be changed.  Attributes applied to types define the defauly behaviour of that type,
+    /// but field-level attributes will override this where present.
     /// </summary>
     public class CopyAttribute : Attribute
     {

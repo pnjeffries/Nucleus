@@ -31,6 +31,7 @@ namespace FreeBuild.Base
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <typeparam name="TOwner"></typeparam>
+    [Serializable]
     public abstract class OwnedCollection<TItem, TOwner> : UniquesCollection<TItem>
         where TItem : IUnique, IOwned<TOwner>
     {
@@ -39,6 +40,7 @@ namespace FreeBuild.Base
         /// <summary>
         /// Private backing member variable for the Owner property
         /// </summary>
+        [Copy(CopyBehaviour.MAP)]
         private TOwner _Owner;
 
         /// <summary>
@@ -56,7 +58,7 @@ namespace FreeBuild.Base
         /// <summary>
         /// Owner constructor
         /// </summary>
-        /// <param name="owner"></param>
+        /// <param name="owner">The object which owns this collection</param>
         public OwnedCollection(TOwner owner) : base()
         {
             _Owner = owner;

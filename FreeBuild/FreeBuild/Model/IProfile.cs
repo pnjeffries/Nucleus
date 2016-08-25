@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using FreeBuild.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,9 +27,14 @@ using System.Threading.Tasks;
 namespace FreeBuild.Model
 {
     /// <summary>
-    /// Base class for objects representing the profile of a SectionProperty
+    /// An I-Shaped Section Profile.
+    /// Not an interface!
     /// </summary>
-    public abstract class SectionProfile : Unique
+    public class IProfile : RectangularProfile
     {
+        #region Properties
+
+        #endregion
+
     }
 }

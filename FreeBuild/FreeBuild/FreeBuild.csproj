@@ -43,9 +43,13 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\ChainableBase.cs" />
     <Compile Include="Base\CopyAttribute.cs" />
     <Compile Include="Base\CopyBehaviour.cs" />
     <Compile Include="Base\EventBase.cs" />
+    <Compile Include="Base\FilePath.cs" />
+    <Compile Include="Base\FilePathCollection.cs" />
+    <Compile Include="Base\IChainable.cs" />
     <Compile Include="Base\IDeletable.cs" />
     <Compile Include="Base\IDuplicatable.cs" />
     <Compile Include="Base\IOwned.cs" />
@@ -76,6 +80,7 @@
     <Compile Include="Geometry\BoundingBox.cs" />
     <Compile Include="Geometry\CartesianCoordinateSystem.cs" />
     <Compile Include="Geometry\Curve.cs" />
+    <Compile Include="Geometry\CurveCollection.cs" />
     <Compile Include="Geometry\CylindricalCoordinateSystem.cs" />
     <Compile Include="Geometry\Dimension.cs" />
     <Compile Include="Geometry\Disk.cs" />
@@ -94,13 +99,16 @@
     <Compile Include="Model\ElementOrientationAngle.cs" />
     <Compile Include="Model\ElementTable.cs" />
     <Compile Include="Model\IElementOrientation.cs" />
-    <Compile Include="Model\ISectionProfile.cs" />
+    <Compile Include="Model\IProfile.cs" />
     <Compile Include="Model\LinearElement.cs" />
     <Compile Include="Model\ModelDocumentCollection.cs" />
     <Compile Include="Model\Node.cs" />
     <Compile Include="Model\NodeCollection.cs" />
     <Compile Include="Model\NodeTable.cs" />
     <Compile Include="Model\SectionProfile.cs" />
+    <Compile Include="Model\ParameterProfile.cs" />
+    <Compile Include="Model\Profile.cs" />
+    <Compile Include="Model\RectangularProfile.cs" />
     <Compile Include="Model\SectionProperty.cs" />
     <Compile Include="Model\VolumetricProperty.cs" />
     <Compile Include="Geometry\Transform.cs" />

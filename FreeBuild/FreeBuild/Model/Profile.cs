@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Base;
+using FreeBuild.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,50 +29,22 @@ using System.Threading.Tasks;
 namespace FreeBuild.Model
 {
     /// <summary>
-    /// An I-Shaped Section Profile.
-    /// Not an interface!
+    /// Base class for objects representing the profile of a SectionProperty
     /// </summary>
-    public class ISectionProfile : SectionProfile
+    public abstract class Profile : Unique
     {
         #region Properties
 
         /// <summary>
-        /// Private backing member variable for the Depth property
+        /// The outer perimeter curve of this section profile.
         /// </summary>
-        private double _Depth;
+        public abstract Curve Perimeter { get; }
 
         /// <summary>
-        /// The depth of the section
+        /// The collection of curves which denote the voids within this section profile.
         /// </summary>
-        public double Depth
-        {
-            get { return _Depth; }
-            set
-            {
-                _Depth = value;
-                NotifyPropertyChanged("Depth");
-            }
-        }
-
-        /// <summary>
-        /// Private backing member variable for the Width property
-        /// </summary>
-        private double _Width;
-
-        /// <summary>
-        /// The width of the section
-        /// </summary>
-        public double Width
-        {
-            get { return _Width; }
-            set
-            {
-                _Width = value;
-                NotifyPropertyChanged("Width");
-            }
-        }
+        public abstract CurveCollection Voids { get; }
 
         #endregion
-
     }
 }

@@ -62,6 +62,7 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Private backing member variable for the Shape property
         /// </summary>
+        [Copy(CopyBehaviour.MAP)]
         private Shape _Owner = null;
 
         /// <summary>
