@@ -264,20 +264,23 @@ namespace FreeBuild.Maths
                 throw new Exception(
                     "Matrix dimensions miss-match.  The number of columns of the first matrix do not match the number of rows of the second.  Therefore the product of the two cannot be caulculated.");
             Matrix result = a.CreateNewMatrix(a.Rows, b.Columns);
-            for (int i = 0; i < result.Rows; i++)
-            {
-                for (int j = 0; j < result.Columns; j++)
+            //for (int i = 0; i < result.Rows; i++) //Old, un-parallel version
+            Parallel.For(0, result.Rows, i => //Calculation will be run in parallel for each row
                 {
-                    // The value in each field will be the cumulative multiplication of the equivalent
-                    // row from A and column from B:
-                    double value = 0;
-                    for (int k = 0; k < a.Columns; k++)
+                    for (int j = 0; j < result.Columns; j++)
                     {
-                        value += a[i, k] * b[k, j];
+                        // The value in each field will be the cumulative multiplication of the equivalent
+                        // row from A and column from B:
+                        double value = 0;
+                        for (int k = 0; k < a.Columns; k++)
+                        {
+                            value += a[i, k] * b[k, j];
+                        }
+                        result[i, j] = value;
                     }
-                    result[i, j] = value;
                 }
-            }
+            );
+
             return result;
         }
 

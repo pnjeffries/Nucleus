@@ -9,7 +9,9 @@ using FreeBuild.Units;
 namespace FreeBuild.Model
 {
     /// <summary>
-    /// 
+    /// Parametric profile type to represent rectangular profiles and
+    /// to act as a base class for section types which have a broadly
+    /// rectangular shape and posess width and height dimensions.
     /// </summary>
     [Serializable]
     public class RectangularProfile : ParameterProfile
@@ -82,13 +84,7 @@ namespace FreeBuild.Model
 
         protected override Curve GeneratePerimeter()
         {
-            return new PolyLine(new Vector[]
-            {
-                new Vector(Width/2, Depth/2),
-                new Vector(-Width/2, Depth/2),
-                new Vector(-Width/2, -Depth/2),
-                new Vector(Width/2, -Depth/2)
-            }, true);
+            return PolyLine.Rectangle(Depth, Width);
         }
 
         protected override CurveCollection GenerateVoids()

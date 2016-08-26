@@ -24,6 +24,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Office.Interop.Excel;
+using System.Runtime.InteropServices;
+using FreeBuild.Extensions;
 
 namespace FreeBuild.Excel
 {
@@ -32,7 +34,7 @@ namespace FreeBuild.Excel
     /// Wraps basic Excel interop behaviour and allows interaction without
     /// the need to involve yourself with specialised Excel types.
     /// </summary>
-    public class ExcelLink
+    public class ExcelController
     {
         #region Properties
 
@@ -86,7 +88,7 @@ namespace FreeBuild.Excel
         /// <summary>
         /// Default constructor
         /// </summary>
-        public ExcelLink()
+        public ExcelController()
         {
 
         }
@@ -95,7 +97,7 @@ namespace FreeBuild.Excel
         /// Initialises the excel link and opens the specified workbook
         /// </summary>
         /// <param name="filePath">The path of the excel file to open</param>
-        public ExcelLink(string filePath) : this()
+        public ExcelController(string filePath) : this()
         {
             OpenWorkbook(filePath);
         }
@@ -141,22 +143,27 @@ namespace FreeBuild.Excel
         /// </summary>
         /// <param name="filePath">The filepath to read the workbook from</param>
         /// <returns></returns>
-        public Workbook OpenWorkbook(string filePath)
+        public bool OpenWorkbook(string filePath)
         {
-            return ExcelApp.Workbooks.Open(filePath);
+            try
+            {
+                ExcelApp.Workbooks.Open(filePath);
+                return true;
+            }
+            catch (COMException)
+            { }
+            return false;
         }
-
 
         /// <summary>
         /// Create a new excel workbook.
         /// Wraps ExcelApp.Workbooks.Add()
         /// </summary>
         /// <returns>The newly created workbook</returns>
-        public Workbook NewWorkbook(string title = null)
+        public void NewWorkbook(string title = null)
         {
             Workbook workbook = ExcelApp.Workbooks.Add();
             if (title != null) workbook.Title = title;
-            return workbook;
         }
 
         /// <summary>
@@ -168,9 +175,30 @@ namespace FreeBuild.Excel
         /// If not specified, the active workbook will be used.</param>
         public void SaveWorkbook(string filePath = null, Workbook workbook = null)
         {
+            ExcelApp.DisplayAlerts = false;
             if (workbook == null) workbook = ActiveWorkbook;
             if (filePath != null) workbook.SaveAs(filePath);
             else workbook.Save();
+        }
+
+        /// <summary>
+        /// Make the worksheet with the specified name the currently active one.
+        /// A new worksheet with that name will be created if it does not already exist
+        /// </summary>
+        /// <param name="sheetName"></param>
+        public void OpenWorksheet(string sheetName)
+        {
+            Worksheet sheet;
+            try
+            {
+                sheet = ActiveWorkbook.Worksheets[sheetName];
+            }
+            catch(COMException) //The sheet doesn't exist or couldn't be opened - so we'll make a new one
+            {
+                sheet = ActiveWorkbook.Worksheets.Add();
+                sheet.Name = sheetName;
+            }
+            sheet.Select();
         }
 
         /// <summary>
@@ -344,5 +372,6 @@ namespace FreeBuild.Excel
         }
 
         #endregion
+
     }
 }

@@ -201,6 +201,24 @@ namespace FreeBuild.Geometry
             return Origin + A.Rotate(L, theta) * r + L * z;
         }
 
+        /// <summary>
+        /// Calculate the azimuth angle of the given point.
+        /// This is the angle necessary for the polar axis to be rotated
+        /// about the longitudinal one in order to be pointing in the direction
+        /// of the specified point.
+        /// </summary>
+        /// <param name="point">The point to test</param>
+        /// <returns>The azimuth angle, in degrees</returns>
+        public double Azimuth(Vector point)
+        {
+            Vector relative = point - Origin;
+            double z = relative.Dot(L);
+            Vector onPlane = relative - L * z;
+            Vector localY = L.Cross(A);
+            double theta = Math.Atan2(onPlane.Dot(localY), onPlane.Dot(A));
+            return theta;
+        }
+
         #endregion
 
 

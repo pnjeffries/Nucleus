@@ -83,9 +83,11 @@ namespace FreeBuild.Geometry
         #region Construtors
 
         /// <summary>
-        /// Default private constructor
+        /// Default constructor.  Initialises an empty line with
+        /// no geometry.  The line will not be valid until its vertices
+        /// are populated.
         /// </summary>
-        protected Line()
+        public Line()
         {
             Vertices = new VertexCollection(this);
         }

@@ -60,7 +60,10 @@ namespace FreeBuild.Geometry
 
         #region Constructors
 
-        protected PolyLine()
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public PolyLine()
         {
             Vertices = new VertexCollection(this);
         }
@@ -91,6 +94,33 @@ namespace FreeBuild.Geometry
         public void Close(bool close = true)
         {
             Closed = close;
+        }
+
+        #endregion
+
+        #region Static Methods
+
+        /// <summary>
+        /// Static factory method to create a polyline representing a rectangle centred on the
+        /// origin on the XY plane.  If the depth or width are 0 or lower null will be returned instead.
+        /// </summary>
+        /// <param name="depth">The depth of the rectangle</param>
+        /// <param name="width">The width of the rectangle</param>
+        /// <returns>A polyline representing the specified rectangle with vertices arranged in an
+        /// anti-clockwise manner, or null is the input depth and width are invalid.</returns>
+        public static PolyLine Rectangle(double depth, double width)
+        {
+            if (depth > 0 && width > 0)
+            {
+                return new PolyLine(new Vector[]
+                {
+                new Vector(width/2, depth/2),
+                new Vector(-width/2, depth/2),
+                new Vector(-width/2, -depth/2),
+                new Vector(width/2, -depth/2)
+                }, true);
+            }
+            else return null;
         }
 
         #endregion

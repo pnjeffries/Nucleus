@@ -34,9 +34,16 @@ namespace FreeBuild.Geometry
         #region Properties
 
         /// <summary>
+        /// The collection of vertices which are used to define the geometry of this shape.
+        /// The arc will be defined by the start and end points of this collection and a vertex
+        /// lying on the arc in between them.
+        /// </summary>
+        public override VertexCollection Vertices { get; }
+
+        /// <summary>
         /// The full circle that this arc forms part of
         /// </summary>
-        public Disk Circle
+        public Circle Circle
         {
             get
             {
@@ -44,28 +51,12 @@ namespace FreeBuild.Geometry
             }
         }
 
-        public override bool Closed
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-
-            protected set
-            {
-                throw new NotImplementedException();
-            }
-        }
+        /// <summary>
+        /// Is this Arc closed?  (i.e. does it represent a circle?
+        /// </summary>
+        public override bool Closed { get { return StartPoint == EndPoint; } protected set { } }
 
         public override bool IsValid
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public override VertexCollection Vertices
         {
             get
             {
@@ -77,9 +68,12 @@ namespace FreeBuild.Geometry
 
         #region Constructors
 
-        public Arc()
+        /// <summary>
+        /// Default private constructor
+        /// </summary>
+        protected Arc()
         {
-
+            Vertices = new Geometry.VertexCollection(this);
         }
 
         #endregion

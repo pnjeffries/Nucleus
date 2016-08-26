@@ -43,6 +43,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\BiDirectionary.cs" />
     <Compile Include="Base\ChainableBase.cs" />
     <Compile Include="Base\CopyAttribute.cs" />
     <Compile Include="Base\CopyBehaviour.cs" />
@@ -52,7 +53,9 @@
     <Compile Include="Base\IChainable.cs" />
     <Compile Include="Base\IDeletable.cs" />
     <Compile Include="Base\IDuplicatable.cs" />
+    <Compile Include="Base\INamed.cs" />
     <Compile Include="Base\IOwned.cs" />
+    <Compile Include="Base\Named.cs" />
     <Compile Include="Base\NotifyPropertyChangedBase.cs" />
     <Compile Include="Base\ObservableKeyedCollection.cs" />
     <Compile Include="Base\OwnedCollection.cs" />
@@ -65,6 +68,7 @@
     <Compile Include="Events\ModelObjectAddedEventArgs.cs" />
     <Compile Include="Extensions\ICollectionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Geometry\Surface.cs" />
     <Compile Include="Model\ElementOrientation.cs" />
     <Compile Include="Events\ElementUpdateEventArgs.cs" />
     <Compile Include="Base\TypeCollection.cs" />
@@ -81,7 +85,7 @@
     <Compile Include="Geometry\CurveCollection.cs" />
     <Compile Include="Geometry\CylindricalCoordinateSystem.cs" />
     <Compile Include="Geometry\Dimension.cs" />
-    <Compile Include="Geometry\Disk.cs" />
+    <Compile Include="Geometry\Circle.cs" />
     <Compile Include="Geometry\ICoordinateSystem.cs" />
     <Compile Include="Geometry\IPosition.cs" />
     <Compile Include="Geometry\Line.cs" />
@@ -95,16 +99,20 @@
     <Compile Include="Geometry\WrappedCurve.cs" />
     <Compile Include="Model\ElementCollection.cs" />
     <Compile Include="Model\ElementOrientationAngle.cs" />
+    <Compile Include="Model\FaceProperty.cs" />
     <Compile Include="Model\IElementOrientation.cs" />
-    <Compile Include="Model\IProfile.cs" />
+    <Compile Include="Model\LetterProfile.cs" />
     <Compile Include="Model\LinearElement.cs" />
     <Compile Include="Model\ModelDocumentCollection.cs" />
     <Compile Include="Model\Node.cs" />
     <Compile Include="Model\NodeCollection.cs" />
+    <Compile Include="Model\PanelElement.cs" />
     <Compile Include="Model\ParameterProfile.cs" />
     <Compile Include="Model\Profile.cs" />
+    <Compile Include="Model\RectangularHollowProfile.cs" />
     <Compile Include="Model\RectangularProfile.cs" />
     <Compile Include="Model\SectionProperty.cs" />
+    <Compile Include="Model\SymmetricIProfile.cs" />
     <Compile Include="Model\VolumetricProperty.cs" />
     <Compile Include="Geometry\Transform.cs" />
     <Compile Include="Geometry\VertexCollection.cs" />

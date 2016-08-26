@@ -40,7 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExcelLink.cs" />
+    <Compile Include="ExcelController.cs" />
+    <Compile Include="ExcelHelper.cs" />
     <Compile Include="ExcelSequenceOrientation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -77,6 +78,12 @@
     <None Include="..\FreeBuild\FreeBuild.licenseheader">
       <Link>FreeBuild.licenseheader</Link>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FreeBuild\FreeBuild.csproj">
+      <Project>{7635522C-178F-4DB5-9106-FF8DFD4B833B}</Project>
+      <Name>FreeBuild</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

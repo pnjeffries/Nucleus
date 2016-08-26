@@ -96,6 +96,19 @@ namespace FreeBuild.Geometry
 
         #endregion
 
-        
+        #region Methods
+
+        /// <summary>
+        /// Project the specified point onto the plane.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public Vector Project(Vector point)
+        {
+            return LocalToGlobal(GlobalToLocal(point).WithZ(0));
+        }
+
+        #endregion
+
     }
 }

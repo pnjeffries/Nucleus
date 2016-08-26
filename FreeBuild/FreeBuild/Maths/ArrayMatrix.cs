@@ -83,6 +83,24 @@ namespace FreeBuild.Maths
         }
 
         /// <summary>
+        /// Initialise a matrix filled with (pseudo)random numbers
+        /// </summary>
+        /// <param name="rows">The number of rows in the matrix</param>
+        /// <param name="columns">The number of columns in the matrix</param>
+        /// <param name="populateWith">The random number generator that will provide the (pseudo)random values</param>
+        /// <param name="scale">The maximum value of the random values</param>
+        public ArrayMatrix(int rows, int columns, Random populateWith, double scale = 1) : base(rows,columns)
+        {
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    this[i, j] = populateWith.NextDouble() * scale;
+                }
+            }
+        }
+
+        /// <summary>
         /// Constructor creating a 3 x 3 matrix with the specified values
         /// </summary>
         /// <param name="a11">Value in row 1, column 1</param>

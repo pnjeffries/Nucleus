@@ -34,7 +34,7 @@ namespace FreeBuild.Model
     /// The IElement interface provides a simple way of interacting with elements without needing to
     /// define specific generic parameters.
     /// </summary>
-    public interface IElement : IUnique
+    public interface IElement : IUnique, INamed
     {
         /// <summary>
         /// The set-out geometry of the element.

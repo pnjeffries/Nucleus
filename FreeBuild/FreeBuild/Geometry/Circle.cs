@@ -30,12 +30,12 @@ namespace FreeBuild.Geometry
     /// Immutable geometric primitive representing a planar region within a
     /// set radius of an origin point.
     /// </summary>
-    public class Disk : CylindricalCoordinateSystem
+    public class Circle : CylindricalCoordinateSystem
     {
         #region Fields
 
         /// <summary>
-        /// The radius of the circle that encloses this disk
+        /// The radius of the circle
         /// </summary>
         public readonly double Radius;
 
@@ -48,7 +48,7 @@ namespace FreeBuild.Geometry
         /// Creates a disk centred on the origin on the global XY plane
         /// </summary>
         /// <param name="radius">The radius of the circle</param>
-        public Disk(double radius) : base()
+        public Circle(double radius) : base()
         {
             Radius = radius;
         }
@@ -60,7 +60,7 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="radius">The radius of the circle</param>
         /// <param name="cSystem">The coordinate system on which the circle will be placed</param>
-        public Disk(double radius, CylindricalCoordinateSystem cSystem) : base(cSystem)
+        public Circle(double radius, CylindricalCoordinateSystem cSystem) : base(cSystem)
         {
             Radius = radius;
         }
@@ -71,7 +71,7 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="radius"></param>
         /// <param name="centre"></param>
-        public Disk(double radius, Vector centre) : base(centre)
+        public Circle(double radius, Vector centre) : base(centre)
         {
             Radius = radius;
         }
@@ -83,7 +83,7 @@ namespace FreeBuild.Geometry
         /// <param name="radius"></param>
         /// <param name="centre"></param>
         /// <param name="normal"></param>
-        public Disk(double radius, Vector centre, Vector normal) : base(centre, normal)
+        public Circle(double radius, Vector centre, Vector normal) : base(centre, normal)
         {
             Radius = radius;
         }

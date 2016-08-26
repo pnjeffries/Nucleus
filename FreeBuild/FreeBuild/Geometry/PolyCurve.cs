@@ -32,6 +32,13 @@ namespace FreeBuild.Geometry
     [Serializable]
     public class PolyCurve : Curve
     {
+        #region Properties
+
+        /// <summary>
+        /// The sub-curves of this PolyCurve
+        /// </summary>
+        public CurveCollection SubCurves { get; }
+
         public override bool Closed
         {
             get
@@ -56,5 +63,16 @@ namespace FreeBuild.Geometry
                 throw new NotImplementedException();
             }
         }
+
+        #endregion
+
+        #region Constructors
+
+        protected PolyCurve()
+        {
+
+        }
+
+        #endregion
     }
 }
