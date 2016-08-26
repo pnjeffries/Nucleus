@@ -161,7 +161,8 @@ namespace FreeBuild.Geometry
 
         /// <summary>
         /// Convert a vector defined in the global coordinate system into 
-        /// one defined in local coordinates of this coordinate system.
+        /// one defined in local coordinates of this coordinate system,
+        /// where X = radius, Y = theta, Z = z
         /// </summary>
         /// <param name="vector">A cartesian vector in the global coordinate system.</param>
         /// <returns>A vector in local coordinates, where X = radius, Y = theta, Z = z</returns>
@@ -209,7 +210,7 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="point">The point to test</param>
         /// <returns>The azimuth angle, in degrees</returns>
-        public double Azimuth(Vector point)
+        public Angle Azimuth(Vector point)
         {
             Vector relative = point - Origin;
             double z = relative.Dot(L);

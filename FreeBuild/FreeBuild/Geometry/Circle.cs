@@ -89,5 +89,42 @@ namespace FreeBuild.Geometry
         }
 
         #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Find the closest point on this circle to the specified test point.
+        /// Expressed as a circle parameter which is itself a rotation angle
+        /// counter-clockwise around the circle.
+        /// </summary>
+        /// <param name="toPoint">The point to test.</param>
+        /// <returns>The closest position as an angle</returns>
+        public double Closest(Vector toPoint)
+        {
+            return Azimuth(toPoint);
+        }
+
+        /// <summary>
+        /// Find the closest point on this circle to the specified test point.
+        /// Expressed as a position vector.
+        /// </summary>
+        /// <param name="toPoint">The point to test.</param>
+        /// <returns>The closest position as a Vector</returns>
+        public Vector ClosestPoint(Vector toPoint)
+        {
+            return PointAt(Closest(toPoint));
+        }
+
+        /// <summary>
+        /// Find the position on the circle at the specified angular parameter
+        /// </summary>
+        /// <param name="t">An angle around the circle, in Radians</param>
+        /// <returns>The point on the circle at the specified parameter</returns>
+        public Vector PointAt(double t)
+        {
+            return LocalToGlobal(Radius, t);
+        }
+
+        #endregion
     }
 }

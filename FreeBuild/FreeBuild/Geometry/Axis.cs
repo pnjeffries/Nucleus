@@ -117,7 +117,7 @@ namespace FreeBuild.Geometry
         /// the point on this axis closest to the test point.  Expressed as
         /// a multiplication factor of the direction vector from the origin.
         /// Use PointAt to evaluate this as a vector if required.</returns>
-        public double ClosestPoint(Vector point)
+        public double Closest(Vector point)
         {
             Vector OP = point - Origin;
             return OP.Dot(Direction) / Direction.MagnitudeSquared();
@@ -133,7 +133,7 @@ namespace FreeBuild.Geometry
         /// <returns>The parameter on this axis describing the closest point to the other axis.
         /// Use PointAt to resolve this into a vector if required.</returns>
         /// <remarks>Algorithm based on http://geomalgorithms.com/a07-_distance.html </remarks>
-        public double ClosestPoint(Axis other, out double t)
+        public double Closest(Axis other, out double t)
         {
             Vector w0 = Origin - other.Origin; //w0 = P0 - Q0
             double a = Direction.Dot(Direction); //a = u*u
@@ -155,10 +155,10 @@ namespace FreeBuild.Geometry
         /// <returns>The parameter on this axis describing the closest point to the other axis.
         /// Use PointAt to resolve this into a vector if required.</returns>
         /// <remarks>Algorithm based on http://geomalgorithms.com/a07-_distance.html </remarks>
-        public double ClosestPoint(Axis other)
+        public double Closest(Axis other)
         {
             double t;
-            return ClosestPoint(other, out t);
+            return Closest(other, out t);
         }
 
         /// <summary>

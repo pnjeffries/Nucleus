@@ -60,7 +60,7 @@ namespace FreeBuild.Maths
         /// <param name="columns"></param>
         public ArrayMatrix(int rows, int columns) : base(rows,columns)
         {
-            _Values = new double[rows - 1, columns - 1];
+            _Values = new double[rows, columns];
         }
 
         /// <summary>
@@ -91,6 +91,7 @@ namespace FreeBuild.Maths
         /// <param name="scale">The maximum value of the random values</param>
         public ArrayMatrix(int rows, int columns, Random populateWith, double scale = 1) : base(rows,columns)
         {
+            _Values = new double[rows, columns];
             for (int i = 0; i < rows; i++)
             {
                 for (int j = 0; j < columns; j++)

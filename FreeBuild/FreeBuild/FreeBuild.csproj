@@ -43,6 +43,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Geometry\Angle.cs" />
     <Compile Include="Base\BiDirectionary.cs" />
     <Compile Include="Base\ChainableBase.cs" />
     <Compile Include="Base\CopyAttribute.cs" />
@@ -59,12 +60,13 @@
     <Compile Include="Base\NotifyPropertyChangedBase.cs" />
     <Compile Include="Base\ObservableKeyedCollection.cs" />
     <Compile Include="Base\OwnedCollection.cs" />
-    <Compile Include="Class1.cs" />
     <Compile Include="Conversion\ConversionDirection.cs" />
     <Compile Include="Conversion\ITypeConverter.cs" />
     <Compile Include="Conversion\MethodTypeConverter.cs" />
     <Compile Include="Conversion\PropertyMapping.cs" />
     <Compile Include="Conversion\MappingTypeConverter.cs" />
+    <Compile Include="DDTree\DDTree.cs" />
+    <Compile Include="DDTree\DDTreeNode.cs" />
     <Compile Include="Events\ModelObjectAddedEventArgs.cs" />
     <Compile Include="Extensions\ICollectionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="Model\ElementCollection.cs" />
     <Compile Include="Model\ElementOrientationAngle.cs" />
     <Compile Include="Model\FaceProperty.cs" />
+    <Compile Include="Model\ElementTable.cs" />
     <Compile Include="Model\IElementOrientation.cs" />
     <Compile Include="Model\LetterProfile.cs" />
     <Compile Include="Model\LinearElement.cs" />
@@ -107,6 +110,7 @@
     <Compile Include="Model\Node.cs" />
     <Compile Include="Model\NodeCollection.cs" />
     <Compile Include="Model\PanelElement.cs" />
+    <Compile Include="Model\NodeTable.cs" />
     <Compile Include="Model\ParameterProfile.cs" />
     <Compile Include="Model\Profile.cs" />
     <Compile Include="Model\RectangularHollowProfile.cs" />

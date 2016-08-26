@@ -144,7 +144,7 @@ namespace FreeBuild.Geometry
         /// angle anticlockwise from the global X-axis.
         /// </summary>
         /// <param name="angle">The angle, clockwise from the global X axis.  In radians.</param>
-        public Vector(double angle)
+        public Vector(Angle angle)
         {
             X = Math.Cos(angle);
             Y = Math.Sin(angle);
@@ -472,7 +472,7 @@ namespace FreeBuild.Geometry
         /// <param name="other"></param>
         /// <returns>The smallest angle between this vector and another,
         /// in Radians.</returns>
-        public double AngleBetween(Vector other)
+        public Angle AngleBetween(Vector other)
         {
             Vector v1 = this.Unitize();
             Vector v2 = other.Unitize();
@@ -491,7 +491,7 @@ namespace FreeBuild.Geometry
         /// <returns>A new vector created by rotating this vector anticlockwise about the given axis by the given angle.</returns>
         /// <remarks>Uses the Rodrigues Rotation Formula - see: 
         /// https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula </remarks>
-        public Vector Rotate(Vector axis, double angle)
+        public Vector Rotate(Vector axis, Angle angle)
         {
             //Rotation formula:
             //v_rot = v*cos(theta) + (k x v)sin(theta) + k(k*v)(1-cos(theta)
