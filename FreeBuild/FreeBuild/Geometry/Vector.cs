@@ -582,6 +582,60 @@ namespace FreeBuild.Geometry
 
         #endregion
 
+        #region Static Methods
+
+        /// <summary>
+        /// Find the unit vector perpendicular to the plane defined by the specified three
+        /// points.
+        /// </summary>
+        /// <param name="pt0"></param>
+        /// <param name="pt1"></param>
+        /// <param name="pt2"></param>
+        /// <returns></returns>
+        public static Vector PerpendicularTo(Vector pt0, Vector pt1, Vector pt2)
+        {
+            //TODO: Add error checking?
+            Vector axis1 = pt1 - pt0;
+            Vector axis2 = pt2 - pt0;
+            return axis1.Cross(axis2).Unitize();
+        }
+
+        /// <summary>
+        /// Find the area of the 3D triangle denoted by the specified three vectors
+        /// </summary>
+        /// <param name="pt0">The first vertex point</param>
+        /// <param name="pt1">The second vertex point</param>
+        /// <param name="pt2">The third vertex point</param>
+        /// <returns>Triangle area as double</returns>
+        public static double TriangleArea(Vector pt0, Vector pt1, Vector pt2)
+        {
+            double d01 = pt0.DistanceTo(pt1);
+            double d12 = pt1.DistanceTo(pt2);
+            double d20 = pt2.DistanceTo(pt0);
+            double s = (d01 + d12 + d20) / 2;
+            return Math.Sqrt(s * (s - d01) * (s - d12) * (s - d20));
+        }
+
+        /// <summary>
+        /// Find the sqhared area of the 3D triangle denoted by the specified three vectors
+        /// </summary>
+        /// <param name="pt0">The first vertex point</param>
+        /// <param name="pt1">The second vertex point</param>
+        /// <param name="pt2">The third vertex point</param>
+        /// <returns>Squared triangle area as double</returns>
+        public static double TriangleAreaSquared(Vector pt0, Vector pt1, Vector pt2)
+        {
+            double d01 = pt0.DistanceTo(pt1);
+            double d12 = pt1.DistanceTo(pt2);
+            double d20 = pt2.DistanceTo(pt0);
+            double s = (d01 + d12 + d20) / 2;
+            return (s * (s - d01) * (s - d12) * (s - d20));
+        }
+
+
+
+        #endregion
+
         #region Operators
 
         /// <summary>

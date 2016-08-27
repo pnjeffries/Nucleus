@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 namespace FreeBuild.Geometry
 {
     /// <summary>
-    /// A planar arc between two points
+    /// A planar arc described by three points.
     /// </summary>
     public class Arc : Curve
     {
@@ -35,10 +35,17 @@ namespace FreeBuild.Geometry
 
         /// <summary>
         /// The collection of vertices which are used to define the geometry of this shape.
-        /// The arc will be defined by the start and end points of this collection and a vertex
-        /// lying on the arc in between them.
+        /// The first vertex defines the start point of the arc.  The second describes a point on
+        /// the arc.  The third describes the end of the arc in the case of an open arc, or a distinct
+        /// third point somewhere on the circle if the arc is closed.
         /// </summary>
         public override VertexCollection Vertices { get; }
+
+        /// <summary>
+        /// Private backing member for Circle property
+        /// </summary>
+        [NonSerialized]
+        private Circle _Circle = null;
 
         /// <summary>
         /// The full circle that this arc forms part of
@@ -47,20 +54,27 @@ namespace FreeBuild.Geometry
         {
             get
             {
-                throw new NotImplementedException();
+                if (_Circle == null && Vertices.Count >= 3)
+                {
+                    _Circle = new Circle(Vertices[0].Position, Vertices[1].Position, Vertices.Last().Position);
+                }
+                return _Circle;
             }
         }
 
         /// <summary>
-        /// Is this Arc closed?  (i.e. does it represent a circle?
+        /// Is this Arc closed?  (i.e. does it represent a circle?)
         /// </summary>
-        public override bool Closed { get { return StartPoint == EndPoint; } protected set { } }
+        public override bool Closed { get; protected set; }
 
+        /// <summary>
+        /// Is this Arc valid?
+        /// </summary>
         public override bool IsValid
         {
             get
             {
-                throw new NotImplementedException();
+                return Vertices.Count == 3;
             }
         }
 
@@ -69,11 +83,25 @@ namespace FreeBuild.Geometry
         #region Constructors
 
         /// <summary>
-        /// Default private constructor
+        /// Default constructor.  Initialises an arc with no geometry.
+        /// Will not be valid.
         /// </summary>
-        protected Arc()
+        public Arc()
         {
-            Vertices = new Geometry.VertexCollection(this);
+            Vertices = new VertexCollection(this);
+        }
+
+        /// <summary>
+        /// Initialise an arc from three points
+        /// </summary>
+        /// <param name="startPt">The start point</param>
+        /// <param name="ptOnArc">A point that lies somewhere on the arc</param>
+        /// <param name="endPt">The end point</param>
+        public Arc(Vector startPt, Vector ptOnArc, Vector endPt) : this()
+        {
+            Vertices.Add(new Vertex(startPt));
+            Vertices.Add(new Vertex(ptOnArc));
+            Vertices.Add(new Vertex(endPt));
         }
 
         #endregion

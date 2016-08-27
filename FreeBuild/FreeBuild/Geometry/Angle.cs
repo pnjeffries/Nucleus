@@ -11,6 +11,15 @@ namespace FreeBuild.Geometry
     /// </summary>
     public struct Angle : IComparable<Angle>
     {
+        #region Constants
+
+        /// <summary>
+        /// A right angle, PI/2 (or 90 degrees).
+        /// </summary>
+        public static readonly Angle RightAngle = new Angle(Math.PI/2);
+
+        #endregion
+
         #region Fields
 
         /// <summary>

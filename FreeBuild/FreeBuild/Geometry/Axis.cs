@@ -147,6 +147,27 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Utility function to find the closest point between two axes
+        /// expressed by starting positions and vectors
+        /// </summary>
+        /// <param name="pt0">The origin of the first axis</param>
+        /// <param name="v0">The direction of the first axis</param>
+        /// <param name="pt1">The origin of the second axis</param>
+        /// <param name="v1">The direction of the second axis</param>
+        /// <returns>The closest point on the first axis to the second.</returns>
+        public static Vector ClosestPoint(Vector pt0, Vector v0, Vector pt1, Vector v1)
+        {
+            Vector w0 = pt0 - pt1; //w0 = P0 - Q0
+            double a = v0.Dot(v0); //a = u*u
+            double b = v0.Dot(v1); //b = u*v
+            double c = v1.Dot(v1); //c = v*v
+            double d = v0.Dot(w0); //d = u*w0
+            double e = v1.Dot(w0); //e = v*w0
+            double s = (b * e - c * d) / (a * c - b * b); //sc = be-cd/(ac - b^2)
+            return pt0 + v0*s;
+        }
+
+        /// <summary>
         /// Find the position along this axis that is closest to the specified
         /// other axis.
         /// Expressed as a multiplication factor of the direction vector from the origin.

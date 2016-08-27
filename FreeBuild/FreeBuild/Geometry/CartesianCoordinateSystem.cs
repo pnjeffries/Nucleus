@@ -144,6 +144,20 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Constructor specifying all axes as a single vector array containing
+        /// Origin, X, Y, Z in that order.
+        /// Allows data to be populated via a static function in a subclass constructor.
+        /// </summary>
+        /// <param name="vectors"></param>
+        protected CartesianCoordinateSystem(Vector[] vectors)
+        {
+            Origin = vectors[0];
+            X = vectors[1];
+            Y = vectors[2];
+            Z = vectors[3];
+        }
+
+        /// <summary>
         /// Duplication constructor
         /// </summary>
         /// <param name="other">Another coordinate system to copy values from</param>

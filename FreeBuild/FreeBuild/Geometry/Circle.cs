@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,8 +70,8 @@ namespace FreeBuild.Geometry
         /// Create a Disk of the specified radius about the specified centrepoint.
         /// The disk will be oriented to the global XY plane.
         /// </summary>
-        /// <param name="radius"></param>
-        /// <param name="centre"></param>
+        /// <param name="radius">The radius of the circle</param>
+        /// <param name="centre">The centre point of the circle</param>
         public Circle(double radius, Vector centre) : base(centre)
         {
             Radius = radius;
@@ -80,12 +81,63 @@ namespace FreeBuild.Geometry
         /// Create a Disk of the specified radius about the specified centrepoint
         /// lying on a plane perpendicular to the given normal direction
         /// </summary>
-        /// <param name="radius"></param>
-        /// <param name="centre"></param>
-        /// <param name="normal"></param>
+        /// <param name="radius">The radius of the circle</param>
+        /// <param name="centre">The centrepoint of the circle</param>
+        /// <param name="normal">The normal vector to the plane the circle lies on</param>
         public Circle(double radius, Vector centre, Vector normal) : base(centre, normal)
         {
             Radius = radius;
+        }
+
+        /// <summary>
+        /// Initialise a circle from three points.  The positions specified must all be different.
+        /// </summary>
+        /// <param name="pt0">The first point on the circle.  Will be used as the 'start' point
+        /// of the circle as well.</param>
+        /// <param name="pt1">The second point on the circle</param>
+        /// <param name="pt2">The third point on the circle</param>
+        public Circle(Vector pt0, Vector pt1, Vector pt2)
+            : this(ref pt0, ref pt1, ref pt2, 0)
+        {
+        }
+
+        /// <summary>
+        /// Initialise a circle from three points
+        /// Internal version that allows the radius to be calculated only once.
+        /// </summary>
+        /// <param name="pt0"></param>
+        /// <param name="pt1"></param>
+        /// <param name="pt2"></param>
+        private Circle(ref Vector pt0, ref Vector pt1, ref Vector pt2, double radius)
+            : base(Calculate3PtCSystem(ref pt0, ref pt1, ref pt2, ref radius))
+        {
+            Radius = radius;
+        }
+
+        /// <summary>
+        /// Calculate the data needed for initialising a circle from 3 points
+        /// </summary>
+        /// <param name="pt0"></param>
+        /// <param name="pt1"></param>
+        /// <param name="pt2"></param>
+        /// <returns></returns>
+        private static Vector[] Calculate3PtCSystem(ref Vector pt0, ref Vector pt1, ref Vector pt2, ref double radius)
+        {
+            Vector v01 = (pt1 - pt0).Unitize();
+            Vector v12 = (pt2 - pt1).Unitize();
+            //Find mid-points
+            Vector mid01 = pt0.Interpolate(pt1, 0.5);
+            Vector mid12 = pt1.Interpolate(pt2, 0.5);
+            Vector normal = v01.Cross(v12);
+            //Find perpendicular axes
+            Vector axis1 = v01.Cross(normal);
+            Vector axis2 = v12.Cross(normal);
+            //FInd intersection:
+            Vector origin = Axis.ClosestPoint(mid01, axis1, mid12, axis2);
+            Vector vO0 = pt0 - origin;
+            radius = vO0.Magnitude();
+            if (radius == 0) return new Vector[] { pt0, Vector.UnitZ, Vector.UnitX }; //Zero-radius circle!
+            return new Vector[] { origin, normal, vO0 / radius };
         }
 
         #endregion

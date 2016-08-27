@@ -155,6 +155,19 @@ namespace FreeBuild.Geometry
             A = other.A;
         }
 
+        /// <summary>
+        /// Constructor specifying all axes as a single vector array containing
+        /// Origin, L, A in that order.
+        /// Allows data to be populated via a static function in a subclass constructor.
+        /// </summary>
+        /// <param name="vectors"></param>
+        protected CylindricalCoordinateSystem(Vector[] vectors)
+        {
+            Origin = vectors[0];
+            L = vectors[1];
+            A = vectors[2];
+        }
+
         #endregion
 
         #region Methods
