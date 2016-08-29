@@ -56,6 +56,15 @@ namespace FreeBuild.Model
         #region Constructors
 
         /// <summary>
+        /// Default constructor.
+        /// For use in factory methods only.
+        /// </summary>
+        internal Node()
+        {
+
+        }
+
+        /// <summary>
         /// Position constructor
         /// </summary>
         /// <param name="position"></param>

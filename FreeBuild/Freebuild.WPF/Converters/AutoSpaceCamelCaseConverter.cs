@@ -28,5 +28,5 @@ namespace Freebuild.WPF.Converters
         {
             throw new NotImplementedException();
         }
-    }
+    
 }
