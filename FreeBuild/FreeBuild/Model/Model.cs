@@ -83,6 +83,28 @@ namespace FreeBuild.Model
             }
         }
 
+        [NonSerialized]
+        private ModelObjectCreator _Create;
+
+        /// <summary>
+        /// Create new objects in this model.  Returns a ModelObjectCreator instance which
+        /// provides factory functionality to create new objects within this model and to
+        /// track their creation history.  The functions accessed via this property will normally
+        /// create new objects and add them to the model, but if the execution information matches
+        /// that of a stored object that object will be updated and returned instead.  This
+        /// allows objects to be easily created and updated via parametric processes.
+        /// Model objects may alternately be instantiated and added to the model manually,
+        /// however this will not track their creation history.
+        /// </summary>
+        public ModelObjectCreator Create
+        {
+            get
+            {
+                if (_Create == null) _Create = new ModelObjectCreator(this);
+                return _Create;
+            }
+        }
+
         #endregion
 
         #region Constructors

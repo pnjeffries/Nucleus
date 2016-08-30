@@ -33,9 +33,26 @@ namespace FreeBuild.Model
     [Serializable]
     public class ModelDocument : Document
     {
+        #region Properties
+
         /// <summary>
         /// The model contained within this document
         /// </summary>
         public Model Model { get; protected set; }
+
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Default constructor.
+        /// Will create a new model.
+        /// </summary>
+        public ModelDocument()
+        {
+            Model = new Model();
+        }
+
+        #endregion
     }
 }

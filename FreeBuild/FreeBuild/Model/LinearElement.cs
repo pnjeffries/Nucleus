@@ -41,6 +41,15 @@ namespace FreeBuild.Model
         #region Constructors
 
         /// <summary>
+        /// Default constructor.
+        /// For use in factory methods only.
+        /// </summary>
+        internal LinearElement()
+        {
+
+        }
+
+        /// <summary>
         /// Curve geometry constructor
         /// </summary>
         /// <param name="geometry"></param>

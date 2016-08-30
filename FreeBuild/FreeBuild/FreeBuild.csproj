@@ -43,6 +43,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\ExecutionInfo.cs" />
+    <Compile Include="DDTree\NodeDDTree.cs" />
     <Compile Include="Exceptions\GeometryException.cs" />
     <Compile Include="Extensions\DoubleExtensions.cs" />
     <Compile Include="Geometry\Angle.cs" />
@@ -109,6 +111,7 @@
     <Compile Include="Model\LetterProfile.cs" />
     <Compile Include="Model\LinearElement.cs" />
     <Compile Include="Model\ModelDocumentCollection.cs" />
+    <Compile Include="Model\ModelObjectCreator.cs" />
     <Compile Include="Model\Node.cs" />
     <Compile Include="Model\NodeCollection.cs" />
     <Compile Include="Model\PanelElement.cs" />

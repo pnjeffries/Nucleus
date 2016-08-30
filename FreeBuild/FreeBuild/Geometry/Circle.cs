@@ -123,12 +123,12 @@ namespace FreeBuild.Geometry
         /// <returns></returns>
         private static Vector[] Calculate3PtCSystem(ref Vector pt0, ref Vector pt1, ref Vector pt2, ref double radius)
         {
-            Vector v01 = (pt1 - pt0).Unitize();
-            Vector v12 = (pt2 - pt1).Unitize();
+            Vector v01 = (pt1 - pt0);
+            Vector v12 = (pt2 - pt1);
             //Find mid-points
             Vector mid01 = pt0.Interpolate(pt1, 0.5);
             Vector mid12 = pt1.Interpolate(pt2, 0.5);
-            Vector normal = v01.Cross(v12);
+            Vector normal = v01.Cross(v12).Unitize();
             //Find perpendicular axes
             Vector axis1 = v01.Cross(normal);
             Vector axis2 = v12.Cross(normal);
