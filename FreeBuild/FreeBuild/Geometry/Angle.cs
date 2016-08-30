@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeBuild.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +17,12 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// A right angle, PI/2 (or 90 degrees).
         /// </summary>
-        public static readonly Angle RightAngle = new Angle(Math.PI/2);
+        public static readonly Angle Right = new Angle(Math.PI/2);
+
+        /// <summary>
+        /// A complete angle, 2*PI (or 360 degrees)
+        /// </summary>
+        public static readonly Angle Complete = new Angle(2 * Math.PI);
 
         #endregion
 
@@ -93,6 +99,27 @@ namespace FreeBuild.Geometry
         public Vector Direction()
         {
             return new Vector(this);
+        }
+
+        /// <summary>
+        /// Get the Explement of this angle.  This is the angle which,
+        /// when summed with this angle, adds up to a complete angle
+        /// </summary>
+        /// <returns></returns>
+        public Angle Explement()
+        {
+            return new Angle(Sign() * 2 * Math.PI - Radians);
+        }
+
+        /// <summary>
+        /// Gets the sign of the angle, expressed as +1 for positive numbers
+        /// and -1 for negative ones.  Zero is treated as being positive in this
+        /// instance.
+        /// </summary>
+        /// <returns></returns>
+        public double Sign()
+        {
+            return Radians.Sign();
         }
 
         public override bool Equals(object obj)

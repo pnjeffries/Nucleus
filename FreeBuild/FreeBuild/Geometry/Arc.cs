@@ -63,6 +63,37 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Does this arc run clockwise or anticlockwise, with reference to the Circle
+        /// derived from its vertices
+        /// </summary>
+        public bool IsClockwise
+        {
+            get
+            {
+                if (Vertices.Count >= 3 && Circle != null)
+                {
+                    return Circle.Azimuth(Vertices.Last().Position) >
+                        Circle.Azimuth(Vertices[1].Position);
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// The length of the arc expressed as an angle
+        /// </summary>
+        public Angle ArcLength
+        {
+            get
+            {
+                if (Circle != null)
+                {
+                    return (Circle.)
+                }
+            }
+        } 
+
+        /// <summary>
         /// Is this Arc closed?  (i.e. does it represent a circle?)
         /// </summary>
         public override bool Closed { get; protected set; }
@@ -86,7 +117,7 @@ namespace FreeBuild.Geometry
         /// Default constructor.  Initialises an arc with no geometry.
         /// Will not be valid.
         /// </summary>
-        public Arc()
+        protected Arc()
         {
             Vertices = new VertexCollection(this);
         }

@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\GeometryException.cs" />
+    <Compile Include="Extensions\DoubleExtensions.cs" />
     <Compile Include="Geometry\Angle.cs" />
     <Compile Include="Base\BiDirectionary.cs" />
     <Compile Include="Base\ChainableBase.cs" />
