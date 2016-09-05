@@ -60,6 +60,18 @@ namespace FreeBuild.Extensions
         }
 
         /// <summary>
+        /// Does this string represent a floating-point or
+        /// integer value?
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static bool IsNumeric(this string str)
+        {
+            double value;
+            return double.TryParse(str, out value) && !double.IsNaN(value);
+        }
+
+        /// <summary>
         /// Removes all non-numeric characters from the start and end of this string.
         /// </summary>
         /// <param name="str"></param>
@@ -179,6 +191,11 @@ namespace FreeBuild.Extensions
                 }
             }
             return result;
+        }
+
+        public static bool EqualsIgnoreCase(this string thisString, string other)
+        {
+            return thisString.Equals(other, StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

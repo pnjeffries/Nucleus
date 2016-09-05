@@ -47,6 +47,7 @@
     <Compile Include="Converters\FlatStringConverter.cs" />
     <Compile Include="Converters\InverseBoolConverter.cs" />
     <Compile Include="Converters\IsNotNullConverter.cs" />
+    <Compile Include="Converters\UnderscoreToSpaceConverter.cs" />
     <Compile Include="Converters\UntitledConverter.cs" />
     <Compile Include="Converters\VisibleWhenEqualConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

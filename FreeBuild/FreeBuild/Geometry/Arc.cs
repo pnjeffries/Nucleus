@@ -27,8 +27,9 @@ using System.Threading.Tasks;
 namespace FreeBuild.Geometry
 {
     /// <summary>
-    /// A planar arc described by three points.
+    /// A planar arc of constant radius described by three points.
     /// </summary>
+    [Serializable]
     public class Arc : Curve
     {
         #region Properties
@@ -80,16 +81,22 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
-        /// The length of the arc expressed as an angle
+        /// The angle subtended by this arc
         /// </summary>
-        public Angle ArcLength
+        public Angle RadianMeasure
         {
             get
             {
                 if (Circle != null)
                 {
-                    return (Circle.)
+                    if (Closed) return Angle.Complete;
+
+                    Angle toEnd = Circle.Azimuth(Vertices.Last().Position);
+                    Angle toMid = Circle.Azimuth(Vertices[1].Position);
+                    if (toMid > toEnd) return toEnd.Explement();
+                    else return toEnd;
                 }
+                return Angle.Zero;
             }
         } 
 
@@ -106,6 +113,19 @@ namespace FreeBuild.Geometry
             get
             {
                 return Vertices.Count == 3;
+            }
+        }
+
+        /// <summary>
+        /// The number of segments in this curve.
+        /// For valid arcs, this is always 1.
+        /// </summary>
+        public override int SegmentCount
+        {
+            get
+            {
+                if (IsValid) return 1;
+                else return 0;
             }
         }
 
@@ -133,6 +153,60 @@ namespace FreeBuild.Geometry
             Vertices.Add(new Vertex(startPt));
             Vertices.Add(new Vertex(ptOnArc));
             Vertices.Add(new Vertex(endPt));
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Calculate and return the length of this arc
+        /// </summary>
+        /// <returns></returns>
+        public override double CalculateLength()
+        {
+            if (Circle != null)
+            {
+                return Circle.Circumference * RadianMeasure / 2 * Math.PI;
+            }
+            else return 0;
+        }
+
+        public override double CalculateSegmentLength(int index)
+        {
+            return CalculateLength();
+        }
+
+        /// <summary>
+        /// Evaluate a point on this curve defined by a parameter t
+        /// </summary>
+        /// <param name="t">A normalised parameter defining a point along this curve.
+        /// Note that parameter-space is not necessarily uniform and does not equate to a normalised length.
+        /// 0 = curve start, 1 = curve end.
+        /// For open curves, parameters outside the range 0-1 will be invalid.
+        /// For closed curves, parameters outside this range will 'wrap'.</param>
+        /// <returns>The vector coordinates describing a point on the curve at the specified parameter,
+        /// if the curve definition and parameter are valid.  Else, an unset vector.</returns>
+        /// <remarks>The base implementation treats the curve as being defined as a polyline, with straight lines
+        /// between vertices.</remarks>
+        public override Vector PointAt(double t)
+        {
+            if (Circle != null)
+            {
+                return Circle.PointAt(t * RadianMeasure);
+            }
+            return Vector.Unset;
+        }
+
+        public override Vector PointAt(int span, double tSpan)
+        {
+            return PointAt(tSpan);
+        }
+
+        protected override void InvalidateCachedGeometry()
+        {
+            _Circle = null;
+            base.InvalidateCachedGeometry();
         }
 
         #endregion

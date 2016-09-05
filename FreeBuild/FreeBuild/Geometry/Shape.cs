@@ -82,7 +82,7 @@ namespace FreeBuild.Geometry
         public abstract VertexCollection Vertices { get; }
 
         /// <summary>
-        /// Is the definition of  shape valid?
+        /// Is the definition of this shape valid?
         /// i.e. does it have the correct number of vertices, are all parameters within
         /// acceptable limits, etc.
         /// </summary>

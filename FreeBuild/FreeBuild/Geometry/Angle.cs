@@ -28,11 +28,24 @@ using System.Threading.Tasks;
 namespace FreeBuild.Geometry
 {
     /// <summary>
-    /// An angle expressed in radians
+    /// An angle expressed in radians.
+    /// Represented by an immutable struct wrapping a double value.
+    /// Implicit converters to and from the double type are provided,
+    /// so this type can be used as though it were an ordinary double.
     /// </summary>
     public struct Angle : IComparable<Angle>
     {
         #region Constants
+
+        /// <summary>
+        /// An undefined, invalid angle
+        /// </summary>
+        public static readonly Angle Undefined = new Angle(double.NaN);
+
+        /// <summary>
+        /// A zero angle
+        /// </summary>
+        public static readonly Angle Zero = new Angle(0d);
 
         /// <summary>
         /// A right angle, PI/2 (or 90 degrees).
@@ -123,7 +136,9 @@ namespace FreeBuild.Geometry
 
         /// <summary>
         /// Get the Explement of this angle.  This is the angle which,
-        /// when summed with this angle, adds up to a complete angle
+        /// when summed with this angle, adds up to a complete angle.
+        /// This will be either positive or negative to match the sign
+        /// of the angle.
         /// </summary>
         /// <returns></returns>
         public Angle Explement()

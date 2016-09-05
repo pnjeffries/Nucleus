@@ -42,6 +42,32 @@ namespace FreeBuild.Geometry
 
         #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// The circumference of the circle
+        /// </summary>
+        public double Circumference
+        {
+            get
+            {
+                return 2 * Math.PI * Radius;
+            }
+        }
+
+        /// <summary>
+        /// The area enclosed by this circle on its own plane
+        /// </summary>
+        public double Area
+        {
+            get
+            {
+                return Math.PI * Radius * Radius;
+            }
+        }
+
+        #endregion
+
         #region Constructors
 
         /// <summary>

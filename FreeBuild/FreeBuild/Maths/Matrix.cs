@@ -110,13 +110,14 @@ namespace FreeBuild.Maths
         public Matrix Transpose()
         {
             Matrix result = CreateNewMatrix(Columns, Rows);
-            for (int i = 0; i < Rows; i++)
+            //for (int i = 0; i < Rows; i++)
+            Parallel.For(0, Rows, i =>
             {
-                for (int j =0; j < Columns; j++)
+                for (int j = 0; j < Columns; j++)
                 {
                     result[j, i] = this[j, i];
                 }
-            }
+            });
             return result;
         }
 
@@ -129,13 +130,14 @@ namespace FreeBuild.Maths
         public void Add(Matrix other)
         {
             if (Rows != other.Rows || Columns != other.Columns) throw new Exception("Matrix dimension mis-match.  Only matrices with the same dimensions can be added together.");
-            for (int i = 0; i < Rows; i++)
+            //for (int i = 0; i < Rows; i++)
+            Parallel.For(0, Rows, i =>
             {
                 for (int j = 0; j < Columns; j++)
                 {
                     this[i, j] += other[i, j];
                 }
-            }
+            });
         }
 
         /// <summary>
@@ -146,13 +148,14 @@ namespace FreeBuild.Maths
         public void Subtract(Matrix other)
         {
             if (Rows != other.Rows || Columns != other.Columns) throw new Exception("Matrix dimension mis-match.  Only matrices with the same dimensions can be added together.");
-            for (int i = 0; i < Rows; i++)
+            //for (int i = 0; i < Rows; i++)
+            Parallel.For(0, Rows, i =>
             {
                 for (int j = 0; j < Columns; j++)
                 {
                     this[i, j] -= other[i, j];
                 }
-            }
+            });
         }
 
         /// <summary>
@@ -162,13 +165,14 @@ namespace FreeBuild.Maths
         /// <param name="scalar">The factor to multiply by</param>
         public void Multiply(double scalar)
         {
-            for (int i = 0; i < Rows; i++)
+            //for (int i = 0; i < Rows; i++)
+            Parallel.For(0, Rows, i =>
             {
                 for (int j = 0; j < Columns; j++)
                 {
                     this[i, j] *= scalar;
                 }
-            }
+            });
         }
 
         /// <summary>
@@ -178,21 +182,20 @@ namespace FreeBuild.Maths
         /// <param name="scalar">The factor to devide by</param>
         public void Divide(double scalar)
         {
-            for (int i = 0; i < Rows; i++)
+            Parallel.For(0, Rows, i => //for (int i = 0; i < Rows; i++)
             {
                 for (int j = 0; j < Columns; j++)
                 {
                     this[i, j] /= scalar;
                 }
-            }
-            this.Duplicate();
+            });
         }
 
         ///// <summary>
         ///// Create a duplicate of this matrix
         ///// </summary>
         ///// <returns></returns>
-        //public abstract Matrix Duplicate();
+        public abstract Matrix Duplicate();
 
         #endregion
 

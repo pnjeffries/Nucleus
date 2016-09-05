@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeBuild", "FreeBuild\FreeBuild.csproj", "{7635522C-178F-4DB5-9106-FF8DFD4B833B}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeBuild.Tests", "FreeBuild.Tests\FreeBuild.Tests.csproj", "{20DE5F48-B713-4109-825F-A8D1BCEF7A35}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeBuild.Rhino", "FreeBuild.Rhino\FreeBuild.Rhino.csproj", "{2595E792-7880-484B-877D-9873AAC7D946}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeBuild.Word", "FreeBuild.Word\FreeBuild.Word.csproj", "{96AACD57-169F-48AE-A568-F1AE0EEF7626}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{2595E792-7880-484B-877D-9873AAC7D946}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2595E792-7880-484B-877D-9873AAC7D946}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2595E792-7880-484B-877D-9873AAC7D946}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96AACD57-169F-48AE-A568-F1AE0EEF7626}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96AACD57-169F-48AE-A568-F1AE0EEF7626}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96AACD57-169F-48AE-A568-F1AE0EEF7626}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96AACD57-169F-48AE-A568-F1AE0EEF7626}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

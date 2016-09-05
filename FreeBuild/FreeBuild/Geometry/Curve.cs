@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Maths;
 using FreeBuild.Units;
 using System;
 using System.Collections.Generic;
@@ -67,26 +68,26 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Get the vertex at the start of the curve (if there is one)
         /// </summary>
-        public Vertex Start
+        public virtual Vertex Start
         {
             get
             {
                 if (Vertices.Count > 0)
                     return Vertices.First();
-                else return default(Vertex);
+                else return null;
             }
         }
 
         /// <summary>
         /// Get the vertex at the end of the curve (if there is one)
         /// </summary>
-        public Vertex End
+        public virtual Vertex End
         {
             get
             {
                 if (Closed) return Start;
                 else if (Vertices.Count > 0) return Vertices.Last();
-                else return default(Vertex);
+                else return null;
             }
         }
 
@@ -141,7 +142,7 @@ namespace FreeBuild.Geometry
         /// For open curves, parameters outside the range 0-1 will be invalid.
         /// For closed curves, parameters outside this range will 'wrap'.</param>
         /// <returns>The vector coordinates describing a point on the curve at the specified parameter,
-        /// if the curve definition and parameter are valid.  Else, null.</returns>
+        /// if the curve definition and parameter are valid.  Else, an unset vector.</returns>
         /// <remarks>The base implementation treats the curve as being defined as a polyline, with straight lines
         /// between vertices.</remarks>
         public virtual Vector PointAt(double t)
@@ -236,7 +237,7 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Calculate the area enclosed by this curve, were the start and end points to be 
         /// joined by a straight line segment.
-        /// A plane may optionally be specififed, otherwise by default the projected area on 
+        /// A plane may optionally be specified, otherwise by default the projected area on 
         /// the XY plane will be used.
         /// </summary>
         /// <param name="onPlane">The plane to use to calculate the area.

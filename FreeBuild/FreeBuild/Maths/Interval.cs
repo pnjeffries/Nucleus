@@ -88,6 +88,12 @@ namespace FreeBuild.Maths
             }
         }
 
+        /// <summary>
+        /// Get the signed value of the greatest absolute value in this interval.
+        /// This will return whichever of Max and Min has the largest (unsigned) magnitude.
+        /// </summary>
+        public double AbsMax { get { return Math.Abs(Max) > Math.Abs(Min) ? Max : Min; } }
+
         #endregion
 
         #region Constructors

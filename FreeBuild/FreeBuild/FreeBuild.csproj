@@ -74,7 +74,12 @@
     <Compile Include="Events\ModelObjectAddedEventArgs.cs" />
     <Compile Include="Extensions\ICollectionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Geometry\CurveParameter.cs" />
+    <Compile Include="Geometry\IShapePosition.cs" />
+    <Compile Include="Geometry\Mesh.cs" />
+    <Compile Include="Geometry\MeshFace.cs" />
     <Compile Include="Geometry\Surface.cs" />
+    <Compile Include="Geometry\Tolerance.cs" />
     <Compile Include="Model\ElementOrientation.cs" />
     <Compile Include="Events\ElementUpdateEventArgs.cs" />
     <Compile Include="Base\TypeCollection.cs" />
@@ -110,6 +115,7 @@
     <Compile Include="Model\IElementOrientation.cs" />
     <Compile Include="Model\LetterProfile.cs" />
     <Compile Include="Model\LinearElement.cs" />
+    <Compile Include="Model\Material.cs" />
     <Compile Include="Model\ModelDocumentCollection.cs" />
     <Compile Include="Model\ModelObjectCreator.cs" />
     <Compile Include="Model\Node.cs" />

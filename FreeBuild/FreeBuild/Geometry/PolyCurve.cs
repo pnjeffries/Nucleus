@@ -37,40 +37,180 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// The sub-curves of this PolyCurve
         /// </summary>
-        public CurveCollection SubCurves { get; }
+        public CurveCollection SubCurves { get; } = new CurveCollection();
 
+        /// <summary>
+        /// Whether this curve is closed.
+        /// If true, the end of the curve is treated as being the same as the start point.
+        /// Default (for most curve types) is false.
+        /// </summary>
         public override bool Closed
         {
             get
             {
-                throw new NotImplementedException();
+                return StartPoint.Equals(EndPoint, Tolerance.Geometric);
             }
             protected set { }
         }
 
+        /// <summary>
+        /// Is the definition of this shape valid?
+        /// i.e. does it have the correct number of vertices, are all parameters within
+        /// acceptable limits, etc.
+        /// </summary>
         public override bool IsValid
         {
             get
             {
-                throw new NotImplementedException();
+                if (SubCurves.Count > 0)
+                {
+                    foreach (Curve subCrv in SubCurves)
+                    {
+                        if (!subCrv.IsValid) return false;
+                    }
+                    return true;
+                }
+                return false;
             }
         }
 
+        /// <summary>
+        /// The collection of vertices which are used to define the geometry of this shape.
+        /// Different shapes will provide different means of editing this collection.
+        /// DO NOT directly modify the collection returned from this property unless you are
+        /// sure you know what you are doing.
+        /// For PolyCurves, this will generate a combined collection of all sub-curve vertices.
+        /// </summary>
         public override VertexCollection Vertices
         {
             get
             {
-                throw new NotImplementedException();
+                VertexCollection allVertices = new VertexCollection();
+                foreach (Curve subCrv in SubCurves)
+                {
+                    allVertices.AddRange(subCrv.Vertices);
+                }
+                return allVertices;
             }
+        }
+
+        /// <summary>
+        /// Get the number of segments that this curve posesses.
+        /// Segments are stretches of the curve that can be evaluated independantly 
+        /// of the rest of the curve.
+        /// In the case of polycurves, this will be the combined segment count of all
+        /// constituent curves.
+        /// </summary
+        public override int SegmentCount
+        {
+            get
+            {
+                int count = 0;
+                foreach (Curve subCrv in SubCurves)
+                {
+                    count += subCrv.SegmentCount;
+                }
+                return count;
+            }
+        }
+
+        /// <summary>
+        /// Get the vertex at the start of the curve (if there is one)
+        /// </summary>
+        public override Vertex Start
+        {
+            get
+            {
+                if (SubCurves.Count > 0) return SubCurves.First().Start;
+                else return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the vertex at the end of the curve (if there is one)
+        /// </summary>
+        public override Vertex End
+        {
+            get
+            {
+                if (SubCurves.Count > 0) return SubCurves.Last().End;
+                else return null;
+            }      
         }
 
         #endregion
 
         #region Constructors
 
-        protected PolyCurve()
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public PolyCurve()
         {
 
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Calculate the total length of this polycurve
+        /// </summary>
+        /// <returns></returns>
+        public override double CalculateLength()
+        {
+            double totalLength = 0;
+            foreach (Curve subCrv in SubCurves)
+            {
+                totalLength += subCrv.Length;
+            }
+            return totalLength;
+        }
+
+        /// <summary>
+        /// Calculate the length of the specified segment in this polycurve
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public override double CalculateSegmentLength(int index)
+        {
+            foreach (Curve subCrv in SubCurves)
+            {
+                int segCount = subCrv.SegmentCount;
+                if (segCount > index)
+                {
+                    return subCrv.CalculateSegmentLength(index);
+                }
+                index -= segCount;
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Evaluate a point defined by a parameter within a specified span.
+        /// </summary>
+        /// <param name="span">The index of the span.  Valid range 0 to SegmentCount - 1</param>
+        /// <param name="tSpan">A normalised parameter defining a point along this span of this curve.
+        /// Note that parameter-space is not necessarily uniform and does not equate to a normalised length.
+        /// 0 = span start, 1 = span end.
+        /// </param>
+        /// <returns>The vector coordinates describing a point on the curve span at the specified parameter,
+        /// if the curve definition and parameter are valid.  Else, null.</returns>
+        /// <remarks>The base implementation treats the curve as being defined as a polyline, with straight lines
+        /// between vertices.</remarks>
+        public override Vector PointAt(int span, double tSpan)
+        {
+            foreach (Curve subCrv in SubCurves)
+            {
+                int segCount = subCrv.SegmentCount;
+                if (segCount > span)
+                {
+                    return subCrv.PointAt(span, tSpan);
+                }
+                span -= segCount;
+            }
+            return Vector.Unset;
         }
 
         #endregion

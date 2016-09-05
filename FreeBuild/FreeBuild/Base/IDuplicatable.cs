@@ -65,11 +65,13 @@ namespace FreeBuild.Base
         /// <returns>A duplicated copy of this object</returns>
         public static T Duplicate<T>(this T obj, ref Dictionary<object, object> objectMap) where T : IDuplicatable
         {
-            T clone = (T)Activator.CreateInstance(typeof(T)); //Create a blank instance of the relevant type
+            T clone = (T)Activator.CreateInstance(obj.GetType()); //Create a blank instance of the relevant type
             if (objectMap == null) objectMap = new Dictionary<object, object>();
             objectMap[obj] = clone; //Store the original-clone relationship in the map
             clone.CopyFieldsFrom(obj, ref objectMap);
+
             //TODO: Deal with duplicating collections
+
             return clone;
         }
 
@@ -86,7 +88,7 @@ namespace FreeBuild.Base
         }
 
         /// <summary>
-        /// Popualate the fields of this object by copying them from equivelent fields on 
+        /// Populate the fields of this object by copying them from equivelent fields on 
         /// another object.  The fields to be copied must share names and types in order to
         /// be successfully transferred.
         /// The CopyAttribute will be used to determine the correct behaviour when copying fields

@@ -45,6 +45,12 @@ namespace FreeBuild.Geometry
         {
         }
 
+        /// <summary>
+        /// Default, parameterless constructor.
+        /// The owner of this vertex collection will be null.
+        /// </summary>
+        public VertexCollection() : this(null) { }
+
         #endregion
 
         #region Methods

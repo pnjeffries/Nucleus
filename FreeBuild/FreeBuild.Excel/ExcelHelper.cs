@@ -43,6 +43,25 @@ namespace FreeBuild.Excel
             return result;
         }
 
+        /// <summary>
+        /// Convert the cell coordinates into an Excel letter-number cell reference
+        /// </summary>
+        /// <param name="columnIndex">The column index (starting from 1)</param>
+        /// <param name="rowIndex">The row index (starting from 1)</param>
+        /// <returns>The converted cell reference</returns>
+        public static string CellReference(int columnIndex, int rowIndex)
+        {
+            string result = "";
+            while (columnIndex > 0)
+            {
+                int modulo = (columnIndex - 1) % 26;
+                result = Convert.ToChar('A' + modulo).ToString() + result;
+                columnIndex = (int)((columnIndex - modulo) / 26);
+            }
+            result = result + rowIndex;
+            return result;
+        }
+
         #endregion
     }
 }

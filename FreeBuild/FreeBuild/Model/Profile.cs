@@ -29,8 +29,9 @@ using System.Threading.Tasks;
 namespace FreeBuild.Model
 {
     /// <summary>
-    /// Base class for objects representing the profile of a SectionProperty
+    /// Base class for objects representing the profile of a SectionProperty.
     /// </summary>
+    [Serializable]
     public abstract class Profile : Unique
     {
         #region Properties
@@ -44,6 +45,20 @@ namespace FreeBuild.Model
         /// The collection of curves which denote the voids within this section profile.
         /// </summary>
         public abstract CurveCollection Voids { get; }
+
+        /// <summary>
+        /// Private backing field for Material property.
+        /// </summary>
+        private Material _Material;
+
+        /// <summary>
+        /// The primary material assigned to this profile.
+        /// </summary>
+        public Material Material
+        {
+            get { return _Material; }
+            set { _Material = value;  NotifyPropertyChanged("Material"); }
+        }
 
         #endregion
     }

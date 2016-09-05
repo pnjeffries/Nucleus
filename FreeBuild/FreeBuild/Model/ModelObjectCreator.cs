@@ -52,7 +52,7 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
-        /// Create 
+        /// Create a new (or update an existing) linear element in the model.
         /// </summary>
         /// <param name="geometry"></param>
         /// <returns></returns>

@@ -27,5 +27,20 @@ namespace FreeBuild.Tests
             Core.Print(sw.Elapsed.ToString());
             return sw.Elapsed;
         }
+
+        public static TimeSpan AdditionTest(int size)
+        {
+            Core.Print("Addition Speed Test:");
+            Stopwatch sw = new Stopwatch();
+            Random rng = new Random(1);
+            Matrix A = new ArrayMatrix(size, size, rng);
+            Matrix B = new ArrayMatrix(size, size, rng);
+
+            sw.Start();
+            Matrix C = A + B;
+            sw.Stop();
+            Core.Print(sw.Elapsed.ToString());
+            return sw.Elapsed;
+        }
     }
 }

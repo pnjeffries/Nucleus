@@ -10,10 +10,20 @@ namespace FreeBuild.Tests
     {
         static void Main(string[] args)
         {
+            //Matrix tests:
             for (int i = 0; i < 5; i++)
             {
-                Matrix_Tests.MultiplicationTest(800);
+                //Matrix_Tests.MultiplicationTest(800);
             }
+
+            for (int i = 0; i < 5; i++)
+            {
+                Matrix_Tests.AdditionTest(800);
+            }
+
+            //Doc tests:
+            //Word_Tests.ReadDocTest();
+
             Console.Read();
         }
     }
