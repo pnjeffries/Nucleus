@@ -58,10 +58,25 @@ namespace FreeBuild.Model
         /// <returns></returns>
         public LinearElement LinearElement(Curve geometry, ExecutionInfo exInfo = null)
         {
-            LinearElement result;
-            //TODO: Check for previously generated elements
-            result = new LinearElement();
+            LinearElement result = new LinearElement();
+            result = (LinearElement)Model.History.Update(exInfo, result);
             result.Geometry = geometry;
+            Model.Add(result);
+            return result;
+        }
+
+        /// <summary>
+        /// Create a new (or update an existing) section property in the model
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <param name="exInfo"></param>
+        /// <returns></returns>
+        public SectionProperty SectionProperty(Profile profile, ExecutionInfo exInfo = null)
+        {
+            SectionProperty result = new SectionProperty();
+            result = (SectionProperty)Model.History.Update(exInfo, result);
+            result.Profile = profile;
+            Model.Add(result);
             return result;
         }
 

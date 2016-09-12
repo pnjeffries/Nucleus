@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -101,6 +102,39 @@ namespace FreeBuild.Extensions
                 }
             }
             return closest;
+        }
+
+        /// <summary>
+        /// Is this a collection type? i.e. does it implement ICollection?
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool IsCollection(this Type type)
+        {
+            return typeof(ICollection).IsAssignableFrom(type)
+                   || typeof(ICollection<>).IsAssignableFrom(type);
+        }
+
+        /// <summary>
+        /// Is this an enumerable type?  i.e. does it implement IEnumerable?
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool IsEnumerable(this Type type)
+        {
+            return typeof(IEnumerable).IsAssignableFrom(type)
+                   || typeof(IEnumerable<>).IsAssignableFrom(type);
+        }
+
+        /// <summary>
+        /// Is this a List type?  i.e. does it implement IList?
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool IsList(this Type type)
+        {
+            return typeof(IList).IsAssignableFrom(type)
+                   || typeof(IList<>).IsAssignableFrom(type);
         }
     }
 }

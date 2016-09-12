@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -207,6 +208,76 @@ namespace FreeBuild.Geometry
         {
             _Circle = null;
             base.InvalidateCachedGeometry();
+        }
+
+        public override double CalculateEnclosedArea(out Vector centroid, Plane onPlane = null)
+        {
+            if (Circle == null)
+            {
+                centroid = Vector.Unset;
+                return 0;
+            }
+            else
+            {
+                //Area:
+                double angle = RadianMeasure;
+                double radius = Circle.Radius;
+                double area = (angle - Math.Sin(angle)) * (radius.Squared() / 2);
+                if (!IsClockwise) area *= -1;
+                //TODO: Adjust by area ratio
+
+                //Centroid:
+                double rBar = (4 * (Math.Sin(angle / 2).Power(3))) / (3 * (angle - Math.Sin(angle)));
+                Vector origin = Circle.Origin;
+                Vector mid = PointAt(0.5);
+                centroid = origin.Interpolate(mid, rBar);
+
+                return area;
+            }
+        }
+
+        public override double CalculateEnclosedIxx(Plane onPlane = null)
+        {
+            if (Circle != null)
+            {
+                Vector o = Circle.Origin;
+                double r = Circle.Radius;
+                Vector c;
+                double a = CalculateEnclosedArea(out c, onPlane).Abs();
+                //TODO
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// The area moment of inertia of a filled circular sector or angle theta in radians and radius r with respect to an axis through the centroid of the circle
+        /// Used in the calculation of enclosed area second moments of area
+        /// </summary>
+        /// <param name="theta">The sector angle in radians in the range 0 to 2*PI</param>
+        /// <param name="radius"></param>
+        /// <returns></returns>
+        /// <remarks></remarks>
+        private static double SectorIxx(double theta, double radius)
+        {
+            if (theta > Math.PI * 1.5)
+            {
+                theta = Math.PI * 2 - theta;
+                //Full circle, minus reflex angle
+                return (Math.PI / 4) * radius.Power(4) - ((theta * 2) - Math.Sin(theta * 2)) * (radius.Power(4)) / 16;
+            }
+            else if (theta > Math.PI)
+            {
+                theta = theta - Math.PI; //Find for angle over PI, then add half circle
+                return ((theta * 2) - Math.Sin(theta * 2)) * (radius.Power(4)) / 16 + ((Math.PI / 8) * radius.Power(4));
+            }
+            else if (theta > Math.PI / 2) //PI/2 to PI
+            {
+                //Calculate for half circle, then subtract reflex sector
+                theta = Math.PI - theta;
+                return ((Math.PI / 4) * radius.Power(4) - (theta * 2 - Math.Sin(theta * 2)) * (radius.Power(4)) / 8) / 2;
+            }
+            else //0 to PI/2
+                return ((theta * 2) - Math.Sin(theta * 2)) * (radius.Power(4)) / 16;
         }
 
         #endregion

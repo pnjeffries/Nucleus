@@ -43,16 +43,16 @@ namespace FreeBuild.Model
         /// <summary>
         /// Event raised when an object is added to the model
         /// </summary>
-        [field:NonSerialized]
-        [field:Copy(CopyBehaviour.DO_NOT_COPY)]
+        [field: NonSerialized]
+        [field: Copy(CopyBehaviour.DO_NOT_COPY)]
         public event EventHandler<ModelObjectAddedEventArgs> ObjectAdded;
 
         /// <summary>
         /// Event raised when a property of an object in this model is changed.
         /// Bubbles the property changed event upwards.
         /// </summary>
-        [field:NonSerialized]
-        [field:Copy(CopyBehaviour.DO_NOT_COPY)]
+        [field: NonSerialized]
+        [field: Copy(CopyBehaviour.DO_NOT_COPY)]
         public event PropertyChangedEventHandler ObjectPropertyChanged;
 
         #endregion
@@ -69,6 +69,11 @@ namespace FreeBuild.Model
         /// Get the collection of nodes that belong to this model.
         /// </summary>
         public NodeTable Nodes { get; }
+
+        /// <summary>
+        /// Get the collection of properties that belong to this model.
+        /// </summary>
+        public VolumetricPropertyCollection Properties { get; }
 
         /// <summary>
         /// Get a single flat collection which contains all sub-objects within
@@ -105,6 +110,26 @@ namespace FreeBuild.Model
             }
         }
 
+        /// <summary>
+        /// Private backing field for History property
+        /// </summary>
+        private ModelSourceHistory _History;
+
+        /// <summary>
+        /// Record of the creation history of objects within this model.
+        /// Used by the model object creator to replace or update previously created objects from
+        /// the same source.
+        /// </summary>
+        public ModelSourceHistory History
+        {
+            get
+            {
+                if (_History == null) _History = new ModelSourceHistory();
+                return _History;
+            }
+        }
+          
+
         #endregion
 
         #region Constructors
@@ -117,10 +142,12 @@ namespace FreeBuild.Model
             //Initialise collections
             Elements = new ElementTable();
             Nodes = new NodeTable();
+            Properties = new VolumetricPropertyCollection();
 
             //Attach handlers:
             Elements.CollectionChanged += HandlesInternalCollectionChanged;
             Nodes.CollectionChanged += HandlesInternalCollectionChanged;
+            Properties.CollectionChanged += HandlesInternalCollectionChanged;
         }
 
         #endregion
@@ -128,21 +155,36 @@ namespace FreeBuild.Model
         #region Methods
 
         /// <summary>
-        /// Add a new element to this model
+        /// Add a new element to this model, if it does not already exist within it.
         /// </summary>
         /// <param name="element">The element to be added</param>
-        public void Add(IElement element)
+        /// <returns>True if the element could be added, false if it already existed within
+        /// the model.</returns>
+        public bool Add(IElement element)
         {
-            Elements.Add(element);
+            return Elements.TryAdd(element);
         }
 
         /// <summary>
-        /// Add a new node to this model
+        /// Add a new node to this model, if it does not already exist within it
         /// </summary>
-        /// <param name="node"></param>
-        public void Add(Node node)
+        /// <param name="node">The node to be added.</param>
+        /// <returns>True if the node could be added, false if it already existed within
+        /// the model.</returns>
+        public bool Add(Node node)
         {
-            Nodes.Add(node);
+            return Nodes.TryAdd(node);
+        }
+
+        /// <summary>
+        /// Add a new property to this model, if it does not already exist within it
+        /// </summary>
+        /// <param name="property">The property to be added.</param>
+        /// <returns>True if the property could be added, false if it already existed within
+        /// the model.</returns>
+        public bool Add(VolumetricProperty property)
+        {
+            return Properties.TryAdd(property);
         }
 
         /// <summary>

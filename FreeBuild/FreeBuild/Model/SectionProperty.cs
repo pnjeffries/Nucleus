@@ -55,5 +55,34 @@ namespace FreeBuild.Model
         }
 
         #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor.  Initialises a new section property with blank data 
+        /// </summary>
+        public SectionProperty(){ }
+
+        /// <summary>
+        /// Initialises a section property with the given profile
+        /// </summary>
+        /// <param name="profile"></param>
+        public SectionProperty(Profile profile)
+        {
+            Profile = profile;
+        }
+
+        /// <summary>
+        /// Initialises a section property with the given name and profile
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="profile"></param>
+        public SectionProperty(string name, Profile profile)
+        {
+            Name = name;
+            Profile = profile;
+        }
+
+        #endregion
     }
 }

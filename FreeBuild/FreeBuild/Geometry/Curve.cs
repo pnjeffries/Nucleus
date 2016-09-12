@@ -296,7 +296,7 @@ namespace FreeBuild.Geometry
         /// about the X-axis of this system.</param>
         /// <returns>The signed second moment of area enclosed by this curve, as a
         /// double.</returns>
-        public virtual double CalculateEnclosedIxx(ICoordinateSystem onPlane = null)
+        public virtual double CalculateEnclosedIxx(Plane onPlane = null)
         {
             double result = 0;
             for (int i = 0; i < Vertices.Count; i++)

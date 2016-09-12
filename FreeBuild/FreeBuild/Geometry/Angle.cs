@@ -147,6 +147,33 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Get the sine of this angle
+        /// </summary>
+        /// <returns></returns>
+        public double Sin()
+        {
+            return Math.Sin(Radians);
+        }
+
+        /// <summary>
+        /// Get the cosine of this angle
+        /// </summary>
+        /// <returns></returns>
+        public double Cos()
+        {
+            return Math.Cos(Radians);
+        }
+
+        /// <summary>
+        /// Get the tangent of this angle
+        /// </summary>
+        /// <returns></returns>
+        public double Tan()
+        {
+            return Math.Tan(Radians);
+        }
+
+        /// <summary>
         /// Gets the sign of the angle, expressed as +1 for positive numbers
         /// and -1 for negative ones.  Zero is treated as being positive in this
         /// instance.

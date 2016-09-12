@@ -18,7 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Extensions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -69,7 +71,15 @@ namespace FreeBuild.Base
             if (objectMap == null) objectMap = new Dictionary<object, object>();
             objectMap[obj] = clone; //Store the original-clone relationship in the map
             clone.CopyFieldsFrom(obj, ref objectMap);
+            if (obj.GetType().IsEnumerable())
+            {
+                IEnumerable source = (IEnumerable)obj;
+                IEnumerable target = (IEnumerable)clone;
+                foreach(object item in source)
+                {
 
+                }
+            }
             //TODO: Deal with duplicating collections
 
             return clone;

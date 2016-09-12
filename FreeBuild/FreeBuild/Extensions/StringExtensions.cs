@@ -30,6 +30,18 @@ namespace FreeBuild.Extensions
     public static class StringExtensions
     {
         /// <summary>
+        /// Returns a version of this string with the first character captalised
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string CapitaliseFirst(this string str)
+        {
+            if (string.IsNullOrEmpty(str)) return str;
+            else
+                return str.Substring(0, 1).ToUpper() + str.Substring(1);
+        }
+
+        /// <summary>
         /// Returns a version of this string with spaces automatically placed before CamelCase capitals
         /// </summary>
         /// <param name="str"></param>
