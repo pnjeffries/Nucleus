@@ -161,9 +161,23 @@ namespace FreeBuild.Geometry
         /// Duplication constructor
         /// </summary>
         /// <param name="other">Another coordinate system to copy values from</param>
-        protected CartesianCoordinateSystem(CartesianCoordinateSystem other)
+        public CartesianCoordinateSystem(CartesianCoordinateSystem other)
         {
             Origin = other.Origin;
+            X = other.X;
+            Y = other.Y;
+            Z = other.Z;
+        }
+
+        /// <summary>
+        /// Constructor to duplicate a coordinate system while changing it's origin to
+        /// a new position
+        /// </summary>
+        /// <param name="other">Another coordinate system to copy axis directions from</param>
+        /// <param name="newOrigin">The origin point of the new coordinate system</param>
+        public CartesianCoordinateSystem(CartesianCoordinateSystem other, Vector newOrigin)
+        {
+            Origin = newOrigin;
             X = other.X;
             Y = other.Y;
             Z = other.Z;

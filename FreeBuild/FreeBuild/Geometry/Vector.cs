@@ -514,6 +514,16 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Project this point in space onto a plane
+        /// </summary>
+        /// <param name="ontoPlane">The plane to project the point onto.</param>
+        /// <returns></returns>
+        public Vector Project(Plane ontoPlane)
+        {
+            return ontoPlane.LocalToGlobal(ontoPlane.GlobalToLocal(this).WithZ(0));
+        }
+
+        /// <summary>
         /// Create a new copy of this vector, but with the specified X coordinate
         /// </summary>
         /// <param name="x">The new value of the X coordinate in the copied vector</param>

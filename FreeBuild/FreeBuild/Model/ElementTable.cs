@@ -30,6 +30,7 @@ namespace FreeBuild.Model
     /// An extended ElementCollection that also maintains several other temporary
     /// data structures in order to provide additional fast lookup capabilities
     /// </summary>
+    [Serializable]
     public class ElementTable : ElementCollection
     {
     }

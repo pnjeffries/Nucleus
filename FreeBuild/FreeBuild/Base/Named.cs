@@ -38,7 +38,7 @@ namespace FreeBuild.Base
         private string _Name;
 
         /// <summary>
-        /// The name of this unique object
+        /// The name, or mark, of this object
         /// </summary>
         public string Name
         {

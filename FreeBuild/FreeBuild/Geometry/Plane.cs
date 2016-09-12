@@ -52,9 +52,15 @@ namespace FreeBuild.Geometry
         public static readonly Plane GlobalYZ = new Plane(Vector.Zero, Vector.UnitY, Vector.UnitZ);
 
         /// <summary>
-        /// A present plane representing the global XZ plane, centred on the global origin
+        /// A present plane representing the global XZ plane, centred on the global origin.
         /// </summary>
         public static readonly Plane GlobalXZ = new Plane(Vector.Zero, Vector.UnitX, Vector.UnitZ);
+
+        /// <summary>
+        /// A preset plane representing the global XY plane, centered on the global origin,
+        /// but aligned with its X-axis lying along the global Y-axis.
+        /// </summary>
+        public static readonly Plane GlobalYX = new Plane(Vector.Zero, Vector.UnitY, Vector.UnitX);
 
         #endregion
 
@@ -94,6 +100,14 @@ namespace FreeBuild.Geometry
         /// <param name="cSystem"></param>
         public Plane(CartesianCoordinateSystem cSystem) : base(cSystem) { }
 
+        /// <summary>
+        /// Initialise a new plane aligned with the XY plane of the specified coordinate system positioned
+        /// at a new origin point
+        /// </summary>
+        /// <param name="cSystem">The coordinate system (or plane) to copy orientation from</param>
+        /// <param name="newOrigin">The origin point of the new plane</param>
+        public Plane(CartesianCoordinateSystem cSystem, Vector newOrigin) : base(cSystem, newOrigin) { }
+
         #endregion
 
         #region Methods
@@ -106,6 +120,29 @@ namespace FreeBuild.Geometry
         public Vector Project(Vector point)
         {
             return LocalToGlobal(GlobalToLocal(point).WithZ(0));
+        }
+
+        /// <summary>
+        /// Get the adjustment ratio of an area plotted on this plane to that of
+        /// its projection on the global XY plane.
+        /// </summary>
+        /// <returns></returns>
+        public double AreaRatio()
+        {
+            Vector v = X + Y;
+            return Math.Abs(v.X * X.Y);
+        }
+
+        /// <summary>
+        /// Get the adjustment ratio of an area plotted on this plane to that of
+        /// its projection on the specified plane
+        /// </summary>
+        /// <param name="onPlane"></param>
+        /// <returns></returns>
+        public double AreaRatio(Plane onPlane)
+        {
+            Vector v = X + Y;
+            return Math.Abs(v.Dot(onPlane.X) * v.Dot(onPlane.Y));
         }
 
         #endregion

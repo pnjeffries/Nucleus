@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Extensions;
 using FreeBuild.Maths;
 using FreeBuild.Units;
 using System;
@@ -240,6 +241,7 @@ namespace FreeBuild.Geometry
         /// A plane may optionally be specified, otherwise by default the projected area on 
         /// the XY plane will be used.
         /// </summary>
+        /// <param name="centroid">Output.  The centroid of the enclosed area.</param>
         /// <param name="onPlane">The plane to use to calculate the area.
         /// If not specified, the XY plane will be used.</param>
         /// <returns>The signed area enclosed by this curve on the specified plane,
@@ -260,6 +262,40 @@ namespace FreeBuild.Geometry
                 result += XYAreaUnder(start.X, start.Y, end.X, end.Y, ref centroid);
             }
             centroid /= result;
+            return result;
+        }
+
+        /// <summary>
+        /// Calculate the combined area enclosed by this curve, were the start and end points to be
+        /// joined by a straight line segment, but excluding areas bounded by a specified set of void curves.
+        /// A plane may optionally be specified, otherwise by default the projected area on the XY plane will
+        /// be used.
+        /// </summary>
+        /// <param name="centroid">Output.  The centroid of the enclosed area.</param>
+        /// <param name="voids">A collection of curves which represent the boundaries of void spaces
+        /// within the perimeter of this curve.  Voids must be co-planar with and wholly within the
+        /// bounds of this curve for the calculation to be accurate.  May be null.</param>
+        /// <param name="onPlane">The plane to use to calculate the area.
+        /// If not specified, the XY plane will be used.</param>
+        /// <returns>The signed area enclosed by this curve on the specified plane, as a double.</returns>
+        public double CalculateEnclosedArea(out Vector centroid, CurveCollection voids, Plane onPlane = null)
+        {
+            double result = CalculateEnclosedArea(out centroid, onPlane);
+            if (voids != null)
+            {
+                centroid *= result;
+                foreach (Curve voidCrv in voids)
+                {
+                    if (voidCrv != null && voidCrv.IsValid)
+                    {
+                        Vector voidCentroid;
+                        double voidArea = result.Sign() * Math.Abs(voidCrv.CalculateEnclosedArea(out voidCentroid, onPlane));
+                        centroid -= voidCentroid * voidArea;
+                        result -= voidArea;
+                    }
+                }
+                centroid /= result;
+            }
             return result;
         }
 
@@ -286,7 +322,7 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
-        /// Calculate the second moment of area enclosed by this curve on a the XY about the
+        /// Calculate the second moment of area enclosed by this curve on a the XY plane about the
         /// X-axis, were the start and end points joined by a straight line segment.
         /// A coordinate system may be specified, otherwise by default the global XY plane and
         /// X-axis will be used.
@@ -309,6 +345,35 @@ namespace FreeBuild.Geometry
                     end = onPlane.GlobalToLocal(end);
                 }
                 result += IxxUnder(start.X, start.Y, end.X, end.Y);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Calculate the second moment of area enclosed by this curve on a the XY plane about the
+        /// X-axis, were the start and end points joined by a straight line segment, excluding
+        /// the void regions specififed as boundaries.
+        /// A coordinate system may be specified, otherwise by default the global XY plane and
+        /// X-axis will be used.
+        /// </summary>
+        /// <param name="voids">A collection of curves which represent the boundaries of void spaces
+        /// within the perimeter of this curve.  Voids must be co-planar with and wholly within the
+        /// bounds of this curve for the calculation to be accurate.  May be null.</param>
+        /// <param name="onPlane">The coordinate system in which the second moment of area is
+        /// to be calculated.  The second moment of area will be calculated on the XY plane and
+        /// about the X-axis of this system.</param>
+        /// <returns>The signed second moment of area enclosed by this curve, as a
+        /// double.</returns>
+        public double CalculateEnclosedIxx(CurveCollection voids, Plane onPlane = null)
+        {
+            double result = CalculateEnclosedIxx(onPlane);
+            if (voids != null)
+            {
+                foreach (Curve voidCrv in voids)
+                {
+                    double voidArea = Math.Abs(voidCrv.CalculateEnclosedIxx(onPlane)) * result.Sign();
+                    result -= voidArea;
+                }
             }
             return result;
         }

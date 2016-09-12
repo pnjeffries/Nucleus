@@ -160,7 +160,7 @@ namespace FreeBuild.Model
         /// <param name="element">The element to be added</param>
         /// <returns>True if the element could be added, false if it already existed within
         /// the model.</returns>
-        public bool Add(IElement element)
+        public bool Add(Element element)
         {
             return Elements.TryAdd(element);
         }
