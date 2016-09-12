@@ -203,6 +203,15 @@ namespace FreeBuild.Geometry
             return LocalToGlobal(Radius, t);
         }
 
+        /// <summary>
+        /// Get the plane on which this circle lies
+        /// </summary>
+        /// <returns></returns>
+        public Plane Plane()
+        {
+            return new Geometry.Plane(Origin, this.L);
+        }
+
         #endregion
     }
 }

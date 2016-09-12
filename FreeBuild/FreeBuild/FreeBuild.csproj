@@ -78,6 +78,7 @@
     <Compile Include="Geometry\IShapePosition.cs" />
     <Compile Include="Geometry\Mesh.cs" />
     <Compile Include="Geometry\MeshFace.cs" />
+    <Compile Include="Geometry\MeshFaceCollection.cs" />
     <Compile Include="Geometry\Surface.cs" />
     <Compile Include="Geometry\Tolerance.cs" />
     <Compile Include="Model\ElementOrientation.cs" />
@@ -112,11 +113,14 @@
     <Compile Include="Model\ElementOrientationAngle.cs" />
     <Compile Include="Model\FaceProperty.cs" />
     <Compile Include="Model\ElementTable.cs" />
+    <Compile Include="Model\HorizontalSetOut.cs" />
     <Compile Include="Model\IElementOrientation.cs" />
     <Compile Include="Model\LetterProfile.cs" />
     <Compile Include="Model\LinearElement.cs" />
     <Compile Include="Model\Material.cs" />
     <Compile Include="Model\ModelDocumentCollection.cs" />
+    <Compile Include="Model\ModelObject.cs" />
+    <Compile Include="Model\ModelObjectCollection.cs" />
     <Compile Include="Model\ModelObjectCreator.cs" />
     <Compile Include="Model\Node.cs" />
     <Compile Include="Model\NodeCollection.cs" />
@@ -128,6 +132,7 @@
     <Compile Include="Model\RectangularProfile.cs" />
     <Compile Include="Model\SectionProperty.cs" />
     <Compile Include="Model\SymmetricIProfile.cs" />
+    <Compile Include="Model\VerticalSetOut.cs" />
     <Compile Include="Model\VolumetricProperty.cs" />
     <Compile Include="Geometry\Transform.cs" />
     <Compile Include="Geometry\VertexCollection.cs" />

@@ -33,7 +33,7 @@ namespace FreeBuild.Model
     /// 3D solid object.
     /// </summary>
     [Serializable]
-    public abstract class VolumetricProperty : Named
+    public abstract class VolumetricProperty : ModelObject
     {
     }
 }

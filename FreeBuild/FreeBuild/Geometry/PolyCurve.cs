@@ -213,6 +213,40 @@ namespace FreeBuild.Geometry
             return Vector.Unset;
         }
 
+        /// <summary>
+        /// Calculate the area enclosed by this curve, were the start and end points to be 
+        /// joined by a straight line segment.
+        /// A plane may optionally be specified, otherwise by default the projected area on 
+        /// the XY plane will be used.
+        /// </summary>
+        /// <param name="onPlane">The plane to use to calculate the area.
+        /// If not specified, the XY plane will be used.</param>
+        /// <returns>The signed area enclosed by this curve on the specified plane,
+        /// as a double.</returns>
+        public override double CalculateEnclosedArea(out Vector centroid, Plane onPlane = null)
+        {
+            double result = 0;
+            centroid = Vector.Zero;
+            for (int i = 0; i < SubCurves.Count; i++)
+            {
+                Curve subCrv = SubCurves[i];
+                Vector start = subCrv.StartPoint;
+                Vector end = subCrv.EndPoint;
+                if (onPlane != null)
+                {
+                    start = onPlane.GlobalToLocal(start);
+                    end = onPlane.GlobalToLocal(end);
+                }
+                result += XYAreaUnder(start.X, start.Y, end.X, end.Y, ref centroid);
+                Vector subCentroid;
+                double subArea = subCrv.CalculateEnclosedArea(out subCentroid, onPlane);
+                result += subArea;
+                centroid += subCentroid * subArea;
+            }
+            centroid /= result;
+            return result;
+        }
+
         #endregion
     }
 }

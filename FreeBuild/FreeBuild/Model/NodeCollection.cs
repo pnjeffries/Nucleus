@@ -31,7 +31,7 @@ namespace FreeBuild.Model
     /// A collection of nodes
     /// </summary>
     [Serializable]
-    public class NodeCollection : UniquesCollection<Node>
+    public class NodeCollection : ModelObjectCollection<Node>
     {
     }
 }

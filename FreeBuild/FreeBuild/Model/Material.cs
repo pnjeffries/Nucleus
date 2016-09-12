@@ -11,7 +11,7 @@ namespace FreeBuild.Model
     /// Abstract base class for materials
     /// </summary>
     [Serializable]
-    public abstract class Material : Named
+    public abstract class Material : ModelObject
     {
     }
 }

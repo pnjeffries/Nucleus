@@ -31,7 +31,7 @@ namespace FreeBuild.Model
     /// A collection of elements
     /// </summary>
     [Serializable]
-    public class ElementCollection : UniquesCollection<IElement>
+    public class ElementCollection : ModelObjectCollection<Element>
     {
     }
 }

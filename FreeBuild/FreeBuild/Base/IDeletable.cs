@@ -27,9 +27,10 @@ using System.Threading.Tasks;
 namespace FreeBuild.Base
 {
     /// <summary>
-    /// Interface for objects which can be deleted.
+    /// Interface for objects which can be 'deleted'.
     /// Deleted objects will remain within the object model but be marked for
-    /// deletion and removed at some future point.
+    /// deletion and removed at some future point, allowing them to be easily
+    /// restored via 'Undeletion'
     /// </summary>
     public interface IDeletable
     {
@@ -37,7 +38,9 @@ namespace FreeBuild.Base
 
         /// <summary>
         /// Get a boolean value indicating whether this object has been
-        /// marked for deletion.
+        /// marked for deletion.  This flag indicates that the object should be
+        /// ignored in any operation that acts only on the current state of the
+        /// model and that it should be removed during the next cleanup sweep.
         /// </summary>
         bool IsDeleted { get; }
 
@@ -62,4 +65,39 @@ namespace FreeBuild.Base
 
         #endregion
     }
+
+    /// <summary>
+    /// Extension methods to act on IDeletable objects and/or collections of same
+    /// </summary>
+    public static class IDeletableExtensions
+    {
+        /// <summary>
+        /// Remove all deleted objects from this list
+        /// </summary>
+        /// <param name="list"></param>
+        public static void RemoveDeleted(this IList<IDeletable> list)
+        {
+            for (int i = list.Count - 1; i >= 0; i--)
+            {
+                if (list[i].IsDeleted) list.RemoveAt(i);
+            }
+        }
+
+        /// <summary>
+        /// Extract the subset of objects from this collection that are not deleted,
+        /// as a list.
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static IList<T> Undeleted<T>(this IList<T> list) where T:IDeletable
+        {
+            List<T> result = new List<T>(list.Count);
+            foreach (T item in list)
+            {
+                if (!item.IsDeleted) result.Add(item);
+            }
+            return result;
+        }
+    }
+
 }

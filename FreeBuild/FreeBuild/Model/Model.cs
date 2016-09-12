@@ -131,7 +131,7 @@ namespace FreeBuild.Model
         /// Add a new element to this model
         /// </summary>
         /// <param name="element">The element to be added</param>
-        public void Add(IElement element)
+        public void Add(Element element)
         {
             Elements.Add(element);
         }

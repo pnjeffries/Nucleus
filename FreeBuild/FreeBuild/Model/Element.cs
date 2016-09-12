@@ -31,16 +31,14 @@ using System.Threading.Tasks;
 namespace FreeBuild.Model
 {
     /// <summary>
-    /// Generic base class for elements - objects which represent physical model
+    /// Abstract base class for Elements - objects which represent physical model
     /// entities and which are defined by a set-out geometry which describes the
     /// overall abstract form of the element and by a volumetric property which
     /// determines how that design representation converts into a 3D solid object.
     /// </summary>
-    [Serializable]
-    public abstract class Element<TShape, TProperty> : Named, IElement
-        where TShape : Shape
-        where TProperty : VolumetricProperty
+    public abstract class Element : ModelObject, IElement
     {
+
         #region Events
 
         /// <summary>
@@ -51,6 +49,65 @@ namespace FreeBuild.Model
 
         #endregion
 
+        /// <summary>
+        /// IElement Geometry implementation
+        /// </summary>
+        Shape IElement.Geometry
+        {
+            get
+            {
+                return GetGeometry();
+            }
+        }
+
+        /// <summary>
+        /// IElement Property implementation
+        /// </summary>
+        VolumetricProperty IElement.Property
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        #region Methods
+
+        /// <summary>
+        /// Notify this shape that one or more of its vertices or another aspect
+        /// of it's geometric definition has been altered.
+        /// or has been updated
+        /// </summary>
+        public void NotifyGeometryUpdated()
+        {
+            RaiseEvent(Updated, new ElementUpdateEventArgs());
+        }
+
+        /// <summary>
+        /// Protected internal function to return this element's geometry as a shape
+        /// </summary>
+        /// <returns></returns>
+        protected abstract Shape GetGeometry();
+
+        /// <summary>
+        /// IElement Property implementation
+        /// </summary>
+        protected abstract VolumetricProperty GetProperty();
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Generic base class for elements - objects which represent physical model
+    /// entities and which are defined by a set-out geometry which describes the
+    /// overall abstract form of the element and by a volumetric property which
+    /// determines how that design representation converts into a 3D solid object.
+    /// </summary>
+    [Serializable]
+    public abstract class Element<TShape, TProperty> : Element
+        where TShape : Shape
+        where TProperty : VolumetricProperty
+    {
         #region Properties
 
         /// <summary>
@@ -87,11 +144,6 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
-        /// IElement Geometry implementation
-        /// </summary>
-        Shape IElement.Geometry { get { return Geometry; } }
-
-        /// <summary>
         /// Private backing member variable for the Property property
         /// </summary>
         private TProperty _Property;
@@ -112,11 +164,6 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
-        /// IElement Property implementation
-        /// </summary>
-        VolumetricProperty IElement.Property { get { return Property; } }
-
-        /// <summary>
         /// The orientation description of this element - determines the relative orientation
         /// of the local coordinate system of this element.
         /// </summary>
@@ -126,17 +173,16 @@ namespace FreeBuild.Model
 
         #region Methods
 
-        /// <summary>
-        /// Notify this shape that one or more of its vertices or another aspect
-        /// of it's geometric definition has been altered.
-        /// or has been updated
-        /// </summary>
-        public void NotifyGeometryUpdated()
+        protected override Shape GetGeometry()
         {
-            RaiseEvent(Updated, new ElementUpdateEventArgs());
+            return Geometry;
+        }
+
+        protected override VolumetricProperty GetProperty()
+        {
+            return Property;
         }
 
         #endregion
-
     }
 }

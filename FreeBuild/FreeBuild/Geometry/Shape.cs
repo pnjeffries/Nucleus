@@ -40,7 +40,7 @@ namespace FreeBuild.Geometry
     /// specific position </typeparam>
     [Serializable]
     [Copy(CopyBehaviour.DUPLICATE)]
-    public abstract class Shape : Unique, IOwned<IElement>
+    public abstract class Shape : Unique, IOwned<Element>
     {
         #region Fields
 
@@ -61,7 +61,7 @@ namespace FreeBuild.Geometry
         /// Private backing field for Element property
         /// </summary>
         [Copy(CopyBehaviour.MAP)]
-        private IElement _Element = null;
+        private Element _Element = null;
 
         /// <summary>
         /// The element, if any, that this shape describes geometry for.
@@ -69,9 +69,9 @@ namespace FreeBuild.Geometry
         /// a maximum of one at any one time.
         /// If this shape does not describe element geometry this will return null.
         /// </summary>
-        public IElement Element { get { return _Element; } internal set { _Element = value; } }
+        public Element Element { get { return _Element; } internal set { _Element = value; } }
 
-        IElement IOwned<IElement>.Owner { get { return Element; } }
+        Element IOwned<Element>.Owner { get { return Element; } }
 
         /// <summary>
         /// The collection of vertices which are used to define the geometry of this shape.
