@@ -13,37 +13,55 @@ namespace FreeBuild.Geometry
     /// parent mesh.
     /// </summary>
     [Serializable]
-    public class MeshFace : Unique, IOwned<Mesh>
+    public class MeshFace : VertexCollection, IUnique
     {
         #region Properties
 
         /// <summary>
-        /// Private backing member variable for the Owner property
+        /// Internal backing member for GUID property
         /// </summary>
-        [Copy(CopyBehaviour.MAP)]
-        private Mesh _Owner = null;
+        [Copy(CopyBehaviour.DO_NOT_COPY)]
+        private Guid _GUID = Guid.NewGuid();
 
         /// <summary>
-        /// The shape (if any) that this vertex belongs to.
+        /// The GUID of this object, which can be used to uniquely identify it. 
         /// </summary>
-        public Mesh Owner
-        {
-            get { return _Owner; }
-            internal set { _Owner = value; }
-        }
+        public Guid GUID { get { return _GUID; } }
 
         /// <summary>
-        /// The collection of vertex indices that describe the topology of this
-        /// face.
+        /// Is this mesh face definition valid?
         /// </summary>
-        public IList<int> Indices { get; } = new List<int>();
+        public bool IsValid { get { return Count >= 3 && Count <= 4; } }
+
+        /// <summary>
+        /// Is this mesh face triangular?
+        /// i.e. does it have three vertices?
+        /// </summary>
+        public bool IsTri { get { return Count == 3; } }
+
+        /// <summary>
+        /// Is this mesg face quadrangular?
+        /// i.e. does it have four vertices?
+        /// </summary>
+        public bool IsQuad { get { return Count == 4; } }
 
         #endregion
 
+        #region Constructors
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public MeshFace()
+        {
+
+        }
+
+        #endregion
 
         #region Methods
 
         #endregion
+
     }
 }

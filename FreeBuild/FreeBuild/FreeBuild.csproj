@@ -82,6 +82,9 @@
     <Compile Include="Geometry\MeshFaceCollection.cs" />
     <Compile Include="Geometry\Surface.cs" />
     <Compile Include="Geometry\Tolerance.cs" />
+    <Compile Include="Model\DataOwner.cs" />
+    <Compile Include="Model\DataStore.cs" />
+    <Compile Include="Model\ElementDataStore.cs" />
     <Compile Include="Model\ElementOrientation.cs" />
     <Compile Include="Events\ElementUpdateEventArgs.cs" />
     <Compile Include="Base\TypeCollection.cs" />
@@ -115,10 +118,13 @@
     <Compile Include="Model\FaceProperty.cs" />
     <Compile Include="Model\ElementTable.cs" />
     <Compile Include="Model\HorizontalSetOut.cs" />
+    <Compile Include="Model\IElementData.cs" />
     <Compile Include="Model\IElementOrientation.cs" />
     <Compile Include="Model\LetterProfile.cs" />
     <Compile Include="Model\LinearElement.cs" />
     <Compile Include="Model\Material.cs" />
+    <Compile Include="Model\MaterialCollection.cs" />
+    <Compile Include="Model\MaterialTable.cs" />
     <Compile Include="Model\ModelDocumentCollection.cs" />
     <Compile Include="Model\ModelObject.cs" />
     <Compile Include="Model\ModelObjectCollection.cs" />
@@ -134,6 +140,7 @@
     <Compile Include="Model\RectangularProfile.cs" />
     <Compile Include="Model\SectionProperty.cs" />
     <Compile Include="Model\SymmetricIProfile.cs" />
+    <Compile Include="Model\VertexDataStore.cs" />
     <Compile Include="Model\VerticalSetOut.cs" />
     <Compile Include="Model\VolumetricProperty.cs" />
     <Compile Include="Geometry\Transform.cs" />
@@ -149,6 +156,7 @@
     <Compile Include="Base\Unique.cs" />
     <Compile Include="Base\UniquesCollection.cs" />
     <Compile Include="Model\VolumetricPropertyCollection.cs" />
+    <Compile Include="Model\VolumetricPropertyTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Geometry\Vector.cs" />
     <Compile Include="Rendering\IRenderable.cs" />

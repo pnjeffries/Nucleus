@@ -10,6 +10,7 @@ namespace FreeBuild.Geometry
     /// <summary>
     /// A collection of mesh face objects
     /// </summary>
+    [Serializable]
     public class MeshFaceCollection : OwnedCollection<MeshFace, Mesh>
     {
         public MeshFaceCollection(Mesh owner) : base(owner)

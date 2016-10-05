@@ -49,6 +49,25 @@ namespace FreeBuild.Model
 
         #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// Private backing field for Data property
+        /// </summary>
+        private ElementDataStore _Data = null;
+
+        /// <summary>
+        /// The non-geometric additional data attached to this element.
+        /// </summary>
+        public ElementDataStore Data
+        {
+            get
+            {
+                if (_Data != null) _Data = new ElementDataStore();
+                return _Data;
+            }
+        }
+
         /// <summary>
         /// IElement Geometry implementation
         /// </summary>
@@ -70,6 +89,8 @@ namespace FreeBuild.Model
                 throw new NotImplementedException();
             }
         }
+
+        #endregion
 
         #region Methods
 

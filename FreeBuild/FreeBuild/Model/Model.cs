@@ -60,31 +60,100 @@ namespace FreeBuild.Model
         #region Properties
 
         /// <summary>
+        /// Private backing field for Elements property
+        /// </summary>
+        private ElementTable _Elements;
+
+        /// <summary>
         /// Get the collection of elements that form the geometric representation 
         /// of this model.
         /// </summary>
-        public ElementTable Elements { get; }
+        public ElementTable Elements
+        {
+            get
+            {
+                if (_Elements == null)
+                {
+                    _Elements = new ElementTable();
+                    _Elements.CollectionChanged += HandlesInternalCollectionChanged;
+                }
+                return _Elements;
+            }
+        }
+
+        /// <summary>
+        /// Private backing field for Nodes property
+        /// </summary>
+        private NodeTable _Nodes;
 
         /// <summary>
         /// Get the collection of nodes that belong to this model.
         /// </summary>
-        public NodeTable Nodes { get; }
-
-        /// <summary>
-        /// Get the collection of properties that belong to this model.
-        /// </summary>
-        public VolumetricPropertyCollection Properties { get; }
-
-        /// <summary>
-        /// Get a single flat collection which contains all sub-objects within
-        /// this model.
-        /// </summary>
-        public UniquesCollection Everything
+        public NodeTable Nodes
         {
             get
             {
-                return new UniquesCollection( new IEnumerable<IUnique>[]
-                    {Elements, Nodes});
+                if (_Nodes == null)
+                {
+                    _Nodes = new NodeTable();
+                    _Nodes.CollectionChanged += HandlesInternalCollectionChanged;
+                }
+                return _Nodes;
+            }
+        }
+
+        /// <summary>
+        /// Private backing field for Properties property
+        /// </summary>
+        private VolumetricPropertyTable _Properties;
+
+        /// <summary>
+        /// Get the collection of volumetric properties that belong to this model.
+        /// </summary>
+        public VolumetricPropertyTable Properties
+        {
+            get
+            {
+                if (_Properties == null)
+                {
+                    _Properties = new VolumetricPropertyTable();
+                    _Properties.CollectionChanged += HandlesInternalCollectionChanged;
+                }
+                return _Properties;
+            }
+        }
+
+        /// <summary>
+        /// Private backing field for Materials property
+        /// </summary>
+        private MaterialTable _Materials;
+
+        /// <summary>
+        /// Get the collection of materials that belong to this model
+        /// </summary>
+        public MaterialTable Materials
+        {
+            get
+            {
+                if (_Materials == null)
+                {
+                    _Materials = new MaterialTable();
+                    _Materials.CollectionChanged += HandlesInternalCollectionChanged;
+                }
+                return _Materials;
+            }
+        }
+
+        /// <summary>
+        /// Get a single flat collection which contains all sub-objects within
+        /// this model, for easy iteration through the entire database in one go.
+        /// </summary>
+        public ModelObjectCollection Everything
+        {
+            get
+            {
+                return new ModelObjectCollection( new IEnumerable<ModelObject>[]
+                    {_Elements, _Nodes, _Properties, _Materials});
             }
         }
 
@@ -139,15 +208,16 @@ namespace FreeBuild.Model
         /// </summary>
         public Model()
         {
-            //Initialise collections
-            Elements = new ElementTable();
-            Nodes = new NodeTable();
-            Properties = new VolumetricPropertyCollection();
+        }
 
-            //Attach handlers:
-            Elements.CollectionChanged += HandlesInternalCollectionChanged;
-            Nodes.CollectionChanged += HandlesInternalCollectionChanged;
-            Properties.CollectionChanged += HandlesInternalCollectionChanged;
+        [OnDeserialized]
+        protected void OnDeserialised()
+        { 
+            //Restore collection changed event handling
+            if (_Elements != null) _Elements.CollectionChanged += HandlesInternalCollectionChanged;
+            if (_Nodes != null) _Nodes.CollectionChanged += HandlesInternalCollectionChanged;
+            if (_Properties != null) _Properties.CollectionChanged += HandlesInternalCollectionChanged;
+            if (_Materials != null) _Materials.CollectionChanged += HandlesInternalCollectionChanged;
         }
 
         #endregion
@@ -191,7 +261,7 @@ namespace FreeBuild.Model
         /// Register a new object with this model for event handling
         /// </summary>
         /// <param name="unique"></param>
-        protected void Register(Unique unique)
+        protected void Register(ModelObject unique)
         {
             unique.PropertyChanged += HandlesObjectPropertyChanged;
         }
@@ -203,7 +273,7 @@ namespace FreeBuild.Model
         [OnDeserialized]
         private void OnDeserialisation(StreamingContext context)
         {
-            foreach (Unique unique in Everything)
+            foreach (ModelObject unique in Everything)
             {
                 Register(unique);
             }
@@ -218,9 +288,9 @@ namespace FreeBuild.Model
             //New item added to a collection
             foreach (object obj in e.NewItems)
             {
-                if (obj is Unique)
+                if (obj is ModelObject)
                 {
-                    Register((Unique)obj);
+                    Register((ModelObject)obj);
                     RaiseEvent(ObjectAdded, new ModelObjectAddedEventArgs((Unique)obj));
                 }
             }

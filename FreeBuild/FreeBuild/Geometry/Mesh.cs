@@ -9,11 +9,15 @@ namespace FreeBuild.Geometry
     [Serializable]
     public class Mesh : Surface
     {
+        /// <summary>
+        /// Is this mesh valid?
+        /// </summary>
         public override bool IsValid
         {
             get
             {
-                throw new NotImplementedException();
+                //TODO!
+                return true;
             }
         }
 
