@@ -79,12 +79,12 @@ namespace FreeBuild.Model
         /// Get a single flat collection which contains all sub-objects within
         /// this model.
         /// </summary>
-        public UniquesCollection Everything
+        public ModelObjectCollection Everything
         {
             get
             {
-                return new UniquesCollection( new IEnumerable<IUnique>[]
-                    {Elements, Nodes});
+                return new ModelObjectCollection( new IEnumerable<ModelObject>[]
+                    {Elements, Nodes, Properties});
             }
         }
 

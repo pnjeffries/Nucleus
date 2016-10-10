@@ -82,6 +82,7 @@
     <Compile Include="Geometry\MeshFaceCollection.cs" />
     <Compile Include="Geometry\Surface.cs" />
     <Compile Include="Geometry\Tolerance.cs" />
+    <Compile Include="Meshing\MeshBuilderBase.cs" />
     <Compile Include="Model\ElementOrientation.cs" />
     <Compile Include="Events\ElementUpdateEventArgs.cs" />
     <Compile Include="Base\TypeCollection.cs" />

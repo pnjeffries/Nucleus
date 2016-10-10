@@ -204,12 +204,28 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Divide this circle into a number of equal-length segments and return
+        /// the division points between those segments.
+        /// </summary>
+        /// <param name="divisions">The number of segments to divide the circle into</param>
+        /// <returns></returns>
+        public Vector[] Divide(int divisions)
+        {
+            var result = new Vector[divisions];
+            for (int i = 0; i < divisions; i++)
+            {
+                result[i] = PointAt(i * 2 * Math.PI / divisions);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Get the plane on which this circle lies
         /// </summary>
         /// <returns></returns>
         public Plane Plane()
         {
-            return new Geometry.Plane(Origin, this.L);
+            return new Plane(Origin, L);
         }
 
         #endregion

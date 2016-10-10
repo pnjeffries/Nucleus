@@ -10,7 +10,7 @@ namespace FreeBuild.Model
     /// <summary>
     /// A collection of VolumetricProperty objects
     /// </summary>
-    public class VolumetricPropertyCollection : UniquesCollection<VolumetricProperty>
+    public class VolumetricPropertyCollection : ModelObjectCollection<VolumetricProperty>
     {
     }
 }
