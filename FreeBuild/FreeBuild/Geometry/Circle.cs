@@ -196,11 +196,45 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Find the position on the circle at the specified angular parameter
         /// </summary>
-        /// <param name="t">An angle around the circle, in Radians</param>
+        /// <param name="t">An angle (anti-clockwise) around the circle, in Radians</param>
         /// <returns>The point on the circle at the specified parameter</returns>
         public Vector PointAt(double t)
         {
             return LocalToGlobal(Radius, t);
+        }
+
+        /// <summary>
+        /// Find the position on the circle at the specified angular parameter
+        /// </summary>
+        /// <param name="t">An angle (anti-clockwise) around the circle, in Radians</param>
+        /// <returns>The point on the circle at the specified parameter</returns>
+        public Vector PointAt(Angle t)
+        {
+            return LocalToGlobal(Radius, t);
+        }
+
+        /// <summary>
+        /// Find the unit tangent vector to the circle at the specified angular
+        /// parameter
+        /// </summary>
+        /// <param name="t">An angle (anti-clockwise) around the circle, in Radians</param>
+        /// <returns></returns>
+        public Vector TangentAt(double t)
+        {
+            Vector localY = L.Cross(A);
+            return localY.Rotate(L, t);
+        }
+
+        /// <summary>
+        /// Find the unit tangent vector to the circle at the specified angular
+        /// parameter
+        /// </summary>
+        /// <param name="t">An angle (anti-clockwise) around the circle, in Radians</param>
+        /// <returns></returns>
+        public Vector TangentAt(Angle t)
+        {
+            Vector localY = L.Cross(A);
+            return localY.Rotate(L, t);
         }
 
         /// <summary>
@@ -209,7 +243,7 @@ namespace FreeBuild.Geometry
         /// <returns></returns>
         public Plane Plane()
         {
-            return new Geometry.Plane(Origin, this.L);
+            return new Plane(Origin, L);
         }
 
         #endregion

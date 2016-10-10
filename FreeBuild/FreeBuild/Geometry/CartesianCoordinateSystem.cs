@@ -223,6 +223,33 @@ namespace FreeBuild.Geometry
             return Origin + X * x + Y * y + Z * z;
         }
 
+        /// <summary>
+        /// Extract the XY plane from this coordinate system
+        /// </summary>
+        /// <returns></returns>
+        public Plane XYPlane()
+        {
+            return new Plane(Origin, X, Y);
+        }
+
+        /// <summary>
+        /// Extract the YZ plane from this coordinate system
+        /// </summary>
+        /// <returns></returns>
+        public Plane YZPlane()
+        {
+            return new Plane(Origin, Y, Z);
+        }
+
+        /// <summary>
+        /// Extract the XZ plane form this coordinate system
+        /// </summary>
+        /// <returns></returns>
+        public Plane XZPlane()
+        {
+            return new Plane(Origin, X, Z);
+        }
+
         #endregion
     }
 }

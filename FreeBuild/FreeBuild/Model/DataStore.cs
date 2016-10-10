@@ -16,8 +16,8 @@ namespace FreeBuild.Model
     {
 
         /// <summary>
-        /// Get data of the specified generic type (or the closest available sub-type) from this
-        /// data store.
+        /// Get data of the specified generic type from this
+        /// data store.  Note that the type must match exactly - sub-types are not included.
         /// </summary>
         /// <typeparam name="T">The type of data component to be retrieved.</typeparam>
         /// <returns></returns>
@@ -25,16 +25,17 @@ namespace FreeBuild.Model
         {
             Type tType = typeof(T);
             if (ContainsKey(tType)) return this[tType] as T;
-            else
-            {
-                Type tSubType = Keys.ClosestDescendent(tType);
-                if (tSubType != null) return this[tSubType] as T;
-            }
+            //Finding sub-types disabled for the sake of speed:
+            //else
+            //{
+            //    Type tSubType = Keys.ClosestDescendent(tType);
+            //    if (tSubType != null) return this[tSubType] as T;
+            //}
             return null;
         }
 
         /// <summary>
-        /// Get data of the specified generic type (or the closest available sub-type) from this
+        /// Get data of the specified generic type from this
         /// data store.  If no data component of the specified type is found then optionally a
         /// new one will be created.
         /// </summary>
@@ -48,8 +49,9 @@ namespace FreeBuild.Model
             if (ContainsKey(tType)) return this[tType] as T;
             else
             {
-                Type tSubType = Keys.ClosestDescendent(tType);
-                if (tSubType != null) return this[tSubType] as T;
+                //Finding sub-types disabled for the sake of speed:
+                //Type tSubType = Keys.ClosestDescendent(tType);
+                //if (tSubType != null) return this[tSubType] as T;
                 if (create)
                 {
                     T newData = new T();
@@ -58,6 +60,38 @@ namespace FreeBuild.Model
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Get all data within this store that is of the specified generic type or which
+        /// is assignable to that type.
+        /// </summary>
+        /// <typeparam name="T">The type of data component to be retrieved.</typeparam>
+        /// <returns></returns>
+        public IList<T> GetAllData<T>() where T: TData
+        {
+            IList<T> result = new List<T>();
+            Type tType = typeof(T);
+            foreach (Type keyType in Keys)
+            {
+                if (tType.IsAssignableFrom(keyType)) result.Add((T)this[keyType]);
+            }
+            return result;
+        }
+        /// <summary>
+        /// Get all data within this store that is of the specified generic type or which
+        /// is assignable to that type and add it to the specififed collection.
+        /// </summary>
+        /// <typeparam name="T">The type of data component to be retrieved.</typeparam>
+        /// <returns></returns>
+        public IList<T> GetAllData<T>(IList<T> addTo) where T:TData
+        {
+            Type tType = typeof(T);
+            foreach (Type keyType in Keys)
+            {
+                if (tType.IsAssignableFrom(keyType)) addTo.Add((T)this[keyType]);
+            }
+            return addTo;
         }
 
         /// <summary>
