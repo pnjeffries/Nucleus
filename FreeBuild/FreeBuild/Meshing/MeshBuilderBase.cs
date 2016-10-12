@@ -90,17 +90,18 @@ namespace FreeBuild.Meshing
         /// </summary>
         /// <param name="element"></param>
         /// <returns>The new face index</returns>
-        public int AddFace(StructAnalysis2DElement element)
+        public int AddFace(PanelElement element)
         {
-            if (element.Nodes.Count == 3 || element.Nodes.Count == 6) //TRI
-            {
-                return AddFace(element.OffsetNodePosition(0), element.OffsetNodePosition(1), element.OffsetNodePosition(2));
-            }
-            else if (element.Nodes.Count >= 4) //QUAD
-            {
-                return AddFace(element.OffsetNodePosition(0), element.OffsetNodePosition(1),
-                    element.OffsetNodePosition(2), element.OffsetNodePosition(3));
-            }
+            //TODO!
+            //if (element.Nodes.Count == 3 || element.Nodes.Count == 6) //TRI
+            //{
+            //    return AddFace(element.OffsetNodePosition(0), element.OffsetNodePosition(1), element.OffsetNodePosition(2));
+            //}
+            //else if (element.Nodes.Count >= 4) //QUAD
+            //{
+            //    return AddFace(element.OffsetNodePosition(0), element.OffsetNodePosition(1),
+            //        element.OffsetNodePosition(2), element.OffsetNodePosition(3));
+            //}
             return -1;
         }
 
@@ -214,19 +215,21 @@ namespace FreeBuild.Meshing
         /// <param name="element"></param>
         public void AddSectionPreview(LinearElement element)
         {
-            SectionProfile section = element.SectionProfile1;
-            if (section != null)
-            {
-                CoordinateSystem elementLocal = element.GetOffsetLocalCoordinateSystem();
-                CoordinateSystem startFrame = new CoordinateSystem(element.OffsetStartPoint, elementLocal.GetYAxisCopy() * -1, elementLocal.GetZAxisCopy());
-                CoordinateSystem endFrame = new CoordinateSystem(startFrame, element.OffsetEndPoint);
-                CurveCollection perimeter = section.GetCachedPerimeter();
-                //CurveCollectionCollection voids = section.GetCachedVoids();
-                IList<ICoordinateSystem> frames = new List<ICoordinateSystem>(2);
-                frames.Add(startFrame);
-                frames.Add(endFrame);
-                AddSweep(frames, perimeter);
-            }
+            //TODO
+
+            //SectionProfile section = element.SectionProfile1;
+            //if (section != null)
+            //{
+            //    CoordinateSystem elementLocal = element.GetOffsetLocalCoordinateSystem();
+            //    CoordinateSystem startFrame = new CoordinateSystem(element.OffsetStartPoint, elementLocal.GetYAxisCopy() * -1, elementLocal.GetZAxisCopy());
+            //    CoordinateSystem endFrame = new CoordinateSystem(startFrame, element.OffsetEndPoint);
+            //    CurveCollection perimeter = section.GetCachedPerimeter();
+            //    //CurveCollectionCollection voids = section.GetCachedVoids();
+            //    IList<ICoordinateSystem> frames = new List<ICoordinateSystem>(2);
+            //    frames.Add(startFrame);
+            //    frames.Add(endFrame);
+            //    AddSweep(frames, perimeter);
+            //}
         }
 
         /// <summary>
@@ -239,12 +242,12 @@ namespace FreeBuild.Meshing
         {
             IList<Vector> basePoints = baseCircle.Divide(baseResolution - 1);
             //if (basePoints.Count >= baseResolution) basePoints.RemoveAt(baseResolution); //Get rid of duplicate last point
-            IList<Point3d> tipPoints = new List<Point3d>();
+            IList<Vector> tipPoints = new List<Vector>();
             for (int i = 0; i < basePoints.Count; i++)
             {
                 tipPoints.Add(tip);
             }
-            IList<IList<Point3d>> topology = new List<IList<Point3d>>();
+            IList<IList<Vector>> topology = new List<IList<Vector>>();
             topology.Add(basePoints);
             topology.Add(tipPoints);
             AddLoft(topology, true);

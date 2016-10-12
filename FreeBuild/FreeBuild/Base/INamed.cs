@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,5 +36,27 @@ namespace FreeBuild.Base
         /// The name of this object
         /// </summary>
         string Name { get; set; }
+    }
+
+    /// <summary>
+    /// Extension methods for INamed objects and collections thereof
+    /// </summary>
+    public static class INamedExtensions
+    {
+        /// <summary>
+        /// Find an item in this collection by name.
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <param name="collection"></param>
+        /// <param name="name">The name of the item to find.  Not case sensitive.</param>
+        /// <returns>The first encountered item in this collection with the given name.</returns>
+        public static TItem FindByName<TItem> (this ICollection<TItem> collection, string name) where TItem: class, INamed
+        {
+            foreach (TItem item in collection)
+            {
+                if (item.Name.EqualsIgnoreCase(name)) return item;
+            }
+            return null;
+        }
     }
 }

@@ -9,11 +9,15 @@ namespace FreeBuild.Geometry
     [Serializable]
     public class Mesh : Surface
     {
+        /// <summary>
+        /// Is this mesh valid?
+        /// </summary>
         public override bool IsValid
         {
             get
             {
-                throw new NotImplementedException();
+                //TODO!
+                return true;
             }
         }
 
@@ -36,7 +40,7 @@ namespace FreeBuild.Geometry
         {
             get
             {
-                if (_Faces == null) _Faces = new MeshFaceCollection(this);
+                if (_Faces == null) _Faces = new MeshFaceCollection();
                 return _Faces;
             }
         }

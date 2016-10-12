@@ -104,7 +104,7 @@ namespace FreeBuild.Base
         {
             foreach (IEnumerable<TItem> subCollection in toBeCombined)
             {
-                TryAddRange(subCollection);
+                if (subCollection != null) TryAddRange(subCollection);
             }
         }
 

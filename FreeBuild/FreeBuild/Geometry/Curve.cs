@@ -148,7 +148,7 @@ namespace FreeBuild.Geometry
         /// between vertices.</remarks>
         public virtual Vector PointAt(double t)
         {
-            if (Closed) { t = t % 1.0; }
+            if (Closed) t = t % 1.0;
 
             //Calculate span
             double tSpan = t * SegmentCount;
@@ -180,6 +180,50 @@ namespace FreeBuild.Geometry
                 Vertex end = SegmentEnd(span); //Find the span end vertex
                 return start.Position.Interpolate(end.Position, tSpan); //Interpolate position
             }
+        }
+
+        /// <summary>
+        /// Evaluate the tangent unit vector of a point on this curve defined by a parameter t
+        /// </summary>
+        /// <param name="t">A normalised parameter defining a point along this curve.
+        /// Note that parameter-space is not necessarily uniform and does not equate to a normalised length.
+        /// 0 = curve start, 1 = curve end.
+        /// For open curves, parameters outside the range 0-1 will be invalid.
+        /// For closed curves, parameters outside this range will 'wrap'.</param>
+        /// <returns>The tangent unit vector of the curve at the specified parameter</returns>
+        /// <remarks>The base implementation treats the curve as being defined as a polyline, with straight lines
+        /// between vertices.</remarks>
+        public virtual Vector TangentAt(double t)
+        {
+            if (Closed) t = t % 1.0;
+
+            //Calculate span
+            double tSpan = t * SegmentCount;
+            int span = (int)Math.Floor(tSpan);
+            tSpan = tSpan % 1.0; //Position in span
+            return TangentAt(span, tSpan);
+        }
+
+        /// <summary>
+        /// Evaluate the tangent unit vector of a point defined by a parameter within a specified span.
+        /// </summary>
+        /// <param name="span">The index of the span.  Valid range 0 to SegmentCount - 1</param>
+        /// <param name="tSpan">A normalised parameter defining a point along this span of this curve.
+        /// Note that parameter-space is not necessarily uniform and does not equate to a normalised length.
+        /// 0 = span start, 1 = span end.
+        /// </param>
+        /// <returns>The unit vector describing the tangent of a point on the curve span at the specified parameter,
+        /// if the curve definition and parameter are valid.  Else, null.</returns>
+        /// <remarks>The base implementation treats the curve as being defined as a polyline, with straight lines
+        /// between vertices.</remarks>
+        public virtual Vector TangentAt(int span, double tSpan)
+        {
+            if (!IsValid) return Vector.Unset; //No spans!
+            Vertex start = SegmentStart(span); //Find the span start vertex
+            if (start == null) return Vector.Unset; //If the start vertex doesn't exist, abort
+            
+            Vertex end = SegmentEnd(span); //Find the span end vertex
+            return (end.Position - start.Position).Unitize(); //Interpolate position
         }
 
         /// <summary>

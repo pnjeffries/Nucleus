@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace FreeBuild.Model
 {
+    /// <summary>
+    /// Manager class to store, restore and merge model objects
+    /// </summary>
     public class ModelSourceHistory
     {
         #region Properties
@@ -15,8 +18,8 @@ namespace FreeBuild.Model
         /// <summary>
         /// The map of objects to sources, stored as a list of UniqueObjects indexed by iteration and keyed by source reference
         /// </summary>
-        public IDictionary<string, IList<IList<Unique>>> SourceMap { get; }
-           = new Dictionary<string, IList<IList<Unique>>>();
+        public IDictionary<string, IList<IList<ModelObject>>> SourceMap { get; }
+           = new Dictionary<string, IList<IList<ModelObject>>>();
 
         #endregion
 
@@ -28,14 +31,14 @@ namespace FreeBuild.Model
         /// <param name="exInfo"></param>
         /// <returns>The object previously stored with equivalent execution information, 
         /// or null if no previously stored object exists</returns>
-        public Unique Get(ExecutionInfo exInfo)
+        public ModelObject Get(ExecutionInfo exInfo)
         {
             if (SourceMap.ContainsKey(exInfo.SourceReference))
             {
-                IList<IList<Unique>> iterations = SourceMap[exInfo.SourceReference];
+                IList<IList<ModelObject>> iterations = SourceMap[exInfo.SourceReference];
                 if (iterations.Count > exInfo.Iteration)
                 {
-                    IList<Unique> iteration = iterations[exInfo.Iteration];
+                    IList<ModelObject> iteration = iterations[exInfo.Iteration];
                     if (iteration.Count > exInfo.HistoryItemCount) return iteration[exInfo.HistoryItemCount];
                 }
             }
@@ -47,22 +50,22 @@ namespace FreeBuild.Model
         /// </summary>
         /// <param name="exInfo"></param>
         /// <param name="unique"></param>
-        public void Set(ExecutionInfo exInfo, Unique unique)
+        public void Set(ExecutionInfo exInfo, ModelObject unique)
         {
             if (exInfo != null && exInfo.SourceReference != null)
             {
-                IList<IList<Unique>> iterations;
+                IList<IList<ModelObject>> iterations;
                 if (SourceMap.ContainsKey(exInfo.SourceReference)) iterations = SourceMap[exInfo.SourceReference];
                 else
                 {
-                    iterations = new List<IList<Unique>>();
+                    iterations = new List<IList<ModelObject>>();
                     SourceMap[exInfo.SourceReference] = iterations;
                 }
                 while (exInfo.Iteration >= iterations.Count) iterations.Add(null);
-                IList<Unique> iteration = iterations[exInfo.Iteration];
+                IList<ModelObject> iteration = iterations[exInfo.Iteration];
                 if (iteration == null)
                 {
-                    iteration = new List<Unique>();
+                    iteration = new List<ModelObject>();
                     iterations[exInfo.Iteration] = iteration;
                 }
                 if (exInfo.HistoryItemCount < iteration.Count) iteration[exInfo.HistoryItemCount] = unique;
@@ -80,15 +83,15 @@ namespace FreeBuild.Model
         /// <param name="unique"></param>
         /// <returns>The current object - either the orginal stored value if it was updated, or the new object
         /// if it was replaced</returns>
-        public Unique Update(ExecutionInfo exInfo, Unique unique)
+        public ModelObject Update(ExecutionInfo exInfo, ModelObject unique)
         {
             if (exInfo != null)
             {
-                Unique original = Get(exInfo);
+                ModelObject original = Get(exInfo);
                 if (original != null && unique != null && original.GetType() == unique.GetType())
                 {
                     original.CopyFieldsFrom(unique);
-                    //original.Undelete();
+                    original.Undelete();
                     exInfo.HistoryItemCount++;
                     return original;
                 }
@@ -97,7 +100,7 @@ namespace FreeBuild.Model
                     if (unique != null)
                         Set(exInfo, unique);
                     else exInfo.HistoryItemCount++;
-                    //if (original != null) original.Delete();
+                    if (original != null) original.Delete();
                     return unique;
                 }
             }
@@ -113,13 +116,13 @@ namespace FreeBuild.Model
         {
             if (SourceMap.ContainsKey(sourceRef))
             {
-                IList<IList<Unique>> iterations = SourceMap[sourceRef];
+                IList<IList<ModelObject>> iterations = SourceMap[sourceRef];
                 for (int i = iteration + 1; i < iterations.Count; i++)
                 {
-                    IList<Unique> uniques = iterations[i];
-                    foreach (Unique unique in uniques)
+                    IList<ModelObject> uniques = iterations[i];
+                    foreach (ModelObject unique in uniques)
                     {
-                        //if (unique != null) unique.Delete();
+                        if (unique != null) unique.Delete();
                     }
                 }
             }
@@ -144,14 +147,14 @@ namespace FreeBuild.Model
         {
             if (SourceMap.ContainsKey(sourceRef))
             {
-                IList<IList<Unique>> iterations = SourceMap[sourceRef];
+                IList<IList<ModelObject>> iterations = SourceMap[sourceRef];
                 for (int i = iteration + 1; i < iterations.Count; i++)
                 {
-                    IList<Unique> uniques = iterations[i];
+                    IList<ModelObject> uniques = iterations[i];
                     for (int j = historyItemCount; j < uniques.Count; j++)
                     {
-                        Unique unique = uniques[j];
-                        //if (unique != null) unique.Delete();
+                        ModelObject unique = uniques[j];
+                        if (unique != null) unique.Delete();
                     }
                 }
             }

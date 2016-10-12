@@ -145,6 +145,29 @@ namespace FreeBuild.Geometry
             return Math.Abs(v.Dot(onPlane.X) * v.Dot(onPlane.Y));
         }
 
+        /// <summary>
+        /// Rotate this plane around its origin about the specified axis
+        /// </summary>
+        /// <param name="axis">The axis of rotation</param>
+        /// <param name="rotation">The angle of rotation</param>
+        /// <returns></returns>
+        public Plane Rotate(Vector axis, Angle rotation)
+        {
+            return new Plane(Origin, X.Rotate(axis, rotation), Y.Rotate(axis, rotation));
+        }
+
+        /// <summary>
+        /// Create a copy of this Plane rotated about its own normal.
+        /// The plane itself will remain the same however the local coordinate axes will
+        /// have been rotated within that plane.
+        /// </summary>
+        /// <param name="rotation"></param>
+        /// <returns></returns>
+        public Plane Rotate(Angle rotation)
+        {
+            return new Plane(Origin, X.Rotate(Z, rotation), Y.Rotate(Z, rotation));
+        }
+
         #endregion
 
     }
