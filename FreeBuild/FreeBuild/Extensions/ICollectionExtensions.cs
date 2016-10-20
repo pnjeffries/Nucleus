@@ -51,6 +51,23 @@ namespace FreeBuild.Extensions
         }
 
         /// <summary>
+        /// Extract all of the objects of a specified type into a separate collection
+        /// </summary>
+        /// <typeparam name="T">The type of object to extract from this collection</typeparam>
+        /// <param name="col"></param>
+        /// <param name="toCollection">The collection to which the objects will be added</param>
+        public static void ExtractAllOfType<T>(this ICollection col, ICollection<T> toCollection)
+        {
+            foreach (object item in col)
+            {
+                if (item is T)
+                {
+                    toCollection.Add((T)item);
+                }
+            }
+        }
+
+        /// <summary>
         /// Create a string containing the ToString() results of all objects in the collection
         /// separated by the optionally specified separator sequence.
         /// </summary>

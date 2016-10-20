@@ -11,20 +11,8 @@ namespace FreeBuild.Geometry
     /// A collection of mesh face objects
     /// </summary>
     [Serializable]
-    public class MeshFaceCollection : OwnedCollection<MeshFace, Mesh>
+    public class MeshFaceCollection : UniquesCollection<MeshFace>
     {
-        public MeshFaceCollection(Mesh owner) : base(owner)
-        {
-        }
-
-        protected override void ClearItemOwner(MeshFace item)
-        {
-            item.Owner = null;
-        }
-
-        protected override void SetItemOwner(MeshFace item)
-        {
-            item.Owner = Owner;
-        }
+       
     }
 }

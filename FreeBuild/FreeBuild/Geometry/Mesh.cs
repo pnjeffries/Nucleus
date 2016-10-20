@@ -40,7 +40,7 @@ namespace FreeBuild.Geometry
         {
             get
             {
-                if (_Faces == null) _Faces = new MeshFaceCollection(this);
+                if (_Faces == null) _Faces = new MeshFaceCollection();
                 return _Faces;
             }
         }

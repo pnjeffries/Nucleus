@@ -33,7 +33,7 @@ namespace FreeBuild.Base
     /// </summary>
     /// <typeparam name="TItem">The type of uniquely identifiable item</typeparam>
     [Serializable]
-    public class UniquesCollection<TItem> : ObservableKeyedCollection<Guid, TItem> where TItem : IUnique
+    public class UniquesCollection<TItem> : ObservableKeyedCollection<Guid, TItem> where TItem : class, IUnique
     {
         #region Constructors
 
@@ -43,10 +43,26 @@ namespace FreeBuild.Base
 
         #endregion
 
+        #region Methods
+
         protected override Guid GetKeyForItem(TItem item)
         {
             return item.GUID;
         }
+
+        /// <summary>
+        /// Try to get a unique item stored by the specified key GUID.
+        /// If no entry with that key is stored, this function will return null.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public TItem TryGet(Guid key)
+        {
+            if (Contains(key)) return this[key];
+            else return null;
+        }
+
+        #endregion
     }
 
     /// <summary>

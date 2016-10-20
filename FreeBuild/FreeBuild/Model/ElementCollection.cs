@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using FreeBuild.Base;
+using FreeBuild.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,5 +34,25 @@ namespace FreeBuild.Model
     [Serializable]
     public class ElementCollection : ModelObjectCollection<Element>
     {
+        #region Properties
+
+        /// <summary>
+        /// Extract a collection of all the linear elements in this collection.
+        /// A new collection will be generated each time this is called.
+        /// </summary>
+        public ElementCollection LinearElements
+        {
+            get
+            {
+                var result = new ElementCollection();
+                foreach (Element element in this)
+                {
+                    if (element is LinearElement) result.Add(element);
+                }
+                return result;
+            }
+        }
+
+        #endregion
     }
 }

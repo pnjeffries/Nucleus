@@ -98,6 +98,14 @@ namespace FreeBuild.Base
             }
             return result;
         }
+
+        public static void DeleteAll(this IEnumerable<IDeletable> list)
+        {
+            foreach(IDeletable item in list)
+            {
+                item.Delete();
+            }
+        }
     }
 
 }

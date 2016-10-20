@@ -45,6 +45,12 @@
   <ItemGroup>
     <Compile Include="Actions\ExecutionHistory.cs" />
     <Compile Include="Actions\ExecutionInfo.cs" />
+    <Compile Include="Conversion\ConversionContext.cs" />
+    <Compile Include="Conversion\ConversionOptions.cs" />
+    <Compile Include="Conversion\IDMappingTable.cs" />
+    <Compile Include="Conversion\ModelIDMappingTable.cs" />
+    <Compile Include="Extensions\IEnumerableExtensions.cs" />
+    <Compile Include="Model\IModelImporter.cs" />
     <Compile Include="DDTree\NodeDDTree.cs" />
     <Compile Include="Exceptions\GeometryException.cs" />
     <Compile Include="Extensions\DoubleExtensions.cs" />

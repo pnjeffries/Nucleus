@@ -33,7 +33,7 @@ namespace FreeBuild.Base
     /// <typeparam name="TOwner"></typeparam>
     [Serializable]
     public abstract class OwnedCollection<TItem, TOwner> : UniquesCollection<TItem>
-        where TItem : IUnique, IOwned<TOwner>
+        where TItem : class, IUnique, IOwned<TOwner>
     {
         #region Properties
 

@@ -31,21 +31,21 @@ namespace FreeBuild.Base
     /// A bi-directional dictionary that allows fast lookup of value by key or
     /// of key by value
     /// </summary>
-    /// <typeparam name="TKey"></typeparam>
-    /// <typeparam name="TValue"></typeparam>
-    public class BiDirectionary<TKey, TValue> : IDictionary<TKey, TValue>
+    /// <typeparam name="TFirst"></typeparam>
+    /// <typeparam name="TSecond"></typeparam>
+    public class BiDirectionary<TFirst, TSecond> : IDictionary<TFirst, TSecond>
     {
         #region Fields
 
         /// <summary>
-        /// The key to value dictionary
+        /// The dictionary mapping the first set of data as keys to the second
         /// </summary>
-        protected IDictionary<TKey, TValue> _AtoB;
+        protected IDictionary<TFirst, TSecond> _FirstToSecond;
 
         /// <summary>
-        /// The reversed, value to key dictionary
+        /// The reversed dictionary mapping the second set of data as keys to the first
         /// </summary>
-        protected IDictionary<TValue, TKey> _BtoA;
+        protected IDictionary<TSecond, TFirst> _SecondToFirst;
 
         #endregion
 
@@ -56,17 +56,17 @@ namespace FreeBuild.Base
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public TValue this[TKey key]
+        public TSecond this[TFirst key]
         {
             get
             {
-                return _AtoB[key];
+                return _FirstToSecond[key];
             }
 
             set
             {
-                _AtoB[key] = value;
-                _BtoA[value] = key;
+                _FirstToSecond[key] = value;
+                _SecondToFirst[value] = key;
             }
         }
 
@@ -75,16 +75,16 @@ namespace FreeBuild.Base
         /// </summary>
         /// <param name="val"></param>
         /// <returns></returns>
-        public TKey this[TValue val]
+        public TFirst this[TSecond val]
         {
             get
             {
-                return _BtoA[val];
+                return _SecondToFirst[val];
             }
             set
             {
-                _BtoA[val] = value;
-                _AtoB[value] = val;
+                _SecondToFirst[val] = value;
+                _FirstToSecond[value] = val;
             }
         }
 
@@ -95,7 +95,7 @@ namespace FreeBuild.Base
         {
             get
             {
-                return _AtoB.Count;
+                return _FirstToSecond.Count;
             }
         }
 
@@ -107,19 +107,19 @@ namespace FreeBuild.Base
             }
         }
 
-        public ICollection<TKey> Keys
+        public ICollection<TFirst> Keys
         {
             get
             {
-                return _AtoB.Keys;
+                return _FirstToSecond.Keys;
             }
         }
 
-        public ICollection<TValue> Values
+        public ICollection<TSecond> Values
         {
             get
             {
-                return _AtoB.Values;
+                return _FirstToSecond.Values;
             }
         }
 
@@ -127,66 +127,122 @@ namespace FreeBuild.Base
 
         #region Methods
 
-        public void Add(KeyValuePair<TKey, TValue> item)
+        /// <summary>
+        /// Adds a linked pair of items to the BiDirectionary
+        /// </summary>
+        /// <param name="item"></param>
+        public void Add(KeyValuePair<TFirst, TSecond> item)
         {
-            _AtoB.Add(item.Key, item.Value);
-            _BtoA.Add(item.Value, item.Key);
+            _FirstToSecond.Add(item.Key, item.Value);
+            _SecondToFirst.Add(item.Value, item.Key);
         }
 
-        public void Add(TKey key, TValue value)
+        /// <summary>
+        /// Adds the linked pair of items to the BiDirectionary
+        /// </summary>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        public void Add(TFirst first, TSecond second)
         {
-            _AtoB.Add(key, value);
-            _BtoA.Add(value, key);
+            _FirstToSecond.Add(first, second);
+            _SecondToFirst.Add(second, first);
         }
 
+        /// <summary>
+        /// Removes all items from the BiDirectionary
+        /// </summary>
         public void Clear()
         {
-            _AtoB.Clear();
-            _BtoA.Clear();
+            _FirstToSecond.Clear();
+            _SecondToFirst.Clear();
         }
 
-        public bool Contains(KeyValuePair<TKey, TValue> item)
+        public bool Contains(KeyValuePair<TFirst, TSecond> item)
         {
-            return _AtoB.Contains(item);
+            return _FirstToSecond.Contains(item);
         }
 
-        public bool ContainsKey(TKey key)
+        public bool ContainsKey(TFirst key)
         {
-            return _AtoB.ContainsKey(key);
+            return _FirstToSecond.ContainsKey(key);
         }
 
-        public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+        public void CopyTo(KeyValuePair<TFirst, TSecond>[] array, int arrayIndex)
         {
-            _AtoB.CopyTo(array, arrayIndex);
+            _FirstToSecond.CopyTo(array, arrayIndex);
         }
 
-        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+        public IEnumerator<KeyValuePair<TFirst, TSecond>> GetEnumerator()
         {
-            return _AtoB.GetEnumerator();
+            return _FirstToSecond.GetEnumerator();
         }
 
-        public bool Remove(KeyValuePair<TKey, TValue> item)
+        public bool Remove(KeyValuePair<TFirst, TSecond> item)
         {
 
-            _BtoA.Remove(new KeyValuePair<TValue, TKey>(item.Value, item.Key));
-            return _AtoB.Remove(item);
+            _SecondToFirst.Remove(new KeyValuePair<TSecond, TFirst>(item.Value, item.Key));
+            return _FirstToSecond.Remove(item);
         }
 
-        public bool Remove(TKey key)
+        public bool Remove(TFirst key)
         {
-            TValue val = _AtoB[key];
-            _BtoA.Remove(val);
-            return _AtoB.Remove(key);
+            TSecond val = _FirstToSecond[key];
+            _SecondToFirst.Remove(val);
+            return _FirstToSecond.Remove(key);
         }
 
-        public bool TryGetValue(TKey key, out TValue value)
+        public bool TryGetValue(TFirst key, out TSecond value)
         {
-            return _AtoB.TryGetValue(key, out value);
+            return _FirstToSecond.TryGetValue(key, out value);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _AtoB.GetEnumerator();
+            return _FirstToSecond.GetEnumerator();
+        }
+
+        /// <summary>
+        /// Get the value within the first set keyed by the specified
+        /// value from within the second.
+        /// </summary>
+        /// <param name="bySecond"></param>
+        /// <returns></returns>
+        public TFirst GetFirst(TSecond bySecond)
+        {
+            return _SecondToFirst[bySecond];
+        }
+
+        /// <summary>
+        /// Get the value within the second set keyed by the specified
+        /// value from within the first set
+        /// </summary>
+        /// <param name="byFirst"></param>
+        /// <returns></returns>
+        public TSecond GetSecond(TFirst byFirst)
+        {
+            return _FirstToSecond[byFirst];
+        }
+
+        /// <summary>
+        /// Determines whether this BiDirectionary contains the value specified within
+        /// the first set.
+        /// </summary>
+        /// <param name="first"></param>
+        /// <returns></returns>
+        public bool ContainsFirst(TFirst first)
+        {
+            return _FirstToSecond.ContainsKey(first);
+        }
+
+        /// <summary>
+        /// Determines whether this BiDirectionary contains the value specified within
+        /// the second set.
+        /// </summary>
+        /// <param name="second"></param>
+        /// <returns></returns>
+        public bool ContainsSecond(TSecond second)
+        {
+            return _SecondToFirst.ContainsKey(second);
         }
 
         #endregion

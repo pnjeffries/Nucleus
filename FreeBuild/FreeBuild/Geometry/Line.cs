@@ -162,6 +162,18 @@ namespace FreeBuild.Geometry
             return 0;
         }
 
+        /// <summary>
+        /// Set this line to run between the specified start and end points.
+        /// Will modify the positions of the start and end vertices of this line.
+        /// </summary>
+        /// <param name="startPt"></param>
+        /// <param name="endPt"></param>
+        public void Set(Vector startPt, Vector endPt)
+        {
+            Start.Position = startPt;
+            End.Position = endPt;
+        }
+
         #endregion
 
     }
