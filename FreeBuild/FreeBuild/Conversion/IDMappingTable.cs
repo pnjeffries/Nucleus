@@ -116,7 +116,7 @@ namespace FreeBuild.Conversion
         public void Add(string category, TFirstID firstID, TSecondID secondID)
         {
             if (!ContainsKey(category)) Add(category, new BiDirectionary<TFirstID, TSecondID>());
-            this[category].Add(firstID, secondID);
+            this[category].Set(firstID, secondID);
         }
 
     }

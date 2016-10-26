@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BarDataType.cs" />
+    <Compile Include="Extensions\IRobotNodeExtensions.cs" />
     <Compile Include="NodeDataType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RobotController.cs" />
@@ -48,6 +49,7 @@
     <Compile Include="RobotConversionOptions.cs" />
     <Compile Include="RobotIDMappingTable.cs" />
     <Compile Include="RobotModelImporter.cs" />
+    <Compile Include="RobotTests.cs" />
     <Compile Include="ROBtoFB.cs" />
   </ItemGroup>
   <ItemGroup>

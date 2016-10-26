@@ -26,6 +26,11 @@ namespace FreeBuild.Robot
         /// </summary>
         public string BarCategory { get { return "Bars"; } }
 
+        /// <summary>
+        /// The name of the category under which section properties are stored
+        /// </summary>
+        public string SectionCategory { get { return "Sections"; } }
+
         #endregion
 
         #region Constructor
@@ -74,6 +79,7 @@ namespace FreeBuild.Robot
         /// <returns></returns>
         public LinearElement GetMappedLinearElement(int robotID, Model.Model model)
         {
+            //TODO: Get for sub-elements (when introduced)
             if (HasFirstID(BarCategory, robotID)) return model.Elements.TryGet(GetFirstID(BarCategory, robotID)) as LinearElement;
             return null;
         }
@@ -87,6 +93,29 @@ namespace FreeBuild.Robot
         public LinearElement GetMappedLinearElement(IRobotBar bar, Model.Model model)
         {
             return GetMappedLinearElement(bar.Number, model);
+        }
+
+        /// <summary>
+        /// Get the FreeBuild section property, if any, mapped to the specified robot section label ID
+        /// </summary>
+        /// <param name="robotID"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public SectionProperty GetMappedSectionProperty(int robotID, Model.Model model)
+        {
+            if (HasFirstID(SectionCategory, robotID)) return model.Properties.TryGet(GetFirstID(SectionCategory, robotID)) as SectionProperty;
+            return null;
+        }
+
+        /// <summary>
+        /// Get the FreeBuild section property, if any, mapped to the ID of the specified 
+        /// </summary>
+        /// <param name="label"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public SectionProperty GetMappedSectionProperty(IRobotLabel label, Model.Model model)
+        {
+            return GetMappedSectionProperty(label.UniqueId, model);
         }
 
         /// <summary>
@@ -110,6 +139,16 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
+        /// Add a new Section entry to this mapping table
+        /// </summary>
+        /// <param name="section"></param>
+        /// <param name="label"></param>
+        public void Add(SectionProperty section, IRobotLabel label)
+        {
+            Add(SectionCategory, section.GUID, label.UniqueId);
+        }
+
+        /// <summary>
         /// Get all nodes in the specified model which have a mapping entry in this table
         /// </summary>
         /// <param name="inModel"></param>
@@ -128,7 +167,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Get all linear elements in the specified model which have a mapping entry in thsi table
+        /// Get all linear elements in the specified model which have a mapping entry in this table
         /// </summary>
         /// <param name="inModel"></param>
         /// <returns></returns>
@@ -140,6 +179,24 @@ namespace FreeBuild.Robot
                 foreach (Guid guid in this[BarCategory].Keys)
                 {
                     if (inModel.Elements.Contains(guid)) result.Add(inModel.Elements[guid]);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Get all section properties in the specified model whcih have a mapping extry in this table
+        /// </summary>
+        /// <param name="inModel"></param>
+        /// <returns></returns>
+        public VolumetricPropertyCollection AllMappedSections(Model.Model inModel)
+        {
+            var result = new VolumetricPropertyCollection();
+            if (ContainsKey(SectionCategory))
+            {
+                foreach (Guid guid in this[SectionCategory].Keys)
+                {
+                    if (inModel.Properties.Contains(guid)) result.Add(inModel.Properties[guid]);
                 }
             }
             return result;

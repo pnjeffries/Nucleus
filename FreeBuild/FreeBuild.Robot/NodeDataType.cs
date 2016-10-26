@@ -56,6 +56,12 @@ namespace FreeBuild.Robot
             return (type == NodeDataType.X || type == NodeDataType.Y || type == NodeDataType.Z);
         }
 
+
+        /// <summary>
+        /// Is this a displacement result data type?
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public static bool IsDisplacementData(this NodeDataType type)
         {
             return (type >= NodeDataType.Displacement_Ux && type <= NodeDataType.Displacmenet_Rzz);

@@ -46,7 +46,7 @@ namespace FreeBuild.Base
         /// <param name="propertyName"></param>
         protected void NotifyPropertyChanged(string propertyName)
         {
-            RaiseEvent(PropertyChanged, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         /// <summary>
@@ -57,10 +57,7 @@ namespace FreeBuild.Base
         /// <param name="args">The event args</param>
         protected void RaiseEvent(PropertyChangedEventHandler handler, PropertyChangedEventArgs args)
         {
-            if (handler != null)
-            {
-                handler(this, args);
-            }
+            handler?.Invoke(this, args);
         }
 
         /// <summary>
@@ -73,10 +70,7 @@ namespace FreeBuild.Base
         /// <param name="args">The event args</param>
         protected void RaiseEvent(PropertyChangedEventHandler handler, object sender, PropertyChangedEventArgs args)
         {
-            if (handler != null)
-            {
-                handler(sender, args);
-            }
+            handler?.Invoke(sender, args);
         }
     }
 }

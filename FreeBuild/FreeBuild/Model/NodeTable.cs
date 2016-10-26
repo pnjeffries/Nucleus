@@ -75,6 +75,12 @@ namespace FreeBuild.Model
             return SpatialTree.NearestTo(point, maxDistance, toBeIgnored);
         }
 
+        protected override void OnCollectionChanged()
+        {
+            //Clear cached data:
+            _SpatialTree = null;
+        }
+
         #endregion
     }
 }

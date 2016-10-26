@@ -18,28 +18,29 @@ namespace FreeBuild.Robot
         Length = 20,
         StartNode = 21,
         EndNode = 22,
-        Displacement_Ux = 30,
-        Displacement_Uy = 31,
-        Displacement_Uz = 32,
-        Displacement_Rxx = 33,
-        Displacement_Ryy = 34,
-        Displacmenet_Rzz = 35,
-        Force_Fx = 40,
-        Force_Fy = 41,
-        Force_Fz = 42,
-        Force_Mxx = 43,
-        Force_Myy = 44,
-        Force_Mzz = 45,
-        Stress_Axial = 50,
-        Stress_Shear_Y = 51,
-        Stress_Shear_Z = 52,
-        Stress_Max = 53,
-        Stress_Max_Myy = 54,
-        Stress_Max_Mzz = 55,
-        Stress_Min = 56,
-        Stress_Min_Myy = 57,
-        Stress_Min_Mzz = 58,
-        Stress_Torsion = 59
+        Section_Name = 30,
+        Displacement_Ux = 130,
+        Displacement_Uy = 131,
+        Displacement_Uz = 132,
+        Displacement_Rxx = 133,
+        Displacement_Ryy = 134,
+        Displacmenet_Rzz = 135,
+        Force_Fx = 140,
+        Force_Fy = 141,
+        Force_Fz = 142,
+        Force_Mxx = 143,
+        Force_Myy = 144,
+        Force_Mzz = 145,
+        Stress_Axial = 150,
+        Stress_Shear_Y = 151,
+        Stress_Shear_Z = 152,
+        Stress_Max = 153,
+        Stress_Max_Myy = 154,
+        Stress_Max_Mzz = 155,
+        Stress_Min = 156,
+        Stress_Min_Myy = 157,
+        Stress_Min_Mzz = 158,
+        Stress_Torsion = 159
     }
 
     public static class BarDataTypeExtensions
@@ -64,7 +65,7 @@ namespace FreeBuild.Robot
         /// <returns></returns>
         public static bool IsBarData(this BarDataType type)
         {
-            return (type == BarDataType.Bar_Name || type == BarDataType.StartNode || type == BarDataType.EndNode || type == BarDataType.Length);
+            return (type == BarDataType.Bar_Name || type == BarDataType.StartNode || type == BarDataType.EndNode || type == BarDataType.Length || type == BarDataType.Section_Name);
         }
 
         /// <summary>
@@ -74,8 +75,7 @@ namespace FreeBuild.Robot
         /// <returns></returns>
         public static bool IsPositional(this BarDataType type)
         {
-            return !(type == BarDataType.Bar_ID || type == BarDataType.Bar_Name || type == BarDataType.Case_ID || type == BarDataType.Case_Name ||
-                type == BarDataType.EndNode || type == BarDataType.Length || type == BarDataType.StartNode);
+            return type >= BarDataType.Displacement_Ux;
         }
 
         /// <summary>

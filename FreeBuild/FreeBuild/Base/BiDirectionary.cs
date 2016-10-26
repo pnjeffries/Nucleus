@@ -33,6 +33,7 @@ namespace FreeBuild.Base
     /// </summary>
     /// <typeparam name="TFirst"></typeparam>
     /// <typeparam name="TSecond"></typeparam>
+    [Serializable]
     public class BiDirectionary<TFirst, TSecond> : IDictionary<TFirst, TSecond>
     {
         #region Fields
@@ -125,6 +126,19 @@ namespace FreeBuild.Base
 
         #endregion
 
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor.  Initialises a new BiDirectionary.
+        /// </summary>
+        public BiDirectionary()
+        {
+            _FirstToSecond = new Dictionary<TFirst, TSecond>();
+            _SecondToFirst = new Dictionary<TSecond, TFirst>();
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -146,6 +160,19 @@ namespace FreeBuild.Base
         {
             _FirstToSecond.Add(first, second);
             _SecondToFirst.Add(second, first);
+        }
+
+        /// <summary>
+        /// Set the linked pair of items within the BiDirectionary.
+        /// This will override any existing stored relationship
+        /// </summary>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        public void Set(TFirst first, TSecond second)
+        {
+            //TODO: Remove past relationships!
+            _FirstToSecond[first] = second;
+            _SecondToFirst[second] = first;
         }
 
         /// <summary>

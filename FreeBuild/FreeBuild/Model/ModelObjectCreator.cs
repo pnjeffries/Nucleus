@@ -55,6 +55,7 @@ namespace FreeBuild.Model
             {
                 result = new Node(position);
             }
+            Model.Add(result);
             return result;
         }
 

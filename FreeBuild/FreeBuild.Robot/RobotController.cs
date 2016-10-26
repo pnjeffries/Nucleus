@@ -17,7 +17,7 @@ namespace FreeBuild.Robot
     /// <summary>
     /// A controller class to interact with Robot
     /// </summary>
-    public class RobotController
+    public class RobotController : MessageRaiser
     {
         #region Properties
 
@@ -67,11 +67,74 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
+        /// Open a new Robot file
+        /// </summary>
+        /// <returns>True if the new project could be created</returns>
+        public bool New()
+        {
+            try
+            {
+                Robot.Project.New(IRobotProjectType.I_PT_BUILDING);
+                return true;
+            }
+            catch (COMException ex) { RaiseMessage(ex.Message); }
+            return false;
+        }
+
+        /// <summary>
+        /// Save the currently open Robot file to the specified location
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public bool Save(FilePath filePath)
+        {
+            try
+            {
+                Robot.Project.SaveAs(filePath);
+                return true;
+            }
+            catch (COMException ex) { RaiseMessage(ex.Message); }
+            return false;
+        }
+
+        /// <summary>
         /// Release control over Robot
         /// </summary>
         public void Release()
         {
             _Robot = null;
+        }
+
+        #region Robot to FreeBuild
+
+        /// <summary>
+        /// Load a FreeBuild model from a Robot file
+        /// </summary>
+        /// <param name="filePath">The filepath of the Robot file to be opened</param>
+        /// <param name="idMap">The ID mapping table to be used.  If null, an empty table will automatically be initialised.
+        /// Mapping data between the Robot and FreeBuild model will be written into this map - store it for later if you wish
+        /// to synchronise the models in future.</param>
+        /// <param name="options">The conversion options.  If null, the default options will be used.</param>
+        /// <returns></returns>
+        public Model.Model LoadModelFromRobot(FilePath filePath, ref RobotIDMappingTable idMap, RobotConversionOptions options = null)
+        {
+            if (Open(filePath)) return LoadModelFromRobot(ref idMap, options);
+            else return null;
+        }
+
+        /// <summary>
+        /// Load a FreeBuild model from the currently open Robot file.  A robot file must have been previously opened before
+        /// calling this function.
+        /// </summary>
+        /// <returns></returns>
+        public Model.Model LoadModelFromRobot(ref RobotIDMappingTable idMap, RobotConversionOptions options = null)
+        {
+            var model = new Model.Model();
+            if (idMap == null) idMap = new RobotIDMappingTable();
+            if (options == null) options = new RobotConversionOptions();
+            var context = new RobotConversionContext(idMap, options);
+            UpdateModelFromRobot(model, context);
+            return model;
         }
 
         /// <summary>
@@ -80,11 +143,12 @@ namespace FreeBuild.Robot
         /// <param name="model">The model to be updated</param>
         /// <param name="map">The ID mapping table that relates model objects to Robot ones</param>
         /// <returns></returns>
-        public bool UpdateModelFromRobotFile(Model.Model model, RobotIDMappingTable map, RobotConversionContext context)
+        public bool UpdateModelFromRobot(Model.Model model, RobotConversionContext context)
         {
             IRobotCollection robotNodes = Robot.Project.Structure.Nodes.GetAll();
-            UpdateModelNodesFromRobotFile(model, robotNodes, map, context);
-            UpdateModelLinearElementsFromRobotFile(model, robotNodes, map, context);
+            UpdateModelSectionsFromRobotFile(model, context);
+            UpdateModelNodesFromRobotFile(model, robotNodes, context);
+            UpdateModelLinearElementsFromRobotFile(model, robotNodes, context);
             return false;
         }
 
@@ -94,10 +158,10 @@ namespace FreeBuild.Robot
         /// <param name="model"></param>
         /// <param name="map"></param>
         /// <param name="context"></param>
-        private void UpdateModelNodesFromRobotFile(Model.Model model, IRobotCollection robotNodes, RobotIDMappingTable map, RobotConversionContext context)
+        private void UpdateModelNodesFromRobotFile(Model.Model model, IRobotCollection robotNodes, RobotConversionContext context)
         {
             //Delete all mapped nodes:
-            if (context.Options.DeleteMissingObjects) map.AllMappedNodes(model).DeleteAll();
+            if (context.Options.DeleteMissingObjects) context.IDMap.AllMappedNodes(model).DeleteAll();
 
             for (int i = 1; i <= robotNodes.Count; i++)
             {
@@ -105,7 +169,7 @@ namespace FreeBuild.Robot
                 if (robotNode != null)
                 {
                     Vector nodePosition = ROBtoFB.PositionOf(robotNode);
-                    Node node = map.GetMappedModelNode(robotNode, model);
+                    Node node = context.IDMap.GetMappedModelNode(robotNode, model);
                     if (node == null)  //Create new node
                         node = model.Create.Node(nodePosition, 0, context.ExInfo);
                     else //Existing mapped node found
@@ -116,7 +180,32 @@ namespace FreeBuild.Robot
                     //TODO: Copy over data
 
                     //Store mapping data:
-                    map.Add(node, robotNode);
+                    context.IDMap.Add(node, robotNode);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Update section properties in a FreeBuild model by loading data from the currently open Robot file
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="context"></param>
+        private void UpdateModelSectionsFromRobotFile(Model.Model model, RobotConversionContext context)
+        {
+            IRobotCollection sections = Robot.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_BAR_SECTION);
+            for (int i = 1; i <= sections.Count; i++)
+            {
+                IRobotLabel label = sections.Get(i);
+                if (label != null)
+                {
+                    SectionProperty section = context.IDMap.GetMappedSectionProperty(label, model);
+                    if (section == null)
+                        section = model.Create.SectionProperty(null, context.ExInfo);
+
+                    //TODO: Copy over data
+
+                    //Store mapping data:
+                    context.IDMap.Add(section, label);
                 }
             }
         }
@@ -128,10 +217,10 @@ namespace FreeBuild.Robot
         /// <param name="robotNodes"></param>
         /// <param name="map"></param>
         /// <param name="context"></param>
-        private void UpdateModelLinearElementsFromRobotFile(Model.Model model, IRobotCollection robotNodes, RobotIDMappingTable map, RobotConversionContext context)
+        private void UpdateModelLinearElementsFromRobotFile(Model.Model model, IRobotCollection robotNodes, RobotConversionContext context)
         {
-            //Delete all linear elements:
-            if (context.Options.DeleteMissingObjects) map.AllMappedLinearElements(model).DeleteAll();
+            //Delete all previously mapped linear elements:
+            if (context.Options.DeleteMissingObjects) context.IDMap.AllMappedLinearElements(model).DeleteAll();
 
             IRobotCollection bars = Robot.Project.Structure.Bars.GetAll();
             for (int i = 1; i <= bars.Count; i++)
@@ -140,7 +229,7 @@ namespace FreeBuild.Robot
                 if (bar != null)
                 {
                     Curve geometry = ROBtoFB.GeometryOf(bar, robotNodes);
-                    LinearElement element = map.GetMappedLinearElement(bar, model);
+                    LinearElement element = context.IDMap.GetMappedLinearElement(bar, model);
                     if (element == null) //Create new element
                         element = model.Create.LinearElement(geometry, context.ExInfo);
                     else //Existing mapped element found
@@ -148,13 +237,242 @@ namespace FreeBuild.Robot
                         element.Geometry = geometry;
                         element.Undelete();
                     }
+                    element.Geometry.Start.Node = context.IDMap.GetMappedModelNode(bar.StartNode, model);
+                    element.Geometry.End.Node = context.IDMap.GetMappedModelNode(bar.EndNode, model);
+                    element.Property = context.IDMap.GetMappedSectionProperty()
                     //TODO: Copy over data
 
                     //Store mapping:
-                    map.Add(element, bar);
+                    context.IDMap.Add(element, bar);
                 }
             }
         }
+
+        #endregion
+
+        #region FreeBuild to Robot
+
+        /// <summary>
+        /// Save a FreeBuild model to a Robot file at the specified location
+        /// </summary>
+        /// <param name="filePath">The filePath of the Robot file to be written to</param>
+        /// <param name="model">The model to be written from</param>
+        /// <param name="idMap">The ID mapping table to be used.  If null, an empty table will automatically be initialised.
+        /// Mapping data between the Robot and FreeBuild model will be written into this map - store it for later if you wish
+        /// to synchronise the models in future.</param>
+        /// <param name="options">The conversion options.  If null, the default options will be used.</param>
+        /// <returns></returns>
+        public bool WriteModelToRobot(FilePath filePath, Model.Model model, ref RobotIDMappingTable idMap, RobotConversionOptions options = null)
+        {
+            if (New())
+            {
+                if (idMap == null) idMap = new RobotIDMappingTable();
+                if (options == null) options = new RobotConversionOptions();
+                var context = new RobotConversionContext(idMap, options);
+                UpdateRobotFromModel(model, context);
+                return Save(filePath);
+            }
+            else return false;
+        }
+
+        /// <summary>
+        /// Update a robot file based on a FreeBuild model 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public bool UpdateRobotFromModel(Model.Model model, RobotConversionContext context)
+        {
+            UpdateRobotNodesFromModel(model, model.Nodes, context);
+            UpdateRobotBarsFromModel(model, model.Elements.LinearElements, context);
+            return true;
+        }
+
+        /// <summary>
+        /// Update the nodes in the open Robot model from those in a FreeBuild model
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="nodes"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        private bool UpdateRobotNodesFromModel(Model.Model model, NodeCollection nodes, RobotConversionContext context)
+        {
+            foreach (Node node in nodes)
+            {
+                UpdateRobotNode(node, context);
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Update the bars in the open Robot model from those in a FreeBuild model
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="linearElements"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        private bool UpdateRobotBarsFromModel(Model.Model model, ElementCollection linearElements, RobotConversionContext context)
+        {
+            foreach (LinearElement element in linearElements)
+            {
+                UpdateRobotBar(element, context);
+            }
+            return true;
+        }
+
+        #endregion
+
+        #region Robot Object Creation
+
+        /// <summary>
+        /// Create a new node within the currently open Robot document
+        /// </summary>
+        /// <param name="x">The x-coordinate of the node</param>
+        /// <param name="y">The y-coordinate of the node</param>
+        /// <param name="z">The z-coordinate of the node</param>
+        /// <param name="id">Optional.  The ID number to be assigned to the node.
+        /// If omitted or lower than 1, the next free number will be used.</param>
+        /// <returns>The newly created node</returns>
+        public IRobotNode CreateRobotNode(double x, double y, double z, int id = -1)
+        {
+            //Create new node
+            if (id < 1) id = Robot.Project.Structure.Nodes.FreeNumber;
+            Robot.Project.Structure.Nodes.Create(id, x, y, z);
+            return Robot.Project.Structure.Nodes.Get(id) as IRobotNode;
+        }
+
+
+        /// <summary>
+        /// Create a new bar within the currently open Robot document
+        /// </summary>
+        /// <param name="startNode">The start node number</param>
+        /// <param name="endNode">The end node number</param>
+        /// <param name="id">Optional.  The ID number to be assigned to the bar.
+        /// If omitted or lower than 1, the next free number will be used.</param>
+        /// <returns></returns>
+        public IRobotBar CreateRobotBar(int startNode, int endNode, int id = -1)
+        {
+            if (id < 1) id = Robot.Project.Structure.Bars.FreeNumber;
+            Robot.Project.Structure.Bars.Create(id, startNode, endNode);
+            return Robot.Project.Structure.Bars.Get(id) as IRobotBar;
+        }
+
+        /// <summary>
+        /// Update or create a robot node linked to the specified FreeBuild node
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="context"></param>
+        /// <param name="updatePosition"></param>
+        /// <returns></returns>
+        public IRobotNode UpdateRobotNode(Node node, RobotConversionContext context)
+        {
+            int mappedID = -1;
+            IRobotNode rNode = null;
+            if (context.IDMap.HasSecondID(context.IDMap.NodeCategory, node.GUID))
+            {
+                mappedID = context.IDMap.GetSecondID(context.IDMap.NodeCategory, node.GUID);
+                if (Robot.Project.Structure.Nodes.Exist(mappedID) != 0)
+                    rNode = Robot.Project.Structure.Nodes.Get(mappedID) as IRobotNode;
+            }
+            if (rNode == null)
+            {
+                rNode = CreateRobotNode(node.Position.X, node.Position.Y, node.Position.Z, mappedID);
+            }
+            else
+            {
+                rNode.SetPosition(node.Position);
+            }
+            //TODO: Moar Data!
+
+            //Store mapping:
+            context.IDMap.Add(node, rNode);
+            return rNode;
+        }
+
+        /// <summary>
+        /// Update or create a robot bar linked to the specified FreeBuild element
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public IRobotBar UpdateRobotBar(LinearElement element, RobotConversionContext context)
+        {
+            int mappedID = -1;
+            IRobotBar bar = null;
+            Node startNode = element.Geometry.Start.Node; //TODO: Make bulletproof!
+            Node endNode = element.Geometry.End.Node; //TODO: Make bulletproof!
+            int nodeID0 = GetMappedNodeID(startNode, context);
+            int nodeID1 = GetMappedNodeID(endNode, context);
+
+            if (context.IDMap.HasSecondID(context.IDMap.BarCategory, element.GUID))
+            {
+                mappedID = context.IDMap.GetSecondID(context.IDMap.BarCategory, element.GUID);
+                if (Robot.Project.Structure.Bars.Exist(mappedID) != 0)
+                    bar = Robot.Project.Structure.Bars.Get(mappedID) as IRobotBar;
+            }
+            if (bar == null)
+            {
+                bar = CreateRobotBar(nodeID0, nodeID1, mappedID);
+            }
+            else
+            {
+                bar.StartNode = nodeID0;
+                bar.EndNode = nodeID1;
+            }
+            
+            if (element.Property != null)
+            {
+                bar.SetLabel(IRobotLabelType.I_LT_BAR_SECTION, element.Property.Name); ///Cannot rely on this! Bulletproof it!
+            }
+            //TODO: More data
+
+            context.IDMap.Add(element, bar);
+
+            return bar;
+        }
+
+        public IRobotLabel UpdateRobotSection(SectionProperty section, RobotConversionContext context)
+        {
+            int mappedID = -1;
+            IRobotLabel label = null;
+            if (context.IDMap.HasSecondID(context.IDMap.SectionCategory, section.GUID))
+            {
+                mappedID = context.IDMap.GetSecondID(context.IDMap.SectionCategory, section.GUID);
+                //if (Robot.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_BAR_SECTION, mappedID) != 0)
+                //    label = Robot.Project.Structure.Labels.Get(IRobotLabelType.I_LT_BAR_SECTION, mappedID) as IRobotLabel;
+                label = Robot.Project.Structure.Labels.FindWithId(mappedID);
+            }
+            if (label == null)
+            {
+                label = Robot.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, section.Name); //TODO: Enforce name uniqueness?
+                //TODO
+            }
+
+            RobotBarSectionData rData = label.Data as RobotBarSectionData;
+            rData.Name = section.Name;
+            //TODO: More data
+
+            context.IDMap.Add(section, label);
+
+            return label;
+        }
+
+        /// <summary>
+        /// Retrieve a mapped robot node ID for the specified node.
+        /// A new node in robot will be generated if nothing is currently mapped.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public int GetMappedNodeID(Node node, RobotConversionContext context)
+        {
+            if (context.IDMap.HasSecondID(context.IDMap.NodeCategory, node.GUID))
+                return context.IDMap.GetSecondID(context.IDMap.NodeCategory, node.GUID);
+            else
+                return UpdateRobotNode(node, context).Number;
+        }
+
+        #endregion
 
         /// <summary>
         /// Extract a list of all node IDs in the currently open project
@@ -324,6 +642,12 @@ namespace FreeBuild.Robot
                 if (dataType == BarDataType.StartNode) return bar.StartNode;
                 if (dataType == BarDataType.EndNode) return bar.EndNode;
                 if (dataType == BarDataType.Length) return bar.Length;
+                if (dataType == BarDataType.Section_Name)
+                {
+                    IRobotLabel sectionLabel = bar.GetLabel(IRobotLabelType.I_LT_BAR_SECTION);
+                    if (sectionLabel != null) return sectionLabel.Name;
+                    else return null;
+                }
             }
 
 

@@ -91,34 +91,6 @@ namespace FreeBuild.Robot
             return null;
         }
 
-        /// <summary>
-        /// Convert a Robot structure into a FreeBuild model.
-        /// This is a test function and is not the recommended way to import models from Robot.
-        /// </summary>
-        /// <param name="structure"></param>
-        /// <returns></returns>
-        public static Model.Model Convert(IRobotStructure structure)
-        {
-            //TEMP!
-            Model.Model result = new Model.Model();
-
-            //Sections
-            
-
-            //Nodes
-            IRobotCollection nodes = structure.Nodes.GetAll();
-
-            //Bars
-            IRobotCollection bars = structure.Bars.GetAll();
-            for (int i = 0; i < bars.Count; i++)
-            {
-                IRobotBar bar = bars.Get(i);
-                //Create element:
-                LinearElement element = new LinearElement(GeometryOf(bar, nodes));
-                result.Add(element);
-            }
-
-            return result;
-        }
+        
     }
 }
