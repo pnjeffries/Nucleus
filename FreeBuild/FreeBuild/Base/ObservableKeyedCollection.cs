@@ -69,7 +69,11 @@ namespace FreeBuild.Base
         /// <param name="args"></param>
         protected void NotifyCollectionChanged(NotifyCollectionChangedEventArgs args)
         {
-            if (!_SuppressNotifyCollectionChanged) RaiseEvent(CollectionChanged, args);
+            if (!_SuppressNotifyCollectionChanged)
+            {
+                OnCollectionChanged();
+                RaiseEvent(CollectionChanged, args);
+            }
         }
 
         /// <summary>
@@ -81,6 +85,7 @@ namespace FreeBuild.Base
         /// <param name="e"></param>
         protected virtual void NotifyCollectionChangedMultiItem(NotifyCollectionChangedEventArgs e)
         {
+            OnCollectionChanged();
             NotifyCollectionChangedEventHandler handlers = CollectionChanged;
             if (handlers != null)
             {
@@ -201,6 +206,12 @@ namespace FreeBuild.Base
             base.RemoveItem(index);
             NotifyCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
         }
+
+        /// <summary>
+        /// Protected function called when the collection is changed.
+        /// Used by subclasses to synchronise cached data.
+        /// </summary>
+        protected virtual void OnCollectionChanged() { }
 
         /// <summary>
         /// Retrieve the combined value of a member of all items in this collection,

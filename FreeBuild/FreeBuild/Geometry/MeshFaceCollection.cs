@@ -13,6 +13,7 @@ namespace FreeBuild.Geometry
     [Serializable]
     public class MeshFaceCollection : UniquesCollection<MeshFace>
     {
+<<<<<<< HEAD
         //public MeshFaceCollection(Mesh owner) : base(owner)
         //{
         //}
@@ -26,5 +27,8 @@ namespace FreeBuild.Geometry
         //{
         //    item.Owner = Owner;
         //}
+=======
+       
+>>>>>>> 63257e33d326be8bf1d85dde676b92ae29dd2984
     }
 }

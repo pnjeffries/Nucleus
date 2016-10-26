@@ -8,11 +8,12 @@ using Rhino.Geometry;
 using FreeBuild.Geometry;
 using FreeBuild.Rhino;
 using RC = Rhino.Geometry;
+using FB = FreeBuild.Geometry;
 using Rhino.DocObjects;
 
 namespace Newt.Rhino
 {
-    public class RhinoOutput
+    public static class RhinoOutput
     {
         /// <summary>
         /// Is Salamander currently writing to the Rhino document?
@@ -71,6 +72,26 @@ namespace Newt.Rhino
             result = ReplacePoint(obj, FBtoRC.Convert(point));
             Writing = false;
             return result;
+        }
+
+        /// <summary>
+        /// Add a curve to the Rhino document
+        /// </summary>
+        /// <param name="curve"></param>
+        /// <returns></returns>
+        public static Guid BakeCurve(RC.Curve curve)
+        {
+            return RhinoDoc.ActiveDoc.Objects.AddCurve(curve);
+        }
+
+        /// <summary>
+        /// Add a curve to the Rhino document
+        /// </summary>
+        /// <param name="curve"></param>
+        /// <returns></returns>
+        public static Guid BakeCurve(FB.Curve curve)
+        {
+            return BakeCurve(FBtoRC.Convert(curve));
         }
 
         /// <summary>
@@ -189,7 +210,7 @@ namespace Newt.Rhino
         /// </summary>
         /// <param name="objID"></param>
         /// <returns></returns>
-        protected static RhinoObject GetObject(Guid objID)
+        private static RhinoObject GetObject(Guid objID)
         {
             return RhinoDoc.ActiveDoc.Objects.Find(objID);
         }

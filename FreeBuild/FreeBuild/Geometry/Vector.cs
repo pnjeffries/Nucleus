@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -588,6 +589,17 @@ namespace FreeBuild.Geometry
         public bool IsZOnly()
         {
             return (X == 0 && Y == 0 && Z != 0);
+        }
+
+        /// <summary>
+        /// Create a copy of this vector with its components rounded to the nearest whole
+        /// increment
+        /// </summary>
+        /// <param name="increment"></param>
+        /// <returns></returns>
+        public Vector RoundOff(double increment)
+        {
+            return new Vector(X.Round(increment), Y.Round(increment), Z.Round(increment));
         }
 
         #endregion

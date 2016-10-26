@@ -37,6 +37,13 @@ namespace FreeBuild.Model
 
         #region Methods
 
+        /// <summary>
+        /// Create a new (or update an existing) node in the model
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="reuseTolerance"></param>
+        /// <param name="exInfo"></param>
+        /// <returns></returns>
         public Node Node(Vector position, double reuseTolerance = 0, ExecutionInfo exInfo = null)
         {
             Node result = null;
@@ -48,6 +55,7 @@ namespace FreeBuild.Model
             {
                 result = new Node(position);
             }
+            Model.Add(result);
             return result;
         }
 

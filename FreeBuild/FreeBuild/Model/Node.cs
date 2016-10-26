@@ -65,12 +65,25 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
-        /// Position constructor
+        /// Position constructor.
+        /// Initialises a new node at the specified position.
         /// </summary>
         /// <param name="position"></param>
         public Node(Vector position)
         {
             _Position = position;
+        }
+
+        /// <summary>
+        /// X, Y, Z position constructor.
+        /// Initialises a new node at the specified position.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public Node(double x, double y, double z)
+        {
+            _Position = new Geometry.Vector(x, y, z);
         }
 
         #endregion

@@ -95,8 +95,8 @@ namespace FreeBuild.Model
         #region Methods
 
         /// <summary>
-        /// Notify this shape that one or more of its vertices or another aspect
-        /// of it's geometric definition has been altered.
+        /// Notify this element that one or more of its vertices or another aspect
+        /// of its geometric definition has been altered.
         /// or has been updated
         /// </summary>
         public void NotifyGeometryUpdated()
@@ -114,6 +114,18 @@ namespace FreeBuild.Model
         /// IElement Property implementation
         /// </summary>
         protected abstract VolumetricProperty GetProperty();
+
+        /// <summary>
+        /// Generate nodes for this element's vertices, if they do not already posess
+        /// them.
+        /// </summary>
+        /// <param name="connectionTolerance"></param>
+        /// <param name="model"></param>
+        public void GenerateNodes(double connectionTolerance, Model model)
+        {
+            Shape geometry = GetGeometry();
+
+        }
 
         #endregion
     }

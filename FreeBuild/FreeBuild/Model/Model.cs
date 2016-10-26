@@ -147,6 +147,11 @@ namespace FreeBuild.Model
         /// <summary>
         /// Get a single flat collection which contains all sub-objects within
         /// this model, for easy iteration through the entire database in one go.
+        /// This collection is compiled when called from the different sub-tables
+        /// within the model - it is not stored and modifying this collection
+        /// will not result in any changes being made to the model itself.
+        /// Use the Elements, Nodes, Properties, Materials etc. properties instead 
+        /// to modify the model.
         /// </summary>
         public ModelObjectCollection Everything
         {
@@ -204,20 +209,10 @@ namespace FreeBuild.Model
         #region Constructors
 
         /// <summary>
-        /// Default constructor
+        /// Default constructor.  Initialises a new empty model.
         /// </summary>
         public Model()
         {
-        }
-
-        [OnDeserialized]
-        protected void OnDeserialised()
-        { 
-            //Restore collection changed event handling
-            if (_Elements != null) _Elements.CollectionChanged += HandlesInternalCollectionChanged;
-            if (_Nodes != null) _Nodes.CollectionChanged += HandlesInternalCollectionChanged;
-            if (_Properties != null) _Properties.CollectionChanged += HandlesInternalCollectionChanged;
-            if (_Materials != null) _Materials.CollectionChanged += HandlesInternalCollectionChanged;
         }
 
         #endregion
@@ -258,6 +253,17 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
+        /// Add a new material to this model, if it does not already exist within it
+        /// </summary>
+        /// <param name="material">The material to be added.</param>
+        /// <returns>True if the material could be added, false if it already existed within
+        /// the model.</returns>
+        public bool Add(Material material)
+        {
+            return Materials.TryAdd(material);
+        }
+
+        /// <summary>
         /// Register a new object with this model for event handling
         /// </summary>
         /// <param name="unique"></param>
@@ -267,12 +273,31 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
+        /// Generate nodes within this model to structurally represent
+        /// the vertices of elements.
+        /// </summary>
+        /// <param name="tolerance">The coincidence tolerance for sharing nodes between elements</param>
+        public void GenerateNodes(double connectionTolerance)
+        {
+            foreach (Element element in Elements)
+            {
+                
+            }
+        }
+
+        /// <summary>
         /// Called immediately after deserialisation to re-register all objects
         /// </summary>
         /// <param name="context"></param>
         [OnDeserialized]
-        private void OnDeserialisation(StreamingContext context)
+        private void OnDeserialized(StreamingContext context)
         {
+            //Restore collection changed event handling
+            if (_Elements != null) _Elements.CollectionChanged += HandlesInternalCollectionChanged;
+            if (_Nodes != null) _Nodes.CollectionChanged += HandlesInternalCollectionChanged;
+            if (_Properties != null) _Properties.CollectionChanged += HandlesInternalCollectionChanged;
+            if (_Materials != null) _Materials.CollectionChanged += HandlesInternalCollectionChanged;
+
             foreach (ModelObject unique in Everything)
             {
                 Register(unique);

@@ -45,6 +45,14 @@
   <ItemGroup>
     <Compile Include="Actions\ExecutionHistory.cs" />
     <Compile Include="Actions\ExecutionInfo.cs" />
+    <Compile Include="Base\MessageRaiser.cs" />
+    <Compile Include="Conversion\ConversionContext.cs" />
+    <Compile Include="Conversion\ConversionOptions.cs" />
+    <Compile Include="Conversion\IDMappingTable.cs" />
+    <Compile Include="Conversion\ModelIDMappingTable.cs" />
+    <Compile Include="Events\MessageRaisedEventArgs.cs" />
+    <Compile Include="Extensions\IEnumerableExtensions.cs" />
+    <Compile Include="Model\IModelImporter.cs" />
     <Compile Include="DDTree\NodeDDTree.cs" />
     <Compile Include="Exceptions\GeometryException.cs" />
     <Compile Include="Extensions\DoubleExtensions.cs" />
@@ -133,6 +141,7 @@
     <Compile Include="Model\ModelSourceHistory.cs" />
     <Compile Include="Model\Node.cs" />
     <Compile Include="Model\NodeCollection.cs" />
+    <Compile Include="Model\NodeGenerationParameters.cs" />
     <Compile Include="Model\PanelElement.cs" />
     <Compile Include="Model\NodeTable.cs" />
     <Compile Include="Model\ParameterProfile.cs" />

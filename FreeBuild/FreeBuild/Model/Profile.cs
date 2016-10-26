@@ -147,7 +147,7 @@ namespace FreeBuild.Model
             if (perimeter != null && perimeter.IsValid)
             {
                 Vector centroid;
-                //double area = perimeter.CalculateEnclosedArea();
+                double area = perimeter.CalculateEnclosedArea(out centroid);
             }
         }
 

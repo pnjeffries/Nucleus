@@ -65,5 +65,16 @@ namespace FreeBuild.Extensions
         {
             return Math.Abs(value);
         }
+
+        /// <summary>
+        /// Round this double to the nearest whole increment
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="increment"></param>
+        /// <returns></returns>
+        public static double Round(this double value, double increment = 1)
+        {
+            return Math.Round(value / increment) * increment;
+        }
     }
 }
