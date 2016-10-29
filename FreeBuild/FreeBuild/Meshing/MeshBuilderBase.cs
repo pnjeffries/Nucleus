@@ -1,0 +1,256 @@
+﻿using FreeBuild.Geometry;
+using FreeBuild.Model;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FreeBuild.Meshing
+{
+    /// <summary>
+    /// An abstract base class used to generically construct meshes in an application-specific format
+    /// </summary>
+    public abstract class MeshBuilderBase
+    {
+        /// <summary>
+        /// Add a new vertex to the mesh
+        /// </summary>
+        /// <param name="pt"></param>
+        /// <returns>The new vertex index</returns>
+        /// <remarks>The returned vertex indices should be sequential</remarks>
+        public abstract int AddVertex(Vector pt);
+
+        /// <summary>
+        /// Add a new tri face to the mesh.
+        /// By default, the winding order is counter-clockwise.
+        /// </summary>
+        /// <param name="v1">The first vertex index</param>
+        /// <param name="v2">The second vertex index</param>
+        /// <param name="v3">The third vertex index</param>
+        /// <returns>The new face index</returns>
+        public abstract int AddFace(int v1, int v2, int v3);
+
+        /// <summary>
+        /// Add a new quad face to the mesh.
+        /// By default, the winding order is counter-clockwise.
+        /// </summary>
+        /// <param name="v1">The first vertex index</param>
+        /// <param name="v2">The second vertex index</param>
+        /// <param name="v3">The third vertex index</param>
+        /// <param name="v4">The fourth vertex index</param>
+        /// <returns>The new face index</returns>
+        public abstract int AddFace(int v1, int v2, int v3, int v4);
+
+        /// <summary>
+        /// Add a new tri face to the mesh
+        /// </summary>
+        /// <param name="pt1"></param>
+        /// <param name="pt2"></param>
+        /// <param name="pt3"></param>
+        /// <returns>The new face index</returns>
+        public int AddFace(Vector pt1, Vector pt2, Vector pt3)
+        {
+            return AddFace(AddVertex(pt1), AddVertex(pt2), AddVertex(pt3));
+        }
+
+        /// <summary>
+        /// Add a new quad face to the mesh
+        /// </summary>
+        /// <param name="pt1"></param>
+        /// <param name="pt2"></param>
+        /// <param name="pt3"></param>
+        /// <param name="pt4"></param>
+        /// <returns>The new face index</returns>
+        public int AddFace(Vector pt1, Vector pt2, Vector pt3, Vector pt4)
+        {
+            return AddFace(AddVertex(pt1), AddVertex(pt2), AddVertex(pt3), AddVertex(pt4));
+        }
+
+        /// <summary>
+        /// Add a new mesh face specified by an ordered list of vertex indices
+        /// </summary>
+        /// <param name="indices">A list of vertex indices to be converted into a face.  Should contain at least three values.</param>
+        /// <returns>The new face index, or -1 if there were insufficient indices to build a face</returns>
+        public int AddFace(IList<int> indices)
+        {
+            if (indices.Count == 3 || indices.Count == 6) //TRI
+            {
+                return AddFace(indices[0], indices[1], indices[2]);
+            }
+            else if (indices.Count >= 4) //QUAD
+            {
+                return AddFace(indices[0], indices[1], indices[2], indices[3]);
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// Add a new face to the mesh based on a structural 2D Element's geometry
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns>The new face index</returns>
+        public int AddFace(PanelElement element)
+        {
+            //TODO!
+            //if (element.Nodes.Count == 3 || element.Nodes.Count == 6) //TRI
+            //{
+            //    return AddFace(element.OffsetNodePosition(0), element.OffsetNodePosition(1), element.OffsetNodePosition(2));
+            //}
+            //else if (element.Nodes.Count >= 4) //QUAD
+            //{
+            //    return AddFace(element.OffsetNodePosition(0), element.OffsetNodePosition(1),
+            //        element.OffsetNodePosition(2), element.OffsetNodePosition(3));
+            //}
+            return -1;
+        }
+
+        /// <summary>
+        /// Add a set of points to the mesh as new vertices
+        /// </summary>
+        /// <param name="points">The points to be added as vertices</param>
+        /// <returns>The vertex index of the last added point</returns>
+        public int AddVertices(IEnumerable<Vector> points)
+        {
+            int lastVI = 0;
+            foreach (Vector point in points)
+            {
+                lastVI = AddVertex(point);
+            }
+            return lastVI;
+        }
+
+        /// <summary>
+        /// Add a set of faces to the mesh described as a set of Lists of vertex indices
+        /// </summary>
+        /// <param name="faces">The collection of lists of vertex indices to be used to describe the face topology</param>
+        /// <returns>The face index of the last valid added face</returns>
+        public int AddFaces(IEnumerable<IList<int>> faces)
+        {
+            int lastFI = 0;
+            foreach (IList<int> face in faces)
+            {
+                int FI = AddFace(face);
+                if (FI >= 0) lastFI = FI;
+            }
+            return lastFI;
+        }
+
+        /// <summary>
+        /// Add strips of faces swept between a set of polylines defined as point lists
+        /// </summary>
+        /// <param name="pointLists">A list of lists of points representing polylines.  Each list should have the same number of points contained within.</param>
+        /// <param name="close"></param>
+        public void AddLoft(IList<IList<Vector>> pointLists, bool close = false)
+        {
+            for (int i = 0; i < pointLists.Count; i++)
+            {
+                IList<Vector> points = pointLists[i];
+                int stripSize = points.Count;
+                for (int j = 0; j < stripSize; j++)
+                {
+                    int vi = AddVertex(points[j]);
+                    if (i > 0 && j > 0)
+                    {
+                        AddFace(vi - 1 - stripSize, vi - 1, vi, vi - stripSize);
+                        if (close && j == stripSize - 1)
+                        {
+                            AddFace(vi + 1 - 2 * stripSize, vi - stripSize, vi, vi + 1 - stripSize); //Close meshing
+                        }
+                    }
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Add strips of faces sweep between lines of points lying on a set of frames
+        /// </summary>
+        /// <param name="frames">A set of coordinate systems representing frames to be swept between</param>
+        /// <param name="pointStrip">A polyline of points in frame-coordinates that will be used to create vertices on each frame</param>
+        /// <param name="close">If true, the strip of points will be closed (i.e. the last point in each strip will be meshed with the first)</param>
+        public void AddSweep(IList<ICoordinateSystem> frames, IList<Vector> pointStrip, bool close = false)
+        {
+            int stripSize = pointStrip.Count;
+            for (int i = 0; i < frames.Count; i++)
+            {
+                ICoordinateSystem cs = frames[i];
+                for (int j = 0; j < stripSize; j++)
+                {
+                    Vector pt = pointStrip[j];
+                    Vector position = cs.LocalToGlobal(pt);
+                    int vi = AddVertex(position);
+                    if (i > 0 && j > 0)
+                    {
+                        AddFace(vi - 1 - stripSize, vi - 1, vi, vi - stripSize);
+                        if (close && j == stripSize - 1)
+                        {
+                            AddFace(vi + 1 - 2 * stripSize, vi - stripSize, vi, vi + 1 - stripSize); //Close meshing
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add a set of faces generated by sweeping a set of curves between a set of frames
+        /// </summary>
+        /// <param name="frames"></param>
+        /// <param name="profile"></param>
+        /// <param name="voids"></param>
+        /// <returns></returns>
+        public void AddSweep(IList<ICoordinateSystem> frames, CurveCollection profile)
+        {
+            foreach (Curve crv in profile)
+            {
+                IList<Vector> pointStrip = crv.Facet(Math.PI / 6);
+                AddSweep(frames, pointStrip, crv.Closed);
+            }
+        }
+
+        /// <summary>
+        /// Add a set of vertices and faces to this mesh representing the given element complete with
+        /// a 3D representation of the assigned section profile
+        /// </summary>
+        /// <param name="element"></param>
+        public void AddSectionPreview(LinearElement element)
+        {
+            //TODO
+
+            //SectionProfile section = element.SectionProfile1;
+            //if (section != null)
+            //{
+            //    CoordinateSystem elementLocal = element.GetOffsetLocalCoordinateSystem();
+            //    CoordinateSystem startFrame = new CoordinateSystem(element.OffsetStartPoint, elementLocal.GetYAxisCopy() * -1, elementLocal.GetZAxisCopy());
+            //    CoordinateSystem endFrame = new CoordinateSystem(startFrame, element.OffsetEndPoint);
+            //    CurveCollection perimeter = section.GetCachedPerimeter();
+            //    //CurveCollectionCollection voids = section.GetCachedVoids();
+            //    IList<ICoordinateSystem> frames = new List<ICoordinateSystem>(2);
+            //    frames.Add(startFrame);
+            //    frames.Add(endFrame);
+            //    AddSweep(frames, perimeter);
+            //}
+        }
+
+        /// <summary>
+        /// Add a set of vertices and faces to this mesh representing a cone
+        /// </summary>
+        /// <param name="tip">The point at the tip of the cone</param>
+        /// <param name="baseCircle">The base circle of the cone</param>
+        /// <param name="baseResolution">The number of positions around the cone where mesh facets will be generated.</param>
+        public void AddCone(Vector tip, Circle baseCircle, int baseResolution)
+        {
+            IList<Vector> basePoints = baseCircle.Divide(baseResolution - 1);
+            //if (basePoints.Count >= baseResolution) basePoints.RemoveAt(baseResolution); //Get rid of duplicate last point
+            IList<Vector> tipPoints = new List<Vector>();
+            for (int i = 0; i < basePoints.Count; i++)
+            {
+                tipPoints.Add(tip);
+            }
+            IList<IList<Vector>> topology = new List<IList<Vector>>();
+            topology.Add(basePoints);
+            topology.Add(tipPoints);
+            AddLoft(topology, true);
+        }
+    }
+}

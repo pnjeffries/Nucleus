@@ -196,6 +196,7 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Find the position on the circle at the specified angular parameter
         /// </summary>
+        /// <param name="t">An angle around the circle, in Radians</param>
         /// <param name="t">An angle (anti-clockwise) around the circle, in Radians</param>
         /// <returns>The point on the circle at the specified parameter</returns>
         public Vector PointAt(double t)
@@ -204,6 +205,39 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Divide this circle into a number of equal-length segments and return
+        /// the division points between those segments.
+        /// </summary>
+        /// <param name="divisions">The number of segments to divide the circle into</param>
+        /// <returns></returns>
+        public Vector[] Divide(int divisions)
+        {
+            var result = new Vector[divisions];
+            for (int i = 0; i < divisions; i++)
+            {
+                result[i] = PointAt(i * 2 * Math.PI / divisions);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Divide an arc segment of this circle into a number of equal-length segments
+        /// and return the division points between those segments
+        /// </summary>
+        /// <param name="divisions"></param>
+        /// <param name="arcStart"></param>
+        /// <param name="arcEnd"></param>
+        /// <returns></returns>
+        public Vector[] Divide(int divisions, Angle arcStart, Angle arcEnd)
+        {
+            var result = new Vector[divisions];
+            for (int i = 0; i < divisions; i++)
+            {
+                result[i] = PointAt(arcStart + i * (arcEnd - arcStart) / divisions);
+            }
+            return result;
+        }
+
         /// Find the position on the circle at the specified angular parameter
         /// </summary>
         /// <param name="t">An angle (anti-clockwise) around the circle, in Radians</param>
@@ -235,6 +269,16 @@ namespace FreeBuild.Geometry
         {
             Vector localY = L.Cross(A);
             return localY.Rotate(L, t);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public Axis TangentAxisAt(Angle t)
+        {
+            return new Axis(PointAt(t), TangentAt(t));
         }
 
         /// <summary>

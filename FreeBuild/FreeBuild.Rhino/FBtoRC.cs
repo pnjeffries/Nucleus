@@ -25,6 +25,37 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
+        /// Convert a FreeBuild vector to a RhinoCommon vector
+        /// </summary>
+        /// <param name="vector">The vector to convert</param>
+        /// <returns></returns>
+        public static RC.Vector3d ConvertVector(Vector vector)
+        {
+            if (vector.IsValid()) return new RC.Vector3d(vector.X, vector.Y, vector.Z);
+            else return RC.Vector3d.Unset;
+        }
+
+        /// <summary>
+        /// Convert a FreeBuild plane to a RhinoCommon one
+        /// </summary>
+        /// <param name="plane"></param>
+        /// <returns></returns>
+        public static RC.Plane Convert(Plane plane)
+        {
+            return new RC.Plane(Convert(plane.Origin), ConvertVector(plane.X), ConvertVector(plane.Y));
+        }
+
+        /// <summary>
+        /// Convert a FreeBuild circle to a RhinoCommon one
+        /// </summary>
+        /// <param name="circle"></param>
+        /// <returns></returns>
+        public static RC.Circle Convert(Circle circle)
+        {
+            return new RC.Circle(Convert(circle.Plane()), circle.Radius);
+        }
+
+        /// <summary>
         /// Convert a FreeBuild line to a RhinoCommon one
         /// </summary>
         /// <param name="line">The line to convert</param>
@@ -53,6 +84,35 @@ namespace FreeBuild.Rhino
                 return new RC.PolylineCurve(points);
             }
             return null;
+        }
+
+        /// <summary>
+        /// Convert a FreeBuild Arc to a RhinoCommon ArcCurve
+        /// </summary>
+        /// <param name="arc">The arc to convert</param>
+        /// <returns></returns>
+        public static RC.ArcCurve Convert(Arc arc)
+        {
+            if (arc.IsValid)
+            {
+                if (arc.Closed) return new RC.ArcCurve(Convert(arc.Circle));
+                else return new RC.ArcCurve(new RC.Arc(Convert(arc.StartPoint), Convert(arc.Vertices[1].Position), Convert(arc.EndPoint)));
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Convert a FreeBuild curve into a RhinoCommon one
+        /// </summary>
+        /// <param name="curve">The curve to convert</param>
+        /// <returns></returns>
+        public static RC.Curve Convert(Curve curve)
+        {
+            if (curve is Line) return Convert((Line)curve);
+            else if (curve is PolyLine) return Convert((PolyLine)curve);
+            else if (curve is Arc) return Convert((Arc)curve);
+            //TODO: Others
+            else throw new Exception("Conversion of curve type to Rhino not yet supported.");
         }
 
     }

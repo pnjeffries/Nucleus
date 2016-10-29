@@ -157,7 +157,7 @@ namespace FreeBuild.Model
         {
             get
             {
-                return new ModelObjectCollection( new IEnumerable<ModelObject>[]
+                return new ModelObjectCollection(new IEnumerable<ModelObject>[]
                     {_Elements, _Nodes, _Properties, _Materials});
             }
         }

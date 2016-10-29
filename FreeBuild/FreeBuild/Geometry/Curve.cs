@@ -250,6 +250,23 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Produce a set of points which represents a facetted version of this curve
+        /// </summary>
+        /// <param name="tolerance">The maximum angular deviation between the curve and the 
+        /// facetted geometry.  If zero, the tolerance is taken as infinite and curves will
+        /// not be facetted between kinks.</param>
+        /// <returns></returns>
+        public virtual Vector[] Facet(Angle tolerance)
+        {
+            Vector[] result = new Vector[Vertices.Count];
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                result[i] = Vertices[i].Position;
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Calculate the length of the segment specified by the index
         /// </summary>
         /// <param name="index">The segment index.  Valid range 0 to SegmentCount - 1</param>
