@@ -132,9 +132,9 @@ namespace FreeBuild.Geometry
         }
 
         // <summary>
-        /// Apply the specified transformation to this vertex, modifying it's geometric data.
+        /// Apply the specified transformation to this vertex, modifying its geometric data.
         /// </summary>
-        /// <param name="transform">THe transformation matrix.</param>
+        /// <param name="transform">The transformation matrix.</param>
         public void Transform(Transform transform)
         {
             Position = Position.Transform(transform);
@@ -153,11 +153,44 @@ namespace FreeBuild.Geometry
         /// Calculate the offset of the position of this vertex from
         /// the node that it is connected to.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The vector from this vertex's node position to its actual position</returns>
         public Vector NodalOffset()
         {
             if (_Node == null) return Vector.Unset; //TODO: Review?
             else return _Position - _Node.Position;
+        }
+
+        /// <summary>
+        /// Generate a node at this vertex, if it does not already posess one.
+        /// A new node will only be created if one does not exist and this vertex is part of
+        /// an element's geometry definition.
+        /// </summary>
+        /// <param name="options"></param>
+        public void GenerateNode(NodeGenerationParameters options)
+        {
+            if (Owner != null && Owner.Element != null)
+            {    
+                if (Node == null)
+                {
+                    Model.Model model = Owner.Element.Model;
+                    if (model == null)
+                    {
+                        Node = model.Create.Node(Position, options.ConnectionTolerance, options.ExInfo);
+                    }
+                    //TODO: Also split nodes if they are too far apart
+                }
+            }
+        }
+
+        /// <summary>
+        /// Copy the values of attached data objects (such as the connected node)
+        /// from another vertex.  This is typically used when replacing one shape with another.
+        /// </summary>
+        /// <param name="other"></param>
+        public void CopyAttachedDataFrom(Vertex other)
+        {
+            Node = other.Node;
+            //Additional data should be copied here
         }
 
         #endregion

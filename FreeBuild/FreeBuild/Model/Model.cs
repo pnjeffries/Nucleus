@@ -74,7 +74,7 @@ namespace FreeBuild.Model
             {
                 if (_Elements == null)
                 {
-                    _Elements = new ElementTable();
+                    _Elements = new ElementTable(this);
                     _Elements.CollectionChanged += HandlesInternalCollectionChanged;
                 }
                 return _Elements;
@@ -95,7 +95,7 @@ namespace FreeBuild.Model
             {
                 if (_Nodes == null)
                 {
-                    _Nodes = new NodeTable();
+                    _Nodes = new NodeTable(this);
                     _Nodes.CollectionChanged += HandlesInternalCollectionChanged;
                 }
                 return _Nodes;
@@ -116,7 +116,7 @@ namespace FreeBuild.Model
             {
                 if (_Properties == null)
                 {
-                    _Properties = new VolumetricPropertyTable();
+                    _Properties = new VolumetricPropertyTable(this);
                     _Properties.CollectionChanged += HandlesInternalCollectionChanged;
                 }
                 return _Properties;
@@ -137,7 +137,7 @@ namespace FreeBuild.Model
             {
                 if (_Materials == null)
                 {
-                    _Materials = new MaterialTable();
+                    _Materials = new MaterialTable(this);
                     _Materials.CollectionChanged += HandlesInternalCollectionChanged;
                 }
                 return _Materials;
@@ -273,15 +273,15 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
-        /// Generate nodes within this model to structurally represent
+        /// Generate or update nodes within this model to structurally represent
         /// the vertices of elements.
         /// </summary>
-        /// <param name="tolerance">The coincidence tolerance for sharing nodes between elements</param>
-        public void GenerateNodes(double connectionTolerance)
+        /// <param name="options"></param>
+        public void RegenerateNodes(NodeGenerationParameters options)
         {
             foreach (Element element in Elements)
             {
-                
+                element.RegenerateNodes(options);
             }
         }
 

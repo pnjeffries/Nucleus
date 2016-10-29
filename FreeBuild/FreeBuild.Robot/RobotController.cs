@@ -237,9 +237,13 @@ namespace FreeBuild.Robot
                         element.Geometry = geometry;
                         element.Undelete();
                     }
-                    element.Geometry.Start.Node = context.IDMap.GetMappedModelNode(bar.StartNode, model);
-                    element.Geometry.End.Node = context.IDMap.GetMappedModelNode(bar.EndNode, model);
-                    element.Property = context.IDMap.GetMappedSectionProperty()
+                    element.StartNode = context.IDMap.GetMappedModelNode(bar.StartNode, model);
+                    element.EndNode = context.IDMap.GetMappedModelNode(bar.EndNode, model);
+                    if (bar.HasLabel(IRobotLabelType.I_LT_BAR_SECTION) != 0)
+                    {
+                        string sectionID = bar.GetLabelName(IRobotLabelType.I_LT_BAR_SECTION);
+                        element.Property = context.IDMap.GetMappedSectionProperty(sectionID, model);
+                    }
                     //TODO: Copy over data
 
                     //Store mapping:
@@ -370,7 +374,7 @@ namespace FreeBuild.Robot
             IRobotNode rNode = null;
             if (context.IDMap.HasSecondID(context.IDMap.NodeCategory, node.GUID))
             {
-                mappedID = context.IDMap.GetSecondID(context.IDMap.NodeCategory, node.GUID);
+                mappedID = int.Parse(context.IDMap.GetSecondID(context.IDMap.NodeCategory, node.GUID));
                 if (Robot.Project.Structure.Nodes.Exist(mappedID) != 0)
                     rNode = Robot.Project.Structure.Nodes.Get(mappedID) as IRobotNode;
             }
@@ -399,14 +403,14 @@ namespace FreeBuild.Robot
         {
             int mappedID = -1;
             IRobotBar bar = null;
-            Node startNode = element.Geometry.Start.Node; //TODO: Make bulletproof!
-            Node endNode = element.Geometry.End.Node; //TODO: Make bulletproof!
+            Node startNode = element.StartNode; //TODO: Make bulletproof!
+            Node endNode = element.EndNode; //TODO: Make bulletproof!
             int nodeID0 = GetMappedNodeID(startNode, context);
             int nodeID1 = GetMappedNodeID(endNode, context);
 
             if (context.IDMap.HasSecondID(context.IDMap.BarCategory, element.GUID))
             {
-                mappedID = context.IDMap.GetSecondID(context.IDMap.BarCategory, element.GUID);
+                mappedID = int.Parse(context.IDMap.GetSecondID(context.IDMap.BarCategory, element.GUID));
                 if (Robot.Project.Structure.Bars.Exist(mappedID) != 0)
                     bar = Robot.Project.Structure.Bars.Get(mappedID) as IRobotBar;
             }
@@ -422,7 +426,7 @@ namespace FreeBuild.Robot
             
             if (element.Property != null)
             {
-                bar.SetLabel(IRobotLabelType.I_LT_BAR_SECTION, element.Property.Name); ///Cannot rely on this! Bulletproof it!
+                bar.SetLabel(IRobotLabelType.I_LT_BAR_SECTION, this.GetMappedSectionID(element.Property, context));
             }
             //TODO: More data
 
@@ -433,14 +437,14 @@ namespace FreeBuild.Robot
 
         public IRobotLabel UpdateRobotSection(SectionProperty section, RobotConversionContext context)
         {
-            int mappedID = -1;
+            string mappedID;
             IRobotLabel label = null;
             if (context.IDMap.HasSecondID(context.IDMap.SectionCategory, section.GUID))
             {
                 mappedID = context.IDMap.GetSecondID(context.IDMap.SectionCategory, section.GUID);
-                //if (Robot.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_BAR_SECTION, mappedID) != 0)
-                //    label = Robot.Project.Structure.Labels.Get(IRobotLabelType.I_LT_BAR_SECTION, mappedID) as IRobotLabel;
-                label = Robot.Project.Structure.Labels.FindWithId(mappedID);
+                if (Robot.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_BAR_SECTION, mappedID) != 0)
+                    label = Robot.Project.Structure.Labels.Get(IRobotLabelType.I_LT_BAR_SECTION, mappedID) as IRobotLabel;
+                //label = Robot.Project.Structure.Labels.FindWithId(mappedID);
             }
             if (label == null)
             {
@@ -467,9 +471,24 @@ namespace FreeBuild.Robot
         public int GetMappedNodeID(Node node, RobotConversionContext context)
         {
             if (context.IDMap.HasSecondID(context.IDMap.NodeCategory, node.GUID))
-                return context.IDMap.GetSecondID(context.IDMap.NodeCategory, node.GUID);
+                return int.Parse(context.IDMap.GetSecondID(context.IDMap.NodeCategory, node.GUID));
             else
                 return UpdateRobotNode(node, context).Number;
+        }
+
+        /// <summary>
+        /// Retrieve a mapped Robot section label name for the specified section.
+        /// A new section in Robot will be generated if nothing is currently mapped.
+        /// </summary>
+        /// <param name="section"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public string GetMappedSectionID(SectionProperty section, RobotConversionContext context)
+        {
+            if (context.IDMap.HasSecondID(context.IDMap.SectionCategory, section.GUID))
+                return context.IDMap.GetSecondID(context.IDMap.SectionCategory, section.GUID);
+            else
+                return UpdateRobotSection(section, context).Name;
         }
 
         #endregion

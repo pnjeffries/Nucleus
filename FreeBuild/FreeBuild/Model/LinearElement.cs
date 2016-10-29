@@ -38,6 +38,48 @@ namespace FreeBuild.Model
     [Serializable]
     public class LinearElement : Element<Curve, SectionProperty>
     {
+        #region Properties
+
+        /// <summary>
+        /// The node (if any) that the start of this element is connected to.
+        /// This is a shortcut property to get or set the node attached to the
+        /// start of this element's geometry curve.
+        /// Note that FreeBuild element geometry is not dependent on nodes and
+        /// so this property may have a null value.
+        /// </summary>
+        public Node StartNode
+        {
+            get
+            {
+                return Geometry?.Start?.Node;
+            }
+            set
+            {
+                if (Geometry != null && Geometry.Start != null) Geometry.Start.Node = value;
+            }
+        }
+
+        /// <summary>
+        /// The node (if any) that the end of this element is connected to.
+        /// This is a shortcut property to get or set the node attached to the
+        /// end of this element's geometry curve.
+        /// Note that FreeBuild element geometry is not dependent on nodes and
+        /// so this property may have a null value.
+        /// </summary>
+        public Node EndNode
+        {
+            get
+            {
+                return Geometry?.End?.Node;
+            }
+            set
+            {
+                if (Geometry != null && Geometry.End != null) Geometry.End.Node = value;
+            }
+        }
+
+        #endregion
+
         #region Constructors
 
         /// <summary>

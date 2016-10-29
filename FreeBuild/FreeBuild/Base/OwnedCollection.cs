@@ -56,13 +56,24 @@ namespace FreeBuild.Base
         #region Constructors
 
         /// <summary>
-        /// Owner constructor
+        /// Default constructor.  Initialises a collection with no owner.
+        /// </summary>
+        protected OwnedCollection() : base() { }
+
+        /// <summary>
+        /// Owner constructor.
         /// </summary>
         /// <param name="owner">The object which owns this collection</param>
         public OwnedCollection(TOwner owner) : base()
         {
             _Owner = owner;
         }
+
+        /// <summary>
+        /// Collection combination constructor
+        /// </summary>
+        /// <param name="toBeCombined"></param>
+        public OwnedCollection(IEnumerable<IEnumerable<TItem>> toBeCombined) : base(toBeCombined) { }
 
         #endregion
 

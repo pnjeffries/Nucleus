@@ -33,5 +33,19 @@ namespace FreeBuild.Model
     [Serializable]
     public class NodeCollection : ModelObjectCollection<Node>
     {
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor.  Initialises a new empty NodeCollection
+        /// </summary>
+        public NodeCollection() : base() { }
+
+        /// <summary>
+        /// Owner constructor.
+        /// </summary>
+        /// <param name="model"></param>
+        protected NodeCollection(Model model) : base(model) { }
+
+        #endregion
     }
 }

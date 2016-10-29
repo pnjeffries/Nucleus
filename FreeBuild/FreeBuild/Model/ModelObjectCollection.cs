@@ -13,7 +13,7 @@ namespace FreeBuild.Model
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     [Serializable]
-    public class ModelObjectCollection<TItem> : UniquesCollection<TItem> where TItem : ModelObject
+    public class ModelObjectCollection<TItem> : OwnedCollection<TItem, Model> where TItem : ModelObject
     {
         #region Constructors
 
@@ -23,10 +23,30 @@ namespace FreeBuild.Model
         public ModelObjectCollection() : base() { }
 
         /// <summary>
+        /// Owner constructor.  Initialises a model object collection with an owning model.
+        /// </summary>
+        /// <param name="model"></param>
+        protected ModelObjectCollection(Model model) : base(model) { }
+
+        /// <summary>
         /// Collection combination constructor
         /// </summary>
         /// <param name="toBeCombined"></param>
         public ModelObjectCollection(IEnumerable<IEnumerable<TItem>> toBeCombined) : base(toBeCombined) { }
+
+        #endregion
+
+        #region Methods
+
+        protected override void SetItemOwner(TItem item)
+        {
+            if (Owner != null) item.Model = Owner;
+        }
+
+        protected override void ClearItemOwner(TItem item)
+        {
+            if (Owner != null) item.Model = null;
+        }
 
         #endregion
     }

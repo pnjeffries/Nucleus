@@ -13,5 +13,14 @@ namespace FreeBuild.Model
     [Serializable]
     public class MaterialTable : MaterialCollection
     {
+        #region Constructor
+
+        /// <summary>
+        /// Initialises a new MaterialTable belonging to 
+        /// </summary>
+        /// <param name="model"></param>
+        public MaterialTable(Model model) : base(model) { }
+
+        #endregion
     }
 }

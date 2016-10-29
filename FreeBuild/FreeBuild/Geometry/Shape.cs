@@ -191,6 +191,22 @@ namespace FreeBuild.Geometry
             }
         }
 
+        /// <summary>
+        /// Copy attached data (for example, nodes connected to vertices)
+        /// from another shape to this one.
+        /// </summary>
+        /// <param name="other"></param>
+        public void CopyAttachedDataFrom(Shape other)
+        {
+            for (int i = 0; i < Math.Min(Vertices.Count, other.Vertices.Count); i++)
+            {
+                Vertex vA = Vertices[i];
+                Vertex vB = other.Vertices[i];
+                vA.CopyAttachedDataFrom(vB);
+            }
+            //Add any other attached data to be copied here
+        }
+
         #endregion
 
 

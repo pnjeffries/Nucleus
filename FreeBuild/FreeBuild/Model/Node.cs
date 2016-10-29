@@ -83,7 +83,24 @@ namespace FreeBuild.Model
         /// <param name="z"></param>
         public Node(double x, double y, double z)
         {
-            _Position = new Geometry.Vector(x, y, z);
+            _Position = new Vector(x, y, z);
+        }
+
+        #endregion
+
+        #region Methods
+
+        public ElementCollection FIndConnectedElements()
+        {
+            var result = new ElementCollection();
+
+            if (Model != null)
+            {
+
+            }
+            //TODO
+
+            return result;
         }
 
         #endregion

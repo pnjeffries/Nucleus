@@ -12,7 +12,7 @@ namespace FreeBuild.Robot
     /// <summary>
     /// A mapping table from freebuild model objects to Robot objects
     /// </summary>
-    public class RobotIDMappingTable : IDMappingTable<Guid, int>
+    public class RobotIDMappingTable : IDMappingTable<Guid, string>
     {
         #region Properties
 
@@ -56,7 +56,7 @@ namespace FreeBuild.Robot
         /// <returns></returns>
         public Node GetMappedModelNode(int robotID, Model.Model model)
         {
-            if (HasFirstID(NodeCategory, robotID)) return model.Nodes.TryGet(GetFirstID(NodeCategory, robotID));
+            if (HasFirstID(NodeCategory, robotID.ToString())) return model.Nodes.TryGet(GetFirstID(NodeCategory, robotID.ToString()));
             return null;
         }
 
@@ -80,7 +80,7 @@ namespace FreeBuild.Robot
         public LinearElement GetMappedLinearElement(int robotID, Model.Model model)
         {
             //TODO: Get for sub-elements (when introduced)
-            if (HasFirstID(BarCategory, robotID)) return model.Elements.TryGet(GetFirstID(BarCategory, robotID)) as LinearElement;
+            if (HasFirstID(BarCategory, robotID.ToString())) return model.Elements.TryGet(GetFirstID(BarCategory, robotID.ToString())) as LinearElement;
             return null;
         }
 
@@ -101,7 +101,7 @@ namespace FreeBuild.Robot
         /// <param name="robotID"></param>
         /// <param name="model"></param>
         /// <returns></returns>
-        public SectionProperty GetMappedSectionProperty(int robotID, Model.Model model)
+        public SectionProperty GetMappedSectionProperty(string robotID, Model.Model model)
         {
             if (HasFirstID(SectionCategory, robotID)) return model.Properties.TryGet(GetFirstID(SectionCategory, robotID)) as SectionProperty;
             return null;
@@ -115,7 +115,7 @@ namespace FreeBuild.Robot
         /// <returns></returns>
         public SectionProperty GetMappedSectionProperty(IRobotLabel label, Model.Model model)
         {
-            return GetMappedSectionProperty(label.UniqueId, model);
+            return GetMappedSectionProperty(label.Name, model);
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace FreeBuild.Robot
         /// <param name="rNode"></param>
         public void Add(Node fbNode, IRobotNode rNode)
         {
-            Add(NodeCategory, fbNode.GUID, rNode.Number);
+            Add(NodeCategory, fbNode.GUID, rNode.Number.ToString());
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace FreeBuild.Robot
         /// <param name="bar"></param>
         public void Add(LinearElement element, IRobotBar bar)
         {
-            Add(BarCategory, element.GUID, bar.Number);
+            Add(BarCategory, element.GUID, bar.Number.ToString());
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace FreeBuild.Robot
         /// <param name="label"></param>
         public void Add(SectionProperty section, IRobotLabel label)
         {
-            Add(SectionCategory, section.GUID, label.UniqueId);
+            Add(SectionCategory, section.GUID, label.Name);
         }
 
         /// <summary>

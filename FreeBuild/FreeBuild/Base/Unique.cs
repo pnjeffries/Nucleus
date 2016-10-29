@@ -30,6 +30,7 @@ namespace FreeBuild.Base
 {
     /// <summary>
     /// Abstract base class implementing the IUnique interface
+    /// Unique objects are uniquely identifiable via a GUID
     /// </summary>
     [Serializable]
     public abstract class Unique : NotifyPropertyChangedBase, IUnique, IDuplicatable

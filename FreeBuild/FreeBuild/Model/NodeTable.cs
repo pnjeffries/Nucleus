@@ -58,6 +58,16 @@ namespace FreeBuild.Model
 
         #endregion
 
+        #region Constructors
+
+        /// <summary>
+        /// Constructor.  Initialises a new NodeTable belonging to the specified model
+        /// </summary>
+        /// <param name="model"></param>
+        public NodeTable(Model model) : base(model) { }
+
+        #endregion
+
         #region Methods
 
         /// <summary>

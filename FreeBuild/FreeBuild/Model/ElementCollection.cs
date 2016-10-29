@@ -54,5 +54,59 @@ namespace FreeBuild.Model
         }
 
         #endregion
+
+        #region constructors
+
+        /// <summary>
+        /// Default constructor.  Initialises a new empty ElementCollection
+        /// </summary>
+        public ElementCollection() : base() { }
+
+        /// <summary>
+        /// Owner constructor.  Initialises an empty ElementCollection with the specified owner
+        /// </summary>
+        /// <param name="model"></param>
+        protected ElementCollection(Model model) : base(model) { }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Find and return the subset of elements in this collection that contain a reference to the
+        /// specified node.
+        /// </summary>
+        /// <param name="node">The node to search for</param>
+        /// <returns></returns>
+        public ElementCollection AllWith(Node node)
+        {
+            var result = new ElementCollection();
+            if (node != null)
+            {
+                foreach (Element el in this)
+                {
+                    if (el.ContainsNode(node)) result.Add(el);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Find and return the subset of elements in this collection that contain a reference to the
+        /// specified property.
+        /// </summary>
+        /// <param name="property">The property to search for</param>
+        /// <returns></returns>
+        public ElementCollection AllWith(VolumetricProperty property)
+        {
+            var result = new ElementCollection();
+            foreach (Element el in this)
+            {
+                if (el.GetProperty() == property) result.Add(el);
+            }
+            return result;
+        }
+
+        #endregion
     }
 }

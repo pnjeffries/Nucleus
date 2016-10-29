@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using FreeBuild.Base;
+using FreeBuild.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -89,6 +90,21 @@ namespace FreeBuild.Geometry
         public BoundingBox BoundingBox()
         {
             return new BoundingBox(this);
+        }
+
+        /// <summary>
+        /// Do any of the vertices in this collection contain a reference to
+        /// the specified node?
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public bool ContainsNode(Node node)
+        {
+            foreach (Vertex v in this)
+            {
+                if (v.Node == node) return true;
+            }
+            return false;
         }
 
         #endregion

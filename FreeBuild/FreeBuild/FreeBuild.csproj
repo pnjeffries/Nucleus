@@ -52,6 +52,7 @@
     <Compile Include="Conversion\ModelIDMappingTable.cs" />
     <Compile Include="Events\MessageRaisedEventArgs.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
+    <Compile Include="Model\ElementVertex.cs" />
     <Compile Include="Model\IModelImporter.cs" />
     <Compile Include="DDTree\NodeDDTree.cs" />
     <Compile Include="Exceptions\GeometryException.cs" />

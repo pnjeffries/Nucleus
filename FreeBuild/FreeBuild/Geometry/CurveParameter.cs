@@ -31,5 +31,20 @@ namespace FreeBuild.Geometry
 
         #endregion
 
+        #region Constructor
+
+
+
+        #endregion
+
+        #region Methods
+
+        public override int GetHashCode()
+        {
+            return T.GetHashCode();
+        }
+
+        #endregion
+
     }
 }

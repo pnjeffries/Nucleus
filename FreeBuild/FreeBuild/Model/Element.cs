@@ -69,6 +69,25 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
+        /// Get a collection containing all of the nodes attached to this element's
+        /// geometry.  This collection will be generated as necessary and adding or removing
+        /// objects from it will not have any effect on the geometry.
+        /// </summary>
+        public NodeCollection Nodes
+        {
+            get
+            {
+                NodeCollection result = new NodeCollection();
+                Shape geometry = GetGeometry();
+                foreach (Vertex v in geometry.Vertices)
+                {
+                    if (v.Node != null && !result.Contains(v.Node.GUID)) result.Add(v.Node);
+                }
+                return result;
+            }
+        }
+
+        /// <summary>
         /// IElement Geometry implementation
         /// </summary>
         Shape IElement.Geometry
@@ -108,23 +127,46 @@ namespace FreeBuild.Model
         /// Protected internal function to return this element's geometry as a shape
         /// </summary>
         /// <returns></returns>
-        protected abstract Shape GetGeometry();
+        public abstract Shape GetGeometry();
 
         /// <summary>
         /// IElement Property implementation
         /// </summary>
-        protected abstract VolumetricProperty GetProperty();
+        public abstract VolumetricProperty GetProperty();
 
         /// <summary>
-        /// Generate nodes for this element's vertices, if they do not already posess
+        /// Generate nodes for this element's vertices, if they do not already posess them
         /// them.
         /// </summary>
         /// <param name="connectionTolerance"></param>
         /// <param name="model"></param>
-        public void GenerateNodes(double connectionTolerance, Model model)
+        public virtual void RegenerateNodes(NodeGenerationParameters options)
         {
             Shape geometry = GetGeometry();
+            foreach (Vertex v in geometry.Vertices)
+            {
+                v.GenerateNode(options);
+            }
+        }
 
+        /// <summary>
+        /// Does this element's geometry contain a reference to the specified node?
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public bool ContainsNode(Node node)
+        {
+            Shape geometry = GetGeometry();
+            foreach (Vertex v in geometry.Vertices)
+            {
+                if (v.Node == node) return true;
+            }
+            return false;
+        }
+
+        void IElement.NotifyGeometryUpdated()
+        {
+            //TODO
         }
 
         #endregion
@@ -155,6 +197,9 @@ namespace FreeBuild.Model
         /// The set-out curve of 1D Elements, the surface of slabs, etc.
         /// The assigned object should not already be assigned to any other
         /// element.
+        /// If you wish to set the geometry of this element but retain existing attached
+        /// data such as vertex nodes, use the ReplaceGeometry function instead of directly
+        /// setting this property.
         /// </summary>
         public TShape Geometry
         {
@@ -174,6 +219,18 @@ namespace FreeBuild.Model
                     NotifyPropertyChanged("Geometry");
                 }
             }
+        }
+
+        /// <summary>
+        /// Replace the set-out geometry of this element, automatically copying over any relevant data
+        /// attached to the original geometry such as vertex nodes.
+        /// </summary>
+        /// <param name="newGeometry"></param>
+        public void ReplaceGeometry(TShape newGeometry)
+        {
+            TShape oldGeometry = Geometry;
+            if (oldGeometry != null) newGeometry.CopyAttachedDataFrom(oldGeometry);
+            Geometry = newGeometry;
         }
 
         /// <summary>
@@ -206,12 +263,12 @@ namespace FreeBuild.Model
 
         #region Methods
 
-        protected override Shape GetGeometry()
+        public override Shape GetGeometry()
         {
             return Geometry;
         }
 
-        protected override VolumetricProperty GetProperty()
+        public override VolumetricProperty GetProperty()
         {
             return Property;
         }

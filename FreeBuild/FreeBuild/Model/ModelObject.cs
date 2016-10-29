@@ -12,7 +12,7 @@ namespace FreeBuild.Model
     /// and form the top-level of data within that model.
     /// </summary>
     [Serializable]
-    public abstract class ModelObject : Named, IDeletable
+    public abstract class ModelObject : Named, IDeletable, IOwned<Model>
     {
 
         #region Properties
@@ -35,6 +35,26 @@ namespace FreeBuild.Model
                 return _IsDeleted;
             }
         }
+
+        /// <summary>
+        /// Private backing field for Model property
+        /// </summary>
+        private Model _Model;
+
+        /// <summary>
+        /// The Model, if any, that this object currently belongs to.
+        /// May be null.
+        /// </summary>
+        public Model Model
+        {
+            get { return _Model; }
+            internal set { _Model = value; }
+        }
+
+        /// <summary>
+        /// Get the owning Model of this object
+        /// </summary>
+        Model IOwned<Model>.Owner{ get { return _Model; }}
 
         #endregion
 

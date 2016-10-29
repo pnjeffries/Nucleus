@@ -13,5 +13,14 @@ namespace FreeBuild.Model
     [Serializable]
     public class VolumetricPropertyTable : VolumetricPropertyCollection
     {
+        #region Constructors
+
+        /// <summary>
+        /// Initialises a new VolumetricPropertyTable belonging to the specified model
+        /// </summary>
+        /// <param name="model"></param>
+        public VolumetricPropertyTable(Model model) : base(model) { }
+
+        #endregion
     }
 }

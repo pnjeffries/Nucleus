@@ -33,5 +33,11 @@ namespace FreeBuild.Model
     [Serializable]
     public class ElementTable : ElementCollection
     {
+        #region Constructors
+
+        public ElementTable(Model model) : base(model)
+        { }
+
+        #endregion
     }
 }
