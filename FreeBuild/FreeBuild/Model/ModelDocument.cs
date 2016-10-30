@@ -53,6 +53,27 @@ namespace FreeBuild.Model
             Model = new Model();
         }
 
+        /// <summary>
+        /// Model constructor.  Initialises a ModelDocument containing the specified model.
+        /// </summary>
+        /// <param name="model"></param>
+        public ModelDocument(Model model)
+        {
+            Model = model;
+        }
+
+        /// <summary>
+        /// FilePath, Model constructor.  Initialises a ModelDocument with the specified model
+        /// loaded from the specified filePath.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="model"></param>
+        public ModelDocument(FilePath filePath, Model model)
+        {
+            FilePath = filePath;
+            Model = model;
+        }
+
         #endregion
     }
 }

@@ -68,7 +68,7 @@ namespace FreeBuild.Model
         {
             LinearElement result = new LinearElement();
             result = (LinearElement)Model.History.Update(exInfo, result);
-            result.Geometry = geometry;
+            result.ReplaceGeometry(geometry);
             Model.Add(result);
             return result;
         }
