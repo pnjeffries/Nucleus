@@ -173,7 +173,7 @@ namespace FreeBuild.Geometry
                 if (Node == null)
                 {
                     Model.Model model = Owner.Element.Model;
-                    if (model == null)
+                    if (model != null)
                     {
                         Node = model.Create.Node(Position, options.ConnectionTolerance, options.ExInfo);
                     }
