@@ -110,6 +110,22 @@ namespace FreeBuild.Geometry
             }
         }
 
+        /// <summary>
+        /// Get the specified dimension of this vector.
+        /// </summary>
+        /// <param name="dimension"></param>
+        /// <returns></returns>
+        public double this[Dimension dimension]
+        {
+            get
+            {
+                if (dimension == Dimension.X) return X;
+                else if (dimension == Dimension.Y) return Y;
+                else if (dimension == Dimension.Z) return Z;
+                else return 0;
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -602,6 +618,29 @@ namespace FreeBuild.Geometry
             return new Vector(X.Round(increment), Y.Round(increment), Z.Round(increment));
         }
 
+        /// <summary>
+        /// Produce a new Vector using remapped components of this one.
+        /// </summary>
+        /// <param name="newX">The source dimension to use for the x component of the new vector</param>
+        /// <param name="newY">The source dimension to use for the y component of the new vector</param>
+        /// <param name="newZ">The source dimension to use for the z component of the new vector</param>
+        /// <returns></returns>
+        public Vector Remap(Dimension newX, Dimension newY, Dimension newZ)
+        {
+            return new Vector(this[newX], this[newY], this[newZ]);
+        }
+
+        /// <summary>
+        /// Produce a new Vector using the Z,X,Y components of this one mapped
+        /// respectively onto X,Y,Z of the new one.
+        /// Useful to convert points drawn on the XY plane to ones drawn on the YZ plane.
+        /// </summary>
+        /// <returns></returns>
+        public Vector RemapZXY()
+        {
+            return new Vector(Z,X,Y);
+        }
+
         #endregion
 
         #region Static Methods
@@ -783,4 +822,26 @@ namespace FreeBuild.Geometry
         
         #endregion
     }
+
+    /// <summary>
+    /// Extension methods related to Vectors
+    /// </summary>
+    public static class VectorExtensions
+    {
+        /// <summary>
+        /// Remap all vectors in this array from the XY to the YZ plane
+        /// </summary>
+        /// <param name="vectors"></param>
+        /// <returns></returns>
+        public static Vector[] RemapZXY(this Vector[] vectors)
+        {
+            Vector[] result = new Vector[vectors.Length];
+            for (int i = 0; i < vectors.Length; i++)
+            {
+                result[i] = vectors[i].RemapZXY();
+            }
+            return result;
+        }
+    }
 }
+

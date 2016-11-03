@@ -76,5 +76,19 @@ namespace FreeBuild.Extensions
         {
             return Math.Round(value / increment) * increment;
         }
+
+        /// <summary>
+        /// Limit this double to the specified range.
+        /// Returns the value if it lies within the range, or the
+        /// minimum or maximum limit if it falls outside that range
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public static double Limit(this double value, double min, double max)
+        {
+            return Math.Max(Math.Min(value, max), min);
+        }
     }
 }

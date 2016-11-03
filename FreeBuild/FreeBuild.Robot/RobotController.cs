@@ -203,6 +203,9 @@ namespace FreeBuild.Robot
                         section = model.Create.SectionProperty(null, context.ExInfo);
 
                     //TODO: Copy over data
+                    RobotBarSectionData data = label.Data;
+                    section.Name = data.Name;
+                    section.Profile = CreateProfileFromRobotSectionData(data);
 
                     //Store mapping data:
                     context.IDMap.Add(section, label);
@@ -435,6 +438,12 @@ namespace FreeBuild.Robot
             return bar;
         }
 
+        /// <summary>
+        /// Update or create a Robot section linked to a FreeBuild section property
+        /// </summary>
+        /// <param name="section"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public IRobotLabel UpdateRobotSection(SectionProperty section, RobotConversionContext context)
         {
             string mappedID;
@@ -454,11 +463,140 @@ namespace FreeBuild.Robot
 
             RobotBarSectionData rData = label.Data as RobotBarSectionData;
             rData.Name = section.Name;
+            UpdateRobotSectionGeometry(rData, section.Profile);
             //TODO: More data
 
             context.IDMap.Add(section, label);
 
             return label;
+        }
+
+        /// <summary>
+        /// Update the values stored in a Robot section data to match those in a FreeBuild profile
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="profile"></param>
+        protected void UpdateRobotSectionGeometry(RobotBarSectionData data, Profile profile)
+        {
+            if (profile != null)
+            {
+                if (profile is SymmetricIProfile) //I Section
+                {
+                    var rProfile = (SymmetricIProfile)profile;
+                    data.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_I_BISYM;
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_D, rProfile.Depth);
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_BF, rProfile.Width);
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_TF, rProfile.FlangeThickness);
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_TW, rProfile.WebThickness);
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_RA, rProfile.RootRadius); //???
+                    //TODO: Fillet radius
+                }
+                else if (profile is RectangularHollowProfile) //Rectangular Hollow Sections
+                {
+                    var rProfile = (RectangularHollowProfile)profile;
+                    data.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_BOX;
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_D, rProfile.Depth);
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_BF, rProfile.Width);
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_TF, rProfile.FlangeThickness);
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_TW, rProfile.WebThickness);
+                }
+                else if (profile is RectangularProfile) //Filled Rectangular Sections
+                {
+                    var rProfile = (RectangularProfile)profile;
+                    data.ShapeType = IRobotBarSectionShapeType.I_BSST_RECT_FILLED;
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_D, rProfile.Depth);
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_BF, rProfile.Width);
+                }
+                else if (profile is CircularHollowProfile)
+                {
+                    var cProfile = (CircularHollowProfile)profile;
+                    data.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_TUBE;
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_D, cProfile.Diameter);
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_TW, cProfile.WallThickness);
+                }
+                else if (profile is CircularProfile)
+                {
+                    var cProfile = (CircularHollowProfile)profile;
+                    data.ShapeType = IRobotBarSectionShapeType.I_BSST_CIRC_FILLED;
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_D, cProfile.Diameter);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Create a FreeBuild section profile geometry from Robot section data
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public Profile CreateProfileFromRobotSectionData(RobotBarSectionData data)
+        {
+            Type equivalent = EquivalentProfileType(data.ShapeType);
+            if (equivalent == typeof(SymmetricIProfile))
+            {
+                var iProfile = new SymmetricIProfile();
+                iProfile.Depth = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
+                iProfile.Width = data.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
+                iProfile.FlangeThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TF);
+                iProfile.WebThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TW);
+                //TODO: Fillet radius
+                iProfile.RootRadius = data.GetValue(IRobotBarSectionDataValue.I_BSDV_RA); //????
+                return iProfile;
+            }
+            else if (equivalent == typeof(RectangularHollowProfile)) //Rectangular Hollow Profile
+            {
+                var rProfile = new RectangularHollowProfile();
+                rProfile.Depth = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
+                rProfile.Width = data.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
+                rProfile.FlangeThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TF);
+                rProfile.WebThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TW);
+                return rProfile;
+            }
+            else if (equivalent == typeof(RectangularProfile)) //Filled Rectangular Profile
+            {
+                var rProfile = new RectangularProfile();
+                rProfile.Depth = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
+                rProfile.Width = data.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
+                return rProfile;
+            }
+            else if (equivalent == typeof(CircularHollowProfile))
+            {
+                var cProfile = new CircularHollowProfile();
+                cProfile.Diameter = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
+                cProfile.WallThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TW); //?
+            }
+            else if (equivalent == typeof(CircularProfile))
+            {
+                var cProfile = new CircularProfile();
+                cProfile.Diameter = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
+            }
+            return null; //Profile could not be created
+        }
+
+        /// <summary>
+        /// Get the equivalent FreeBuild Profile subtype for the specified value of the Robot
+        /// IRobotBarSectionShapeType enum
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public Type EquivalentProfileType(IRobotBarSectionShapeType type)
+        {
+            if (type == IRobotBarSectionShapeType.I_BSST_USER_I_BISYM
+                || type == IRobotBarSectionShapeType.I_BSST_IPE
+                || type == IRobotBarSectionShapeType.I_BSST_HEA)
+                return typeof(SymmetricIProfile);
+            else if (type == IRobotBarSectionShapeType.I_BSST_USER_BOX
+                || type == IRobotBarSectionShapeType.I_BSST_USER_RECT
+                || type == IRobotBarSectionShapeType.I_BSST_TREC)
+                return typeof(RectangularHollowProfile);
+            else if (type == IRobotBarSectionShapeType.I_BSST_RECT_FILLED)
+                return typeof(RectangularProfile);
+            else if (type == IRobotBarSectionShapeType.I_BSST_TRON
+                || type == IRobotBarSectionShapeType.I_BSST_TUBE)
+                return typeof(CircularHollowProfile);
+            else if (type == IRobotBarSectionShapeType.I_BSST_CIRC_FILLED)
+                return typeof(CircularProfile);
+            else
+                return null;
         }
 
         /// <summary>

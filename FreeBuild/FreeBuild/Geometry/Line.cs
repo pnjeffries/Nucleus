@@ -104,6 +104,27 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Constructor to create a new line between two sets of coordinates
+        /// </summary>
+        /// <param name="x0">The x coordinate of the line start</param>
+        /// <param name="y0">The y coordinate of the line start</param>
+        /// <param name="z0">The z coordinate of the line start</param>
+        /// <param name="x1">The x coordinate of the line end</param>
+        /// <param name="y1">The y coordinate of the line end</param>
+        /// <param name="z1">The z coordinate of the line end</param>
+        public Line(double x0, double y0, double z0, double x1, double y1, double z1) : this(new Vector(x0, y0, z0), new Vector(x1, y1, z1)) { }
+
+        /// <summary>
+        /// Constructor to create a new line between two sets of coordinates
+        /// on the XY plane.
+        /// </summary>
+        /// <param name="x0">The x coordinate of the line start</param>
+        /// <param name="y0">The y coordinate of the line start</param>
+        /// <param name="x1">The x coordinate of the line end</param>
+        /// <param name="y1">The y coordinate of the line end</param>
+        public Line(double x0, double y0, double x1, double y1) : this(x0, y0, 0, x1, y1, 0) { }
+
+        /// <summary>
         /// Constructor to create a new line between two vertices
         /// </summary>
         /// <param name="startVertex">The start vertex of the line.  This should not be shared with any other geometry.</param>

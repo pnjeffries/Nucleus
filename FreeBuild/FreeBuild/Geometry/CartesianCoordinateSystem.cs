@@ -170,7 +170,7 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
-        /// Constructor to duplicate a coordinate system while changing it's origin to
+        /// Constructor to duplicate a coordinate system while changing its origin to
         /// a new position
         /// </summary>
         /// <param name="other">Another coordinate system to copy axis directions from</param>

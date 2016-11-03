@@ -227,6 +227,51 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Evaluate the local coordinate system at a position along this curve.
+        /// By convention, the x-axis of the local coordinate system will point along the
+        /// curve and the z-axis will be orientated as closely as possible to global Z, unless
+        /// the x-axis lies within one degree of z, in which case the global X axis
+        /// will be used instead.
+        /// </summary>
+        /// <param name="tSpan">A normalised parameter defining a point along this span of this curve.
+        /// Note that parameter-space is not necessarily uniform and does not equate to a normalised length.
+        /// 0 = span start, 1 = span end.</param>
+        /// <param name="orientation">The orientation angle.  The rotation of the Y and Z axes of the coordinate 
+        /// system around the X axis, relative to default reference orientation.</param>
+        /// <returns></returns>
+        public CartesianCoordinateSystem LocalCoordinateSystem(int span, double tSpan, Angle orientation)
+        {
+            return LocalCoordinateSystem(span, tSpan, orientation, Angle.FromDegrees(1));
+        }
+
+        /// <summary>
+        /// Evaluate the local coordinate system at a position along this curve.
+        /// By convention, the x-axis of the local coordinate system will point along the
+        /// curve and the z-axis will be orientated as closely as possible to global Z, unless
+        /// the x-axis lies within a certain angular limit of z, in which case the global X axis
+        /// will be used instead.
+        /// </summary>
+        /// <param name="span">The index of the span.  Valid range 0 to SegmentCount - 1</param>
+        /// <param name="tSpan">A normalised parameter defining a point along this span of this curve.
+        /// Note that parameter-space is not necessarily uniform and does not equate to a normalised length.
+        /// 0 = span start, 1 = span end.</param>
+        /// <param name="orientation">The orientation angle.  The rotation of the Y and Z axes of the coordinate 
+        /// system around the X axis, relative to default reference orientation.</param>
+        /// <param name="zLimit">The angular limit within which if the local X and global Z approach each other,
+        /// local Z will be aligned towards global X rather than global Z.  By default, this is 1 degree.</param>
+        /// <returns></returns>
+        public virtual CartesianCoordinateSystem LocalCoordinateSystem(int span, double tSpan, Angle orientation, Angle zLimit)
+        {
+            Vector O = PointAt(span, tSpan);
+            Vector T = TangentAt(span, tSpan);
+            Vector alignZ = Vector.UnitZ;
+            if (T.AngleBetween(alignZ) <= zLimit) alignZ = Vector.UnitX;
+            Vector lY = alignZ.Cross(T);
+            if (orientation != 0) lY = lY.Rotate(T, orientation);
+            return new Plane(O, T, lY);
+        }
+
+        /// <summary>
         /// Get the vertex (if any) which defines the start of the specified segment.
         /// </summary>
         /// <param name="index">The segment index.  Valid range 0 to SegmentCount - 1</param>
@@ -262,6 +307,44 @@ namespace FreeBuild.Geometry
             for (int i = 0; i < Vertices.Count; i++)
             {
                 result[i] = Vertices[i].Position;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Produce a set of coordinate systems along the curve which can be used to generate a solid representation
+        /// of an element around this curve.
+        /// </summary>
+        /// <param name="tolerance">The maximum angular deviation between the curve and the 
+        /// facetted geometry.  If zero, the tolerance is taken as infinite and curves will
+        /// not be facetted between kinks.</param>
+        /// <param name="orientation">The orientation angle.  The rotation of the Y and Z axes of the coordinate 
+        /// system around the X axis, relative to default reference orientation.</param>
+        /// <returns></returns>
+        public virtual IList<CartesianCoordinateSystem> FacetCSystems(Angle tolerance, Angle orientation)
+        {
+            return FacetCSystems(tolerance, orientation, Angle.FromDegrees(1));
+        }
+
+        /// <summary>
+        /// Produce a set of coordinate systems along the curve which can be used to generate a solid representation
+        /// of an element around this curve.
+        /// </summary>
+        /// <param name="tolerance">The maximum angular deviation between the curve and the 
+        /// facetted geometry.  If zero, the tolerance is taken as infinite and curves will
+        /// not be facetted between kinks.</param>
+        /// <param name="orientation">The orientation angle.  The rotation of the Y and Z axes of the coordinate 
+        /// system around the X axis, relative to default reference orientation.</param>
+        /// <param name="zLimit">The angular limit within which if the local X and global Z approach each other,
+        /// local Z will be aligned towards global X rather than global Z.  By default, this is 1 degree.</param>
+        /// <returns></returns>
+        public virtual IList<CartesianCoordinateSystem> FacetCSystems(Angle tolerance, Angle orientation, Angle zLimit)
+        {
+            var result = new List<CartesianCoordinateSystem>();
+            for (int i = 0; i < SegmentCount; i++)
+            {
+                result.Add(LocalCoordinateSystem(i, 0, orientation, zLimit));
+                result.Add(LocalCoordinateSystem(i, 1, orientation, zLimit));
             }
             return result;
         }
@@ -458,5 +541,7 @@ namespace FreeBuild.Geometry
             double yCT = (y0 + (y1 - y0) / 3); //y of centroid triangle
             return IxxR + aR * yCR * yCR + IxxT + aT * yCT * yCT;
         }
+
+       
     }
 }

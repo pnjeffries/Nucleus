@@ -150,6 +150,27 @@ namespace FreeBuild.Geometry
 
         }
 
+        /// <summary>
+        /// Curve constructor.  Initialises a polycurve starting with the specifed curve
+        /// </summary>
+        /// <param name="curve"></param>
+        public PolyCurve(Curve curve)
+        {
+            SubCurves.Add(curve);
+        }
+
+        /// <summary>
+        /// Initialises a new polycurve 
+        /// </summary>
+        /// <param name="curves"></param>
+        public PolyCurve(IEnumerable<Curve> curves)
+        {
+            foreach (Curve crv in curves)
+            {
+                SubCurves.Add(crv);
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -245,6 +266,87 @@ namespace FreeBuild.Geometry
             }
             centroid /= result;
             return result;
+        }
+
+        /// <summary>
+        /// Add a new sub-curve to this PolyCurve.
+        /// Note that to form a valid polycurve the new sub-curve *must*
+        /// start at a point within tolerance of the end point of the
+        /// last sub-curve.
+        /// </summary>
+        /// <param name="subCurve">The curve to add.</param>
+        public void Add(Curve subCurve)
+        {
+            SubCurves.Add(subCurve);
+        }
+
+        /// <summary>
+        /// Add a new line segment to the end of this polycurve.
+        /// The line will run from the end of the last subcurve in this polycurve
+        /// to the specified point.
+        /// This polycurve must contain at least one subcurve already in order for the start
+        /// point to be determined.
+        /// </summary>
+        /// <param name="lineEnd">The end point of the new line segment.</param>
+        /// <returns></returns>
+        public Line AddLine(Vector lineEnd)
+        {
+            if (SubCurves.Count > 0)
+            {
+                Vector startPoint = SubCurves.Last().EndPoint;
+                Line result = new Line(startPoint, lineEnd);
+                Add(result);
+                return result;
+            }
+            else return null;
+        }
+
+        /// <summary>
+        /// Add a new line segment to the end of this polycurve.
+        /// The line will run from the end of the last subcurve in this polycurve
+        /// to the specified point.
+        /// This polycurve must contain at least one subcurve already in order for the start
+        /// point to be determined.
+        /// </summary>
+        /// <param name="endX">The x-coordinate of the end point of the new line segement</param>
+        /// <param name="endY">The y-coordinate of the end point of the new line segement</param>
+        /// <param name="endZ">The z-coordinate of the end point of the new line segement</param>
+        /// <returns></returns>
+        public Line AddLine(double endX, double endY, double endZ = 0)
+        {
+            return AddLine(new Vector(endX, endY, endZ));
+        }
+
+        /// <summary>
+        /// Add a new arc segment to the end of this polycurve.
+        /// The arc will run from the end of the last subcurve in this polycurve
+        /// to the specified, maintaining tangency with the last segment.
+        /// This polycurve must contain at least one subcurve already in order for the
+        /// start point to be determined.
+        /// </summary>
+        /// <param name="arcEnd"></param>
+        /// <returns></returns>
+        public Curve AddArc(Vector arcEnd)
+        {
+            //!!! TEMP !!!
+            //TODO: Add Arc properly
+            return AddLine(arcEnd);
+        }
+
+        /// <summary>
+        /// Add a new arc segment to the end of this polycurve.
+        /// The arc will run from the end of the last subcurve in this polycurve
+        /// to the specified, maintaining tangency with the last segment.
+        /// This polycurve must contain at least one subcurve already in order for the
+        /// start point to be determined.
+        /// </summary>
+        /// <param name="endX">The x-coordinate of the end point of the new arc segement</param>
+        /// <param name="endY">The y-coordinate of the end point of the new arc segement</param>
+        /// <param name="endZ">The z-coordinate of the end point of the new arc segement</param>
+        /// <returns></returns>
+        public Curve AddArc(double endX, double endY, double endZ = 0)
+        {
+            return AddArc(new Vector(endX, endY, endZ));
         }
 
         #endregion

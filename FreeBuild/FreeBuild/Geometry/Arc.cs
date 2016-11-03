@@ -156,6 +156,19 @@ namespace FreeBuild.Geometry
             Vertices.Add(new Vertex(endPt));
         }
 
+        /// <summary>
+        /// Initialise an arc that forms a complete circle
+        /// </summary>
+        /// <param name="circle"></param>
+        public Arc(Circle circle)
+        {
+            Vertices.Add(new Vertex(circle.PointAt(0.0)));
+            Vertices.Add(new Vertex(circle.PointAt(Math.PI)));
+            Vertices.Add(new Vertex(circle.PointAt(2*Math.PI)));
+            Closed = true;
+            _Circle = circle;
+        }
+
         #endregion
 
         #region Methods
@@ -199,15 +212,60 @@ namespace FreeBuild.Geometry
             return Vector.Unset;
         }
 
+        /// <summary>
+        /// Evaluate a point defined by a parameter within a specified span.
+        /// </summary>
+        /// <param name="span">The index of the span.  Valid range 0 to SegmentCount - 1</param>
+        /// <param name="tSpan">A normalised parameter defining a point along this span of this curve.
+        /// Note that parameter-space is not necessarily uniform and does not equate to a normalised length.
+        /// 0 = span start, 1 = span end.
+        /// </param>
+        /// <returns>The vector coordinates describing a point on the curve span at the specified parameter,
+        /// if the curve definition and parameter are valid.  Else, null.</returns>
+        /// <remarks>The base implementation treats the curve as being defined as a polyline, with straight lines
+        /// between vertices.</remarks>
         public override Vector PointAt(int span, double tSpan)
         {
             return PointAt(tSpan);
+        }
+
+        /// <summary>
+        /// Evaluate the tangent unit vector of a point on this curve defined by a parameter t
+        /// </summary>
+        /// <param name="t">A normalised parameter defining a point along this curve.
+        /// Note that parameter-space is not necessarily uniform and does not equate to a normalised length.
+        /// 0 = curve start, 1 = curve end.
+        /// For open curves, parameters outside the range 0-1 will be invalid.
+        /// For closed curves, parameters outside this range will 'wrap'.</param>
+        /// <returns>The tangent unit vector of the curve at the specified parameter</returns>
+        /// <remarks>The base implementation treats the curve as being defined as a polyline, with straight lines
+        /// between vertices.</remarks>
+        public override Vector TangentAt(double t)
+        {
+            if (Circle != null)
+            {
+                return Circle.TangentAt(t * RadianMeasure);
+            }
+            return Vector.Unset;
+        }
+
+        public override Vector TangentAt(int span, double tSpan)
+        {
+            return TangentAt(tSpan);
         }
 
         protected override void InvalidateCachedGeometry()
         {
             _Circle = null;
             base.InvalidateCachedGeometry();
+        }
+
+        public override Vector[] Facet(Angle tolerance)
+        {
+            int divisions = 1;
+            if (tolerance > 0 && tolerance < RadianMeasure)
+                divisions = (int)Math.Ceiling(RadianMeasure / tolerance);
+            return Circle.Divide(divisions, 0.0, RadianMeasure);
         }
 
         public override double CalculateEnclosedArea(out Vector centroid, Plane onPlane = null)

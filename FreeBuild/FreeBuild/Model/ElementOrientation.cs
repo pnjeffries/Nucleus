@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,20 @@ namespace FreeBuild.Model
     /// </summary>
     public abstract class ElementOrientation
     {
+
+        #region Methods
+
+        /// <summary>
+        /// Get this orientation expressed as an orientation angle
+        /// </summary>
+        /// <returns></returns>
+        public virtual Angle Angle()
+        {
+            return new Angle();
+        }
+
+        #endregion
+
         #region Operator
 
         /// <summary>
@@ -46,6 +61,17 @@ namespace FreeBuild.Model
             return new ElementOrientationAngle(value);
         }
 
+        /// <summary>
+        /// Implicit conversion from an ElementOrientation to an angle
+        /// </summary>
+        /// <param name="value"></param>
+        public static implicit operator Angle(ElementOrientation value)
+        {
+            if (value == null) return 0;
+            else return value.Angle();
+        }
+
         #endregion
+
     }
 }

@@ -24,6 +24,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FreeBuild.Geometry;
+using FreeBuild.Units;
+using FreeBuild.Extensions;
 
 namespace FreeBuild.Model
 {
@@ -33,6 +35,30 @@ namespace FreeBuild.Model
     /// </summary>
     public class SymmetricIProfile : LetterProfile
     {
+        #region Properties
+
+        /// <summary>
+        /// Private backing member variable for the Depth property
+        /// </summary>
+        private double _RootRadius;
+
+        /// <summary>
+        /// The root radius of the fillet between web and flange of this profile
+        /// </summary>
+        [Dimension(DimensionType.Distance)]
+        public double RootRadius
+        {
+            get { return _RootRadius; }
+            set
+            {
+                _RootRadius = value;
+                InvalidateCachedGeometry();
+                NotifyPropertyChanged("RootRadius");
+            }
+        }
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -47,8 +73,12 @@ namespace FreeBuild.Model
         /// <param name="width">The width of the section</param>
         /// <param name="flangeThickness">The thickness of the top and bottom flange plates</param>
         /// <param name="webThickness">The thiskness of the web</param>
-        public SymmetricIProfile(double depth, double width, double flangeThickness, double webThickness)
-            : base(depth, width, flangeThickness, webThickness) { }
+        /// <param name="rootRadius">The fillet root radius between web and flange</param>
+        public SymmetricIProfile(double depth, double width, double flangeThickness, double webThickness, double rootRadius = 0)
+            : base(depth, width, flangeThickness, webThickness)
+        {
+            RootRadius = rootRadius;
+        }
 
         #endregion
 
@@ -56,7 +86,32 @@ namespace FreeBuild.Model
 
         protected override Curve GeneratePerimeter()
         {
-            throw new NotImplementedException();
+            double xF = Width / 2;
+            double xW = WebThickness / 2;
+            double yF = Depth / 2;
+            double yW = yF - FlangeThickness;
+            double fR = RootRadius.Limit(0, Math.Min(xF - xW, yW));
+            double xR = xW + fR;
+            double yR = yW - fR;
+
+            PolyCurve result = new PolyCurve(new Line(xF,yF,-xF,yF)); //Top ---
+            result.AddLine(-xF, yW); //Top flange left |
+            result.AddLine(-xR, yW); //Top left fillet start _
+            if (fR > 0) result.AddArc(-xW, yR);  //Top left fillet end ¬
+            result.AddLine(-xW, -yR); //Bottom left fillet start |
+            if (fR > 0) result.AddArc(-xR, -yW); //Bottom left fillet end 
+            result.AddLine(-xF, -yW); //Bottom flange top left -
+            result.AddLine(-xF, -yF); //Bottom flange left |
+            result.AddLine(xF, -yF);  //Bottom ___
+            result.AddLine(xF, -yW); //Bottom flange right |
+            result.AddLine(xR, -yW); //Bottom flange top right -
+            if (fR > 0) result.AddArc(xW, -yR); //Bottom right fillet L
+            result.AddLine(xW, yR); //Web right |
+            if (fR > 0) result.AddArc(xR, yW); //Top Right Fillet r
+            result.AddLine(xF, yW); //Top flange bottom right -
+            result.AddLine(xF, yF); //Top flange right |
+
+            return result;
         }
 
         #endregion

@@ -79,18 +79,6 @@ namespace FreeBuild.Robot
             return new Line(PositionOf(bar.Start, structureNodes), PositionOf(bar.End, structureNodes));
         }
 
-        public static Profile Convert(IRobotBarSectionData section)
-        {
-            double D = section.GetValue(IRobotBarSectionDataValue.I_BSDV_D); //Section depth
-            //section.GetValue(IRobotBarSectionDataValue.
-            if (section.ShapeType == IRobotBarSectionShapeType.I_BSST_RECT_FILLED) //Filled rectangle
-            {
-                //section.
-                //RectangularProfile profile = new RectangularProfile(section)
-            }
-            return null;
-        }
-
         
     }
 }
