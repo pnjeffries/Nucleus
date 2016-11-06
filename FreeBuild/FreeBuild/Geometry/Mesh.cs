@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace FreeBuild.Geometry
 {
+    /// <summary>
+    /// A type of surface represented by a mesh of vertices and triangular or quadrangular faces
+    /// </summary>
     [Serializable]
     public class Mesh : Surface
     {

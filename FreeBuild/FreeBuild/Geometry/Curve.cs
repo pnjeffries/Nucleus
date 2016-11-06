@@ -327,6 +327,18 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Calculate the plane this curve lies on, if it is planar.
+        /// Returns null if the curve is non-planar within the specified tolerance 
+        /// or if its geometry is not sufficient to describe a plane (i.e. it is a line).
+        /// </summary>
+        /// <returns></returns>
+        public Plane Plane(double tolerance = 0.0000001)
+        {
+            VertexCollection vertices = Vertices;
+            return vertices.Plane(tolerance);
+        }
+
+        /// <summary>
         /// Produce a set of coordinate systems along the curve which can be used to generate a solid representation
         /// of an element around this curve.
         /// </summary>

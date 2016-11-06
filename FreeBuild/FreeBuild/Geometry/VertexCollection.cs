@@ -93,6 +93,36 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Calculate the plane these vertices lie on, if they are planar.
+        /// Returns null if the vertex collection is non-planar within the specified tolerance 
+        /// or if there are insufficient points to describe a plane.
+        /// </summary>
+        /// <returns></returns>
+        public Plane Plane(double tolerance)
+        {
+            if (Count > 2)
+            {
+                Vector o = this[0].Position;
+                Vector x = this[1].Position - o;
+                Vector xy = this[2].Position - o;
+                int i = 2;
+                while (i < Count)
+                {
+                    i++;
+                    if (!x.IsParallelTo(xy)) break;
+                    else xy = this[i].Position - o;
+                }
+                Plane result = new Plane(o, x, xy);
+                while (i < this.Count)
+                {
+                    if (result.DistanceTo(this[i].Position) > tolerance) return null;
+                }
+                return result;
+            }
+            else return null;
+        }
+
+        /// <summary>
         /// Do any of the vertices in this collection contain a reference to
         /// the specified node?
         /// </summary>

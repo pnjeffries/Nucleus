@@ -123,6 +123,19 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Get the distance above or below the plane the specified point lies.
+        /// This is returned as a signed multiple of the local z-axis.
+        /// If above the plane the result will be positive, if below negative.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public double DistanceTo(Vector point)
+        {
+            Vector relV = point - Origin;
+            return relV.Dot(Z);
+        }
+
+        /// <summary>
         /// Get the adjustment ratio of an area plotted on this plane to that of
         /// its projection on the global XY plane.
         /// </summary>

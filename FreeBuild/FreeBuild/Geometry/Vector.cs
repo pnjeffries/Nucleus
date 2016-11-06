@@ -608,6 +608,17 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Is this vector parallel to another?
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool IsParallelTo(Vector other)
+        {
+            double checkVal = X / other.X;
+            return (checkVal == Y / other.Y && checkVal == Z / other.Z);
+        }
+
+        /// <summary>
         /// Create a copy of this vector with its components rounded to the nearest whole
         /// increment
         /// </summary>

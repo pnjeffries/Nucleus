@@ -339,5 +339,40 @@ namespace FreeBuild.Geometry
         }
 
         #endregion
+
+        #region Static Methods
+
+        /// <summary>
+        /// Attempt to create a new Arc defined by a start point, start tangent and end point.
+        /// This function may return an Arc, a Line (in the case that the tangent vector directly
+        /// leads to the end point) or null if the start and end point are coincident.
+        /// </summary>
+        /// <param name="startPt"></param>
+        /// <param name="startTangent"></param>
+        /// <param name="endPt"></param>
+        /// <returns></returns>
+        public static Curve StartTangentEnd(Vector startPt, Vector startTangent, Vector endPt)
+        {
+            Vector SE = endPt - startPt;
+            double dist = SE.Magnitude();
+            if (dist > 0)
+            {
+                SE /= dist;
+                startTangent = startTangent.Unitize();
+                if (startTangent.Equals(SE,0.001))
+                {
+                    return new Line(startPt, endPt);
+                }
+                else
+                {
+                    Vector BS = (SE + startTangent).Unitize();
+                    BS *= (0.5 * dist) / (BS.Dot(startTangent));
+                    return new Arc(startPt, startPt + BS, endPt);
+                }
+            }
+            else return null;
+        }
+
+        #endregion
     }
 }

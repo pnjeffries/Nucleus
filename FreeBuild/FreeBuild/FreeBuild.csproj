@@ -53,6 +53,7 @@
     <Compile Include="Conversion\ModelIDMappingTable.cs" />
     <Compile Include="Events\MessageRaisedEventArgs.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
+    <Compile Include="Geometry\PlanarSurface.cs" />
     <Compile Include="Model\CircularHollowProfile.cs" />
     <Compile Include="Model\CircularProfile.cs" />
     <Compile Include="Model\ElementVertex.cs" />
