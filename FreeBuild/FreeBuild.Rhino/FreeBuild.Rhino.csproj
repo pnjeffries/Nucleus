@@ -47,6 +47,8 @@
     <Compile Include="FBtoRC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RCtoFB.cs" />
+    <Compile Include="RhinoIDMappingTable.cs" />
+    <Compile Include="RhinoMeshBuilder.cs" />
     <Compile Include="RhinoOutput.cs" />
   </ItemGroup>
   <ItemGroup>

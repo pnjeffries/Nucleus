@@ -12,6 +12,7 @@ namespace FreeBuild.Robot
     /// <summary>
     /// A mapping table from freebuild model objects to Robot objects
     /// </summary>
+    [Serializable]
     public class RobotIDMappingTable : IDMappingTable<Guid, string>
     {
         #region Properties

@@ -230,8 +230,8 @@ namespace FreeBuild.Geometry
         /// <returns></returns>
         public Vector[] Divide(int divisions, Angle arcStart, Angle arcEnd)
         {
-            var result = new Vector[divisions];
-            for (int i = 0; i < divisions; i++)
+            var result = new Vector[divisions + 1];
+            for (int i = 0; i <= divisions; i++)
             {
                 result[i] = PointAt(arcStart + i * (arcEnd - arcStart) / divisions);
             }

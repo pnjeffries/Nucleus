@@ -107,7 +107,7 @@ namespace FreeBuild.Model
         protected override CurveCollection GenerateVoids()
         {
             CurveCollection result = new CurveCollection();
-            Curve voidCrv = PolyLine.Rectangle(Depth - 2 * FlangeThickness, Width - 2 * WebThickness);
+            Curve voidCrv = PolyCurve.Rectangle(Depth - 2 * FlangeThickness, Width - 2 * WebThickness);
             if (voidCrv != null) result.Add(voidCrv);
             return result;
         }

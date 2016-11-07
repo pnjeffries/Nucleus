@@ -95,6 +95,32 @@ namespace Newt.Rhino
         }
 
         /// <summary>
+        /// Replace an existing curve in the Rhino document
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="curve"></param>
+        /// <returns></returns>
+        public static bool ReplaceCurve(Guid obj, RC.Curve curve)
+        {
+            bool result = false;
+            Writing = true;
+            result = RhinoDoc.ActiveDoc.Objects.Replace(obj, curve);
+            Writing = false;
+            return result;
+        }
+
+        /// <summary>
+        /// Replace an existing curve in the Rhino document
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="curve"></param>
+        /// <returns></returns>
+        public static bool ReplaceCurve(Guid obj, FB.Curve curve)
+        {
+            return ReplaceCurve(obj, FBtoRC.Convert(curve));
+        }
+
+        /// <summary>
         /// Add a line between two points to the current Rhino document
         /// </summary>
         /// <param name="startPoint"></param>

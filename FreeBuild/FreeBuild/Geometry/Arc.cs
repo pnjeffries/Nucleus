@@ -160,7 +160,7 @@ namespace FreeBuild.Geometry
         /// Initialise an arc that forms a complete circle
         /// </summary>
         /// <param name="circle"></param>
-        public Arc(Circle circle)
+        public Arc(Circle circle):this()
         {
             Vertices.Add(new Vertex(circle.PointAt(0.0)));
             Vertices.Add(new Vertex(circle.PointAt(Math.PI)));

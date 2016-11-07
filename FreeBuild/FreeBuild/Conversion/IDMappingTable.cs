@@ -42,6 +42,11 @@ namespace FreeBuild.Conversion
             get { return _SecondIDName; }
         }
 
+        /// <summary>
+        /// The name of the category used to store objects when no other category is specified.
+        /// </summary>
+        public virtual string DefaultCategory { get { return ""; } }
+
         #endregion
 
         #region Constructors
@@ -59,12 +64,14 @@ namespace FreeBuild.Conversion
 
         #endregion
 
+        #region Methods
+
         /// <summary>
         /// Determines whether this mapping table contains an entry within the second set stored
         /// under the specified catagory and associated with the given ID from the first set.
         /// </summary>
-        /// <param name="category"></param>
-        /// <param name="firstID"></param>
+        /// <param name="category">The mapping category</param>
+        /// <param name="firstID">The ID from the first set</param>
         /// <returns></returns>
         public bool HasSecondID(string category, TFirstID firstID)
         {
@@ -72,11 +79,22 @@ namespace FreeBuild.Conversion
         }
 
         /// <summary>
+        /// Determines whether this mapping table contains an entry within the second set stored
+        /// under the default catagory and associated with the given ID from the first set.
+        /// </summary>
+        /// <param name="firstID">The ID from the first set</param>
+        /// <returns></returns>
+        public bool HasSecondID(TFirstID firstID)
+        {
+            return HasSecondID(DefaultCategory, firstID);
+        }
+
+        /// <summary>
         /// Get the ID from the second set within the category and associated with the ID from
         /// the first set specified.
         /// </summary>
-        /// <param name="category"></param>
-        /// <param name="firstID"></param>
+        /// <param name="category">The mapping category</param>
+        /// <param name="firstID">The ID from the first set</param>
         /// <returns></returns>
         public TSecondID GetSecondID(string category, TFirstID firstID)
         {
@@ -84,11 +102,22 @@ namespace FreeBuild.Conversion
         }
 
         /// <summary>
+        /// Get the ID from the second set within the default category and associated with the ID from
+        /// the first set specified.
+        /// </summary>
+        /// <param name="firstID">The ID from the first set</param>
+        /// <returns></returns>
+        public TSecondID GetSecondID(TFirstID firstID)
+        {
+            return GetSecondID(DefaultCategory, firstID);
+        }
+
+        /// <summary>
         /// Determines whether this mapping tale contains an entry within the first set stored 
         /// under the specified category and associated with the given ID from the second set
         /// </summary>
-        /// <param name="category"></param>
-        /// <param name="secondID"></param>
+        /// <param name="category">The mapping category</param>
+        /// <param name="secondID">The ID from the second set</param>
         /// <returns></returns>
         public bool HasFirstID(string category, TSecondID secondID)
         {
@@ -96,11 +125,22 @@ namespace FreeBuild.Conversion
         }
 
         /// <summary>
+        /// Determines whether this mapping tale contains an entry within the first set stored 
+        /// under the specified category and associated with the given ID from the second set
+        /// </summary>
+        /// <param name="secondID">The ID from the second set</param>
+        /// <returns></returns>
+        public bool HasFirstID(TSecondID secondID)
+        {
+            return HasFirstID(DefaultCategory, secondID);
+        }
+
+        /// <summary>
         /// Get the ID from the first set within the category and associated with the ID from the
         /// second set specified
         /// </summary>
-        /// <param name="category"></param>
-        /// <param name="secondID"></param>
+        /// <param name="category">The mapping category</param>
+        /// <param name="secondID">The ID from the second set</param>
         /// <returns></returns>
         public TFirstID GetFirstID(string category, TSecondID secondID)
         {
@@ -108,16 +148,39 @@ namespace FreeBuild.Conversion
         }
 
         /// <summary>
+        /// Get the ID from the first set within the category and associated with the ID from the
+        /// second set specified
+        /// </summary>
+        /// <param name="category">The mapping category</param>
+        /// <param name="secondID">The ID from the second set</param>
+        /// <returns></returns>
+        public TFirstID GetFirstID(TSecondID secondID)
+        {
+            return GetFirstID(DefaultCategory, secondID);
+        }
+
+        /// <summary>
         /// Add a new entry to this mapping table
         /// </summary>
-        /// <param name="category"></param>
-        /// <param name="firstID"></param>
-        /// <param name="secondID"></param>
+        /// <param name="category">The mapping category</param>
+        /// <param name="firstID">The first ID</param>
+        /// <param name="secondID">The second ID</param>
         public void Add(string category, TFirstID firstID, TSecondID secondID)
         {
             if (!ContainsKey(category)) Add(category, new BiDirectionary<TFirstID, TSecondID>());
             this[category].Set(firstID, secondID);
         }
 
+        /// <summary>
+        /// Add a new entry to this mapping table
+        /// </summary>
+        /// <param name="firstID"></param>
+        /// <param name="secondID"></param>
+        public void Add(TFirstID firstID, TSecondID secondID)
+        {
+            Add(DefaultCategory, firstID, secondID);
+        }
+
+        #endregion
     }
 }

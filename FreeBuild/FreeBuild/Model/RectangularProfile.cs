@@ -104,7 +104,7 @@ namespace FreeBuild.Model
 
         protected override Curve GeneratePerimeter()
         {
-            return PolyLine.Rectangle(Depth, Width);
+            return PolyCurve.Rectangle(Depth, Width);
         }
 
         protected override CurveCollection GenerateVoids()

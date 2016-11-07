@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RC = Rhino.Geometry;
 
-namespace Newt.RhinoCommon
+namespace FreeBuild.Rhino
 {
     /// <summary>
     /// Helper class to convert from RhinoCommon to FreeBuild format

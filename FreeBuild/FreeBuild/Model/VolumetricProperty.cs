@@ -35,5 +35,18 @@ namespace FreeBuild.Model
     [Serializable]
     public abstract class VolumetricProperty : ModelObject
     {
+        #region Methods
+
+        /// <summary>
+        /// Get a collection of all elements in the same model which have this property assigned
+        /// </summary>
+        /// <returns></returns>
+        public ElementCollection Elements()
+        {
+            if (Model != null) return Model.Elements.AllWith(this);
+            else return new ElementCollection();
+        }
+
+        #endregion
     }
 }

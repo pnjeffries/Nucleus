@@ -381,5 +381,28 @@ namespace FreeBuild.Geometry
         }
 
         #endregion
+
+        #region Static Methods
+
+        /// <summary>
+        /// Generates a rectangular polycurve on the XY plane centred on the origin
+        /// </summary>
+        /// <param name="depth">The depth of the rectangle</param>
+        /// <param name="width">The width of the rectangle</param>
+        /// <returns></returns>
+        public static PolyCurve Rectangle(double depth, double width)
+        {
+            double x = width / 2;
+            double y = depth / 2;
+
+            PolyCurve result = new PolyCurve(new Line(x,y,-x, y));
+            result.AddLine(-x, -y);
+            result.AddLine(x, -y);
+            result.AddLine(x, y);
+
+            return result;
+        }
+
+        #endregion
     }
 }
