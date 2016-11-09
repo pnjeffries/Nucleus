@@ -208,8 +208,26 @@ namespace FreeBuild.Meshing
             else
             {
                 Vector[] pointStrip = profile.Facet(Math.PI / 6);
-                if (useYZ) pointStrip = pointStrip.RemapZXY();
+                if (useYZ) pointStrip = pointStrip.RemapZnegXY();
                 AddSweep(frames, pointStrip, profile.Closed);
+            }
+        }
+
+        /// <summary>
+        /// Create faces out of points from the specified list, starting by joining the start points to the end points
+        /// and moving towards the middle of the list
+        /// </summary>
+        /// <param name="pointStrip"></param>
+        /// <param name="startOffset"></param>
+        public void FillStartToEnd(IList<Vector> pointStrip, int startOffset = 1)
+        {
+            for (int i = 0; i < pointStrip.Count / 2 - startOffset; i++)
+            {
+                Vector v0 = pointStrip[pointStrip.Count - 1 - i];
+                Vector v1 = pointStrip[i + startOffset];
+                Vector v2 = pointStrip[i + startOffset + 1];
+                Vector v3 = pointStrip[pointStrip.Count - 2 - i];
+                AddFace(v0, v1, v2, v3);
             }
         }
 
@@ -223,13 +241,23 @@ namespace FreeBuild.Meshing
             Angle tolerance = Angle.FromDegrees(15); //TODO: Make adjustable
             SectionProperty section = element.Property;
             Curve geometry = element.Geometry;
-            if (section != null && geometry != null)
+            if (section != null && geometry != null && section.Profile != null)
             {
                 Angle orientation = 0;
                 if (element.Orientation != null) orientation = element.Orientation.Angle();
                 IList<CartesianCoordinateSystem> frames = geometry.FacetCSystems(tolerance, orientation);
-                Curve perimeter = section.Profile.Perimeter;
-                AddSweep(frames, perimeter, true);
+                if (frames.Count > 0)
+                {
+                    Curve perimeter = section.Profile.Perimeter;
+                    AddSweep(frames, perimeter, true);
+
+                    //Caps:
+                    Vector[] pointStrip = perimeter.Facet(Math.PI / 6);
+                    Vector[] startPts = frames[0].LocalToGlobal(pointStrip.RemapZnegXY());
+                    FillStartToEnd(startPts);
+                    Vector[] endPts = frames.Last().LocalToGlobal(pointStrip.RemapZXY());
+                    FillStartToEnd(endPts);
+                }
             }
         }
 

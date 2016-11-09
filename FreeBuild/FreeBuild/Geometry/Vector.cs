@@ -652,6 +652,18 @@ namespace FreeBuild.Geometry
             return new Vector(Z,X,Y);
         }
 
+        /// <summary>
+        /// Produce a new Vector using the Z,-X,Y components of this one mapped
+        /// respectively onto X,Y,Z of the new one.
+        /// Useful to convert points drawn on the XY plane to ones drawn on the YZ plane,
+        /// where the Y axis is flipped.
+        /// </summary>
+        /// <returns></returns>
+        public Vector RemapZnegXY()
+        {
+            return new Vector(Z, -X, Y);
+        }
+
         #endregion
 
         #region Static Methods
@@ -850,6 +862,22 @@ namespace FreeBuild.Geometry
             for (int i = 0; i < vectors.Length; i++)
             {
                 result[i] = vectors[i].RemapZXY();
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Remap all vectors in this array from the XY to the YZ plane,
+        /// with the Y axis flipped
+        /// </summary>
+        /// <param name="vectors"></param>
+        /// <returns></returns>
+        public static Vector[] RemapZnegXY(this Vector[] vectors)
+        {
+            Vector[] result = new Vector[vectors.Length];
+            for (int i = 0; i < vectors.Length; i++)
+            {
+                result[i] = vectors[i].RemapZnegXY();
             }
             return result;
         }

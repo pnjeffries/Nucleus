@@ -34,6 +34,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,18 +49,29 @@
     <Compile Include="Converters\FlatStringConverter.cs" />
     <Compile Include="Converters\InverseBoolConverter.cs" />
     <Compile Include="Converters\IsNotNullConverter.cs" />
+    <Compile Include="Converters\NullOrEmptyVisibilityConverter.cs" />
     <Compile Include="Converters\UnderscoreToSpaceConverter.cs" />
     <Compile Include="Converters\UntitledConverter.cs" />
     <Compile Include="Converters\VisibleWhenEqualConverter.cs" />
     <Compile Include="FieldControl.cs" />
     <Compile Include="LabelledControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SliderFieldControl.xaml.cs">
+      <DependentUpon>SliderFieldControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SnapBorder.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FreeBuild\FreeBuild.csproj">
       <Project>{7635522c-178f-4db5-9106-ff8dfd4b833b}</Project>
       <Name>FreeBuild</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="SliderFieldControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

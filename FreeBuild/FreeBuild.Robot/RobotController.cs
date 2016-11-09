@@ -291,6 +291,7 @@ namespace FreeBuild.Robot
         public bool UpdateRobotFromModel(Model.Model model, RobotConversionContext context)
         {
             UpdateRobotNodesFromModel(model, model.Nodes, context);
+            //TODO: Update sections (including those not assigned to Elements)
             UpdateRobotBarsFromModel(model, model.Elements.LinearElements, context);
             return true;
         }
@@ -467,6 +468,8 @@ namespace FreeBuild.Robot
             //TODO: More data
 
             context.IDMap.Add(section, label);
+
+            Robot.Project.Structure.Labels.Store(label);
 
             return label;
         }

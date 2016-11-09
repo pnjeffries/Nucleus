@@ -224,6 +224,22 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Convert a set of points defined in the local coordinate system
+        /// to a set of points defined in the global one
+        /// </summary>
+        /// <param name="vectors"></param>
+        /// <returns></returns>
+        public Vector[] LocalToGlobal(IList<Vector> vectors)
+        {
+            Vector[] result = new Vector[vectors.Count];
+            for (int i = 0; i < vectors.Count; i++)
+            {
+                result[i] = LocalToGlobal(vectors[i]);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Extract the XY plane from this coordinate system
         /// </summary>
         /// <returns></returns>
