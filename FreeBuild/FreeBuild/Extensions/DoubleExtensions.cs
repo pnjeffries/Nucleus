@@ -90,5 +90,31 @@ namespace FreeBuild.Extensions
         {
             return Math.Max(Math.Min(value, max), min);
         }
+
+        /// <summary>
+        /// Is this value within the specified range?
+        /// i.e. is it > min and < max
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public static bool InRange(this double value, double min, double max)
+        {
+            return value > min && value < max;
+        }
+
+        /// <summary>
+        /// Is this value within the specified range?
+        /// i.e. is it >= min and =< max
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public static bool InRangeInclusive(this double value, double min, double max)
+        {
+            return value >= min && value <= max;
+        }
     }
 }

@@ -102,17 +102,60 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
+        /// Convert a FreeBuild polyCurve into a RhinoCommon one
+        /// </summary>
+        /// <param name="curve"></param>
+        /// <returns></returns>
+        public static RC.PolyCurve Convert(PolyCurve curve)
+        {
+            RC.PolyCurve result = new RC.PolyCurve();
+            foreach (Curve subCrv in curve.SubCurves)
+            {
+                RC.Curve rCrv = Convert(subCrv);
+                if (rCrv != null) result.Append(rCrv);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Convert a FreeBuild curve into a RhinoCommon one
         /// </summary>
         /// <param name="curve">The curve to convert</param>
         /// <returns></returns>
         public static RC.Curve Convert(Curve curve)
         {
-            if (curve is Line) return Convert((Line)curve);
+            if (curve == null) return null;
+            else if (curve is Line) return Convert((Line)curve);
             else if (curve is PolyLine) return Convert((PolyLine)curve);
             else if (curve is Arc) return Convert((Arc)curve);
+            else if (curve is PolyCurve) return Convert((PolyCurve)curve);
             //TODO: Others
             else throw new Exception("Conversion of curve type to Rhino not yet supported.");
+        }
+
+        /// <summary>
+        /// Convert a FreeBuild PlanarSurface into a Rhino BRep
+        /// </summary>
+        /// <param name="surface"></param>
+        /// <returns></returns>
+        public static RC.Brep Convert(PlanarSurface surface)
+        {
+            if (surface == null || !surface.IsValid) return null;
+            else
+            {
+                var rCrvs = new List<RC.Curve>();
+                rCrvs.Add(Convert(surface.Perimeter));
+                if (surface.HasVoids)
+                {
+                    foreach (Curve voidCrv in surface.Voids)
+                    {
+                        rCrvs.Add(Convert(voidCrv));
+                    }
+                }
+                RC.Brep[] result = RC.Brep.CreatePlanarBreps(rCrvs);
+                if (result.Length > 0) return result[0];
+             }
+            return null;
         }
 
     }

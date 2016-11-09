@@ -53,7 +53,9 @@
     <Compile Include="Conversion\ModelIDMappingTable.cs" />
     <Compile Include="Events\MessageRaisedEventArgs.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
+    <Compile Include="Extensions\IListExtensions.cs" />
     <Compile Include="Geometry\PlanarSurface.cs" />
+    <Compile Include="Meshing\CoordinateSystemRemappingOption.cs" />
     <Compile Include="Model\CircularHollowProfile.cs" />
     <Compile Include="Model\CircularProfile.cs" />
     <Compile Include="Model\ElementVertex.cs" />
@@ -154,6 +156,7 @@
     <Compile Include="Model\RectangularHollowProfile.cs" />
     <Compile Include="Model\RectangularProfile.cs" />
     <Compile Include="Model\SectionProperty.cs" />
+    <Compile Include="Model\SectionPropertyCollection.cs" />
     <Compile Include="Model\SymmetricIProfile.cs" />
     <Compile Include="Model\VertexDataStore.cs" />
     <Compile Include="Model\VerticalSetOut.cs" />

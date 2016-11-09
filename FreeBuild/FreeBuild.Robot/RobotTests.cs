@@ -23,6 +23,9 @@ namespace FreeBuild.Robot
             var robot = new RobotController();
             RobotIDMappingTable idMap = new RobotIDMappingTable();
             Model.Model model = robot.LoadModelFromRobot(readPath, ref idMap);
+            robot.Close();
+            robot.Release();
+            robot = new RobotController();
             robot.WriteModelToRobot(writePath, model, ref idMap);
         }
     }

@@ -47,6 +47,11 @@ namespace FreeBuild.Model
         public abstract CurveCollection Voids { get; }
 
         /// <summary>
+        /// Does this profile (potentially) have voids?
+        /// </summary>
+        public virtual bool HasVoids { get { return false; } }
+
+        /// <summary>
         /// Private backing field for Material property.
         /// </summary>
         private Material _Material;

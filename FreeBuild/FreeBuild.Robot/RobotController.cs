@@ -105,6 +105,14 @@ namespace FreeBuild.Robot
             _Robot = null;
         }
 
+        /// <summary>
+        /// Close Robot
+        /// </summary>
+        public void Close()
+        {
+            Robot.Project.Close();
+        }
+
         #region Robot to FreeBuild
 
         /// <summary>
@@ -291,7 +299,7 @@ namespace FreeBuild.Robot
         public bool UpdateRobotFromModel(Model.Model model, RobotConversionContext context)
         {
             UpdateRobotNodesFromModel(model, model.Nodes, context);
-            //TODO: Update sections (including those not assigned to Elements)
+            UpdateRobotPropertiesFromModel(model, model.Properties, context);
             UpdateRobotBarsFromModel(model, model.Elements.LinearElements, context);
             return true;
         }
@@ -308,6 +316,25 @@ namespace FreeBuild.Robot
             foreach (Node node in nodes)
             {
                 UpdateRobotNode(node, context);
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Update the section, face properties etc. in the open Robot model from those in a FreeBuild model
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="properties"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        private bool UpdateRobotPropertiesFromModel(Model.Model model, VolumetricPropertyCollection properties, RobotConversionContext context)
+        {
+            foreach (VolumetricProperty property in properties)
+            {
+                if (property is SectionProperty)
+                {
+                    UpdateRobotSection((SectionProperty)property, context);
+                }
             }
             return true;
         }
@@ -519,7 +546,7 @@ namespace FreeBuild.Robot
                 }
                 else if (profile is CircularProfile)
                 {
-                    var cProfile = (CircularHollowProfile)profile;
+                    var cProfile = (CircularProfile)profile;
                     data.ShapeType = IRobotBarSectionShapeType.I_BSST_CIRC_FILLED;
                     data.SetValue(IRobotBarSectionDataValue.I_BSDV_D, cProfile.Diameter);
                 }
@@ -566,11 +593,13 @@ namespace FreeBuild.Robot
                 var cProfile = new CircularHollowProfile();
                 cProfile.Diameter = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
                 cProfile.WallThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TW); //?
+                return cProfile;
             }
             else if (equivalent == typeof(CircularProfile))
             {
                 var cProfile = new CircularProfile();
                 cProfile.Diameter = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
+                return cProfile;
             }
             return null; //Profile could not be created
         }
@@ -596,7 +625,8 @@ namespace FreeBuild.Robot
             else if (type == IRobotBarSectionShapeType.I_BSST_TRON
                 || type == IRobotBarSectionShapeType.I_BSST_TUBE)
                 return typeof(CircularHollowProfile);
-            else if (type == IRobotBarSectionShapeType.I_BSST_CIRC_FILLED)
+            else if (type == IRobotBarSectionShapeType.I_BSST_CIRC_FILLED
+                || type == IRobotBarSectionShapeType.I_BSST_USER_CIRC_FILLED)
                 return typeof(CircularProfile);
             else
                 return null;

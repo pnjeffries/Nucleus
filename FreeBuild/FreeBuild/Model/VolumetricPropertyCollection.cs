@@ -10,6 +10,7 @@ namespace FreeBuild.Model
     /// <summary>
     /// A collection of VolumetricProperty objects
     /// </summary>
+    [Serializable]
     public class VolumetricPropertyCollection : ModelObjectCollection<VolumetricProperty>
     {
         #region Constructors
@@ -24,6 +25,25 @@ namespace FreeBuild.Model
         /// </summary>
         /// <param name="model"></param>
         protected VolumetricPropertyCollection(Model model) : base(model) { }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Extract all Section Properties from this collection
+        /// </summary>
+        /// <returns></returns>
+        public SectionPropertyCollection GetSections()
+        {
+            var result = new SectionPropertyCollection();
+            foreach (VolumetricProperty vProp in this)
+            {
+                if (vProp is SectionProperty)
+                    result.Add((SectionProperty)vProp);
+            }
+            return result;
+        }
 
         #endregion
     }

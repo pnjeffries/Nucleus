@@ -28,6 +28,11 @@ namespace FreeBuild.Model
             set { _WallThickness = value;  NotifyPropertyChanged("WallThickness"); }
         }
 
+        /// <summary>
+        /// Does this profile (potentially) have voids?
+        /// </summary>
+        public override bool HasVoids { get { return true; } }
+
         #endregion
 
         #region Constructors

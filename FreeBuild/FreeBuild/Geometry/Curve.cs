@@ -265,7 +265,8 @@ namespace FreeBuild.Geometry
             Vector O = PointAt(span, tSpan);
             Vector T = TangentAt(span, tSpan);
             Vector alignZ = Vector.UnitZ;
-            if (T.AngleBetween(alignZ) <= zLimit) alignZ = Vector.UnitX;
+            Angle angleBetween = T.AngleBetween(alignZ);
+            if (angleBetween <= zLimit || angleBetween >= Angle.Straight - zLimit) alignZ = Vector.UnitX;
             Vector lY = alignZ.Cross(T);
             if (orientation != 0) lY = lY.Rotate(T, orientation);
             return new Plane(O, T, lY);

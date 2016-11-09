@@ -484,7 +484,7 @@ namespace FreeBuild.Geometry
 
         /// <summary>
         /// Calculate the (smallest, non-directional) angle between this vector and another.
-        /// In the range 0 - PI/2.
+        /// In the range -PI/2 to PI/2.
         /// </summary>
         /// <param name="other"></param>
         /// <returns>The smallest angle between this vector and another,
@@ -493,8 +493,8 @@ namespace FreeBuild.Geometry
         {
             Vector v1 = this.Unitize();
             Vector v2 = other.Unitize();
-            double dot = v1.Dot(ref v1);
-            return Math.Atan(dot);
+            double dot = v1.Dot(ref v2);
+            return Math.Acos(dot);
         }
 
 

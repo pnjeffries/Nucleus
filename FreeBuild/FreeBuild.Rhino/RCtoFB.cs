@@ -27,6 +27,27 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
+        /// Convert a Rhino vector to a FreeBuild one
+        /// </summary>
+        /// <param name="vector">The vector to convert</param>
+        /// <returns></returns>
+        public static Vector Convert(RC.Vector3d vector)
+        {
+            return new Vector(vector.X, vector.Y, vector.Z);
+        }
+
+        /// <summary>
+        /// Convert a Rhino plane to a FreeBuild one
+        /// </summary>
+        /// <param name="plane"></param>
+        /// <returns></returns>
+        public static Plane Convert(RC.Plane plane)
+        {
+            return new Plane(Convert(plane.Origin),
+                Convert(plane.XAxis), Convert(plane.YAxis));
+        }
+
+        /// <summary>
         /// Convert a Rhino line to a FreeBuild one
         /// </summary>
         /// <param name="line">The line to be converted</param>
@@ -51,6 +72,26 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
+        /// Convert a Rhino arc to a FreeBuild one
+        /// </summary>
+        /// <param name="arc"></param>
+        /// <returns></returns>
+        public static Arc Convert(RC.Arc arc)
+        {
+            if (arc.IsCircle)
+            {
+                //TODO
+            }
+            throw new NotImplementedException();
+        }
+
+        public static Circle Convert(RC.Circle circle)
+        {
+            //TODO
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Convert a Rhino polyline to a FreeBuild one
         /// </summary>
         /// <param name="polyline"></param>
@@ -70,6 +111,27 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
+        /// Convert a RhinoCommon PolyCurve to a FreeBuild one
+        /// </summary>
+        /// <param name="polyCurve"></param>
+        /// <returns></returns>
+        public static PolyCurve Convert(RC.PolyCurve polyCurve)
+        {
+            if (polyCurve != null)
+            {
+                PolyCurve result = new PolyCurve();
+                RC.Curve[] subCrvs = polyCurve.Explode();
+                foreach (RC.Curve subCrv in subCrvs)
+                {
+                    Curve crv = Convert(subCrv);
+                    if (crv != null) result.Add(crv);
+                }
+                return result;
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Convert a Rhino curve to a FreeBuild one
         /// </summary>
         /// <param name="curve"></param>
@@ -80,10 +142,17 @@ namespace FreeBuild.Rhino
             else if (curve.IsPolyline())
             {
                 RC.Polyline pLine;
-                curve.TryGetPolyline(out pLine);
-                return Convert(pLine);
+                if (curve.TryGetPolyline(out pLine))
+                    return Convert(pLine);
             }
-            else throw new NotImplementedException();
+            else if (curve is RC.PolyCurve) return Convert((RC.PolyCurve)curve);
+            else if (curve.IsArc())
+            {
+                RC.Arc arc;
+                if (curve.TryGetArc(out arc))
+                    return Convert(arc);
+            }
+            throw new NotImplementedException();
         }
     }
 }

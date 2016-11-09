@@ -1,4 +1,5 @@
-﻿using FreeBuild.Geometry;
+﻿using FreeBuild.Extensions;
+using FreeBuild.Geometry;
 using FreeBuild.Model;
 using System;
 using System.Collections.Generic;
@@ -198,17 +199,19 @@ namespace FreeBuild.Meshing
         /// <param name="frames">The local coordinate frames between which faces will be swept</param>
         /// <param name="profile">The curve to sweep.</param>
         /// <param name="useYZ"></param>
-        public void AddSweep(IList<CartesianCoordinateSystem> frames, Curve profile, bool useYZ = false)
+        public void AddSweep(IList<CartesianCoordinateSystem> frames, Curve profile, 
+            CoordinateSystemRemappingOption remapping = CoordinateSystemRemappingOption.None)
         {
             if (profile is PolyCurve) //Polycurves are a special case which will be recursively broken up to subcurves
             {
                 PolyCurve pC = (PolyCurve)profile;
-                foreach (Curve subCrv in pC.SubCurves) AddSweep(frames, subCrv, useYZ);
+                foreach (Curve subCrv in pC.SubCurves) AddSweep(frames, subCrv, remapping);
             }
             else
             {
                 Vector[] pointStrip = profile.Facet(Math.PI / 6);
-                if (useYZ) pointStrip = pointStrip.RemapZnegXY();
+                if (remapping == CoordinateSystemRemappingOption.RemapNegYZ) pointStrip = pointStrip.RemapZnegXY();
+                else if (remapping == CoordinateSystemRemappingOption.RemapYZ) pointStrip = pointStrip.RemapZXY();
                 AddSweep(frames, pointStrip, profile.Closed);
             }
         }
@@ -232,6 +235,25 @@ namespace FreeBuild.Meshing
         }
 
         /// <summary>
+        /// Create faces by filling between matching indices in two lists of points.
+        /// </summary>
+        /// <param name="pointStrip1">The first set of points</param>
+        /// <param name="pointStrip2">The second set of points</param>
+        /// <param name="reverse">If true, the second set of points will be reversed</param>
+        public void FillBetween(IList<Vector> pointStrip1, IList<Vector> pointStrip2, bool reverse = false)
+        {
+            int max = Math.Max(pointStrip1.Count, pointStrip2.Count) - 1;
+            for (int i = 0; i < max; i++)
+            {
+                Vector v1 = pointStrip2.GetBounded(i, reverse);
+                Vector v2 = pointStrip1.GetBounded(i);
+                Vector v3 = pointStrip1.GetBounded(i + 1);
+                Vector v4 = pointStrip2.GetBounded(i + 1, reverse);
+                AddFace(v1, v2, v3, v4);
+            }
+        }
+
+        /// <summary>
         /// Add a set of vertices and faces to this mesh representing the given element complete with
         /// a 3D representation of the assigned section profile
         /// </summary>
@@ -249,14 +271,37 @@ namespace FreeBuild.Meshing
                 if (frames.Count > 0)
                 {
                     Curve perimeter = section.Profile.Perimeter;
-                    AddSweep(frames, perimeter, true);
+                    AddSweep(frames, perimeter, CoordinateSystemRemappingOption.RemapNegYZ);
 
-                    //Caps:
-                    Vector[] pointStrip = perimeter.Facet(Math.PI / 6);
-                    Vector[] startPts = frames[0].LocalToGlobal(pointStrip.RemapZnegXY());
-                    FillStartToEnd(startPts);
-                    Vector[] endPts = frames.Last().LocalToGlobal(pointStrip.RemapZXY());
-                    FillStartToEnd(endPts);
+                    if (section.Profile.HasVoids)
+                    {
+                        CurveCollection voids = section.Profile.Voids;
+                        if (voids.Count > 0)
+                        {
+                            Vector[] outer = perimeter.Facet(tolerance);
+                            Vector[] startOuter = frames[0].LocalToGlobal(outer.RemapZnegXY());
+                            Vector[] endOuter = frames.Last().LocalToGlobal(outer.RemapZXY());
+                            foreach (Curve voidCrv in voids)
+                            {
+                                AddSweep(frames, voidCrv, CoordinateSystemRemappingOption.RemapYZ);
+                                Vector[] inner = voidCrv.Facet(tolerance);
+                                Vector[] startInner = frames[0].LocalToGlobal(outer.RemapZXY());
+                                Vector[] endInner = frames.Last().LocalToGlobal(outer.RemapZXY());
+                                FillBetween(startOuter, startInner);
+                                FillBetween(endOuter, endInner);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //Caps:
+                        Vector[] pointStrip = perimeter.Facet(tolerance);
+                        Vector[] startPts = frames[0].LocalToGlobal(pointStrip.RemapZnegXY());
+                        FillStartToEnd(startPts,2);
+                        Vector[] endPts = frames.Last().LocalToGlobal(pointStrip.RemapZXY());
+                        FillStartToEnd(endPts,2);
+                        //TODO: Implement other capping methods
+                    }
                 }
             }
         }

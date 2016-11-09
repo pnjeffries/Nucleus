@@ -48,9 +48,14 @@ namespace FreeBuild.Geometry
         public static readonly Angle Zero = new Angle(0d);
 
         /// <summary>
-        /// A right angle, PI/2 (or 90 degrees).
+        /// A right angle, PI/2 (or 90 degrees)
         /// </summary>
         public static readonly Angle Right = new Angle(Math.PI/2);
+
+        /// <summary>
+        /// A straignt angle, PI (or 180 degrees)
+        /// </summary>
+        public static readonly Angle Straight = new Angle(Math.PI);
 
         /// <summary>
         /// A complete angle, 2*PI (or 360 degrees)
@@ -74,6 +79,22 @@ namespace FreeBuild.Geometry
         /// Get the angle expressed in degrees
         /// </summary>
         public double Degrees { get { return 180 * Radians / Math.PI; } }
+
+        /// <summary>
+        /// Is this an acute angle - i.e. is it lower than PI/2 (90 degrees)?
+        /// </summary>
+        public bool IsAcute { get { return Radians.Abs() < Right; } }
+
+        /// <summary>
+        /// Is this an obtuse angle - i.e is it greater than PI/2 (90 degrees) but
+        /// lower than PI (180 degrees)?
+        /// </summary>
+        public bool IsObtuse { get { return Radians.Abs().InRange(Right, Straight); } }
+
+        /// <summary>
+        /// Is this a reflex angle - i.e. is it greater than PI (180 degrees)?
+        /// </summary>
+        public bool IsReflex { get { return Radians.Abs() > Straight; } }
 
         #endregion
 
