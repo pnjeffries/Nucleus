@@ -209,7 +209,7 @@ namespace FreeBuild.Meshing
             }
             else
             {
-                Vector[] pointStrip = profile.Facet(Math.PI / 6);
+                Vector[] pointStrip = profile.Facet(Angle.FromDegrees(15));
                 if (remapping == CoordinateSystemRemappingOption.RemapNegYZ) pointStrip = pointStrip.RemapZnegXY();
                 else if (remapping == CoordinateSystemRemappingOption.RemapYZ) pointStrip = pointStrip.RemapZXY();
                 AddSweep(frames, pointStrip, profile.Closed);
@@ -285,8 +285,8 @@ namespace FreeBuild.Meshing
                             {
                                 AddSweep(frames, voidCrv, CoordinateSystemRemappingOption.RemapYZ);
                                 Vector[] inner = voidCrv.Facet(tolerance);
-                                Vector[] startInner = frames[0].LocalToGlobal(outer.RemapZXY());
-                                Vector[] endInner = frames.Last().LocalToGlobal(outer.RemapZXY());
+                                Vector[] startInner = frames[0].LocalToGlobal(inner.RemapZnegXY());
+                                Vector[] endInner = frames.Last().LocalToGlobal(inner.RemapZXY());
                                 FillBetween(startOuter, startInner);
                                 FillBetween(endOuter, endInner);
                             }

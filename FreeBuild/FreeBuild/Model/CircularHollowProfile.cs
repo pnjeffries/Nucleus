@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FreeBuild.Geometry;
 
 namespace FreeBuild.Model
 {
@@ -51,6 +52,21 @@ namespace FreeBuild.Model
         {
             Diameter = diameter;
             WallThickness = wallThickness;
+        }
+
+        #endregion
+
+        #region Methods
+
+        protected override CurveCollection GenerateVoids()
+        {
+            CurveCollection result = new CurveCollection();
+            if (Diameter / 2 > WallThickness)
+            {
+                Curve voidCrv = new Arc(new Circle(Diameter / 2 - WallThickness));
+                if (voidCrv != null) result.Add(voidCrv);
+            }
+            return result;
         }
 
         #endregion

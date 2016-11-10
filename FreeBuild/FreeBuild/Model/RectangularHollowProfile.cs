@@ -102,7 +102,8 @@ namespace FreeBuild.Model
         public RectangularHollowProfile(double depth, double width, double flangeThickness, double webThickness)
             :base(depth, width)
         {
-
+            FlangeThickness = flangeThickness;
+            WebThickness = webThickness;
         }
 
         #endregion
