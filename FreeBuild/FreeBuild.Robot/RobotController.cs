@@ -90,7 +90,9 @@ namespace FreeBuild.Robot
         {
             try
             {
+                
                 Robot.Project.SaveAs(filePath);
+                RaiseMessage("Robot file saved to " + filePath);
                 return true;
             }
             catch (COMException ex) { RaiseMessage(ex.Message); }
@@ -298,9 +300,11 @@ namespace FreeBuild.Robot
         /// <returns></returns>
         public bool UpdateRobotFromModel(Model.Model model, RobotConversionContext context)
         {
+            RaiseMessage("Writing data to Robot...");
             UpdateRobotNodesFromModel(model, model.Nodes, context);
             UpdateRobotPropertiesFromModel(model, model.Properties, context);
             UpdateRobotBarsFromModel(model, model.Elements.LinearElements, context);
+            RaiseMessage("Data writing completed.");
             return true;
         }
 
@@ -485,6 +489,7 @@ namespace FreeBuild.Robot
             }
             if (label == null)
             {
+                if (section.Name == null) section.Name = "Test"; //TEMP!
                 label = Robot.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, section.Name); //TODO: Enforce name uniqueness?
                 //TODO
             }
@@ -513,42 +518,65 @@ namespace FreeBuild.Robot
                 if (profile is SymmetricIProfile) //I Section
                 {
                     var rProfile = (SymmetricIProfile)profile;
+                    data.Type = IRobotBarSectionType.I_BST_NS_I;
                     data.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_I_BISYM;
-                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_D, rProfile.Depth);
+                    /*data.SetValue(IRobotBarSectionDataValue.I_BSDV_D, rProfile.Depth);
                     data.SetValue(IRobotBarSectionDataValue.I_BSDV_BF, rProfile.Width);
                     data.SetValue(IRobotBarSectionDataValue.I_BSDV_TF, rProfile.FlangeThickness);
                     data.SetValue(IRobotBarSectionDataValue.I_BSDV_TW, rProfile.WebThickness);
                     data.SetValue(IRobotBarSectionDataValue.I_BSDV_RA, rProfile.RootRadius); //???
-                    //TODO: Fillet radius
+                    */
+                    RobotBarSectionNonstdData nsdata = data.CreateNonstd(0);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H, rProfile.Depth - rProfile.FlangeThickness * 2);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B, rProfile.Width);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF, rProfile.FlangeThickness);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW, rProfile.WebThickness);
                 }
                 else if (profile is RectangularHollowProfile) //Rectangular Hollow Sections
                 {
                     var rProfile = (RectangularHollowProfile)profile;
+                    data.Type = IRobotBarSectionType.I_BST_NS_BOX;
                     data.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_BOX;
-                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_D, rProfile.Depth);
+                    /*data.SetValue(IRobotBarSectionDataValue.I_BSDV_D, rProfile.Depth);
                     data.SetValue(IRobotBarSectionDataValue.I_BSDV_BF, rProfile.Width);
                     data.SetValue(IRobotBarSectionDataValue.I_BSDV_TF, rProfile.FlangeThickness);
-                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_TW, rProfile.WebThickness);
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_TW, rProfile.WebThickness);*/
+                    RobotBarSectionNonstdData nsdata = data.CreateNonstd(0);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_H, rProfile.Depth - rProfile.FlangeThickness*2);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_B, rProfile.Width);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_TF, rProfile.FlangeThickness);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_TW, rProfile.WebThickness);
                 }
                 else if (profile is RectangularProfile) //Filled Rectangular Sections
                 {
                     var rProfile = (RectangularProfile)profile;
+                    data.Type = IRobotBarSectionType.I_BST_NS_RECT;
                     data.ShapeType = IRobotBarSectionShapeType.I_BSST_RECT_FILLED;
-                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_D, rProfile.Depth);
-                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_BF, rProfile.Width);
+                    //data.SetValue(IRobotBarSectionDataValue.I_BSDV_D, rProfile.Depth);
+                    //data.SetValue(IRobotBarSectionDataValue.I_BSDV_BF, rProfile.Width);
+                    RobotBarSectionNonstdData nsdata = data.CreateNonstd(0);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H, rProfile.Depth);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B, rProfile.Width);
                 }
                 else if (profile is CircularHollowProfile)
                 {
                     var cProfile = (CircularHollowProfile)profile;
+                    data.Type = IRobotBarSectionType.I_BST_NS_TUBE;
                     data.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_TUBE;
-                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_D, cProfile.Diameter);
-                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_TW, cProfile.WallThickness);
+                    //data.SetValue(IRobotBarSectionDataValue.I_BSDV_D, cProfile.Diameter);
+                    //data.SetValue(IRobotBarSectionDataValue.I_BSDV_TW, cProfile.WallThickness);
+                    RobotBarSectionNonstdData nsdata = data.CreateNonstd(0);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D, cProfile.Diameter);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_T, cProfile.WallThickness);
                 }
                 else if (profile is CircularProfile)
                 {
                     var cProfile = (CircularProfile)profile;
-                    data.ShapeType = IRobotBarSectionShapeType.I_BSST_CIRC_FILLED;
-                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_D, cProfile.Diameter);
+                    data.Type = IRobotBarSectionType.I_BST_NS_TUBE;
+                    //data.ShapeType = IRobotBarSectionShapeType.I_BSST_CIRC_FILLED;
+                    //data.SetValue(IRobotBarSectionDataValue.I_BSDV_D, cProfile.Diameter);
+                    RobotBarSectionNonstdData nsdata = data.CreateNonstd(0);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D, cProfile.Diameter);
                 }
             }
         }

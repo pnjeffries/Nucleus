@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,6 +14,8 @@ namespace Freebuild.WPF
     /// </summary>
     public abstract class LabelledControl : UserControl
     {
+        #region Properties
+
         /// <summary>
         /// Label dependency property
         /// </summary>
@@ -58,5 +61,20 @@ namespace Freebuild.WPF
             set { SetValue(UnitsProperty, value); }
         }
 
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Set up this control to display the specified object property
+        /// </summary>
+        /// <param name="property"></param>
+        public virtual void AdaptTo(PropertyInfo property)
+        {
+            //TODO: Override with attribute if present
+            Label = property.Name;
+        }
+
+        #endregion
     }
 }

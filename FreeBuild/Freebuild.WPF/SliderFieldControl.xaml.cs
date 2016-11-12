@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,6 +22,8 @@ namespace Freebuild.WPF
     /// </summary>
     public partial class SliderFieldControl : FieldControl
     {
+        #region Properties
+
         /// <summary>
         /// Minumum dependency property
         /// </summary>
@@ -96,6 +99,10 @@ namespace Freebuild.WPF
             set { SetValue(TickPlacementProperty, value); }
         }
 
+        #endregion
+
+        #region Constructor
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -105,5 +112,21 @@ namespace Freebuild.WPF
 
             LayoutRoot.DataContext = this;
         }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Set up this control to display the specified object property
+        /// </summary>
+        /// <param name="property"></param>
+        public override void AdaptTo(PropertyInfo property)
+        {
+            base.AdaptTo(property);
+        }
+
+        #endregion
+
     }
 }
