@@ -350,7 +350,7 @@ namespace FreeBuild.Robot
         /// <param name="linearElements"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        private bool UpdateRobotBarsFromModel(Model.Model model, ElementCollection linearElements, RobotConversionContext context)
+        private bool UpdateRobotBarsFromModel(Model.Model model, LinearElementCollection linearElements, RobotConversionContext context)
         {
             foreach (LinearElement element in linearElements)
             {

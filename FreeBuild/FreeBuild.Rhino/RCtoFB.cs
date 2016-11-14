@@ -139,6 +139,7 @@ namespace FreeBuild.Rhino
         public static Curve Convert(RC.Curve curve)
         {
             if (curve is RC.LineCurve) return Convert((RC.LineCurve)curve);
+            else if (curve.IsLinear()) return Convert(new RC.Line(curve.PointAtStart, curve.PointAtEnd));
             else if (curve.IsPolyline())
             {
                 RC.Polyline pLine;

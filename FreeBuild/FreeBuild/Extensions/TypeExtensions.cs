@@ -18,10 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -135,6 +137,30 @@ namespace FreeBuild.Extensions
         {
             return typeof(IList).IsAssignableFrom(type)
                    || typeof(IList<>).IsAssignableFrom(type);
+        }
+
+        /// <summary>
+        /// Extract all properties from this type that have been annotated with an AutoUIAttribute,
+        /// sorted by their order.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static IList<PropertyInfo> GetAutoUIProperties(this Type type)
+        {
+            SortedList<double, PropertyInfo> result = new SortedList<double, PropertyInfo>();
+            PropertyInfo[] pInfos = type.GetProperties();
+            foreach (PropertyInfo pInfo in pInfos)
+            {
+                object[] attributes = pInfo.GetCustomAttributes(typeof(AutoUIAttribute), true);
+                if (attributes.Count() > 0)
+                {
+                    AutoUIAttribute aInput = (AutoUIAttribute)attributes[0];
+                    double keyValue = aInput.Order;
+                    while (result.ContainsKey(keyValue)) keyValue += 0.0000001;
+                    result.Add(keyValue, pInfo);
+                }
+            }
+            return result.Values.ToList<PropertyInfo>();
         }
     }
 }

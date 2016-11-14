@@ -273,6 +273,20 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
+        /// Get the object with the specified GUID, if it can be found in this model.
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <returns></returns>
+        public ModelObject GetObject(Guid guid)
+        {
+            if (Elements.Contains(guid)) return Elements[guid];
+            else if (Nodes.Contains(guid)) return Nodes[guid];
+            else if (Properties.Contains(guid)) return Properties[guid];
+            else if (Materials.Contains(guid)) return Materials[guid];
+            else return null;
+        }
+
+        /// <summary>
         /// Generate or update nodes within this model to structurally represent
         /// the vertices of elements.
         /// </summary>

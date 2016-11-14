@@ -138,6 +138,7 @@
     <Compile Include="Model\IElementOrientation.cs" />
     <Compile Include="Model\LetterProfile.cs" />
     <Compile Include="Model\LinearElement.cs" />
+    <Compile Include="Model\LinearElementCollection.cs" />
     <Compile Include="Model\Material.cs" />
     <Compile Include="Model\MaterialCollection.cs" />
     <Compile Include="Model\MaterialTable.cs" />

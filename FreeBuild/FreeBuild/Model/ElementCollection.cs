@@ -29,33 +29,14 @@ using System.Threading.Tasks;
 namespace FreeBuild.Model
 {
     /// <summary>
-    /// A collection of elements
+    /// Generic base collection of elements
     /// </summary>
-    [Serializable]
-    public class ElementCollection : ModelObjectCollection<Element>
+    /// <typeparam name="TElement">The sub-type of elements that this collection contains</typeparam>
+    public abstract class ElementCollection<TElement, TSelf> : ModelObjectCollection<TElement>
+        where TElement : Element
+        where TSelf : ElementCollection<TElement,TSelf>, new()
     {
-        #region Properties
-
-        /// <summary>
-        /// Extract a collection of all the linear elements in this collection.
-        /// A new collection will be generated each time this is called.
-        /// </summary>
-        public ElementCollection LinearElements
-        {
-            get
-            {
-                var result = new ElementCollection();
-                foreach (Element element in this)
-                {
-                    if (element is LinearElement) result.Add(element);
-                }
-                return result;
-            }
-        }
-
-        #endregion
-
-        #region constructors
+        #region Constructors
 
         /// <summary>
         /// Default constructor.  Initialises a new empty ElementCollection
@@ -78,12 +59,12 @@ namespace FreeBuild.Model
         /// </summary>
         /// <param name="node">The node to search for</param>
         /// <returns></returns>
-        public ElementCollection AllWith(Node node)
+        public TSelf AllWith(Node node)
         {
-            var result = new ElementCollection();
+            var result = new TSelf();
             if (node != null)
             {
-                foreach (Element el in this)
+                foreach (TElement el in this)
                 {
                     if (el.ContainsNode(node)) result.Add(el);
                 }
@@ -97,10 +78,10 @@ namespace FreeBuild.Model
         /// </summary>
         /// <param name="property">The property to search for</param>
         /// <returns></returns>
-        public ElementCollection AllWith(VolumetricProperty property)
+        public TSelf AllWith(VolumetricProperty property)
         {
-            var result = new ElementCollection();
-            foreach (Element el in this)
+            var result = new TSelf();
+            foreach (TElement el in this)
             {
                 if (el.GetProperty() == property) result.Add(el);
             }
@@ -108,5 +89,50 @@ namespace FreeBuild.Model
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// A collection of elements
+    /// </summary>
+    [Serializable]
+    public class ElementCollection : ElementCollection<Element, ElementCollection>
+    {
+        #region Properties
+
+        /// <summary>
+        /// Extract a collection of all the linear elements in this collection.
+        /// A new collection will be generated each time this is called.
+        /// </summary>
+        public LinearElementCollection LinearElements
+        {
+            get
+            {
+                var result = new LinearElementCollection();
+                foreach (Element element in this)
+                {
+                    if (element is LinearElement) result.Add((LinearElement)element);
+                }
+                return result;
+            }
+        }
+
+        #endregion
+
+        #region constructors
+
+        /// <summary>
+        /// Default constructor.  Initialises a new empty ElementCollection
+        /// </summary>
+        public ElementCollection() : base() { }
+
+        /// <summary>
+        /// Owner constructor.  Initialises an empty ElementCollection with the specified owner
+        /// </summary>
+        /// <param name="model"></param>
+        protected ElementCollection(Model model) : base(model) { }
+
+        #endregion
+
+        
     }
 }

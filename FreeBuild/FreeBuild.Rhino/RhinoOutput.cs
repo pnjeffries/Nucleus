@@ -11,7 +11,7 @@ using RC = Rhino.Geometry;
 using FB = FreeBuild.Geometry;
 using Rhino.DocObjects;
 
-namespace Newt.Rhino
+namespace Salamander.Rhino
 {
     public static class RhinoOutput
     {
