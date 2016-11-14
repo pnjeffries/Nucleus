@@ -37,6 +37,21 @@ namespace FreeBuild.Model
         #region Properties
 
         /// <summary>
+        /// Private backing field for CatalogueName property
+        /// </summary>
+        protected string _CatalogueName = null;
+
+        /// <summary>
+        /// The catalogue name of this profile, if this is a standard profile from
+        /// a catalogue.  If this is a custom section this value will be null.
+        /// </summary>
+        public string CatalogueName
+        {
+            get { return _CatalogueName; }
+            set { _CatalogueName = value; NotifyPropertyChanged("CatalogueName"); }
+        }
+
+        /// <summary>
         /// The outer perimeter curve of this section profile.
         /// </summary>
         public abstract Curve Perimeter { get; }

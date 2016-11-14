@@ -41,7 +41,7 @@ namespace FreeBuild.Base
         /// marked for deletion.  This flag indicates that the object should be
         /// ignored in any operation that acts only on the current state of the
         /// model and that it should be removed during the next cleanup sweep.
-        /// </summary>
+        /// </summary> 
         bool IsDeleted { get; }
 
         #endregion
@@ -99,11 +99,32 @@ namespace FreeBuild.Base
             return result;
         }
 
+        /// <summary>
+        /// Delete all objects in this collection.
+        /// The objects themselves will not be immediately removed from the model
+        /// but will instead be flagged for future removal and ignored wherever
+        /// appropriate.
+        /// </summary>
+        /// <param name="list"></param>
         public static void DeleteAll(this IEnumerable<IDeletable> list)
         {
             foreach(IDeletable item in list)
             {
                 item.Delete();
+            }
+        }
+
+        /// <summary>
+        /// Undelete all objects in this collection.
+        /// If the deletion flag on any object is set it will be unset and
+        /// the object restored.
+        /// </summary>
+        /// <param name="list"></param>
+        public static void UndeleteAll(this IEnumerable<IDeletable> list)
+        {
+            foreach (IDeletable item in list)
+            {
+                item.Undelete();
             }
         }
     }

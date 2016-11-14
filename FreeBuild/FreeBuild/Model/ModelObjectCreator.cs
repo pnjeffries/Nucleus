@@ -84,6 +84,7 @@ namespace FreeBuild.Model
             SectionProperty result = new SectionProperty();
             result = (SectionProperty)Model.History.Update(exInfo, result);
             result.Profile = profile;
+            if (result.Name == null) result.Name = Model.Properties.NextAvailableName("Section", true);
             Model.Add(result);
             return result;
         }

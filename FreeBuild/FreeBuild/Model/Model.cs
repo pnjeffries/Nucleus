@@ -202,7 +202,19 @@ namespace FreeBuild.Model
                 return _History;
             }
         }
-          
+
+        /// <summary>
+        /// Get the object with the specified GUID, if it can be found in this model.
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <returns></returns>
+        public ModelObject this[Guid guid]
+        {
+            get
+            {
+                return GetObject(guid);
+            }
+        }
 
         #endregion
 

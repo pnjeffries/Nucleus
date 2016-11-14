@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,6 +22,8 @@ namespace Freebuild.WPF
     /// </summary>
     public partial class ComboFieldControl : FieldControl
     {
+        #region Properties
+
         public static DependencyProperty ItemsSourceProperty =
             DependencyProperty.Register("ItemsSource", typeof(IEnumerable), typeof(ComboFieldControl));
 
@@ -66,11 +69,31 @@ namespace Freebuild.WPF
             set { SetValue(TextSearchPathProperty, value); }
         }
 
+        #endregion
+
+        #region Constructors
+
         public ComboFieldControl()
         {
             InitializeComponent();
 
             LayoutRoot.DataContext = this;
         }
+
+        #endregion
+
+        #region Methods
+
+        public override void AdaptTo(PropertyInfo property)
+        {
+            base.AdaptTo(property);
+            if (property.PropertyType.IsEnum)
+            {
+                ItemsSource = Enum.GetValues(property.PropertyType);
+            }
+        }
+
+        #endregion
+
     }
 }
