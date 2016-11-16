@@ -664,6 +664,15 @@ namespace FreeBuild.Geometry
             return new Vector(Z, -X, Y);
         }
 
+        /// <summary>
+        /// Get the absolute magnitude of the largest component coordinate of this vector.
+        /// </summary>
+        /// <returns></returns>
+        public double LargestComponent()
+        {
+            return Math.Max(X.Abs(), Math.Max(Y.Abs(), Z.Abs()));
+        }
+
         #endregion
 
         #region Static Methods

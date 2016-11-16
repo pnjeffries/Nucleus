@@ -11,7 +11,7 @@ namespace FreeBuild.Tests
         static void Main(string[] args)
         {
             //Matrix tests:
-            for (int i = 0; i < 5; i++)
+            /*for (int i = 0; i < 5; i++)
             {
                 //Matrix_Tests.MultiplicationTest(800);
             }
@@ -19,10 +19,16 @@ namespace FreeBuild.Tests
             for (int i = 0; i < 5; i++)
             {
                 Matrix_Tests.AdditionTest(800);
-            }
+            }*/
 
             //Doc tests:
             //Word_Tests.ReadDocTest();
+
+            //Mesh tests:
+            for (int i = 0; i < 5; i++)
+            {
+                Mesh_Tests.DelaunayTest(5000);
+            }
 
             Console.Read();
         }

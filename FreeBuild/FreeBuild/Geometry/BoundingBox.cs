@@ -308,6 +308,24 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Generate a set of random points inside this bounding box
+        /// </summary>
+        /// <param name="rng">The random number generator used to generate the point coordinates</param>
+        /// <param name="number">The number of points to generate</param>
+        /// <returns></returns>
+        public Vector[] RandomPointsInside(Random rng, int number)
+        {
+            var result = new Vector[number];
+
+            for (int i = 0; i < number; i++)
+            {
+                result[i] = RandomPointInside(rng);
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Get the minimum value in the specified dimension
         /// </summary>
         /// <param name="dimension"></param>

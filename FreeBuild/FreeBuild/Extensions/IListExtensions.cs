@@ -27,5 +27,46 @@ namespace FreeBuild.Extensions
             if (index < 0) index = 0;
             return list[index];
         }
+
+        /// <summary>
+        /// Get the item at the specified index, automatically wrapping if it is outside the
+        /// bounds of the collection.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public static T GetWrapped<T>(this IList<T> list, int index)
+        {
+            if (list.Count > 0)
+            {
+                while (index >= list.Count) index -= list.Count;
+                while (index < 0) index += list.Count;
+            }
+            return list[index];
+        }
+
+        /// <summary>
+        /// Remove all duplicate objects from this collection
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        public static void RemoveDuplicates<T>(this IList<T> list)
+        {
+            for (int i = list.Count - 2; i >= 0; i--)
+            {
+                T itemA = list[i];
+                for (int j = list.Count - 1; j > i; j--)
+                {
+                    if (itemA.Equals(list[j]))
+                    {
+                        list.RemoveAt(j);
+                        list.RemoveAt(i);
+                        j--;
+                        continue;
+                    }
+                }
+            }
+        }
     }
 }

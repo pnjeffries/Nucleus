@@ -67,5 +67,6 @@ namespace FreeBuild.Geometry
         {
             return thisIPos.Position.DistanceToSquared(other.Position);
         }
+
     }
 }

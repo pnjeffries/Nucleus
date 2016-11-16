@@ -77,6 +77,54 @@ namespace FreeBuild.Base
         }
 
         /// <summary>
+        /// Raise a CollectionChanged event, signalling that this collection has been modified.
+        /// </summary>
+        protected void NotifyCollectionChanged(NotifyCollectionChangedAction action, TItem item, TItem oldItem, int index)
+        {
+            if (!_SuppressNotifyCollectionChanged)
+            {
+                OnCollectionChanged();
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(action, item, oldItem, index));
+            }
+        }
+
+        /// <summary>
+        /// Raise a CollectionChanged event, signalling that this collection has been modified.
+        /// </summary>
+        protected void NotifyCollectionChanged(NotifyCollectionChangedAction action, TItem item, int index)
+        {
+            if (!_SuppressNotifyCollectionChanged)
+            {
+                OnCollectionChanged();
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(action, item, index));
+            }
+        }
+
+        /// <summary>
+        /// Raise a CollectionChanged event, signalling that this collection has been modified.
+        /// </summary>
+        protected void NotifyCollectionChanged(NotifyCollectionChangedAction action, TItem item)
+        {
+            if (!_SuppressNotifyCollectionChanged)
+            {
+                OnCollectionChanged();
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(action, item));
+            }
+        }
+
+        /// <summary>
+        /// Raise a CollectionChanged event, signalling that this collection has been modified.
+        /// </summary>
+        protected void NotifyCollectionChanged(NotifyCollectionChangedAction action)
+        {
+            if (!_SuppressNotifyCollectionChanged)
+            {
+                OnCollectionChanged();
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(action));
+            }
+        }
+
+        /// <summary>
         /// Raise a CollectionChanged event for multiple items at once.
         /// Includes a fix for WPF collectionviews throwing an exception when more than one item
         /// is added at once.
@@ -173,7 +221,7 @@ namespace FreeBuild.Base
         {
             TItem oldItem = this[index];
             base.SetItem(index, item);
-            NotifyCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, item, oldItem, index));
+            NotifyCollectionChanged(NotifyCollectionChangedAction.Replace, item, oldItem, index);
         }
 
         /// <summary>
@@ -184,7 +232,7 @@ namespace FreeBuild.Base
         protected override void InsertItem(int index, TItem item)
         {
             base.InsertItem(index, item);
-            NotifyCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
+            NotifyCollectionChanged(NotifyCollectionChangedAction.Add, item, index);
         }
 
         /// <summary>
@@ -193,7 +241,7 @@ namespace FreeBuild.Base
         protected override void ClearItems()
         {
             base.ClearItems();
-            NotifyCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            NotifyCollectionChanged(NotifyCollectionChangedAction.Reset);
         }
 
         /// <summary>
@@ -204,7 +252,7 @@ namespace FreeBuild.Base
         {
             TItem item = this[index];
             base.RemoveItem(index);
-            NotifyCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
+            NotifyCollectionChanged(NotifyCollectionChangedAction.Remove, item);
         }
 
         /// <summary>

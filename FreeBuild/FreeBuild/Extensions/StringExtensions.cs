@@ -209,5 +209,7 @@ namespace FreeBuild.Extensions
         {
             return thisString.Equals(other, StringComparison.InvariantCultureIgnoreCase);
         }
+
+
     }
 }

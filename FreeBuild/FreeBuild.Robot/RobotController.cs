@@ -38,6 +38,7 @@ namespace FreeBuild.Robot
                 // whenever it is needed:
                 if (_Robot == null)
                 {
+                    COMMessageFilter.Register();
                     _Robot = new RobotApplication();
                 }
                 return _Robot;
@@ -105,6 +106,7 @@ namespace FreeBuild.Robot
         public void Release()
         {
             _Robot = null;
+            COMMessageFilter.Revoke();
         }
 
         /// <summary>
@@ -515,6 +517,9 @@ namespace FreeBuild.Robot
         {
             if (profile != null)
             {
+                //Attempt to load catalogue section:
+                if (!string.IsNullOrWhiteSpace(profile.CatalogueName) && data.LoadFromDBase(profile.CatalogueName) != 0) return;
+
                 if (profile is SymmetricIProfile) //I Section
                 {
                     var rProfile = (SymmetricIProfile)profile;
@@ -588,6 +593,7 @@ namespace FreeBuild.Robot
         /// <returns></returns>
         public Profile CreateProfileFromRobotSectionData(RobotBarSectionData data)
         {
+            Profile result = null;
             Type equivalent = EquivalentProfileType(data.ShapeType);
             if (equivalent == typeof(SymmetricIProfile))
             {
@@ -598,7 +604,7 @@ namespace FreeBuild.Robot
                 iProfile.WebThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TW);
                 //TODO: Fillet radius
                 iProfile.RootRadius = data.GetValue(IRobotBarSectionDataValue.I_BSDV_RA); //????
-                return iProfile;
+                result = iProfile;
             }
             else if (equivalent == typeof(RectangularHollowProfile)) //Rectangular Hollow Profile
             {
@@ -607,29 +613,35 @@ namespace FreeBuild.Robot
                 rProfile.Width = data.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
                 rProfile.FlangeThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TF);
                 rProfile.WebThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TW);
-                return rProfile;
+                result = rProfile;
             }
             else if (equivalent == typeof(RectangularProfile)) //Filled Rectangular Profile
             {
                 var rProfile = new RectangularProfile();
                 rProfile.Depth = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
                 rProfile.Width = data.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
-                return rProfile;
+                result = rProfile;
             }
             else if (equivalent == typeof(CircularHollowProfile))
             {
                 var cProfile = new CircularHollowProfile();
                 cProfile.Diameter = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
                 cProfile.WallThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TW); //?
-                return cProfile;
+                result = cProfile;
             }
             else if (equivalent == typeof(CircularProfile))
             {
                 var cProfile = new CircularProfile();
                 cProfile.Diameter = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
-                return cProfile;
+                result = cProfile;
             }
-            return null; //Profile could not be created
+
+            if (data.Type == IRobotBarSectionType.I_BST_STANDARD)
+            {
+                result.CatalogueName = data.Name;
+            }
+
+            return result; //Profile could not be created
         }
 
         /// <summary>
@@ -799,7 +811,11 @@ namespace FreeBuild.Robot
             if (dataType == NodeDataType.Case_Name)
             {
                 IRobotCase rCase = structure.Cases.Get(caseID);
-                return rCase.Name;
+                if (rCase != null)
+                {
+                    return rCase.Name;
+                }
+                else return null;
             }
 
             //Node properties:
@@ -850,7 +866,7 @@ namespace FreeBuild.Robot
             if (dataType == BarDataType.Case_Name)
             {
                 IRobotCase rCase = Robot.Project.Structure.Cases.Get(caseID);
-                return rCase.Name;
+                return rCase?.Name;
             }
 
             if (dataType.IsBarData())
@@ -962,6 +978,35 @@ namespace FreeBuild.Robot
                 }
 
             }
+            return null;
+        }
+
+        public object ExtractData(string sectionID, SectionDataType dataType)
+        {
+            if (dataType == SectionDataType.Name) return sectionID;
+
+            IRobotLabel label = Robot.Project.Structure.Labels.Get(IRobotLabelType.I_LT_BAR_SECTION, sectionID);
+            RobotBarSectionData data = label.Data;
+
+            if (dataType == SectionDataType.Material) return data.MaterialName;
+            else if (dataType == SectionDataType.Type) return data.Type.ToString();
+            else if (dataType == SectionDataType.ShapeType) return data.ShapeType.ToString();
+            else if (dataType == SectionDataType.Depth) return data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
+            else if (dataType == SectionDataType.Width) return data.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
+            else if (dataType == SectionDataType.Width_2) return data.GetValue(IRobotBarSectionDataValue.I_BSDV_BF2);
+            else if (dataType == SectionDataType.Flange_Thickness) return data.GetValue(IRobotBarSectionDataValue.I_BSDV_TF);
+            else if (dataType == SectionDataType.Flange_Thickness_2) return data.GetValue(IRobotBarSectionDataValue.I_BSDV_TF2);
+            else if (dataType == SectionDataType.Web_Thickness) return data.GetValue(IRobotBarSectionDataValue.I_BSDV_TW);
+            else if (dataType == SectionDataType.Fillet_Radius) return data.GetValue(IRobotBarSectionDataValue.I_BSDV_RA);
+            else if (dataType == SectionDataType.Gamma_Angle) return data.GetValue(IRobotBarSectionDataValue.I_BSDV_GAMMA);
+            else if (dataType == SectionDataType.Weight) return data.GetValue(IRobotBarSectionDataValue.I_BSDV_WEIGHT);
+            else if (dataType == SectionDataType.Perimeter) return data.GetValue(IRobotBarSectionDataValue.I_BSDV_SURFACE);
+            else if (dataType == SectionDataType.Area_X) return data.GetValue(IRobotBarSectionDataValue.I_BSDV_AX);
+            else if (dataType == SectionDataType.Area_Y) return data.GetValue(IRobotBarSectionDataValue.I_BSDV_AY);
+            else if (dataType == SectionDataType.Area_Z) return data.GetValue(IRobotBarSectionDataValue.I_BSDV_AZ);
+            else if (dataType == SectionDataType.I_XX) return data.GetValue(IRobotBarSectionDataValue.I_BSDV_IX);
+            else if (dataType == SectionDataType.I_YY) return data.GetValue(IRobotBarSectionDataValue.I_BSDV_IY);
+            else if (dataType == SectionDataType.I_ZZ) return data.GetValue(IRobotBarSectionDataValue.I_BSDV_IZ);
             return null;
         }
 

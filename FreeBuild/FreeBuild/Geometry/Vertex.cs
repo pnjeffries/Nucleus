@@ -60,6 +60,21 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Shortcut property to get the X coordinate of the position of this vertex
+        /// </summary>
+        public double X { get { return _Position.X; } }
+
+        /// <summary>
+        /// Shortcut property to get the Y coordinate of the position of this vertex
+        /// </summary>
+        public double Y { get { return _Position.Y; } }
+
+        /// <summary>
+        /// Shortcut property to get the Z coordinate of the position of this vertex
+        /// </summary>
+        public double Z { get { return _Position.Z; } }
+
+        /// <summary>
         /// Private backing member variable for the Shape property
         /// </summary>
         [Copy(CopyBehaviour.MAP)]
@@ -117,6 +132,17 @@ namespace FreeBuild.Geometry
             _Node = node;
         }
 
+        /// <summary>
+        /// Initialise a new vertex at the specified coordinates
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public Vertex(double x, double y, double z = 0)
+        {
+            _Position = new Vector(x, y, z);
+        }
+
         #endregion
 
         #region Methods
@@ -169,10 +195,10 @@ namespace FreeBuild.Geometry
         public void GenerateNode(NodeGenerationParameters options)
         {
             if (Owner != null && Owner.Element != null)
-            {    
+            {
+                Model.Model model = Owner.Element.Model;
                 if (Node == null)
                 {
-                    Model.Model model = Owner.Element.Model;
                     if (model != null)
                     {
                         Node = model.Create.Node(Position, options.ConnectionTolerance, options.ExInfo);

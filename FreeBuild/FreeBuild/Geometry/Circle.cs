@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using FreeBuild.Exceptions;
+using FreeBuild.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -191,6 +192,19 @@ namespace FreeBuild.Geometry
         public Vector ClosestPoint(Vector toPoint)
         {
             return PointAt(Closest(toPoint));
+        }
+
+        /// <summary>
+        /// Does the (projection of the) specified point lie within this circle?
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public bool IsInside(Vector point)
+        {
+            Vector relative = point - Origin;
+            double z = relative.Dot(L);
+            Vector onPlane = relative - L * z;
+            return onPlane.MagnitudeSquared() < Radius.Squared();
         }
 
         /// <summary>

@@ -4,21 +4,19 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Data;
 
 namespace Freebuild.WPF
 {
     /// <summary>
-    /// Converter that returns Visibility.Visible when the value is equal to the parameter, or
-    /// else returns Visbility.Collapsed
+    /// Converter that returns whether or not the value is the same as the parameter
+    /// as a boolean
     /// </summary>
-    public class VisibleWhenEqualConverter : IValueConverter
+    public class IsEqualConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value.Equals(parameter)) return Visibility.Visible;
-            else return Visibility.Collapsed;
+            return (value.Equals(parameter));
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -28,15 +26,14 @@ namespace Freebuild.WPF
     }
 
     /// <summary>
-    /// Converter that returns Visibility.Visible when the value is not equal to the parameter, or
-    /// else returns Visbility.Collapsed if it is
+    /// Converter that returns whether or not the value is not the same as the parameter
+    /// as a boolean
     /// </summary>
-    public class VisibleWhenNotEqualConverter : IValueConverter
+    public class IsNotEqualConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!value.Equals(parameter)) return Visibility.Visible;
-            else return Visibility.Collapsed;
+            return (!value.Equals(parameter));
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

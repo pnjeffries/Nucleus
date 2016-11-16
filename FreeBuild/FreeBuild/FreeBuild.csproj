@@ -54,6 +54,7 @@
     <Compile Include="Events\MessageRaisedEventArgs.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Extensions\IListExtensions.cs" />
+    <Compile Include="Geometry\MeshEdge.cs" />
     <Compile Include="Geometry\PlanarSurface.cs" />
     <Compile Include="Meshing\CoordinateSystemRemappingOption.cs" />
     <Compile Include="Model\CircularHollowProfile.cs" />

@@ -36,7 +36,7 @@ namespace FreeBuild.Geometry
     public class VertexCollection : OwnedCollection<Vertex, Shape>
     {
         
-        #region Constructor
+        #region Constructors
 
         /// <summary>
         /// Owner constructor
@@ -51,6 +51,19 @@ namespace FreeBuild.Geometry
         /// The owner of this vertex collection will be null.
         /// </summary>
         public VertexCollection() : this(null) { }
+
+        /// <summary>
+        /// Initialise a new vertex collection, converting the set of position vectors passed in into
+        /// new vertices.
+        /// </summary>
+        /// <param name="points"></param>
+        public VertexCollection(IEnumerable<Vector> points, Shape owner = null) : this(owner)
+        {
+            foreach(Vector v in points)
+            {
+                Add(new Vertex(v));
+            }
+        }
 
         #endregion
 
