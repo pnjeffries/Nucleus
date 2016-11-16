@@ -98,7 +98,7 @@ namespace FreeBuild.Model
             if (Count == 0) return null;
             else
             {
-
+                throw new NotImplementedException();
             }
         }
 

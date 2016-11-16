@@ -126,12 +126,15 @@ namespace FreeBuild.Geometry
             // Calculates the determinant of a matrix containing the vertex and point coordinates
             // If vertices are counterclockwise and point lies inside, determinant will be > 0
 
-            double x0 = this[0].X - point.X;
-            double y0 = this[0].Y - point.Y;
-            double x1 = this[1].X - point.X;
-            double y1 = this[1].Y - point.Y;
-            double x2 = this[2].X - point.X;
-            double y2 = this[2].Y - point.Y;
+            Vertex v0 = this[0];
+            Vertex v1 = this[1];
+            Vertex v2 = this[2];
+            double x0 = v0.X - point.X;
+            double y0 = v0.Y - point.Y;
+            double x1 = v1.X - point.X;
+            double y1 = v1.Y - point.Y;
+            double x2 = v2.X - point.X;
+            double y2 = v2.Y - point.Y;
 
             double det_01 = x0 * y1 - x1 * y0;
             double det_12 = x1 * y2 - x2 * y1;

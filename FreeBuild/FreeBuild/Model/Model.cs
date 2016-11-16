@@ -163,10 +163,10 @@ namespace FreeBuild.Model
             }
         }
 
-        public BoundingBox BoundingBox
-        {
-            get
-        }
+        //public BoundingBox BoundingBox
+        //{
+           
+        //}
 
         [NonSerialized]
         private ModelObjectCreator _Create;

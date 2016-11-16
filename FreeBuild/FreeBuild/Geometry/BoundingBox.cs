@@ -259,6 +259,20 @@ namespace FreeBuild.Geometry
         public void Include(Vector pt)
         {
             if (pt.X < MinX) MinX = pt.X;
+            else if (pt.X > MaxX) MaxX = pt.X;
+            if (pt.Y < MinY) MinY = pt.Y;
+            else if (pt.Y > MaxY) MaxY = pt.Y;
+            if (pt.Z < MinZ) MinZ = pt.Z;
+            else if (pt.Z > MaxZ) MaxZ = pt.Z;
+        }
+
+        /// <summary>
+        /// Expand the bounding box to include the specified point, if necessary
+        /// </summary>
+        /// <param name="pt"></param>
+        public void Include(ref Vector pt)
+        {
+            if (pt.X < MinX) MinX = pt.X;
             if (pt.X > MaxX) MaxX = pt.X;
             if (pt.Y < MinY) MinY = pt.Y;
             if (pt.Y > MaxY) MaxY = pt.Y;
