@@ -197,6 +197,8 @@ namespace FreeBuild.Model
         /// The set-out curve of 1D Elements, the surface of slabs, etc.
         /// The assigned object should not already be assigned to any other
         /// element.
+        /// When setting, the previous geometry (if any) will have any attached nodes removed
+        /// to prevent memory leaks.
         /// If you wish to set the geometry of this element but retain existing attached
         /// data such as vertex nodes, use the ReplaceGeometry function instead of directly
         /// setting this property.
@@ -213,7 +215,11 @@ namespace FreeBuild.Model
                 }
                 else
                 {
-                    if (_Geometry != null && _Geometry.Element == this) _Geometry.Element = null;
+                    if (_Geometry != null && _Geometry.Element == this)
+                    {
+                        _Geometry.DettachNodes();
+                        _Geometry.Element = null;
+                    }
                     _Geometry = value;
                     _Geometry.Element = this;
                     NotifyPropertyChanged("Geometry");
@@ -223,13 +229,17 @@ namespace FreeBuild.Model
 
         /// <summary>
         /// Replace the set-out geometry of this element, automatically copying over any relevant data
-        /// attached to the original geometry such as vertex nodes.
+        /// attached to the original geometry such as vertex nodes and cleaning up any residual data on
+        /// the old geometry to prevent memory leaks.
         /// </summary>
         /// <param name="newGeometry"></param>
         public void ReplaceGeometry(TShape newGeometry)
         {
             TShape oldGeometry = Geometry;
-            if (oldGeometry != null) newGeometry.CopyAttachedDataFrom(oldGeometry);
+            if (oldGeometry != null)
+            {
+                newGeometry.CopyAttachedDataFrom(oldGeometry);
+            }
             Geometry = newGeometry;
         }
 

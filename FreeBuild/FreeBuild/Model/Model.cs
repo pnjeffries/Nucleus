@@ -20,6 +20,7 @@
 
 using FreeBuild.Base;
 using FreeBuild.Events;
+using FreeBuild.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -160,6 +161,11 @@ namespace FreeBuild.Model
                 return new ModelObjectCollection(new IEnumerable<ModelObject>[]
                     {_Elements, _Nodes, _Properties, _Materials});
             }
+        }
+
+        public BoundingBox BoundingBox
+        {
+            get
         }
 
         [NonSerialized]

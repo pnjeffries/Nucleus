@@ -175,6 +175,20 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Initialise a bounding box as a singularity at the specified coordinates
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public BoundingBox(double x, double y, double z) : this(x, x, y, y, z, z) { }
+
+        /// <summary>
+        /// Initialise a bounding box as a singularity at the specified points
+        /// </summary>
+        /// <param name="point"></param>
+        public BoundingBox(Vector point) : this(point.X, point.Y, point.Z) { }
+
+        /// <summary>
         /// Constructor to fit a bounding box around a set of points.
         /// </summary>
         /// <param name="points">The points to fit the bounding box around</param>
@@ -269,6 +283,15 @@ namespace FreeBuild.Geometry
                 if (other.MinZ < MinZ) MinZ = other.MinZ;
                 if (other.MaxZ > MaxZ) MaxZ = other.MaxZ;
             }
+        }
+
+        /// <summary>
+        /// Expand this bounding box to include the specified element
+        /// </summary>
+        /// <param name="element"></param>
+        public void Include(Element element)
+        {
+            Include(element.GetGeometry());
         }
 
         /// <summary>
