@@ -207,6 +207,17 @@ namespace FreeBuild.Geometry
             //Add any other attached data to be copied here
         }
 
+        /// <summary>
+        /// Dettach all nodes from the vertices of this shape
+        /// </summary>
+        public void DettachNodes()
+        {
+            foreach (Vertex v in Vertices)
+            {
+                v.Node = null;
+            }
+        }
+
         #endregion
 
 

@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using FreeBuild.Base;
+using FreeBuild.Extensions;
 using FreeBuild.Model;
 using FreeBuild.Units;
 using System;
@@ -82,11 +83,25 @@ namespace FreeBuild.Geometry
 
         /// <summary>
         /// The shape (if any) that this vertex belongs to.
+        /// Vertices removed from their owner will automatically be detatched from
+        /// their node to prevent memory leaks.
         /// </summary>
         public Shape Owner
         {
             get { return _Owner; }
-            internal set { _Owner = value; }
+            internal set
+            {
+                _Owner = value;
+                if (_Owner == null) Node = null;
+            }
+        }
+
+        /// <summary>
+        /// Get the element (if any) that this vertex forms part of the geometric definition for
+        /// </summary>
+        public Element Element
+        {
+            get { return Owner?.Element; }
         }
 
         /// <summary>
@@ -104,7 +119,15 @@ namespace FreeBuild.Geometry
         public Node Node
         {
             get { return _Node; }
-            set { _Node = value; NotifyPropertyChanged("Node"); }
+            set
+            {
+                //De-register with old node
+                if (_Node != null) _Node.Vertices.Remove(this);
+                _Node = value;
+                //Register with new node
+                if (_Node != null) _Node.Vertices.TryAdd(this);
+                NotifyPropertyChanged("Node");
+            }
         }
 
         #endregion
@@ -202,8 +225,21 @@ namespace FreeBuild.Geometry
                     if (model != null)
                     {
                         Node = model.Create.Node(Position, options.ConnectionTolerance, options.ExInfo);
+                    }     
+                }
+                else
+                {
+                    //Node already exists - check and update it
+                    if (Position.DistanceToSquared(Node.Position) > options.ConnectionTolerance.Squared())
+                    {
+                        //Check for other connections that share this node:
+                        if (Node.Vertices.Count > 1)
+                        {
+                            //TODO!
+                            //TODO: Also split nodes if they are too far apart
+                        }
+                        else Node.Position = Position;
                     }
-                    //TODO: Also split nodes if they are too far apart
                 }
             }
         }

@@ -51,6 +51,26 @@ namespace FreeBuild.Model
             set { _Position = value;  NotifyPropertyChanged("Position"); }
         }
 
+        /// <summary>
+        /// Private backing field for Vertices property.
+        /// </summary>
+        private VertexCollection _Vertices = null;
+
+        /// <summary>
+        /// The collection of vertices to which this node is connected
+        /// </summary>
+        public VertexCollection Vertices
+        {
+            get
+            {
+                if (_Vertices == null)
+                {
+                    _Vertices = new VertexCollection();
+                }
+                return _Vertices;
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -90,17 +110,38 @@ namespace FreeBuild.Model
 
         #region Methods
 
-        public ElementCollection FIndConnectedElements()
+        /// <summary>
+        /// Get a collection of all elements connected to this node
+        /// </summary>
+        /// <returns></returns>
+        public ElementCollection GetConnectedElements()
         {
             var result = new ElementCollection();
 
-            if (Model != null)
+            foreach (Vertex v in Vertices)
             {
-
+                if (v.Element != null) result.Add(v.Element);
             }
-            //TODO
 
             return result;
+        }
+
+        /// <summary>
+        /// Change the position of this node, optionally dragging any
+        /// attached vertices through the same transformation.
+        /// </summary>
+        /// <param name="newPosition"></param>
+        /// <param name="dragVertices"></param>
+        public void MoveTo(Vector newPosition, bool dragVertices = true)
+        {
+            Vector move = newPosition - Position;
+            if (dragVertices)
+            {
+                foreach (Vertex v in Vertices)
+                {
+                    v.Position += move;
+                }
+            }
         }
 
         #endregion

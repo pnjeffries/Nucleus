@@ -20,6 +20,7 @@
 
 using FreeBuild.Base;
 using FreeBuild.Extensions;
+using FreeBuild.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -86,6 +87,19 @@ namespace FreeBuild.Model
                 if (el.GetProperty() == property) result.Add(el);
             }
             return result;
+        }
+
+        /// <summary>
+        /// Calculate the bounding box of the elements in this collection
+        /// </summary>
+        /// <returns></returns>
+        public BoundingBox BoundingBox()
+        {
+            if (Count == 0) return null;
+            else
+            {
+
+            }
         }
 
         #endregion
