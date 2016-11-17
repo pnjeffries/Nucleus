@@ -57,6 +57,7 @@
     <Compile Include="Geometry\MeshEdge.cs" />
     <Compile Include="Geometry\PlanarSurface.cs" />
     <Compile Include="Meshing\CoordinateSystemRemappingOption.cs" />
+    <Compile Include="Meshing\DelaunayTriangle.cs" />
     <Compile Include="Model\CircularHollowProfile.cs" />
     <Compile Include="Model\CircularProfile.cs" />
     <Compile Include="Model\ElementVertex.cs" />

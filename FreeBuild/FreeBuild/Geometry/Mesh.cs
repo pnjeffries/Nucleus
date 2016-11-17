@@ -1,4 +1,5 @@
 ﻿using FreeBuild.Extensions;
+using FreeBuild.Meshing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -93,16 +94,19 @@ namespace FreeBuild.Geometry
         /// If null or ommitted, a new MeshFaceCollection will be created.</param>
         public static MeshFaceCollection DelaunayTriangulationXY(VertexCollection vertices, MeshFaceCollection faces = null)
         {
-            
+            List<Vertex> vertexList = vertices.ToList();
+            vertexList.Sort();
+
             if (faces == null) faces = new MeshFaceCollection();
 
             // Meshing starts with one 'super triangle' that encloses all vertices.
             // This will be removed at the end
-            MeshFace superTriangle = MeshFace.GenerateSuperTriangleXY(vertices.BoundingBox());
+            MeshFace superTriangle = DelaunayTriangle.GenerateSuperTriangleXY(new BoundingBox(vertexList));
+                //vertices.BoundingBox());
             faces.Add(superTriangle);
 
             // Include each vertex in the meshing one at a time
-            foreach (Vertex v in vertices)
+            foreach (Vertex v in vertexList)
             {
                 IList<MeshEdge> edges = new List<MeshEdge>(); //The edges of replaced triangles
 
@@ -144,12 +148,12 @@ namespace FreeBuild.Geometry
                 //Add triangle fan between all remaining edges and the new vertex
                 foreach (MeshEdge edge in edges)
                 {
-                    faces.Add(new MeshFace(edge, v));
+                    faces.Add(new DelaunayTriangle(edge, v));
                 }
             }
 
             //Remove the super triangle and any triangles still attached to it
-            faces.RemoveAllWithVertices(superTriangle);
+            faces.RemoveAllWithVertices(new VertexCollection(superTriangle));
 
             return faces;
         }

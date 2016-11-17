@@ -65,6 +65,18 @@ namespace FreeBuild.Geometry
             }
         }
 
+        /// <summary>
+        /// Initialise a new vertex collection, containing the specified set of vertices
+        /// </summary>
+        /// <param name="points"></param>
+        public VertexCollection(IEnumerable<Vertex> vertices, Shape owner = null) : this(owner)
+        {
+            foreach (Vertex v in vertices)
+            {
+                Add(v);
+            }
+        }
+
         #endregion
 
         #region Methods

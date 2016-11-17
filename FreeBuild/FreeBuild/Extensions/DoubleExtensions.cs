@@ -116,5 +116,16 @@ namespace FreeBuild.Extensions
         {
             return value >= min && value <= max;
         }
+
+        /// <summary>
+        /// Is this number really small?
+        /// (-0.00000001 > value > 0.00000001)
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool IsTiny(this double value)
+        {
+            return (value > -0.00000001 && value < 0.00000001);
+        }
     }
 }

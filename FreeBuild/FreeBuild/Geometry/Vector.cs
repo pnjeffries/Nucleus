@@ -21,6 +21,7 @@
 using FreeBuild.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,6 +40,7 @@ namespace FreeBuild.Geometry
     /// passing vectors around in function arguments etc. is inefficient.  
     /// </remarks>
     [Serializable]
+    [DebuggerDisplay("( {X} , {Y} , {Z}) ")]
     public struct Vector :
         IEquatable<Vector>
     {
@@ -201,7 +203,7 @@ namespace FreeBuild.Geometry
         /// <returns>True if all components are valid, else false.</returns>
         public bool IsValid()
         {
-            return X != double.NaN && Y != double.NaN && Z != double.NaN;
+            return !double.IsNaN(X) && !double.IsNaN(Y) && !double.IsNaN(Z);
         }
 
         /// <summary>
@@ -662,6 +664,15 @@ namespace FreeBuild.Geometry
         public Vector RemapZnegXY()
         {
             return new Vector(Z, -X, Y);
+        }
+
+        /// <summary>
+        /// Get a vector perpendicular to this vector on the XY plane
+        /// </summary>
+        /// <returns></returns>
+        public Vector PerpendicularXY()
+        {
+            return new Vector(Y, -X);
         }
 
         /// <summary>

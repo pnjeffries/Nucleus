@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using FreeBuild.Base;
+using FreeBuild.Extensions;
 using FreeBuild.Units;
 using System;
 using System.Collections.Generic;
@@ -147,27 +148,6 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
-        /// Utility function to find the closest point between two axes
-        /// expressed by starting positions and vectors
-        /// </summary>
-        /// <param name="pt0">The origin of the first axis</param>
-        /// <param name="v0">The direction of the first axis</param>
-        /// <param name="pt1">The origin of the second axis</param>
-        /// <param name="v1">The direction of the second axis</param>
-        /// <returns>The closest point on the first axis to the second.</returns>
-        public static Vector ClosestPoint(Vector pt0, Vector v0, Vector pt1, Vector v1)
-        {
-            Vector w0 = pt0 - pt1; //w0 = P0 - Q0
-            double a = v0.Dot(v0); //a = u*u
-            double b = v0.Dot(v1); //b = u*v
-            double c = v1.Dot(v1); //c = v*v
-            double d = v0.Dot(w0); //d = u*w0
-            double e = v1.Dot(w0); //e = v*w0
-            double s = (b * e - c * d) / (a * c - b * b); //sc = be-cd/(ac - b^2)
-            return pt0 + v0*s;
-        }
-
-        /// <summary>
         /// Find the position along this axis that is closest to the specified
         /// other axis.
         /// Expressed as a multiplication factor of the direction vector from the origin.
@@ -192,6 +172,77 @@ namespace FreeBuild.Geometry
         public Vector PointAt(double t)
         {
             return Origin + Direction * t;
+        }
+
+        #endregion
+
+        #region Static Methods
+
+        /// <summary>
+        /// Utility function to find the closest point between two axes
+        /// expressed by starting positions and vectors
+        /// </summary>
+        /// <param name="pt0">The origin of the first axis</param>
+        /// <param name="v0">The direction of the first axis</param>
+        /// <param name="pt1">The origin of the second axis</param>
+        /// <param name="v1">The direction of the second axis</param>
+        /// <returns>The closest point on the first axis to the second.</returns>
+        public static Vector ClosestPoint(Vector pt0, Vector v0, Vector pt1, Vector v1)
+        {
+            Vector w0 = pt0 - pt1; //w0 = P0 - Q0
+            double a = v0.Dot(v0); //a = u*u
+            double b = v0.Dot(v1); //b = u*v
+            double c = v1.Dot(v1); //c = v*v
+            double d = v0.Dot(w0); //d = u*w0
+            double e = v1.Dot(w0); //e = v*w0
+            double s = (b * e - c * d) / (a * c - b * b); //sc = be-cd/(ac - b^2)
+            return pt0 + v0 * s;
+        }
+
+        /// <summary>
+        /// Find the intersection point, if one exists, for two infinite lines on the XY plane.
+        /// For 3D, use the ClosestPoint function instead.
+        /// </summary>
+        /// <param name="pt0">The origin point of the first line</param>
+        /// <param name="v0">The direction of the first line</param>
+        /// <param name="pt1">The origin point of the second line</param>
+        /// <param name="v1">The direction of the second line</param>
+        /// <returns>The XY intersection point, if one exists.  Else (the lines are null or parallel) Vector.Unset</returns>
+        public static Vector IntersectXY(Vector pt0, Vector v0, Vector pt1, Vector v1)
+        {
+            if (v0.X == 0)
+            {
+                if (v1.X == 0) return Vector.Unset;
+                else
+                {
+                    double m2 = v1.Y / v1.X;
+                    double c2 = pt1.Y - m2 * pt1.X;
+                    double x = pt0.X;
+                    return new Vector(x, m2 * x + c2, pt0.Z);
+                }
+            }
+            else if (v1.X == 0)
+            {
+                double m1 = v0.Y / v0.X;
+                double c1 = pt0.Y - m1 * pt0.X;
+                double x = pt1.X;
+                return new Vector(x, m1 * x + c1, pt0.Z);
+            }
+            else
+            {
+                double m1 = v0.Y / v0.X;
+                double c1 = pt0.Y - m1 * pt0.X;
+                double m2 = v1.Y / v1.X;
+                double c2 = pt1.Y - m2 * pt1.X;
+
+                if (m1 - m2 == 0) return Vector.Unset;
+                else
+                {
+                    double x = (c2 - c1) / (m1 - m2);
+                    double y = m1 * x + c1;
+                    return new Vector(x, y, pt0.Z);
+                }
+            }
         }
 
         #endregion

@@ -122,6 +122,44 @@ namespace FreeBuild.Maths
             Max = max;
         }
 
+        /// <summary>
+        /// Constructor creating an interval surrounding the specified set of 
+        /// values.  The maximum and minimum will be automatically determined.
+        /// </summary>
+        /// <param name="list"></param>
+        public Interval(double val1, double val2, double val3)
+        {
+            if (val1 < val2)
+            {
+                Min = Math.Min(val1, val3);
+                Max = Math.Max(val2, val3);
+            }
+            else
+            {
+                Min = Math.Min(val2, val3);
+                Max = Math.Max(val1, val3);
+            }
+        }
+
+        /// <summary>
+        /// Constructor creating an interval surrounding the specified set of 
+        /// values.  The maximum and minimum will be automatically determined
+        /// </summary>
+        /// <param name="list"></param>
+        public Interval(params double[] list)
+        {
+            double min = list[0];
+            double max = list[1];
+            for (int i = 0; i < list.Length; i++)
+            {
+                double val = list[i];
+                if (val < min) min = val;
+                if (val > max) max = val;
+            }
+            Min = min;
+            Max = max;
+        }
+
         #endregion
 
         #region Methods

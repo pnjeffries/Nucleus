@@ -1,5 +1,6 @@
 ﻿using FreeBuild.Base;
 using FreeBuild.Extensions;
+using FreeBuild.Maths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,9 @@ namespace FreeBuild.Geometry
     /// parent mesh.
     /// </summary>
     [Serializable]
-    public class MeshFace : VertexCollection, IUnique
+    public class MeshFace : 
+        List<Vertex>, IUnique
+        //VertexCollection, IUnique //Slower!
     {
         #region Properties
 
@@ -49,11 +52,11 @@ namespace FreeBuild.Geometry
         #endregion
 
         #region Constructors
-
+        
         /// <summary>
         /// Default constructor
         /// </summary>
-        public MeshFace()
+        public MeshFace() : base(4)
         {
 
         }
@@ -64,7 +67,7 @@ namespace FreeBuild.Geometry
         /// <param name="v1"></param>
         /// <param name="v2"></param>
         /// <param name="v3"></param>
-        public MeshFace(Vertex v1, Vertex v2, Vertex v3)
+        public MeshFace(Vertex v1, Vertex v2, Vertex v3) : base(3)
         {
             Add(v1);
             Add(v2);
@@ -78,7 +81,7 @@ namespace FreeBuild.Geometry
         /// <param name="v2"></param>
         /// <param name="v3"></param>
         /// <param name="v4"></param>
-        public MeshFace(Vertex v1, Vertex v2, Vertex v3, Vertex v4)
+        public MeshFace(Vertex v1, Vertex v2, Vertex v3, Vertex v4) : base(4)
         {
             Add(v1);
             Add(v2);
@@ -91,7 +94,7 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="edge"></param>
         /// <param name="v"></param>
-        public MeshFace(MeshEdge edge, Vertex v)
+        public MeshFace(MeshEdge edge, Vertex v) : base(3)
         {
             Add(edge.Start);
             Add(edge.End);
@@ -120,7 +123,7 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="point">The position vector to test</param>
         /// <returns></returns>
-        internal bool XYCircumcircleContainmentQuickCheck(Vector point)
+        internal virtual bool XYCircumcircleContainmentQuickCheck(Vector point)
         {
             // See https://en.wikipedia.org/wiki/Delaunay_triangulation#Algorithms for methodology -
             // Calculates the determinant of a matrix containing the vertex and point coordinates
@@ -145,7 +148,8 @@ namespace FreeBuild.Geometry
             double square2 = x2 * x2 + y2 * y2;
 
             double det = square0 * det_12 + square1 * det_20 + square2 * det_01;
-            return det > 0;
+            return (det > 0);
+
         }
 
         /// <summary>
@@ -157,31 +161,9 @@ namespace FreeBuild.Geometry
         {
             foreach (Vertex v in this)
             {
-                if (vertices.Contains(v)) return true;
+                if (vertices.Contains(v.GUID)) return true;
             }
             return false;
-        }
-
-        #endregion
-
-        #region Static Methods
-
-        /// <summary>
-        /// Generate a triangular mesh face that encompasses the specified bounding box
-        /// Used as the initial stage of delaunary triangulation.
-        /// The triangle will be created using temporary vertices that will not be added to
-        /// the vertices of this mesh.
-        /// </summary>
-        /// <returns></returns>
-        internal static MeshFace GenerateSuperTriangleXY(BoundingBox box)
-        {
-            box.Expand(1.0); //Provide a little wriggle room!
-
-            Vertex v0 = new Vertex(box.MinX + box.SizeX * 2, box.MinY);
-            Vertex v1 = new Vertex(box.MinX + 1, box.MinY + box.SizeY * 2);
-            Vertex v2 = new Vertex(box.MinX, box.MinY);
-
-            return new MeshFace(v0, v1, v2);
         }
 
         #endregion

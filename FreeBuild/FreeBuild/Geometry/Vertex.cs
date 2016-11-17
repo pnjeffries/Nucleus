@@ -24,6 +24,7 @@ using FreeBuild.Model;
 using FreeBuild.Units;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,7 +38,8 @@ namespace FreeBuild.Geometry
     /// attached data defining properties at that position.
     /// </summary>
     [Serializable]
-    public class Vertex : Unique, IOwned<Shape>, IPosition
+    [DebuggerDisplay("Vertex( {X} , {Y} , {Z}) ")]
+    public class Vertex : Unique, IOwned<Shape>, IPosition, IComparable<Vertex>
     {
         #region Properties
 
@@ -253,6 +255,11 @@ namespace FreeBuild.Geometry
         {
             Node = other.Node;
             //Additional data should be copied here
+        }
+
+        public int CompareTo(Vertex other)
+        {
+            return _Position.X.CompareTo(other.X);
         }
 
         #endregion
