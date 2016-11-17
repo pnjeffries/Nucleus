@@ -88,7 +88,7 @@ namespace FreeBuild.Meshing
         /// </summary>
         /// <param name="point">The position vector to test</param>
         /// <returns></returns>
-        internal override bool XYCircumcircleContainmentQuickCheck(Vector point)
+        internal override bool XYCircumcircleContainmentQuickCheck(Vertex point)
         {
             // See https://en.wikipedia.org/wiki/Delaunay_triangulation#Algorithms for methodology -
             // Calculates the determinant of a matrix containing the vertex and point coordinates

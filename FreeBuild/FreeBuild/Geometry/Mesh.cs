@@ -113,7 +113,7 @@ namespace FreeBuild.Geometry
                 for (int i = faces.Count - 1; i >= 0; i--)
                 {
                     MeshFace face = faces[i];
-                    if (face.XYCircumcircleContainmentQuickCheck(v.Position)) //The vertex lies within the circumcircle of this face
+                    if (face.XYCircumcircleContainmentQuickCheck(v)) //The vertex lies within the circumcircle of this face
                     {
                         //The edges of the triangle are added to the current edge set...
                         for (int j = 0; j < face.Count; j++)

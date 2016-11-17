@@ -27,7 +27,7 @@ namespace FreeBuild.Tests
             //Mesh tests:
             for (int i = 0; i < 10; i++)
             {
-                Mesh_Tests.DelaunayTest(5000);
+                Mesh_Tests.DelaunayTest(10000);
             }
 
             Console.Read();

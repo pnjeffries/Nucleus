@@ -123,7 +123,7 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="point">The position vector to test</param>
         /// <returns></returns>
-        internal virtual bool XYCircumcircleContainmentQuickCheck(Vector point)
+        internal virtual bool XYCircumcircleContainmentQuickCheck(Vertex point)
         {
             // See https://en.wikipedia.org/wiki/Delaunay_triangulation#Algorithms for methodology -
             // Calculates the determinant of a matrix containing the vertex and point coordinates
