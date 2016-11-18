@@ -128,6 +128,14 @@ namespace FreeBuild.Geometry
             }
         }
 
+        /// <summary>
+        /// Get the angle of this vector on the XY plane.
+        /// </summary>
+        public Angle Angle
+        {
+            get { return Math.Atan2(Y, X); }
+        }
+
         #endregion
 
         #region Constructors
@@ -327,6 +335,16 @@ namespace FreeBuild.Geometry
             double dX = position.X - X;
             double dY = position.Y - Y;
             return Math.Sqrt(dX * dX + dY * dY);
+        }
+
+        /// <summary>
+        /// Find the angle on the XY plane from this position vector to another
+        /// </summary>
+        /// <param name="other">The position vector to measure the angle to</param>
+        /// <returns></returns>
+        public Angle AngleTo(Vector other)
+        {
+            return Math.Atan2(other.Y - Y, other.X - X);
         }
 
         /// <summary>

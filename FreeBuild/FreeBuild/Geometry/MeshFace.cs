@@ -49,10 +49,19 @@ namespace FreeBuild.Geometry
         /// </summary>
         public bool IsQuad { get { return Count == 4; } }
 
+        /// <summary>
+        /// Get the circumcentre of the first three vertices of this face on the XY plane
+        /// </summary>
+        /// <returns></returns>
+        internal virtual Vector XYCircumcentre
+        {
+            get { return CalculateXYCircumcentre(); }
+        }
+
         #endregion
 
         #region Constructors
-        
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -131,7 +140,7 @@ namespace FreeBuild.Geometry
         /// Find the circumcentre of the first three vertices of this face on the XY plane
         /// </summary>
         /// <returns></returns>
-        protected Vector XYCircumcentre()
+        protected Vector CalculateXYCircumcentre()
         {
             Vector A = this[0].Position;
             Vector B = this[1].Position;
@@ -147,6 +156,8 @@ namespace FreeBuild.Geometry
             return centre;
         }
 
+
+
         /// <summary>
         /// Tests whether a point lies in the circumcircle of this face.  Used during delaunay
         /// triangulation on the XY plane.
@@ -155,7 +166,7 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="point">The position vector to test</param>
         /// <returns></returns>
-        internal virtual bool XYCircumcircleContainmentQuickCheck(Vector point)
+        internal virtual bool XYCircumcircleContainmentQuickCheck(Vertex point)
         {
             // See https://en.wikipedia.org/wiki/Delaunay_triangulation#Algorithms for methodology -
             // Calculates the determinant of a matrix containing the vertex and point coordinates

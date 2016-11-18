@@ -233,10 +233,28 @@ namespace FreeBuild.Geometry
                 else
                 {
                     //Scale to subsequent nodes:
-                    Include(points);
+                    Include(point.Position);
                 }
             }
-            
+        }
+
+        public void Fit(IList<Vertex> vertices)
+        {
+            if (vertices.Count > 0)
+            {
+                Vector pt = vertices[0].Position;
+                MinX = pt.X;
+                MaxX = pt.X;
+                MinY = pt.Y;
+                MaxY = pt.Y;
+                MinZ = pt.Z;
+                MaxZ = pt.Z;
+
+                for (int i = 1; i < vertices.Count; i++)
+                {
+                    Include(vertices[i].Position);
+                }
+            }
         }
 
         /// <summary>
@@ -273,11 +291,11 @@ namespace FreeBuild.Geometry
         public void Include(ref Vector pt)
         {
             if (pt.X < MinX) MinX = pt.X;
-            if (pt.X > MaxX) MaxX = pt.X;
+            else if (pt.X > MaxX) MaxX = pt.X;
             if (pt.Y < MinY) MinY = pt.Y;
-            if (pt.Y > MaxY) MaxY = pt.Y;
+            else if (pt.Y > MaxY) MaxY = pt.Y;
             if (pt.Z < MinZ) MinZ = pt.Z;
-            if (pt.Z > MaxZ) MaxZ = pt.Z;
+            else if (pt.Z > MaxZ) MaxZ = pt.Z;
         }
 
         /// <summary>

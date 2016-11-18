@@ -21,7 +21,13 @@ namespace FreeBuild.Tests
             sw.Start();
             MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(verts);
             sw.Stop();
-            Core.Print(sw.Elapsed.ToString() + " " + faces.Count + " Tris");
+
+            Stopwatch sw2 = new Stopwatch();
+            sw2.Start();
+            Mesh.VoronoiFromDelaunay(verts, faces);
+            sw2.Stop();
+
+            Core.Print("Triangulation: " + sw.Elapsed.ToString() + " " + faces.Count + " Tris, Voronoi: " + sw2.Elapsed.ToString());
             return sw.Elapsed;
         }
     }

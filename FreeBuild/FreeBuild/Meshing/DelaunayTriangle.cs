@@ -39,6 +39,23 @@ namespace FreeBuild.Meshing
 
         #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// Get the circumcentre of the first three vertices of this face on the XY plane
+        /// </summary>
+        /// <returns></returns>
+        internal override Vector XYCircumcentre
+        {
+            get
+            {
+                if (!_Circumcentre.IsValid()) _Circumcentre = CalculateXYCircumcentre();
+                return _Circumcentre;
+            }
+        }
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -68,7 +85,7 @@ namespace FreeBuild.Meshing
         /// </summary>
         /// <param name="point">The position vector to test</param>
         /// <returns></returns>
-        internal override bool XYCircumcircleContainmentQuickCheck(Vector point)
+        internal override bool XYCircumcircleContainmentQuickCheck(Vertex point)
         {
             // See https://en.wikipedia.org/wiki/Delaunay_triangulation#Algorithms for methodology -
             // Calculates the determinant of a matrix containing the vertex and point coordinates
@@ -76,7 +93,7 @@ namespace FreeBuild.Meshing
 
             if (_ExcludeFromContainmentCheck) return false;
 
-            if (!_Circumcentre.IsValid()) _Circumcentre = XYCircumcentre();
+            if (!_Circumcentre.IsValid()) _Circumcentre = CalculateXYCircumcentre();
             if (_CircumRadiusSquared < 0) _CircumRadiusSquared = this[0].Position.XYDistanceToSquared(_Circumcentre);
 
             double xDistSqd = (_Circumcentre.X - point.X).Squared();

@@ -113,7 +113,7 @@ namespace FreeBuild.Geometry
                 for (int i = faces.Count - 1; i >= 0; i--)
                 {
                     MeshFace face = faces[i];
-                    if (face.XYCircumcircleContainmentQuickCheck(v.Position)) //The vertex lies within the circumcircle of this face
+                    if (face.XYCircumcircleContainmentQuickCheck(v)) //The vertex lies within the circumcircle of this face
                     {
                         //The edges of the triangle are added to the current edge set...
                         for (int j = 0; j < face.Count; j++)
@@ -158,7 +158,35 @@ namespace FreeBuild.Geometry
             return faces;
         }
 
-        
+        /// <summary>
+        /// Convert a set of mesh faces generated via 
+        /// </summary>
+        /// <param name="triangles"></param>
+        /// <returns></returns>
+        public static Dictionary<Vertex, MeshFace> VoronoiFromDelaunay(VertexCollection vertices, MeshFaceCollection faces)
+        {
+            var cells = new Dictionary<Vertex, MeshFace>(); //The generated voronoi cells
+
+            foreach (Vertex v in vertices)
+            {
+                cells.Add(v, new MeshFace()); //Create empty cells
+            }
+
+            foreach (MeshFace face in faces)
+            {
+                Vector centre = face.XYCircumcentre;
+                Vertex newVert = new Vertex(centre);
+                foreach (Vertex v in face)
+                {
+                    MeshFace cell = cells[v];
+                    cell.Add(newVert);
+                }
+            }
+
+            //TODO: Sort cell vertices anticlockwise around centroid
+
+            return cells;
+        }
 
         #endregion
     }

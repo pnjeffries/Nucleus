@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace FreeBuild.Geometry
 {
     /// <summary>
-    /// Class that represents an edge between two vertices in a mesh.
+    /// Structure that represents an edge between two vertices in a mesh.
     /// A temporary construct used during certain mesh operations - does not
     /// form part of the core definition of a mesh geometry
     /// </summary>
@@ -54,6 +54,11 @@ namespace FreeBuild.Geometry
             return this == (MeshEdge)obj;
         }
 
+        public bool Equals(ref MeshEdge other)
+        {
+            return ((Start == other.Start && End == other.End) || (Start == other.End && End == other.Start));
+        }
+
         #endregion
 
         #region Operators
@@ -73,6 +78,13 @@ namespace FreeBuild.Geometry
             return ((edge1.Start == edge2.Start && edge1.End == edge2.End) || (edge1.Start == edge2.End && edge1.End == edge2.Start));
         }
 
+        /// <summary>
+        /// Tests whether the two edges are not equal.
+        /// Direction does not matter for two edges to be equal.
+        /// </summary>
+        /// <param name="edge1"></param>
+        /// <param name="edge2"></param>
+        /// <returns></returns>
         public static bool operator != (MeshEdge edge1, MeshEdge edge2)
         {
             return !(edge1 == edge2);
