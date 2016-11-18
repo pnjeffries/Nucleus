@@ -101,6 +101,18 @@ namespace FreeBuild.Geometry
             Add(v);
         }
 
+        /// <summary>
+        /// Initialise a MeshFace containing the specified set of vertices
+        /// </summary>
+        /// <param name="vertices">A set of vertices to use to build this face.</param>
+        public MeshFace(IList<Vertex> vertices) : base(vertices.Count)
+        {
+            foreach (Vertex v in vertices)
+            {
+                Add(v);
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -113,6 +125,26 @@ namespace FreeBuild.Geometry
         public MeshEdge GetEdge(int index)
         {
             return new MeshEdge(this[index], this.GetWrapped(index + 1));
+        }
+
+        /// <summary>
+        /// Find the circumcentre of the first three vertices of this face on the XY plane
+        /// </summary>
+        /// <returns></returns>
+        protected Vector XYCircumcentre()
+        {
+            Vector A = this[0].Position;
+            Vector B = this[1].Position;
+            Vector C = this[2].Position;
+
+            Vector AB = B - A;
+            Vector BC = C - B;
+
+            Vector midAB = A + AB * 0.5;
+            Vector midBC = B + BC * 0.5;
+
+            Vector centre = Axis.IntersectXY(midAB, AB.PerpendicularXY(), midBC, BC.PerpendicularXY());
+            return centre;
         }
 
         /// <summary>

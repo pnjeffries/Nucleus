@@ -61,26 +61,6 @@ namespace FreeBuild.Meshing
         #region Methods
 
         /// <summary>
-        /// Find the circumcentre of this triangle on the XY plane
-        /// </summary>
-        /// <returns></returns>
-        internal Vector XYCircumcentre()
-        {
-            Vector A = this[0].Position;
-            Vector B = this[1].Position;
-            Vector C = this[2].Position;
-
-            Vector AB = B - A;
-            Vector BC = C - B;
-
-            Vector midAB = A + AB * 0.5;
-            Vector midBC = B + BC * 0.5;
-
-            Vector centre = Axis.IntersectXY(midAB, AB.PerpendicularXY(), midBC, BC.PerpendicularXY());
-            return centre;
-        }
-
-        /// <summary>
         /// Tests whether a point lies in the circumcircle of this face.  Used during delaunay
         /// triangulation on the XY plane.
         /// Currently works only for triangle faces which are counterclockwise on XY plane.
