@@ -15,21 +15,6 @@ namespace FreeBuild.Model
     [Serializable]
     public class ModelObjectCollection<TItem> : OwnedCollection<TItem, Model> where TItem : ModelObject
     {
-        #region Properties
-
-        /// <summary>
-        /// Get or set the combined name value of the objects in this collection.
-        /// If all the objects in this collection have the same name, that name will be returned.
-        /// Otherwise the string "[Multi]" will be returned.
-        /// Set this property to set the name property of all objects in this collection
-        /// </summary>
-        public virtual string Name
-        {
-            get { return (string)CombinedValue(i => i.Name, "[Multi]"); }
-            set { foreach (TItem item in this) item.Name = value; }
-        }
-
-        #endregion
 
         #region Constructors
 

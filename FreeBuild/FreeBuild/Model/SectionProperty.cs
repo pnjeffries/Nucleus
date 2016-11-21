@@ -39,18 +39,32 @@ namespace FreeBuild.Model
         /// <summary>
         /// Private backing member variable for the Profile property
         /// </summary>
-        private Profile _Profile = null;
+        private SectionProfile _Profile = null;
 
         /// <summary>
         /// The description of the profile of this section property
         /// </summary>
-        public Profile Profile
+        public SectionProfile Profile
         {
             get { return _Profile; }
             set
             {
+                if (_Profile != null) _Profile.Section = null;
                 _Profile = value;
+                if (_Profile != null) _Profile.Section = this;
                 NotifyPropertyChanged("Profile");
+                NotifyPropertyChanged("Profiles");
+            }
+        }
+
+        /// <summary>
+        /// The collection of profiles which make up the 
+        /// </summary>
+        public SectionProfileCollection  Profiles
+        {
+            get
+            {
+                return new SectionProfileCollection(Profile);
             }
         }
 
@@ -67,7 +81,7 @@ namespace FreeBuild.Model
         /// Initialises a section property with the given profile
         /// </summary>
         /// <param name="profile"></param>
-        public SectionProperty(Profile profile)
+        public SectionProperty(SectionProfile profile)
         {
             Profile = profile;
         }
@@ -77,10 +91,24 @@ namespace FreeBuild.Model
         /// </summary>
         /// <param name="name"></param>
         /// <param name="profile"></param>
-        public SectionProperty(string name, Profile profile)
+        public SectionProperty(string name, SectionProfile profile)
         {
             Name = name;
             Profile = profile;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Notify this section that one of its constutuent profiles has been modified
+        /// </summary>
+        /// <param name="profile"></param>
+        internal void NotifyProfileChanged(SectionProfile profile)
+        {
+            NotifyPropertyChanged("Profile");
+            NotifyPropertyChanged("Profile");
         }
 
         #endregion

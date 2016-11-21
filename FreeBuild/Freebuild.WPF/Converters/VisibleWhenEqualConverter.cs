@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Freebuild.WPF
+namespace Freebuild.WPF.Converters
 {
     /// <summary>
     /// Converter that returns Visibility.Visible when the value is equal to the parameter, or

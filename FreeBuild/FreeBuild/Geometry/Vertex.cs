@@ -41,6 +41,15 @@ namespace FreeBuild.Geometry
     [DebuggerDisplay("Vertex( {X} , {Y} , {Z}) ")]
     public class Vertex : Unique, IOwned<Shape>, IPosition, IComparable<Vertex>
     {
+        #region Static Fields
+
+        /// <summary>
+        /// The value set aside to indicate an unset vertex index
+        /// </summary>
+        public static int UnsetIndex = -1;
+
+        #endregion
+
         #region Properties
 
         /// <summary>
@@ -63,19 +72,31 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
-        /// Shortcut property to get the X coordinate of the position of this vertex
+        /// Shortcut property to get or set the X coordinate of the position of this vertex
         /// </summary>
-        public double X { get { return _Position.X; } }
+        public double X
+        {
+            get { return _Position.X; }
+            set { Position = _Position.WithX(value); }
+        }
 
         /// <summary>
-        /// Shortcut property to get the Y coordinate of the position of this vertex
+        /// Shortcut property to get or set the Y coordinate of the position of this vertex
         /// </summary>
-        public double Y { get { return _Position.Y; } }
+        public double Y
+        {
+            get { return _Position.Y; }
+            set { Position = _Position.WithY(value); }
+        }
 
         /// <summary>
-        /// Shortcut property to get the Z coordinate of the position of this vertex
+        /// Shortcut property to get or set the Z coordinate of the position of this vertex
         /// </summary>
-        public double Z { get { return _Position.Z; } }
+        public double Z
+        {
+            get { return _Position.Z; }
+            set { Position = _Position.WithZ(value); }
+        }
 
         /// <summary>
         /// Private backing member variable for the Shape property
@@ -132,6 +153,24 @@ namespace FreeBuild.Geometry
             }
         }
 
+        /// <summary>
+        /// Private backing field for VertexIndex property
+        /// </summary>
+        private int _VertexIndex = UnsetIndex;
+
+        /// <summary>
+        /// The index of this vertex.
+        /// This is a temporary value which will be populated during certain
+        /// operations (such as drawing), but will not generally be populated automatically.
+        /// This does *not* necessarily correspond to the position of this vertex in
+        /// the containing shape.
+        /// </summary>
+        public int VertexIndex
+        {
+            get { return _VertexIndex; }
+            set { _VertexIndex = value; }
+        }
+
         #endregion
 
         #region Constructors
@@ -166,6 +205,12 @@ namespace FreeBuild.Geometry
         public Vertex(double x, double y, double z = 0)
         {
             _Position = new Vector(x, y, z);
+        }
+
+        public Vertex(Vertex other)
+        {
+            _Position = other.Position;
+            Node = other.Node;
         }
 
         #endregion

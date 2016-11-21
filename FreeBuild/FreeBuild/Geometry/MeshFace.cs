@@ -126,6 +126,13 @@ namespace FreeBuild.Geometry
 
         #region Methods
 
+        internal virtual void Set(Vertex v1, Vertex v2, Vertex v3)
+        {
+            this[0] = v1;
+            this[1] = v2;
+            this[2] = v3;
+        }
+
         /// <summary>
         /// Get the edge of this face at the specified index
         /// </summary>
@@ -134,6 +141,30 @@ namespace FreeBuild.Geometry
         public MeshEdge GetEdge(int index)
         {
             return new MeshEdge(this[index], this.GetWrapped(index + 1));
+        }
+
+        /// <summary>
+        /// Extract the position vectors of all vertices in this face to
+        /// an array.
+        /// </summary>
+        /// <returns></returns>
+        public Vector[] ExtractPoints()
+        {
+            Vector[] result = new Vector[Count];
+            for (int i = 0; i < Count; i++)
+            {
+                result[i] = this[i].Position;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Get the curve that describes the boundary of this face
+        /// </summary>
+        /// <returns></returns>
+        public virtual Curve GetBoundary()
+        {
+            return new PolyLine(ExtractPoints(), true);
         }
 
         /// <summary>
@@ -207,6 +238,30 @@ namespace FreeBuild.Geometry
                 if (vertices.Contains(v.GUID)) return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Sort the vertices of this face counter-clockwise around the specified point
+        /// in plan (i.e. in the XY plane).  This will essentially align this face 'upwards'
+        /// </summary>
+        /// <param name="aroundPt"></param>
+        public void SortVerticesCounterClockwise(Vector aroundPt)
+        {
+            this.Sort(
+                delegate (Vertex v1, Vertex v2)
+                {
+                    return aroundPt.AngleTo(v1.Position).CompareTo(aroundPt.AngleTo(v2.Position));
+                });
+        }
+
+        /// <summary>
+        /// Sort the vertices of this face counter-clockwise about the circumcentre
+        /// of the first three vertices of the face in the XY plane.  This will essentially
+        /// align this face 'upwards'.
+        /// </summary>
+        public void SortVerticesCounterClockwise()
+        {
+            SortVerticesCounterClockwise(XYCircumcentre);
         }
 
         #endregion

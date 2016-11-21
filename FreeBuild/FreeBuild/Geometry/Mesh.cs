@@ -159,6 +159,96 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Generate a set of mesh faces that represent a delaunay triangulation in the XY plane of the
+        /// specified set of vertices.
+        /// Based on the algorithm described here: http://paulbourke.net/papers/triangulate/
+        /// </summary>
+        /// <param name="vertices">The vertices to mesh between</param>
+        /// <param name="faces">Optional.  The face collection to which to add the triangles.
+        /// If null or ommitted, a new MeshFaceCollection will be created.</param>
+        public static MeshFaceCollection DelaunayTriangulationXY2(VertexCollection vertices, MeshFaceCollection faces = null)
+        {
+            List<Vertex> vertexList = vertices.ToList();
+            vertexList.Sort();
+
+            if (faces == null) faces = new MeshFaceCollection();
+
+            // Meshing starts with one 'super triangle' that encloses all vertices.
+            // This will be removed at the end
+            MeshFace superTriangle = DelaunayTriangle.GenerateSuperTriangleXY(new BoundingBox(vertexList));
+            //vertices.BoundingBox());
+            faces.Add(superTriangle);
+
+            var triVerts = new VertexCollection(superTriangle);
+
+            List<MeshFace> toReplace = new List<MeshFace>();
+            IList<MeshEdge> edges = new List<MeshEdge>(); //The edges of replaced triangles
+
+            // Include each vertex in the meshing one at a time
+            foreach (Vertex v in vertexList)
+            {
+                
+
+                for (int i = faces.Count - 1; i >= 0; i--)
+                {
+                    MeshFace face = faces[i];
+                    if (face.XYCircumcircleContainmentQuickCheck(v)) //The vertex lies within the circumcircle of this face
+                    {
+                        //The edges of the triangle are added to the current edge set...
+                        for (int j = 0; j < face.Count; j++)
+                        {
+                            edges.Add(face.GetEdge(j));
+                        }
+                        //...and the triangle is removed.
+                        //faces.RemoveAt(i);
+                        toReplace.Add(face);
+                    }
+                }
+
+                //Remove duplicate edges to retain only the convex hull of edges.
+                //edges.RemoveDuplicates();
+
+                //Replaced with bespoke version 
+                for (int i = edges.Count - 2; i >= 0; i--)
+                {
+                    MeshEdge itemA = edges[i];
+                    for (int j = edges.Count - 1; j > i; j--)
+                    {
+                        if (itemA.Equals(edges[j]))
+                        {
+                            edges.RemoveAt(j);
+                            edges.RemoveAt(i);
+                            j--;
+                            continue;
+                        }
+                    }
+                }
+
+                int index = 0;
+
+                //Add triangle fan between all remaining edges and the new vertex
+                foreach (MeshEdge edge in edges)
+                {
+                    if (index < toReplace.Count)
+                    {
+                        MeshFace face = toReplace[index];
+                        face.Set(edge.Start, edge.End, v);
+                        index++;
+                    }
+                    else faces.Add(new DelaunayTriangle(edge, v));
+                }
+
+                toReplace.Clear();
+                edges.Clear();
+            }
+
+            //Remove the super triangle and any triangles still attached to it
+            faces.RemoveAllWithVertices(triVerts);
+
+            return faces;
+        }
+
+        /// <summary>
         /// Convert a set of mesh faces generated via 
         /// </summary>
         /// <param name="triangles"></param>
@@ -183,7 +273,13 @@ namespace FreeBuild.Geometry
                 }
             }
 
-            //TODO: Sort cell vertices anticlockwise around centroid
+            //TODO: Deal with cells on the edge
+
+            //Sort cell vertices anticlockwise around centroid
+            foreach (MeshFace face in faces)
+            {
+                face.SortVerticesCounterClockwise();
+            }
 
             return cells;
         }

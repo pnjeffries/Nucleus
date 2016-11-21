@@ -162,6 +162,36 @@ namespace FreeBuild.Geometry
             return false;
         }
 
+        /// <summary>
+        /// Populate the VertexIndex properties of the vertices in this collection,
+        /// starting from the specified (optional) value.
+        /// </summary>
+        /// <param name="startingIndex">The index to assign to the first vertex in the collection.
+        /// Subsequent vertices will be numbered incrementally.</param>
+        public void AssignVertexIndices(int startingIndex = 0)
+        {
+            foreach (Vertex v in this)
+            {
+                v.VertexIndex = startingIndex;
+                startingIndex++;
+            }
+        }
+
+        /// <summary>
+        /// Extract the position vectors of all vertices in this collection to
+        /// an array.
+        /// </summary>
+        /// <returns></returns>
+        public Vector[] ExtractPoints()
+        {
+            Vector[] result = new Vector[Count];
+            for (int i = 0; i < Count; i++)
+            {
+                result[i] = this[i].Position;
+            }
+            return result;
+        }
+
         #endregion
     }
 }

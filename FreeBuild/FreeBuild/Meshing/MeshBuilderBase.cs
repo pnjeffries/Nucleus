@@ -1,4 +1,5 @@
-﻿using FreeBuild.Extensions;
+﻿using FreeBuild.Exceptions;
+using FreeBuild.Extensions;
 using FreeBuild.Geometry;
 using FreeBuild.Model;
 using System;
@@ -15,12 +16,29 @@ namespace FreeBuild.Meshing
     public abstract class MeshBuilderBase
     {
         /// <summary>
+        /// Finalize the mesh building.
+        /// Will apply any necessary last steps to the mesh generation.
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool Finalize() { return true; }
+
+        /// <summary>
         /// Add a new vertex to the mesh
         /// </summary>
         /// <param name="pt"></param>
         /// <returns>The new vertex index</returns>
         /// <remarks>The returned vertex indices should be sequential</remarks>
         public abstract int AddVertex(Vector pt);
+
+        /// <summary>
+        /// Add a new vertex to the mesh.
+        /// This operation will set the VertexIndex property of the vertex.
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns>The new vertex index</returns>
+        /// <remarks>The returned indices should be sequential and the 
+        /// VertexIndex property of the input vertex should be set.</remarks> 
+        public abstract int AddVertex(Vertex v);
 
         /// <summary>
         /// Add a new tri face to the mesh.
@@ -69,6 +87,22 @@ namespace FreeBuild.Meshing
         }
 
         /// <summary>
+        /// Add a new face to the mesh.
+        /// The vertices within this face should have already had their indices set
+        /// </summary>
+        /// <param name="face"></param>
+        /// <returns></returns>
+        public int AddFace(MeshFace face)
+        {
+            if (face.Count == 3)
+                return AddFace(face[0].VertexIndex, face[1].VertexIndex, face[2].VertexIndex); //TRI
+            else if (face.Count > 3)
+                return AddFace(face[0].VertexIndex, face[1].VertexIndex, face[2].VertexIndex, face[3].VertexIndex); //QUAD
+            else
+                return -1;
+        }
+
+        /// <summary>
         /// Add a new mesh face specified by an ordered list of vertex indices
         /// </summary>
         /// <param name="indices">A list of vertex indices to be converted into a face.  Should contain at least three values.</param>
@@ -83,26 +117,6 @@ namespace FreeBuild.Meshing
             {
                 return AddFace(indices[0], indices[1], indices[2], indices[3]);
             }
-            return -1;
-        }
-
-        /// <summary>
-        /// Add a new face to the mesh based on a structural 2D Element's geometry
-        /// </summary>
-        /// <param name="element"></param>
-        /// <returns>The new face index</returns>
-        public int AddFace(PanelElement element)
-        {
-            //TODO!
-            //if (element.Nodes.Count == 3 || element.Nodes.Count == 6) //TRI
-            //{
-            //    return AddFace(element.OffsetNodePosition(0), element.OffsetNodePosition(1), element.OffsetNodePosition(2));
-            //}
-            //else if (element.Nodes.Count >= 4) //QUAD
-            //{
-            //    return AddFace(element.OffsetNodePosition(0), element.OffsetNodePosition(1),
-            //        element.OffsetNodePosition(2), element.OffsetNodePosition(3));
-            //}
             return -1;
         }
 
@@ -122,6 +136,21 @@ namespace FreeBuild.Meshing
         }
 
         /// <summary>
+        /// Add a set of vertices to the mesh
+        /// </summary>
+        /// <param name="vertices"></param>
+        /// <returns></returns>
+        public int AddVertices(IEnumerable<Vertex> vertices)
+        {
+            int lastVI = 0;
+            foreach (Vertex v in vertices)
+            {
+                lastVI = AddVertex(v);
+            }
+            return lastVI;
+        }
+
+        /// <summary>
         /// Add a set of faces to the mesh described as a set of Lists of vertex indices
         /// </summary>
         /// <param name="faces">The collection of lists of vertex indices to be used to describe the face topology</param>
@@ -135,6 +164,36 @@ namespace FreeBuild.Meshing
                 if (FI >= 0) lastFI = FI;
             }
             return lastFI;
+        }
+
+        /// <summary>
+        /// Add a set of faces to the mesh.
+        /// The vertices referenced by these faces should have been previously
+        /// added and the vertex indices set.
+        /// </summary>
+        /// <param name="faces"></param>
+        /// <returns></returns>
+        public int AddFaces(IEnumerable<MeshFace> faces)
+        {
+            int lastFI = 0;
+            foreach (MeshFace face in faces)
+            {
+                int FI = AddFace(face);
+                if (FI >= 0) lastFI = FI;
+            }
+            return lastFI;
+        }
+
+        /// <summary>
+        /// Add a FreeBuild mesh to the mesh.
+        /// Copies of the input mesh vertices and faces will be appended
+        /// to those already existing in the current mesh.
+        /// </summary>
+        /// <param name="mesh"></param>
+        public void AddMesh(Mesh mesh)
+        {
+            AddVertices(mesh.Vertices);
+            AddFaces(mesh.Faces);
         }
 
         /// <summary>
@@ -325,6 +384,32 @@ namespace FreeBuild.Meshing
             topology.Add(basePoints);
             topology.Add(tipPoints);
             AddLoft(topology, true);
+        }
+
+        public void FillBoundary(Vector[] pts)
+        {
+
+        }
+    }
+
+    /// <summary>
+    /// An abstract base class used to generically construct meshes in an application-specific format
+    /// </summary>
+    /// <typeparam name="TMesh">The type of mesh being generated</typeparam>
+    public abstract class MeshBuilderBase<TMesh> : MeshBuilderBase
+    {
+        /// <summary>
+        /// Protected backing field for Mesh property
+        /// </summary>
+        protected TMesh _Mesh;
+
+        /// <summary>
+        /// The mesh that is being built
+        /// </summary>
+        public TMesh Mesh
+        {
+            get { return _Mesh; }
+            set { _Mesh = value; }
         }
     }
 }

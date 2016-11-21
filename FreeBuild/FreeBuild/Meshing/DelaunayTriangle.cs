@@ -77,6 +77,15 @@ namespace FreeBuild.Meshing
 
         #region Methods
 
+        internal override void Set(Vertex v1, Vertex v2, Vertex v3)
+        {
+            this[0] = v1;
+            this[1] = v2;
+            this[2] = v3;
+            _Circumcentre = Vector.Unset;
+            _CircumRadiusSquared = -1;
+        }
+
         /// <summary>
         /// Tests whether a point lies in the circumcircle of this face.  Used during delaunay
         /// triangulation on the XY plane.

@@ -30,7 +30,7 @@ namespace Freebuild.WPF
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
-        public static Shapes.Line Convert(Line line)
+        public static Shapes.Line ConvertToLine(Line line)
         {
             if(line == null) return null;
             Shapes.Line result = new Shapes.Line();
@@ -38,6 +38,19 @@ namespace Freebuild.WPF
             result.Y1 = line.StartPoint.Y;
             result.X2 = line.EndPoint.X;
             result.Y2 = line.EndPoint.Y;
+            return result;
+        }
+
+        /// <summary>
+        /// Convert a FreeBuild line to a WPF PathFigure
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns></returns>
+        public static Media.PathFigure Convert(Line line)
+        {
+            Media.PathFigure result = new Media.PathFigure();
+            result.StartPoint = Convert(line.StartPoint);
+            result.Segments.Add(new Media.LineSegment(Convert(line.EndPoint), true));
             return result;
         }
 
@@ -117,7 +130,7 @@ namespace Freebuild.WPF
                         {
                             bool largeArc = arc.RadianMeasure.IsReflex;
                             Media.SweepDirection dir = Media.SweepDirection.Clockwise;
-                            if (!arc.IsClockwise) dir = Media.SweepDirection.Counterclockwise;
+                            if (arc.IsClockwise) dir = Media.SweepDirection.Counterclockwise;
                             result.Segments.Add(new Media.ArcSegment(Convert(arc.EndPoint), new W.Size(radius, radius), 0, largeArc, dir, true));
                         }
                     }
@@ -132,6 +145,20 @@ namespace Freebuild.WPF
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Convert a FreeBuild curve to a WPF PathFigure
+        /// </summary>
+        /// <param name="curve"></param>
+        /// <returns></returns>
+        public static Media.PathFigure Convert(Curve curve)
+        {
+            if (curve is Line) return Convert((Line)curve);
+            else if (curve is PolyLine) return Convert((PolyLine)curve);
+            else if (curve is Arc) return Convert((Arc)curve);
+            else if (curve is PolyCurve) return Convert((PolyCurve)curve);
+            else return null;
         }
 
 

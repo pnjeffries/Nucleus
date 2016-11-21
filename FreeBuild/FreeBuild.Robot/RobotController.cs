@@ -513,7 +513,7 @@ namespace FreeBuild.Robot
         /// </summary>
         /// <param name="data"></param>
         /// <param name="profile"></param>
-        protected void UpdateRobotSectionGeometry(RobotBarSectionData data, Profile profile)
+        protected void UpdateRobotSectionGeometry(RobotBarSectionData data, SectionProfile profile)
         {
             if (profile != null)
             {
@@ -591,9 +591,9 @@ namespace FreeBuild.Robot
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public Profile CreateProfileFromRobotSectionData(RobotBarSectionData data)
+        public SectionProfile CreateProfileFromRobotSectionData(RobotBarSectionData data)
         {
-            Profile result = null;
+            SectionProfile result = null;
             Type equivalent = EquivalentProfileType(data.ShapeType);
             if (equivalent == typeof(SymmetricIProfile))
             {

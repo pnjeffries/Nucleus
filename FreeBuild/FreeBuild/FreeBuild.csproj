@@ -52,12 +52,14 @@
     <Compile Include="Conversion\IDMappingTable.cs" />
     <Compile Include="Conversion\ModelIDMappingTable.cs" />
     <Compile Include="Events\MessageRaisedEventArgs.cs" />
+    <Compile Include="Exceptions\MeshConstructionException.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Extensions\IListExtensions.cs" />
     <Compile Include="Geometry\MeshEdge.cs" />
     <Compile Include="Geometry\PlanarSurface.cs" />
     <Compile Include="Meshing\CoordinateSystemRemappingOption.cs" />
     <Compile Include="Meshing\DelaunayTriangle.cs" />
+    <Compile Include="Meshing\MeshBuilder.cs" />
     <Compile Include="Model\CircularHollowProfile.cs" />
     <Compile Include="Model\CircularProfile.cs" />
     <Compile Include="Model\ElementVertex.cs" />
@@ -158,9 +160,10 @@
     <Compile Include="Model\PanelElement.cs" />
     <Compile Include="Model\NodeTable.cs" />
     <Compile Include="Model\ParameterProfile.cs" />
-    <Compile Include="Model\Profile.cs" />
+    <Compile Include="Model\SectionProfile.cs" />
     <Compile Include="Model\RectangularHollowProfile.cs" />
     <Compile Include="Model\RectangularProfile.cs" />
+    <Compile Include="Model\SectionProfileCollection.cs" />
     <Compile Include="Model\SectionProperty.cs" />
     <Compile Include="Model\SectionPropertyCollection.cs" />
     <Compile Include="Model\SymmetricIProfile.cs" />
@@ -185,8 +188,10 @@
     <Compile Include="Geometry\Vector.cs" />
     <Compile Include="Rendering\IRenderable.cs" />
     <Compile Include="Rendering\RenderingParameters.cs" />
+    <Compile Include="Selection\LinearElementSelection.cs" />
     <Compile Include="Structural\Support.cs" />
     <Compile Include="UI\AutoUIAttribute.cs" />
+    <Compile Include="Selection\SelectionViewModel.cs" />
     <Compile Include="Units\DimensionAttribute.cs" />
     <Compile Include="Units\DimensionType.cs" />
   </ItemGroup>

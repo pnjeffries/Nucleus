@@ -33,7 +33,7 @@ namespace FreeBuild.Model
     /// on them.
     /// </summary>
     [Serializable]
-    public abstract class ParameterProfile : Profile
+    public abstract class ParameterProfile : SectionProfile
     {
         #region Properties
 
@@ -94,6 +94,10 @@ namespace FreeBuild.Model
         public virtual void InvalidateCachedGeometry()
         {
             _Perimeter = null;
+            _Voids = null;
+            NotifyPropertyChanged("Perimeter");
+            NotifyPropertyChanged("Voids");
+            if (Section != null) Section.NotifyProfileChanged(this);
         }
 
         #endregion

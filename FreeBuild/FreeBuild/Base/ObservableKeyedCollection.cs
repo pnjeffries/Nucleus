@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,7 +38,10 @@ namespace FreeBuild.Base
     /// <typeparam name="TKey">The key type</typeparam>
     /// <typeparam name="TValue">The item type</typeparam>
     [Serializable]
-    public abstract class ObservableKeyedCollection<TKey, TItem> : KeyedCollection<TKey, TItem>, INotifyCollectionChanged
+    public abstract class ObservableKeyedCollection<TKey, TItem> : 
+        KeyedCollection<TKey, TItem>, 
+        INotifyCollectionChanged,
+        INotifyPropertyChanged
     {
         #region Events
 
@@ -48,9 +52,24 @@ namespace FreeBuild.Base
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         /// <summary>
+        /// Event raised when a property of this object is changed
+        /// </summary>
+        [field: NonSerialized]
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
         /// Boolean flag to temporarily suppress CollectionChanged event raising
         /// </summary>
         private bool _SuppressNotifyCollectionChanged = false;
+
+        /// <summary>
+        /// Raise a PropertyChanged event for the specified property name
+        /// </summary>
+        /// <param name="propertyName"></param>
+        protected void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         /// <summary>
         /// Raise an event
@@ -73,6 +92,7 @@ namespace FreeBuild.Base
             {
                 OnCollectionChanged();
                 RaiseEvent(CollectionChanged, args);
+                if (args.Action != NotifyCollectionChangedAction.Replace) NotifyPropertyChanged("Count");
             }
         }
 
@@ -85,6 +105,7 @@ namespace FreeBuild.Base
             {
                 OnCollectionChanged();
                 CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(action, item, oldItem, index));
+                if (action != NotifyCollectionChangedAction.Replace) NotifyPropertyChanged("Count");
             }
         }
 
@@ -97,6 +118,7 @@ namespace FreeBuild.Base
             {
                 OnCollectionChanged();
                 CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(action, item, index));
+                if (action != NotifyCollectionChangedAction.Replace) NotifyPropertyChanged("Count");
             }
         }
 
@@ -109,6 +131,7 @@ namespace FreeBuild.Base
             {
                 OnCollectionChanged();
                 CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(action, item));
+                if (action != NotifyCollectionChangedAction.Replace) NotifyPropertyChanged("Count");
             }
         }
 
@@ -121,6 +144,7 @@ namespace FreeBuild.Base
             {
                 OnCollectionChanged();
                 CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(action));
+                if (action != NotifyCollectionChangedAction.Replace) NotifyPropertyChanged("Count");
             }
         }
 
@@ -145,6 +169,7 @@ namespace FreeBuild.Base
                         handler(this, e);
                 }
             }
+            if (e.Action != NotifyCollectionChangedAction.Replace) NotifyPropertyChanged("Count");
         }
 
         #endregion

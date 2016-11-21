@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace Freebuild.WPF
+namespace Freebuild.WPF.Converters
 {
     /// <summary>
     /// Converter that returns true if a value is non-null, false if it is

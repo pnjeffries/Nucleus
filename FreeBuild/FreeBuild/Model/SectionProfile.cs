@@ -32,7 +32,7 @@ namespace FreeBuild.Model
     /// Base class for objects representing the profile of a SectionProperty.
     /// </summary>
     [Serializable]
-    public abstract class Profile : Unique
+    public abstract class SectionProfile : Unique, IOwned<SectionProperty>
     {
         #region Properties
 
@@ -129,6 +129,28 @@ namespace FreeBuild.Model
         {
             get { return _Offset; }
             set { _Offset = value;  NotifyPropertyChanged("Offset"); }
+        }
+
+        /// <summary>
+        /// Private backing field for Section property
+        /// </summary>
+        private SectionProperty _Section = null;
+
+        /// <summary>
+        /// The section to which this profile belongs
+        /// </summary>
+        public SectionProperty Section
+        {
+            get { return _Section; }
+            internal set { _Section = value; }
+        }
+
+        SectionProperty IOwned<SectionProperty>.Owner
+        {
+            get
+            {
+                return _Section;
+            }
         }
 
         #endregion

@@ -24,11 +24,17 @@ namespace FreeBuild.Tests
             //Doc tests:
             //Word_Tests.ReadDocTest();
 
+            TimeSpan ts1 = new TimeSpan();
+            TimeSpan ts2 = new TimeSpan();
+
             //Mesh tests:
             for (int i = 0; i < 10; i++)
             {
-                Mesh_Tests.DelaunayTest(5000);
+                ts1 += Mesh_Tests.DelaunayTest2(10000);
+                ts2 += Mesh_Tests.DelaunayTest(10000);
             }
+
+            Core.Print("Method 1: " + ts1 + "   Method 2: " + ts2);
 
             Console.Read();
         }
