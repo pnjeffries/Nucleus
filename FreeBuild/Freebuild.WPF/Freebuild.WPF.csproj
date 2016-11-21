@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\ExpanderHeaderWidthConverter.cs" />
+    <Compile Include="EnumBindingSourceExtension.cs" />
     <Compile Include="FBtoWPF.cs" />
     <Compile Include="Field Controls\CheckBoxFieldControl.xaml.cs">
       <DependentUpon>CheckBoxFieldControl.xaml</DependentUpon>
