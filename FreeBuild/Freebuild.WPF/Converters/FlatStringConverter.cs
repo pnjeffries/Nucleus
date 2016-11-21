@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace Freebuild.WPF
+namespace Freebuild.WPF.Converters
 {
     /// <summary>
     /// Converter that takes a list of strings and converts them into a single flat string separated by newline

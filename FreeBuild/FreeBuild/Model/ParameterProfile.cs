@@ -33,7 +33,7 @@ namespace FreeBuild.Model
     /// on them.
     /// </summary>
     [Serializable]
-    public abstract class ParameterProfile : Profile
+    public abstract class ParameterProfile : SectionProfile
     {
         #region Properties
 

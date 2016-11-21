@@ -32,7 +32,7 @@ namespace FreeBuild.Model
     /// Base class for objects representing the profile of a SectionProperty.
     /// </summary>
     [Serializable]
-    public abstract class Profile : Unique
+    public abstract class SectionProfile : Unique
     {
         #region Properties
 

@@ -65,6 +65,7 @@
     <Compile Include="Field Controls\LabelledControl.cs" />
     <Compile Include="AutoPropertiesPanel.cs" />
     <Compile Include="Converters\IsEqualConverter.cs" />
+    <Compile Include="ProfileCanvas.cs" />
     <Compile Include="PropertiesExpander.xaml.cs">
       <DependentUpon>PropertiesExpander.xaml</DependentUpon>
     </Compile>

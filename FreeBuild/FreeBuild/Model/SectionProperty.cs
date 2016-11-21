@@ -39,18 +39,34 @@ namespace FreeBuild.Model
         /// <summary>
         /// Private backing member variable for the Profile property
         /// </summary>
-        private Profile _Profile = null;
+        private SectionProfile _Profile = null;
 
         /// <summary>
         /// The description of the profile of this section property
         /// </summary>
-        public Profile Profile
+        public SectionProfile Profile
         {
             get { return _Profile; }
             set
             {
                 _Profile = value;
                 NotifyPropertyChanged("Profile");
+            }
+        }
+
+        /// <summary>
+        /// Private backing member variable for the Profiles property
+        /// </summary>
+        private SectionProfileCollection _Profiles;
+
+        /// <summary>
+        /// The collection of profiles which make up the 
+        /// </summary>
+        public SectionProfileCollection  Profiles
+        {
+            get
+            {
+                return new SectionProfileCollection(Profile);
             }
         }
 
@@ -67,7 +83,7 @@ namespace FreeBuild.Model
         /// Initialises a section property with the given profile
         /// </summary>
         /// <param name="profile"></param>
-        public SectionProperty(Profile profile)
+        public SectionProperty(SectionProfile profile)
         {
             Profile = profile;
         }
@@ -77,7 +93,7 @@ namespace FreeBuild.Model
         /// </summary>
         /// <param name="name"></param>
         /// <param name="profile"></param>
-        public SectionProperty(string name, Profile profile)
+        public SectionProperty(string name, SectionProfile profile)
         {
             Name = name;
             Profile = profile;

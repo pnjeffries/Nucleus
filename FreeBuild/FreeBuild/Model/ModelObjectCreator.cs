@@ -79,7 +79,7 @@ namespace FreeBuild.Model
         /// <param name="profile"></param>
         /// <param name="exInfo"></param>
         /// <returns></returns>
-        public SectionProperty SectionProperty(Profile profile, ExecutionInfo exInfo = null)
+        public SectionProperty SectionProperty(SectionProfile profile, ExecutionInfo exInfo = null)
         {
             SectionProperty result = new SectionProperty();
             result = (SectionProperty)Model.History.Update(exInfo, result);
