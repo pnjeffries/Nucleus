@@ -198,6 +198,15 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Constructor to fit a bounding box around an element
+        /// </summary>
+        /// <param name="elements"></param>
+        public BoundingBox(IEnumerable<IElement> elements)
+        {
+            Fit(elements);
+        }
+
+        /// <summary>
         /// Initialise a bounding box as a copy of another
         /// </summary>
         /// <param name="other"></param>
@@ -238,6 +247,10 @@ namespace FreeBuild.Geometry
             }
         }
 
+        /// <summary>
+        /// Fit this bounding box around a collection of vertices
+        /// </summary>
+        /// <param name="vertices"></param>
         public void Fit(IList<Vertex> vertices)
         {
             if (vertices.Count > 0)
@@ -258,8 +271,49 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Fit this bounding box around a collection of elements
+        /// </summary>
+        /// <param name="elements"></param>
+        public void Fit(IEnumerable<IElement> elements)
+        {
+            bool first = true;
+            foreach (IElement element in elements)
+            {
+                if (first)
+                {
+                    //Initialise to first element:
+                    Fit(element);
+                    first = false;
+                }
+                else
+                {
+                    //Scale to subsequent elements:
+                    Include(element);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Fit this bounding box around an element
+        /// </summary>
+        /// <param name="element"></param>
+        public void Fit(IElement element)
+        {
+            Fit(element.Geometry);
+        }
+
+        /// <summary>
+        /// Fit this bounding box around a shape
+        /// </summary>
+        /// <param name="shape"></param>
+        public void Fit(Shape shape)
+        {
+            if (shape != null) Fit(shape.Vertices);
+        }
+
+        /// <summary>
         /// Expand this bounding box to include the positions of the
-        /// specified set of pbjects
+        /// specified set of positional objects
         /// </summary>
         /// <param name="points"></param>
         public void Include(IEnumerable<IPosition> points)
@@ -268,6 +322,16 @@ namespace FreeBuild.Geometry
             {
                 Include(point.Position);
             }
+        }
+
+        /// <summary>
+        /// Expand this bounding box to include the positions of the 
+        /// specified set of elements
+        /// </summary>
+        /// <param name="elements"></param>
+        public void Include(IEnumerable<IElement> elements)
+        {
+            foreach (IElement element in elements) Include(element);
         }
 
         /// <summary>
@@ -321,9 +385,9 @@ namespace FreeBuild.Geometry
         /// Expand this bounding box to include the specified element
         /// </summary>
         /// <param name="element"></param>
-        public void Include(Element element)
+        public void Include(IElement element)
         {
-            Include(element.GetGeometry());
+            Include(element.Geometry);
         }
 
         /// <summary>
@@ -333,7 +397,7 @@ namespace FreeBuild.Geometry
         /// <param name="geometry"></param>
         public void Include(Shape geometry)
         {
-            if (geometry != null) Include(geometry.BoundingBox);
+            if (geometry != null) Include(geometry.Vertices);
         }
 
         /// <summary>

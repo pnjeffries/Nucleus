@@ -108,7 +108,7 @@ namespace FreeBuild.Model
         internal void NotifyProfileChanged(SectionProfile profile)
         {
             NotifyPropertyChanged("Profile");
-            NotifyPropertyChanged("Profile");
+            NotifyPropertyChanged("Profiles");
         }
 
         #endregion

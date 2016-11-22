@@ -189,6 +189,7 @@
     <Compile Include="Rendering\IRenderable.cs" />
     <Compile Include="Rendering\RenderingParameters.cs" />
     <Compile Include="Selection\LinearElementSelection.cs" />
+    <Compile Include="Selection\SectionPropertySelection.cs" />
     <Compile Include="Structural\Support.cs" />
     <Compile Include="UI\AutoUIAttribute.cs" />
     <Compile Include="Selection\SelectionViewModel.cs" />

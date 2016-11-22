@@ -163,10 +163,24 @@ namespace FreeBuild.Model
             }
         }
 
-        //public BoundingBox BoundingBox
-        //{
-           
-        //}
+        /// <summary>
+        /// Private backing field for BoundingBox property
+        /// </summary>
+        [NonSerialized]
+        private BoundingBox _BoundingBox = null;
+
+        /// <summary>
+        /// The bounding box of this model.  Calculated and cached as needed
+        /// based on element geometry.
+        /// </summary>
+        public BoundingBox BoundingBox
+        {
+            get
+            {
+                if (_BoundingBox == null) _BoundingBox = CalculateBoundingBox();
+                return _BoundingBox;
+            }
+        }
 
         [NonSerialized]
         private ModelObjectCreator _Create;
@@ -318,6 +332,21 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
+        /// Calculate and return the bounding box of this model.
+        /// This is called automatically and the result cached by the
+        /// BoundingBox property - so it is usually more efficient to
+        /// use that rather than calling this function.
+        /// </summary>
+        /// <returns></returns>
+        public BoundingBox CalculateBoundingBox()
+        {
+            BoundingBox box = Elements.BoundingBox();
+            if (box == null) box = new BoundingBox(0,0,0);
+            box.Expand(3);
+            return box;
+        }
+
+        /// <summary>
         /// Called immediately after deserialisation to re-register all objects
         /// </summary>
         /// <param name="context"></param>
@@ -336,6 +365,15 @@ namespace FreeBuild.Model
             }
         }
 
+        /// <summary>
+        /// Clear any volatile cached data that should be disposed when data within this model
+        /// is updated. 
+        /// </summary>
+        private void ClearCachedData()
+        {
+            _BoundingBox = null;
+        }
+
         #endregion
 
         #region Event Handlers
@@ -349,6 +387,7 @@ namespace FreeBuild.Model
                 {
                     Register((ModelObject)obj);
                     RaiseEvent(ObjectAdded, new ModelObjectAddedEventArgs((Unique)obj));
+                    ClearCachedData();
                 }
             }
         }
@@ -357,6 +396,7 @@ namespace FreeBuild.Model
         {
             //Bubble property changed events upwards:
             RaiseEvent(ObjectPropertyChanged, sender, e);
+            ClearCachedData();
         }
 
         #endregion

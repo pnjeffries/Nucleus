@@ -36,6 +36,16 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
+        /// Convert a FreeBuild bounding box to a RhinoCommon one
+        /// </summary>
+        /// <param name="box"></param>
+        /// <returns></returns>
+        public static RC.BoundingBox Convert(BoundingBox box)
+        {
+            return new RC.BoundingBox(box.MinX, box.MinY, box.MinZ, box.MaxX, box.MaxY, box.MaxZ);
+        }
+
+        /// <summary>
         /// Convert a FreeBuild plane to a RhinoCommon one
         /// </summary>
         /// <param name="plane"></param>
