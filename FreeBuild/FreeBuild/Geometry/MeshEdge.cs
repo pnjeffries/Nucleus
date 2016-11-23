@@ -25,6 +25,16 @@ namespace FreeBuild.Geometry
         /// </summary>
         public Vertex End { get; }
 
+        /// <summary>
+        /// Get the start point of this edge
+        /// </summary>
+        public Vector StartPoint { get { return Start.Position; } }
+
+        /// <summary>
+        /// Get the end point of this edge
+        /// </summary>
+        public Vector EndPoint { get { return End.Position; } }
+
         #endregion
 
         #region Constructor

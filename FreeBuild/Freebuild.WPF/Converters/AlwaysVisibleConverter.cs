@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Freebuild.WPF.Converters
+namespace FreeBuild.WPF.Converters
 {
     /// <summary>
     /// A converter that always returns Visibility.Visible.  Can used in conjection with fallbackvalue when

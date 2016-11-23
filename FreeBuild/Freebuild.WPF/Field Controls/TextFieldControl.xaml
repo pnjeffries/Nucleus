@@ -1,10 +1,10 @@
-﻿<local:FieldControl x:Class="Freebuild.WPF.TextFieldControl"
+﻿<local:FieldControl x:Class="FreeBuild.WPF.TextFieldControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Freebuild.WPF"
-             xmlns:converters="clr-namespace:Freebuild.WPF.Converters"
+             xmlns:local="clr-namespace:FreeBuild.WPF"
+             xmlns:converters="clr-namespace:FreeBuild.WPF.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="26" d:DesignWidth="300">
     <local:FieldControl.Resources>

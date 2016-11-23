@@ -8,7 +8,7 @@ using W = System.Windows;
 using Shapes = System.Windows.Shapes;
 using Media = System.Windows.Media;
 
-namespace Freebuild.WPF
+namespace FreeBuild.WPF
 {
     /// <summary>
     /// Helper class to convert FreeBuild objects to WPF shapes
@@ -96,6 +96,8 @@ namespace Freebuild.WPF
                 Vertex v = polyLine.Vertices[i];
                 result.Segments.Add(new Media.LineSegment(Convert(v.Position), true));
             }
+            if (polyLine.Closed && polyLine.Vertices.Count > 0)
+                result.Segments.Add(new Media.LineSegment(Convert(polyLine.Vertices[0].Position), true));
             return result;
         }
 

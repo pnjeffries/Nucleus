@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 namespace FreeBuild.Geometry
 {
     /// <summary>
-    /// An observable, keyed collection of shapes
+    /// A generic, observable, keyed collection of shapes
     /// </summary>
     /// <typeparam name="TShape"></typeparam>
     [Serializable]
@@ -36,4 +36,11 @@ namespace FreeBuild.Geometry
         where TShape : Shape
     {
     }
+
+    /// <summary>
+    /// An observable, keyed collection of geometry
+    /// </summary>
+    public class ShapeCollection : ShapeCollection<Shape>
+    { }
+
 }

@@ -86,6 +86,30 @@ namespace FreeBuild.Base
         }
 
         /// <summary>
+        /// Populate the properties of this object by copying them from equivalent public
+        /// fields on another object.  The properties to be copied must share names and types
+        /// in order to be successfully transferred.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="source"></param>
+        public static void CopyPropertiesFrom(this object target, object source)
+        {
+            Type targetType = target.GetType();
+            Type sourceType = source.GetType();
+            BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
+            PropertyInfo[] properties = targetType.GetProperties(flags);
+            foreach (PropertyInfo targetProperty in properties)
+            {
+                PropertyInfo sourceProperty = sourceType.GetProperty(targetProperty.Name, flags);
+                if (sourceProperty != null && targetProperty.PropertyType.IsAssignableFrom(sourceProperty.PropertyType))
+                {
+                    object value = sourceProperty.GetValue(source);
+                    targetProperty.SetValue(target, value);
+                }
+            }
+        }
+
+        /// <summary>
         /// Popualate the fields of this object by copying them from equivelent fields on 
         /// another object.  The fields to be copied must share names and types in order to
         /// be successfully transferred.
@@ -98,7 +122,7 @@ namespace FreeBuild.Base
         }
 
         /// <summary>
-        /// Populate the fields of this object by copying them from equivelent fields on 
+        /// Populate the fields of this object by copying them from equivalent fields on 
         /// another object.  The fields to be copied must share names and types in order to
         /// be successfully transferred.
         /// The CopyAttribute will be used to determine the correct behaviour when copying fields
@@ -112,11 +136,11 @@ namespace FreeBuild.Base
         {
             Type targetType = target.GetType();
             Type sourceType = source.GetType();
-            BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
-            FieldInfo[] fields = targetType.GetFields(flags);
+            BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
+            ICollection<FieldInfo> fields = targetType.GetAllFields(flags);
             foreach (FieldInfo targetField in fields)
             {
-                FieldInfo sourceField = sourceType.GetField(targetField.Name, flags);
+                FieldInfo sourceField = sourceType.GetBaseField(targetField.Name, flags);
                 if (sourceField != null && targetField.FieldType.IsAssignableFrom(sourceField.FieldType))
                 {
                     //Have found a matching property - check for copy behaviour attributes:

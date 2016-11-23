@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeBuild.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,8 @@ namespace FreeBuild.Tests
 
             //Doc tests:
             //Word_Tests.ReadDocTest();
+
+            Reflection_Tests.PrintFields(typeof(SymmetricIProfile));
 
             TimeSpan ts1 = new TimeSpan();
             TimeSpan ts2 = new TimeSpan();

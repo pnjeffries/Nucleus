@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace Freebuild.WPF
+namespace FreeBuild.WPF
 {
     /// <summary>
     /// Converter that returns whether or not the value is the same as the parameter

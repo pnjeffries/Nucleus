@@ -13,6 +13,27 @@ namespace FreeBuild.Geometry
     [Serializable]
     public class MeshFaceCollection : UniquesCollection<MeshFace>
     {
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public MeshFaceCollection() { }
+
+        /// <summary>
+        /// Initialise this collection with the specified set of faces
+        /// </summary>
+        /// <param name="faces"></param>
+        public MeshFaceCollection(IEnumerable<MeshFace> faces) : base()
+        {
+            foreach(MeshFace face in faces)
+            {
+                Add(face);
+            }
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -26,6 +47,20 @@ namespace FreeBuild.Geometry
             {
                 if (this[i].ContainsAnyVertex(vertices)) RemoveAt(i);
             }
+        }
+
+        /// <summary>
+        /// Extract the boundary curves of each mesh face in this collection
+        /// </summary>
+        /// <returns></returns>
+        public ShapeCollection ExtractFaceBoundaries()
+        {
+            ShapeCollection result = new Geometry.ShapeCollection();
+            foreach (MeshFace face in this)
+            {
+                result.Add(face.GetBoundary());
+            }
+            return result;
         }
 
         #endregion

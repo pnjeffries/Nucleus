@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Freebuild.WPF
+namespace FreeBuild.WPF
 {
     /// <summary>
     /// Base class for user controls with a label dependency property

@@ -7,8 +7,8 @@
     <ProjectGuid>{E2D93282-51BD-4317-8D13-363347065F8B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Freebuild.WPF</RootNamespace>
-    <AssemblyName>Freebuild.WPF</AssemblyName>
+    <RootNamespace>FreeBuild.WPF</RootNamespace>
+    <AssemblyName>FreeBuild.WPF</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -66,6 +66,7 @@
     <Compile Include="Field Controls\LabelledControl.cs" />
     <Compile Include="AutoPropertiesPanel.cs" />
     <Compile Include="Converters\IsEqualConverter.cs" />
+    <Compile Include="GeometryCanvas.cs" />
     <Compile Include="ProfileCanvas.cs" />
     <Compile Include="PropertiesExpander.xaml.cs">
       <DependentUpon>PropertiesExpander.xaml</DependentUpon>
@@ -81,6 +82,7 @@
     <Compile Include="Field Controls\VectorFieldControl.xaml.cs">
       <DependentUpon>VectorFieldControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SubTypeBindingSourceExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FreeBuild\FreeBuild.csproj">

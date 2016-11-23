@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using FB = FreeBuild.Geometry;
 
-namespace Freebuild.WPF
+namespace FreeBuild.WPF
 {
     /// <summary>
     /// Interaction logic for VectorFieldControl.xaml

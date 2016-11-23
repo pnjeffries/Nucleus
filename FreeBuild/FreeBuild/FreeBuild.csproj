@@ -56,6 +56,7 @@
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Extensions\IListExtensions.cs" />
     <Compile Include="Extensions\IntExtensionscs.cs" />
+    <Compile Include="Geometry\Cloud.cs" />
     <Compile Include="Geometry\Intersect.cs" />
     <Compile Include="Geometry\MeshEdge.cs" />
     <Compile Include="Geometry\PlanarSurface.cs" />
@@ -191,6 +192,7 @@
     <Compile Include="Rendering\IRenderable.cs" />
     <Compile Include="Rendering\RenderingParameters.cs" />
     <Compile Include="Selection\LinearElementSelection.cs" />
+    <Compile Include="Selection\SectionPropertySelection.cs" />
     <Compile Include="Structural\Support.cs" />
     <Compile Include="UI\AutoUIAttribute.cs" />
     <Compile Include="Selection\SelectionViewModel.cs" />

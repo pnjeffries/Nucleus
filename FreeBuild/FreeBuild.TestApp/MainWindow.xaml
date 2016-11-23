@@ -1,0 +1,47 @@
+﻿<Window x:Class="FreeBuild.TestApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FreeBuild.TestApp"
+        xmlns:fb="clr-namespace:FreeBuild.WPF;assembly=FreeBuild.WPF"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="480" Width="640">
+    <Grid>
+        <TabControl>
+            <TabItem Header="Delaunay">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Border BorderBrush="Black" BorderThickness="1" Background="White">
+                        <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
+                    <Viewbox>
+                        <fb:GeometryCanvas Name="DelaunayCanvas" Width="10" Height="10" CurveThickness="0.03" PointDiameter="0.1"
+                                           ></fb:GeometryCanvas>
+                    </Viewbox>
+                        </ScrollViewer>
+                    </Border>
+                    <Button Grid.Row="1" Click="DelaunayButton_Click">Generate Delaunay Triangulation</Button>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Voronoi">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Border BorderBrush="Black" BorderThickness="1" Background="White">
+                        <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
+                            <Viewbox>
+                                <fb:GeometryCanvas Name="VoronoiCanvas" Width="10" Height="10" CurveThickness="0.03" PointDiameter="0.1"></fb:GeometryCanvas>
+                            </Viewbox>
+                        </ScrollViewer>
+                    </Border>
+                    <Button Grid.Row="1" Click="VoronoiButton_Click">Generate Voronoi Diagram</Button>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

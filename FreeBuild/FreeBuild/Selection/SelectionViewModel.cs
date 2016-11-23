@@ -10,6 +10,9 @@ using System.ComponentModel;
 
 namespace FreeBuild.Selection
 {
+    /// <summary>
+    /// Abstract base class for ViewModel wrapper classes representing selections of unique objects
+    /// </summary>
     public abstract class SelectionViewModel : NotifyPropertyChangedBase
     {
         /// <summary>
@@ -31,14 +34,19 @@ namespace FreeBuild.Selection
         public abstract void Clear();
     }
 
-    public abstract class SelectionViewModel<T, U> : SelectionViewModel
-        where T : UniquesCollection<U>, new() where U : class, IUnique
+    /// <summary>
+    /// Abstract generic base class for ViewModel wrapper classes representing selections of unique objects
+    /// </summary>
+    /// <typeparam name="TCollection"></typeparam>
+    /// <typeparam name="TUnique"></typeparam>
+    public abstract class SelectionViewModel<TCollection, TUnique> : SelectionViewModel
+        where TCollection : UniquesCollection<TUnique>, new() where TUnique : class, IUnique
     {
 
         /// <summary>
         /// The collection of selected objects
         /// </summary>
-        public T Selection { get; } = new T();
+        public TCollection Selection { get; } = new TCollection();
 
         /// <summary>
         /// Constructor
@@ -52,7 +60,7 @@ namespace FreeBuild.Selection
         /// Add a new item to the selection
         /// </summary>
         /// <param name="item"></param>
-        public bool Add(U item)
+        public bool Add(TUnique item)
         {
             return Selection.TryAdd(item);
         }
@@ -64,9 +72,9 @@ namespace FreeBuild.Selection
         /// <returns></returns>
         public override bool Add(object item)
         {
-            if (item is U)
+            if (item is TUnique)
             {
-                return Add((U)item);
+                return Add((TUnique)item);
             }
             else return false;
         }
@@ -75,7 +83,7 @@ namespace FreeBuild.Selection
         /// Remove an item from the selection
         /// </summary>
         /// <param name="item"></param>
-        public bool Remove(U item)
+        public bool Remove(TUnique item)
         {
                return Selection.Remove(item);
         }
@@ -86,9 +94,9 @@ namespace FreeBuild.Selection
         /// <param name="item"></param>
         public override bool Remove(object item)
         {
-            if (item is U)
+            if (item is TUnique)
             {
-                return Remove((U)item);
+                return Remove((TUnique)item);
             }
             else return false;
         }
@@ -97,7 +105,7 @@ namespace FreeBuild.Selection
         /// Set the selection to the specified object
         /// </summary>
         /// <param name="item"></param>
-        public void Set(U item)
+        public void Set(TUnique item)
         {
             Clear();
             if (item != null) Add(item);
@@ -108,7 +116,7 @@ namespace FreeBuild.Selection
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public bool Contains(U item)
+        public bool Contains(TUnique item)
         {
             return Selection.Contains(item.GUID);
         }
@@ -147,7 +155,7 @@ namespace FreeBuild.Selection
         /// <param name="propertyDelegate">A lambda function that returns a particular property for each item in the selection</param>
         /// <param name="multiValue">The return value that indicates multiple inconsistent values</param>
         /// <returns></returns>
-        public object CombinedValue(Func<U, object> propertyDelegate, object multiValue)
+        public object CombinedValue(Func<TUnique, object> propertyDelegate, object multiValue)
         {
             return Selection.CombinedValue(propertyDelegate, multiValue);
         }
@@ -157,7 +165,7 @@ namespace FreeBuild.Selection
         /// </summary>
         /// <param name="propertyDelegate">A lambda function that returns a particular property for each item in the selection</param>
         /// <returns></returns>
-        public object CombinedValue(Func<U, object> propertyDelegate)
+        public object CombinedValue(Func<TUnique, object> propertyDelegate)
         {
             return CombinedValue(propertyDelegate, "[Multi]");
         }

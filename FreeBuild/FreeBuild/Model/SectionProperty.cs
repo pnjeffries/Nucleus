@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,7 +54,23 @@ namespace FreeBuild.Model
                 _Profile = value;
                 if (_Profile != null) _Profile.Section = this;
                 NotifyPropertyChanged("Profile");
+                NotifyPropertyChanged("ProfileType");
                 NotifyPropertyChanged("Profiles");
+            }
+        }
+
+        /// <summary>
+        /// Get or set the type of the assigned profile
+        /// </summary>
+        public Type ProfileType
+        {
+            get
+            {
+                return _Profile?.GetType();
+            }
+            set
+            {
+                ChangeProfieType(value);
             }
         }
 
@@ -108,7 +125,40 @@ namespace FreeBuild.Model
         internal void NotifyProfileChanged(SectionProfile profile)
         {
             NotifyPropertyChanged("Profile");
-            NotifyPropertyChanged("Profile");
+            NotifyPropertyChanged("Profiles");
+        }
+        
+        /// <summary>
+        /// Change the type of profile of this section, copying across as much data as possible
+        /// </summary>
+        /// <typeparam name="TProfile">The type of the new profile</typeparam>
+        /// <returns>The </returns>
+        public TProfile ChangeProfileType<TProfile>() where TProfile : SectionProfile, new()
+        {
+            SectionProfile oldProfile = Profile;
+            TProfile newProfile = new TProfile();
+            if (oldProfile != null) newProfile.CopyFieldsFrom(oldProfile);
+            newProfile.CatalogueName = null;
+            Profile = newProfile;
+            return newProfile;
+        }
+
+        /// <summary>
+        /// Change the type of profile of this section, copying across as much data as possible
+        /// </summary>
+        /// <param name="newType">The type of the new profile.  Must be a non-abstract subtype of SectionProfile</param>
+        /// <returns></returns>
+        public SectionProfile ChangeProfieType(Type newType)
+        {
+            SectionProfile oldProfile = Profile;
+            SectionProfile newProfile = Activator.CreateInstance(newType) as SectionProfile;
+            if (newProfile != null)
+            {
+                if (oldProfile != null) newProfile.CopyFieldsFrom(oldProfile);
+                newProfile.CatalogueName = null;
+                Profile = newProfile;
+            }
+            return newProfile;
         }
 
         #endregion

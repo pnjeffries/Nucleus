@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Freebuild.WPF
+namespace FreeBuild.WPF
 {
     /// <summary>
     /// Interaction logic for SidebarExpanderControl.xaml

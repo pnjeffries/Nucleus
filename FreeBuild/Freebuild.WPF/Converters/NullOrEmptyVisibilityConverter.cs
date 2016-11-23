@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Freebuild.WPF.Converters
+namespace FreeBuild.WPF.Converters
 {
     /// <summary>
     /// Converter class that returns Visibility.Collapsed if the input value is null or an empty string,

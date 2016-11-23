@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Markup;
 
-namespace Freebuild.WPF
+namespace FreeBuild.WPF
 {
     /// <summary>
     /// A markup extension to retrieve enum values.
@@ -63,7 +63,7 @@ namespace Freebuild.WPF
 
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
-            if (_EnumType == null) throw new InvalidOperationException("The EnumType is not specified.");
+            
 
             Type actualType = Nullable.GetUnderlyingType(_EnumType) ?? _EnumType;
             Array values = Enum.GetValues(actualType);

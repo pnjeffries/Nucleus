@@ -144,6 +144,20 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Get all edges of this face
+        /// </summary>
+        /// <returns></returns>
+        public MeshEdge[] GetEdges()
+        {
+            MeshEdge[] result = new MeshEdge[Count];
+            for (int i = 0; i < Count; i++)
+            {
+                result[i] = GetEdge(i);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Extract the position vectors of all vertices in this face to
         /// an array.
         /// </summary>

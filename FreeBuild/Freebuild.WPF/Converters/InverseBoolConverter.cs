@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace Freebuild.WPF.Converters
+namespace FreeBuild.WPF.Converters
 {
     /// <summary>
     /// Converter which will invert a boolean
