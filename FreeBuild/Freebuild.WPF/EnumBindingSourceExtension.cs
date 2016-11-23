@@ -63,7 +63,7 @@ namespace Freebuild.WPF
 
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
-            if (_EnumType == null) throw new InvalidOperationException("The EnumType is not specified.");
+            
 
             Type actualType = Nullable.GetUnderlyingType(_EnumType) ?? _EnumType;
             Array values = Enum.GetValues(actualType);

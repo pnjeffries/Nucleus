@@ -81,6 +81,7 @@
     <Compile Include="Field Controls\VectorFieldControl.xaml.cs">
       <DependentUpon>VectorFieldControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SubTypeBindingSourceExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FreeBuild\FreeBuild.csproj">

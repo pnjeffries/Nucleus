@@ -112,7 +112,7 @@ namespace FreeBuild.Base
         {
             Type targetType = target.GetType();
             Type sourceType = source.GetType();
-            BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
+            BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
             FieldInfo[] fields = targetType.GetFields(flags);
             foreach (FieldInfo targetField in fields)
             {

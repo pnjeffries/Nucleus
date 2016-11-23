@@ -34,11 +34,11 @@ namespace FreeBuild.Selection
             }
         }
 
-        /*public Type SectionType
+        /*public Type ProfileType
         {
             get
             {
-                if (Section != null) return Section.GetType();
+                if (Section != null) return Section.Profile.GetType();
                 return null;
             }
             set
@@ -52,9 +52,9 @@ namespace FreeBuild.Selection
                     Section = ReflectionHelper.ChangeType<SectionProfile>(original, value, design);
                 }
             }
-        }
+        }*/
 
-        public IList<Type> AvailableSectionTypes
+        /*public IList<Type> AvailableSectionTypes
         {
             get
             {

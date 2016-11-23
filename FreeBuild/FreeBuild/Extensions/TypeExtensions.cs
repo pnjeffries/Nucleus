@@ -162,5 +162,57 @@ namespace FreeBuild.Extensions
             }
             return result.Values.ToList<PropertyInfo>();
         }
+
+        /// <summary>
+        /// Get a list of all the non-abstract types that derive from this type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="allAssemblies">If true, all loaded assembles will be checked, else only the assembly the 
+        /// base type is defined in.</param>
+        /// <returns></returns>
+        public static IList<Type> GetSubTypes(this Type type, bool allAssemblies = true)
+        {
+            IList<Type> result = new List<Type>();
+            if (allAssemblies)
+            {
+                foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    foreach (Type subType in assembly.GetTypes())
+                    {
+                        if (subType.IsSubclassOf(type) && !subType.IsAbstract) result.Add(subType);
+                    }
+                }
+            }
+            else
+            {
+                Assembly assembly = type.Assembly;
+                foreach (Type subType in assembly.GetTypes())
+                {
+                    if (subType.IsSubclassOf(type) && !subType.IsAbstract) result.Add(subType);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Get all fields of this type, including those inherited from base classes
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="outFields"></param>
+        /// <param name="flags"></param>
+        public static void GetAllFields(this Type type, ICollection<FieldInfo> outFields, BindingFlags flags)
+        {
+            foreach (var field in type.GetFields(flags))
+            {
+                // Ignore inherited fields.
+                if (field.DeclaringType == type) //Necessary?
+                    outFields.Add(field);
+            }
+
+            var baseType = type.BaseType;
+            if (baseType != null)
+                baseType.GetAllFields(outFields, flags);
+        }
+
     }
 }
