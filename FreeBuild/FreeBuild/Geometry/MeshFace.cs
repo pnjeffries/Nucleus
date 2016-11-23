@@ -183,7 +183,7 @@ namespace FreeBuild.Geometry
             Vector midAB = A + AB * 0.5;
             Vector midBC = B + BC * 0.5;
 
-            Vector centre = Axis.IntersectXY(midAB, AB.PerpendicularXY(), midBC, BC.PerpendicularXY());
+            Vector centre = Intersect.LineLineXY(midAB, AB.PerpendicularXY(), midBC, BC.PerpendicularXY());
             return centre;
         }
 
@@ -245,7 +245,7 @@ namespace FreeBuild.Geometry
         /// in plan (i.e. in the XY plane).  This will essentially align this face 'upwards'
         /// </summary>
         /// <param name="aroundPt"></param>
-        public void SortVerticesCounterClockwise(Vector aroundPt)
+        public void SortVerticesAntiClockwise(Vector aroundPt)
         {
             this.Sort(
                 delegate (Vertex v1, Vertex v2)
@@ -261,7 +261,7 @@ namespace FreeBuild.Geometry
         /// </summary>
         public void SortVerticesCounterClockwise()
         {
-            SortVerticesCounterClockwise(XYCircumcentre);
+            SortVerticesAntiClockwise(XYCircumcentre);
         }
 
         #endregion

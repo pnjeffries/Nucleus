@@ -134,6 +134,8 @@ namespace FreeBuild.Geometry
 
         #endregion
 
+        #region Methods
+
         /// <summary>
         /// Evaluate a point on this curve defined by a parameter t
         /// </summary>
@@ -555,6 +557,16 @@ namespace FreeBuild.Geometry
             return IxxR + aR * yCR * yCR + IxxT + aT * yCT * yCT;
         }
 
-       
+        /// <summary>
+        /// Does this curve contain the specified point within it's bounds 
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public bool Contains(Vector point)
+        {
+
+        }
+
+        #endregion
     }
 }

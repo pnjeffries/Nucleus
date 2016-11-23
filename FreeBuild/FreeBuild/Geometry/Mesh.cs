@@ -161,7 +161,7 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Generate a set of mesh faces that represent a delaunay triangulation in the XY plane of the
         /// specified set of vertices.
-        /// Based on the algorithm described here: http://paulbourke.net/papers/triangulate/
+        /// Uses a Bowyer-Watson algorithm based on the one described here: http://paulbourke.net/papers/triangulate/
         /// </summary>
         /// <param name="vertices">The vertices to mesh between</param>
         /// <param name="faces">Optional.  The face collection to which to add the triangles.
@@ -275,10 +275,10 @@ namespace FreeBuild.Geometry
 
             //TODO: Deal with cells on the edge
 
-            //Sort cell vertices anticlockwise around centroid
-            foreach (MeshFace face in faces)
+            //Sort cell vertices anticlockwise around vertex
+            foreach (KeyValuePair<Vertex, MeshFace> kvp in cells)
             {
-                face.SortVerticesCounterClockwise();
+                kvp.Value.SortVerticesAntiClockwise(kvp.Key.Position);
             }
 
             return cells;

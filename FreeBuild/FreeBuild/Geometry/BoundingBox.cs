@@ -238,6 +238,10 @@ namespace FreeBuild.Geometry
             }
         }
 
+        /// <summary>
+        /// Fit this bounding box around a collection of vertices
+        /// </summary>
+        /// <param name="vertices"></param>
         public void Fit(IList<Vertex> vertices)
         {
             if (vertices.Count > 0)

@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,5 +69,30 @@ namespace FreeBuild.Geometry
             return thisIPos.Position.DistanceToSquared(other.Position);
         }
 
+        /// <summary>
+        /// Check for containment of a point within a polygon with these vertices on the XY plane
+        /// </summary>
+        /// <param name="point">The point to test for containment</param>
+        /// <returns>True if the point is inside (or on) the polygon, else false.</returns>
+        public static bool PolygonContainmentXY(this IList<IPosition> polygon, Vector point)
+        {
+            if (polygon.Count > 2)
+            {
+                int count = 0;
+                Vector lastPoint = polygon[0].Position;
+                for (int i = 1; i < polygon.Count; i++)
+                {
+                    Vector nextPoint = polygon[i].Position;
+                    if (Intersect.XHalfLineSegmentXYCheck(ref point, ref lastPoint, ref nextPoint))
+                        count++;
+                    lastPoint = nextPoint;
+                }
+                Vector startPoint = polygon[0].Position;
+                if (Intersect.XHalfLineSegmentXYCheck(ref point, ref lastPoint, ref startPoint))
+                    count++;
+                return count.IsOdd();
+            }
+            else return false;
+        }
     }
 }
