@@ -43,7 +43,19 @@ namespace FreeBuild.Selection
             get { return (SectionProperty)CombinedValue(i => i.Property, null); }
             set
             {
+                if (value != null && value is SectionPropertyDummy)
+                {
+                    SectionPropertyDummy dummy = (SectionPropertyDummy)value;
+                    if (dummy.Name.Equals("New..."))
+                    {
+                        SectionProperty newSection = Selection[0].Model?.Create.SectionProperty(null);
+                        value = newSection;
+                        NotifyPropertyChanged("AvailableSections");
+                    }
+                }
                 foreach (LinearElement lEl in Selection) lEl.Property = value;
+               
+                NotifyPropertyChanged("Property");
             }
         }
 
@@ -57,7 +69,9 @@ namespace FreeBuild.Selection
             {
                 if (Selection.Count > 0)
                 {
-                    return Selection[0].Model?.Properties.Sections;
+                    SectionPropertyCollection result = new SectionPropertyCollection(Selection[0].Model?.Properties.Sections);
+                    result.Add(new SectionPropertyDummy("New..."));
+                    return result;
                 }
                 else return null;
             }

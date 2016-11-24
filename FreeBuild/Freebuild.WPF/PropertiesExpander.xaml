@@ -35,9 +35,9 @@
                                                     Path=ActualWidth,
                                                     Converter={StaticResource ExpanderHeaderWidthConverter}}"
                                           Content="{Binding Path=HeaderContent, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"/>
-                        <Button Grid.Column="2">
+                        <!--<Button Grid.Column="2">
                             <Border Width="12" Height="12" BorderBrush="Black" BorderThickness="1" Margin="2"></Border>
-                        </Button>
+                        </Button>-->
                     </Grid>
                 </DockPanel>
             </Expander.Header>
