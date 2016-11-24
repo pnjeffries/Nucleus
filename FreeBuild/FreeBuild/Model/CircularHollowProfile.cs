@@ -26,7 +26,11 @@ namespace FreeBuild.Model
         public double WallThickness
         {
             get { return _WallThickness; }
-            set { _WallThickness = value;  NotifyPropertyChanged("WallThickness"); }
+            set {
+                _WallThickness = value;
+                InvalidateCachedGeometry();
+                NotifyPropertyChanged("WallThickness");
+            }
         }
 
         /// <summary>

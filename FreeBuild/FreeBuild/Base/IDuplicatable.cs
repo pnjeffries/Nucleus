@@ -100,11 +100,14 @@ namespace FreeBuild.Base
             PropertyInfo[] properties = targetType.GetProperties(flags);
             foreach (PropertyInfo targetProperty in properties)
             {
-                PropertyInfo sourceProperty = sourceType.GetProperty(targetProperty.Name, flags);
-                if (sourceProperty != null && targetProperty.PropertyType.IsAssignableFrom(sourceProperty.PropertyType))
+                if (targetProperty.CanWrite)
                 {
-                    object value = sourceProperty.GetValue(source);
-                    targetProperty.SetValue(target, value);
+                    PropertyInfo sourceProperty = sourceType.GetProperty(targetProperty.Name, flags);
+                    if (sourceProperty != null && sourceProperty.CanRead && targetProperty.PropertyType.IsAssignableFrom(sourceProperty.PropertyType))
+                    {
+                        object value = sourceProperty.GetValue(source);
+                        targetProperty.SetValue(target, value);
+                    }
                 }
             }
         }

@@ -244,7 +244,7 @@ namespace FreeBuild.Extensions
             {
                 var baseType = type.BaseType;
                 if (baseType != null)
-                    baseType.GetBaseField(name, flags);
+                    result = baseType.GetBaseField(name, flags);
             }
             return result;
         }

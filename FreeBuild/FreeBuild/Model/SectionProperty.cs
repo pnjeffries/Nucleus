@@ -154,7 +154,7 @@ namespace FreeBuild.Model
             SectionProfile newProfile = Activator.CreateInstance(newType) as SectionProfile;
             if (newProfile != null)
             {
-                if (oldProfile != null) newProfile.CopyFieldsFrom(oldProfile);
+                if (oldProfile != null) newProfile.CopyPropertiesFrom(oldProfile);
                 newProfile.CatalogueName = null;
                 Profile = newProfile;
             }

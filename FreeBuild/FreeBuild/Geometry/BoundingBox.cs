@@ -156,6 +156,11 @@ namespace FreeBuild.Geometry
         #region Constructor
 
         /// <summary>
+        /// Default constructor.  Initialises a bounding box of zero dimension at the origin.
+        /// </summary>
+        public BoundingBox() : this(0, 0, 0) { }
+
+        /// <summary>
         /// Initialise a bounding box to the specified set of minimum and maximum values
         /// </summary>
         /// <param name="minX"></param>
