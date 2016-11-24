@@ -77,7 +77,7 @@ namespace FreeBuild.Model
         public Material Material
         {
             get { return _Material; }
-            set { _Material = value;  NotifyPropertyChanged("Material"); }
+            set { _Material = value; NotifyPropertyChanged("Material"); }
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace FreeBuild.Model
         public HorizontalSetOut HorizontalSetOut
         {
             get { return _HorizontalSetOut; }
-            set { _HorizontalSetOut = value;  NotifyPropertyChanged("HorizontalSetOut"); }
+            set { _HorizontalSetOut = value; NotifyPropertyChanged("HorizontalSetOut"); }
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace FreeBuild.Model
         public VerticalSetOut VerticalSetOut
         {
             get { return _VerticalSetOut; }
-            set { _VerticalSetOut = value;  NotifyPropertyChanged("VerticalSetOut"); }
+            set { _VerticalSetOut = value; NotifyPropertyChanged("VerticalSetOut"); }
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace FreeBuild.Model
         public Vector Offset
         {
             get { return _Offset; }
-            set { _Offset = value;  NotifyPropertyChanged("Offset"); }
+            set { _Offset = value; NotifyPropertyChanged("Offset"); }
         }
 
         /// <summary>
@@ -152,6 +152,24 @@ namespace FreeBuild.Model
                 return _Section;
             }
         }
+
+        /// <summary>
+        /// Get the overall depth of this section profile.
+        /// This is a utility property common to all profile types
+        /// regardless of how their parameters are actually defined.
+        /// It gives the overall bounding dimension of the profile
+        /// (i.e. the depth between extreme points).
+        /// </summary>
+        public abstract double OverallDepth { get; }
+
+        /// <summary>
+        /// Get the overall width of this section profile.
+        /// This is a utility property common to all profile types
+        /// regardless of how their parameters are actually defined.
+        /// It gives the overall bounding dimension of the profile
+        /// (i.e. the width between extreme points).
+        /// </summary>
+        public abstract double OverallWidth { get; }
 
         #endregion
 

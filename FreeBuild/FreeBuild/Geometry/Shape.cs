@@ -140,6 +140,15 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Move this shape along the specified translation vector
+        /// </summary>
+        /// <param name="translation"></param>
+        public void Move(Vector translation)
+        {
+            Transform(new Transform(translation));
+        }
+
+        /// <summary>
         /// Apply the specified transformation to this shape
         /// </summary>
         public virtual void Transform(Transform transform)
