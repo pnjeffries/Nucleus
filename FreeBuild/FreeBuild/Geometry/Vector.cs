@@ -591,6 +591,36 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Add a value to the X component of this vector and return the result
+        /// </summary>
+        /// <param name="value">The value to be added to the X component</param>
+        /// <returns></returns>
+        public Vector AddX(double value)
+        {
+            return new Vector(X + value, Y, Z);
+        }
+
+        /// <summary>
+        /// Add a value to the Y component of this vector and return the result
+        /// </summary>
+        /// <param name="value">The value to be added to the Y component</param>
+        /// <returns></returns>
+        public Vector AddY(double value)
+        {
+            return new Vector(X, Y + value, Z);
+        }
+
+        /// <summary>
+        /// Add a value to the Z component of this vector and return the result
+        /// </summary>
+        /// <param name="value">The value to be added to the Z component</param>
+        /// <returns></returns>
+        public Vector AddZ(double value)
+        {
+            return new Vector(X, Y, Z + value);
+        }
+
+        /// <summary>
         /// Create a copy of this vector flattened to the XY plane
         /// </summary>
         /// <returns>A new vector with the same X and Y components as this one,
@@ -700,6 +730,33 @@ namespace FreeBuild.Geometry
         public double LargestComponent()
         {
             return Math.Max(X.Abs(), Math.Max(Y.Abs(), Z.Abs()));
+        }
+
+        /// <summary>
+        /// Get a Vector containing only the X component of this vector.
+        /// </summary>
+        /// <returns></returns>
+        public Vector XComponent()
+        {
+            return new Vector(X, 0, 0);
+        }
+
+        /// <summary>
+        /// Get a Vector containing only the Y component of this vector.
+        /// </summary>
+        /// <returns></returns>
+        public Vector YComponent()
+        {
+            return new Vector(0, Y, 0);
+        }
+
+        /// <summary>
+        /// Get a Vector containing only the Z component of this vector.
+        /// </summary>
+        /// <returns></returns>
+        public Vector ZComponent()
+        {
+            return new Vector(0, 0, Z);
         }
 
         #endregion

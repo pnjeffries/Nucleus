@@ -268,6 +268,16 @@ namespace FreeBuild.Geometry
             return result;
         }
 
+        public override Vector[] Facet(Angle tolerance)
+        {
+            var result = new List<Vector>();
+            foreach (Curve subCrv in SubCurves)
+            {
+                result.AddRange(subCrv.Facet(tolerance));
+            }
+            return result.ToArray();
+        }
+
         /// <summary>
         /// Add a new sub-curve to this PolyCurve.
         /// Note that to form a valid polycurve the new sub-curve *must*

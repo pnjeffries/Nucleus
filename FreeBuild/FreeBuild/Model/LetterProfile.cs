@@ -77,6 +77,24 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
+        /// Get the overall depth of this section profile.
+        /// This is a utility property common to all profile types
+        /// regardless of how their parameters are actually defined.
+        /// It gives the overall bounding dimension of the profile
+        /// (i.e. the depth between extreme points).
+        /// </summary>
+        public override double OverallDepth { get { return _Depth; } }
+
+        /// <summary>
+        /// Get the overall width of this section profile.
+        /// This is a utility property common to all profile types
+        /// regardless of how their parameters are actually defined.
+        /// It gives the overall bounding dimension of the profile
+        /// (i.e. the width between extreme points).
+        /// </summary>
+        public override double OverallWidth { get { return _Width; } }
+
+        /// <summary>
         /// Private backing field for FlangeThickness property
         /// </summary>
         private double _FlangeThickness;

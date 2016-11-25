@@ -294,6 +294,24 @@ namespace FreeBuild.Meshing
         }
 
         /// <summary>
+        /// Create faces out of points from the specified list, starting by joining the start points to the end points
+        /// and moving towards the middle of the list
+        /// </summary>
+        /// <param name="pointStrip"></param>
+        /// <param name="startOffset"></param>
+        public void FillStartToEndReverse(IList<Vector> pointStrip, int startOffset = 1)
+        {
+            for (int i = 0; i < pointStrip.Count / 2 - startOffset; i++)
+            {
+                Vector v1 = pointStrip[pointStrip.Count - 1 - i];
+                Vector v0 = pointStrip[i + startOffset];
+                Vector v3 = pointStrip[i + startOffset + 1];
+                Vector v2 = pointStrip[pointStrip.Count - 2 - i];
+                AddFace(v0, v1, v2, v3);
+            }
+        }
+
+        /// <summary>
         /// Create faces by filling between matching indices in two lists of points.
         /// </summary>
         /// <param name="pointStrip1">The first set of points</param>
@@ -357,8 +375,8 @@ namespace FreeBuild.Meshing
                         Vector[] pointStrip = perimeter.Facet(tolerance);
                         Vector[] startPts = frames[0].LocalToGlobal(pointStrip.RemapZnegXY());
                         FillStartToEnd(startPts,2);
-                        Vector[] endPts = frames.Last().LocalToGlobal(pointStrip.RemapZXY());
-                        FillStartToEnd(endPts,2);
+                        Vector[] endPts = frames.Last().LocalToGlobal(pointStrip.RemapZnegXY());
+                        FillStartToEndReverse(endPts,2);
                         //TODO: Implement other capping methods
                     }
                 }

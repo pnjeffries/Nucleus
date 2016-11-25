@@ -156,6 +156,18 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Duplication constructor, moving the origin of the coordinat system to a new position
+        /// </summary>
+        /// <param name="other"></param>
+        /// <param name="origin"></param>
+        public CylindricalCoordinateSystem(CylindricalCoordinateSystem other, Vector origin)
+        {
+            Origin = origin;
+            L = other.L;
+            A = other.A;
+        }
+
+        /// <summary>
         /// Constructor specifying all axes as a single vector array containing
         /// Origin, L, A in that order.
         /// Allows data to be populated via a static function in a subclass constructor.

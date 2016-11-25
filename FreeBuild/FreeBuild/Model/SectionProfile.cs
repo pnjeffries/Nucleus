@@ -94,7 +94,12 @@ namespace FreeBuild.Model
         public HorizontalSetOut HorizontalSetOut
         {
             get { return _HorizontalSetOut; }
-            set { _HorizontalSetOut = value; NotifyPropertyChanged("HorizontalSetOut"); }
+            set
+            {
+                _HorizontalSetOut = value;
+                InvalidateCachedGeometry();
+                NotifyPropertyChanged("HorizontalSetOut");
+            }
         }
 
         /// <summary>
@@ -111,7 +116,12 @@ namespace FreeBuild.Model
         public VerticalSetOut VerticalSetOut
         {
             get { return _VerticalSetOut; }
-            set { _VerticalSetOut = value; NotifyPropertyChanged("VerticalSetOut"); }
+            set
+            {
+                _VerticalSetOut = value;
+                InvalidateCachedGeometry();
+                NotifyPropertyChanged("VerticalSetOut");
+            }
         }
 
         /// <summary>
@@ -128,7 +138,12 @@ namespace FreeBuild.Model
         public Vector Offset
         {
             get { return _Offset; }
-            set { _Offset = value; NotifyPropertyChanged("Offset"); }
+            set
+            {
+                _Offset = value;
+                InvalidateCachedGeometry();
+                NotifyPropertyChanged("Offset");
+            }
         }
 
         /// <summary>
@@ -157,7 +172,7 @@ namespace FreeBuild.Model
         /// Get the overall depth of this section profile.
         /// This is a utility property common to all profile types
         /// regardless of how their parameters are actually defined.
-        /// It gives the overall bounding dimension of the profile
+        /// It gives the overall bounding dimension of the 
         /// (i.e. the depth between extreme points).
         /// </summary>
         public abstract double OverallDepth { get; }
@@ -196,6 +211,13 @@ namespace FreeBuild.Model
         {
             SetOut(horizontal, vertical);
             Offset = offset;
+        }
+
+        /// <summary>
+        /// Invalidate the stored generated geometry 
+        /// </summary>
+        public virtual void InvalidateCachedGeometry()
+        {
         }
 
         public void CalculateGeometricProperties()

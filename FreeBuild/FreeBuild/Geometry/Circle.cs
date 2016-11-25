@@ -83,7 +83,7 @@ namespace FreeBuild.Geometry
 
         /// <summary>
         /// Radius, coordinatesystem constructor.
-        /// Creates a disk lying on the reference plane and centred on the origin
+        /// Creates a circle lying on the reference plane and centred on the origin
         /// of the specified coordinate system.
         /// </summary>
         /// <param name="radius">The radius of the circle</param>
@@ -92,6 +92,35 @@ namespace FreeBuild.Geometry
         {
             Radius = radius;
         }
+
+        /// <summary>
+        /// Radius, coordinatesystem, origin constructor.
+        /// Creates a circle orientated to the given coordinate system but with a new origin
+        /// </summary>
+        /// <param name="radius">The radius of the circle</param>
+        /// <param name="cSystem">The coordinate system on which the circle will be placed</param>
+        public Circle(double radius, CylindricalCoordinateSystem cSystem, Vector origin) : base(cSystem, origin)
+        {
+            Radius = radius;
+        }
+
+        /// <summary>
+        /// Duplication constructor.
+        /// Create a copy of the other circle.
+        /// </summary>
+        /// <param name="other"></param>
+        public Circle(Circle other) : this(other.Radius,other)
+        {
+
+        }
+
+        /// <summary>
+        /// Dupication constructor.
+        /// Create a copy of the other circle, moving its centroid to the specified point
+        /// </summary>
+        /// <param name="other"></param>
+        /// <param name="origin"></param>
+        public Circle(Circle other, Vector origin) : this(other.Radius, other, origin) { }
 
         /// <summary>
         /// Create a Disk of the specified radius about the specified centrepoint.
@@ -302,6 +331,16 @@ namespace FreeBuild.Geometry
         public Plane Plane()
         {
             return new Plane(Origin, L);
+        }
+
+        /// <summary>
+        /// Create a copy of this circle, moved along the specified translation vector
+        /// </summary>
+        /// <param name="translation"></param>
+        /// <returns></returns>
+        public Circle Move(Vector translation)
+        {
+            return new Circle(this, Origin + translation);
         }
 
         #endregion

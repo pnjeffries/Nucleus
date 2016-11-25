@@ -49,7 +49,7 @@ namespace FreeBuild.Model
         {
             get
             {
-                if (_Perimeter == null) _Perimeter = GeneratePerimeter();
+                if (_Perimeter == null) GenerateGeometry();
                 return _Perimeter;
             }
         }
@@ -67,7 +67,7 @@ namespace FreeBuild.Model
         {
             get
             {
-                if (_Voids == null) _Voids = GenerateVoids();
+                if (_Voids == null) GenerateGeometry();
                 return _Voids;
             }
         }
@@ -89,9 +89,46 @@ namespace FreeBuild.Model
         protected abstract CurveCollection GenerateVoids();
 
         /// <summary>
+        /// Update the stored geometry properties of this profile
+        /// </summary>
+        public void GenerateGeometry()
+        {
+            //Generate initial geometry:
+            _Perimeter = GeneratePerimeter();
+            _Voids = GenerateVoids();
+            if (_Perimeter != null)
+            {
+                Vector centroid;
+                _Perimeter.CalculateEnclosedArea(out centroid, _Voids);
+                Vector offset = Offset;
+
+                if (VerticalSetOut == VerticalSetOut.Centroid)
+                    offset = offset.AddY(-centroid.Y);
+                else if (VerticalSetOut == VerticalSetOut.Bottom)
+                    offset = offset.AddY(OverallDepth / 2);
+                else if (VerticalSetOut == VerticalSetOut.Top)
+                    offset = offset.AddY(-OverallDepth / 2);
+
+                if (HorizontalSetOut == HorizontalSetOut.Centroid)
+                    offset = offset.AddX(-centroid.X);
+                else if (HorizontalSetOut == HorizontalSetOut.Left)
+                    offset = offset.AddX(OverallWidth / 2);
+                else if (HorizontalSetOut == HorizontalSetOut.Right)
+                    offset = offset.AddX(-OverallWidth / 2);
+
+                _Perimeter.Move(offset);
+                foreach (Curve voidCrv in _Voids)
+                {
+                    voidCrv.Move(offset);
+                }
+            }
+           
+        }
+
+        /// <summary>
         /// Invalidate the stored generated geometry 
         /// </summary>
-        public virtual void InvalidateCachedGeometry()
+        public override void InvalidateCachedGeometry()
         {
             _Perimeter = null;
             _Voids = null;

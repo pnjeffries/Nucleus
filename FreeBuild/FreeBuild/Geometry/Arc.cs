@@ -256,8 +256,18 @@ namespace FreeBuild.Geometry
 
         protected override void InvalidateCachedGeometry()
         {
-            _Circle = null;
+            if (!Closed) _Circle = null;
+            else
+            {
+                //TODO; Update circle!
+            }
             base.InvalidateCachedGeometry();
+        }
+
+        public override void Move(Vector translation)
+        {
+            base.Move(translation);
+            if (_Circle != null) _Circle = _Circle.Move(translation);
         }
 
         public override Vector[] Facet(Angle tolerance)
@@ -372,6 +382,8 @@ namespace FreeBuild.Geometry
             }
             else return null;
         }
+
+
 
         #endregion
     }
