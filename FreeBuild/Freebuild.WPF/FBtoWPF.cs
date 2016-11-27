@@ -35,9 +35,9 @@ namespace FreeBuild.WPF
             if(line == null) return null;
             Shapes.Line result = new Shapes.Line();
             result.X1 = line.StartPoint.X;
-            result.Y1 = line.StartPoint.Y;
+            result.Y1 = -line.StartPoint.Y;
             result.X2 = line.EndPoint.X;
-            result.Y2 = line.EndPoint.Y;
+            result.Y2 = -line.EndPoint.Y;
             return result;
         }
 

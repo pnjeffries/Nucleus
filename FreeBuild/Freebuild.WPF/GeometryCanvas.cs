@@ -119,7 +119,7 @@ namespace FreeBuild.WPF
                             ellipse.Height = diameter;
                             ellipse.Fill = PointBrush;
                             Canvas.SetLeft(ellipse, v.X - diameter / 2);
-                            Canvas.SetTop(ellipse, v.Y - diameter / 2);
+                            Canvas.SetTop(ellipse, -v.Y - diameter / 2);
 
                             Children.Add(ellipse);
                         }

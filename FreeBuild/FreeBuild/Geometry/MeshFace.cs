@@ -273,7 +273,7 @@ namespace FreeBuild.Geometry
         /// of the first three vertices of the face in the XY plane.  This will essentially
         /// align this face 'upwards'.
         /// </summary>
-        public void SortVerticesCounterClockwise()
+        public void SortVerticesAntiClockwise()
         {
             SortVerticesAntiClockwise(XYCircumcentre);
         }
