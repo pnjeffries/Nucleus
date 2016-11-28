@@ -210,6 +210,20 @@ namespace FreeBuild.Extensions
             return thisString.Equals(other, StringComparison.InvariantCultureIgnoreCase);
         }
 
+        /// <summary>
+        /// Count the number of non-null-or-whitespace entries in this array of strings
+        /// </summary>
+        /// <param name="strings"></param>
+        /// <returns></returns>
+        public static int NonEmptyCount(this IEnumerable<string> strings)
+        {
+            int count = 0;
+            foreach (string value in strings)
+            {
+                if (!string.IsNullOrWhiteSpace(value)) count++;
+            }
+            return count;
+        }
 
     }
 }

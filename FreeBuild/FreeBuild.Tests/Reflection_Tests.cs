@@ -19,5 +19,15 @@ namespace FreeBuild.Tests
                 Core.Print(field.Name);
             }
         }
+
+        public static void PrintProperties(Type type)
+        {
+            BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
+            IEnumerable<PropertyInfo> fields = type.GetProperties(flags);
+            foreach (PropertyInfo field in fields)
+            {
+                Core.Print(field.Name);
+            }
+        }
     }
 }

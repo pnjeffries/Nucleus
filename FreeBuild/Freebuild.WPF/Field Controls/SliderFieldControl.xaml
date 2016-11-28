@@ -17,7 +17,7 @@
     </local:FieldControl.Resources>
     <Grid Name="LayoutRoot">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <Grid>

@@ -25,9 +25,10 @@ namespace FreeBuild.Tests
             //Doc tests:
             //Word_Tests.ReadDocTest();
 
-            Reflection_Tests.PrintFields(typeof(SymmetricIProfile));
+            //Reflection_Tests.PrintFields(typeof(SymmetricIProfile));
+            Reflection_Tests.PrintProperties(typeof(SymmetricIProfile));
 
-            TimeSpan ts1 = new TimeSpan();
+            /*TimeSpan ts1 = new TimeSpan();
             TimeSpan ts2 = new TimeSpan();
 
             //Mesh tests:
@@ -37,7 +38,7 @@ namespace FreeBuild.Tests
                 ts2 += Mesh_Tests.DelaunayTest(10000);
             }
 
-            Core.Print("Method 1: " + ts1 + "   Method 2: " + ts2);
+            Core.Print("Method 1: " + ts1 + "   Method 2: " + ts2);*/
 
             Console.Read();
         }

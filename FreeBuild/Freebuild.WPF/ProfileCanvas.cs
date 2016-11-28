@@ -121,7 +121,7 @@ namespace FreeBuild.WPF
                 setOutPt.Height = setOutPt.Width;
                 SetLeft(setOutPt, -setOutPt.Width / 2);
                 SetTop(setOutPt, -setOutPt.Height / 2);
-                setOutPt.Fill = Brushes.Red;
+                setOutPt.Fill = Brushes.OrangeRed;
                 Children.Add(setOutPt);
             }
             Width = bBox.SizeX;

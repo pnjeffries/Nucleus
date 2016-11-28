@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:FreeBuild.WPF"
              xmlns:converters="clr-namespace:FreeBuild.WPF.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="100" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:ExpanderHeaderWidthConverter x:Key="ExpanderHeaderWidthConverter"/>
@@ -15,7 +15,8 @@
     <Grid Name="LayoutRoot">
         <Expander>
             <Expander.Header>
-                <DockPanel HorizontalAlignment="{Binding HorizontalAlignment, 
+                <DockPanel
+                    HorizontalAlignment="{Binding HorizontalAlignment, 
                             RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWayToSource}">
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
@@ -24,7 +25,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Image Source="{Binding Path=HeaderIcon, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" 
-                               Width="16" Height="16"></Image>
+                               MaxWidth="16" MaxHeight="16"></Image>
                         <ContentPresenter Grid.Column="1" 
                                           HorizontalAlignment="Left"
                                           VerticalAlignment="Center"
@@ -41,7 +42,10 @@
                     </Grid>
                 </DockPanel>
             </Expander.Header>
-            <ContentPresenter Content="{Binding Path=BodyContent, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:PropertiesExpander}}}"></ContentPresenter>
+            <ContentPresenter Content="{Binding Path=BodyContent, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:PropertiesExpander}}}"
+                              >
+                
+            </ContentPresenter>
         </Expander>
     </Grid>
 </UserControl>

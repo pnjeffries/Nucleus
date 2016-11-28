@@ -51,10 +51,11 @@ namespace FreeBuild.Model
             set
             {
                 if (_Profile != null) _Profile.Section = null;
+                SectionProfile oldProfile = _Profile;
                 _Profile = value;
                 if (_Profile != null) _Profile.Section = this;
                 NotifyPropertyChanged("Profile");
-                NotifyPropertyChanged("ProfileType");
+                if (oldProfile?.GetType() != _Profile?.GetType()) NotifyPropertyChanged("ProfileType");
                 NotifyPropertyChanged("Profiles");
             }
         }

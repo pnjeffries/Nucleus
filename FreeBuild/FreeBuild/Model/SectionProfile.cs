@@ -218,6 +218,7 @@ namespace FreeBuild.Model
         /// </summary>
         public virtual void InvalidateCachedGeometry()
         {
+
         }
 
         public void CalculateGeometricProperties()

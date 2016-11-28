@@ -44,6 +44,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\CountVisibilityConverter.cs" />
     <Compile Include="Converters\ExpanderHeaderWidthConverter.cs" />
     <Compile Include="EnumBindingSourceExtension.cs" />
     <Compile Include="FBtoWPF.cs" />
