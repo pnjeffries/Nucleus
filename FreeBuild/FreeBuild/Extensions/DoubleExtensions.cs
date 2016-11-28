@@ -18,7 +18,7 @@ namespace FreeBuild.Extensions
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static double Sign(this double value)
+        public static int Sign(this double value)
         {
             if (value >= 0) return 1;
             else return -1;

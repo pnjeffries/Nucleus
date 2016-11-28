@@ -74,7 +74,7 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="point">The point to test for containment</param>
         /// <returns>True if the point is inside (or on) the polygon, else false.</returns>
-        public static bool PolygonContainmentXY(this IList<IPosition> polygon, Vector point)
+        public static bool PolygonContainmentXY<T>(this IList<T> polygon, Vector point) where T:IPosition
         {
             if (polygon.Count > 2)
             {
@@ -83,12 +83,12 @@ namespace FreeBuild.Geometry
                 for (int i = 1; i < polygon.Count; i++)
                 {
                     Vector nextPoint = polygon[i].Position;
-                    if (Intersect.XHalfLineSegmentXYCheck(ref point, ref lastPoint, ref nextPoint))
+                    if (Intersect.XRayLineSegmentXYCheck(ref point, ref lastPoint, ref nextPoint))
                         count++;
                     lastPoint = nextPoint;
                 }
                 Vector startPoint = polygon[0].Position;
-                if (Intersect.XHalfLineSegmentXYCheck(ref point, ref lastPoint, ref startPoint))
+                if (Intersect.XRayLineSegmentXYCheck(ref point, ref lastPoint, ref startPoint))
                     count++;
                 return count.IsOdd();
             }

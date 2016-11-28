@@ -172,6 +172,7 @@
     <Compile Include="Model\SectionProperty.cs" />
     <Compile Include="Model\SectionPropertyCollection.cs" />
     <Compile Include="Model\SymmetricIProfile.cs" />
+    <Compile Include="Model\TProfile.cs" />
     <Compile Include="Model\VertexDataStore.cs" />
     <Compile Include="Model\VerticalSetOut.cs" />
     <Compile Include="Model\VolumetricProperty.cs" />

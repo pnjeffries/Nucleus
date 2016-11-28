@@ -29,7 +29,7 @@ namespace FreeBuild.TestApp
         private void DelaunayButton_Click(object sender, RoutedEventArgs e)
         {
             Random rng = new Random();
-            BoundingBox box = new BoundingBox(0, 10, 0, 10, 0, 10);
+            BoundingBox box = new BoundingBox(0, 10, -10, 0, 0, 0);
 
             int size = 200;
             Geometry.Vector[] points = box.RandomPointsInside(rng, size);
@@ -45,7 +45,7 @@ namespace FreeBuild.TestApp
         private void VoronoiButton_Click(object sender, RoutedEventArgs e)
         {
             Random rng = new Random();
-            BoundingBox box = new BoundingBox(0, 10, 0, 10, 0, 10);
+            BoundingBox box = new BoundingBox(0, 10, -10, 0, 0, 0);
 
             int size = 200;
             Geometry.Vector[] points = box.RandomPointsInside(rng, size);

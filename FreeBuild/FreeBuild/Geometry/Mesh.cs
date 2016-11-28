@@ -109,10 +109,11 @@ namespace FreeBuild.Geometry
             if (bounds == null) bounds = new BoundingBox(vertexList);
             else bounds = new BoundingBox(bounds);
 
+            bounds.Scale(5); //Provide a little wriggle room!
+
             // Meshing starts with one 'super triangle' that encloses all vertices.
             // This will be removed at the end
             MeshFace superTriangle = DelaunayTriangle.GenerateSuperTriangleXY(bounds);
-                //vertices.BoundingBox());
             faces.Add(superTriangle);
 
             // Include each vertex in the meshing one at a time
