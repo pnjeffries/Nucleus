@@ -59,6 +59,64 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Find the intersection point, if one exists, for two infinite lines on the XY plane.
+        /// For 3D, use the Axis class and ClosestPoint function instead.
+        /// This version also provides the parameters on the two lines - i.e. the multiplication factor necessary
+        /// to apply to the line direction vector to get to the intersection point from the line origin.
+        /// </summary>
+        /// <param name="pt0">The origin point of the first line</param>
+        /// <param name="v0">The direction of the first line</param>
+        /// <param name="pt1">The origin point of the second line</param>
+        /// <param name="v1">The direction of the second line</param>
+        /// <param name="t0">The parameter on the first line</param>
+        /// <param name="t1">The parameter on the second line</param>
+        /// <returns>The XY intersection point, if one exists.  Else (the lines are null or parallel) Vector.Unset</returns>
+        public static Vector LineLineXY(Vector pt0, Vector v0, Vector pt1, Vector v1, ref double t0, ref double t1)
+        {
+            if (v0.X == 0)
+            {
+                if (v1.X == 0) return Vector.Unset;
+                else
+                {
+                    double m2 = v1.Y / v1.X;
+                    double c2 = pt1.Y - m2 * pt1.X;
+                    double x = pt0.X;
+                    double y = m2 * x + c2;
+                    t0 = (y - pt0.Y) / v0.Y;
+                    t1 = (x - pt1.X) / v1.X;
+                    return new Vector(x,y,pt0.Z);
+                }
+            }
+            else if (v1.X == 0)
+            {
+                double m1 = v0.Y / v0.X;
+                double c1 = pt0.Y - m1 * pt0.X;
+                double x = pt1.X;
+                double y = m1 * x + c1;
+                t0 = (x - pt0.X) / v0.X;
+                t1 = (y - pt1.Y) / v1.Y;
+                return new Vector(x, y, pt0.Z);
+            }
+            else
+            {
+                double m1 = v0.Y / v0.X;
+                double c1 = pt0.Y - m1 * pt0.X;
+                double m2 = v1.Y / v1.X;
+                double c2 = pt1.Y - m2 * pt1.X;
+
+                if (m1 - m2 == 0) return Vector.Unset;
+                else
+                {
+                    double x = (c2 - c1) / (m1 - m2);
+                    double y = m1 * x + c1;
+                    t0 = (x - pt0.X) / v0.X;
+                    t1 = (x - pt1.X) / v1.X;
+                    return new Vector(x, y, pt0.Z);
+                }
+            }
+        }
+
+        /// <summary>
         /// Find the intersection point between a ray half-line and a line segment on the XY plane, if one exists
         /// </summary>
         /// <param name="rayStart">The ray start point</param>
@@ -137,7 +195,7 @@ namespace FreeBuild.Geometry
                 // ray start is to the right or left
                 else if (((segStart.Y >= rayStart.Y && segEnd.Y < rayStart.Y)
                 || (segStart.Y < rayStart.Y && segEnd.Y >= rayStart.Y))
-                && (segStart.X + (segEnd.X - segStart.X) * ((rayStart.Y - segStart.Y) / (segEnd.Y - segStart.Y)) < rayStart.X))
+                && (segStart.X + (segEnd.X - segStart.X) * ((rayStart.Y - segStart.Y) / (segEnd.Y - segStart.Y)) > rayStart.X))
                 {
                     return true;
                 }
@@ -147,7 +205,7 @@ namespace FreeBuild.Geometry
             {
                 if (((segStart.Y >= rayStart.Y && segEnd.Y < rayStart.Y)
                 || (segStart.Y < rayStart.Y && segEnd.Y >= rayStart.Y))
-                && (segStart.X + (segEnd.X - segStart.X) * ((rayStart.Y - segStart.Y) / (segEnd.Y - segStart.Y)) < rayStart.X))
+                && (segStart.X + (segEnd.X - segStart.X) * ((rayStart.Y - segStart.Y) / (segEnd.Y - segStart.Y)) > rayStart.X))
                 {
                     return true;
                 }
@@ -163,47 +221,237 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
-        /// Find the overlapping region between two polygons, represented as sets of vertices
+        /// Find the overlapping region(s) between two polygons, represented as sets of vertices.
+        /// Uses an algorithm similar to that presented in Efficient Clipping of Arbitrary Polygons
+        /// by Gunter Greiner and Kai Hormann: http://davis.wpi.edu/~matt/courses/clipping/.
+        /// The returned polygons will be composed of the vertices of the previous polygons plus additional
+        /// ones at the intersection points.  Note that you may need to create copies of these if the
+        /// pre-existing vertices already form part of a separate geometry object.
         /// </summary>
-        /// <param name="polygonA"></param>
-        /// <param name="polygonB"></param>
+        /// <param name="polygonA">The set of vertices representing the first polygon</param>
+        /// <param name="polygonB">The set of vertices representing the second polygon</param>
+        /// <param name="allVertices">Optional.  The collection of vertices, to which any vertices created during this process should be added</param>
         /// <returns></returns>
-        public static IList<TPolygon> PolygonOverlapXY<TPolygon>(IList<Vertex> polygonA, IList<Vertex> polygonB) where TPolygon: class, IList<Vertex>, new()
+        public static IList<TPolygon> PolygonOverlapXY<TPolygon>(IList<Vertex> polygonA, IList<Vertex> polygonB, IList<Vertex> allVertices = null)
+            where TPolygon: class, IList<Vertex>, new()
         {
-            TPolygon current = null;
-            bool previousInside = false;
-            for (int i = 0; i <= polygonA.Count; i++) //Iterate through the vertices of polygon A
-            {
-                Vertex vA1 = polygonA.GetWrapped(i);
-                bool inside = polygonB.PolygonContainmentXY(vA1.Position); //Check whether this polygon lies inside polygonB
-                if (inside != previousInside && i > 0)
-                {
-                    //Boundaries cross - find intersection:
-                    Vertex vA0 = polygonA[i - 1];
-                    Vector startA = vA0.Position;
-                    Vector endA = vA1.Position;
-                    for (int j = 0; j <= polygonB.Count; j++)
-                    {
-                        Vector startB = polygonB[j].Position;
-                        Vector endB = polygonB.GetWrapped(j + 1).Position;
-                        Vector intersection = LineSegmentsXY(ref startA, ref endA, ref startB, ref endB);
-                        if (intersection.IsValid()) //Intersection exists!
-                        {
-                            Vertex newVertex = new Vertex(intersection);
-                            
 
-                            break; //Don't need to check anymore??? - What if it crosses the same line twice?
+            List<TPolygon> result = null;
+
+            if (polygonA.Count > 0 && polygonB.Count > 0)
+            {
+                // Build sorted lists of intersections between A and B:
+
+                var intersectionsA = new SortedList<double, LineLineIntersection>();
+                var intersectionsB = new SortedList<double, LineLineIntersection>();
+
+                bool inside = polygonB.PolygonContainmentXY(polygonA[0].Position);
+
+                for (int i = 0; i < polygonA.Count; i++) // Loop through A's edges
+                {
+                    Vertex vA0 = polygonA[i];
+                    Vertex vA1 = polygonA.GetWrapped(i + 1);
+                    Vector pt0 = vA0.Position;
+                    Vector v0 = vA1.Position - pt0;
+                    if (!v0.IsZero())
+                    {
+                        for (int j = 0; j < polygonB.Count; j++) // Loop through B's edges
+                        {
+                            Vertex vB0 = polygonB[j];
+                            Vertex vB1 = polygonB.GetWrapped(j + 1);
+                            Vector pt1 = vB0.Position;
+                            Vector v1 = vB1.Position - pt1;
+                            if (!v1.IsZero())
+                            {
+                                double t0 = 0;
+                                double t1 = 0;
+                                Vector iPt = LineLineXY(pt0, v0, pt1, v1, ref t0, ref t1); // Find infinite line intersection
+                                if (iPt.IsValid() && t0 >= 0 && t0 < 1 && t1 >= 0 && t1 < 1)
+                                {
+                                    // Intersection lies within line segments - we have a genuine intersection
+                                    LineLineIntersection intersect = new LineLineIntersection();
+                                    if (t0 <= 0.00001)
+                                    {
+                                        intersect.Vertex = vA0;
+                                    }
+                                    else if (t1 <= 0.00001)
+                                    {
+                                        intersect.Vertex = vB0;
+                                    }
+                                    else
+                                    {
+                                        Vertex newVertex = new Vertex(iPt);
+                                        intersect.Vertex = newVertex;
+                                        if (allVertices != null) allVertices.Add(newVertex);
+                                    }
+                                    intersect.At = i + t0;
+                                    intersect.Bt = j + t1;
+                                    // TODO: Check for degeneracy by looking at position of point a short distance
+                                    // along the next edge?
+
+                                    intersectionsA.Add(intersect.At, intersect);
+                                    intersectionsB.Add(intersect.Bt, intersect);
+                                }
+                            }
                         }
                     }
                 }
-                //TODO: Add to current if inside
 
-                //ABORT! ABORT! WILL NOT WORK IN CASES WHERE A LINE SEGMENT CROSSES RIGHT OVER THE OTHER POLYGON!
+                if (intersectionsA.Count <= 1)
+                {
+                    // No intersections found - polygon A is either entirely inside or entirely outside B
+                    if (inside) // A is inside B
+                    {
+                        result = new List<TPolygon>();
+                        TPolygon polygon = new TPolygon();
+                        foreach (Vertex v in polygonA)
+                        {
+                            polygon.Add(v);
+                        }
+                        result.Add(polygon);
+                    }
+                    else if (polygonA.PolygonContainmentXY(polygonB[0].Position)) // B is inside A
+                    {
+                        result = new List<TPolygon>();
+                        TPolygon polygon = new TPolygon();
+                        foreach (Vertex v in polygonB)
+                        {
+                            polygon.Add(v);
+                        }
+                        result.Add(polygon);
+                    }
+                    // Else no intersection!
+                }
+                else
+                {
+                    // Mark as entries & exits:
+                    foreach (LineLineIntersection intersect in intersectionsA.Values)
+                    {
+                        inside = !inside; // Flip inside/outside
+                        intersect.Entry = inside; // TODO: Check for degeneracy?
+                    }
 
-                previousInside = inside;
+                    // Build resultant polygons
+                    result = new List<TPolygon>();
+
+                    while (intersectionsA.Count > 0)
+                    {
+                        LineLineIntersection startInt = null;
+                        // Find the first remaining intersection that is an entry point
+                        foreach (LineLineIntersection intersect in intersectionsA.Values)
+                        {
+                            if (intersect.Entry)
+                            {
+                                startInt = intersect;
+                                break;
+                            }
+                        }
+
+                        if (startInt == null)
+                        {
+                            break; // Something has gone wrong and no entry point could be found!
+                        }
+
+                        double t = startInt.At;
+                        TPolygon polygon = new TPolygon();
+                        polygon.Add(startInt.Vertex);
+                        result.Add(polygon);
+
+                        LineLineIntersection nextInt = intersectionsA.NextAfter(t, true);
+
+                        //Alternate between polygons A and B to loop around overlap regions
+                        while (nextInt != null)
+                        {
+                            intersectionsA.Remove(nextInt.At);
+                            intersectionsB.Remove(nextInt.Bt);
+                            if (nextInt.Entry)
+                            {
+                                foreach (Vertex v in polygonB.AllBetween(t, nextInt.Bt)) polygon.Add(v);
+                                if (nextInt == startInt)
+                                {
+                                    nextInt = null;
+                                }
+                                else
+                                {
+                                    polygon.Add(nextInt.Vertex);
+                                    t = nextInt.At;
+                                    nextInt = intersectionsA.NextAfter(t, true);
+                                }
+                            }
+                            else
+                            { 
+                                foreach (Vertex v in polygonA.AllBetween(t, nextInt.At)) polygon.Add(v);
+                                if (nextInt == startInt)
+                                {
+                                    nextInt = null;
+                                }
+                                else
+                                {
+                                    polygon.Add(nextInt.Vertex);
+                                    t = nextInt.Bt;
+                                    nextInt = intersectionsB.NextAfter(t, true);
+                                }
+                            }
+                        }
+                    }
+                }
+                        
             }
 
-            throw new NotImplementedException();
+            return result;
+
+        }
+
+        /// <summary>
+        /// A class for storing line-line intersection events
+        /// </summary>
+        private class LineLineIntersection
+        {
+            #region Fields
+
+            /// <summary>
+            /// The intersection point itself
+            /// </summary>
+            public Vertex Vertex;
+
+            /// <summary>
+            /// The intersection parameter on A
+            /// </summary>
+            public double At;
+
+            /// <summary>
+            /// The intersection parameter on B
+            /// </summary>
+            public double Bt;
+
+            /// <summary>
+            /// Is this intersection an entry from A into B (or, if false, an exit)?
+            /// </summary>
+            public bool Entry;
+
+            #endregion
+
+            #region Constructor
+
+            /// <summary>
+            /// Default constructor
+            /// </summary>
+            public LineLineIntersection() { }
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="point"></param>
+            /// <param name="at"></param>
+            /// <param name="bt"></param>
+            public LineLineIntersection(Vertex vert, double at, double bt)
+            {
+                Vertex = vert;
+                At = at;
+                Bt = bt;
+            }
+
+            #endregion
         }
     }
 }

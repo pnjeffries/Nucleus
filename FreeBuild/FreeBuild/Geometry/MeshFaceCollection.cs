@@ -32,6 +32,15 @@ namespace FreeBuild.Geometry
             }
         }
 
+        /// <summary>
+        /// Initialise this collection containing the specified face
+        /// </summary>
+        /// <param name="face"></param>
+        public MeshFaceCollection(MeshFace face) : base()
+        {
+            Add(face);
+        }
+
         #endregion
 
         #region Methods
@@ -59,6 +68,24 @@ namespace FreeBuild.Geometry
             foreach (MeshFace face in this)
             {
                 result.Add(face.GetBoundary());
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Trim this collection of faces to only those which fit within the specified boundary polygon
+        /// on the XY plane
+        /// </summary>
+        /// <param name="boundary"></param>
+        /// <param name="vertices"></param>
+        /// <returns></returns>
+        public MeshFaceCollection TrimToPolygonXY(IList<Vertex> boundary, IList<Vertex> vertices = null)
+        {
+            MeshFaceCollection result = new MeshFaceCollection();
+            foreach (MeshFace face in this)
+            {
+                IList<MeshFace> splitFaces = Intersect.PolygonOverlapXY<MeshFace>(face, boundary, vertices);
+                if (splitFaces != null) foreach (MeshFace sFace in splitFaces) result.Add(sFace);
             }
             return result;
         }

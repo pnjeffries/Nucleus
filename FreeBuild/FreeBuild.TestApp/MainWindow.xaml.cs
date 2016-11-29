@@ -47,12 +47,16 @@ namespace FreeBuild.TestApp
             Random rng = new Random();
             BoundingBox box = new BoundingBox(0, 10, -10, 0, 0, 0);
 
-            int size = 200;
+            int size = 3;
             Geometry.Vector[] points = box.RandomPointsInside(rng, size);
             VertexCollection verts = new VertexCollection(points);
-            MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(verts, null, null, false);
+            MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(verts, null, box, false);
             Dictionary<Vertex, MeshFace> voronoi = Mesh.VoronoiFromDelaunay(verts, faces);
-            ShapeCollection geometry = new MeshFaceCollection(voronoi.Values).ExtractFaceBoundaries();
+            MeshFaceCollection outFaces = new MeshFaceCollection(voronoi.Values);
+            PolyLine rect = PolyLine.Rectangle(0,-10,10, 0);
+            outFaces = outFaces.TrimToPolygonXY(rect.Vertices);
+            outFaces = outFaces.TrimToPolygonXY(rect.Vertices); //Test duplicate edges
+            ShapeCollection geometry = outFaces.ExtractFaceBoundaries();
             //ShapeCollection geometry = faces.ExtractFaceBoundaries();
             geometry.Add(new Cloud(verts.ExtractPoints()));
             VoronoiCanvas.Geometry = geometry;

@@ -216,7 +216,7 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="other"></param>
         public BoundingBox(BoundingBox other)
-            :this(other.MinX, other.MaxZ, other.MinY, other.MaxY, other.MinZ, other.MaxZ){}
+            :this(other.MinX, other.MaxX, other.MinY, other.MaxY, other.MinZ, other.MaxZ){}
 
         #endregion
 

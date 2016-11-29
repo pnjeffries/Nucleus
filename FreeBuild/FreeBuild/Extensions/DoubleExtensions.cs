@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FreeBuild.Extensions
@@ -126,6 +127,27 @@ namespace FreeBuild.Extensions
         public static bool IsTiny(this double value)
         {
             return (value > -0.00000001 && value < 0.00000001);
+        }
+
+        /// <summary>
+        /// Utility function to add one double to another in a thread-safe way.
+        /// Equivalent to toBeModified += value, and similar to the Interlocked.Add()
+        /// function for integers.
+        /// </summary>
+        /// <param name="toBeModified"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static double InterlockedAdd(ref double toBeModified, double value)
+        {
+            double newCurrentValue = 0;
+            while (true)
+            {
+                double currentValue = newCurrentValue;
+                double newValue = currentValue + value;
+                newCurrentValue = Interlocked.CompareExchange(ref toBeModified, newValue, currentValue);
+                if (newCurrentValue == currentValue)
+                    return newValue;
+            }
         }
     }
 }

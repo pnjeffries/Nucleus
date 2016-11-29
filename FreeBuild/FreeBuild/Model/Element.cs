@@ -36,18 +36,9 @@ namespace FreeBuild.Model
     /// overall abstract form of the element and by a volumetric property which
     /// determines how that design representation converts into a 3D solid object.
     /// </summary>
+    [Serializable]
     public abstract class Element : ModelObject, IElement
     {
-
-        #region Events
-
-        /// <summary>
-        /// Event raised whenever a key part of this element's representative data
-        /// has been updated.
-        /// </summary>
-        public EventHandler<ElementUpdateEventArgs> Updated;
-
-        #endregion
 
         #region Properties
 
@@ -120,7 +111,7 @@ namespace FreeBuild.Model
         /// </summary>
         public void NotifyGeometryUpdated()
         {
-            RaiseEvent(Updated, new ElementUpdateEventArgs());
+            NotifyPropertyChanged("Geometry");
         }
 
         /// <summary>
@@ -164,12 +155,8 @@ namespace FreeBuild.Model
             return false;
         }
 
-        void IElement.NotifyGeometryUpdated()
-        {
-            //TODO
-        }
-
         #endregion
+
     }
 
     /// <summary>
@@ -183,6 +170,7 @@ namespace FreeBuild.Model
         where TShape : Shape
         where TProperty : VolumetricProperty
     {
+
         #region Properties
 
         /// <summary>
@@ -284,5 +272,6 @@ namespace FreeBuild.Model
         }
 
         #endregion
+
     }
 }

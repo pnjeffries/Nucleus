@@ -92,6 +92,8 @@ namespace FreeBuild.WPF
             ShapeCollection geometry = Geometry;
             if (geometry != null)
             {
+                Brush fillBrush = new SolidColorBrush(Color.FromArgb(64, 255, 0, 0));
+
                 foreach (FB.Shape shape in geometry)
                 {
                     if (shape is Curve)
@@ -106,6 +108,8 @@ namespace FreeBuild.WPF
                         path.StrokeThickness = CurveThickness;
                         path.Data = pathGeo;
                         path.StrokeLineJoin = PenLineJoin.Round;
+                        path.Fill = fillBrush;
+                        fillBrush = null;
 
                         Children.Add(path);
                     }

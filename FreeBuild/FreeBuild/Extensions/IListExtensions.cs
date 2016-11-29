@@ -68,5 +68,38 @@ namespace FreeBuild.Extensions
                 }
             }
         }
+
+        /// <summary>
+        /// Return the sub-list of all items in this list between the two specified index parameters.
+        /// If the end value is lower than the start value, the item selection will wrap.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="start">The start of the index range to extract</param>
+        /// <param name="end">The end of the index range to extract</param>
+        /// <returns></returns>
+        public static IList<T> AllBetween<T>(this IList<T> list, double start, double end)
+        {
+            IList<T> result = new List<T>();
+            if (end >= start)
+            {
+                for (int i = (int)Math.Ceiling(start); i < Math.Min(list.Count, end); i++)
+                {
+                    result.Add(list[i]);
+                }
+            }
+            else
+            {
+                for (int i = (int)Math.Ceiling(start); i < list.Count; i++)
+                {
+                    result.Add(list[i]);
+                }
+                for (int i = 0; i < end; i++)
+                {
+                    result.Add(list[i]);
+                }
+            }
+            return result;
+        }
     }
 }

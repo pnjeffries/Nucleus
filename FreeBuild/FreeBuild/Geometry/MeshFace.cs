@@ -126,11 +126,47 @@ namespace FreeBuild.Geometry
 
         #region Methods
 
-        internal virtual void Set(Vertex v1, Vertex v2, Vertex v3)
+        /// <summary>
+        /// Set the vertices of this face
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <param name="v3"></param>
+        public virtual void Set(Vertex v1, Vertex v2, Vertex v3)
         {
             this[0] = v1;
             this[1] = v2;
             this[2] = v3;
+            while (Count > 3) RemoveAt(3);
+        }
+
+        /// <summary>
+        /// Set the vertices of this face
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <param name="v3"></param>
+        /// <param name="v4"></param>
+        public virtual void Set(Vertex v1, Vertex v2, Vertex v3, Vertex v4)
+        {
+            this[0] = v1;
+            this[1] = v2;
+            this[2] = v3;
+            this[3] = v4;
+            while (Count > 4) RemoveAt(4);
+        }
+
+        /// <summary>
+        /// Set the vertices of this face
+        /// </summary>
+        /// <param name="vertices"></param>
+        public virtual void Set(IList<Vertex> vertices)
+        {
+            Clear();
+            foreach (Vertex v in vertices)
+            {
+                Add(v);
+            }
         }
 
         /// <summary>
@@ -200,8 +236,6 @@ namespace FreeBuild.Geometry
             Vector centre = Intersect.LineLineXY(midAB, AB.PerpendicularXY(), midBC, BC.PerpendicularXY());
             return centre;
         }
-
-
 
         /// <summary>
         /// Tests whether a point lies in the circumcircle of this face.  Used during delaunay

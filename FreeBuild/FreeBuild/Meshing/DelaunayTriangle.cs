@@ -77,7 +77,7 @@ namespace FreeBuild.Meshing
 
         #region Methods
 
-        internal override void Set(Vertex v1, Vertex v2, Vertex v3)
+        public override void Set(Vertex v1, Vertex v2, Vertex v3)
         {
             this[0] = v1;
             this[1] = v2;

@@ -19,10 +19,13 @@
 // SOFTWARE.
 
 using FreeBuild.Base;
+using FreeBuild.Exceptions;
+using FreeBuild.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FreeBuild.Maths
@@ -189,6 +192,82 @@ namespace FreeBuild.Maths
                     this[i, j] /= scalar;
                 }
             });
+        }
+
+        /// <summary>
+        /// Return a sub-matrix of this matrix by eliminating one row and one column
+        /// </summary>
+        /// <param name="row">The row number to remove</param>
+        /// <param name="column">The column number to remove</param>
+        /// <returns></returns>
+        public virtual Matrix SubMatrix(int row, int column)
+        {
+            Matrix result = CreateNewMatrix(Rows - 1, Columns - 1);
+            Parallel.For(0, Rows, i =>
+            {
+                if (i != row)
+                {
+                    int iT = i;
+                    if (i > row) iT -= 1;
+                    for (int j = 0; j < Columns; j++)
+                    {
+                        if (j < column) result[iT, j] = this[i, j];
+                        else if (j > column) result[iT, j - 1] = this[i, j];
+                    }
+                }
+            });
+            return result;
+        }
+
+        /// <summary>
+        /// Calculate the adjugate, classical adjoint or adjunct of this matrix
+        /// (i.e. the transpose of the matrix of cofactors).
+        /// This is only valid for square matrices.
+        /// </summary>
+        /// <returns></returns>
+        public Matrix Adjugate()
+        {
+            if (Rows != Columns) throw new MatrixException("Matrix is not square and therefore has no adjugate.");
+            Matrix AT = Transpose();
+            Matrix result = CreateNewMatrix(AT.Rows, AT.Columns);
+            Parallel.For(0, Rows, i =>
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    Matrix sMatrix = AT.SubMatrix(i, j);
+                    result[i, j] = sMatrix.Determinant() * Math.Pow(-1, i + j + 2);
+                }
+            });
+            return result;
+        }
+
+        /// <summary>
+        /// Calculate the determinant of this matrix by expanding along the first row.
+        /// This is only valid for square matrices.
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>Recursive and of factorial order - not recommended for large matrices!</remarks>
+        public virtual double Determinant()
+        {
+            if (Rows != Columns) throw new MatrixException("Matrix is not square and therefore has no determinant.");
+            else if (Rows == 2) //2x2 Matrix - we can calculate that!
+            {
+                return this[0, 0] * this[1, 1] - this[0, 1] * this[1, 0];
+            }
+            else if (Rows == 1) //1x1 Matrix - the determinant is the single value stored
+            {
+                return this[0, 0];
+            }
+            else //Larger matrix
+            {
+                double result = 0;
+                Parallel.For(0, Columns, j =>
+                {
+                    Matrix subMatrix = SubMatrix(0, j);
+                    DoubleExtensions.InterlockedAdd(ref result, subMatrix.Determinant());
+                });
+                return result;
+            }
         }
 
         ///// <summary>
