@@ -177,9 +177,16 @@ namespace FreeBuild.Extensions
             {
                 foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
                 {
-                    foreach (Type subType in assembly.GetTypes())
+                    try
                     {
-                        if (subType.IsSubclassOf(type) && !subType.IsAbstract) result.Add(subType);
+                        foreach (Type subType in assembly.GetTypes())
+                        {
+                            if (subType.IsSubclassOf(type) && !subType.IsAbstract) result.Add(subType);
+                        }
+                    }
+                    catch
+                    {
+
                     }
                 }
             }

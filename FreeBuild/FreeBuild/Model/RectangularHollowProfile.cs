@@ -53,6 +53,7 @@ namespace FreeBuild.Model
             set
             {
                 _FlangeThickness = value;
+                CatalogueName = null;
                 InvalidateCachedGeometry();
                 NotifyPropertyChanged("FlangeThickness");
             }
@@ -73,6 +74,7 @@ namespace FreeBuild.Model
             set
             {
                 _WebThickness = value;
+                CatalogueName = null;
                 InvalidateCachedGeometry();
                 NotifyPropertyChanged("WebThickness");
             }

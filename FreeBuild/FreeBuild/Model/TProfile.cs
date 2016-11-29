@@ -32,6 +32,7 @@ namespace FreeBuild.Model
             set
             {
                 _RootRadius = value;
+                CatalogueName = null;
                 InvalidateCachedGeometry();
                 NotifyPropertyChanged("RootRadius");
             }
@@ -70,7 +71,7 @@ namespace FreeBuild.Model
             double xW = WebThickness / 2;
             double yF = Depth / 2;
             double yW = yF - FlangeThickness;
-            double fR = RootRadius.Limit(0, Math.Min(xF - xW, yW));
+            double fR = RootRadius.Limit(0, Math.Min(xF - xW, Depth - WebThickness));
             double xR = xW + fR;
             double yR = yW - fR;
 

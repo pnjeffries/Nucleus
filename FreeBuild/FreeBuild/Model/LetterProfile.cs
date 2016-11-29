@@ -51,6 +51,7 @@ namespace FreeBuild.Model
             set
             {
                 _Depth = value;
+                CatalogueName = null;
                 InvalidateCachedGeometry();
                 NotifyPropertyChanged("Depth");
             }
@@ -71,6 +72,7 @@ namespace FreeBuild.Model
             set
             {
                 _Width = value;
+                CatalogueName = null;
                 InvalidateCachedGeometry();
                 NotifyPropertyChanged("Width");
             }
@@ -110,6 +112,7 @@ namespace FreeBuild.Model
             set
             {
                 _FlangeThickness = value;
+                CatalogueName = null;
                 InvalidateCachedGeometry();
                 NotifyPropertyChanged("FlangeThickness");
             }
@@ -130,6 +133,7 @@ namespace FreeBuild.Model
             set
             {
                 _WebThickness = value;
+                CatalogueName = null;
                 InvalidateCachedGeometry();
                 NotifyPropertyChanged("WebThickness");
             }

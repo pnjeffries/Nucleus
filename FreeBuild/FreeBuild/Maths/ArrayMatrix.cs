@@ -118,7 +118,10 @@ namespace FreeBuild.Maths
             double a21, double a22, double a23,
             double a31, double a32, double a33) : base(3,3)
         {
-            _Values = new double[,] { { a11, a12, a13 }, { a21, a22, a23 }, { a31, a32, a33 } };
+            _Values = new double[,] { 
+                { a11, a12, a13 }, 
+                { a21, a22, a23 }, 
+                { a31, a32, a33 } };
         }
 
         /// <summary>
@@ -150,7 +153,7 @@ namespace FreeBuild.Maths
                 { a11, a12, a13, a14 }, 
                 { a21, a22, a23, a24 }, 
                 { a31, a32, a33, a34 },
-                {a41, a42, a43, a44 } };
+                { a41, a42, a43, a44 } };
         }
 
         #endregion

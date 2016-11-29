@@ -33,6 +33,7 @@ namespace FreeBuild.Model
             set
             {
                 _Diameter = value;
+                CatalogueName = null;
                 InvalidateCachedGeometry();
                 NotifyPropertyChanged("Diameter");
             }

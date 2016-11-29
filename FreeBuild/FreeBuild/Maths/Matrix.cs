@@ -106,6 +106,97 @@ namespace FreeBuild.Maths
         }
 
         /// <summary>
+        /// Set the values of the fields in the specified row.
+        /// </summary>
+        /// <param name="row">The row index</param>
+        /// <param name="values">The new set of values to be placed within the row</param>
+        public void SetRow(int row, double[] values)
+        {
+            for(int j = 0; j < Math.Min(Columns,values.Length); j++)
+            {
+                this[row, j] = values[j];
+            }
+        }
+
+        /// <summary>
+        /// Set the values of the fields in the specified column.
+        /// </summary>
+        /// <param name="column">The column index</param>
+        /// <param name="values">The new set of values to be placed within the column</param>
+        public void SetColumn(int column, double[] values)
+        {
+            for (int i = 0; i < Math.Min(Rows, values.Length); i++)
+            {
+                this[i,column] = values[i];
+            }
+        }
+
+        /// <summary>
+        /// Clear a row (i.e. set all values in that row to 0)
+        /// </summary>
+        /// <param name="row">The index of the row to clear</param>
+        public virtual void ClearRow(int row)
+        {
+            for (int j = 0; j < Columns; j++) this[row, j] = 0;
+        }
+
+        /// <summary>
+        /// Clear a row (i.e. set all values in that row to 0),
+        /// optionally maintaining non-singularity by setting the
+        /// diagonal to 1.
+        /// </summary>
+        /// <param name="row">The index of the row to clear</param>
+        /// <param name="maintainNonSingularity">If true, non-singularity will be 
+        /// maintained by setting the diagonal in the row to be 1.</param>
+        public void ClearRow(int row, bool maintainNonSingularity)
+        {
+            ClearRow(row);
+            if (maintainNonSingularity && Columns > row) this[row, row] = 1;
+        }
+
+        /// <summary>
+        /// Clear a column (i.e. set all values in that column to 0)
+        /// </summary>
+        /// <param name="column">The index of the column to clear</param>
+        public virtual void ClearColumn(int column)
+        {
+            for (int i = 0; i < Columns; i++) this[i, column] = 0;
+        }
+
+        /// <summary>
+        /// Clear a column (i.e. set all values in that column to 0),
+        /// optionally maintaining non-singularity by setting the
+        /// diagonal to 1.
+        /// </summary>
+        /// <param name="column">The index of the column to clear</param>
+        /// /// <param name="maintainNonSingularity">If true, non-singularity will be 
+        /// maintained by setting the diagonal in the column to be 1.</param>
+        public void ClearColumn(int column, bool maintainNonSingularity)
+        {
+            ClearColumn(column);
+            if (maintainNonSingularity && Rows > column) this[column, column] = 1;
+        }
+
+        /// <summary>
+        /// Overwrites a section of this matrix with the values defined within another,
+        /// starting at the specified indices
+        /// </summary>
+        /// <param name="startRow">The starting row index for insertion</param>
+        /// <param name="startColumn">The starting column index for insertion</param>
+        /// <param name="values">The matrix of values to be inserted</param>
+        public virtual void SetBlock(int startRow, int startColumn, Matrix values)
+        {
+            //Possibly faster method using Array.Copy?
+            Parallel.For(0, Math.Min(Rows - startRow,values.Rows), i =>
+            {
+                for (int j = 0; j < Math.Min(Columns - startColumn, values.Columns); j++)
+                {
+                    this[i + startRow, j + startColumn] = values[i, j];
+                }
+            });
+        }
+
+        /// <summary>
         /// Create the transpose of this matrix.
         /// The transpose of a matrix is obtained by flipping rows and columns.
         /// </summary>
@@ -118,7 +209,7 @@ namespace FreeBuild.Maths
             {
                 for (int j = 0; j < Columns; j++)
                 {
-                    result[j, i] = this[j, i];
+                    result[j, i] = this[i, j];
                 }
             });
             return result;
@@ -242,6 +333,19 @@ namespace FreeBuild.Maths
         }
 
         /// <summary>
+        /// Calculate the inverse of this matrix, if it exists.
+        /// If there is no inverse (i.e. the determinant = 0) then null will
+        /// be returned.
+        /// </summary>
+        /// <returns></returns>
+        public Matrix Inverse()
+        {
+            double det = Determinant();
+            if (det == 0) return null;
+            else return Adjugate() / det;
+        }
+
+        /// <summary>
         /// Calculate the determinant of this matrix by expanding along the first row.
         /// This is only valid for square matrices.
         /// </summary>
@@ -268,6 +372,22 @@ namespace FreeBuild.Maths
                 });
                 return result;
             }
+        }
+
+        
+
+        /// <summary>
+        /// Generate an augmented form of this matrix by adding the columns from the specified other matrix
+        /// </summary>
+        /// <param name="columns">The values to be placed in the new columns.  Should have the same number of
+        /// rows as this matrix.</param>
+        /// <returns></returns>
+        public Matrix Augmented(Matrix columns)
+        {
+            Matrix result = CreateNewMatrix(Rows, Columns + columns.Columns);
+            result.SetBlock(0, 0, this);
+            result.SetBlock(0, Columns, columns);
+            return result;
         }
 
         ///// <summary>
