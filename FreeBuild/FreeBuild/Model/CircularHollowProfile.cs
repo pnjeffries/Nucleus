@@ -28,6 +28,7 @@ namespace FreeBuild.Model
             get { return _WallThickness; }
             set {
                 _WallThickness = value;
+                CatalogueName = null;
                 InvalidateCachedGeometry();
                 NotifyPropertyChanged("WallThickness");
             }

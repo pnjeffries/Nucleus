@@ -134,7 +134,6 @@ namespace FreeBuild.Model
             _Voids = null;
             NotifyPropertyChanged("Perimeter");
             NotifyPropertyChanged("Voids");
-            CatalogueName = null;
             if (Section != null) Section.NotifyProfileChanged(this);
         }
 

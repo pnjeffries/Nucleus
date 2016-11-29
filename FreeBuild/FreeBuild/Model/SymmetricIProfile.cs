@@ -52,6 +52,7 @@ namespace FreeBuild.Model
             set
             {
                 _RootRadius = value;
+                CatalogueName = null;
                 InvalidateCachedGeometry();
                 NotifyPropertyChanged("RootRadius");
             }

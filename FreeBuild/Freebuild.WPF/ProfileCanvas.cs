@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using W = System.Windows.Shapes;
 
 namespace FreeBuild.WPF
 {
@@ -68,6 +69,15 @@ namespace FreeBuild.WPF
         {
             BoundingBox bBox = new BoundingBox(0,0,0);
             Children.Clear();
+
+            var steelGrad = new GradientStopCollection();
+            steelGrad.Add(new GradientStop(Colors.LightGray, 0));
+            steelGrad.Add(new GradientStop(Colors.White, 0.5));
+            steelGrad.Add(new GradientStop(Colors.LightGray, 1));
+
+            var steelBrush = new LinearGradientBrush(steelGrad, 45);
+
+            var topLayer = new List<UIElement>();
             if (Profiles != null)
             {
                 foreach (SectionProfile sp in Profiles)
@@ -94,26 +104,38 @@ namespace FreeBuild.WPF
                     }
 
                     Path path = new Path();
-                    path.Fill = Brushes.LightGray;
+                    path.Fill = steelBrush;
                     path.Stroke = Brushes.Black;
                     path.StrokeThickness = 0.01;
                     path.Data = cg;
 
-                    Children.Add(path);
+                    topLayer.Add(path);
 
                 }
 
                 bBox.Expand(Math.Max(bBox.SizeX, bBox.SizeY) * 0.1);
                 double maxSize = Math.Max(bBox.SizeX, bBox.SizeY);
 
+                //Draw grid:
+                /*var axisBrush = new RadialGradientBrush(Colors.Black, Colors.Transparent);
+
+                var hAxis = new W.Line();
+                hAxis.X1 = -maxSize;
+                hAxis.X2 = maxSize;
+                hAxis.Stroke = axisBrush;
+                hAxis.StrokeThickness = maxSize*0.005;
+                Children.Add(hAxis);*/
+
                 //Adjust stroke:
-                foreach (UIElement el in Children)
+                foreach (UIElement el in topLayer)
                 {
                     if (el is Path)
                     {
                         ((Path)el).StrokeThickness = maxSize * 0.005;
                     }
                 }
+
+                foreach (UIElement el in topLayer) Children.Add(el);
 
                 //Draw set-out point
                 Ellipse setOutPt = new Ellipse();

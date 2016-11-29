@@ -48,7 +48,9 @@ namespace FreeBuild.Model
         public string CatalogueName
         {
             get { return _CatalogueName; }
-            set { _CatalogueName = value; NotifyPropertyChanged("CatalogueName"); }
+            set { _CatalogueName = value;
+                NotifyPropertyChanged("CatalogueName");
+            }
         }
 
         /// <summary>

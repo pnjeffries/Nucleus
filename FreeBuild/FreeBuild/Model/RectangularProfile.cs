@@ -53,6 +53,7 @@ namespace FreeBuild.Model
             set
             {
                 _Depth = value;
+                CatalogueName = null;
                 InvalidateCachedGeometry();
                 NotifyPropertyChanged("Depth");
             }
@@ -73,6 +74,7 @@ namespace FreeBuild.Model
             set
             {
                 _Width = value;
+                CatalogueName = null;
                 InvalidateCachedGeometry();
                 NotifyPropertyChanged("Width");
             }
