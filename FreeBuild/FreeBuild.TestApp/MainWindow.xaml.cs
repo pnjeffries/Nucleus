@@ -47,7 +47,7 @@ namespace FreeBuild.TestApp
             Random rng = new Random();
             BoundingBox box = new BoundingBox(0, 10, -10, 0, 0, 0);
 
-            int size = 3;
+            int size = 20;
             Geometry.Vector[] points = box.RandomPointsInside(rng, size);
             VertexCollection verts = new VertexCollection(points);
             MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(verts, null, box, false);

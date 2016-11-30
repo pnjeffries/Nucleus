@@ -16,16 +16,65 @@ namespace FreeBuild.WPF
     /// </summary>
     public class AutoPropertiesPanel : StackPanel
     {
+        #region Constructors
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public AutoPropertiesPanel() : base()
+        {
+            Initialise();
+        }
+
+        #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Initialise this panel
+        /// </summary>
+        protected void Initialise()
+        {
+            this.DataContextChanged += AutoPropertiesPanel_DataContextChanged;
+        }
+
+        /// <summary>
+        /// Called when the DataContext is changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AutoPropertiesPanel_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
+        {
+            Refresh();
+        }
+
+        /// <summary>
+        /// Refresh the fields displayed by this panel
+        /// </summary>
+        public void Refresh()
+        {
+            Children.Clear();
+            if (DataContext != null)
+            {
+                GenerateFieldsFor(DataContext.GetType());
+            }
+        }
 
         /// <summary>
         /// Populate this panel with controls for the specified type
         /// </summary>
         /// <param name="type"></param>
-        public void GenerateFieldsFor(Type type)
+        protected void GenerateFieldsFor(Type type)
         {
             IList<PropertyInfo> properties = type.GetAutoUIProperties();
+        }
+
+        /// <summary>
+        /// Populate this panel with controls for the specified list of properties
+        /// </summary>
+        /// <param name="properties"></param>
+        protected void GenerateFieldsFor(IList<PropertyInfo> properties)
+        { 
             foreach (PropertyInfo property in properties)
             {
                 FieldControl control = null;

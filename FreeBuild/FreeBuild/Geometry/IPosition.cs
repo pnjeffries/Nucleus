@@ -80,19 +80,42 @@ namespace FreeBuild.Geometry
             {
                 int count = 0;
                 Vector lastPoint = polygon[0].Position;
+                bool onLine = false;
                 for (int i = 1; i < polygon.Count; i++)
                 {
                     Vector nextPoint = polygon[i].Position;
-                    if (Intersect.XRayLineSegmentXYCheck(ref point, ref lastPoint, ref nextPoint))
+                    if (Intersect.XRayLineSegmentXYCheck(ref point, ref lastPoint, ref nextPoint, out onLine))
                         count++;
+                    if (onLine) return true; //TODO: Review
                     lastPoint = nextPoint;
                 }
                 Vector startPoint = polygon[0].Position;
-                if (Intersect.XRayLineSegmentXYCheck(ref point, ref lastPoint, ref startPoint))
+                if (Intersect.XRayLineSegmentXYCheck(ref point, ref lastPoint, ref startPoint, out onLine))
                     count++;
+                if (onLine) return true; //TODO: Review
                 return count.IsOdd();
             }
             else return false;
+        }
+
+        /// <summary>
+        /// Find the averate position vector of a this collection of points
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="points"></param>
+        /// <returns></returns>
+        public static Vector AveragePoint<T>(this IList<T> points) where T:IPosition
+        {
+            if (points.Count > 0)
+            {
+                Vector result = points[0].Position;
+                for (int i = 0; i < points.Count; i++)
+                {
+                    result += points[i].Position;
+                }
+                return result / points.Count;
+            }
+            else return Vector.Unset;
         }
     }
 }
