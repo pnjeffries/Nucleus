@@ -583,6 +583,8 @@ namespace FreeBuild.Robot
                     RobotBarSectionNonstdData nsdata = data.CreateNonstd(0);
                     nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D, cProfile.Diameter);
                 }
+
+                
             }
         }
 

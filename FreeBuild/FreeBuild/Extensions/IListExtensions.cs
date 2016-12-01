@@ -81,7 +81,7 @@ namespace FreeBuild.Extensions
         public static IList<T> AllBetween<T>(this IList<T> list, double start, double end)
         {
             IList<T> result = new List<T>();
-            if (end >= start)
+            if (end > start)
             {
                 for (int i = (int)Math.Ceiling(start); i < Math.Min(list.Count, end); i++)
                 {

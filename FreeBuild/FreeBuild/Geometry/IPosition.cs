@@ -117,5 +117,29 @@ namespace FreeBuild.Geometry
             }
             else return Vector.Unset;
         }
+
+        /// <summary>
+        /// Get a point along the edge of the polygon represented by this set of points,
+        /// denoted by a parameter matching the indices of the edge points.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="points"></param>
+        /// <param name="t">The parameter from which to extract the point.  Note that
+        /// this is not unitised to the length of the polygon edge but instead corresponds to
+        /// the vertex indices - i.e. 0-1 will be between the first and second indices,
+        /// 1-2 will be between the second and third and so on.</param>
+        /// <returns></returns>
+        public static Vector PolygonEdgePointAt<T>(this IList<T> points, double t) where T:IPosition
+        {
+            if (points.Count > 0)
+            {
+                int index = (int)Math.Floor(t);
+                Vector pt0 = points.GetWrapped(index).Position;
+                Vector pt1 = points.GetWrapped(index + 1).Position;
+                double spanT = t % 1.0;
+                return pt0.Interpolate(pt1, spanT);
+            }
+            else return Vector.Unset;
+        }
     }
 }
