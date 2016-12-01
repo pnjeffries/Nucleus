@@ -1,5 +1,6 @@
 ﻿using FreeBuild.Extensions;
 using FreeBuild.Geometry;
+using FreeBuild.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,6 +80,10 @@ namespace FreeBuild.WPF
             {
                 FieldControl control = null;
                 Type pType = property.GetType();
+                if (property.HasAttribute(typeof(AutoUIComboBoxAttribute)))
+                {
+                    control = new ComboFieldControl();
+                }
                 if (pType.IsAssignableFrom(typeof(double))) //Numbers
                 {
                     control = new SliderFieldControl();

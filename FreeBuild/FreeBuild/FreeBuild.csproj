@@ -57,6 +57,7 @@
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Extensions\IListExtensions.cs" />
     <Compile Include="Extensions\IntExtensionscs.cs" />
+    <Compile Include="Extensions\PropertyInfoExtensions.cs" />
     <Compile Include="Extensions\SortedListExtensions.cs" />
     <Compile Include="Geometry\Cloud.cs" />
     <Compile Include="Geometry\Intersect.cs" />
