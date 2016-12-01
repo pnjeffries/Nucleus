@@ -200,7 +200,7 @@ namespace FreeBuild.Geometry
                     double dist = segStart.X + (segEnd.X - segStart.X) * ((rayStart.Y - segStart.Y) / (segEnd.Y - segStart.Y)) - rayStart.X;
                     if (dist >= 0)
                     {
-                        if (dist == 0) onLine = true;
+                        //if (dist == 0) onLine = true;
                         return true;
                     }
                 }
@@ -214,7 +214,7 @@ namespace FreeBuild.Geometry
                     double dist = segStart.X + (segEnd.X - segStart.X) * ((rayStart.Y - segStart.Y) / (segEnd.Y - segStart.Y)) - rayStart.X;
                     if (dist >= 0)
                     {
-                        if (dist == 0) onLine = true;
+                        //if (dist == 0) onLine = true;
                         return true;
                     }
                 }
@@ -224,7 +224,7 @@ namespace FreeBuild.Geometry
             else if ((segStart.Y >= rayStart.Y && segEnd.Y < rayStart.Y)
                 || (segStart.Y <= rayStart.Y && segEnd.Y > rayStart.Y))
             {
-                if (segStart.X == rayStart.X && segEnd.X == rayStart.X) onLine = true;
+                //if (segStart.X == rayStart.X && segEnd.X == rayStart.X) onLine = true;
                 return true;
             }
             else return false;
@@ -245,7 +245,7 @@ namespace FreeBuild.Geometry
         public static IList<TPolygon> PolygonOverlapXY<TPolygon>(IList<Vertex> polygonA, IList<Vertex> polygonB, IList<Vertex> allVertices = null)
             where TPolygon: class, IList<Vertex>, new()
         {
-
+            double tolerance = 0.000001;
             List<TPolygon> result = null;
 
             if (polygonA.Count > 0 && polygonB.Count > 0)
@@ -276,15 +276,15 @@ namespace FreeBuild.Geometry
                                 double t0 = 0;
                                 double t1 = 0;
                                 Vector iPt = LineLineXY(pt0, v0, pt1, v1, ref t0, ref t1); // Find infinite line intersection
-                                if (iPt.IsValid() && t0 >= 0 && t0 < 1 && t1 >= 0 && t1 < 1)
+                                if (iPt.IsValid() && t0 >= -tolerance && t0 <= 1 + tolerance && t1 >= -tolerance && t1 <= 1 + tolerance)
                                 {
                                     // Intersection lies within line segments - we have a genuine intersection
                                     LineLineIntersection intersect = new LineLineIntersection();
-                                    if (t0 <= 0.00001)
+                                    if (t0 <= tolerance)
                                     {
                                         intersect.Vertex = vA0;
                                     }
-                                    else if (t1 <= 0.00001)
+                                    else if (t1 <= tolerance)
                                     {
                                         intersect.Vertex = vB0;
                                     }
@@ -296,21 +296,29 @@ namespace FreeBuild.Geometry
                                     }
                                     intersect.At = i + t0;
                                     intersect.Bt = j + t1;
-                                    // TODO: Check for degeneracy by looking at position of point a short distance
-                                    // along the next edge?
+                                    // Test for extry/exit:
+                                    // The test point is the average of a point a little way along the current edge vector and a point a little further
+                                    // around the polygon.
+                                    Vector testPt = (polygonA.PolygonEdgePointAt(intersect.At + 0.001) + intersect.Vertex.Position + v0 * 0.001)/2;
+                                    if (polygonB.PolygonContainmentXY(testPt)) intersect.Entry = true;
+                                    else intersect.Entry = false;
 
-                                    intersectionsA.Add(intersect.At, intersect);
-                                    intersectionsB.Add(intersect.Bt, intersect);
+                                    if (!intersectionsA.ContainsKey(intersect.At) && !intersectionsB.ContainsKey(intersect.Bt))
+                                    {
+                                        intersectionsA.Add(intersect.At, intersect);
+                                        intersectionsB.Add(intersect.Bt, intersect);
+                                    }
                                 }
                             }
                         }
                     }
                 }
 
-                if (intersectionsA.Count <= 1)
+                if (intersectionsA.Count < 1)
                 {
                     // No intersections found - polygon A is either entirely inside or entirely outside B
-                    if (inside) // A is inside B
+                    if (inside || 
+                        (polygonB.PolygonContainmentXY(polygonA[0].Position.Interpolate(polygonA.AveragePoint(),0.001)))) // A is inside B
                     {
                         result = new List<TPolygon>();
                         TPolygon polygon = new TPolygon();
@@ -335,20 +343,20 @@ namespace FreeBuild.Geometry
                 else
                 {
                     // Mark as entries & exits:
-                    foreach (LineLineIntersection intersect in intersectionsA.Values)
+                    /*foreach (LineLineIntersection intersect in intersectionsA.Values)
                     {
                         inside = !inside; // Flip inside/outside
                         intersect.Entry = inside; // TODO: Check for degeneracy?
-                    }
+                    }*/
 
                     // Build resultant polygons
                     result = new List<TPolygon>();
 
                     while (intersectionsA.Count > 0)
                     {
-                        LineLineIntersection startInt = null;
+                        LineLineIntersection startInt = intersectionsA.First().Value;// null;
                         // Find the first remaining intersection that is an entry point
-                        foreach (LineLineIntersection intersect in intersectionsA.Values)
+                        /*foreach (LineLineIntersection intersect in intersectionsA.Values)
                         {
                             if (intersect.Entry)
                             {
@@ -359,48 +367,47 @@ namespace FreeBuild.Geometry
 
                         if (startInt == null)
                         {
-                            break; // Something has gone wrong and no entry point could be found!
-                        }
+                            startInt = intersectionsA.First().Value;
+                            //break; // Something has gone wrong and no entry point could be found!
+                        }*/
 
-                        double t = startInt.At;
                         TPolygon polygon = new TPolygon();
                         polygon.Add(startInt.Vertex);
                         result.Add(polygon);
 
-                        LineLineIntersection nextInt = intersectionsA.NextAfter(t, true);
+                        LineLineIntersection prevInt = startInt;
+                        LineLineIntersection nextInt;
+                        if (startInt.Entry)
+                            nextInt = intersectionsA.NextAfter(prevInt.At, true);
+                        else nextInt = intersectionsB.NextAfter(prevInt.Bt, true);
 
                         //Alternate between polygons A and B to loop around overlap regions
                         while (nextInt != null)
                         {
                             intersectionsA.Remove(nextInt.At);
                             intersectionsB.Remove(nextInt.Bt);
-                            if (nextInt.Entry)
+
+                            if (!prevInt.Entry)
                             {
-                                foreach (Vertex v in polygonB.AllBetween(t, nextInt.Bt)) polygon.Add(v);
-                                if (nextInt == startInt)
-                                {
-                                    nextInt = null;
-                                }
-                                else
-                                {
-                                    polygon.Add(nextInt.Vertex);
-                                    t = nextInt.At;
-                                    nextInt = intersectionsA.NextAfter(t, true);
-                                }
+                                foreach (Vertex v in polygonB.AllBetween(prevInt.Bt, nextInt.Bt)) polygon.Add(v);
                             }
                             else
                             { 
-                                foreach (Vertex v in polygonA.AllBetween(t, nextInt.At)) polygon.Add(v);
-                                if (nextInt == startInt)
-                                {
-                                    nextInt = null;
-                                }
+                                foreach (Vertex v in polygonA.AllBetween(prevInt.At, nextInt.At)) polygon.Add(v);   
+                            }
+
+                            if (nextInt == startInt)
+                            {
+                                nextInt = null;
+                            }
+                            else
+                            {
+                                if (polygon.Last() != nextInt.Vertex) polygon.Add(nextInt.Vertex);
+                                prevInt = nextInt;
+                                if (nextInt.Entry)
+                                    nextInt = intersectionsA.NextAfter(nextInt.At, true);
                                 else
-                                {
-                                    polygon.Add(nextInt.Vertex);
-                                    t = nextInt.Bt;
-                                    nextInt = intersectionsB.NextAfter(t, true);
-                                }
+                                    nextInt = intersectionsB.NextAfter(nextInt.Bt, true);
                             }
                         }
                     }

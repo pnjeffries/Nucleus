@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeBuild.UI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -90,6 +91,14 @@ namespace FreeBuild.WPF
             if (property.PropertyType.IsEnum)
             {
                 ItemsSource = Enum.GetValues(property.PropertyType);
+            }
+            else
+            {
+                AutoUIComboBoxAttribute cBA = property.GetCustomAttribute<AutoUIComboBoxAttribute>();
+                if (cBA != null)
+                {
+                    SetBinding(ItemsSourceProperty, cBA.ItemsSource);
+                }
             }
         }
 

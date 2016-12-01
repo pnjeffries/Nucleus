@@ -56,6 +56,18 @@ namespace FreeBuild.Model
         /// </summary>
         Model IOwned<Model>.Owner{ get { return _Model; }}
 
+
+        /// <summary>
+        /// Private backing field for Modified property
+        /// </summary>
+        private DateTime _Modified = DateTime.Now;
+
+        /// <summary>
+        /// The date and time of the last significant modification
+        /// performed on this object.
+        /// </summary>
+        public DateTime Modified { get { return _Modified; } }
+
         #endregion
 
         #region Methods
@@ -89,6 +101,18 @@ namespace FreeBuild.Model
             }
         }
 
+        /// <summary>
+        /// Raise a PropertyChanged event for the specified property name.
+        /// Will also update the stored last modification time.
+        /// </summary>
+        /// <param name="propertyName"></param>
+        protected override void NotifyPropertyChanged(string propertyName)
+        {
+            _Modified = DateTime.Now;
+            base.NotifyPropertyChanged(propertyName);
+        }
+
         #endregion
+
     }
 }

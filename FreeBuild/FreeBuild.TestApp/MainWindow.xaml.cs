@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FreeBuild.Extensions;
 
 namespace FreeBuild.TestApp
 {
@@ -44,10 +45,17 @@ namespace FreeBuild.TestApp
 
         private void VoronoiButton_Click(object sender, RoutedEventArgs e)
         {
-            Random rng = new Random();
+            Random rng = null;
+            if (VoronoiSeedBox.Text.IsNumeric())
+            {
+                int seed = int.Parse(VoronoiSeedBox.Text);
+                rng = new Random(seed);
+            }
+            else rng = new Random();
+
             BoundingBox box = new BoundingBox(0, 10, -10, 0, 0, 0);
 
-            int size = 20;
+            int size = 500;
             Geometry.Vector[] points = box.RandomPointsInside(rng, size);
             VertexCollection verts = new VertexCollection(points);
             MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(verts, null, box, false);

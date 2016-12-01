@@ -44,7 +44,7 @@ namespace FreeBuild.Base
         /// Raise a PropertyChanged event for the specified property name
         /// </summary>
         /// <param name="propertyName"></param>
-        protected void NotifyPropertyChanged(string propertyName)
+        protected virtual void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

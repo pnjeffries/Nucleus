@@ -109,7 +109,7 @@ namespace FreeBuild.WPF
                         path.Data = pathGeo;
                         path.StrokeLineJoin = PenLineJoin.Round;
                         path.Fill = fillBrush;
-                        fillBrush = null;
+                        //fillBrush = null;
 
                         Children.Add(path);
                     }
