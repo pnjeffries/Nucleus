@@ -55,6 +55,15 @@ namespace FreeBuild.Geometry
             }
         }
 
+        /// <summary>
+        /// Initialise a point cloud containing a single point
+        /// </summary>
+        /// <param name="point"></param>
+        public Cloud(Vector point) : this()
+        {
+            _Vertices.Add(new Vertex(point));
+        }
+
         #endregion
 
     }

@@ -108,7 +108,7 @@ namespace FreeBuild.WPF
                         path.StrokeThickness = CurveThickness;
                         path.Data = pathGeo;
                         path.StrokeLineJoin = PenLineJoin.Round;
-                        path.Fill = fillBrush;
+                        //path.Fill = fillBrush;
                         //fillBrush = null;
 
                         Children.Add(path);

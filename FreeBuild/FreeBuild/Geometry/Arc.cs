@@ -74,8 +74,10 @@ namespace FreeBuild.Geometry
             {
                 if (Vertices.Count >= 3 && Circle != null)
                 {
-                    return Circle.Azimuth(Vertices.Last().Position) >
-                        Circle.Azimuth(Vertices[1].Position);
+                    Angle toStart = Circle.Azimuth(Vertices.First().Position);
+                    Angle toEnd = Circle.Azimuth(Vertices.Last().Position).NormalizeTo2PI();
+                    Angle toMid = Circle.Azimuth(Vertices[1].Position).NormalizeTo2PI();
+                    return toEnd > toMid;
                 }
                 return false;
             }
@@ -92,8 +94,10 @@ namespace FreeBuild.Geometry
                 {
                     if (Closed) return Angle.Complete;
 
-                    Angle toEnd = Circle.Azimuth(Vertices.Last().Position);
-                    Angle toMid = Circle.Azimuth(Vertices[1].Position);
+                    Angle toStart = Circle.Azimuth(Vertices.First().Position);
+                    Angle toEnd = Circle.Azimuth(Vertices.Last().Position) - toStart;
+                    Angle toMid = Circle.Azimuth(Vertices[1].Position) - toStart;
+                    
                     if (toMid > toEnd) return toEnd.Explement();
                     else return toEnd;
                 }
@@ -160,12 +164,26 @@ namespace FreeBuild.Geometry
         /// Initialise an arc that forms a complete circle
         /// </summary>
         /// <param name="circle"></param>
-        public Arc(Circle circle):this()
+        public Arc(Circle circle) : this()
         {
             Vertices.Add(new Vertex(circle.PointAt(0.0)));
             Vertices.Add(new Vertex(circle.PointAt(Math.PI)));
             Vertices.Add(new Vertex(circle.PointAt(2*Math.PI)));
             Closed = true;
+            _Circle = circle;
+        }
+
+        /// <summary>
+        /// Initialise an arc defined between start and end angles on a circle
+        /// </summary>
+        /// <param name="circle"></param>
+        /// <param name="startAngle"></param>
+        /// <param name="endAngle"></param>
+        public Arc(Circle circle, Angle startAngle, Angle endAngle) : this()
+        {
+            Vertices.Add(new Vertex(circle.PointAt(startAngle)));
+            Vertices.Add(new Vertex(circle.PointAt(startAngle + (endAngle-startAngle).NormalizeTo2PI()/2)));
+            Vertices.Add(new Vertex(circle.PointAt(endAngle)));
             _Circle = circle;
         }
 
