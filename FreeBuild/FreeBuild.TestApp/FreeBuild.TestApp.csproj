@@ -96,6 +96,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FreeBuild.DXF\FreeBuild.DXF.csproj">
+      <Project>{36955035-2ed9-4e01-a440-c95c1051b0bb}</Project>
+      <Name>FreeBuild.DXF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Freebuild.WPF\FreeBuild.WPF.csproj">
       <Project>{e2d93282-51bd-4317-8d13-363347065f8b}</Project>
       <Name>FreeBuild.WPF</Name>

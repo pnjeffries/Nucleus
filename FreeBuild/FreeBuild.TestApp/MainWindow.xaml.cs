@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using FreeBuild.Extensions;
+using Microsoft.Win32;
+using FreeBuild.DXF;
 
 namespace FreeBuild.TestApp
 {
@@ -68,6 +70,20 @@ namespace FreeBuild.TestApp
             //ShapeCollection geometry = faces.ExtractFaceBoundaries();
             geometry.Add(new Cloud(verts.ExtractPoints()));
             VoronoiCanvas.Geometry = geometry;
+        }
+
+        private void DXFLoadButton_Click(object sender, RoutedEventArgs e)
+        {
+            var openDialog = new OpenFileDialog();
+            openDialog.Title = "Select .DXF file to open";
+            openDialog.Filter = "AutoCAD DXF File (*.dxf)|*dxf";
+
+            if (openDialog.ShowDialog(this) == true)
+            {
+                var dxfReader = new DXFReader();
+                ShapeCollection geometry = dxfReader.ReadDXF(openDialog.FileName);
+                DXFCanvas.Geometry = geometry;
+            }
         }
     }
 }

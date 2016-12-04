@@ -50,6 +50,22 @@
                     
                 </Grid>
             </TabItem>
+            <TabItem Header="DXF Reader">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Border BorderBrush="Black" BorderThickness="1" Background="White">
+                        <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
+                            <Viewbox>
+                                <fb:GeometryCanvas Name="DXFCanvas" Width="10" Height="10" CurveThickness="0.03" PointDiameter="0.1"></fb:GeometryCanvas>
+                            </Viewbox>
+                        </ScrollViewer>
+                    </Border>
+                    <Button Grid.Row="1" Click="DXFLoadButton_Click">Load .DXF</Button>
+                </Grid>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>
