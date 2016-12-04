@@ -268,7 +268,7 @@ namespace FreeBuild.Meshing
             }
             else
             {
-                Vector[] pointStrip = profile.Facet(Angle.FromDegrees(15));
+                Vector[] pointStrip = profile.Facet(Angle.FromDegrees(20));
                 if (remapping == CoordinateSystemRemappingOption.RemapNegYZ) pointStrip = pointStrip.RemapZnegXY();
                 else if (remapping == CoordinateSystemRemappingOption.RemapYZ) pointStrip = pointStrip.RemapZXY();
                 AddSweep(frames, pointStrip, profile.Closed);
@@ -317,7 +317,8 @@ namespace FreeBuild.Meshing
         /// <param name="pointStrip1">The first set of points</param>
         /// <param name="pointStrip2">The second set of points</param>
         /// <param name="reverse">If true, the second set of points will be reversed</param>
-        public void FillBetween(IList<Vector> pointStrip1, IList<Vector> pointStrip2, bool reverse = false)
+        /// <param name="close">If true, an additional face will be added closing the loop</param>
+        public void FillBetween(IList<Vector> pointStrip1, IList<Vector> pointStrip2, bool reverse = false, bool close = false)
         {
             int max = Math.Max(pointStrip1.Count, pointStrip2.Count) - 1;
             for (int i = 0; i < max; i++)
@@ -326,6 +327,14 @@ namespace FreeBuild.Meshing
                 Vector v2 = pointStrip1.GetBounded(i);
                 Vector v3 = pointStrip1.GetBounded(i + 1);
                 Vector v4 = pointStrip2.GetBounded(i + 1, reverse);
+                AddFace(v1, v2, v3, v4);
+            }
+            if (close)
+            {
+                Vector v1 = pointStrip2.GetBounded(pointStrip2.Count - 1, reverse);
+                Vector v2 = pointStrip1.GetBounded(pointStrip1.Count - 1);
+                Vector v3 = pointStrip1.GetBounded(0);
+                Vector v4 = pointStrip2.GetBounded(0, reverse);
                 AddFace(v1, v2, v3, v4);
             }
         }
@@ -337,14 +346,28 @@ namespace FreeBuild.Meshing
         /// <param name="element"></param>
         public void AddSectionPreview(LinearElement element)
         {
-            Angle tolerance = Angle.FromDegrees(15); //TODO: Make adjustable
+
             SectionProperty section = element.Property;
             Curve geometry = element.Geometry;
+            Angle orientation = 0;
+            if (element.Orientation != null) orientation = element.Orientation.Angle();
+            AddSectionPreview(geometry, section, orientation);
+        }
+
+        /// <summary>
+        /// Add a set of vertices and faces to the mesh representing a sweep of the specified section
+        /// along the specified curve with the specified orientation
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <param name="section"></param>
+        /// <param name="orientation"></param>
+        public void AddSectionPreview(Curve geometry, SectionProperty section, Angle orientation)
+        { 
+            Angle tolerance = Angle.FromDegrees(20); //TODO: Make adjustable
             if (section != null && geometry != null && section.Profile != null)
             {
-                Angle orientation = 0;
-                if (element.Orientation != null) orientation = element.Orientation.Angle();
-                IList<CartesianCoordinateSystem> frames = geometry.FacetCSystems(tolerance, orientation);
+                
+                IList<CartesianCoordinateSystem> frames = geometry.FacetCSystems(Angle.FromDegrees(5), orientation);
                 if (frames.Count > 0)
                 {
                     Curve perimeter = section.Profile.Perimeter;
@@ -364,8 +387,8 @@ namespace FreeBuild.Meshing
                                 Vector[] inner = voidCrv.Facet(tolerance);
                                 Vector[] startInner = frames[0].LocalToGlobal(inner.RemapZnegXY());
                                 Vector[] endInner = frames.Last().LocalToGlobal(inner.RemapZXY());
-                                FillBetween(startOuter, startInner);
-                                FillBetween(endOuter, endInner);
+                                FillBetween(startOuter, startInner, false, (voidCrv is Arc && voidCrv.Closed));
+                                FillBetween(endOuter, endInner, false, (voidCrv is Arc && voidCrv.Closed));
                             }
                         }
                     }
@@ -374,9 +397,17 @@ namespace FreeBuild.Meshing
                         //Caps:
                         Vector[] pointStrip = perimeter.Facet(tolerance);
                         Vector[] startPts = frames[0].LocalToGlobal(pointStrip.RemapZnegXY());
-                        FillStartToEnd(startPts,2);
                         Vector[] endPts = frames.Last().LocalToGlobal(pointStrip.RemapZnegXY());
-                        FillStartToEndReverse(endPts,2);
+                        if (perimeter is Arc)
+                        {
+                            FillStartToEnd(startPts, 0);
+                            FillStartToEndReverse(endPts, 0);
+                        }
+                        else
+                        {
+                            FillStartToEnd(startPts, 2);
+                            FillStartToEndReverse(endPts, 2);
+                        }
                         //TODO: Implement other capping methods
                     }
                 }

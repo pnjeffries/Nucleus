@@ -20,6 +20,12 @@ namespace FreeBuild.UI
         /// </summary>
         public double Order { get; set; } = 0;
 
+        /// <summary>
+        /// The text that the field should be labelled with.  If not set,
+        /// the property name itself will be used.
+        /// </summary>
+        public string Label { get; set; } = null;
+
         #endregion
 
         #region Constructors

@@ -59,8 +59,8 @@ namespace FreeBuild.Geometry
             {
                 if (Vertices.Count > 0)
                 {
-                    if (Closed) return Vertices.Count + 1;
-                    return Vertices.Count;
+                    if (Closed) return Vertices.Count;
+                    return Vertices.Count - 1;
                 }
                 else return 0;
             }
@@ -293,7 +293,7 @@ namespace FreeBuild.Geometry
         public virtual Vertex SegmentEnd(int index)
         {
             if (Closed && index == Vertices.Count) return Start;
-            else if (index < Vertices.Count) return Vertices[index + 1];
+            else if (index < Vertices.Count - 1) return Vertices[index + 1];
             else return null;
         }
 
@@ -324,7 +324,7 @@ namespace FreeBuild.Geometry
         /// <param name="orientation">The orientation angle.  The rotation of the Y and Z axes of the coordinate 
         /// system around the X axis, relative to default reference orientation.</param>
         /// <returns></returns>
-        public virtual IList<CartesianCoordinateSystem> FacetCSystems(Angle tolerance, Angle orientation)
+        public IList<CartesianCoordinateSystem> FacetCSystems(Angle tolerance, Angle orientation)
         {
             return FacetCSystems(tolerance, orientation, Angle.FromDegrees(1));
         }

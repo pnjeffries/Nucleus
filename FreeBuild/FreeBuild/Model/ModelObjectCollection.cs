@@ -52,13 +52,14 @@ namespace FreeBuild.Model
         /// <summary>
         /// Find the first item in this collection which has the specified name (if any)
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">The name to search for.</param>
+        /// <param name="ignore">Optional.  If specified this object will be ignore during the search.</param>
         /// <returns></returns>
-        public virtual TItem FindByName(string name)
+        public virtual TItem FindByName(string name, TItem ignore = null)
         {
             foreach(TItem mO in this)
             {
-                if (mO.Name == name) return mO;
+                if (mO.Name == name && mO != ignore) return mO;
             }
             return null;
         }
@@ -68,9 +69,10 @@ namespace FreeBuild.Model
         /// will be a unique name in this collection.
         /// </summary>
         /// <param name="baseName">The base name</param>
+        /// <param name="ignore">Optional.  If specified, this object will be ignored during the search.</param>
         /// <param name="enforcePostFix">Optional.  If set true, a postfix numeral will always be applied, even if it is 1.</param>
         /// <returns></returns>
-        public string NextAvailableName(string baseName, bool enforcePostFix = false)
+        public string NextAvailableName(string baseName, TItem ignore = null, bool enforcePostFix = false)
         {
             if (!enforcePostFix && FindByName(baseName) == null) return baseName;
             else
@@ -80,7 +82,7 @@ namespace FreeBuild.Model
                 while (postFix < 100000)
                 {
                     string nextName = baseName + " " + postFix;
-                    if (FindByName(nextName) == null) return nextName;
+                    if (FindByName(nextName, ignore) == null) return nextName;
                     postFix++;
                 }
             }

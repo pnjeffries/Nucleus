@@ -273,9 +273,27 @@ namespace FreeBuild.Geometry
         public override Vector[] Facet(Angle tolerance)
         {
             int divisions = 1;
+            double radianMeasure = RadianMeasure;
+            if (tolerance > 0 && tolerance < radianMeasure)
+                divisions = (int)Math.Ceiling(radianMeasure / tolerance);
+            if (Closed) radianMeasure -= radianMeasure / divisions;
+            return Circle.Divide(divisions, 0.0, radianMeasure);
+        }
+
+        public override IList<CartesianCoordinateSystem> FacetCSystems(Angle tolerance, Angle orientation, Angle zLimit)
+        {
+            int divisions = 1;
             if (tolerance > 0 && tolerance < RadianMeasure)
                 divisions = (int)Math.Ceiling(RadianMeasure / tolerance);
-            return Circle.Divide(divisions, 0.0, RadianMeasure);
+
+            var result = new List<CartesianCoordinateSystem>();
+
+            for (int i = 0; i <= divisions; i++)
+            {
+                result.Add(LocalCoordinateSystem(0, i * 1.0/divisions, orientation, zLimit));
+            }
+            
+            return result;
         }
 
         public override double CalculateEnclosedArea(out Vector centroid, Plane onPlane = null)

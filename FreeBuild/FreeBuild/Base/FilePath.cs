@@ -24,6 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Reflection;
 
 namespace FreeBuild.Base
 {
@@ -108,6 +109,20 @@ namespace FreeBuild.Base
         public override int GetHashCode()
         {
             return Path.GetHashCode();
+        }
+
+        #endregion
+
+        #region Static Methods
+
+        /// <summary>
+        /// Return the path of the directory within which the specified loaded assembly exists
+        /// </summary>
+        /// <param name="assembly"></param>
+        /// <returns></returns>
+        public static FilePath DirectoryOf(Assembly assembly)
+        {
+            return new FilePath(assembly.Location).Directory;
         }
 
         #endregion

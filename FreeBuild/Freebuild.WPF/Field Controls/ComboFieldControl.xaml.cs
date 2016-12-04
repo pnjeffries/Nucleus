@@ -95,10 +95,15 @@ namespace FreeBuild.WPF
             else
             {
                 AutoUIComboBoxAttribute cBA = property.GetCustomAttribute<AutoUIComboBoxAttribute>();
+                string textTemplate = "Name";
                 if (cBA != null)
                 {
                     SetBinding(ItemsSourceProperty, cBA.ItemsSource);
                 }
+                ItemTemplate = new DataTemplate();
+                FrameworkElementFactory tbFactory = new FrameworkElementFactory(typeof(TextBlock));
+                tbFactory.SetBinding(TextBlock.TextProperty, new Binding(textTemplate));
+                ItemTemplate.VisualTree = tbFactory;
             }
         }
 

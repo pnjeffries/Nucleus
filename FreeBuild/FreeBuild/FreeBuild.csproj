@@ -60,6 +60,7 @@
     <Compile Include="Extensions\PropertyInfoExtensions.cs" />
     <Compile Include="Extensions\SortedListExtensions.cs" />
     <Compile Include="Geometry\Cloud.cs" />
+    <Compile Include="Rendering\DisplayAttributes.cs" />
     <Compile Include="Geometry\Intersect.cs" />
     <Compile Include="Geometry\MeshEdge.cs" />
     <Compile Include="Geometry\PlanarSurface.cs" />

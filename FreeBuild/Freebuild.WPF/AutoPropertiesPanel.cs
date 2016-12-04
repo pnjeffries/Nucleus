@@ -3,11 +3,15 @@ using FreeBuild.Geometry;
 using FreeBuild.UI;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using FB = FreeBuild.Geometry;
 
 namespace FreeBuild.WPF
 {
@@ -17,6 +21,31 @@ namespace FreeBuild.WPF
     /// </summary>
     public class AutoPropertiesPanel : StackPanel
     {
+        #region Properties
+
+        public static readonly DependencyProperty MyDataContextProperty =
+        DependencyProperty.Register("MyDataContext",
+                                    typeof(Object),
+                                    typeof(AutoPropertiesPanel),
+                                    new PropertyMetadata(MyDataContextChanged));
+
+        private static void MyDataContextChanged(
+            object sender,
+            DependencyPropertyChangedEventArgs e)
+        {
+            AutoPropertiesPanel myControl = (AutoPropertiesPanel)sender;
+            myControl.Refresh();
+        }
+
+        public object MyDataContext
+        {
+            get { return GetValue(MyDataContextProperty); }
+            set { SetValue(MyDataContextProperty, value); }
+        }
+
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -24,19 +53,21 @@ namespace FreeBuild.WPF
         /// </summary>
         public AutoPropertiesPanel() : base()
         {
-            Initialise();
+           Initialise();
         }
 
         #endregion
 
         #region Methods
 
+
+
         /// <summary>
         /// Initialise this panel
         /// </summary>
         protected void Initialise()
         {
-            this.DataContextChanged += AutoPropertiesPanel_DataContextChanged;
+            SetBinding(MyDataContextProperty, new Binding());
         }
 
         /// <summary>
@@ -68,6 +99,7 @@ namespace FreeBuild.WPF
         protected void GenerateFieldsFor(Type type)
         {
             IList<PropertyInfo> properties = type.GetAutoUIProperties();
+            GenerateFieldsFor(properties);
         }
 
         /// <summary>
@@ -79,16 +111,20 @@ namespace FreeBuild.WPF
             foreach (PropertyInfo property in properties)
             {
                 FieldControl control = null;
-                Type pType = property.GetType();
+                Type pType = property.PropertyType;
                 if (property.HasAttribute(typeof(AutoUIComboBoxAttribute)))
                 {
                     control = new ComboFieldControl();
                 }
-                if (pType.IsAssignableFrom(typeof(double))) //Numbers
+                else if (pType.IsAssignableFrom(typeof(double))) //Numbers
                 {
                     control = new SliderFieldControl();
                 }
-                else if (pType == typeof(Vector)) //Vectors
+                else if (pType == typeof(bool))
+                {
+                    control = new CheckBoxFieldControl();
+                }
+                else if (pType == typeof(FB.Vector)) //Vectors
                 {
                     control = new VectorFieldControl();
                 }

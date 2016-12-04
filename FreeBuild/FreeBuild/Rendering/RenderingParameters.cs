@@ -37,5 +37,6 @@ namespace FreeBuild.Rendering
         /// The current position of the 3D cursor during dynamically-drawn selection operations
         /// </summary>
         public Vector CursorPosition { get; set; } = Vector.Unset;
+
     }
 }

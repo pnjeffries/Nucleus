@@ -232,6 +232,75 @@ namespace Salamander.Rhino
         }
 
         /// <summary>
+        /// Bake a piece of Rhino geometry in the active document
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        public static Guid Bake(RC.GeometryBase geometry)
+        {
+            return RhinoDoc.ActiveDoc.Objects.Add(geometry);
+        }
+
+        /// <summary>
+        /// Bake a piece of FreeBuild geometry in the active Rhino document
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        public static Guid Bake(Shape geometry)
+        {
+            GeometryBase gB = FBtoRC.Convert(geometry);
+            if (gB != null)
+                return Bake(gB);
+            else throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Replace a geometry object in the active Rhino document
+        /// </summary>
+        /// <param name="objID"></param>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        public static bool Replace(Guid objID, GeometryBase geometry)
+        {
+            if (geometry == null)
+                return false;
+            else if (geometry is RC.Curve)
+                return RhinoDoc.ActiveDoc.Objects.Replace(objID, (RC.Curve)geometry);
+            else if (geometry is RC.Mesh)
+                return RhinoDoc.ActiveDoc.Objects.Replace(objID, (RC.Mesh)geometry);
+            else if (geometry is RC.Brep)
+                return RhinoDoc.ActiveDoc.Objects.Replace(objID, (RC.Brep)geometry);
+            else if (geometry is RC.Surface)
+                return RhinoDoc.ActiveDoc.Objects.Replace(objID, (RC.Curve)geometry);
+            else return false;
+        }
+
+        /// <summary>
+        /// Replace an object in the current Rhino document
+        /// </summary>
+        /// <param name="objID"></param>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        public static bool Replace(Guid objID, Shape geometry)
+        {
+            return Replace(objID, FBtoRC.Convert(geometry));
+        }
+
+        /// <summary>
+        /// Replace an object if it exists or bake a new one if it does not
+        /// </summary>
+        /// <param name="objID"></param>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        public static Guid BakeOrReplace(Guid objID, Shape geometry)
+        {
+            if (objID != Guid.Empty && ObjectExists(objID) && Replace(objID, geometry))
+                return objID;
+            else
+                return Bake(geometry);
+        }
+
+        /// <summary>
         /// Helper function to get an object by it's GUID
         /// </summary>
         /// <param name="objID"></param>
@@ -239,6 +308,16 @@ namespace Salamander.Rhino
         private static RhinoObject GetObject(Guid objID)
         {
             return RhinoDoc.ActiveDoc.Objects.Find(objID);
+        }
+
+        /// <summary>
+        /// Does an object with the specified ID exist within the current document?
+        /// </summary>
+        /// <param name="objID"></param>
+        /// <returns></returns>
+        public static bool ObjectExists(Guid objID)
+        {
+            return GetObject(objID) != null;
         }
 
         /// <summary>

@@ -1,4 +1,7 @@
 ﻿using FreeBuild.Geometry;
+using FreeBuild.Rendering;
+using Rhino;
+using Rhino.DocObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -82,6 +85,7 @@ namespace FreeBuild.Rhino
             {
                 //TODO
             }
+            else return new Arc(Convert(arc.StartPoint), Convert(arc.MidPoint), Convert(arc.EndPoint));
             throw new NotImplementedException();
         }
 
@@ -154,6 +158,37 @@ namespace FreeBuild.Rhino
                     return Convert(arc);
             }
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Convert RhinoCommon geometry to FreeBuild geometry
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        public static Shape Convert(RC.GeometryBase geometry)
+        {
+            if (geometry is RC.Curve) return Convert((RC.Curve)geometry);
+            else throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Convert a Rhino object reference to FreeBuild geometry with attached
+        /// attributes.
+        /// </summary>
+        /// <param name="objRef"></param>
+        /// <returns></returns>
+        public static Shape Convert(ObjRef objRef)
+        {
+            Shape result = Convert(objRef.Geometry());
+            if (result != null)
+            {
+                DisplayAttributes attributes = new DisplayAttributes();
+                int layerIndex = objRef.Object().Attributes.LayerIndex;
+                attributes.LayerName = RhinoDoc.ActiveDoc.Layers[layerIndex].Name;
+                attributes.SourceID = objRef.ObjectId.ToString();
+                result.Attributes = attributes;
+            }
+            return result;
         }
     }
 }

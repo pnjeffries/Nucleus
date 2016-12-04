@@ -168,5 +168,28 @@ namespace FreeBuild.Rhino
             return null;
         }
 
+        /// <summary>
+        /// Convert a FreeBuild surface to Rhino geometry
+        /// </summary>
+        /// <param name="surface"></param>
+        /// <returns></returns>
+        public static RC.GeometryBase Convert(Surface surface)
+        {
+            if (surface is PlanarSurface) return Convert((PlanarSurface)surface);
+            return null;
+        }
+
+        /// <summary>
+        /// Convert FreeBuild geometry into RhinoCommon geometry
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        public static RC.GeometryBase Convert(Shape geometry)
+        {
+            if (geometry is Curve) return Convert((Curve)geometry);
+            else if (geometry is Surface) return Convert((Surface)geometry);
+            return null;
+        }
+
     }
 }

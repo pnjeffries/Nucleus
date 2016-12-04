@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeBuild.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -71,8 +72,12 @@ namespace FreeBuild.WPF
         /// <param name="property"></param>
         public virtual void AdaptTo(PropertyInfo property)
         {
-            //TODO: Override with attribute if present
-            Label = property.Name;
+            // Use attribute-defined label if present:
+            AutoUIAttribute autoAtt = property.GetCustomAttribute<AutoUIAttribute>();
+            if (autoAtt != null && !string.IsNullOrWhiteSpace(autoAtt.Label))
+                Label = autoAtt.Label;
+            // Otherwise, use property name:
+            else Label = property.Name;
         }
 
         #endregion

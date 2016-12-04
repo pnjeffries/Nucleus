@@ -20,6 +20,7 @@
 
 using FreeBuild.Base;
 using FreeBuild.Model;
+using FreeBuild.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,6 +88,22 @@ namespace FreeBuild.Geometry
         /// acceptable limits, etc.
         /// </summary>
         public abstract bool IsValid { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private DisplayAttributes _Attributes = null;
+
+        /// <summary>
+        /// Optional attached display attributes for this geometry, which determine how this
+        /// object is drawn.  This property may be null, in which case default options should
+        /// be used.
+        /// </summary>
+        public DisplayAttributes Attributes
+        {
+            get { return _Attributes; }
+            set { _Attributes = value; }
+        }
 
         /// <summary>
         /// Private backing member variable for the BoundingBox property
@@ -213,6 +230,7 @@ namespace FreeBuild.Geometry
                 Vertex vB = other.Vertices[i];
                 vA.CopyAttachedDataFrom(vB);
             }
+            Attributes = other.Attributes;
             //Add any other attached data to be copied here
         }
 
