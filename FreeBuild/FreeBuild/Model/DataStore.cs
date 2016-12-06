@@ -104,4 +104,12 @@ namespace FreeBuild.Model
             if (data != null) this[data.GetType()] = data;
         }
     }
+
+    /// <summary>
+    /// Extensible storage mechanism for adding tagged data to model objects
+    /// </summary>
+    public class DataStore : DataStore<object>
+    {
+
+    }
 }

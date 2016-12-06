@@ -19,7 +19,17 @@ namespace FreeBuild.DXF
             ShapeCollection result = new ShapeCollection();
 
             DxfDocument doc = DxfDocument.Load(path);
-            
+            double scale = 1.0;
+            if (doc.DrawingVariables.InsUnits == netDxf.Units.DrawingUnits.Millimeters) scale = 0.001;
+            else if (doc.DrawingVariables.InsUnits == netDxf.Units.DrawingUnits.Centimeters) scale = 0.01;
+            DXFtoFB.ConversionScaling = scale;
+
+            // Hatches
+            foreach (netDxf.Entities.Hatch hatch in doc.Hatches)
+            {
+                result.AddRange(DXFtoFB.Convert(hatch));
+            }
+
             // Lines
             foreach (netDxf.Entities.Line line in doc.Lines)
             {
@@ -57,6 +67,29 @@ namespace FreeBuild.DXF
             {
                 result.Add(DXFtoFB.Convert(point));
             }
+
+            // Block inserts
+            foreach (netDxf.Entities.Insert insert in doc.Inserts)
+            {
+                // Explode:
+                // Note: There is some commented-out code in the library to do this:
+                // see: https://netdxf.codeplex.com/SourceControl/latest#netDxf/Entities/Insert.cs
+                // TODO: Review and improve?
+                Vector translation = DXFtoFB.Convert(insert.Position);
+                Transform transform = DXFtoFB.Convert(insert.GetTransformation(netDxf.Units.DrawingUnits.Meters));
+
+                foreach (netDxf.Entities.EntityObject entity in insert.Block.Entities)
+                {
+                    Shape shape = DXFtoFB.Convert(entity);
+                    if (shape != null)
+                    {
+                        shape.Transform(transform);
+                        shape.Move(translation);
+                        result.Add(shape);
+                    }
+                }
+            }
+
 
             return result;
         }

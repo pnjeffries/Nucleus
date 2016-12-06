@@ -92,14 +92,14 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// 
         /// </summary>
-        private DisplayAttributes _Attributes = null;
+        private GeometryAttributes _Attributes = null;
 
         /// <summary>
         /// Optional attached display attributes for this geometry, which determine how this
         /// object is drawn.  This property may be null, in which case default options should
         /// be used.
         /// </summary>
-        public DisplayAttributes Attributes
+        public GeometryAttributes Attributes
         {
             get { return _Attributes; }
             set { _Attributes = value; }

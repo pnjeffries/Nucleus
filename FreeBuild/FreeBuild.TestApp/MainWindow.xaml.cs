@@ -82,7 +82,10 @@ namespace FreeBuild.TestApp
             {
                 var dxfReader = new DXFReader();
                 ShapeCollection geometry = dxfReader.ReadDXF(openDialog.FileName);
-                DXFCanvas.Geometry = geometry;
+                GeometryLayerTable layers = geometry.Layered();
+                DXFCanvas.ViewBounds = new BoundingBox(geometry);
+                DXFCanvas.Layers = layers;
+                LayerBox.ItemsSource = layers;
             }
         }
     }

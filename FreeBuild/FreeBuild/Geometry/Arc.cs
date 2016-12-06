@@ -153,24 +153,26 @@ namespace FreeBuild.Geometry
         /// <param name="startPt">The start point</param>
         /// <param name="ptOnArc">A point that lies somewhere on the arc</param>
         /// <param name="endPt">The end point</param>
-        public Arc(Vector startPt, Vector ptOnArc, Vector endPt) : this()
+        public Arc(Vector startPt, Vector ptOnArc, Vector endPt, GeometryAttributes attributes = null) : this()
         {
             Vertices.Add(new Vertex(startPt));
             Vertices.Add(new Vertex(ptOnArc));
             Vertices.Add(new Vertex(endPt));
+            Attributes = attributes;
         }
 
         /// <summary>
         /// Initialise an arc that forms a complete circle
         /// </summary>
         /// <param name="circle"></param>
-        public Arc(Circle circle) : this()
+        public Arc(Circle circle, GeometryAttributes attributes = null) : this()
         {
             Vertices.Add(new Vertex(circle.PointAt(0.0)));
             Vertices.Add(new Vertex(circle.PointAt(Math.PI)));
             Vertices.Add(new Vertex(circle.PointAt(2*Math.PI)));
             Closed = true;
             _Circle = circle;
+            Attributes = attributes;
         }
 
         /// <summary>
@@ -179,12 +181,13 @@ namespace FreeBuild.Geometry
         /// <param name="circle"></param>
         /// <param name="startAngle"></param>
         /// <param name="endAngle"></param>
-        public Arc(Circle circle, Angle startAngle, Angle endAngle) : this()
+        public Arc(Circle circle, Angle startAngle, Angle endAngle, GeometryAttributes attributes = null) : this()
         {
             Vertices.Add(new Vertex(circle.PointAt(startAngle)));
             Vertices.Add(new Vertex(circle.PointAt(startAngle + (endAngle-startAngle).NormalizeTo2PI()/2)));
             Vertices.Add(new Vertex(circle.PointAt(endAngle)));
             _Circle = circle;
+            Attributes = attributes;
         }
 
         #endregion
@@ -286,6 +289,12 @@ namespace FreeBuild.Geometry
         {
             base.Move(translation);
             if (_Circle != null) _Circle = _Circle.Move(translation);
+        }
+
+        public override void Transform(Transform transform)
+        {
+            base.Transform(transform);
+            if (_Circle != null) _Circle = Circle.Transform(transform);
         }
 
         public override Vector[] Facet(Angle tolerance)

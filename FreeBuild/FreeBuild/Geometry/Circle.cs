@@ -343,6 +343,18 @@ namespace FreeBuild.Geometry
             return new Circle(this, Origin + translation);
         }
 
+        /// <summary>
+        /// Create a transformed copy of this circle
+        /// !!!TEMPORARY IMPLEMENTATION THAT ONLY WORKS FOR SIMPLE UNIFORM SCALING!!!
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public Circle Transform(Transform t)
+        {
+            // TEMP!  Applies x-scaling factor (uniformly) but does nothing else!
+            return new Circle(Math.Abs(this.Radius * t[0, 0]), this);
+        }
+
         #endregion
     }
 }

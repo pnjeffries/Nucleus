@@ -97,10 +97,11 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="startPoint">The start point of the line</param>
         /// <param name="endPoint">The end point of the line</param>
-        public Line(Vector startPoint, Vector endPoint): this()
+        public Line(Vector startPoint, Vector endPoint, GeometryAttributes attributes = null): this()
         {
             Vertices.Add(new Vertex(startPoint));
             Vertices.Add(new Vertex(endPoint));
+            Attributes = attributes;
         }
 
         /// <summary>
@@ -112,7 +113,8 @@ namespace FreeBuild.Geometry
         /// <param name="x1">The x coordinate of the line end</param>
         /// <param name="y1">The y coordinate of the line end</param>
         /// <param name="z1">The z coordinate of the line end</param>
-        public Line(double x0, double y0, double z0, double x1, double y1, double z1) : this(new Vector(x0, y0, z0), new Vector(x1, y1, z1)) { }
+        public Line(double x0, double y0, double z0, double x1, double y1, double z1, GeometryAttributes attributes = null) 
+            : this(new Vector(x0, y0, z0), new Vector(x1, y1, z1), attributes) { }
 
         /// <summary>
         /// Constructor to create a new line between two sets of coordinates
@@ -122,7 +124,7 @@ namespace FreeBuild.Geometry
         /// <param name="y0">The y coordinate of the line start</param>
         /// <param name="x1">The x coordinate of the line end</param>
         /// <param name="y1">The y coordinate of the line end</param>
-        public Line(double x0, double y0, double x1, double y1) : this(x0, y0, 0, x1, y1, 0) { }
+        public Line(double x0, double y0, double x1, double y1, GeometryAttributes attributes = null) : this(x0, y0, 0, x1, y1, 0, attributes) { }
 
         /// <summary>
         /// Constructor to create a new line between two vertices

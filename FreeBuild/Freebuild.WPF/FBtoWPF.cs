@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 using W = System.Windows;
 using Shapes = System.Windows.Shapes;
 using Media = System.Windows.Media;
+using FreeBuild.Rendering;
 
 namespace FreeBuild.WPF
 {
     /// <summary>
-    /// Helper class to convert FreeBuild objects to WPF shapes
+    /// Helper class of static functions to convert FreeBuild objects to WPF shapes
     /// </summary>
     public static class FBtoWPF
     {
@@ -23,6 +24,37 @@ namespace FreeBuild.WPF
         public static W.Point Convert(Vector pt)
         {
             return new W.Point(pt.X, -pt.Y);
+        }
+
+        /// <summary>
+        /// Convert a FreeBuild colour to a WPF color
+        /// </summary>
+        /// <param name="col"></param>
+        /// <returns></returns>
+        public static Media.Color Convert(Colour col)
+        {
+            return Media.Color.FromArgb(col.A, col.R, col.G, col.B);
+        }
+
+        /// <summary>
+        /// Convert a FreeBuild ColourBrush to a WPF SolidColorBrush
+        /// </summary>
+        /// <param name="brush">The brush to convert</param>
+        /// <returns></returns>
+        public static Media.SolidColorBrush Convert(ColourBrush brush)
+        {
+            return new Media.SolidColorBrush(Convert(brush.Colour));
+        }
+
+        /// <summary>
+        /// Convert a FreeBuild brush to a WPF one
+        /// </summary>
+        /// <param name="brush"></param>
+        /// <returns></returns>
+        public static Media.Brush Convert(DisplayBrush brush)
+        {
+            if (brush is ColourBrush) return Convert((ColourBrush)brush);
+            else return null;
         }
 
         /// <summary>

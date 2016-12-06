@@ -60,10 +60,12 @@
     <Compile Include="Extensions\PropertyInfoExtensions.cs" />
     <Compile Include="Extensions\SortedListExtensions.cs" />
     <Compile Include="Geometry\Cloud.cs" />
-    <Compile Include="Rendering\DisplayAttributes.cs" />
+    <Compile Include="Geometry\GeometryAttributes.cs" />
+    <Compile Include="Geometry\GeometryLayer.cs" />
+    <Compile Include="Geometry\GeometryLayerTable.cs" />
     <Compile Include="Geometry\Intersect.cs" />
     <Compile Include="Geometry\MeshEdge.cs" />
-    <Compile Include="Geometry\PlanarSurface.cs" />
+    <Compile Include="Geometry\PlanarRegion.cs" />
     <Compile Include="IO\CSVReader.cs" />
     <Compile Include="Meshing\CoordinateSystemRemappingOption.cs" />
     <Compile Include="Meshing\DelaunayTriangle.cs" />
@@ -150,6 +152,9 @@
     <Compile Include="Model\IElementData.cs" />
     <Compile Include="Model\IElementOrientation.cs" />
     <Compile Include="Model\LetterProfile.cs" />
+    <Compile Include="Model\Level.cs" />
+    <Compile Include="Model\LevelCollection.cs" />
+    <Compile Include="Model\LevelTable.cs" />
     <Compile Include="Model\LinearElement.cs" />
     <Compile Include="Model\LinearElementCollection.cs" />
     <Compile Include="Model\Load.cs" />
@@ -197,6 +202,9 @@
     <Compile Include="Model\VolumetricPropertyTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Geometry\Vector.cs" />
+    <Compile Include="Rendering\Colour.cs" />
+    <Compile Include="Rendering\ColourBrush.cs" />
+    <Compile Include="Rendering\DisplayBrush.cs" />
     <Compile Include="Rendering\IRenderable.cs" />
     <Compile Include="Rendering\RenderingParameters.cs" />
     <Compile Include="Structural\Support.cs" />

@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="FreeBuild.WPF.LayeredGeometryCanvas"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FreeBuild.WPF"
+             xmlns:converters="clr-namespace:FreeBuild.WPF.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Name="LayoutRoot">
+        
+            <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
+                <Viewbox>
+                    <ItemsControl Name="ItemsControl" ItemsSource="{Binding Layers}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <local:GeometryCanvas Geometry="{Binding}" 
+                                                      Visibility="{Binding Path=Visible, Converter={StaticResource BooleanVisibilityConverter}}"
+                                                      CurveThickness="{Binding Path=CurveThickness, RelativeSource={RelativeSource AncestorType=local:LayeredGeometryCanvas}}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                </Viewbox>
+            </ScrollViewer>
+        
+    </Grid>
+</UserControl>

@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 
 namespace FreeBuild.Geometry
 {
+
     /// <summary>
     /// A generic, observable, keyed collection of shapes
     /// </summary>
@@ -35,12 +36,52 @@ namespace FreeBuild.Geometry
     public class ShapeCollection<TShape> : UniquesCollection<TShape>
         where TShape : Shape
     {
+        
     }
 
     /// <summary>
     /// An observable, keyed collection of geometry
     /// </summary>
+    [Serializable]
     public class ShapeCollection : ShapeCollection<Shape>
-    { }
+    {
+        #region Methods
+
+        /// <summary>
+        /// Extract from this collection all geometry objects that are marked as lying on
+        /// a layer with the specified name
+        /// </summary>
+        /// <param name="layerName">The layer name to search for.  Case sensitive.</param>
+        /// <returns></returns>
+        public ShapeCollection AllOnLayer(string layerName)
+        {
+            ShapeCollection result = new ShapeCollection();
+            foreach (Shape geometry in this)
+            {
+                if (geometry.Attributes?.LayerName == layerName) result.Add(geometry);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Extract a dictionary of geometry objects keyed by the layer name of their attributes
+        /// </summary>
+        /// <returns></returns>
+        public GeometryLayerTable Layered()
+        {
+            GeometryLayerTable result = new GeometryLayerTable();
+            foreach (Shape geometry in this)
+            {
+                string layerName = geometry.Attributes?.LayerName;
+                if (layerName == null) layerName = "Default";
+                if (!result.Contains(layerName))
+                    result.Add(new GeometryLayer(layerName));
+                result[layerName].Add(geometry);
+            }
+            return result;
+        }
+
+        #endregion
+    }
 
 }

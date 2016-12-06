@@ -182,7 +182,7 @@ namespace FreeBuild.Rhino
             Shape result = Convert(objRef.Geometry());
             if (result != null)
             {
-                DisplayAttributes attributes = new DisplayAttributes();
+                GeometryAttributes attributes = new GeometryAttributes();
                 int layerIndex = objRef.Object().Attributes.LayerIndex;
                 attributes.LayerName = RhinoDoc.ActiveDoc.Layers[layerIndex].Name;
                 attributes.SourceID = objRef.ObjectId.ToString();

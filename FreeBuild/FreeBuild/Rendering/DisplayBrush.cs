@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Model
+namespace FreeBuild.Rendering
 {
     /// <summary>
-    /// A collection of loads
+    /// Abstract base class for objects which describe how an object should be drawn.
     /// </summary>
     [Serializable]
-    public class LoadCollection : ModelObjectCollection<Load>
+    public abstract class DisplayBrush
     {
     }
 }

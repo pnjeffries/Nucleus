@@ -74,13 +74,14 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="points"></param>
         /// <param name="close"></param>
-        public PolyLine(IEnumerable<Vector> points, bool close = false) : this()
+        public PolyLine(IEnumerable<Vector> points, bool close = false, GeometryAttributes attributes = null) : this()
         {
             foreach(Vector pt in points)
             {
                 Vertices.Add(new Vertex(pt));
             }
             Closed = close;
+            Attributes = attributes;
         }
 
         #endregion

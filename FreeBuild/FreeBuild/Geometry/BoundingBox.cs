@@ -151,6 +151,14 @@ namespace FreeBuild.Geometry
         /// </summary>
         public Vector Mid { get { return new Vector(MidX, MidY, MidZ); } }
 
+        /// <summary>
+        /// The largest dimensional size of this bounding box
+        /// </summary>
+        public double MaxSize
+        {
+            get { return Math.Max(Math.Max(SizeX, SizeY), SizeZ); }
+        }
+
         #endregion
 
         #region Constructor
@@ -203,12 +211,21 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
-        /// Constructor to fit a bounding box around an element
+        /// Constructor to fit a bounding box around a collection of elements
         /// </summary>
         /// <param name="elements"></param>
         public BoundingBox(IEnumerable<IElement> elements)
         {
             Fit(elements);
+        }
+
+        /// <summary>
+        /// Constructor to fit a bounding box around a collection of geometry
+        /// </summary>
+        /// <param name="geometry"></param>
+        public BoundingBox(IEnumerable<Shape> geometry)
+        {
+            Fit(geometry);
         }
 
         /// <summary>
@@ -294,6 +311,29 @@ namespace FreeBuild.Geometry
                 {
                     //Scale to subsequent elements:
                     Include(element);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Fit this bounding box around a collection of elements
+        /// </summary>
+        /// <param name="geometry"></param>
+        public void Fit(IEnumerable<Shape> geometry)
+        {
+            bool first = true;
+            foreach (Shape shape in geometry)
+            {
+                if (first)
+                {
+                    //Initialise to first element:
+                    Fit(shape);
+                    first = false;
+                }
+                else
+                {
+                    //Scale to subsequent elements:
+                    Include(shape);
                 }
             }
         }

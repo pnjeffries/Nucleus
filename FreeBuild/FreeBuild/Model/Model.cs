@@ -104,6 +104,27 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
+        /// Private backing field for Levels property
+        /// </summary>
+        private LevelTable _Levels;
+
+        /// <summary>
+        /// Get the collection of Levels that belong to this model
+        /// </summary>
+        public LevelTable Levels
+        {
+            get
+            {
+                if (_Levels == null)
+                {
+                    _Levels = new LevelTable(this);
+                    _Levels.CollectionChanged += HandlesInternalCollectionChanged;
+                }
+                return _Levels;
+            }
+        }
+
+        /// <summary>
         /// Private backing field for Properties property
         /// </summary>
         private VolumetricPropertyTable _Properties;
@@ -159,7 +180,7 @@ namespace FreeBuild.Model
             get
             {
                 return new ModelObjectCollection(new IEnumerable<ModelObject>[]
-                    {_Elements, _Nodes, _Properties, _Materials});
+                    {_Elements, _Nodes, _Levels, _Properties, _Materials});
             }
         }
 
@@ -170,7 +191,7 @@ namespace FreeBuild.Model
         private BoundingBox _BoundingBox = null;
 
         /// <summary>
-        /// The bounding box of this model.  Calculated and cached as needed
+        /// Get the bounding box of this model.  Calculated and cached as needed
         /// based on element geometry.
         /// </summary>
         public BoundingBox BoundingBox
@@ -274,6 +295,17 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
+        /// Add a new level to this model, if it does not already exist within it
+        /// </summary>
+        /// <param name="level">The level to be added.</param>
+        /// <returns>True if the level could be added, false if it already existed within
+        /// the model.</returns>
+        public bool Add(Level level)
+        {
+            return Levels.TryAdd(level);
+        }
+
+        /// <summary>
         /// Add a new property to this model, if it does not already exist within it
         /// </summary>
         /// <param name="property">The property to be added.</param>
@@ -358,6 +390,7 @@ namespace FreeBuild.Model
             if (_Nodes != null) _Nodes.CollectionChanged += HandlesInternalCollectionChanged;
             if (_Properties != null) _Properties.CollectionChanged += HandlesInternalCollectionChanged;
             if (_Materials != null) _Materials.CollectionChanged += HandlesInternalCollectionChanged;
+            if (_Levels != null) _Levels.CollectionChanged += HandlesInternalCollectionChanged;
 
             foreach (ModelObject unique in Everything)
             {

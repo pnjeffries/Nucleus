@@ -18,7 +18,7 @@
                     <Border BorderBrush="Black" BorderThickness="1" Background="White">
                         <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
                     <Viewbox>
-                        <fb:GeometryCanvas Name="DelaunayCanvas" Width="10" Height="10" CurveThickness="0.03" PointDiameter="0.1"
+                        <fb:GeometryCanvas Name="DelaunayCanvas" Width="10" Height="10"
                                            ></fb:GeometryCanvas>
                     </Viewbox>
                         </ScrollViewer>
@@ -35,7 +35,7 @@
                     <Border BorderBrush="Black" BorderThickness="1" Background="White">
                         <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
                             <Viewbox>
-                                <fb:GeometryCanvas Name="VoronoiCanvas" Width="10" Height="10" CurveThickness="0.03" PointDiameter="0.1"></fb:GeometryCanvas>
+                                <fb:GeometryCanvas Name="VoronoiCanvas" Width="10" Height="10"></fb:GeometryCanvas>
                             </Viewbox>
                         </ScrollViewer>
                     </Border>
@@ -52,19 +52,36 @@
             </TabItem>
             <TabItem Header="DXF Reader">
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Border BorderBrush="Black" BorderThickness="1" Background="White">
-                        <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
-                            <Viewbox>
-                                <fb:GeometryCanvas Name="DXFCanvas" Width="10" Height="10" CurveThickness="0.03" PointDiameter="0.1"></fb:GeometryCanvas>
-                            </Viewbox>
-                        </ScrollViewer>
+                        <fb:LayeredGeometryCanvas Name="DXFCanvas"/>
                     </Border>
-                    <Button Grid.Row="1" Click="DXFLoadButton_Click">Load .DXF</Button>
+                    <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></GridSplitter>
+                    <ListBox Grid.Column="2" Name="LayerBox">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <CheckBox Margin="2" IsChecked="{Binding Path=Visible}"/>
+                                    <TextBlock Margin="2" Grid.Column="1" Text="{Binding Path=Name}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Button Grid.Row="1" Grid.ColumnSpan="3" Click="DXFLoadButton_Click">Load .DXF</Button>
                 </Grid>
+                
             </TabItem>
         </TabControl>
     </Grid>

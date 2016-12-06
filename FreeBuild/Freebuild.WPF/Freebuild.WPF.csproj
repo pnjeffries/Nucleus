@@ -44,6 +44,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\BooleanVisibilityConverter.cs" />
     <Compile Include="Converters\CountVisibilityConverter.cs" />
     <Compile Include="Converters\ExpanderHeaderWidthConverter.cs" />
     <Compile Include="EnumBindingSourceExtension.cs" />
@@ -68,6 +69,9 @@
     <Compile Include="AutoPropertiesPanel.cs" />
     <Compile Include="Converters\IsEqualConverter.cs" />
     <Compile Include="GeometryCanvas.cs" />
+    <Compile Include="LayeredGeometryCanvas.xaml.cs">
+      <DependentUpon>LayeredGeometryCanvas.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ProfileCanvas.cs" />
     <Compile Include="PropertiesExpander.xaml.cs">
       <DependentUpon>PropertiesExpander.xaml</DependentUpon>
@@ -110,6 +114,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Field Controls\VectorFieldControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LayeredGeometryCanvas.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

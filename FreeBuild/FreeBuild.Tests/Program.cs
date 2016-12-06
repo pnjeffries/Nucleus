@@ -46,9 +46,9 @@ namespace FreeBuild.Tests
                 //ts2 += Mesh_Tests.DelaunayTest(10000);
             }
 
-            Core.Print("Method 1: " + ts1 + "   Method 2: " + ts2);*/
+            Core.Print("Method 1: " + ts1 + "   Method 2: " + ts2);
             Core.Print("Total: " + ts1 + " Average: " + TimeSpan.FromMilliseconds((ts1.TotalMilliseconds/runs)));//+ "   Method 2: " + ts2);
-
+            */
             Console.Read();
         }
     }

@@ -35,12 +35,12 @@ namespace FreeBuild.Base
         /// <summary>
         /// Private backing field for Name property
         /// </summary>
-        private string _Name;
+        protected string _Name;
 
         /// <summary>
         /// The name, or mark, of this object
         /// </summary>
-        public string Name
+        public virtual string Name
         {
             get
             {

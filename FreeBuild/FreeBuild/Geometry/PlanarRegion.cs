@@ -10,7 +10,7 @@ namespace FreeBuild.Geometry
     /// A planar surface described by a perimeter boundary curve and (optionally)
     /// a set of 'cut out' perimeter voids.
     /// </summary>
-    public class PlanarSurface : Surface
+    public class PlanarRegion : Surface
     {
         #region Properties
 
@@ -121,15 +121,16 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Default constructor.  Initialises a new PlanarSurface with no geometry.
         /// </summary>
-        public PlanarSurface() { }
+        public PlanarRegion() { }
 
         /// <summary>
         /// Initialises a new PlanarSurface with the specified perimeter curve.
         /// </summary>
         /// <param name="perimeter"></param>
-        public PlanarSurface(Curve perimeter)
+        public PlanarRegion(Curve perimeter, GeometryAttributes attributes = null)
         {
             _Perimeter = perimeter;
+            Attributes = attributes;
         }
 
         /// <summary>
@@ -137,7 +138,7 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="perimeter"></param>
         /// <param name="voids"></param>
-        public PlanarSurface(Curve perimeter, CurveCollection voids) : this(perimeter)
+        public PlanarRegion(Curve perimeter, CurveCollection voids, GeometryAttributes attributes = null) : this(perimeter, attributes)
         {
             _Voids = voids;
         }

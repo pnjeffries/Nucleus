@@ -148,7 +148,7 @@ namespace FreeBuild.Rhino
         /// </summary>
         /// <param name="surface"></param>
         /// <returns></returns>
-        public static RC.Brep Convert(PlanarSurface surface)
+        public static RC.Brep Convert(PlanarRegion surface)
         {
             if (surface == null || !surface.IsValid) return null;
             else
@@ -175,7 +175,7 @@ namespace FreeBuild.Rhino
         /// <returns></returns>
         public static RC.GeometryBase Convert(Surface surface)
         {
-            if (surface is PlanarSurface) return Convert((PlanarSurface)surface);
+            if (surface is PlanarRegion) return Convert((PlanarRegion)surface);
             return null;
         }
 
