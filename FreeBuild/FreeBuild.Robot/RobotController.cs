@@ -361,6 +361,22 @@ namespace FreeBuild.Robot
             return true;
         }
 
+        /// <summary>
+        /// Update the panel elements in the open Robot model from those in a FreeBuild model
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="panelElements"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        private bool UpdateRobotPanelsFromModel(Model.Model model, PanelElementCollection panelElements, RobotConversionContext context)
+        {
+            foreach (PanelElement element in panelElements)
+            {
+                //TODO
+            }
+            return true;
+        }
+
         #endregion
 
         #region Robot Object Creation
@@ -775,6 +791,22 @@ namespace FreeBuild.Robot
             {
                 IRobotDataObject bar = bars.Get(i);
                 if (bar != null) result.Add(bar.Number);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Extract a list of all finite element IDs in the currently open project
+        /// </summary>
+        /// <returns></returns>
+        public IList<int> AllFiniteElementIDs()
+        {
+            IRobotCollection elems = Robot.Project.Structure.FiniteElems.GetAll();
+            IList<int> result = new List<int>(elems.Count);
+            for (int i = 1; i <= elems.Count; i++)
+            {
+                IRobotDataObject elem = elems.Get(i);
+                if (elem != null) result.Add(elem.Number);
             }
             return result;
         }

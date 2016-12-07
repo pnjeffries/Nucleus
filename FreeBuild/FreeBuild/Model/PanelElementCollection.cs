@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 namespace FreeBuild.Model
 {
     /// <summary>
-    /// A collection of linear elements
+    /// A collection of PanelElements
     /// </summary>
     [Serializable]
-    public class LinearElementCollection : ElementCollection<LinearElement, LinearElementCollection>
+    public class PanelElementCollection : ElementCollection<PanelElement, PanelElementCollection>
     {
+
     }
 }

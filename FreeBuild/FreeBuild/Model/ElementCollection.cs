@@ -130,6 +130,23 @@ namespace FreeBuild.Model
             }
         }
 
+        /// <summary>
+        /// Extract a collection of all the panel elements in this collection.
+        /// A new collection will be generated each time this is called.
+        /// </summary>
+        public PanelElementCollection PanelElements
+        {
+            get
+            {
+                var result = new PanelElementCollection();
+                foreach (Element element in this)
+                {
+                    if (element is PanelElement) result.Add((PanelElement)element);
+                }
+                return result;
+            }
+        }
+
         #endregion
 
         #region constructors

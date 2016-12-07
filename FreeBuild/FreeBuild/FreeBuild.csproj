@@ -173,6 +173,7 @@
     <Compile Include="Model\NodeGenerationParameters.cs" />
     <Compile Include="Model\PanelElement.cs" />
     <Compile Include="Model\NodeTable.cs" />
+    <Compile Include="Model\PanelElementCollection.cs" />
     <Compile Include="Model\ParameterProfile.cs" />
     <Compile Include="Model\SectionProfile.cs" />
     <Compile Include="Model\RectangularHollowProfile.cs" />
