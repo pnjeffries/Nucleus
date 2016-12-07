@@ -139,8 +139,8 @@
     <Compile Include="Geometry\Plane.cs" />
     <Compile Include="Geometry\PolyCurve.cs" />
     <Compile Include="Geometry\PolyLine.cs" />
-    <Compile Include="Geometry\Shape.cs" />
-    <Compile Include="Geometry\ShapeCollection.cs" />
+    <Compile Include="Geometry\VertexGeometry.cs" />
+    <Compile Include="Geometry\VertexGeometryCollection.cs" />
     <Compile Include="Geometry\Vertex.cs" />
     <Compile Include="Base\Document.cs" />
     <Compile Include="Geometry\WrappedCurve.cs" />

@@ -42,7 +42,7 @@ namespace FreeBuild.Model
         /// the overall geometry of this object.
         /// The set-out curve of 1D Elements, the surface of slabs, etc.
         /// </summary>
-        Shape Geometry { get; }
+        VertexGeometry Geometry { get; }
 
         /// <summary>
         /// The volumetric property that describes how the editable set-out 

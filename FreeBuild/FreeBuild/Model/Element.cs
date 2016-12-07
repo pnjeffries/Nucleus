@@ -69,7 +69,7 @@ namespace FreeBuild.Model
             get
             {
                 NodeCollection result = new NodeCollection();
-                Shape geometry = GetGeometry();
+                VertexGeometry geometry = GetGeometry();
                 foreach (Vertex v in geometry.Vertices)
                 {
                     if (v.Node != null && !result.Contains(v.Node.GUID)) result.Add(v.Node);
@@ -81,7 +81,7 @@ namespace FreeBuild.Model
         /// <summary>
         /// IElement Geometry implementation
         /// </summary>
-        Shape IElement.Geometry
+        VertexGeometry IElement.Geometry
         {
             get
             {
@@ -118,7 +118,7 @@ namespace FreeBuild.Model
         /// Protected internal function to return this element's geometry as a shape
         /// </summary>
         /// <returns></returns>
-        public abstract Shape GetGeometry();
+        public abstract VertexGeometry GetGeometry();
 
         /// <summary>
         /// IElement Property implementation
@@ -133,7 +133,7 @@ namespace FreeBuild.Model
         /// <param name="model"></param>
         public virtual void RegenerateNodes(NodeGenerationParameters options)
         {
-            Shape geometry = GetGeometry();
+            VertexGeometry geometry = GetGeometry();
             foreach (Vertex v in geometry.Vertices)
             {
                 v.GenerateNode(options);
@@ -147,7 +147,7 @@ namespace FreeBuild.Model
         /// <returns></returns>
         public bool ContainsNode(Node node)
         {
-            Shape geometry = GetGeometry();
+            VertexGeometry geometry = GetGeometry();
             foreach (Vertex v in geometry.Vertices)
             {
                 if (v.Node == node) return true;
@@ -167,7 +167,7 @@ namespace FreeBuild.Model
     /// </summary>
     [Serializable]
     public abstract class Element<TShape, TProperty> : Element
-        where TShape : Shape
+        where TShape : VertexGeometry
         where TProperty : VolumetricProperty
     {
 
@@ -261,7 +261,7 @@ namespace FreeBuild.Model
 
         #region Methods
 
-        public override Shape GetGeometry()
+        public override VertexGeometry GetGeometry()
         {
             return Geometry;
         }

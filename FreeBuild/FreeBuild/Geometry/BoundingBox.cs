@@ -223,7 +223,7 @@ namespace FreeBuild.Geometry
         /// Constructor to fit a bounding box around a collection of geometry
         /// </summary>
         /// <param name="geometry"></param>
-        public BoundingBox(IEnumerable<Shape> geometry)
+        public BoundingBox(IEnumerable<VertexGeometry> geometry)
         {
             Fit(geometry);
         }
@@ -319,10 +319,10 @@ namespace FreeBuild.Geometry
         /// Fit this bounding box around a collection of elements
         /// </summary>
         /// <param name="geometry"></param>
-        public void Fit(IEnumerable<Shape> geometry)
+        public void Fit(IEnumerable<VertexGeometry> geometry)
         {
             bool first = true;
-            foreach (Shape shape in geometry)
+            foreach (VertexGeometry shape in geometry)
             {
                 if (first)
                 {
@@ -351,7 +351,7 @@ namespace FreeBuild.Geometry
         /// Fit this bounding box around a shape
         /// </summary>
         /// <param name="shape"></param>
-        public void Fit(Shape shape)
+        public void Fit(VertexGeometry shape)
         {
             if (shape != null) Fit(shape.Vertices);
         }
@@ -440,7 +440,7 @@ namespace FreeBuild.Geometry
         /// necessary.
         /// </summary>
         /// <param name="geometry"></param>
-        public void Include(Shape geometry)
+        public void Include(VertexGeometry geometry)
         {
             if (geometry != null) Include(geometry.Vertices);
         }

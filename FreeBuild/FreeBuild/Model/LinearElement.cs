@@ -86,7 +86,7 @@ namespace FreeBuild.Model
         /// Default constructor.
         /// For use in factory methods only.
         /// </summary>
-        internal LinearElement()
+        public LinearElement()
         {
 
         }

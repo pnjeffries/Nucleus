@@ -30,7 +30,7 @@ namespace FreeBuild.Geometry
     /// A collection of curve objects
     /// </summary>
     [Serializable]
-    public class CurveCollection : ShapeCollection<Curve>
+    public class CurveCollection : VertexGeometryCollection<Curve>
     {
     }
 }

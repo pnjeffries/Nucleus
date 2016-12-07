@@ -215,7 +215,7 @@ namespace FreeBuild.DXF
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static Shape Convert(nDE.EntityObject entity)
+        public static VertexGeometry Convert(nDE.EntityObject entity)
         {
             if (entity is nDE.Point) return Convert((nDE.Point)entity);
             else if (entity is nDE.Line) return Convert((nDE.Line)entity);

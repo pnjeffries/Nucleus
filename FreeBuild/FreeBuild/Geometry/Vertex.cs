@@ -39,7 +39,7 @@ namespace FreeBuild.Geometry
     /// </summary>
     [Serializable]
     [DebuggerDisplay("Vertex( {X} , {Y} , {Z}) ")]
-    public class Vertex : Unique, IOwned<Shape>, IPosition, IComparable<Vertex>
+    public class Vertex : Unique, IOwned<VertexGeometry>, IPosition, IComparable<Vertex>
     {
         #region Static Fields
 
@@ -102,14 +102,14 @@ namespace FreeBuild.Geometry
         /// Private backing member variable for the Shape property
         /// </summary>
         [Copy(CopyBehaviour.MAP)]
-        private Shape _Owner = null;
+        private VertexGeometry _Owner = null;
 
         /// <summary>
         /// The shape (if any) that this vertex belongs to.
         /// Vertices removed from their owner will automatically be detatched from
         /// their node to prevent memory leaks.
         /// </summary>
-        public Shape Owner
+        public VertexGeometry Owner
         {
             get { return _Owner; }
             internal set

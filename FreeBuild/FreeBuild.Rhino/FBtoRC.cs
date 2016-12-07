@@ -184,7 +184,7 @@ namespace FreeBuild.Rhino
         /// </summary>
         /// <param name="geometry"></param>
         /// <returns></returns>
-        public static RC.GeometryBase Convert(Shape geometry)
+        public static RC.GeometryBase Convert(VertexGeometry geometry)
         {
             if (geometry is Curve) return Convert((Curve)geometry);
             else if (geometry is Surface) return Convert((Surface)geometry);

@@ -67,22 +67,26 @@ namespace FreeBuild.Base
         /// <returns>A duplicated copy of this object</returns>
         public static T Duplicate<T>(this T obj, ref Dictionary<object, object> objectMap) where T : IDuplicatable
         {
-            T clone = (T)Activator.CreateInstance(obj.GetType()); //Create a blank instance of the relevant type
-            if (objectMap == null) objectMap = new Dictionary<object, object>();
-            objectMap[obj] = clone; //Store the original-clone relationship in the map
-            clone.CopyFieldsFrom(obj, ref objectMap);
-            if (obj.GetType().IsEnumerable())
+            if (obj.GetType().HasParameterlessConstructor())
             {
-                IEnumerable source = (IEnumerable)obj;
-                IEnumerable target = (IEnumerable)clone;
-                foreach(object item in source)
+                T clone = (T)Activator.CreateInstance(obj.GetType()); //Create a blank instance of the relevant type
+                if (objectMap == null) objectMap = new Dictionary<object, object>();
+                objectMap[obj] = clone; //Store the original-clone relationship in the map
+                clone.CopyFieldsFrom(obj, ref objectMap);
+                if (obj.GetType().IsEnumerable())
                 {
+                    IEnumerable source = (IEnumerable)obj;
+                    IEnumerable target = (IEnumerable)clone;
+                    foreach (object item in source)
+                    {
 
+                    }
                 }
-            }
-            //TODO: Deal with duplicating collections
+                //TODO: Deal with duplicating collections
 
-            return clone;
+                return clone;
+            }
+            else return default(T);
         }
 
         /// <summary>

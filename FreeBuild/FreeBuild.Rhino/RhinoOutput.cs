@@ -246,7 +246,7 @@ namespace Salamander.Rhino
         /// </summary>
         /// <param name="geometry"></param>
         /// <returns></returns>
-        public static Guid Bake(Shape geometry)
+        public static Guid Bake(VertexGeometry geometry)
         {
             GeometryBase gB = FBtoRC.Convert(geometry);
             if (gB != null)
@@ -281,7 +281,7 @@ namespace Salamander.Rhino
         /// <param name="objID"></param>
         /// <param name="geometry"></param>
         /// <returns></returns>
-        public static bool Replace(Guid objID, Shape geometry)
+        public static bool Replace(Guid objID, VertexGeometry geometry)
         {
             return Replace(objID, FBtoRC.Convert(geometry));
         }
@@ -292,7 +292,7 @@ namespace Salamander.Rhino
         /// <param name="objID"></param>
         /// <param name="geometry"></param>
         /// <returns></returns>
-        public static Guid BakeOrReplace(Guid objID, Shape geometry)
+        public static Guid BakeOrReplace(Guid objID, VertexGeometry geometry)
         {
             if (objID != Guid.Empty && ObjectExists(objID) && Replace(objID, geometry))
                 return objID;

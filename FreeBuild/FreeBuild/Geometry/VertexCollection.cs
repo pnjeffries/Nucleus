@@ -33,7 +33,7 @@ namespace FreeBuild.Geometry
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     [Serializable]
-    public class VertexCollection : OwnedCollection<Vertex, Shape>
+    public class VertexCollection : OwnedCollection<Vertex, VertexGeometry>
     {
         
         #region Constructors
@@ -42,7 +42,7 @@ namespace FreeBuild.Geometry
         /// Owner constructor
         /// </summary>
         /// <param name="owner"></param>
-        public VertexCollection(Shape owner): base(owner)
+        public VertexCollection(VertexGeometry owner): base(owner)
         {
         }
 
@@ -57,7 +57,7 @@ namespace FreeBuild.Geometry
         /// new vertices.
         /// </summary>
         /// <param name="points"></param>
-        public VertexCollection(IEnumerable<Vector> points, Shape owner = null) : this(owner)
+        public VertexCollection(IEnumerable<Vector> points, VertexGeometry owner = null) : this(owner)
         {
             foreach(Vector v in points)
             {
@@ -69,7 +69,7 @@ namespace FreeBuild.Geometry
         /// Initialise a new vertex collection, containing the specified set of vertices
         /// </summary>
         /// <param name="points"></param>
-        public VertexCollection(IEnumerable<Vertex> vertices, Shape owner = null) : this(owner)
+        public VertexCollection(IEnumerable<Vertex> vertices, VertexGeometry owner = null) : this(owner)
         {
             foreach (Vertex v in vertices)
             {
