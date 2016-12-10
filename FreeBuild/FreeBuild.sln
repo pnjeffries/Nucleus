@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeBuild", "FreeBuild\FreeBuild.csproj", "{7635522C-178F-4DB5-9106-FF8DFD4B833B}"
 EndProject
@@ -20,6 +20,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeBuild.TestApp", "FreeBuild.TestApp\FreeBuild.TestApp.csproj", "{91E17196-8E2A-4E8B-9701-67134E535C80}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeBuild.DXF", "FreeBuild.DXF\FreeBuild.DXF.csproj", "{36955035-2ED9-4E01-A440-C95C1051B0BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeBuild.OpenTK", "FreeBuild.OpenTK\FreeBuild.OpenTK.csproj", "{022305D8-4399-4B96-B8C1-C87E25F2E68E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{36955035-2ED9-4E01-A440-C95C1051B0BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36955035-2ED9-4E01-A440-C95C1051B0BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36955035-2ED9-4E01-A440-C95C1051B0BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{022305D8-4399-4B96-B8C1-C87E25F2E68E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{022305D8-4399-4B96-B8C1-C87E25F2E68E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{022305D8-4399-4B96-B8C1-C87E25F2E68E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{022305D8-4399-4B96-B8C1-C87E25F2E68E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
