@@ -33,9 +33,43 @@ namespace FreeBuild.Geometry
     /// </summary>
     public class GeometryLayerTable : ObservableKeyedCollection<string, GeometryLayer>
     {
+        #region Properties
+
+        /// <summary>
+        /// Get the bounding box of all geometry on all layers within this table
+        /// </summary>
+        public BoundingBox BoundingBox
+        {
+            get
+            {
+                if (Count > 0)
+                {
+                    BoundingBox result = this[0].BoundingBox;
+                    for (int i = 1; i < Count; i++)
+                    {
+                        result.Include(this[1]);
+                    }
+                    return result;
+                }
+                else return null;
+            }
+        }
+
+        #endregion
+
+        #region Methods
+
         protected override string GetKeyForItem(GeometryLayer item)
         {
             return item.Name;
         }
+
+        protected override void OnCollectionChanged()
+        {
+            base.OnCollectionChanged();
+            NotifyPropertyChanged("BoundingBox");
+        }
+
+        #endregion
     }
 }

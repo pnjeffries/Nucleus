@@ -380,6 +380,16 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Expand this bounding box to include the specified set
+        /// of geometry.
+        /// </summary>
+        /// <param name="geometry"></param>
+        public void Include(IEnumerable<VertexGeometry> geometry)
+        {
+            foreach (VertexGeometry geom in geometry) Include(geom);
+        }
+
+        /// <summary>
         /// Expand the bounding box to include the specified point, if necessary
         /// </summary>
         /// <param name="pt"></param>

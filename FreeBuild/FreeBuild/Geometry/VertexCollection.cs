@@ -131,16 +131,17 @@ namespace FreeBuild.Geometry
                 Vector x = this[1].Position - o;
                 Vector xy = this[2].Position - o;
                 int i = 2;
-                while (i < Count)
+                while (i < Count - 1)
                 {
                     i++;
-                    if (!x.IsParallelTo(xy)) break;
+                    if (!xy.IsZero() && !x.IsParallelTo(xy)) break;
                     else xy = this[i].Position - o;
                 }
                 Plane result = new Plane(o, x, xy);
-                while (i < this.Count)
+                while (i < Count)
                 {
                     if (result.DistanceTo(this[i].Position) > tolerance) return null;
+                    i++;
                 }
                 return result;
             }

@@ -109,7 +109,7 @@ namespace FreeBuild.Geometry
         {
             Origin = origin;
             Z = zAxis;
-            Y = Z.IsXOnly() ? Z.Cross(Vector.UnitZ) : Z.Cross(Vector.UnitX);
+            Y = (Z.IsXOnly() ? Z.Cross(Vector.UnitZ) : Z.Cross(Vector.UnitX)).Unitize();
             X = Y.Cross(Z);
         }
 
@@ -122,9 +122,9 @@ namespace FreeBuild.Geometry
         public CartesianCoordinateSystem(Vector origin, Vector xAxis, Vector xyVector)
         {
             Origin = origin;
-            X = xAxis;
-            Z = xAxis.Cross(xyVector);
-            Y = Z.Cross(xAxis);
+            X = xAxis.Unitize();
+            Z = X.Cross(xyVector).Unitize();
+            Y = Z.Cross(X);
         }
 
         /// <summary>

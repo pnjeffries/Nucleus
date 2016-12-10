@@ -664,8 +664,11 @@ namespace FreeBuild.Geometry
         /// <returns></returns>
         public bool IsParallelTo(Vector other)
         {
-            double checkVal = X / other.X;
-            return (checkVal == Y / other.Y && checkVal == Z / other.Z);
+            return (Y * other.Z - Z * other.Y == 0 &&
+                Z * other.X - X * other.Z == 0 &&
+                X * other.Y - Y * other.X == 0);
+            //double checkVal = X / other.X;
+            //return (checkVal == Y / other.Y && checkVal == Z / other.Z);
         }
 
         /// <summary>

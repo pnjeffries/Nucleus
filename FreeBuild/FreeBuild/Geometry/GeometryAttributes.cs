@@ -74,6 +74,15 @@ namespace FreeBuild.Geometry
             Brush = brush;
         }
 
+        /// <summary>
+        /// Brush constructor.  Initialises a new GeometryAttributes object with the specified display brush.
+        /// </summary>
+        /// <param name="brush"></param>
+        public GeometryAttributes(DisplayBrush brush)
+        {
+            Brush = brush;
+        }
+
         #endregion
     }
 }

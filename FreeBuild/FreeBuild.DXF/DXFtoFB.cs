@@ -186,7 +186,7 @@ namespace FreeBuild.DXF
             PolyCurve result = new PolyCurve();
             foreach (nDE.HatchBoundaryPath.Edge edge in path.Edges)
             {
-                Shape edgeRep = Convert(edge.ConvertTo());
+                VertexGeometry edgeRep = Convert(edge.ConvertTo());
                 if (edgeRep != null && edgeRep is Curve)
                 {
                     result.Add((Curve)edgeRep);

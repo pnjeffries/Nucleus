@@ -129,4 +129,23 @@ namespace FreeBuild.Model
         /// <param name="toBeCombined"></param>
         public ModelObjectCollection(IEnumerable<IEnumerable<ModelObject>> toBeCombined) : base(toBeCombined) { }
     }
+
+    /// <summary>
+    /// Extension methods of ModelObjectCollections.
+    /// Implemented as extension methods to take advantage of some return type trickery with generics
+    /// </summary>
+    public static class ModelObjectCollectionExtensions
+    {
+        public static TCollection Modified<TCollection, TObject>(this TCollection collection, DateTime since)
+            where TCollection : ModelObjectCollection<TObject>, new()
+            where TObject : ModelObject
+        {
+            TCollection result = new TCollection();
+            foreach (TObject obj in collection)
+            {
+                if (obj.Modified > since) result.Add(obj);
+            }
+            return result;
+        }
+    }
 }

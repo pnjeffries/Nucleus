@@ -29,12 +29,8 @@ namespace FreeBuild.Model
     /// <summary>
     /// A collection of linear elements
     /// </summary>
+    [Serializable]
     public class LinearElementCollection : ElementCollection<LinearElement, LinearElementCollection>
     {
-        #region Properties
-
-        
-
-        #endregion
     }
 }

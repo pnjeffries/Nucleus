@@ -47,6 +47,7 @@
     <Compile Include="Actions\ExecutionInfo.cs" />
     <Compile Include="Base\Bool6D.cs" />
     <Compile Include="Base\MessageRaiser.cs" />
+    <Compile Include="Base\ObservablePair.cs" />
     <Compile Include="Conversion\ConversionContext.cs" />
     <Compile Include="Conversion\ConversionOptions.cs" />
     <Compile Include="Conversion\IDMappingTable.cs" />
@@ -66,7 +67,8 @@
     <Compile Include="Geometry\Intersect.cs" />
     <Compile Include="Geometry\MeshEdge.cs" />
     <Compile Include="Geometry\PlanarRegion.cs" />
-    <Compile Include="IO\CSVReader.cs" />
+    <Compile Include="Geometry\VertexRule.cs" />
+    <Compile Include="IO\CSVParser.cs" />
     <Compile Include="Meshing\CoordinateSystemRemappingOption.cs" />
     <Compile Include="Meshing\DelaunayTriangle.cs" />
     <Compile Include="Meshing\MeshBuilder.cs" />
@@ -173,6 +175,7 @@
     <Compile Include="Model\NodeGenerationParameters.cs" />
     <Compile Include="Model\PanelElement.cs" />
     <Compile Include="Model\NodeTable.cs" />
+    <Compile Include="Model\PanelElementCollection.cs" />
     <Compile Include="Model\ParameterProfile.cs" />
     <Compile Include="Model\SectionProfile.cs" />
     <Compile Include="Model\RectangularHollowProfile.cs" />

@@ -106,7 +106,7 @@ namespace FreeBuild.WPF
         /// <summary>
         /// The default diameter of points drawn on this canvas
         /// </summary>
-        public double PointDiameter { get; set; } = 0.03;
+        public double PointDiameter { get; set; } = 0.25;
 
         /// <summary>
         /// The default brush used to draw curves on this canvas

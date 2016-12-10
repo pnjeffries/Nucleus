@@ -37,27 +37,10 @@ namespace FreeBuild.Model
     /// determines how that design representation converts into a 3D solid object.
     /// </summary>
     [Serializable]
-    public abstract class Element : ModelObject, IElement
+    public abstract class Element : DataOwner<ElementDataStore, IElementData>, IElement
     {
 
         #region Properties
-
-        /// <summary>
-        /// Private backing field for Data property
-        /// </summary>
-        private ElementDataStore _Data = null;
-
-        /// <summary>
-        /// The non-geometric additional data attached to this element.
-        /// </summary>
-        public ElementDataStore Data
-        {
-            get
-            {
-                if (_Data != null) _Data = new ElementDataStore();
-                return _Data;
-            }
-        }
 
         /// <summary>
         /// Get a collection containing all of the nodes attached to this element's
@@ -256,6 +239,24 @@ namespace FreeBuild.Model
         /// of the local coordinate system of this element.
         /// </summary>
         public ElementOrientation Orientation { get; set; } = 0.0;
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        protected Element() { }
+
+        /// <summary>
+        /// Duplication constructor
+        /// </summary>
+        /// <param name="other"></param>
+        protected Element(Element<TShape,TProperty> other)
+        {
+
+        }
 
         #endregion
 

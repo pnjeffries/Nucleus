@@ -69,6 +69,19 @@ namespace FreeBuild.Geometry
             }
         }
 
+        private string _Tag = null;
+
+        /// <summary>
+        /// A general-purpose text tag on this layer, used to designate
+        /// additional information, such as what the geometry on this layer
+        /// represents
+        /// </summary>
+        public string Tag
+        {
+            get { return _Tag; }
+            set { _Tag = value;  NotifyPropertyChanged("Tag"); }
+        }
+
         #endregion
 
         #region Constructor

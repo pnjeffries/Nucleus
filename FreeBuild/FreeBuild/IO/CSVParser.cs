@@ -51,7 +51,6 @@ namespace FreeBuild.IO
 
         #endregion
 
-
         #region Properties
 
         /// <summary>

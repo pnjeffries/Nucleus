@@ -88,5 +88,33 @@ namespace FreeBuild.Geometry
 
         #endregion
 
+        #region Methods
+
+        /// <summary>
+        /// Add a point to this cloud.
+        /// </summary>
+        /// <param name="point"></param>
+        public Vertex Add(Vector point)
+        {
+            Vertex v = new Vertex(point);
+            _Vertices.Add(v);
+            return v;
+        }
+
+        /// <summary>
+        /// Add a vertex to this cloud.
+        /// If the specified vertex already belongs to another piece of geometry it will
+        /// automatically be copied and the copy added to this cloud.
+        /// </summary>
+        /// <param name="vertex"></param>
+        public Vertex Add(Vertex vertex)
+        {
+            if (vertex.Owner != null) vertex = new Vertex(vertex);
+            _Vertices.Add(vertex);
+            return vertex;
+        }
+
+        #endregion
+
     }
 }

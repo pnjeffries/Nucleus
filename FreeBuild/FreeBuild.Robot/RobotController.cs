@@ -38,8 +38,10 @@ namespace FreeBuild.Robot
                 // whenever it is needed:
                 if (_Robot == null)
                 {
+                    RaiseMessage("Establishing Robot link...");
                     COMMessageFilter.Register();
                     _Robot = new RobotApplication();
+                    RaiseMessage("Robot link established.");
                 }
                 return _Robot;
             }
@@ -58,11 +60,13 @@ namespace FreeBuild.Robot
         {
             try
             {
+                RaiseMessage("Opening Robot file '" + filePath + "'...");
                 Robot.Project.Open(filePath);
                 return true;
             }
-            catch (COMException)
+            catch (COMException ex)
             {
+                RaiseMessage("Error: Opening Robot file '" + filePath + "' failed.  " + ex.Message);
             }
             return false;
         }
@@ -75,6 +79,7 @@ namespace FreeBuild.Robot
         {
             try
             {
+                RaiseMessage("Creating new Robot project...");
                 Robot.Project.New(IRobotProjectType.I_PT_BUILDING);
                 return true;
             }
@@ -91,7 +96,7 @@ namespace FreeBuild.Robot
         {
             try
             {
-                
+                RaiseMessage("Saving Robot file...");
                 Robot.Project.SaveAs(filePath);
                 RaiseMessage("Robot file saved to " + filePath);
                 return true;
@@ -107,6 +112,7 @@ namespace FreeBuild.Robot
         {
             _Robot = null;
             COMMessageFilter.Revoke();
+            RaiseMessage("Robot link released.");
         }
 
         /// <summary>
@@ -115,6 +121,7 @@ namespace FreeBuild.Robot
         public void Close()
         {
             Robot.Project.Close();
+            RaiseMessage("Robot file closed.");
         }
 
         #region Robot to FreeBuild
@@ -157,10 +164,12 @@ namespace FreeBuild.Robot
         /// <returns></returns>
         public bool UpdateModelFromRobot(Model.Model model, RobotConversionContext context)
         {
+            RaiseMessage("Reading data from Robot...");
             IRobotCollection robotNodes = Robot.Project.Structure.Nodes.GetAll();
             UpdateModelSectionsFromRobotFile(model, context);
             UpdateModelNodesFromRobotFile(model, robotNodes, context);
             UpdateModelLinearElementsFromRobotFile(model, robotNodes, context);
+            RaiseMessage("Data reading completed.");
             return false;
         }
 
@@ -357,6 +366,22 @@ namespace FreeBuild.Robot
             foreach (LinearElement element in linearElements)
             {
                 UpdateRobotBar(element, context);
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Update the panel elements in the open Robot model from those in a FreeBuild model
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="panelElements"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        private bool UpdateRobotPanelsFromModel(Model.Model model, PanelElementCollection panelElements, RobotConversionContext context)
+        {
+            foreach (PanelElement element in panelElements)
+            {
+                //TODO
             }
             return true;
         }
@@ -775,6 +800,22 @@ namespace FreeBuild.Robot
             {
                 IRobotDataObject bar = bars.Get(i);
                 if (bar != null) result.Add(bar.Number);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Extract a list of all finite element IDs in the currently open project
+        /// </summary>
+        /// <returns></returns>
+        public IList<int> AllFiniteElementIDs()
+        {
+            IRobotCollection elems = Robot.Project.Structure.FiniteElems.GetAll();
+            IList<int> result = new List<int>(elems.Count);
+            for (int i = 1; i <= elems.Count; i++)
+            {
+                IRobotDataObject elem = elems.Get(i);
+                if (elem != null) result.Add(elem.Number);
             }
             return result;
         }

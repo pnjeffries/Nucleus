@@ -58,7 +58,7 @@ namespace FreeBuild.Model
                 if (_Name == null)
                 {
                     string result = "Level ";
-                    result += string.Format("{0:+0.00;-0.00", Z);
+                    result += string.Format("{0:+0.00;-0.00}", Z);
                     return result;
                 }
                 return base.Name;

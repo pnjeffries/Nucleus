@@ -80,6 +80,7 @@ namespace FreeBuild.Model
         /// <summary>
         /// Private backing field for Modified property
         /// </summary>
+        [Copy(CopyBehaviour.DO_NOT_COPY)]
         private DateTime _Modified = DateTime.Now;
 
         /// <summary>
@@ -87,6 +88,25 @@ namespace FreeBuild.Model
         /// performed on this object.
         /// </summary>
         public DateTime Modified { get { return _Modified; } }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Protected base default constructor
+        /// </summary>
+        protected ModelObject() : base() {}
+
+        /// <summary>
+        /// Duplication constructor
+        /// </summary>
+        /// <param name="other"></param>
+        protected ModelObject(ModelObject other) : base(other)
+        {
+            _IsDeleted = other.IsDeleted;
+            // Other properties not necessary to copy
+        }
 
         #endregion
 

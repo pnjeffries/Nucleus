@@ -173,6 +173,28 @@ namespace FreeBuild.Geometry
             _Plane = null;
         }
 
+        /// <summary>
+        /// Calculate the area of this region
+        /// </summary>
+        /// <param name="centroid"></param>
+        /// <returns></returns>
+        public double CalculateArea(out Vector centroid)
+        {
+            if (_Perimeter != null)
+            {
+                Plane plane = Plane;
+                if (plane != null)
+                {
+                    double area = _Perimeter.CalculateEnclosedArea(out centroid, _Voids, plane);
+                    centroid = plane.LocalToGlobal(centroid);
+                    return area;
+                }
+            }
+
+            centroid = Vector.Unset;
+            return 0;
+        }
+
         #endregion
     }
 }

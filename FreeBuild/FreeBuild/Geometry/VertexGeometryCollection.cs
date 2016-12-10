@@ -36,7 +36,15 @@ namespace FreeBuild.Geometry
     public class VertexGeometryCollection<TShape> : UniquesCollection<TShape>
         where TShape : VertexGeometry
     {
-        
+        #region Properties
+
+        /// <summary>
+        /// Get the bounding box of the geometry contained within this collection
+        /// </summary>
+        public BoundingBox BoundingBox { get { return new BoundingBox(this); } }
+
+
+        #endregion
     }
 
     /// <summary>

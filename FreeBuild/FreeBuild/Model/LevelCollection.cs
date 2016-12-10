@@ -46,5 +46,53 @@ namespace FreeBuild.Model
         public LevelCollection(Model model) : base(model) { }
 
         #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Search through this collection and find the next highest level after
+        /// the one specified.
+        /// </summary>
+        /// <param name="level"></param>
+        /// <returns></returns>
+        public Level NextLevelAbove(Level level)
+        {
+            double minDistance = 0;
+            Level result = null;
+            foreach (Level testLevel in this)
+            {
+                double dist = testLevel.Z - level.Z;
+                if (dist > 0 && (result == null || dist < minDistance))
+                {
+                    result = testLevel;
+                    minDistance = dist;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Search through this collection and find the next lowest level after
+        /// the one specified.
+        /// </summary>
+        /// <param name="level"></param>
+        /// <returns></returns>
+        public Level NextLevelBelow(Level level)
+        {
+            double minDistance = 0;
+            Level result = null;
+            foreach (Level testLevel in this)
+            {
+                double dist = level.Z - testLevel.Z;
+                if (dist > 0 && (result == null || dist < minDistance))
+                {
+                    result = testLevel;
+                    minDistance = dist;
+                }
+            }
+            return result;
+        }
+
+        #endregion
     }
 }

@@ -49,11 +49,12 @@ namespace FreeBuild.Rendering
         public static readonly Colour Green = new Colour(0, 255, 0);
         /// <summary> An opaque solid blue colour </summary>
         public static readonly Colour Blue = new Colour(0, 0, 255);
+        /// <summary> An opaque solid yellow colour </summary>
+        public static readonly Colour Yellow = new Colour(255, 255, 0);
         /// <summary> An transparent colour </summary>
         public static readonly Colour Transparent = new Colour(0, 0, 0, 0);
 
         #endregion
-
 
         #region Properties
 
@@ -148,7 +149,7 @@ namespace FreeBuild.Rendering
         public Colour(float r, float g, float b)
             : this((byte)255, (byte)(255 * r), (byte)(255 * g), (byte)(255 * b)) { }
 
-
+       
         #endregion
 
         #region Methods
