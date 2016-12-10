@@ -240,6 +240,8 @@ namespace FreeBuild.Geometry
         /// A plane may optionally be specified, otherwise by default the projected area on 
         /// the XY plane will be used.
         /// </summary>
+        /// <param name="centroid">Output.  The centroid of the enclosed area, in local coordinates
+        /// on the specified plane.</param>
         /// <param name="onPlane">The plane to use to calculate the area.
         /// If not specified, the XY plane will be used.</param>
         /// <returns>The signed area enclosed by this curve on the specified plane,

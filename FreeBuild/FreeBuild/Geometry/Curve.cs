@@ -37,7 +37,7 @@ namespace FreeBuild.Geometry
     /// <remarks>This class implements a default set of interrogation methods, which will treat
     /// this curve as a polyline of straight segments between vertices.</remarks>
     [Serializable]
-    public abstract class Curve: Shape
+    public abstract class Curve: VertexGeometry
     {
         #region Properties
 

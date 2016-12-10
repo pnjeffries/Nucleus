@@ -1,4 +1,24 @@
-﻿using FreeBuild.Actions;
+﻿// Copyright (c) 2016 Paul Jeffries
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+using FreeBuild.Actions;
 using FreeBuild.Base;
 using FreeBuild.Geometry;
 using System;
@@ -101,6 +121,23 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
+        /// Create a new (or update an existing) element as a copy of another one
+        /// </summary>
+        /// <param name="element">The element to copy.</param>
+        /// <param name="newGeometry">Optional.  The set-out geometry to be used for the new element.
+        /// Should be of the appropriate type for the element to be copied.</param>
+        /// <param name="exInfo">Optional.  The execution information of the current action.
+        /// If an object has been created previously with matching execution information then
+        /// instead of creating a new item this previous one will be updated and returned instead.
+        /// This enables this method to be used parametrically.</param>
+        /// <returns></returns>
+        public Element CopyOf(Element element, VertexGeometry newGeometry = null, ExecutionInfo exInfo = null)
+        {
+            if (element is LinearElement) return CopyOf(element, newGeometry as Curve, exInfo);
+            else return null;
+        }
+
+        /// <summary>
         /// Create a new (or update an existing) section property in the model
         /// </summary>
         /// <param name="exInfo">Optional.  The execution information of the current action.
@@ -155,6 +192,7 @@ namespace FreeBuild.Model
             Model.Add(result);
             return result;
         }
+
 
         #endregion
     }

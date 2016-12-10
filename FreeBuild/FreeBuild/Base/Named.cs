@@ -32,6 +32,9 @@ namespace FreeBuild.Base
     [Serializable]
     public abstract class Named : Unique, INamed
     {
+
+        #region Properties
+
         /// <summary>
         /// Private backing field for Name property
         /// </summary>
@@ -53,5 +56,25 @@ namespace FreeBuild.Base
                 NotifyPropertyChanged("Name");
             }
         }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Protected default constructor
+        /// </summary>
+        protected Named() : base() { }
+
+        /// <summary>
+        /// Protected duplication constructor
+        /// </summary>
+        /// <param name="other"></param>
+        protected Named(Named other) : base()
+        {
+            Name = other.Name;
+        }
+
+        #endregion
     }
 }

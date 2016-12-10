@@ -39,7 +39,7 @@ namespace FreeBuild.Geometry
     /// </summary>
     [Serializable]
     [DebuggerDisplay("Vertex( {X} , {Y} , {Z}) ")]
-    public class Vertex : Unique, IOwned<Shape>, IPosition, IComparable<Vertex>
+    public class Vertex : Unique, IOwned<VertexGeometry>, IPosition, IComparable<Vertex>
     {
         #region Static Fields
 
@@ -102,14 +102,14 @@ namespace FreeBuild.Geometry
         /// Private backing member variable for the Shape property
         /// </summary>
         [Copy(CopyBehaviour.MAP)]
-        private Shape _Owner = null;
+        private VertexGeometry _Owner = null;
 
         /// <summary>
         /// The shape (if any) that this vertex belongs to.
         /// Vertices removed from their owner will automatically be detatched from
         /// their node to prevent memory leaks.
         /// </summary>
-        public Shape Owner
+        public VertexGeometry Owner
         {
             get { return _Owner; }
             internal set
@@ -207,6 +207,11 @@ namespace FreeBuild.Geometry
             _Position = new Vector(x, y, z);
         }
 
+        /// <summary>
+        /// Initialise a new vertex copying data from the specified other
+        /// vertex
+        /// </summary>
+        /// <param name="other"></param>
         public Vertex(Vertex other)
         {
             _Position = other.Position;
@@ -276,14 +281,18 @@ namespace FreeBuild.Geometry
                 }
                 else
                 {
-                    //Node already exists - check and update it
+                    // Node already exists - check and update it
                     if (Position.DistanceToSquared(Node.Position) > options.ConnectionTolerance.Squared())
                     {
-                        //Check for other connections that share this node:
+                        // Check for other connections that share this node:
                         if (Node.Vertices.Count > 1)
                         {
-                            //TODO!
-                            //TODO: Also split nodes if they are too far apart
+                            double dist = Node.DistanceToSquared(this);
+                            if (dist > options.ConnectionTolerance && model != null)
+                            {
+                                // Node is too far away - split and create new node
+                                Node = model.Create.Node(Position, options.ConnectionTolerance, options.ExInfo);
+                            }
                         }
                         else Node.Position = Position;
                     }
@@ -302,6 +311,11 @@ namespace FreeBuild.Geometry
             //Additional data should be copied here
         }
 
+        /// <summary>
+        /// Comparison function for sorting.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public int CompareTo(Vertex other)
         {
             return _Position.X.CompareTo(other.X);

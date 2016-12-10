@@ -207,6 +207,7 @@ namespace FreeBuild.Extensions
 
         public static bool EqualsIgnoreCase(this string thisString, string other)
         {
+            if (thisString == null) return (other == null);
             return thisString.Equals(other, StringComparison.InvariantCultureIgnoreCase);
         }
 

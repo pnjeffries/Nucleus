@@ -38,8 +38,10 @@ namespace FreeBuild.Robot
                 // whenever it is needed:
                 if (_Robot == null)
                 {
+                    RaiseMessage("Establishing Robot link...");
                     COMMessageFilter.Register();
                     _Robot = new RobotApplication();
+                    RaiseMessage("Robot link established.");
                 }
                 return _Robot;
             }
@@ -58,11 +60,13 @@ namespace FreeBuild.Robot
         {
             try
             {
+                RaiseMessage("Opening Robot file '" + filePath + "'...");
                 Robot.Project.Open(filePath);
                 return true;
             }
-            catch (COMException)
+            catch (COMException ex)
             {
+                RaiseMessage("Error: Opening Robot file '" + filePath + "' failed.  " + ex.Message);
             }
             return false;
         }
@@ -75,6 +79,7 @@ namespace FreeBuild.Robot
         {
             try
             {
+                RaiseMessage("Creating new Robot project...");
                 Robot.Project.New(IRobotProjectType.I_PT_BUILDING);
                 return true;
             }
@@ -91,7 +96,7 @@ namespace FreeBuild.Robot
         {
             try
             {
-                
+                RaiseMessage("Saving Robot file...");
                 Robot.Project.SaveAs(filePath);
                 RaiseMessage("Robot file saved to " + filePath);
                 return true;
@@ -107,6 +112,7 @@ namespace FreeBuild.Robot
         {
             _Robot = null;
             COMMessageFilter.Revoke();
+            RaiseMessage("Robot link released.");
         }
 
         /// <summary>
@@ -115,6 +121,7 @@ namespace FreeBuild.Robot
         public void Close()
         {
             Robot.Project.Close();
+            RaiseMessage("Robot file closed.");
         }
 
         #region Robot to FreeBuild
@@ -157,10 +164,12 @@ namespace FreeBuild.Robot
         /// <returns></returns>
         public bool UpdateModelFromRobot(Model.Model model, RobotConversionContext context)
         {
+            RaiseMessage("Reading data from Robot...");
             IRobotCollection robotNodes = Robot.Project.Structure.Nodes.GetAll();
             UpdateModelSectionsFromRobotFile(model, context);
             UpdateModelNodesFromRobotFile(model, robotNodes, context);
             UpdateModelLinearElementsFromRobotFile(model, robotNodes, context);
+            RaiseMessage("Data reading completed.");
             return false;
         }
 

@@ -165,7 +165,7 @@ namespace FreeBuild.Rhino
         /// </summary>
         /// <param name="geometry"></param>
         /// <returns></returns>
-        public static Shape Convert(RC.GeometryBase geometry)
+        public static VertexGeometry Convert(RC.GeometryBase geometry)
         {
             if (geometry is RC.Curve) return Convert((RC.Curve)geometry);
             else throw new NotImplementedException();
@@ -177,9 +177,9 @@ namespace FreeBuild.Rhino
         /// </summary>
         /// <param name="objRef"></param>
         /// <returns></returns>
-        public static Shape Convert(ObjRef objRef)
+        public static VertexGeometry Convert(ObjRef objRef)
         {
-            Shape result = Convert(objRef.Geometry());
+            VertexGeometry result = Convert(objRef.Geometry());
             if (result != null)
             {
                 GeometryAttributes attributes = new GeometryAttributes();

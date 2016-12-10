@@ -132,7 +132,7 @@ namespace FreeBuild.WPF
             if (ViewBounds != null)
             {
                 BoundingBox bBox = new BoundingBox(ViewBounds);
-                bBox.Scale(1.05);
+                bBox.Scale(1.1);
                 ItemsControl.Width = bBox.SizeX;
                 ItemsControl.Height = bBox.SizeY;
                 ItemsControl.RenderTransform = new TranslateTransform(-bBox.MinX, bBox.MaxY);

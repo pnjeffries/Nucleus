@@ -14,9 +14,9 @@ namespace FreeBuild.DXF
     /// </summary>
     public class DXFReader
     {
-        public ShapeCollection ReadDXF(FilePath path)
+        public VertexGeometryCollection ReadDXF(FilePath path)
         {
-            ShapeCollection result = new ShapeCollection();
+            VertexGeometryCollection result = new VertexGeometryCollection();
 
             DxfDocument doc = DxfDocument.Load(path);
             double scale = 1.0;
@@ -80,7 +80,7 @@ namespace FreeBuild.DXF
 
                 foreach (netDxf.Entities.EntityObject entity in insert.Block.Entities)
                 {
-                    Shape shape = DXFtoFB.Convert(entity);
+                    VertexGeometry shape = DXFtoFB.Convert(entity);
                     if (shape != null)
                     {
                         shape.Transform(transform);

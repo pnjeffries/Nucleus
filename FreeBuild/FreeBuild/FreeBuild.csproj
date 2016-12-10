@@ -47,6 +47,7 @@
     <Compile Include="Actions\ExecutionInfo.cs" />
     <Compile Include="Base\Bool6D.cs" />
     <Compile Include="Base\MessageRaiser.cs" />
+    <Compile Include="Base\ObservablePair.cs" />
     <Compile Include="Conversion\ConversionContext.cs" />
     <Compile Include="Conversion\ConversionOptions.cs" />
     <Compile Include="Conversion\IDMappingTable.cs" />
@@ -66,7 +67,8 @@
     <Compile Include="Geometry\Intersect.cs" />
     <Compile Include="Geometry\MeshEdge.cs" />
     <Compile Include="Geometry\PlanarRegion.cs" />
-    <Compile Include="IO\CSVReader.cs" />
+    <Compile Include="Geometry\VertexRule.cs" />
+    <Compile Include="IO\CSVParser.cs" />
     <Compile Include="Meshing\CoordinateSystemRemappingOption.cs" />
     <Compile Include="Meshing\DelaunayTriangle.cs" />
     <Compile Include="Meshing\MeshBuilder.cs" />
@@ -139,8 +141,8 @@
     <Compile Include="Geometry\Plane.cs" />
     <Compile Include="Geometry\PolyCurve.cs" />
     <Compile Include="Geometry\PolyLine.cs" />
-    <Compile Include="Geometry\Shape.cs" />
-    <Compile Include="Geometry\ShapeCollection.cs" />
+    <Compile Include="Geometry\VertexGeometry.cs" />
+    <Compile Include="Geometry\VertexGeometryCollection.cs" />
     <Compile Include="Geometry\Vertex.cs" />
     <Compile Include="Base\Document.cs" />
     <Compile Include="Geometry\WrappedCurve.cs" />

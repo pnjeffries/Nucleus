@@ -256,5 +256,16 @@ namespace FreeBuild.Extensions
             return result;
         }
 
+        /// <summary>
+        /// Does this type posess a parameterless constructor
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool HasParameterlessConstructor(this Type type)
+        {
+            return type.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                                        null, Type.EmptyTypes, null) != null;
+        }
+
     }
 }

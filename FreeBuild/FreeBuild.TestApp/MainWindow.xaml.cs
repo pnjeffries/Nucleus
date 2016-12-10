@@ -40,7 +40,7 @@ namespace FreeBuild.TestApp
             MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(verts);
             //Dictionary<Vertex, MeshFace> voronoi = Mesh.VoronoiFromDelaunay(verts, faces);
             //ShapeCollection geometry = new MeshFaceCollection(voronoi.Values).ExtractFaceBoundaries();
-            ShapeCollection geometry = faces.ExtractFaceBoundaries();
+            VertexGeometryCollection geometry = faces.ExtractFaceBoundaries();
             geometry.Add(new Cloud(verts.ExtractPoints()));
             DelaunayCanvas.Geometry = geometry;
         }
@@ -66,7 +66,7 @@ namespace FreeBuild.TestApp
             PolyLine rect = PolyLine.Rectangle(0,-10,10, 0);
             outFaces = outFaces.TrimToPolygonXY(rect.Vertices);
             outFaces = outFaces.TrimToPolygonXY(rect.Vertices); //Test duplicate edges
-            ShapeCollection geometry = outFaces.ExtractFaceBoundaries();
+            VertexGeometryCollection geometry = outFaces.ExtractFaceBoundaries();
             //ShapeCollection geometry = faces.ExtractFaceBoundaries();
             geometry.Add(new Cloud(verts.ExtractPoints()));
             VoronoiCanvas.Geometry = geometry;
@@ -81,7 +81,7 @@ namespace FreeBuild.TestApp
             if (openDialog.ShowDialog(this) == true)
             {
                 var dxfReader = new DXFReader();
-                ShapeCollection geometry = dxfReader.ReadDXF(openDialog.FileName);
+                VertexGeometryCollection geometry = dxfReader.ReadDXF(openDialog.FileName);
                 GeometryLayerTable layers = geometry.Layered();
                 DXFCanvas.ViewBounds = new BoundingBox(geometry);
                 DXFCanvas.Layers = layers;

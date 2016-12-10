@@ -52,16 +52,16 @@ namespace FreeBuild.WPF
         /// Profiles dependency property
         /// </summary>
         public static DependencyProperty GeometryProperty =
-            DependencyProperty.Register("Geometry", typeof(ShapeCollection), typeof(GeometryCanvas),
+            DependencyProperty.Register("Geometry", typeof(VertexGeometryCollection), typeof(GeometryCanvas),
                  new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None,
                     new PropertyChangedCallback(OnGeometryChanged)));
 
         /// <summary>
         /// The profiles to be displayed on this canvas
         /// </summary>
-        public ShapeCollection Geometry
+        public VertexGeometryCollection Geometry
         {
-            get { return (ShapeCollection)GetValue(GeometryProperty); }
+            get { return (VertexGeometryCollection)GetValue(GeometryProperty); }
             set { SetValue(GeometryProperty, value); }
         }
 
@@ -106,7 +106,7 @@ namespace FreeBuild.WPF
         /// <summary>
         /// The default diameter of points drawn on this canvas
         /// </summary>
-        public double PointDiameter { get; set; } = 0.03;
+        public double PointDiameter { get; set; } = 0.25;
 
         /// <summary>
         /// The default brush used to draw curves on this canvas
@@ -144,7 +144,7 @@ namespace FreeBuild.WPF
         {
             Children.Clear();
 
-            ShapeCollection geometry = Geometry;
+            VertexGeometryCollection geometry = Geometry;
             //BoundingBox bBox = new BoundingBox(geometry);
 
             double scaleFactor = 1;
@@ -154,7 +154,7 @@ namespace FreeBuild.WPF
             {
                 //Brush fillBrush = new SolidColorBrush(Color.FromArgb(64, 255, 0, 0));
 
-                foreach (FB.Shape shape in geometry)
+                foreach (FB.VertexGeometry shape in geometry)
                 {
                     if (shape is Curve)
                     {

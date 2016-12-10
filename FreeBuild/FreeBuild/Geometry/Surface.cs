@@ -29,7 +29,7 @@ namespace FreeBuild.Geometry
     /// <summary>
     /// Abstract base class for surfaces - infinitely thin membrane geometries
     /// </summary>
-    public abstract class Surface : Shape
+    public abstract class Surface : VertexGeometry
     {
         //TODO
     }
