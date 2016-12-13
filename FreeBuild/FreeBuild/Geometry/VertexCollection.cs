@@ -50,7 +50,16 @@ namespace FreeBuild.Geometry
         /// Default, parameterless constructor.
         /// The owner of this vertex collection will be null.
         /// </summary>
-        public VertexCollection() : this(null) { }
+        public VertexCollection() : this((VertexGeometry)null) { }
+
+        /// <summary>
+        /// Initialise a new vertex collection containing a single vertex
+        /// </summary>
+        /// <param name="vertex"></param>
+        public VertexCollection(Vertex vertex) : this()
+        {
+            Add(vertex);
+        }
 
         /// <summary>
         /// Initialise a new vertex collection, converting the set of position vectors passed in into

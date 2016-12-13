@@ -49,10 +49,6 @@ namespace FreeBuild.Model
 
         Element IOwned<Element>.Owner { get { return _Element; } }
 
-        private Node _Node;
-
-        public Node Node { get { return _Node; } }
-
         #endregion
 
         #region Constructors

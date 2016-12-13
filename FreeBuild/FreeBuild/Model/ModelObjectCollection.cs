@@ -136,12 +136,20 @@ namespace FreeBuild.Model
     /// </summary>
     public static class ModelObjectCollectionExtensions
     {
-        public static TCollection Modified<TCollection, TObject>(this TCollection collection, DateTime since)
-            where TCollection : ModelObjectCollection<TObject>, new()
-            where TObject : ModelObject
+        /// <summary>
+        /// Get the subset of this collection which has a recorded modification after the specified date and time
+        /// </summary>
+        /// <typeparam name="TCollection"></typeparam>
+        /// <typeparam name="TItem"></typeparam>
+        /// <param name="collection"></param>
+        /// <param name="since">The date and time to filter by</param>
+        /// <returns></returns>
+        public static TCollection Modified<TCollection, TItem>(this TCollection collection, DateTime since)
+            where TCollection : ModelObjectCollection<TItem>, new()
+            where TItem : ModelObject
         {
             TCollection result = new TCollection();
-            foreach (TObject obj in collection)
+            foreach (TItem obj in collection)
             {
                 if (obj.Modified > since) result.Add(obj);
             }

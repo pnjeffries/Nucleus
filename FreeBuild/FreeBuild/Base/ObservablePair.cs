@@ -144,5 +144,39 @@ namespace FreeBuild.Base
         {
             collection.Insert(index, new ObservablePair<TFirst, TSecond>(first, second));
         }
+
+        /// <summary>
+        /// Count the number of pairs in this set where the first item in the pair is equal to the value
+        /// specified.
+        /// </summary>
+        /// <typeparam name="TFirst"></typeparam>
+        /// <typeparam name="TSecond"></typeparam>
+        /// <param name="collection"></param>
+        /// <param name="equals">The value to check the first item in each pair for equality to</param>
+        /// <returns></returns>
+        public static int CountWhereFirst<TFirst, TSecond>(this IEnumerable<ObservablePair<TFirst, TSecond>> collection, TFirst equals)
+        {
+            int count = 0;
+            foreach (ObservablePair<TFirst, TSecond> pair in collection)
+                if (pair.First.Equals(equals)) count++;
+            return count;
+        }
+
+        /// <summary>
+        /// Count the number of pairs in this set where the second item in the pair is equal to the value
+        /// specified.
+        /// </summary>
+        /// <typeparam name="TFirst"></typeparam>
+        /// <typeparam name="TSecond"></typeparam>
+        /// <param name="collection"></param>
+        /// <param name="equals">The value to check the second item in each pair for equality to</param>
+        /// <returns></returns>
+        public static int CountWhereSecond<TFirst, TSecond>(this IEnumerable<ObservablePair<TFirst, TSecond>> collection, TSecond equals)
+        {
+            int count = 0;
+            foreach (ObservablePair<TFirst, TSecond> pair in collection)
+                if (pair.Second.Equals(equals)) count++;
+            return count;
+        }
     }
 }

@@ -209,7 +209,7 @@ namespace FreeBuild.WPF
                         {
                             path.Fill = FillBrush;
                         }
-                        else path.Fill = FBtoWPF.Convert(reg.Attributes.Brush);
+                        else path.Fill = FBtoWPF.Convert(reg.Attributes.Brush, 192);
                         //path.Stroke = Brushes.Black;
                         //path.StrokeThickness = 0.01;
                         path.Data = cg;

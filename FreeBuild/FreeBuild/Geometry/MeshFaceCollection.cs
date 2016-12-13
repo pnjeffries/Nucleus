@@ -82,9 +82,9 @@ namespace FreeBuild.Geometry
         /// Extract the boundary curves of each mesh face in this collection
         /// </summary>
         /// <returns></returns>
-        public VertexGeometryCollection ExtractFaceBoundaries()
+        public CurveCollection ExtractFaceBoundaries()
         {
-            VertexGeometryCollection result = new Geometry.VertexGeometryCollection();
+            CurveCollection result = new CurveCollection();
             foreach (MeshFace face in this)
             {
                 result.Add(face.GetBoundary());
