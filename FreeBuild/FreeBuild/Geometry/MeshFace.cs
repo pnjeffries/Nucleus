@@ -332,6 +332,8 @@ namespace FreeBuild.Geometry
             SortVerticesAntiClockwise(XYCircumcentre);
         }
 
+       
+
         #endregion
 
     }

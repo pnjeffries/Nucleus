@@ -67,6 +67,7 @@
     <Compile Include="Geometry\Intersect.cs" />
     <Compile Include="Geometry\MeshEdge.cs" />
     <Compile Include="Geometry\PlanarRegion.cs" />
+    <Compile Include="Geometry\Point.cs" />
     <Compile Include="Geometry\VertexRule.cs" />
     <Compile Include="IO\CSVParser.cs" />
     <Compile Include="Meshing\CoordinateSystemRemappingOption.cs" />
@@ -207,6 +208,7 @@
     <Compile Include="Geometry\Vector.cs" />
     <Compile Include="Rendering\Colour.cs" />
     <Compile Include="Rendering\ColourBrush.cs" />
+    <Compile Include="Rendering\DisplayAttributes.cs" />
     <Compile Include="Rendering\DisplayBrush.cs" />
     <Compile Include="Rendering\IRenderable.cs" />
     <Compile Include="Rendering\Renderer.cs" />

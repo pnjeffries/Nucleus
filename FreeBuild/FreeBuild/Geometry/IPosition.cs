@@ -141,5 +141,26 @@ namespace FreeBuild.Geometry
             }
             else return Vector.Unset;
         }
+
+        /// <summary>
+        /// Remove from this list of points any which are within tolerance of the preceeding point
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="polygon"></param>
+        /// <param name="tolerance">The limit within which points will be removed</param>
+        public static void CleanTinyEdges<T>(this IList<T> polygon, double tolerance = 0.0001)
+            where T:IPosition
+        {
+            double limit = tolerance * tolerance;
+            for (int i = polygon.Count - 1; i > 0; i--)
+            {
+                if (polygon[i].DistanceToSquared(polygon[i - 1]) <= limit) polygon.RemoveAt(i);
+            }
+            // Final check - start and end:
+            if (polygon.Count > 1 && polygon[0].DistanceToSquared(polygon.Last()) < limit)
+            {
+                polygon.RemoveAt(polygon.Count - 1);
+            }
+        }
     }
 }

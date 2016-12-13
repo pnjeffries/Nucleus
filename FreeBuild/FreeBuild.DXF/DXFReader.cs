@@ -68,6 +68,12 @@ namespace FreeBuild.DXF
                 result.Add(DXFtoFB.Convert(point));
             }
 
+            // Text
+            foreach (netDxf.Entities.Text text in doc.Texts)
+            {
+                text.
+            }
+
             // Block inserts
             foreach (netDxf.Entities.Insert insert in doc.Inserts)
             {

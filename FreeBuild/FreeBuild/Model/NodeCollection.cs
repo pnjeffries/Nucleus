@@ -47,5 +47,19 @@ namespace FreeBuild.Model
         protected NodeCollection(Model model) : base(model) { }
 
         #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Get the subset of this collection which has a recorded modification after the specified date and time
+        /// </summary>
+        /// <param name="since"></param>
+        /// <returns></returns>
+        public NodeCollection Modified(DateTime since)
+        {
+            return this.Modified<NodeCollection, Node>(since);
+        }
+
+        #endregion
     }
 }

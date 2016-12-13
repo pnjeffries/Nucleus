@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,63 @@ namespace FreeBuild.Model
     /// </summary>
     public class AreaLoad : Load<Element, ElementCollection>
     {
+        #region Properties
 
+        /// <summary>
+        /// Private backing field for Region property
+        /// </summary>
+        private PlanarRegion _Region;
+
+        /// <summary>
+        /// The region over which the load is applied
+        /// </summary>
+        public PlanarRegion Region
+        {
+            get { return _Region; }
+            set { _Region = value; NotifyPropertyChanged("Region"); }
+        }
+
+        /// <summary>
+        /// Private backing field for Value property
+        /// </summary>
+        private Vector _Value;
+
+        /// <summary>
+        /// The value of the load to be applied.
+        /// TODO: Review
+        /// </summary>
+        public Vector Value
+        {
+            get { return _Value; }
+            set { _Value = value;  NotifyPropertyChanged("Value"); }
+        }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor.  Initialises a new blank area load.
+        /// </summary>
+        public AreaLoad() : base() { }
+
+        /// <summary>
+        /// Region constructor.  Initialises an area load applied over the specified region.
+        /// </summary>
+        /// <param name="region">The region of application of the load.</param>
+        public AreaLoad(PlanarRegion region, Vector value) : this()
+        {
+            Region = region;
+            Value = value;
+        }
+
+        /// <summary>
+        /// Region constructor.  Initialises an area load applied over the region within the
+        /// specified boundary.
+        /// </summary>
+        /// <param name="regionBoundary">The boundary of the applied area.  Should be closed.</param>
+        public AreaLoad(Curve regionBoundary, Vector value) : this(new PlanarRegion(regionBoundary), value) { }
+
+        #endregion
     }
 }

@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,5 +33,24 @@ namespace FreeBuild.Geometry
     [Serializable]
     public class CurveCollection : VertexGeometryCollection<Curve>
     {
+        #region Methods
+
+        /// <summary>
+        /// Calculate the combined enclosed area of all curves within this collection
+        /// </summary>
+        /// <returns></returns>
+        public double TotalEnclosedArea(Plane onPlane = null)
+        {
+            double result = 0;
+            foreach (Curve crv in this)
+            {
+                Vector centroid;
+                result += crv.CalculateEnclosedArea(out centroid, onPlane).Abs();
+            }
+            return result;
+        }
+
+        #endregion
+
     }
 }

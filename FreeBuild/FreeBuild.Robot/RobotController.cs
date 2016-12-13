@@ -312,9 +312,15 @@ namespace FreeBuild.Robot
         public bool UpdateRobotFromModel(Model.Model model, RobotConversionContext context)
         {
             RaiseMessage("Writing data to Robot...");
-            UpdateRobotNodesFromModel(model, model.Nodes, context);
-            UpdateRobotPropertiesFromModel(model, model.Properties, context);
-            UpdateRobotBarsFromModel(model, model.Elements.LinearElements, context);
+            NodeCollection nodes = model.Nodes;
+            if (context.Options.Update) nodes = nodes.Modified(context.Options.UpdateSince);
+            UpdateRobotNodesFromModel(model, nodes, context);
+            VolumetricPropertyCollection properties = model.Properties;
+            if (context.Options.Update) properties = properties.Modified(context.Options.UpdateSince);
+            UpdateRobotPropertiesFromModel(model, properties, context);
+            LinearElementCollection linearElements = model.Elements.LinearElements;
+            if (context.Options.Update) linearElements = linearElements.Modified(context.Options.UpdateSince);
+            UpdateRobotBarsFromModel(model, linearElements, context);
             RaiseMessage("Data writing completed.");
             return true;
         }

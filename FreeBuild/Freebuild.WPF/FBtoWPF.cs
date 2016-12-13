@@ -29,31 +29,41 @@ namespace FreeBuild.WPF
         /// <summary>
         /// Convert a FreeBuild colour to a WPF color
         /// </summary>
-        /// <param name="col"></param>
+        /// <param name="col">The colour to be converterd</param>
+        /// <param name="alphaLimit">Optional.  The maximum value to which to limit the alpha channel of the colour.
+        /// Use this to specify that the colour should be displayed as semitransparent even if the original to be converted
+        /// was not.
+        /// </param>
         /// <returns></returns>
-        public static Media.Color Convert(Colour col)
+        public static Media.Color Convert(Colour col, byte alphaLimit = 255)
         {
-            return Media.Color.FromArgb(col.A, col.R, col.G, col.B);
+            return Media.Color.FromArgb((byte)Math.Min(col.A, alphaLimit), col.R, col.G, col.B);
         }
 
         /// <summary>
         /// Convert a FreeBuild ColourBrush to a WPF SolidColorBrush
         /// </summary>
         /// <param name="brush">The brush to convert</param>
+        /// <param name="alphaLimit">Optional.  The maximum value to which to limit the alpha channel of the colour.
+        /// Use this to specify that the colour should be displayed as semitransparent even if the original to be converted
+        /// was not.
         /// <returns></returns>
-        public static Media.SolidColorBrush Convert(ColourBrush brush)
+        public static Media.SolidColorBrush Convert(ColourBrush brush, byte alphaLimit = 255)
         {
-            return new Media.SolidColorBrush(Convert(brush.Colour));
+            return new Media.SolidColorBrush(Convert(brush.Colour, alphaLimit));
         }
 
         /// <summary>
         /// Convert a FreeBuild brush to a WPF one
         /// </summary>
-        /// <param name="brush"></param>
+        /// <param name="brush">The brush to convert</param>
+        /// <param name="alphaLimit">Optional.  The maximum value to which to limit the alpha channel of the colour.
+        /// Use this to specify that the colour should be displayed as semitransparent even if the original to be converted
+        /// was not.
         /// <returns></returns>
-        public static Media.Brush Convert(DisplayBrush brush)
+        public static Media.Brush Convert(DisplayBrush brush, byte alphaLimit = 255)
         {
-            if (brush is ColourBrush) return Convert((ColourBrush)brush);
+            if (brush is ColourBrush) return Convert((ColourBrush)brush, alphaLimit);
             else return null;
         }
 

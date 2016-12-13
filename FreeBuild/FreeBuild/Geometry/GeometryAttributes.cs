@@ -33,7 +33,7 @@ namespace FreeBuild.Geometry
     /// piece of geometry should be displayed or organised.
     /// </summary>
     [Serializable]
-    public class GeometryAttributes
+    public class GeometryAttributes : DisplayAttributes
     {
         #region Properties
 
@@ -47,12 +47,7 @@ namespace FreeBuild.Geometry
         /// to which it is otherwise linked.
         /// </summary>
         public string SourceID { get; set; } = null;
-
-        /// <summary>
-        /// The brush which determines how this geometry should be drawn.
-        /// </summary>
-        public DisplayBrush Brush { get; set; } = null;
-
+        
         #endregion
 
         #region Constructors
