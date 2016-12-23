@@ -119,7 +119,6 @@
     <Compile Include="Model\DataOwner.cs" />
     <Compile Include="Model\DataStore.cs" />
     <Compile Include="Model\ElementDataStore.cs" />
-    <Compile Include="Model\ElementOrientation.cs" />
     <Compile Include="Events\ElementUpdateEventArgs.cs" />
     <Compile Include="Base\TypeCollection.cs" />
     <Compile Include="Conversion\ConversionLibrary.cs" />
@@ -148,7 +147,6 @@
     <Compile Include="Base\Document.cs" />
     <Compile Include="Geometry\WrappedCurve.cs" />
     <Compile Include="Model\ElementCollection.cs" />
-    <Compile Include="Model\ElementOrientationAngle.cs" />
     <Compile Include="Model\FaceProperty.cs" />
     <Compile Include="Model\ElementTable.cs" />
     <Compile Include="Model\HorizontalSetOut.cs" />

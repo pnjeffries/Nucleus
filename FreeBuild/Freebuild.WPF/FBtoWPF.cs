@@ -118,7 +118,7 @@ namespace FreeBuild.WPF
             {
                 bool largeArc = arc.RadianMeasure.IsReflex;
                 Media.SweepDirection dir = Media.SweepDirection.Clockwise;
-                if (arc.IsClockwise) dir = Media.SweepDirection.Counterclockwise;
+                if (!arc.IsClockwise) dir = Media.SweepDirection.Counterclockwise;
                 result.Segments.Add(new Media.ArcSegment(Convert(arc.EndPoint), new W.Size(radius, radius), 0, largeArc, dir, true));
             }
             return result;
@@ -174,7 +174,7 @@ namespace FreeBuild.WPF
                         {
                             bool largeArc = arc.RadianMeasure.IsReflex;
                             Media.SweepDirection dir = Media.SweepDirection.Clockwise;
-                            if (arc.IsClockwise) dir = Media.SweepDirection.Counterclockwise;
+                            if (!arc.IsClockwise) dir = Media.SweepDirection.Counterclockwise;
                             result.Segments.Add(new Media.ArcSegment(Convert(arc.EndPoint), new W.Size(radius, radius), 0, largeArc, dir, true));
                         }
                     }
