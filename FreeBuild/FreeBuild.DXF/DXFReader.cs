@@ -71,8 +71,13 @@ namespace FreeBuild.DXF
             // Text
             foreach (netDxf.Entities.Text text in doc.Texts)
             {
-                text.
+                result.Add(DXFtoFB.Convert(text));
             }
+            foreach (netDxf.Entities.MText text in doc.MTexts)
+            {
+                result.Add(DXFtoFB.Convert(text));
+            }
+
 
             // Block inserts
             foreach (netDxf.Entities.Insert insert in doc.Inserts)

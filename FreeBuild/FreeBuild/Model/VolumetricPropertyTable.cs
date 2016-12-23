@@ -36,6 +36,19 @@ namespace FreeBuild.Model
         #region Properties
 
         /// <summary>
+        /// Private backing field for NextNumericID property
+        /// </summary>
+        private long _NextNumericID = 1;
+
+        /// <summary>
+        /// The numeric ID that will be assigned to the next element to be added to this table
+        /// </summary>
+        public long NextNumericID
+        {
+            get { return _NextNumericID; }
+        }
+
+        /// <summary>
         /// Private backing field for Sections property
         /// </summary>
         private SectionPropertyCollection _Sections = null;
@@ -72,6 +85,12 @@ namespace FreeBuild.Model
         {
             //Clear cached data:
             _Sections = null;
+        }
+
+        protected override void SetNumericID(VolumetricProperty item)
+        {
+            item.NumericID = NextNumericID;
+            _NextNumericID++;
         }
 
         #endregion

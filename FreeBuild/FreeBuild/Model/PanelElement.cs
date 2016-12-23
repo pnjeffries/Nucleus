@@ -37,6 +37,11 @@ namespace FreeBuild.Model
         #region Constructors
 
         /// <summary>
+        /// Default constructor.  Initialises a panel element with no data.
+        /// </summary>
+        public PanelElement() { }
+
+        /// <summary>
         /// Initialises a panel element with the specified set-out
         /// geometry.
         /// </summary>

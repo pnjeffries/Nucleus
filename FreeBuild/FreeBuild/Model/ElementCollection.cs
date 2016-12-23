@@ -149,7 +149,7 @@ namespace FreeBuild.Model
 
         #endregion
 
-        #region constructors
+        #region Constructors
 
         /// <summary>
         /// Default constructor.  Initialises a new empty ElementCollection
@@ -164,6 +164,31 @@ namespace FreeBuild.Model
 
         #endregion
 
-        
+        #region Methods
+
+        /// <summary>
+        /// Get the subset of this collection which has a recorded modification after the specified date and time
+        /// </summary>
+        /// <param name="since">The date and time to filter by</param>
+        /// <returns></returns>
+        public ElementCollection Modified(DateTime since)
+        {
+            return this.Modified<ElementCollection, Element>(since);
+        }
+
+        /// <summary>
+        /// Get the subset of this collection which has an attached data component of the specified type
+        /// </summary>
+        /// <typeparam name="TData">The type of data component to check for</typeparam>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        public ElementCollection AllWithDataComponent<TData>()
+            where TData : class
+        {
+            return this.AllWithDataComponent<ElementCollection, Element, TData>();
+        }
+
+        #endregion
+
     }
 }

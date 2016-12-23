@@ -94,6 +94,64 @@ namespace FreeBuild.DXF
         }
 
         /// <summary>
+        /// Convert a netDXF attachment point to a horizontal set-out
+        /// </summary>
+        /// <param name="attachment"></param>
+        /// <returns></returns>
+        public static HorizontalSetOut ConvertHorizontal(nDE.MTextAttachmentPoint attachment)
+        {
+            if (attachment == netDxf.Entities.MTextAttachmentPoint.BottomLeft ||
+                attachment == netDxf.Entities.MTextAttachmentPoint.MiddleLeft ||
+                attachment == netDxf.Entities.MTextAttachmentPoint.TopLeft)
+                return HorizontalSetOut.Left;
+            else if (attachment == netDxf.Entities.MTextAttachmentPoint.BottomRight ||
+                attachment == netDxf.Entities.MTextAttachmentPoint.MiddleRight ||
+                attachment == netDxf.Entities.MTextAttachmentPoint.TopRight)
+                return HorizontalSetOut.Right;
+            else return HorizontalSetOut.MidPoint;
+        }
+
+        /// <summary>
+        /// Convert a netDXF attachment point to a vertical set-out
+        /// </summary>
+        /// <param name="attachment"></param>
+        /// <returns></returns>
+        public static VerticalSetOut ConvertVertical(nDE.MTextAttachmentPoint attachment)
+        {
+            if (attachment == netDxf.Entities.MTextAttachmentPoint.BottomCenter ||
+                attachment == netDxf.Entities.MTextAttachmentPoint.BottomLeft ||
+                attachment == netDxf.Entities.MTextAttachmentPoint.BottomRight)
+                return VerticalSetOut.Bottom;
+            else if (attachment == netDxf.Entities.MTextAttachmentPoint.TopCenter ||
+                attachment == netDxf.Entities.MTextAttachmentPoint.TopLeft ||
+                attachment == netDxf.Entities.MTextAttachmentPoint.TopRight)
+                return VerticalSetOut.Top;
+            else
+                return VerticalSetOut.MidPoint;
+        }
+
+        /// <summary>
+        /// Convert a netDXF text object to a FreeBuild label.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static Label Convert(netDxf.Entities.Text text)
+        {
+            return new Label(Convert(text.Position), text.Value, text.Height * ConversionScaling);
+        }
+
+        /// <summary>
+        /// Convert a netDXF MText object to a FreeBuild label
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static Label Convert(netDxf.Entities.MText text)
+        {
+            return new Label(Convert(text.Position), text.Value, text.Height * ConversionScaling, 
+                ConvertVertical(text.AttachmentPoint), ConvertHorizontal(text.AttachmentPoint));
+        }
+
+        /// <summary>
         /// Convert a netDXF Line to a FreeBuild one
         /// </summary>
         /// <param name="line"></param>
@@ -224,6 +282,8 @@ namespace FreeBuild.DXF
             else if (entity is nDE.LwPolyline) return Convert((nDE.LwPolyline)entity);
             else if (entity is nDE.Polyline) return Convert((nDE.Polyline)entity);
             else if (entity is nDE.Spline) return Convert((nDE.Spline)entity);
+            else if (entity is nDE.Text) return Convert((nDE.Text)entity);
+            else if (entity is nDE.MText) return Convert((nDE.MText)entity);
             else return null;
         }
 

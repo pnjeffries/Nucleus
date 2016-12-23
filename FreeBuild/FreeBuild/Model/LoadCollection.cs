@@ -32,5 +32,31 @@ namespace FreeBuild.Model
     [Serializable]
     public class LoadCollection : ModelObjectCollection<Load>
     {
+        #region Methods
+
+        /// <summary>
+        /// Get the subset of this collection which has a recorded modification after the specified date and time
+        /// </summary>
+        /// <param name="since">The date and time to filter by</param>
+        /// <returns></returns>
+        public LoadCollection Modified(DateTime since)
+        {
+            return this.Modified<LoadCollection, Load>(since);
+        }
+
+        /// <summary>
+        /// Get the subset of this collection which has an attached data component of the specified type
+        /// </summary>
+        /// <typeparam name="TData">The type of data component to check for</typeparam>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        public LoadCollection AllWithDataComponent<TData>()
+            where TData : class
+        {
+            return this.AllWithDataComponent<LoadCollection, Load, TData>();
+        }
+
+        #endregion
+
     }
 }

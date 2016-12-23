@@ -37,7 +37,7 @@ namespace FreeBuild.Model
     /// determines how that design representation converts into a 3D solid object.
     /// </summary>
     [Serializable]
-    public abstract class Element : DataOwner<ElementDataStore, IElementData>, IElement
+    public abstract class Element : ModelObject, IElement
     {
 
         #region Properties

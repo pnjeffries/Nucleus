@@ -276,6 +276,52 @@ namespace FreeBuild.Robot
             }
         }
 
+        private void UpdateModelPanelElementsFromRobotFile(Model.Model model, IRobotCollection robotNodes, RobotConversionContext context)
+        {
+            /*IRobotCollection pEls = Robot.Project.Structure.FiniteElems.GetAll();
+            for (int i = 1; i <= pEls.Count; i++)
+            {
+                IRobotFiniteElement pEl = pEls.Get(i);
+                
+                // TODO
+            }*/
+            IRobotCollection objs = Robot.Project.Structure.Objects.GetAll();
+            for (int i = 1; i <= objs.Count; i++)
+            {
+                RobotObjObject rOO = objs.Get(i);
+                if (rOO != null && rOO.StructuralType == IRobotObjectStructuralType.I_OST_SLAB && rOO.Host < 1)
+                {
+                    RobotGeoObject geometry = rOO.Main.Geometry;
+                    Curve border = ROBtoFB.Convert(geometry);
+                    if (border != null)
+                    {
+                        PlanarRegion region = new PlanarRegion(border);
+                        RobotSelection holes = rOO.GetHostedObjects();
+                        if (holes != null && holes.Count > 0)
+                        {
+                            for (int j = 1; j <= holes.Count; j++)
+                            {
+                                // TODO
+                            }
+                        }
+
+                        PanelElement pEl = context.IDMap.GetMappedPanelElement(rOO, model);
+                        if (pEl == null) //Create new element
+                            pEl = model.Create.PanelElement(region, context.ExInfo);
+                        else //Exising mapped element found
+                        {
+                            pEl.Geometry = region;
+                            pEl.Undelete();
+                        }
+                        // TODO: Copy over more data
+
+                        // Store mapping:
+                        context.IDMap.Add(pEl, rOO);
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region FreeBuild to Robot

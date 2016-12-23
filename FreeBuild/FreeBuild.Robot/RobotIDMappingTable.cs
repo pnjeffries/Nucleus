@@ -28,9 +28,16 @@ namespace FreeBuild.Robot
         public string BarCategory { get { return "Bars"; } }
 
         /// <summary>
+        /// The name of the category under which panels are stored
+        /// </summary>
+        public string PanelCategory { get { return "Panel"; } }
+
+        /// <summary>
         /// The name of the category under which section properties are stored
         /// </summary>
         public string SectionCategory { get { return "Sections"; } }
+
+        
 
         #endregion
 
@@ -81,8 +88,22 @@ namespace FreeBuild.Robot
         public LinearElement GetMappedLinearElement(int robotID, Model.Model model)
         {
             //TODO: Get for sub-elements (when introduced)
-            if (HasFirstID(BarCategory, robotID.ToString())) return model.Elements.TryGet(GetFirstID(BarCategory, robotID.ToString())) as LinearElement;
-            return null;
+            if (HasFirstID(BarCategory, robotID.ToString()))
+                return model.Elements.TryGet(GetFirstID(BarCategory, robotID.ToString())) as LinearElement;
+            else return null;
+        }
+
+        /// <summary>
+        /// Get the FreeBuild element, if any, mapped to the specified robot panel ID
+        /// </summary>
+        /// <param name="robotID"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public PanelElement GetMappedPanelElement(int robotID, Model.Model model)
+        {
+            if (HasFirstID(PanelCategory, robotID.ToString()))
+                return model.Elements.TryGet(GetFirstID(PanelCategory, robotID.ToString())) as PanelElement;
+            else return null;
         }
 
         /// <summary>
@@ -94,6 +115,17 @@ namespace FreeBuild.Robot
         public LinearElement GetMappedLinearElement(IRobotBar bar, Model.Model model)
         {
             return GetMappedLinearElement(bar.Number, model);
+        }
+
+        /// <summary>
+        /// Get the FreeBuild element, if any, mapped to the ID of the specified robot object
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public PanelElement GetMappedPanelElement(RobotObjObject obj, Model.Model model)
+        {
+            return GetMappedPanelElement(obj.Number, model);
         }
 
         /// <summary>
@@ -137,6 +169,16 @@ namespace FreeBuild.Robot
         public void Add(LinearElement element, IRobotBar bar)
         {
             Add(BarCategory, element.GUID, bar.Number.ToString());
+        }
+
+        /// <summary>
+        /// Add a new Panel entry to this mapping table
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="obj"></param>
+        public void Add(PanelElement element, IRobotObjObject obj)
+        {
+            Add(PanelCategory, element.GUID, obj.Number.ToString());
         }
 
         /// <summary>

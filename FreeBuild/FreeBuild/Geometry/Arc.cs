@@ -66,7 +66,9 @@ namespace FreeBuild.Geometry
 
         /// <summary>
         /// Does this arc run clockwise or anticlockwise, with reference to the Circle
-        /// derived from its vertices
+        /// derived from its vertices?
+        /// Note that this is relative to the plane said circle lies on, the normal of which
+        /// may be orientated differently to the global coordinate system.
         /// </summary>
         public bool IsClockwise
         {
@@ -273,6 +275,25 @@ namespace FreeBuild.Geometry
         public override Vector TangentAt(int span, double tSpan)
         {
             return TangentAt(tSpan);
+        }
+
+        /// <summary>
+        /// Is this arc clockwise with respect to the specified coordinate system?
+        /// The coordinate system specified should have its origin at the centre of
+        /// this arc's circle.
+        /// </summary>
+        /// <param name="cSystem"></param>
+        /// <returns></returns>
+        public bool IsClockwiseIn(CylindricalCoordinateSystem cSystem)
+        {
+            if (Vertices.Count >= 3 && cSystem != null)
+            {
+                Angle toStart = cSystem.Azimuth(Vertices.First().Position);
+                Angle toEnd = cSystem.Azimuth(Vertices.Last().Position).NormalizeTo2PI();
+                Angle toMid = cSystem.Azimuth(Vertices[1].Position).NormalizeTo2PI();
+                return toEnd > toMid;
+            }
+            return false;
         }
 
         protected override void InvalidateCachedGeometry()

@@ -25,6 +25,97 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
+        /// Convert a collection of Robot 3D points to a FreeBuild Vector array
+        /// </summary>
+        /// <param name="pts"></param>
+        /// <returns></returns>
+        public static Vector[] Convert(RobotGeoPoint3DCollection pts)
+        {
+            Vector[] result = new Vector[pts.Count];
+            for (int i = 0; i < pts.Count; i++)
+            {
+                result[i] = pts.Get(i + 1);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Convert a Robot polyline geometry into a FreeBuild polyline
+        /// </summary>
+        /// <param name="polyline"></param>
+        /// <returns></returns>
+        public static PolyLine Convert(RobotGeoPolyline polyline)
+        {
+            PolyLine result = new PolyLine();
+            RobotGeoSegmentCollection segments = polyline.Segments as RobotGeoSegmentCollection;
+            for (int i = 1; i <= segments.Count; i++)
+            {
+                RobotGeoSegment segment = segments.Get(i);
+                Vector pt = Convert(segment.P1);
+                if (i == segments.Count && pt.Equals(result.StartPoint, Tolerance.Geometric))
+                {
+                    result.Close(true);
+                }
+                else result.Add(pt);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Convert a Robot contour geometry to a FreeBuild polycurve
+        /// </summary>
+        /// <param name="contour"></param>
+        /// <returns></returns>
+        public static PolyCurve Convert(RobotGeoContour contour)
+        {
+            PolyCurve result = new PolyCurve();
+            RobotGeoSegmentCollection segments = contour.Segments as RobotGeoSegmentCollection;
+            RobotGeoSegment firstSegment = segments.Get(1);
+            Vector lastPt = Convert(firstSegment.P1);
+            for (int i = 2; i <= segments.Count; i++)
+            {
+                RobotGeoSegment segment = segments.Get(i);
+                if (segment.Type == IRobotGeoSegmentType.I_GST_ARC)
+                {
+                    RobotGeoSegmentArc arcSegment = (RobotGeoSegmentArc)segment;
+                    Vector endPt = Convert(arcSegment.P2);
+                    Arc arc = new Arc(lastPt, Convert(arcSegment.P1), endPt);
+                    result.Add(arc);
+                    lastPt = endPt;
+                }
+                else
+                {
+                    Vector endPt = Convert(segment.P1);
+                    Line line = new Line(lastPt, endPt);
+                    result.Add(line);
+                    lastPt = endPt;
+                }
+            }
+            result.Close();
+            return result;
+        }
+
+        /// <summary>
+        /// Convert a Robot geometry object into a FreeBuild curve
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        public static Curve Convert(RobotGeoObject geometry)
+        {
+            if (geometry.Type == IRobotGeoObjectType.I_GOT_POLYLINE)
+            {
+                return Convert((RobotGeoPolyline)geometry);
+            }
+            else if (geometry.Type == IRobotGeoObjectType.I_GOT_CONTOUR)
+            {
+                return Convert((RobotGeoContour)geometry);
+            }
+            // TODO: Others!
+            else return null;
+        }
+
+        /// <summary>
         /// Convert a Robot bar end offset into a FreeBuild Vector 
         /// </summary>
         /// <param name="offset"></param>

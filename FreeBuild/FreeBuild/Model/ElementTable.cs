@@ -33,10 +33,37 @@ namespace FreeBuild.Model
     [Serializable]
     public class ElementTable : ElementCollection
     {
+        #region Properties
+
+        /// <summary>
+        /// Private backing field for NextNumericID property
+        /// </summary>
+        private long _NextNumericID = 1;
+
+        /// <summary>
+        /// The numeric ID that will be assigned to the next element to be added to this table
+        /// </summary>
+        public long NextNumericID
+        {
+            get { return _NextNumericID; }
+        }
+
+        #endregion
+
         #region Constructors
 
         public ElementTable(Model model) : base(model)
         { }
+
+        #endregion
+
+        #region Methods
+
+        protected override void SetNumericID(Element item)
+        {
+            item.NumericID = _NextNumericID;
+            _NextNumericID++;
+        }
 
         #endregion
     }

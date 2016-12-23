@@ -33,7 +33,48 @@ namespace FreeBuild.Model
     /// <typeparam name="TData">The type of data that this store will contain</typeparam>
     [Serializable]
     public abstract class DataStore<TData> : Dictionary<Type, TData>
+        where TData : class
     {
+        #region Properties
+
+        /// <summary>
+        /// Get a data component within this store by it's type name.
+        /// </summary>
+        /// <param name="typeName"></param>
+        /// <returns></returns>
+        public TData this[string typeName]
+        {
+            get { return GetData(typeName); }
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Get a datacomponent from this store by it's type name.
+        /// </summary>
+        /// <param name="typeName">The name of the type of component to be searched for.
+        /// This will first attempt to be resolved via the Type.GetType static function - if this fails the
+        /// store will be searched to find a stored type with the specifed 
+        /// <returns></returns>
+        public TData GetData(string typeName)
+        {
+            Type tType = Type.GetType(typeName);
+            if (tType == null || !ContainsKey(tType))
+            {
+                //If the type name could not be resolved, search through the collection for anything with the specified name
+                foreach (KeyValuePair<Type,TData> kvp in this)
+                {
+                    if (kvp.Key.Name.EqualsIgnoreCase(typeName)) return kvp.Value;
+                }
+            }
+            else
+            {
+                return this[tType];
+            }
+            return null;
+        }
 
         /// <summary>
         /// Get data of the specified generic type from this
@@ -83,6 +124,17 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
+        /// Does this data store contain data of the specified type?
+        /// </summary>
+        /// <typeparam name="T">The type of data component to check for</typeparam>
+        /// <returns></returns>
+        public bool HasData<T>() where T : class, TData
+        {
+            Type tType = typeof(T);
+            return ContainsKey(tType);
+        }
+
+        /// <summary>
         /// Get all data within this store that is of the specified generic type or which
         /// is assignable to that type.
         /// </summary>
@@ -123,6 +175,8 @@ namespace FreeBuild.Model
         {
             if (data != null) this[data.GetType()] = data;
         }
+
+        #endregion
     }
 
     /// <summary>

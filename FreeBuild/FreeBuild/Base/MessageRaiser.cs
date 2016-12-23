@@ -28,13 +28,18 @@ using System.Threading.Tasks;
 namespace FreeBuild.Base
 {
     /// <summary>
-    /// Abstract base class for objects which can raise message events
+    /// Abstract base class for objects which can raise message events.
+    /// Typically used for objects which own and run a lengthy process
+    /// that may need to raise Message events in order to communicate
+    /// progress and errors encountered to the outside environment
+    /// without interrupting program flow.
     /// </summary>
     [Serializable]
     public abstract class MessageRaiser : NotifyPropertyChangedBase
     {
         /// <summary>
-        /// Event raised when this object
+        /// Message event raised when this object has something to communicate to the
+        /// outside world.
         /// </summary>
         [field:NonSerialized]
         public EventHandler<MessageRaisedEventArgs> Message;

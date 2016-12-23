@@ -61,13 +61,27 @@ namespace FreeBuild.Model
 
         protected override void SetItemOwner(TItem item)
         {
-            if (Owner != null) item.Model = Owner;
+            if (Owner != null)
+            {
+                item.Model = Owner;
+                if (item.NumericID <= 0) SetNumericID(item);
+            }
         }
 
         protected override void ClearItemOwner(TItem item)
         {
-            if (Owner != null) item.Model = null;
+            if (Owner != null)
+            {
+                item.Model = null;
+            }
         }
+
+        /// <summary>
+        /// Set the numeric ID of the specified item.  
+        /// In standard collections, this does nothing.
+        /// </summary>
+        /// <param name="item"></param>
+        protected virtual void SetNumericID(TItem item) { }
 
         /// <summary>
         /// Find the first item in this collection which has the specified name (if any)
@@ -118,6 +132,8 @@ namespace FreeBuild.Model
     [Serializable]
     public class ModelObjectCollection : ModelObjectCollection<ModelObject>
     {
+        #region Constructors
+
         /// <summary>
         /// Default constructor.  Initialises a new model object collection
         /// </summary>
@@ -128,6 +144,34 @@ namespace FreeBuild.Model
         /// </summary>
         /// <param name="toBeCombined"></param>
         public ModelObjectCollection(IEnumerable<IEnumerable<ModelObject>> toBeCombined) : base(toBeCombined) { }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Get the subset of this collection which has a recorded modification after the specified date and time
+        /// </summary>
+        /// <param name="since">The date and time to filter by</param>
+        /// <returns></returns>
+        public ModelObjectCollection Modified(DateTime since)
+        {
+            return this.Modified<ModelObjectCollection, ModelObject>(since);
+        }
+
+        /// <summary>
+        /// Get the subset of this collection which has an attached data component of the specified type
+        /// </summary>
+        /// <typeparam name="TData">The type of data component to check for</typeparam>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        public ModelObjectCollection AllWithDataComponent<TData>()
+            where TData : class
+        {
+            return this.AllWithDataComponent<ModelObjectCollection, ModelObject, TData>();
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -152,6 +196,27 @@ namespace FreeBuild.Model
             foreach (TItem obj in collection)
             {
                 if (obj.Modified > since) result.Add(obj);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Get the subset of this collection which has an attached data component of the specified type
+        /// </summary>
+        /// <typeparam name="TCollection"></typeparam>
+        /// <typeparam name="TItem"></typeparam>
+        /// <typeparam name="TData">The type of data component to check for</typeparam>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        public static TCollection AllWithDataComponent<TCollection, TItem, TData>(this TCollection collection)
+            where TCollection : ModelObjectCollection<TItem>, new()
+            where TItem : ModelObject
+            where TData : class
+        {
+            TCollection result = new TCollection();
+            foreach (TItem obj in collection)
+            {
+                if (obj.HasData<TData>()) result.Add(obj);
             }
             return result;
         }
