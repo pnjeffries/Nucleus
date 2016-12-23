@@ -223,6 +223,7 @@
     <Compile Include="Rendering\DisplayAttributes.cs" />
     <Compile Include="Rendering\DisplayBrush.cs" />
     <Compile Include="Rendering\IRenderable.cs" />
+    <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Rendering\RenderingParameters.cs" />
     <Compile Include="Structural\Support.cs" />
     <Compile Include="UI\AutoUIAttribute.cs" />

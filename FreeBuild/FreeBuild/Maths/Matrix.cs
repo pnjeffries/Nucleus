@@ -197,6 +197,68 @@ namespace FreeBuild.Maths
         }
 
         /// <summary>
+        /// Exchange the values in two rows in this matrix.
+        /// An elementary row operation.
+        /// </summary>
+        /// <param name="iA">The first row index</param>
+        /// <param name="iB">The second row index</param>
+        public virtual void SwapRows(int iA, int iB)
+        {
+            for (int j = 0; j < Columns; j++)
+            {
+                double valA = this[iA, j];
+                this[iA, j] = this[iB, j];
+                this[iB, j] = valA;
+            }
+        }
+
+        /// <summary>
+        /// Multiply a row by a factor.
+        /// An elementary row operation.
+        /// </summary>
+        /// <param name="i">The index of the row to be modified.</param>
+        /// <param name="scalar">The factor to multiply by.</param>
+        public virtual void MultiplyRow(int i, double scalar)
+        {
+            for (int j = 0; j < Columns; j++)
+            {
+                this[i, j] *= scalar;
+            }
+        }
+
+
+        /// <summary>
+        /// Divide a row by a non-zero constant.
+        /// An elementary row operation.
+        /// </summary>
+        /// <param name="i">The row index</param>
+        /// <param name="divisor">The value to divide by.
+        /// Should be non-zero.</param>
+        public virtual void DivideRow(int i, double divisor)
+        {
+            for (int j = 0; j < Columns; j++)
+            {
+                this[i, j] /= divisor;
+            }
+        }
+
+        /// <summary>
+        /// Subtract row B times a factor from row A.
+        /// An elementary row operation.
+        /// </summary>
+        /// <param name="iA">The index of the row to subtract from</param>
+        /// <param name="iB">The index of the row to subtract</param>
+        /// <param name="factor">The factor by which the second row is to be multiplied
+        /// before subtraction.</param>
+        public void SubtractRow(int iA, int iB, double factor)
+        {
+            for (int j = 0; j < Columns; j++)
+            {
+                this[iA, j] -= this[iB, j] * factor;
+            }
+        }
+
+        /// <summary>
         /// Create the transpose of this matrix.
         /// The transpose of a matrix is obtained by flipping rows and columns.
         /// </summary>
@@ -213,6 +275,119 @@ namespace FreeBuild.Maths
                 }
             });
             return result;
+        }
+
+        /// <summary>
+        /// Uses Gaussian Elimination to put the matrix into row-echelon form.
+        /// </summary>
+        public void GaussianElimination()
+        {
+            int i = 0;
+            int j = 0;
+            while (i < Rows && j < Columns)
+            {
+                // Find 'pivot' point in column j, starting from row i:
+                int iMax = i;
+                double max = Math.Abs(this[i, j]);
+                for (int k = i + 1; k < Rows; i++)
+                {
+                    double test = Math.Abs(this[k, j]);
+                    if (test > max)
+                    {
+                        iMax = k;
+                        max = test;
+                    }
+                }
+                if (max != 0)
+                {
+                    // Move entry with the largest absolute value to the pivot position
+                    SwapRows(i, iMax);
+                    DivideRow(i, this[i, j]); //[i,j] will now be 1
+                    for (int k = i + 1; k < Rows; k++)
+                    {
+                        SubtractRow(k, i, this[k, j]);
+                    }
+                    i++;
+                }
+                j++;
+            }
+        }
+
+        /// <summary>
+        /// Express this matrix as the product of:
+        /// L, a singular lower triangular matrix and
+        /// U, an upper triangular matrix.
+        /// This matrix must be square.
+        /// </summary>
+        /// <param name="L">Output.  A singular lower triangular matrix.</param>
+        /// <param name="U">Output.  An upper triangular matrix.</param>
+        public void LUDecomposition(out Matrix L, out Matrix U)
+        {
+            L = CreateNewMatrix(Rows, Columns);
+            U = Duplicate();
+            for (int j = 0; j < Columns; j++)
+            {
+                double div = U[j, j];
+                L[j, j] = 1;
+                for (int i = j+1; i < Rows; i++)
+                {
+                    double factor = U[i, j] / div;
+                    L[i, j] = factor;
+                    U.SubtractRow(i, j, factor);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Solve a matrix representing a system of simultaneous equations.
+        /// The matrix must be augmented and in row-echelon form, with each column
+        /// before the last indicating a variable coefficient 
+        /// </summary>
+        /// <returns>A single-row matrix going the solution for each column.</returns>
+        public Matrix Solve()
+        {
+            Matrix result = CreateNewMatrix(1, Columns - 1);
+            bool[] solved = new bool[Columns - 1]; // Stores whether a given solution has been found
+
+            // Work backwards through the rows, solving each one
+            for (int i = Rows - 1; i >= 0; i--)
+            {
+                int uC = 0; // Counts the number of unsolved variables
+                int jU = -1; // The position of the last unsolved variable
+
+                // Get the right hand side of the equation:
+                double right = this[i, Columns - 1];
+
+                for (int j = 0; j < Columns - 1; j++)
+                {
+                    double value = this[i, j];
+                    if (value != 0)
+                    {
+                        if (!solved[j])
+                        {
+                            // Variable isn't solved yet - keep going
+                            uC += 1;
+                            jU = j;
+                        }
+                        else
+                        {
+                            // Substitute for the solved variable:
+                            right -= value * result[0, j];
+                        }
+                    }
+                }
+                if (uC == 1) // There is only one unsolved variable in this row - we can solve it!
+                {
+                    result[0, jU] = right / this[i, jU];
+                    solved[jU] = true;
+                }
+            }
+            foreach (bool vSol in solved)
+                if (!vSol)
+                    throw new MatrixException("Solutions could not be found for all variables!");
+
+            return result;
+            // TODO: Could this be simplified?
         }
 
         /// <summary>
@@ -373,8 +548,6 @@ namespace FreeBuild.Maths
                 return result;
             }
         }
-
-        
 
         /// <summary>
         /// Generate an augmented form of this matrix by adding the columns from the specified other matrix
