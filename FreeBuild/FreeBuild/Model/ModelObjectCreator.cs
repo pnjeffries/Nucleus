@@ -102,6 +102,24 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
+        /// Create a new (or update an existing) panel element in the model
+        /// </summary>
+        /// <param name="geometry">The set-out geometry of the element</param>
+        /// <param name="exInfo">Optional.  The execution information of the current action.
+        /// If an object has been created previously with matching execution information then
+        /// instead of creating a new item this previous one will be updated and returned instead.
+        /// This enables this method to be used parametrically.</param>
+        /// <returns>A new or previously created Panel elemet</returns>
+        public PanelElement PanelElement(Surface geometry, ExecutionInfo exInfo = null)
+        {
+            PanelElement result = new PanelElement();
+            result = (PanelElement)Model.History.Update(exInfo, result);
+            result.ReplaceGeometry(geometry);
+            Model.Add(result);
+            return result;
+        }
+
+        /// <summary>
         /// Create a new (or update an existing) linear element as a copy of another one
         /// </summary>
         /// <param name="element">The element to copy.</param>
@@ -115,6 +133,25 @@ namespace FreeBuild.Model
         {
             LinearElement result = element.Duplicate();
             result = (LinearElement)Model.History.Update(exInfo, result);
+            if (newGeometry != null) result.ReplaceGeometry(newGeometry);
+            Model.Add(result);
+            return result;
+        }
+
+        /// <summary>
+        /// Create a new (or update an existing) panel element as a copy of another one
+        /// </summary>
+        /// <param name="element">The element to copy.</param>
+        /// <param name="newGeometry">Optional.  The set-out geometry to be used for the new element.</param>
+        /// <param name="exInfo">Optional.  The execution information of the current action.
+        /// If an object has been created previously with matching execution information then
+        /// instead of creating a new item this previous one will be updated and returned instead.
+        /// This enables this method to be used parametrically.</param>
+        /// <returns></returns>
+        public PanelElement CopyOf(PanelElement element, Surface newGeometry = null, ExecutionInfo exInfo = null)
+        {
+            PanelElement result = element.Duplicate();
+            result = (PanelElement)Model.History.Update(exInfo, result);
             if (newGeometry != null) result.ReplaceGeometry(newGeometry);
             Model.Add(result);
             return result;

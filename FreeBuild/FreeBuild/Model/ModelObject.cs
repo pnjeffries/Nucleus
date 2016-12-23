@@ -32,7 +32,7 @@ namespace FreeBuild.Model
     /// and form the top-level of data within that model.
     /// </summary>
     [Serializable]
-    public abstract class ModelObject : Named, IDeletable, IOwned<Model>
+    public abstract class ModelObject : DataOwner, IDeletable, IOwned<Model>
     {
 
         #region Properties
@@ -88,6 +88,31 @@ namespace FreeBuild.Model
         /// performed on this object.
         /// </summary>
         public DateTime Modified { get { return _Modified; } }
+
+
+        /// <summary>
+        /// Private backing field for NumericID property
+        /// </summary>
+        private long _NumericID = 0;
+
+        /// <summary>
+        /// The table number of this object.
+        /// This is used as a display ID and also when syncing with other
+        /// software that uses numeric IDs.  However it is not generally used
+        /// as an identifier internally as it is not guaranteed to be unique.
+        /// </summary>
+        public long NumericID
+        {
+            get
+            {
+                return _NumericID;
+            }
+            set
+            {
+                _NumericID = value;
+                NotifyPropertyChanged("NumericID");
+            }
+        }
 
         #endregion
 
@@ -148,7 +173,7 @@ namespace FreeBuild.Model
         /// <param name="propertyName"></param>
         protected override void NotifyPropertyChanged(string propertyName)
         {
-            _Modified = DateTime.Now;
+            _Modified = DateTime.UtcNow;
             base.NotifyPropertyChanged(propertyName);
         }
 

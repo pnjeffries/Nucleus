@@ -8,6 +8,7 @@ using W = System.Windows;
 using Shapes = System.Windows.Shapes;
 using Media = System.Windows.Media;
 using FreeBuild.Rendering;
+using System.Windows.Controls;
 
 namespace FreeBuild.WPF
 {

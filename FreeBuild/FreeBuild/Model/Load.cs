@@ -41,18 +41,18 @@ namespace FreeBuild.Model
     /// to be considered during analysis
     /// </summary>
     /// <typeparam name="TAppliedTo">The type of object that this load applies to</typeparam>
-    /// <typeparam name="TAppliedToCollection">The type of collection of TAppliedTo to use to store</typeparam>
+    /// <typeparam name="TAppliedToSet">The type of collection of TAppliedTo to use to store</typeparam>
     [Serializable]
-    public abstract class Load<TAppliedTo, TAppliedToCollection> : Load
+    public abstract class Load<TAppliedTo, TAppliedToSet> : Load
         where TAppliedTo : ModelObject
-        where TAppliedToCollection : ModelObjectCollection<TAppliedTo>, new()
+        where TAppliedToSet : ModelObjectCollection<TAppliedTo>, new()
     {
         #region Properties
 
         /// <summary>
         /// The collection of objects that this load is applied to
         /// </summary>
-        public TAppliedToCollection AppliedTo { get; } = new TAppliedToCollection();
+        public TAppliedToSet AppliedTo { get; } = new TAppliedToSet();
 
         #endregion
     }

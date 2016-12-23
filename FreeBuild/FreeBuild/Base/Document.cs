@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -77,7 +78,7 @@ namespace FreeBuild.Base
         /// </summary>
         /// <param name="filePath">The filepath to save the document to</param>
         /// <returns>True if the file was successfully saved, else false</returns>
-        public virtual bool SaveAs(string filePath)
+        public virtual bool SaveAs(FilePath filePath)
         {
             try
             {
@@ -86,6 +87,34 @@ namespace FreeBuild.Base
                                          FileMode.Create,
                                          FileAccess.Write, FileShare.None);
                 formatter.Serialize(stream, this);
+                stream.Close();
+                FilePath = filePath; //Store filepath
+                return true;
+            }
+            catch
+            {
+                //TODO: Notify user of error
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Save this document to the specified location
+        /// in text format via the specified customisable text serialiser
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="filePath"></param>
+        /// <param name="textSerialiser"></param>
+        /// <returns></returns>
+        public virtual bool SaveAs<T>(FilePath filePath, DocumentTextSerialiser<T> textSerialiser)
+            where T : Document
+        {
+            try
+            {
+                Stream stream = new FileStream(filePath,
+                                         FileMode.Create,
+                                         FileAccess.Write, FileShare.None);
+                textSerialiser.Serialize(stream, this as T);
                 stream.Close();
                 FilePath = filePath; //Store filepath
                 return true;

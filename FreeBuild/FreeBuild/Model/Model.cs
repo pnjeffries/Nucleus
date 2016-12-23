@@ -179,8 +179,19 @@ namespace FreeBuild.Model
         {
             get
             {
-                return new ModelObjectCollection(new IEnumerable<ModelObject>[]
-                    {_Elements, _Nodes, _Levels, _Properties, _Materials});
+                return new ModelObjectCollection(AllTables);
+            }
+        }
+
+        /// <summary>
+        /// Get all of the object tables in this Model.
+        /// </summary>
+        public IEnumerable<IEnumerable<ModelObject>> AllTables
+        {
+            get
+            {
+                return new IEnumerable<ModelObject>[]
+                    {_Materials, _Properties, _Levels, _Nodes, _Elements};
             }
         }
 

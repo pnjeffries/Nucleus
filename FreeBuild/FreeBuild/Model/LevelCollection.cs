@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,13 +56,13 @@ namespace FreeBuild.Model
         /// </summary>
         /// <param name="level"></param>
         /// <returns></returns>
-        public Level NextLevelAbove(Level level)
+        public Level NextLevelAbove(double z)
         {
             double minDistance = 0;
             Level result = null;
             foreach (Level testLevel in this)
             {
-                double dist = testLevel.Z - level.Z;
+                double dist = testLevel.Z - z;
                 if (dist > 0 && (result == null || dist < minDistance))
                 {
                     result = testLevel;
@@ -77,13 +78,13 @@ namespace FreeBuild.Model
         /// </summary>
         /// <param name="level"></param>
         /// <returns></returns>
-        public Level NextLevelBelow(Level level)
+        public Level NextLevelBelow(double z)
         {
             double minDistance = 0;
             Level result = null;
             foreach (Level testLevel in this)
             {
-                double dist = level.Z - testLevel.Z;
+                double dist = z - testLevel.Z;
                 if (dist > 0 && (result == null || dist < minDistance))
                 {
                     result = testLevel;
@@ -91,6 +92,49 @@ namespace FreeBuild.Model
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Find the level in this collection closest to the specified z-coordinate
+        /// </summary>
+        /// <param name="z"></param>
+        /// <returns></returns>
+        public Level NearestLevel(double z)
+        {
+            double minDistance = 0;
+            Level result = null;
+            foreach (Level level in this)
+            {
+                double dist = (level.Z - z).Abs();
+                if (result == null || dist < minDistance)
+                {
+                    result = level;
+                    minDistance = dist;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Get the subset of this collection which has a recorded modification after the specified date and time
+        /// </summary>
+        /// <param name="since">The date and time to filter by</param>
+        /// <returns></returns>
+        public LevelCollection Modified(DateTime since)
+        {
+            return this.Modified<LevelCollection, Level>(since);
+        }
+
+        /// <summary>
+        /// Get the subset of this collection which has an attached data component of the specified type
+        /// </summary>
+        /// <typeparam name="TData">The type of data component to check for</typeparam>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        public LevelCollection AllWithDataComponent<TData>()
+            where TData : class
+        {
+            return this.AllWithDataComponent<LevelCollection, Level, TData>();
         }
 
         #endregion

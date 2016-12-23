@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using FreeBuild.Base;
+using FreeBuild.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,6 +73,23 @@ namespace FreeBuild.Model
         {
             FilePath = filePath;
             Model = model;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Save this document to the specified location
+        /// in the specified text format
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="filePath">The filepath to save to</param>
+        /// <param name="format">The text format to save in</param>
+        /// <returns></returns>
+        public virtual bool SaveAs(FilePath filePath, TextFormat format)
+        {
+            return SaveAs(filePath, new ModelDocumentTextSerialiser(format));
         }
 
         #endregion

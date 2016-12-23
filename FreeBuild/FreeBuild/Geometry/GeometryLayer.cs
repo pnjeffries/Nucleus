@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,6 +70,28 @@ namespace FreeBuild.Geometry
             }
         }
 
+        /// <summary>
+        /// Private backing field for the Brush property
+        /// </summary>
+        private DisplayBrush _Brush;
+
+        /// <summary>
+        /// The default brush to be used to display objects on this layer in
+        /// the absense of any overriding display colour
+        /// </summary>
+        public DisplayBrush Brush
+        {
+            get { return _Brush; }
+            set
+            {
+                _Brush = value;
+                NotifyPropertyChanged("Brush");
+            }
+        }
+
+        /// <summary>
+        /// Private backing field for the Tag property
+        /// </summary>
         private string _Tag = null;
 
         /// <summary>
@@ -89,10 +112,20 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">The name of the layer</param>
         public GeometryLayer(string name)
         {
             Name = name;
+        }
+
+        /// <summary>
+        /// Name, brush constructor
+        /// </summary>
+        /// <param name="name">The name of the layer</param>
+        /// <param name="brush">The default display brush of this layer</param>
+        public GeometryLayer(string name, DisplayBrush brush) : this(name)
+        {
+            Brush = brush;
         }
 
         #endregion

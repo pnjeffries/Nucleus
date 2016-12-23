@@ -38,6 +38,19 @@ namespace FreeBuild.Model
         #region Properties
 
         /// <summary>
+        /// Private backing field for NextNumericID property
+        /// </summary>
+        private long _NextNumericID = 1;
+
+        /// <summary>
+        /// The numeric ID that will be assigned to the next element to be added to this table
+        /// </summary>
+        public long NextNumericID
+        {
+            get { return _NextNumericID; }
+        }
+
+        /// <summary>
         /// Private backing member variable for the SpatialTree property
         /// </summary>
         [NonSerialized]
@@ -89,6 +102,12 @@ namespace FreeBuild.Model
         {
             //Clear cached data:
             _SpatialTree = null;
+        }
+
+        protected override void SetNumericID(Node item)
+        {
+            item.NumericID = NextNumericID;
+            _NextNumericID++;
         }
 
         #endregion

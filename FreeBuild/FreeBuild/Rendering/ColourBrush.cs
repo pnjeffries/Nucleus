@@ -31,6 +31,15 @@ namespace FreeBuild.Rendering
     /// </summary>
     public class ColourBrush : DisplayBrush
     {
+        #region Constants
+
+        /// <summary>
+        /// Get a default black colour brush
+        /// </summary>
+        public static ColourBrush Black { get { return new ColourBrush(Colour.Black); } }
+
+        #endregion
+
         #region Properties
 
         /// <summary>

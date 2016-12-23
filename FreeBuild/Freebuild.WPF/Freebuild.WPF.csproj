@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\BooleanVisibilityConverter.cs" />
+    <Compile Include="Converters\BrushConverter.cs" />
     <Compile Include="Converters\CountVisibilityConverter.cs" />
     <Compile Include="Converters\ExpanderHeaderWidthConverter.cs" />
     <Compile Include="EnumBindingSourceExtension.cs" />

@@ -97,6 +97,18 @@ namespace FreeBuild.Geometry
             Closed = close;
         }
 
+        /// <summary>
+        /// Add a new point to the end of the polyline 
+        /// (creating a new polyline segment if this is not the first point added)
+        /// </summary>
+        /// <param name="pt"></param>
+        public Vertex Add(Vector pt)
+        {
+            Vertex result = new Vertex(pt);
+            Vertices.Add(result);
+            return result;
+        }
+
         #endregion
 
         #region Static Methods

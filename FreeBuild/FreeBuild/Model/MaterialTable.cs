@@ -33,6 +33,23 @@ namespace FreeBuild.Model
     [Serializable]
     public class MaterialTable : MaterialCollection
     {
+        #region Properties
+
+        /// <summary>
+        /// Private backing field for NextNumericID property
+        /// </summary>
+        private long _NextNumericID = 1;
+
+        /// <summary>
+        /// The numeric ID that will be assigned to the next element to be added to this table
+        /// </summary>
+        public long NextNumericID
+        {
+            get { return _NextNumericID; }
+        }
+
+        #endregion
+
         #region Constructor
 
         /// <summary>
@@ -40,6 +57,16 @@ namespace FreeBuild.Model
         /// </summary>
         /// <param name="model"></param>
         public MaterialTable(Model model) : base(model) { }
+
+        #endregion
+
+        #region Methods
+
+        protected override void SetNumericID(Material item)
+        {
+            item.NumericID = NextNumericID;
+            _NextNumericID++;
+        }
 
         #endregion
     }

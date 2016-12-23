@@ -1,6 +1,7 @@
 ﻿using FreeBuild.Geometry;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -65,34 +66,16 @@ namespace FreeBuild.WPF
             set { SetValue(GeometryProperty, value); }
         }
 
-        //public static void OnViewBoundsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        //{
-        //    //((GeometryCanvas)d).RefreshContents();
-        //}
 
-        //public static DependencyProperty ViewBoundsProperty =
-        //    DependencyProperty.Register("ViewBounds", typeof(BoundingBox), typeof(GeometryCanvas),
-        //        new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None,
-        //            new PropertyChangedCallback(OnViewBoundsChanged)));
-
-        ///// <summary>
-        ///// The bounds within which geometry should be drawn on this canvas
-        ///// </summary>
-        //public BoundingBox ViewBounds
-        //{
-        //    get { return (BoundingBox)GetValue(ViewBoundsProperty); }
-        //    set { SetValue(ViewBoundsProperty, value); }
-        //}
-
-        public static void OnCurveThicknessChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        public static void OnRedrawChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            //((GeometryCanvas)d).RefreshContents();
+            ((GeometryCanvas)d).RefreshContents();
         }
 
         public static DependencyProperty CurveThicknessProperty =
             DependencyProperty.Register("CurveThickness", typeof(double), typeof(GeometryCanvas),
-            new FrameworkPropertyMetadata(0.01, FrameworkPropertyMetadataOptions.None,
-                new PropertyChangedCallback(OnCurveThicknessChanged)));
+            new FrameworkPropertyMetadata(0.01, FrameworkPropertyMetadataOptions.None));//,
+                //new PropertyChangedCallback(OnCurveThicknessChanged)));
 
         /// <summary>
         /// The default stroke thickness of curves drawn on this canvas
@@ -104,19 +87,26 @@ namespace FreeBuild.WPF
         }
 
         /// <summary>
+        /// Default Brush dependency property
+        /// </summary>
+        public static DependencyProperty DefaultBrushProperty =
+            DependencyProperty.Register("DefaultBrush", typeof(Brush), typeof(GeometryCanvas),
+                new FrameworkPropertyMetadata(Brushes.Black, FrameworkPropertyMetadataOptions.None,
+                new PropertyChangedCallback(OnRedrawChange)));
+
+        /// <summary>
+        /// The default brush used to draw objects on this canvas
+        /// </summary>
+        public Brush DefaultBrush
+        {
+            get { return (Brush)GetValue(DefaultBrushProperty); }
+            set { SetValue(DefaultBrushProperty, value); }
+        }
+
+        /// <summary>
         /// The default diameter of points drawn on this canvas
         /// </summary>
         public double PointDiameter { get; set; } = 0.25;
-
-        /// <summary>
-        /// The default brush used to draw curves on this canvas
-        /// </summary>
-        public Brush CurveBrush { get; set; } = Brushes.Black;
-
-        /// <summary>
-        /// The default brush used to draw points on this canvas
-        /// </summary>
-        public Brush PointBrush { get; set; } = Brushes.Black;
 
         /// <summary>
         /// The default brush used to fill closed regions
@@ -166,7 +156,7 @@ namespace FreeBuild.WPF
                         path.DataContext = this;
                         if (crv.Attributes == null || crv.Attributes.Brush == null)
                         {
-                            path.Stroke = CurveBrush;
+                            path.Stroke = DefaultBrush;
                         }
                         else path.Stroke = FBtoWPF.Convert(crv.Attributes.Brush);
                         path.SetBinding(Path.StrokeThicknessProperty, new Binding("CurveThickness"));
@@ -207,7 +197,7 @@ namespace FreeBuild.WPF
                         Path path = new Path();
                         if (reg.Attributes == null || reg.Attributes.Brush == null)
                         {
-                            path.Fill = FillBrush;
+                            path.Fill = DefaultBrush;
                         }
                         else path.Fill = FBtoWPF.Convert(reg.Attributes.Brush, 192);
                         //path.Stroke = Brushes.Black;
@@ -216,9 +206,45 @@ namespace FreeBuild.WPF
 
                         Children.Add(path);
                     }
-                    else if (shape is Cloud)
+                    else if (shape is FB.Label)
                     {
-                        Brush pointBrush = PointBrush;
+                        FB.Label label = (FB.Label)shape;
+
+                        TextBlock tB = new TextBlock();
+                        tB.DataContext = label;
+                        tB.Padding = new Thickness(0);
+                        tB.Text = label.Text;
+                        tB.SetBinding(TextBlock.TextProperty, new Binding("Text"));
+                        tB.FontSize = 1;//label.TextSize;
+                        tB.RenderTransform = new ScaleTransform(label.TextSize, label.TextSize);
+                        //tB.RenderTransformOrigin = new System.Windows.Point(0, 1);
+
+                        if (shape.Attributes != null && shape.Attributes.Brush != null)
+                        {
+                            tB.Foreground = FBtoWPF.Convert(shape.Attributes.Brush);
+                        }
+
+                        FormattedText fT = new FormattedText(label.Text, CultureInfo.CurrentCulture, tB.FlowDirection,
+                            new Typeface(tB.FontFamily, tB.FontStyle, tB.FontWeight, tB.FontStretch), 1, tB.Foreground);
+
+                        double xOffset;
+                        if (label.HorizontalSetOut == HorizontalSetOut.Left) xOffset = 0;
+                        else if (label.HorizontalSetOut == HorizontalSetOut.Right) xOffset = fT.Width * label.TextSize;
+                        else xOffset = label.TextSize * fT.Width / 2;
+                        
+                        double yOffset;
+                        if (label.VerticalSetOut == VerticalSetOut.Top) yOffset = 0;
+                        else if (label.VerticalSetOut == VerticalSetOut.Bottom) yOffset = fT.Height * label.TextSize;
+                        else yOffset = label.TextSize * fT.Height / 2;
+
+                        SetLeft(tB, label.Position.X - xOffset);
+                        SetTop(tB, -label.Position.Y - yOffset);
+
+                        Children.Add(tB);
+                    }
+                    else if (shape is Cloud || shape is FB.Point)
+                    {
+                        Brush pointBrush = DefaultBrush;
                         if (shape.Attributes != null && shape.Attributes.Brush != null)
                         {
                             pointBrush = FBtoWPF.Convert(shape.Attributes.Brush);
@@ -230,8 +256,9 @@ namespace FreeBuild.WPF
                             ellipse.Width = diameter;
                             ellipse.Height = diameter;
                             ellipse.Fill = pointBrush;
-                            Canvas.SetLeft(ellipse, v.X - diameter / 2);
-                            Canvas.SetTop(ellipse, -v.Y - diameter / 2);
+
+                            SetLeft(ellipse, v.X - diameter / 2);
+                            SetTop(ellipse, -v.Y - diameter / 2);
 
                             Children.Add(ellipse);
                         }

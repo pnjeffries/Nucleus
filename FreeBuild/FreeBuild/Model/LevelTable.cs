@@ -34,6 +34,23 @@ namespace FreeBuild.Model
     [Serializable]
     public class LevelTable : LevelCollection
     {
+        #region Properties
+
+        /// <summary>
+        /// Private backing field for NextNumericID property
+        /// </summary>
+        private long _NextNumericID = 1;
+
+        /// <summary>
+        /// The numeric ID that will be assigned to the next element to be added to this table
+        /// </summary>
+        public long NextNumericID
+        {
+            get { return _NextNumericID; }
+        }
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -83,6 +100,12 @@ namespace FreeBuild.Model
             {
                 list.Sort((x, y) => x.Z.CompareTo(y.Z));
             }
+        }
+
+        protected override void SetNumericID(Level item)
+        {
+            item.NumericID = NextNumericID;
+            _NextNumericID++;
         }
 
         #endregion

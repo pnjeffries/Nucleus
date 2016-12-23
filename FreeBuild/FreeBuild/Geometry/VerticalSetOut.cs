@@ -24,17 +24,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Model
+namespace FreeBuild.Geometry
 {
     /// <summary>
-    /// Enumerated values for the horizontal set-out of section profiles
+    /// Enumerated values for the vertical set-out of section profiles
     /// </summary>
-    public enum HorizontalSetOut
+    public enum VerticalSetOut
     {
         Centroid,
         MidPoint,
-        Left,
-        Right,
+        Top,
+        Bottom,
         Origin
     }
 }

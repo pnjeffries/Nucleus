@@ -392,6 +392,18 @@ namespace FreeBuild.Geometry
             else return null;
         }
 
+        /// <summary>
+        /// Close this polycurve by adding an extra line segment between end and start,
+        /// if it is not already closed
+        /// </summary>
+        public void Close()
+        {
+            if (!Closed)
+            {
+                AddLine(StartPoint);
+            }
+        }
+
         #endregion
 
         #region Static Methods

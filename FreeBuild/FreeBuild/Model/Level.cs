@@ -30,7 +30,7 @@ namespace FreeBuild.Model
     /// Object that represents a level in a model
     /// </summary>
     [Serializable]
-    public class Level : DataOwner<DataStore,object>
+    public class Level : ModelObject
     {
         #region Properties
 

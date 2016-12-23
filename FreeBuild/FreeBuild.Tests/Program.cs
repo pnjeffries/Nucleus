@@ -26,7 +26,9 @@ namespace FreeBuild.Tests
             //Word_Tests.ReadDocTest();
 
             //Reflection_Tests.PrintFields(typeof(SymmetricIProfile));
-            Reflection_Tests.PrintProperties(typeof(SymmetricIProfile));
+            //Reflection_Tests.PrintProperties(typeof(SymmetricIProfile));
+
+            GWA_Tests.SerializeToGWA();
 
             /*TimeSpan ts1 = new TimeSpan();
             TimeSpan ts2 = new TimeSpan();
