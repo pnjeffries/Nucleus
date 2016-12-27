@@ -70,6 +70,9 @@
     <Compile Include="Field Controls\LabelledControl.cs" />
     <Compile Include="AutoPropertiesPanel.cs" />
     <Compile Include="Converters\IsEqualConverter.cs" />
+    <Compile Include="Field Controls\XYZControl.xaml.cs">
+      <DependentUpon>XYZControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GeometryCanvas.cs" />
     <Compile Include="LayeredGeometryCanvas.xaml.cs">
       <DependentUpon>LayeredGeometryCanvas.xaml</DependentUpon>
@@ -116,6 +119,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Field Controls\VectorFieldControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Field Controls\XYZControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

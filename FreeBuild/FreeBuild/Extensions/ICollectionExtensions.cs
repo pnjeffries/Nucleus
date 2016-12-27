@@ -117,25 +117,87 @@ namespace FreeBuild.Extensions
         {
             var sb = new StringBuilder();
             int last = int.MaxValue;
+            int rangeStart = 0;
             bool inSequence = false;
             foreach (int i in col)
             {
                 if (last == i - 1)
                 {
-                    if (!inSequence) sb.Append(bridge);
-                    inSequence = true;
+                    if (!inSequence)
+                    {
+                        rangeStart = last;
+                        inSequence = true;
+                    }
                 }
                 else
                 {
-                    if (inSequence) sb.Append(last);
+                    if (inSequence)
+                    {
+                        if (last > rangeStart + 1) sb.Append(bridge);
+                        else sb.Append(separator);
+                        sb.Append(last);
+                    }
                     if (sb.Length > 0) sb.Append(separator);
                     sb.Append(i);
                     inSequence = false;
                 }
                 last = i;
             }
-            if (inSequence) sb.Append(last);
+            if (inSequence)
+            {
+                if (last > rangeStart + 1) sb.Append(bridge);
+                else sb.Append(separator);
+                sb.Append(last);
+            }
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Create a string containing all of the integer values in the list, but with consecutive values shortened 
+        /// to the form 'A to B'.
+        /// </summary>
+        /// <param name="col"></param>
+        /// <param name="separator"></param>
+        /// <param name="bridge"></param>
+        /// <returns></returns>
+        public static string ToCompressedString(this ICollection<long> col, string separator = " ", string bridge = " to ")
+        {
+            var sb = new StringBuilder();
+            long last = long.MaxValue;
+            long rangeStart = 0;
+            bool inSequence = false;
+            foreach (long i in col)
+            {
+                if (last == i - 1)
+                {
+                    if (!inSequence)
+                    {
+                        rangeStart = last;
+                        inSequence = true;
+                    }
+                }
+                else
+                {
+                    if (inSequence)
+                    {
+                        if (last > rangeStart + 1) sb.Append(bridge);
+                        else sb.Append(separator);
+                        sb.Append(last);
+                    }
+                    if (sb.Length > 0) sb.Append(separator);
+                    sb.Append(i);
+                    inSequence = false;
+                }
+                last = i;
+            }
+            if (inSequence)
+            {
+                if (last > rangeStart + 1) sb.Append(bridge);
+                else sb.Append(separator);
+                sb.Append(last);
+            }
+            return sb.ToString();
+        
         }
     }
 }

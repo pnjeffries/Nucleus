@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using FreeBuild.Actions;
+using FreeBuild.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +33,8 @@ namespace FreeBuild.Model
     /// </summary>
     public class NodeGenerationParameters
     {
+        #region Properties
+
         /// <summary>
         /// The execution info for the operation that the node generation is taking part as part of
         /// </summary>
@@ -41,5 +44,20 @@ namespace FreeBuild.Model
         /// The distance tolerance for creating connections
         /// </summary>
         public double ConnectionTolerance { get; set; } = 0;
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor.  Initialises a set of parameters with the connection tolerance using 
+        /// the current global geometric tolerance setting.
+        /// </summary>
+        public NodeGenerationParameters()
+        {
+            ConnectionTolerance = Tolerance.Geometric;
+        }
+
+        #endregion
     }
 }
