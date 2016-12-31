@@ -82,6 +82,11 @@ namespace FreeBuild.Geometry
         /// </summary>
         public static readonly Angle Complete = new Angle(2 * Math.PI);
 
+        /// <summary>
+        /// An angle value representing multiple angles together
+        /// </summary>
+        public static readonly Angle Multi = new Angle(double.NegativeInfinity);
+
         #endregion
 
         #region Fields
@@ -115,6 +120,16 @@ namespace FreeBuild.Geometry
         /// Is this a reflex angle - i.e. is it greater than PI (180 degrees)?
         /// </summary>
         public bool IsReflex { get { return Radians.Abs() > Straight; } }
+
+        /// <summary>
+        /// Is this angle undefined (i.e. is it's Radians value NaN?)
+        /// </summary>
+        public bool IsUndefined { get { return double.IsNaN(Radians); } }
+
+        /// <summary>
+        /// Does this value represent multiple different angles?
+        /// </summary>
+        public bool IsMulti { get { return double.IsNegativeInfinity(Radians); } }
 
         #endregion
 
@@ -227,7 +242,9 @@ namespace FreeBuild.Geometry
 
         public override bool Equals(object obj)
         {
-            return Radians.Equals((double)obj);
+            if (obj is Angle) return Radians.Equals(((Angle)obj).Radians);
+            else if (obj is double) return Radians.Equals((double)obj);
+            else return false;
         }
 
         public override int GetHashCode()
@@ -242,6 +259,8 @@ namespace FreeBuild.Geometry
 
         public override string ToString()
         {
+            if (IsUndefined) return "";
+            else if (IsMulti) return "Multi";
             return (Radians / Math.PI).ToString() + "π";
         }
 

@@ -294,13 +294,14 @@ namespace FreeBuild.Base
         /// </summary>
         /// <param name="propertyDelegate">A lambda function that returns a particular property for each item in the selection</param>
         /// <param name="multiValue">The value that should be returned to indicate multiple inconsistent values</param>
+        /// <param name="nullValue">The value that should be returned if </param>
         /// <returns>The consistent value that is shared between all items, if that is the case, else the input multiValue</returns>
-        public object CombinedValue(Func<TItem, object> propertyDelegate, object multiValue)
+        public TValue CombinedValue<TValue>(Func<TItem, TValue> propertyDelegate, TValue multiValue = default(TValue), TValue nullValue = default(TValue))
         {
-            IEnumerable<object> values = this.Select(propertyDelegate);
-            object combinedValue = null;
+            IEnumerable<TValue> values = this.Select(propertyDelegate);
+            TValue combinedValue = nullValue;
             bool first = true;
-            foreach (object value in values)
+            foreach (TValue value in values)
             {
                 if (first)
                 {

@@ -234,11 +234,17 @@ namespace FreeBuild.Model
             }
         }
 
+        private Angle _Orientation = Angle.Zero;
+
         /// <summary>
         /// The orientation description of this element - determines the relative orientation
         /// of the local coordinate system of this element.
         /// </summary>
-        public ElementOrientation Orientation { get; set; } = 0.0;
+        public Angle Orientation
+        {
+            get { return _Orientation; }
+            set { _Orientation = value; NotifyPropertyChanged("Orientation"); }
+        }
 
         #endregion
 

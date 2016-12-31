@@ -370,7 +370,7 @@ namespace FreeBuild.Meshing
             SectionProperty section = element.Property;
             Curve geometry = element.Geometry;
             Angle orientation = 0;
-            if (element.Orientation != null) orientation = element.Orientation.Angle();
+            orientation = element.Orientation;
             AddSectionPreview(geometry, section, orientation);
         }
 

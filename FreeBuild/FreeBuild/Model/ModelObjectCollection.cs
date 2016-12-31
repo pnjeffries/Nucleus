@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using FreeBuild.Base;
+using FreeBuild.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,7 +65,7 @@ namespace FreeBuild.Model
             if (Owner != null)
             {
                 item.Model = Owner;
-                if (item.NumericID <= 0) SetNumericID(item);
+                SetNumericID(item);
             }
         }
 
@@ -121,6 +122,31 @@ namespace FreeBuild.Model
                 }
             }
             return baseName;
+        }
+
+        /// <summary>
+        /// Extract from this collection an array of all the numeric IDs of the
+        /// objects in this collection.
+        /// </summary>
+        /// <returns></returns>
+        public long[] ToNumericIDs()
+        {
+            long[] result = new long[Count];
+            for (int i = 0; i < Count; i++)
+            {
+                result[i] = this[i].NumericID;
+            }
+            Array.Sort(result);
+            return result;
+        }
+
+        /// <summary>
+        /// Convert to a collapsed ID string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return ToNumericIDs().ToCompressedString();
         }
 
         #endregion
