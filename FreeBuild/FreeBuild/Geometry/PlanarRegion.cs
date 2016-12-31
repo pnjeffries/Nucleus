@@ -30,6 +30,7 @@ namespace FreeBuild.Geometry
     /// A planar surface described by a perimeter boundary curve and (optionally)
     /// a set of 'cut out' perimeter voids.
     /// </summary>
+    [Serializable]
     public class PlanarRegion : Surface
     {
         #region Properties
@@ -178,7 +179,7 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="centroid"></param>
         /// <returns></returns>
-        public double CalculateArea(out Vector centroid)
+        public override double CalculateArea(out Vector centroid)
         {
             if (_Perimeter != null)
             {

@@ -37,6 +37,7 @@ namespace FreeBuild.Model
     /// allow collections to be defined via a base collection and a set of logical 
     /// filters which act upon that collection.
     /// </summary>
+    [Serializable]
     public abstract class ModelObjectSet<TItem, TCollection> : ModelObjectSet
          where TItem : ModelObject
         where TCollection : ModelObjectCollection<TItem>, new()

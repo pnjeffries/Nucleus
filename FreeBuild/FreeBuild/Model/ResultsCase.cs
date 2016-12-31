@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 namespace FreeBuild.Model
 {
     /// <summary>
-    /// A collection of load cases
+    /// Abstract base class for cases which produce results
     /// </summary>
     [Serializable]
-    public class LoadCaseCollection : ModelObjectCollection<LoadCase>
+    public abstract class ResultsCase : ModelObject
     {
     }
 }

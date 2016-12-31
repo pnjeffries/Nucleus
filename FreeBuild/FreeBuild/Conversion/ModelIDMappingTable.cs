@@ -30,6 +30,7 @@ namespace FreeBuild.Conversion
     /// Base class for ID mapping tables where the first ID set reference model objects
     /// </summary>
     /// <typeparam name="TSecondID"></typeparam>
+    [Serializable]
     public class ModelIDMappingTable<TSecondID> : IDMappingTable<Guid, TSecondID>
     {
         #region Constructors

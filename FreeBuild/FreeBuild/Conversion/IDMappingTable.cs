@@ -32,6 +32,7 @@ namespace FreeBuild.Conversion
     /// </summary>
     /// <typeparam name="TFirstID"></typeparam>
     /// <typeparam name="TSecondID"></typeparam>
+    [Serializable]
     public class IDMappingTable<TFirstID, TSecondID> : Dictionary<string, BiDirectionary<TFirstID, TSecondID>>
     {
         #region Properties

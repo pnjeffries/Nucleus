@@ -30,7 +30,7 @@ namespace FreeBuild.Geometry
     /// <summary>
     /// A straight line between two points.
     /// </summary>
-    /// <typeparam name="TVertex"></typeparam>
+    [Serializable]
     public class Line : Curve
     {
 

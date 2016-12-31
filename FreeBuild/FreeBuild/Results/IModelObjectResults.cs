@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Model
+namespace FreeBuild.Results
 {
     /// <summary>
-    /// A collection of load cases
+    /// Interface for dictionaries of results for a particular model object
     /// </summary>
-    [Serializable]
-    public class LoadCaseCollection : ModelObjectCollection<LoadCase>
+    public interface IModelObjectResults
     {
     }
 }

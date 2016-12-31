@@ -11,6 +11,7 @@ namespace FreeBuild.Geometry
     /// order to define their position by reference to some other object
     /// and/or criteria.
     /// </summary>
+    [Serializable]
     public abstract class VertexRule
     {
         /// <summary>

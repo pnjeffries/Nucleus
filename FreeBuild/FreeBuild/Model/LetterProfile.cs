@@ -32,6 +32,7 @@ namespace FreeBuild.Model
     /// An abstract base class for I-, T-, C- and L- shape profiles, which
     /// consist of a single web and one or two flanges in various arrangements
     /// </summary>
+    [Serializable]
     public abstract class LetterProfile : ParameterProfile
     {
         #region Properties

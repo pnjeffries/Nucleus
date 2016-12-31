@@ -33,6 +33,7 @@ namespace FreeBuild.Model
     /// Represents profiles shaped like a capital 'I' with a single web and
     /// top and bottom flanges of the same width.
     /// </summary>
+    [Serializable]
     public class SymmetricIProfile : LetterProfile
     {
         #region Properties

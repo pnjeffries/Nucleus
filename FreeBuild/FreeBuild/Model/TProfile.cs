@@ -33,6 +33,7 @@ namespace FreeBuild.Model
     /// Represents profiles shaped like a captial 'T' consisting of a top flange only
     /// and web.
     /// </summary>
+    [Serializable]
     public class TProfile : LetterProfile
     {
         #region Properties

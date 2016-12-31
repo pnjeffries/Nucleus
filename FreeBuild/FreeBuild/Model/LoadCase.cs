@@ -30,7 +30,7 @@ namespace FreeBuild.Model
     /// A set of loading which is applied to the model under a particular condition
     /// </summary>
     [Serializable]
-    public class LoadCase : ModelObject
+    public class LoadCase : ResultsCase
     {
         #region Properties
 

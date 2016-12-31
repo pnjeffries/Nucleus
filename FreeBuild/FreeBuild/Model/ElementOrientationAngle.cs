@@ -30,6 +30,7 @@ namespace FreeBuild.Model
     /// <summary>
     /// An Element Orientation expressed by a rotation angle
     /// </summary>
+    [Serializable]
     public class ElementOrientationAngle : ElementOrientation
     {
         #region Properties

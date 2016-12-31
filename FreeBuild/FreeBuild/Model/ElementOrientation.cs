@@ -34,6 +34,7 @@ namespace FreeBuild.Model
     /// is applied to the set-out geometry to create the full
     /// solid representation of the object
     /// </summary>
+    [Serializable]
     public abstract class ElementOrientation
     {
 

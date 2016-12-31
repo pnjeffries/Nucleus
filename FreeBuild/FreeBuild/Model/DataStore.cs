@@ -24,6 +24,7 @@ using FreeBuild.Extensions;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
 namespace FreeBuild.Model
 {
@@ -45,6 +46,28 @@ namespace FreeBuild.Model
         public TData this[string typeName]
         {
             get { return GetData(typeName); }
+        }
+
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Serialisation constructor
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        protected DataStore(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+
+        }
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public DataStore()
+        {
+
         }
 
         #endregion
@@ -182,8 +205,29 @@ namespace FreeBuild.Model
     /// <summary>
     /// Extensible storage mechanism for adding tagged data to model objects
     /// </summary>
+    [Serializable]
     public class DataStore : DataStore<object>
     {
+        #region Constructor
 
+        /// <summary>
+        /// Serialisation constructor
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        protected DataStore(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+
+        }
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public DataStore()
+        {
+
+        }
+
+        #endregion
     }
 }

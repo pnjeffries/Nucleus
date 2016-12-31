@@ -10,6 +10,7 @@ namespace FreeBuild.Base
     /// Abstract base class for conditional filters which can be applied to collections
     /// in order to 
     /// </summary>
+    [Serializable]
     public abstract class SetFilter<TItem> : Unique
     {
         public abstract bool Pass(TItem item);

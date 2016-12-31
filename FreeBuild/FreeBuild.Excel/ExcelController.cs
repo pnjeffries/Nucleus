@@ -304,9 +304,9 @@ namespace FreeBuild.Excel
         /// </summary>
         /// <param name="startRow">The row number of the cell to put the first value into</param>
         /// <param name="startColumn">The column number of the cell to put the first value into</param>
-        /// <param name="values">An array of values to be placed into the cells</param>
+        /// <param name="values">An array of values to be placed into the cells, ordered by row, column</param>
         /// <param name="sheet">Optional.  Specify the sheet the values are to be placed in.</param>
-        public void SetCellValues(int startRow, int startColumn, object[,] values, Worksheet sheet = null)
+        public void SetCellValues<T>(int startRow, int startColumn, T[,] values, Worksheet sheet = null)
         {
             if (sheet == null) sheet = ActiveSheet;
             for (int i = 0; i < values.GetLength(0); i++)

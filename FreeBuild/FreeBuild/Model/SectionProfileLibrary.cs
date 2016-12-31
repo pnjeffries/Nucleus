@@ -29,6 +29,7 @@ namespace FreeBuild.Model
     /// <summary>
     /// A library of standard section profiles
     /// </summary>
+    [Serializable]
     public class SectionProfileLibrary : SectionProfileCollection
     {
     }

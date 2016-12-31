@@ -32,6 +32,7 @@ namespace FreeBuild.Geometry
     /// Immutable geometric primitive representing a planar region within a
     /// set radius of an origin point.
     /// </summary>
+    [Serializable]
     public class Circle : CylindricalCoordinateSystem
     {
         #region Fields

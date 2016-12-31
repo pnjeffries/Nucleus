@@ -32,6 +32,7 @@ namespace FreeBuild.Model
     /// An extended NodeCollection that also maintains several other temporary
     /// data structures in order to provide additional fast lookup capabilities
     /// </summary>
+    [Serializable]
     public class NodeTable : NodeCollection
     {
 

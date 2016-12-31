@@ -26,6 +26,10 @@ using System.Threading.Tasks;
 
 namespace FreeBuild.Geometry
 {
+    /// <summary>
+    /// A curve consisting of straight lines between vertices
+    /// </summary>
+    [Serializable]
     public class PolyLine : Curve
     {
         #region Properties

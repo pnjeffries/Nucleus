@@ -29,5 +29,22 @@ namespace FreeBuild.Tests
                 Core.Print(field.Name);
             }
         }
+
+        public static void PrintUnserializableTypes(Assembly assembly)
+        {
+            var q = from t in assembly.GetTypes()
+                    where t.IsClass && ((t.Attributes & TypeAttributes.Serializable) != TypeAttributes.Serializable)
+                    select t;
+            q.ToList().ForEach(t => Core.Print(t.Name));
+        }
+
+        public static void PrintUnserializableTypes(Type toSerialise)
+        {
+            var types = toSerialise.GetDependencies(true);
+            foreach (Type t in types)
+            {
+                if (t.IsClass && t.GetCustomAttribute(typeof(SerializableAttribute)) == null) Core.Print(t.Name);
+            }
+        }
     }
 }

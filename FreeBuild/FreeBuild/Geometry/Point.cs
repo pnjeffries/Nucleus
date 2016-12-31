@@ -9,6 +9,7 @@ namespace FreeBuild.Geometry
     /// <summary>
     /// A point geometry object, consisting only of a single vertex.
     /// </summary>
+    [Serializable]
     public class Point : VertexGeometry, IPosition
     {
         #region Properties

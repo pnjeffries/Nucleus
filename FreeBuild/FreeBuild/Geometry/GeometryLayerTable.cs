@@ -31,6 +31,7 @@ namespace FreeBuild.Geometry
     /// <summary>
     /// A table of geometry layer objects, keyed by name
     /// </summary>
+    [Serializable]
     public class GeometryLayerTable : ObservableKeyedCollection<string, GeometryLayer>
     {
         #region Properties

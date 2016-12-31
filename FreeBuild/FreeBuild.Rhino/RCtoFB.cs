@@ -161,6 +161,53 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
+        /// Convert a Rhino mesh to a FreeBuild one
+        /// </summary>
+        /// <param name="mesh"></param>
+        /// <returns></returns>
+        public static Mesh Convert(RC.Mesh mesh)
+        {
+            Mesh result = new Mesh();
+            for (int i = 0; i < mesh.Vertices.Count; i++)
+            {
+                result.AddVertex(Convert(mesh.Vertices[i]));
+                // TODO: Vertex colours?
+            }
+            for (int i = 0; i < mesh.Faces.Count; i++)
+            {
+                RC.MeshFace mF = mesh.Faces[i];
+                if (mF.IsTriangle)
+                    result.AddFace(mF.A, mF.B, mF.C);
+                else
+                    result.AddFace(mF.A, mF.B, mF.C, mF.D);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Convert a planar Rhino surface to a FreeBuild planar region
+        /// </summary>
+        /// <param name="surface"></param>
+        /// <returns></returns>
+        public static PlanarRegion ConvertToPlanarRegion(RC.Surface surface)
+        {
+            throw new NotImplementedException();
+            //TODO!
+        }
+
+        /// <summary>
+        /// Convert a Rhino surface to a FreeBuild one
+        /// </summary>
+        /// <param name="surface"></param>
+        /// <returns></returns>
+        public static Surface Convert(RC.Surface surface)
+        {
+            if (surface.IsPlanar()) return ConvertToPlanarRegion(surface);
+            else
+                throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Convert RhinoCommon geometry to FreeBuild geometry
         /// </summary>
         /// <param name="geometry"></param>

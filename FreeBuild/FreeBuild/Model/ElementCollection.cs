@@ -33,6 +33,7 @@ namespace FreeBuild.Model
     /// Generic base collection of elements
     /// </summary>
     /// <typeparam name="TElement">The sub-type of elements that this collection contains</typeparam>
+    [Serializable]
     public abstract class ElementCollection<TElement, TSelf> : ModelObjectCollection<TElement>
         where TElement : Element
         where TSelf : ElementCollection<TElement,TSelf>, new()

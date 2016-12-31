@@ -37,6 +37,7 @@ namespace FreeBuild.Geometry
     /// Positive values of theta represent anticlockwise rotations around the
     /// longitudinal axis.
     /// </summary>
+    [Serializable]
     public class CylindricalCoordinateSystem :
         ICoordinateSystem, IDuplicatable
     {

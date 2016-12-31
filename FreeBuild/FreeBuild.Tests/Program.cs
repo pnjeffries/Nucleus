@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -51,6 +52,9 @@ namespace FreeBuild.Tests
             Core.Print("Method 1: " + ts1 + "   Method 2: " + ts2);
             Core.Print("Total: " + ts1 + " Average: " + TimeSpan.FromMilliseconds((ts1.TotalMilliseconds/runs)));//+ "   Method 2: " + ts2);
             */
+
+            Reflection_Tests.PrintUnserializableTypes(typeof(ModelDocument));
+
             Console.Read();
         }
     }

@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Base;
 using FreeBuild.Rendering;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,8 @@ namespace FreeBuild.Geometry
     /// <summary>
     /// A collection of vertex geometry that acts equivalently to a layer in a CAD package
     /// </summary>
-    public class GeometryLayer : VertexGeometryCollection
+    [Serializable]
+    public class GeometryLayer : VertexGeometryCollection, INamed
     {
         #region Properties
 

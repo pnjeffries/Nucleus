@@ -32,6 +32,7 @@ namespace FreeBuild.Geometry
     /// in order to change its position or orientation.
     /// Represented as a 4 x 4 transformation matrix
     /// </summary>
+    [Serializable]
     public class Transform : ArrayMatrix
     {
         #region Constructors

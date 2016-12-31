@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace FreeBuild.WPF.Converters
 {
@@ -19,6 +20,10 @@ namespace FreeBuild.WPF.Converters
             if (value is DisplayBrush)
             {
                 return FBtoWPF.Convert((DisplayBrush)value);
+            }
+            else if (value is Colour)
+            {
+                return new SolidColorBrush(FBtoWPF.Convert((Colour)value));
             }
             return value;
         }

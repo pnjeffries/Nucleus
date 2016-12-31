@@ -31,6 +31,7 @@ namespace FreeBuild.Geometry
     /// <summary>
     /// Represents a cartesian coordinate system
     /// </summary>
+    [Serializable]
     public class CartesianCoordinateSystem
         : ICoordinateSystem, IDuplicatable
     {

@@ -358,15 +358,27 @@ namespace FreeBuild.Robot
         public bool UpdateRobotFromModel(Model.Model model, RobotConversionContext context)
         {
             RaiseMessage("Writing data to Robot...");
+
             NodeCollection nodes = model.Nodes;
             if (context.Options.Update) nodes = nodes.Modified(context.Options.UpdateSince);
+            if (nodes.Count > 0) RaiseMessage("Writing Nodes...");
             UpdateRobotNodesFromModel(model, nodes, context);
+
             VolumetricPropertyCollection properties = model.Properties;
             if (context.Options.Update) properties = properties.Modified(context.Options.UpdateSince);
+            if (properties.Count > 0) RaiseMessage("Writing Properties...");
             UpdateRobotPropertiesFromModel(model, properties, context);
+
             LinearElementCollection linearElements = model.Elements.LinearElements;
             if (context.Options.Update) linearElements = linearElements.Modified(context.Options.UpdateSince);
+            if (linearElements.Count > 0) RaiseMessage("Writing Bars...");
             UpdateRobotBarsFromModel(model, linearElements, context);
+
+            PanelElementCollection panelElements = model.Elements.PanelElements;
+            if (context.Options.Update) panelElements = panelElements.Modified(context.Options.UpdateSince);
+            if (panelElements.Count > 0) RaiseMessage("Writing Panels...");
+            UpdateRobotPanelsFromModel(model, panelElements, context);
+
             RaiseMessage("Data writing completed.");
             return true;
         }
@@ -433,7 +445,7 @@ namespace FreeBuild.Robot
         {
             foreach (PanelElement element in panelElements)
             {
-                //TODO
+                UpdateRobotPanel(element, context);
             }
             return true;
         }
@@ -473,6 +485,18 @@ namespace FreeBuild.Robot
             if (id < 1) id = Robot.Project.Structure.Bars.FreeNumber;
             Robot.Project.Structure.Bars.Create(id, startNode, endNode);
             return Robot.Project.Structure.Bars.Get(id) as IRobotBar;
+        }
+
+        /// <summary>
+        /// Create a new panel object within the currently open Robot document
+        /// </summary>
+        /// <param name="id">Optional.  The ID number to be assigned to the object.
+        /// If omitted or lower than 1, the next free number will be used.</param>
+        /// <returns></returns>
+        public IRobotObjObject CreateRobotPanel(int id = -1)
+        {
+            if (id < 1) id = Robot.Project.Structure.Objects.FreeNumber;
+            return Robot.Project.Structure.Objects.Create(id);
         }
 
         /// <summary>
@@ -547,6 +571,40 @@ namespace FreeBuild.Robot
             context.IDMap.Add(element, bar);
 
             return bar;
+        }
+
+        /// <summary>
+        /// Update or create a Robot panel object linked to the specified FreeBuild element
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public IRobotObjObject UpdateRobotPanel(PanelElement element, RobotConversionContext context)
+        {
+            int mappedID = -1;
+            IRobotObjObject obj = null;
+
+            if (context.IDMap.HasSecondID(context.IDMap.PanelCategory, element.GUID))
+            {
+                mappedID = int.Parse(context.IDMap.GetSecondID(context.IDMap.PanelCategory, element.GUID));
+                if (Robot.Project.Structure.Objects.Exist(mappedID) != 0)
+                    obj = Robot.Project.Structure.Objects.Get(mappedID) as IRobotObjObject;
+            }
+            if (obj == null)
+            {
+                obj = CreateRobotPanel(mappedID);
+            }
+
+            //TODO: Setup geometry:
+            if (element.Geometry is PlanarRegion)
+            {
+                var pR = (PlanarRegion)element.Geometry;
+                obj.Main.Geometry = FBtoROB.Convert(pR.Perimeter);
+            }
+
+            context.IDMap.Add(element, obj);
+
+            return obj;
         }
 
         /// <summary>

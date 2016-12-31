@@ -10,6 +10,7 @@ namespace FreeBuild.Model
     /// A generic collection of ModelObjectSet objects
     /// </summary>
     /// <typeparam name="TSet"></typeparam>
+    [Serializable]
     public class ModelObjectSetCollection<TSet> : ModelObjectCollection<TSet>
         where TSet : ModelObjectSet
     {

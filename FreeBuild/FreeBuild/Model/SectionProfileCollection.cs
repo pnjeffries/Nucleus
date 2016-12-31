@@ -31,6 +31,7 @@ namespace FreeBuild.Model
     /// <summary>
     /// A collection of section profiles
     /// </summary>
+    [Serializable]
     public class SectionProfileCollection : UniquesCollection<SectionProfile>
     {
         #region Constructors

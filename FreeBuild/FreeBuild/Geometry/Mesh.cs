@@ -100,6 +100,62 @@ namespace FreeBuild.Geometry
 
         #region Methods
 
+        /// <summary>
+        /// Add a new vertex to this mesh
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns>The index of the new vertex</returns>
+        public int AddVertex(Vector position)
+        {
+            Vertices.Add(new Vertex(position));
+            return Vertices.Count - 1;
+        }
+
+        /// <summary>
+        /// Add a new triangular face to this mesh.
+        /// The vertex indices provided should reference valid vertices
+        /// already added to this mesh.
+        /// </summary>
+        /// <param name="v0">The first vertex index</param>
+        /// <param name="v1">The second vertex index</param>
+        /// <param name="v2">The third vertex index</param>
+        /// <returns>The index of the new face</returns>
+        public int AddFace(int v0, int v1, int v2)
+        {
+            Faces.Add(new MeshFace(Vertices[v0], Vertices[v1], Vertices[v2]));
+            return Faces.Count - 1;
+        }
+
+        /// <summary>
+        /// Add a new quadrangular face to this mesh.
+        /// The vertex indices provided should reference valid vertices
+        /// already added to this mesh.
+        /// </summary>
+        /// <param name="v0">The first vertex index</param>
+        /// <param name="v1">The second vertex index</param>
+        /// <param name="v2">The third vertex index</param>
+        /// <param name="v3">The fourth vertex index</param>
+        /// <returns>The index of the new face</returns>
+        public int AddFace(int v0, int v1, int v2, int v3)
+        {
+            Faces.Add(new MeshFace(Vertices[v0], Vertices[v1], Vertices[v2], Vertices[v3]));
+            return Faces.Count - 1;
+        }
+
+        /// <summary>
+        /// Calculate the surface area of this mesh's faces
+        /// </summary>
+        /// <param name="centroid"></param>
+        /// <returns></returns>
+        public override double CalculateArea(out Vector centroid)
+        {
+            throw new NotImplementedException();
+            foreach (MeshFace face in Faces)
+            {
+                //TODO!
+            }
+        }
+
         #endregion
 
         #region Static Methods

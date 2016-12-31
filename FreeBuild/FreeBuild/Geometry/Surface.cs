@@ -29,8 +29,28 @@ namespace FreeBuild.Geometry
     /// <summary>
     /// Abstract base class for surfaces - infinitely thin membrane geometries
     /// </summary>
+    [Serializable]
     public abstract class Surface : VertexGeometry
     {
-        //TODO
+        #region Methods
+
+        /// <summary>
+        /// Calculate the surface area (and centroid) of this surface
+        /// </summary>
+        /// <param name="centroid"></param>
+        /// <returns></returns>
+        public abstract double CalculateArea(out Vector centroid);
+
+        /// <summary>
+        /// Calculate the surface area of this surface
+        /// </summary>
+        /// <returns></returns>
+        public double CalculateArea()
+        {
+            Vector centroid;
+            return CalculateArea(out centroid);
+        }
+
+        #endregion
     }
 }

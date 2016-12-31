@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 namespace FreeBuild.Model
 {
     /// <summary>
-    /// A collection of load cases
+    /// A factored load case.  Used to build up load combination cases
     /// </summary>
     [Serializable]
-    public class LoadCaseCollection : ModelObjectCollection<LoadCase>
+    public class FactoredLoadCase : FactoredCase<LoadCase>
     {
     }
 }

@@ -85,7 +85,11 @@
     <Compile Include="Model\AreaLoad.cs" />
     <Compile Include="Model\CircularHollowProfile.cs" />
     <Compile Include="Model\CircularProfile.cs" />
+    <Compile Include="Model\ElementOrientation.cs" />
+    <Compile Include="Model\ElementOrientationAngle.cs" />
     <Compile Include="Model\ElementVertex.cs" />
+    <Compile Include="Model\FactoredCase.cs" />
+    <Compile Include="Model\FactoredLoadCase.cs" />
     <Compile Include="Model\IModelImporter.cs" />
     <Compile Include="DDTree\NodeDDTree.cs" />
     <Compile Include="Exceptions\GeometryException.cs" />
@@ -128,7 +132,6 @@
     <Compile Include="Model\DataOwner.cs" />
     <Compile Include="Model\DataStore.cs" />
     <Compile Include="Model\ElementDataStore.cs" />
-    <Compile Include="Model\ElementOrientation.cs" />
     <Compile Include="Events\ElementUpdateEventArgs.cs" />
     <Compile Include="Base\TypeCollection.cs" />
     <Compile Include="Conversion\ConversionLibrary.cs" />
@@ -157,7 +160,6 @@
     <Compile Include="Base\Document.cs" />
     <Compile Include="Geometry\WrappedCurve.cs" />
     <Compile Include="Model\ElementCollection.cs" />
-    <Compile Include="Model\ElementOrientationAngle.cs" />
     <Compile Include="Model\FaceProperty.cs" />
     <Compile Include="Model\ElementTable.cs" />
     <Compile Include="Geometry\HorizontalSetOut.cs" />
@@ -190,6 +192,7 @@
     <Compile Include="Model\NodeTable.cs" />
     <Compile Include="Model\PanelElementCollection.cs" />
     <Compile Include="Model\ParameterProfile.cs" />
+    <Compile Include="Model\ResultsCase.cs" />
     <Compile Include="Model\SectionProfile.cs" />
     <Compile Include="Model\RectangularHollowProfile.cs" />
     <Compile Include="Model\RectangularProfile.cs" />
@@ -199,7 +202,6 @@
     <Compile Include="Model\SectionPropertyCollection.cs" />
     <Compile Include="Model\SymmetricIProfile.cs" />
     <Compile Include="Model\TProfile.cs" />
-    <Compile Include="Model\VertexDataStore.cs" />
     <Compile Include="Geometry\VerticalSetOut.cs" />
     <Compile Include="Model\VolumetricProperty.cs" />
     <Compile Include="Geometry\Transform.cs" />
@@ -225,7 +227,13 @@
     <Compile Include="Rendering\IRenderable.cs" />
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Rendering\RenderingParameters.cs" />
-    <Compile Include="Structural\Support.cs" />
+    <Compile Include="Results\CaseResults.cs" />
+    <Compile Include="Results\IModelObjectResult.cs" />
+    <Compile Include="Results\IModelObjectResults.cs" />
+    <Compile Include="Results\ModelObjectResults.cs" />
+    <Compile Include="Results\ModelResults.cs" />
+    <Compile Include="Results\NodeResultTypes.cs" />
+    <Compile Include="Results\ResultsDictionary.cs" />
     <Compile Include="UI\AutoUIAttribute.cs" />
     <Compile Include="UI\AutoUIComboBoxAttribute.cs" />
     <Compile Include="Units\DimensionAttribute.cs" />
@@ -234,6 +242,7 @@
   <ItemGroup>
     <None Include="FreeBuild.licenseheader" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

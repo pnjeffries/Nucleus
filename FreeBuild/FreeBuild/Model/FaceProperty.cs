@@ -31,6 +31,7 @@ namespace FreeBuild.Model
     /// makeup of a panel element in order to produce
     /// a 3D solid geometry
     /// </summary>
+    [Serializable]
     public class FaceProperty : VolumetricProperty
     {
         //TODO

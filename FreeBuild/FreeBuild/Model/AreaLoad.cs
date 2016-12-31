@@ -30,6 +30,7 @@ namespace FreeBuild.Model
     /// <summary>
     /// A load applied over a planar area
     /// </summary>
+    [Serializable]
     public class AreaLoad : Load<Element, ElementCollection>
     {
         #region Properties

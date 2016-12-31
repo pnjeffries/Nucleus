@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Extensions;
 using FreeBuild.UI;
 using System;
 using System.Collections;
@@ -265,6 +266,33 @@ namespace FreeBuild.Extensions
         {
             return type.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
                                         null, Type.EmptyTypes, null) != null;
+        }
+
+        /// <summary>
+        /// Get a collection of all types which this type relies on for its definition
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="ignoreNonSerialised"></param>
+        /// <returns></returns>
+        public static ICollection<Type> GetDependencies(this Type type, bool ignoreNonSerialised = false)
+        {
+            HashSet<Type> result = new HashSet<Type>();
+            GetDependencies(type, result, ignoreNonSerialised);
+            return result;
+        }
+
+        public static void GetDependencies(this Type type, ICollection<Type> output, bool ignoreNonSerialised = false)
+        {
+            if (!output.Contains(type))
+            {
+                output.Add(type);
+                if (type.BaseType != null) type.BaseType.GetDependencies(output, ignoreNonSerialised);
+                foreach (FieldInfo fI in type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                {
+                    if (!ignoreNonSerialised || fI.GetCustomAttribute(typeof(NonSerializedAttribute)) == null)
+                    fI.FieldType.GetDependencies(output, ignoreNonSerialised);
+                }
+            }
         }
 
     }

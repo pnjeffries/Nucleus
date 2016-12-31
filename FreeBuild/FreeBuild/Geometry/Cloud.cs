@@ -29,6 +29,7 @@ namespace FreeBuild.Geometry
     /// <summary>
     /// A point cloud, consisting only of vertices with no connecting geometry.
     /// </summary>
+    [Serializable]
     public class Cloud : VertexGeometry
     {
         #region Properties

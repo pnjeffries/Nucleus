@@ -9,6 +9,7 @@ namespace FreeBuild.Base
     /// <summary>
     /// Generic base type for collections of Set Filters
     /// </summary>
+    [Serializable]
     public class SetFilterCollection<TFilter, TItem> : UniquesCollection<TFilter>
         where TFilter : SetFilter<TItem>
     {

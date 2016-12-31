@@ -32,5 +32,11 @@ namespace FreeBuild.Rendering
     [Serializable]
     public abstract class DisplayBrush
     {
+        /// <summary>
+        /// Get the base colour for this display brush - a single
+        /// colour that can be used to represent this brush in cases where
+        /// more complex shading is not available.
+        /// </summary>
+        public abstract Colour BaseColour { get; }
     }
 }

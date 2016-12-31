@@ -29,6 +29,7 @@ namespace FreeBuild.Rendering
     /// <summary>
     /// A brush that uses a single solid colour
     /// </summary>
+    [Serializable]
     public class ColourBrush : DisplayBrush
     {
         #region Constants
@@ -38,6 +39,31 @@ namespace FreeBuild.Rendering
         /// </summary>
         public static ColourBrush Black { get { return new ColourBrush(Colour.Black); } }
 
+        /// <summary>
+        /// Get a default white colour brush
+        /// </summary>
+        public static ColourBrush White { get { return new ColourBrush(Colour.White); } }
+
+        /// <summary>
+        /// Get a default red colour brush
+        /// </summary>
+        public static ColourBrush Red { get { return new ColourBrush(Colour.Red); } }
+
+        /// <summary>
+        /// Get a default green colour brush
+        /// </summary>
+        public static ColourBrush Green { get { return new ColourBrush(Colour.Green); } }
+
+        /// <summary>
+        /// Get a default blue colour brush
+        /// </summary>
+        public static ColourBrush Blue { get { return new ColourBrush(Colour.Blue); } }
+
+        /// <summary>
+        /// Get a default transparent colour brush
+        /// </summary>
+        public static ColourBrush Transparent { get { return new ColourBrush(Colour.Transparent); } }
+
         #endregion
 
         #region Properties
@@ -46,6 +72,14 @@ namespace FreeBuild.Rendering
         /// The colour of the brush
         /// </summary>
         public Colour Colour { get; set; } = Colour.Black;
+
+        /// <summary>
+        /// Get the base colour for this display brush - a single
+        /// colour that can be used to represent this brush in cases where
+        /// more complex shading is not available.
+        /// For ColourBrushes this will return the Colour property.
+        /// </summary>
+        public override Colour BaseColour { get { return Colour; } }
 
         #endregion
 

@@ -10,6 +10,7 @@ namespace FreeBuild.Geometry
     /// <summary>
     /// A geometry object representing a text label
     /// </summary>
+    [Serializable]
     public class Label : Point
     {
         #region Properties

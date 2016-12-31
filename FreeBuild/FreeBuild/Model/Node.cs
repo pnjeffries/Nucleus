@@ -71,6 +71,24 @@ namespace FreeBuild.Model
             }
         }
 
+        /// <summary>
+        /// Private backing field for Fixtity property
+        /// </summary>
+        private Bool6D _Fixity;
+
+        /// <summary>
+        /// The lateral and rotational directions in which this node is
+        /// fixed for the purpose of structural and physics-based analysis.
+        /// Represented by a set of six booleans, one each for the X, Y, Z, 
+        /// XX,YY and ZZ degrees of freedom.  If true, the node is fixed in
+        /// that direction, if false it is free to move.
+        /// </summary>
+        public Bool6D Fixity
+        {
+            get { return _Fixity; }
+            set { _Fixity = value;  NotifyPropertyChanged("Fixity"); }
+        }
+
         #endregion
 
         #region Constructors

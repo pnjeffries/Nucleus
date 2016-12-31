@@ -31,6 +31,7 @@ namespace FreeBuild.Model
     /// <summary>
     /// Manager class to store, restore and merge model objects
     /// </summary>
+    [Serializable]
     public class ModelSourceHistory
     {
         #region Properties
