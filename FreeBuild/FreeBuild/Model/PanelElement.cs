@@ -33,7 +33,7 @@ namespace FreeBuild.Model
     /// the cross-thickness properties.
     /// </summary>
     [Serializable]
-    public class PanelElement : Element<Surface, FaceProperty>
+    public class PanelElement : Element<Surface, FaceFamily>
     {
         #region Constructors
 

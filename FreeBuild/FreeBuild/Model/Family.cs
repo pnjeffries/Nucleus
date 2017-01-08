@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,28 +28,23 @@ using System.Threading.Tasks;
 namespace FreeBuild.Model
 {
     /// <summary>
-    /// A collection of Section Properties
+    /// A shared property that describes how to resolve
+    /// an element's editable set-out geometry into a full
+    /// 3D solid object.
     /// </summary>
     [Serializable]
-    public class SectionPropertyCollection : ModelObjectCollection<SectionProperty>
+    public abstract class Family : ModelObject
     {
-        #region Constructors
+        #region Methods
 
         /// <summary>
-        /// Default constructor
+        /// Get a collection of all elements in the same model which have this property assigned
         /// </summary>
-        public SectionPropertyCollection() : base() { }
-
-        /// <summary>
-        /// Initialise a new SectionPropertyCollection containing the specified set of sections
-        /// </summary>
-        /// <param name="sections"></param>
-        public SectionPropertyCollection(IEnumerable<SectionProperty> sections)
+        /// <returns></returns>
+        public ElementCollection Elements()
         {
-            foreach (SectionProperty section in sections)
-            {
-                Add(section);
-            }
+            if (Model != null) return Model.Elements.AllWith(this);
+            else return new ElementCollection();
         }
 
         #endregion

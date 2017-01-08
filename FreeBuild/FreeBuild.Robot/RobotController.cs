@@ -219,7 +219,7 @@ namespace FreeBuild.Robot
                 IRobotLabel label = sections.Get(i);
                 if (label != null)
                 {
-                    SectionProperty section = context.IDMap.GetMappedSectionProperty(label, model);
+                    SectionFamily section = context.IDMap.GetMappedSectionProperty(label, model);
                     if (section == null)
                         section = model.Create.SectionProperty(context.ExInfo);
 
@@ -266,7 +266,7 @@ namespace FreeBuild.Robot
                     if (bar.HasLabel(IRobotLabelType.I_LT_BAR_SECTION) != 0)
                     {
                         string sectionID = bar.GetLabelName(IRobotLabelType.I_LT_BAR_SECTION);
-                        element.Property = context.IDMap.GetMappedSectionProperty(sectionID, model);
+                        element.Family = context.IDMap.GetMappedSectionProperty(sectionID, model);
                     }
                     //TODO: Copy over data
 
@@ -364,7 +364,7 @@ namespace FreeBuild.Robot
             if (nodes.Count > 0) RaiseMessage("Writing Nodes...");
             UpdateRobotNodesFromModel(model, nodes, context);
 
-            VolumetricPropertyCollection properties = model.Properties;
+            FamilyCollection properties = model.Properties;
             if (context.Options.Update) properties = properties.Modified(context.Options.UpdateSince);
             if (properties.Count > 0) RaiseMessage("Writing Properties...");
             UpdateRobotPropertiesFromModel(model, properties, context);
@@ -406,13 +406,13 @@ namespace FreeBuild.Robot
         /// <param name="properties"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        private bool UpdateRobotPropertiesFromModel(Model.Model model, VolumetricPropertyCollection properties, RobotConversionContext context)
+        private bool UpdateRobotPropertiesFromModel(Model.Model model, FamilyCollection properties, RobotConversionContext context)
         {
-            foreach (VolumetricProperty property in properties)
+            foreach (Family property in properties)
             {
-                if (property is SectionProperty)
+                if (property is SectionFamily)
                 {
-                    UpdateRobotSection((SectionProperty)property, context);
+                    UpdateRobotSection((SectionFamily)property, context);
                 }
             }
             return true;
@@ -562,9 +562,9 @@ namespace FreeBuild.Robot
                 bar.EndNode = nodeID1;
             }
             
-            if (element.Property != null)
+            if (element.Family != null)
             {
-                bar.SetLabel(IRobotLabelType.I_LT_BAR_SECTION, this.GetMappedSectionID(element.Property, context));
+                bar.SetLabel(IRobotLabelType.I_LT_BAR_SECTION, this.GetMappedSectionID(element.Family, context));
             }
             //TODO: More data
 
@@ -613,7 +613,7 @@ namespace FreeBuild.Robot
         /// <param name="section"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public IRobotLabel UpdateRobotSection(SectionProperty section, RobotConversionContext context)
+        public IRobotLabel UpdateRobotSection(SectionFamily section, RobotConversionContext context)
         {
             string mappedID;
             IRobotLabel label = null;
@@ -831,7 +831,7 @@ namespace FreeBuild.Robot
         /// <param name="section"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public string GetMappedSectionID(SectionProperty section, RobotConversionContext context)
+        public string GetMappedSectionID(SectionFamily section, RobotConversionContext context)
         {
             if (context.IDMap.HasSecondID(context.IDMap.SectionCategory, section.GUID))
                 return context.IDMap.GetSecondID(context.IDMap.SectionCategory, section.GUID);

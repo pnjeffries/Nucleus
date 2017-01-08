@@ -248,10 +248,17 @@ namespace Salamander.Rhino
         /// <returns></returns>
         public static Guid Bake(VertexGeometry geometry)
         {
+            Guid result = Guid.Empty;
             GeometryBase gB = FBtoRC.Convert(geometry);
             if (gB != null)
-                return Bake(gB);
+            {
+                Writing = true;
+                result = Bake(gB);
+                Writing = false;
+            }
             else throw new NotImplementedException();
+
+            return result;
         }
 
         /// <summary>
@@ -262,17 +269,20 @@ namespace Salamander.Rhino
         /// <returns></returns>
         public static bool Replace(Guid objID, GeometryBase geometry)
         {
+            bool result = false;
+            Writing = true;
             if (geometry == null)
-                return false;
+                result = false;
             else if (geometry is RC.Curve)
-                return RhinoDoc.ActiveDoc.Objects.Replace(objID, (RC.Curve)geometry);
+                result = RhinoDoc.ActiveDoc.Objects.Replace(objID, (RC.Curve)geometry);
             else if (geometry is RC.Mesh)
-                return RhinoDoc.ActiveDoc.Objects.Replace(objID, (RC.Mesh)geometry);
+                result = RhinoDoc.ActiveDoc.Objects.Replace(objID, (RC.Mesh)geometry);
             else if (geometry is RC.Brep)
-                return RhinoDoc.ActiveDoc.Objects.Replace(objID, (RC.Brep)geometry);
+                result = RhinoDoc.ActiveDoc.Objects.Replace(objID, (RC.Brep)geometry);
             else if (geometry is RC.Surface)
-                return RhinoDoc.ActiveDoc.Objects.Replace(objID, (RC.Curve)geometry);
-            else return false;
+                result = RhinoDoc.ActiveDoc.Objects.Replace(objID, (RC.Curve)geometry);
+            Writing = false;
+            return result;
         }
 
         /// <summary>
@@ -342,8 +352,7 @@ namespace Salamander.Rhino
             if (rObj != null)
             {
                 rObj.Attributes.Name = name;
-                rObj.CommitChanges();
-                return true;
+                return rObj.CommitChanges();
             }
             else return false;
         }
@@ -397,6 +406,7 @@ namespace Salamander.Rhino
             }
             return false;
         }
+
 
         /// <summary>
         /// The array of separator strings used to split layer paths into separate layers

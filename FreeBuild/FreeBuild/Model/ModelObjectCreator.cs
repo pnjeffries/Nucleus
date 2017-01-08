@@ -182,10 +182,10 @@ namespace FreeBuild.Model
         /// instead of creating a new item this previous one will be updated and returned instead.
         /// This enables this method to be used parametrically.</param>
         /// <returns></returns>
-        public SectionProperty SectionProperty(ExecutionInfo exInfo = null)
+        public SectionFamily SectionProperty(ExecutionInfo exInfo = null)
         {
-            SectionProperty result = new SectionProperty();
-            result = (SectionProperty)Model.History.Update(exInfo, result);
+            SectionFamily result = new SectionFamily();
+            result = (SectionFamily)Model.History.Update(exInfo, result);
             if (result.Name == null) result.Name = Model.Properties.NextAvailableName("Section", result, true);
             Model.Add(result);
             return result;
@@ -202,10 +202,10 @@ namespace FreeBuild.Model
         /// instead of creating a new item this previous one will be updated and returned instead.
         /// This enables this method to be used parametrically.</param>
         /// <returns></returns>
-        public SectionProperty SectionProperty(string name, ExecutionInfo exInfo = null)
+        public SectionFamily SectionProperty(string name, ExecutionInfo exInfo = null)
         {
-            SectionProperty result = new SectionProperty();
-            result = (SectionProperty)Model.History.Update(exInfo, result);
+            SectionFamily result = new SectionFamily();
+            result = (SectionFamily)Model.History.Update(exInfo, result);
             result.Name = Model.Properties.NextAvailableName(name, result);
             Model.Add(result);
             return result;
@@ -220,10 +220,10 @@ namespace FreeBuild.Model
         /// instead of creating a new item this previous one will be updated and returned instead.
         /// This enables this method to be used parametrically.</param>
         /// <returns></returns>
-        public SectionProperty SectionProperty(SectionProfile profile, ExecutionInfo exInfo = null)
+        public SectionFamily SectionProperty(SectionProfile profile, ExecutionInfo exInfo = null)
         {
-            SectionProperty result = new SectionProperty();
-            result = (SectionProperty)Model.History.Update(exInfo, result);
+            SectionFamily result = new SectionFamily();
+            result = (SectionFamily)Model.History.Update(exInfo, result);
             result.Profile = profile;
             if (result.Name == null) result.Name = Model.Properties.NextAvailableName("Section", result, true);
             Model.Add(result);

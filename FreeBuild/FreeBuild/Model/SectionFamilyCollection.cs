@@ -27,13 +27,30 @@ using System.Threading.Tasks;
 namespace FreeBuild.Model
 {
     /// <summary>
-    /// A property which describes the cross-thickness
-    /// makeup of a panel element in order to produce
-    /// a 3D solid geometry
+    /// A collection of Section Families
     /// </summary>
     [Serializable]
-    public class FaceProperty : VolumetricProperty
+    public class SectionFamilyCollection : ModelObjectCollection<SectionFamily>
     {
-        //TODO
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public SectionFamilyCollection() : base() { }
+
+        /// <summary>
+        /// Initialise a new SectionPropertyCollection containing the specified set of sections
+        /// </summary>
+        /// <param name="sections"></param>
+        public SectionFamilyCollection(IEnumerable<SectionFamily> sections)
+        {
+            foreach (SectionFamily section in sections)
+            {
+                Add(section);
+            }
+        }
+
+        #endregion
     }
 }

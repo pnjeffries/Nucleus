@@ -127,18 +127,18 @@ namespace FreeBuild.Model
         /// <summary>
         /// Private backing field for Properties property
         /// </summary>
-        private VolumetricPropertyTable _Properties;
+        private FamilyTable _Properties;
 
         /// <summary>
         /// Get the collection of volumetric properties that belong to this model.
         /// </summary>
-        public VolumetricPropertyTable Properties
+        public FamilyTable Properties
         {
             get
             {
                 if (_Properties == null)
                 {
-                    _Properties = new VolumetricPropertyTable(this);
+                    _Properties = new FamilyTable(this);
                     _Properties.CollectionChanged += HandlesInternalCollectionChanged;
                 }
                 return _Properties;
@@ -322,7 +322,7 @@ namespace FreeBuild.Model
         /// <param name="property">The property to be added.</param>
         /// <returns>True if the property could be added, false if it already existed within
         /// the model.</returns>
-        public bool Add(VolumetricProperty property)
+        public bool Add(Family property)
         {
             return Properties.TryAdd(property);
         }

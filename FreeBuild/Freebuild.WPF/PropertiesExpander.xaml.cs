@@ -23,7 +23,7 @@ namespace FreeBuild.WPF
     public partial class PropertiesExpander : UserControl
     {
         /// <summary>
-        /// Header Icon Dependency Property
+        /// Header Icon Dependency Family
         /// </summary>
         public static readonly DependencyProperty HeaderIconProperty
             = DependencyProperty.Register("HeaderIcon", typeof(ImageSource), typeof(PropertiesExpander));

@@ -73,13 +73,27 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
-        /// IElement Property implementation
+        /// IElement Family implementation
         /// </summary>
-        VolumetricProperty IElement.Property
+        Family IElement.Family
         {
             get
             {
                 throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
+        /// Get a description of this element.
+        /// Will be the element's name if it has one or will return "Element {ID}"
+        /// if not.
+        /// </summary>
+        public override string Description
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(Name) && NumericID > 0) return "Element " + NumericID;
+                else return Name;
             }
         }
 
@@ -104,9 +118,9 @@ namespace FreeBuild.Model
         public abstract VertexGeometry GetGeometry();
 
         /// <summary>
-        /// IElement Property implementation
+        /// IElement Family implementation
         /// </summary>
-        public abstract VolumetricProperty GetProperty();
+        public abstract Family GetFamily();
 
         /// <summary>
         /// Generate nodes for this element's vertices, if they do not already posess them
@@ -149,9 +163,9 @@ namespace FreeBuild.Model
     /// determines how that design representation converts into a 3D solid object.
     /// </summary>
     [Serializable]
-    public abstract class Element<TShape, TProperty> : Element
+    public abstract class Element<TShape, TFamily> : Element
         where TShape : VertexGeometry
-        where TProperty : VolumetricProperty
+        where TFamily : Family
     {
 
         #region Properties
@@ -215,22 +229,22 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
-        /// Private backing member variable for the Property property
+        /// Private backing member variable for the Family property
         /// </summary>
-        private TProperty _Property;
+        private TFamily _Family;
 
         /// <summary>
         /// The volumetric property that describes how the editable set-out 
         /// geometry of this element should be interpreted to produce a 
         /// full 3D solid object
         /// </summary>
-        public TProperty Property
+        public TFamily Family
         {
-            get { return _Property; }
+            get { return _Family; }
             set
             {
-                _Property = value;
-                NotifyPropertyChanged("Property");
+                _Family = value;
+                NotifyPropertyChanged("Family");
             }
         }
 
@@ -259,7 +273,7 @@ namespace FreeBuild.Model
         /// Duplication constructor
         /// </summary>
         /// <param name="other"></param>
-        protected Element(Element<TShape,TProperty> other)
+        protected Element(Element<TShape,TFamily> other)
         {
 
         }
@@ -273,9 +287,9 @@ namespace FreeBuild.Model
             return Geometry;
         }
 
-        public override VolumetricProperty GetProperty()
+        public override Family GetFamily()
         {
-            return Property;
+            return Family;
         }
 
         #endregion

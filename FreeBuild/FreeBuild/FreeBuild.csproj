@@ -160,7 +160,7 @@
     <Compile Include="Base\Document.cs" />
     <Compile Include="Geometry\WrappedCurve.cs" />
     <Compile Include="Model\ElementCollection.cs" />
-    <Compile Include="Model\FaceProperty.cs" />
+    <Compile Include="Model\FaceFamily.cs" />
     <Compile Include="Model\ElementTable.cs" />
     <Compile Include="Geometry\HorizontalSetOut.cs" />
     <Compile Include="Model\IElementData.cs" />
@@ -198,12 +198,12 @@
     <Compile Include="Model\RectangularProfile.cs" />
     <Compile Include="Model\SectionProfileCollection.cs" />
     <Compile Include="Model\SectionProfileLibrary.cs" />
-    <Compile Include="Model\SectionProperty.cs" />
-    <Compile Include="Model\SectionPropertyCollection.cs" />
+    <Compile Include="Model\SectionFamily.cs" />
+    <Compile Include="Model\SectionFamilyCollection.cs" />
     <Compile Include="Model\SymmetricIProfile.cs" />
     <Compile Include="Model\TProfile.cs" />
     <Compile Include="Geometry\VerticalSetOut.cs" />
-    <Compile Include="Model\VolumetricProperty.cs" />
+    <Compile Include="Model\Family.cs" />
     <Compile Include="Geometry\Transform.cs" />
     <Compile Include="Geometry\VertexCollection.cs" />
     <Compile Include="Maths\ArrayMatrix.cs" />
@@ -216,8 +216,8 @@
     <Compile Include="Model\Model.cs" />
     <Compile Include="Base\Unique.cs" />
     <Compile Include="Base\UniquesCollection.cs" />
-    <Compile Include="Model\VolumetricPropertyCollection.cs" />
-    <Compile Include="Model\VolumetricPropertyTable.cs" />
+    <Compile Include="Model\FamilyCollection.cs" />
+    <Compile Include="Model\FamilyTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Geometry\Vector.cs" />
     <Compile Include="Rendering\Colour.cs" />

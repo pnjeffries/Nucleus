@@ -80,12 +80,12 @@ namespace FreeBuild.Model
         /// </summary>
         /// <param name="property">The property to search for</param>
         /// <returns></returns>
-        public TSelf AllWith(VolumetricProperty property)
+        public TSelf AllWith(Family property)
         {
             var result = new TSelf();
             foreach (TElement el in this)
             {
-                if (el.GetProperty() == property) result.Add(el);
+                if (el.GetFamily() == property) result.Add(el);
             }
             return result;
         }

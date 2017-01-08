@@ -36,7 +36,7 @@ namespace FreeBuild.Extensions
                     else
                         obj = info.Invoke(obj, null);
                 }
-                else // Property...
+                else // Family...
                 {
                     PropertyInfo info = type.GetProperty(token);
                     if (info == null)

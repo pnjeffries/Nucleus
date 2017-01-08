@@ -89,6 +89,20 @@ namespace FreeBuild.Model
             set { _Fixity = value;  NotifyPropertyChanged("Fixity"); }
         }
 
+        /// <summary>
+        /// Get a description of this node.
+        /// Will be the node's name if it has one or will return "Node {ID}"
+        /// if not.
+        /// </summary>
+        public override string Description
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(Name) && NumericID > 0) return "Node " + NumericID;
+                else return Name;
+            }
+        }
+
         #endregion
 
         #region Constructors

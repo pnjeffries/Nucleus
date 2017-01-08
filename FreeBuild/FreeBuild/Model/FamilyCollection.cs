@@ -28,23 +28,52 @@ using System.Threading.Tasks;
 namespace FreeBuild.Model
 {
     /// <summary>
-    /// A shared property that describes how to resolve
-    /// an element's editable set-out geometry into a full
-    /// 3D solid object.
+    /// A collection of VolumetricProperty objects
     /// </summary>
     [Serializable]
-    public abstract class VolumetricProperty : ModelObject
+    public class FamilyCollection : ModelObjectCollection<Family>
     {
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public FamilyCollection() : base() { }
+
+        /// <summary>
+        /// Owner constructor
+        /// </summary>
+        /// <param name="model"></param>
+        protected FamilyCollection(Model model) : base(model) { }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
-        /// Get a collection of all elements in the same model which have this property assigned
+        /// Extract all Section Properties from this collection
         /// </summary>
         /// <returns></returns>
-        public ElementCollection Elements()
+        public SectionFamilyCollection GetSections()
         {
-            if (Model != null) return Model.Elements.AllWith(this);
-            else return new ElementCollection();
+            var result = new SectionFamilyCollection();
+            foreach (Family vProp in this)
+            {
+                if (vProp is SectionFamily)
+                    result.Add((SectionFamily)vProp);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Get the subset of items in this collection which has a recorded modification 
+        /// after the specified date and time
+        /// </summary>
+        /// <param name="since">The date/time to filter by</param>
+        /// <returns></returns>
+        public FamilyCollection Modified(DateTime since)
+        {
+            return this.Modified<FamilyCollection, Family>(since);
         }
 
         #endregion

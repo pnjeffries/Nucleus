@@ -46,7 +46,7 @@ namespace FreeBuild.Base
     {
         /// <summary>
         /// Produce a duplicated copy of this object.
-        /// Property references will be copied, save for those which
+        /// Family references will be copied, save for those which
         /// are intended to be unique to this object, which will themselves
         /// be duplicated.
         /// </summary>
@@ -59,7 +59,7 @@ namespace FreeBuild.Base
 
         /// <summary>
         /// Produce a duplicated copy of this object.
-        /// Property references will be copied, save for those which
+        /// Family references will be copied, save for those which
         /// are intended to be unique to this object, which will themselves
         /// be duplicated.
         /// </summary>

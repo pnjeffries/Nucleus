@@ -367,7 +367,7 @@ namespace FreeBuild.Meshing
         public void AddSectionPreview(LinearElement element)
         {
 
-            SectionProperty section = element.Property;
+            SectionFamily section = element.Family;
             Curve geometry = element.Geometry;
             Angle orientation = 0;
             orientation = element.Orientation;
@@ -381,7 +381,7 @@ namespace FreeBuild.Meshing
         /// <param name="geometry"></param>
         /// <param name="section"></param>
         /// <param name="orientation"></param>
-        public void AddSectionPreview(Curve geometry, SectionProperty section, Angle orientation)
+        public void AddSectionPreview(Curve geometry, SectionFamily section, Angle orientation)
         { 
             Angle tolerance = Angle.FromDegrees(20); //TODO: Make adjustable
             if (section != null && geometry != null && section.Profile != null)

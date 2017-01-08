@@ -36,7 +36,7 @@ namespace FreeBuild.Model
     /// extrusion along a curve, such as Beams, Columns, 
     /// </summary>
     [Serializable]
-    public class LinearElement : Element<Curve, SectionProperty>
+    public class LinearElement : Element<Curve, SectionFamily>
     {
         #region Properties
 
@@ -105,9 +105,9 @@ namespace FreeBuild.Model
         /// </summary>
         /// <param name="geometry"></param>
         /// <param name="property"></param>
-        public LinearElement(Curve geometry, SectionProperty property) : this(geometry)
+        public LinearElement(Curve geometry, SectionFamily property) : this(geometry)
         {
-            Property = property;
+            Family = property;
         }
 
         /// <summary>
@@ -130,9 +130,9 @@ namespace FreeBuild.Model
         /// <param name="startPoint"></param>
         /// <param name="endPoint"></param>
         /// <param name="property"></param>
-        public LinearElement(Vector startPoint, Vector endPoint, SectionProperty property):this(startPoint, endPoint)
+        public LinearElement(Vector startPoint, Vector endPoint, SectionFamily property):this(startPoint, endPoint)
         {
-            Property = property;
+            Family = property;
         }
 
         /// <summary>
@@ -142,10 +142,10 @@ namespace FreeBuild.Model
         /// </summary>
         /// <param name="startNode"></param>
         /// <param name="endNode"></param>
-        public LinearElement(Node startNode, Node endNode, SectionProperty property = null)
+        public LinearElement(Node startNode, Node endNode, SectionFamily property = null)
         {
             Geometry = new Line(startNode, endNode);
-            Property = property;
+            Family = property;
         }
 
         #endregion

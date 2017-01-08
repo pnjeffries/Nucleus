@@ -114,6 +114,20 @@ namespace FreeBuild.Model
             }
         }
 
+
+        /// <summary>
+        /// Get a description of this object.
+        /// By default, this is the name of the object, but when the name is
+        /// not set some types will generate a replacement description.
+        /// </summary>
+        public virtual string Description
+        {
+            get
+            {
+                return Name;
+            }
+        }
+
         #endregion
 
         #region Constructors

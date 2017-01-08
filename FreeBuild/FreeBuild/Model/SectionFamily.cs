@@ -28,12 +28,12 @@ using System.Threading.Tasks;
 namespace FreeBuild.Model
 {
     /// <summary>
-    /// A property which describes a section which should be
+    /// A family which describes a section which should be
     /// swept along the set-out curve of a linear element in
     /// order to produce a 3D solid geometry.
     /// </summary>
     [Serializable]
-    public class SectionProperty : VolumetricProperty
+    public class SectionFamily : Family
     {
         #region Properties
 
@@ -93,13 +93,13 @@ namespace FreeBuild.Model
         /// <summary>
         /// Default constructor.  Initialises a new section property with blank data 
         /// </summary>
-        public SectionProperty(){ }
+        public SectionFamily(){ }
 
         /// <summary>
         /// Initialises a section property with the given profile
         /// </summary>
         /// <param name="profile"></param>
-        public SectionProperty(SectionProfile profile)
+        public SectionFamily(SectionProfile profile)
         {
             Profile = profile;
         }
@@ -109,7 +109,7 @@ namespace FreeBuild.Model
         /// </summary>
         /// <param name="name"></param>
         /// <param name="profile"></param>
-        public SectionProperty(string name, SectionProfile profile)
+        public SectionFamily(string name, SectionProfile profile)
         {
             Name = name;
             Profile = profile;

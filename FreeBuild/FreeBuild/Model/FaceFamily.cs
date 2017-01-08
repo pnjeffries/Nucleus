@@ -18,8 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using FreeBuild.Base;
-using FreeBuild.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,32 +27,13 @@ using System.Threading.Tasks;
 namespace FreeBuild.Model
 {
     /// <summary>
-    /// Entities posessing geometry defined by a set of vertices
-    /// and potentially a set of attached data defining additional properties.
-    /// The IElement interface provides a simple way of interacting with elements without needing to
-    /// define specific generic parameters.
+    /// A property which describes the cross-thickness
+    /// makeup of a panel element in order to produce
+    /// a 3D solid geometry
     /// </summary>
-    public interface IElement : IUnique, INamed, IDeletable, IOwned<Model>
+    [Serializable]
+    public class FaceFamily : Family
     {
-        /// <summary>
-        /// The set-out geometry of the element.
-        /// Describes the editable control geometry that primarily defines
-        /// the overall geometry of this object.
-        /// The set-out curve of 1D Elements, the surface of slabs, etc.
-        /// </summary>
-        VertexGeometry Geometry { get; }
-
-        /// <summary>
-        /// The volumetric family that describes how the editable set-out 
-        /// geometry of this element should be interpreted to produce a 
-        /// full 3D solid object
-        /// </summary>
-        Family Family { get; }
-
-        /// <summary>
-        /// Notify this element that it's geometric representation has been updated.
-        /// This may prompt related properties to be invalidated or updated.
-        /// </summary>
-        void NotifyGeometryUpdated();
+        //TODO
     }
 }

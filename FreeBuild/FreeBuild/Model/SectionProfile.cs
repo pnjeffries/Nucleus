@@ -32,7 +32,7 @@ namespace FreeBuild.Model
     /// Base class for objects representing the profile of a SectionProperty.
     /// </summary>
     [Serializable]
-    public abstract class SectionProfile : Unique, IOwned<SectionProperty>
+    public abstract class SectionProfile : Unique, IOwned<SectionFamily>
     {
         #region Properties
 
@@ -151,18 +151,18 @@ namespace FreeBuild.Model
         /// <summary>
         /// Private backing field for Section property
         /// </summary>
-        private SectionProperty _Section = null;
+        private SectionFamily _Section = null;
 
         /// <summary>
         /// The section to which this profile belongs
         /// </summary>
-        public SectionProperty Section
+        public SectionFamily Section
         {
             get { return _Section; }
             internal set { _Section = value; }
         }
 
-        SectionProperty IOwned<SectionProperty>.Owner
+        SectionFamily IOwned<SectionFamily>.Owner
         {
             get
             {

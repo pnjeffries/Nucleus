@@ -134,9 +134,9 @@ namespace FreeBuild.Robot
         /// <param name="robotID"></param>
         /// <param name="model"></param>
         /// <returns></returns>
-        public SectionProperty GetMappedSectionProperty(string robotID, Model.Model model)
+        public SectionFamily GetMappedSectionProperty(string robotID, Model.Model model)
         {
-            if (HasFirstID(SectionCategory, robotID)) return model.Properties.TryGet(GetFirstID(SectionCategory, robotID)) as SectionProperty;
+            if (HasFirstID(SectionCategory, robotID)) return model.Properties.TryGet(GetFirstID(SectionCategory, robotID)) as SectionFamily;
             return null;
         }
 
@@ -146,7 +146,7 @@ namespace FreeBuild.Robot
         /// <param name="label"></param>
         /// <param name="model"></param>
         /// <returns></returns>
-        public SectionProperty GetMappedSectionProperty(IRobotLabel label, Model.Model model)
+        public SectionFamily GetMappedSectionProperty(IRobotLabel label, Model.Model model)
         {
             return GetMappedSectionProperty(label.Name, model);
         }
@@ -186,7 +186,7 @@ namespace FreeBuild.Robot
         /// </summary>
         /// <param name="section"></param>
         /// <param name="label"></param>
-        public void Add(SectionProperty section, IRobotLabel label)
+        public void Add(SectionFamily section, IRobotLabel label)
         {
             Add(SectionCategory, section.GUID, label.Name);
         }
@@ -232,9 +232,9 @@ namespace FreeBuild.Robot
         /// </summary>
         /// <param name="inModel"></param>
         /// <returns></returns>
-        public VolumetricPropertyCollection AllMappedSections(Model.Model inModel)
+        public FamilyCollection AllMappedSections(Model.Model inModel)
         {
-            var result = new VolumetricPropertyCollection();
+            var result = new FamilyCollection();
             if (ContainsKey(SectionCategory))
             {
                 foreach (Guid guid in this[SectionCategory].Keys)
