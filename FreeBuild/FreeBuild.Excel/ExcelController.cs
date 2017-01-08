@@ -171,9 +171,19 @@ namespace FreeBuild.Excel
         /// </summary>
         /// <param name="filePath">Optional.  The filepath to save the workbook to.
         /// If not specified the workbook will be saved to its previous location.</param>
+        public void SaveWorkbook(string filePath = null)
+        {
+            SaveWorkbook(filePath, null);
+        }
+
+        /// <summary>
+        /// Save a workbook to the specified file path
+        /// </summary>
+        /// <param name="filePath">Optional.  The filepath to save the workbook to.
+        /// If not specified the workbook will be saved to its previous location.</param>
         /// <param name="workbook">Optional.  The workbook to save.
         /// If not specified, the active workbook will be used.</param>
-        public void SaveWorkbook(string filePath = null, Workbook workbook = null)
+        public void SaveWorkbook(string filePath, Workbook workbook)
         {
             ExcelApp.DisplayAlerts = false;
             if (workbook == null) workbook = ActiveWorkbook;
@@ -234,9 +244,20 @@ namespace FreeBuild.Excel
         /// </summary>
         /// <param name="row">The row number of the cell</param>
         /// <param name="column">The column number of the cell</param>
+        /// <returns>The data from within the specified cell</returns>
+        public object GetCellValue(int row, int column)
+        {
+            return GetCellValue(row, column, null);
+        }
+
+        /// <summary>
+        /// Get the current value of the specified cell
+        /// </summary>
+        /// <param name="row">The row number of the cell</param>
+        /// <param name="column">The column number of the cell</param>
         /// <param name="sheet">Optional.Specify the sheet the value is to be extracted from.</param>
-        /// <returns></returns>
-        public object GetCellValue(int row, int column, Worksheet sheet = null)
+        /// <returns>The data from within the specified cell</returns>
+        public object GetCellValue(int row, int column, Worksheet sheet)
         {
             if (sheet == null) sheet = ActiveSheet;
             return sheet.Cells[row, column].Value;
@@ -248,9 +269,20 @@ namespace FreeBuild.Excel
         /// <param name="row">The row number of the cell</param>
         /// <param name="column">The column number of the cell</param>
         /// <param name="value">The value to be placed in the cell</param>
+        public void SetCellValue(int row, int column, object value)
+        {
+            SetCellValue(row, column, value, null);
+        }
+
+        /// <summary>
+        /// Set the value of the specified cell
+        /// </summary>
+        /// <param name="row">The row number of the cell</param>
+        /// <param name="column">The column number of the cell</param>
+        /// <param name="value">The value to be placed in the cell</param>
         /// <param name="sheet">Optional.  The sheet the value is to be placed in.
         /// If not specified, the currently active sheet will be used.</param>
-        public void SetCellValue(int row, int column, object value, Worksheet sheet = null)
+        public void SetCellValue(int row, int column, object value, Worksheet sheet)
         {
             if (sheet == null) sheet = ActiveSheet;
             sheet.Cells[row, column].Value = value;
