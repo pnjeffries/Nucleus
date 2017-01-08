@@ -50,7 +50,7 @@ namespace FreeBuild.Model
 
         #endregion
 
-        #region Constructor
+        #region Constructors
 
         /// <summary>
         /// Serialisation constructor

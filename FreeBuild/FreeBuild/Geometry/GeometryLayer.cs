@@ -75,7 +75,7 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Private backing field for the Brush property
         /// </summary>
-        private DisplayBrush _Brush;
+        private DisplayBrush _Brush = ColourBrush.Black;
 
         /// <summary>
         /// The default brush to be used to display objects on this layer in

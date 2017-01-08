@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeBuild.Maths;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -8,11 +9,10 @@ using System.Threading.Tasks;
 namespace FreeBuild.Results
 {
     /// <summary>
-    /// Abstract base class for dictionaries that store analysis results,
-    /// either directly or within further sub-dictionaries.
+    /// Results storage table for nodes
     /// </summary>
     [Serializable]
-    public abstract class ResultsDictionary<TKey, TValue> : Dictionary<TKey,TValue>
+    public class NodeResults : ModelObjectResults<NodeResultTypes, Interval>
     {
         #region Constructors
 
@@ -21,12 +21,12 @@ namespace FreeBuild.Results
         /// </summary>
         /// <param name="info"></param>
         /// <param name="context"></param>
-        protected ResultsDictionary(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        protected NodeResults(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         /// <summary>
-        /// Initialises a new empty ResultsDictionary
+        /// Initialises a new empty NodeResults dictionary
         /// </summary>
-        public ResultsDictionary() : base() {}
+        public NodeResults() : base() { }
 
         #endregion
     }

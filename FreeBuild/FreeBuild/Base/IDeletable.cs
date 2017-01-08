@@ -75,7 +75,8 @@ namespace FreeBuild.Base
         /// Remove all deleted objects from this list
         /// </summary>
         /// <param name="list"></param>
-        public static void RemoveDeleted(this IList<IDeletable> list)
+        public static void RemoveDeleted<TItem>(this IList<TItem> list)
+            where TItem : IDeletable
         {
             for (int i = list.Count - 1; i >= 0; i--)
             {

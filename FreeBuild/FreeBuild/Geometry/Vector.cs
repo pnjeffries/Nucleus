@@ -762,6 +762,15 @@ namespace FreeBuild.Geometry
             return new Vector(0, 0, Z);
         }
 
+        /// <summary>
+        /// ToString override
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("({0:0.####},{1:0.####},{2:0.####})", X, Y, Z);
+        }
+
         #endregion
 
         #region Static Methods

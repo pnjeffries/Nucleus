@@ -17,7 +17,7 @@
         
             <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
                 <Viewbox>
-                    <ItemsControl Name="ItemsControl" ItemsSource="{Binding Layers}">
+                    <ItemsControl Name="ItemsControl" ItemsSource="{Binding Layers}" MouseMove="HandleMouseMove">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <Canvas/>

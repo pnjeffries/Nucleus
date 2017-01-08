@@ -63,6 +63,25 @@ namespace FreeBuild.Maths
         #region Properties
 
         /// <summary>
+        /// Is this interval valid?
+        /// An interval is valid providing both of its limits are not set to NaN.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsValid
+        {
+            get { return !double.IsNaN(Min) && !double.IsNaN(Max); }
+        }
+
+        /// <summary>
+        /// Is this a singularity?  i.e. are the maximum and minimum values the same?
+        /// </summary>
+        /// <returns></returns>
+        public bool IsSingularity
+        {
+            get { return Min == Max; }
+        }
+
+        /// <summary>
         /// The mid-point of this interval
         /// </summary>
         public double Mid { get { return (Min + Max) / 2; } }
@@ -165,26 +184,6 @@ namespace FreeBuild.Maths
         #region Methods
 
         /// <summary>
-        /// Is this interval valid?
-        /// An interval is valid providing both of its limits are not set to NaN
-        /// and the minimum value is below or equal to the maximum one.
-        /// </summary>
-        /// <returns></returns>
-        public bool IsValid()
-        {
-            return !double.IsNaN(Min) && !double.IsNaN(Max) && Min <= Max;
-        }
-
-        /// <summary>
-        /// Is this a singularity?  i.e. are the maximum and minimum values the same?
-        /// </summary>
-        /// <returns></returns>
-        public bool IsSingularity()
-        {
-            return Min == Max;
-        }
-
-        /// <summary>
         /// Is this interval equal to another?
         /// </summary>
         /// <param name="other"></param>
@@ -192,6 +191,42 @@ namespace FreeBuild.Maths
         public bool Equals(Interval other)
         {
             return Min == other.Min && Max == other.Max; 
+        }
+
+        /// <summary>
+        /// Is this interval equal to a value?
+        /// The interval counts as equal to a single value only if the interval
+        /// is a singularity with limits equal to the value
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public bool Equals(double value)
+        {
+            return Min == value && Max == value;
+        }
+
+        /// <summary>
+        /// Is this interval less than another?
+        /// The interval counts as less than another if its maximum value
+        /// is lower than the minimum value of the other.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool LesserThan(Interval other)
+        {
+            return Max < other.Min;
+        }
+
+        /// <summary>
+        /// Is this interval greater than another?
+        /// The interval counts as greater than another if its minimum value
+        /// is greater than the maximum value of the other.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool GreaterThan(Interval other)
+        {
+            return Min > other.Max;
         }
 
         /// <summary>
@@ -417,6 +452,61 @@ namespace FreeBuild.Maths
         /// <returns></returns>
         public static Interval operator /(double d, Interval i)
             => new Interval(d / i.Max, d / i.Min);
+
+        /// <summary>
+        /// Equality operator override
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static bool operator == (Interval a, Interval b)
+            => a.Equals(b);
+
+        /// <summary>
+        /// Inequality operator override
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static bool operator != (Interval a, Interval b)
+            => !a.Equals(b);
+
+
+        /// <summary>
+        /// Lesser-than operator
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static bool operator < (Interval a, Interval b)
+            => a.LesserThan(b);
+
+        /// <summary>
+        /// Greater-than operator
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static bool operator > (Interval a, Interval b)
+            => a.GreaterThan(b);
+
+        /// <summary>
+        /// Interval-double equality operator
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="d"></param>
+        /// <returns></returns>
+        public static bool operator == (Interval i, double d)
+            => i.Equals(d);
+
+        /// <summary>
+        /// Interval double equality operator
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="d"></param>
+        /// <returns></returns>
+        public static bool operator != (Interval i, double d)
+            => !i.Equals(d);
 
         #endregion
     }

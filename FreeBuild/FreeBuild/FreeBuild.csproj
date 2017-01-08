@@ -232,10 +232,14 @@
     <Compile Include="Results\IModelObjectResults.cs" />
     <Compile Include="Results\ModelObjectResults.cs" />
     <Compile Include="Results\ModelResults.cs" />
+    <Compile Include="Results\NodeResults.cs" />
     <Compile Include="Results\NodeResultTypes.cs" />
     <Compile Include="Results\ResultsDictionary.cs" />
     <Compile Include="UI\AutoUIAttribute.cs" />
     <Compile Include="UI\AutoUIComboBoxAttribute.cs" />
+    <Compile Include="UI\IMouseInteraction.cs" />
+    <Compile Include="UI\IUserInteraction.cs" />
+    <Compile Include="UI\MouseInteractionParameters.cs" />
     <Compile Include="Units\DimensionAttribute.cs" />
     <Compile Include="Units\DimensionType.cs" />
   </ItemGroup>

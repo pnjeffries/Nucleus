@@ -112,6 +112,18 @@ namespace FreeBuild.WPF
             set { SetValue(ViewBoundsProperty, value); }
         }
 
+        /// <summary>
+        /// The current cursor position on the canvas, in model coordinates
+        /// </summary>
+        public FreeBuild.Geometry.Vector CursorPosition
+        {
+            get
+            {
+                System.Windows.Point p = Mouse.GetPosition(ItemsControl);
+                return WPFtoFB.Convert(p);
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -141,5 +153,10 @@ namespace FreeBuild.WPF
         }
 
         #endregion
+
+        private void HandleMouseMove(object sender, MouseEventArgs e)
+        {
+            
+        }
     }
 }

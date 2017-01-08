@@ -223,6 +223,7 @@ namespace FreeBuild.WPF
                         {
                             tB.Foreground = FBtoWPF.Convert(shape.Attributes.Brush);
                         }
+                        else tB.Foreground = DefaultBrush;
 
                         FormattedText fT = new FormattedText(label.Text, CultureInfo.CurrentCulture, tB.FlowDirection,
                             new Typeface(tB.FontFamily, tB.FontStyle, tB.FontWeight, tB.FontStretch), 1, tB.Foreground);
