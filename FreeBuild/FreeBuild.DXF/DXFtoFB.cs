@@ -88,9 +88,9 @@ namespace FreeBuild.DXF
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        public static Cloud Convert(netDxf.Entities.Point point)
+        public static Point Convert(nDE.Point point)
         {
-            return new Cloud(Convert(point.Position), ExtractAttributes(point));
+            return new Point(Convert(point.Position), ExtractAttributes(point));
         }
 
         /// <summary>
@@ -100,13 +100,13 @@ namespace FreeBuild.DXF
         /// <returns></returns>
         public static HorizontalSetOut ConvertHorizontal(nDE.MTextAttachmentPoint attachment)
         {
-            if (attachment == netDxf.Entities.MTextAttachmentPoint.BottomLeft ||
-                attachment == netDxf.Entities.MTextAttachmentPoint.MiddleLeft ||
-                attachment == netDxf.Entities.MTextAttachmentPoint.TopLeft)
+            if (attachment == nDE.MTextAttachmentPoint.BottomLeft ||
+                attachment == nDE.MTextAttachmentPoint.MiddleLeft ||
+                attachment == nDE.MTextAttachmentPoint.TopLeft)
                 return HorizontalSetOut.Left;
-            else if (attachment == netDxf.Entities.MTextAttachmentPoint.BottomRight ||
-                attachment == netDxf.Entities.MTextAttachmentPoint.MiddleRight ||
-                attachment == netDxf.Entities.MTextAttachmentPoint.TopRight)
+            else if (attachment == nDE.MTextAttachmentPoint.BottomRight ||
+                attachment == nDE.MTextAttachmentPoint.MiddleRight ||
+                attachment == nDE.MTextAttachmentPoint.TopRight)
                 return HorizontalSetOut.Right;
             else return HorizontalSetOut.MidPoint;
         }
@@ -118,13 +118,13 @@ namespace FreeBuild.DXF
         /// <returns></returns>
         public static VerticalSetOut ConvertVertical(nDE.MTextAttachmentPoint attachment)
         {
-            if (attachment == netDxf.Entities.MTextAttachmentPoint.BottomCenter ||
-                attachment == netDxf.Entities.MTextAttachmentPoint.BottomLeft ||
-                attachment == netDxf.Entities.MTextAttachmentPoint.BottomRight)
+            if (attachment == nDE.MTextAttachmentPoint.BottomCenter ||
+                attachment == nDE.MTextAttachmentPoint.BottomLeft ||
+                attachment == nDE.MTextAttachmentPoint.BottomRight)
                 return VerticalSetOut.Bottom;
-            else if (attachment == netDxf.Entities.MTextAttachmentPoint.TopCenter ||
-                attachment == netDxf.Entities.MTextAttachmentPoint.TopLeft ||
-                attachment == netDxf.Entities.MTextAttachmentPoint.TopRight)
+            else if (attachment == nDE.MTextAttachmentPoint.TopCenter ||
+                attachment == nDE.MTextAttachmentPoint.TopLeft ||
+                attachment == nDE.MTextAttachmentPoint.TopRight)
                 return VerticalSetOut.Top;
             else
                 return VerticalSetOut.MidPoint;

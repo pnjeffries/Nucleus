@@ -136,6 +136,23 @@ namespace FreeBuild.Geometry
             }
         }
 
+        /// <summary>
+        /// Gets or sets the position of the mid-vertex on the arc between start and end points.
+        /// </summary>
+        public Vector PointOnArc
+        {
+            get
+            {
+                if (Vertices.Count > 2) return Vertices[1].Position;
+                else return Vector.Unset;
+            }
+            set
+            {
+                if (Vertices.Count == 2) Vertices.Insert(1, new Vertex(value));
+                else if (Vertices.Count > 2) Vertices[1].Position = value;
+            }
+        }
+
         #endregion
 
         #region Constructors

@@ -1,4 +1,5 @@
 ﻿using FreeBuild.Base;
+using FreeBuild.Conversion;
 using FreeBuild.Extensions;
 using FreeBuild.Model;
 using System;
@@ -26,6 +27,20 @@ namespace FreeBuild.IO
         #endregion
 
         #region Property
+
+        /// <summary>
+        /// Private backing field for Context property
+        /// </summary>
+        private IStringConversionContext _Context = null;
+
+        /// <summary>
+        /// The context object for string conversion
+        /// </summary>
+        public IStringConversionContext Context
+        {
+            get { return _Context; }
+            set { _Context = value; }
+        }
 
         /// <summary>
         /// Private backing field for Format property
@@ -114,10 +129,10 @@ namespace FreeBuild.IO
             if (type != null)
             {
                 string format = _Format[type];
-                return Write(item.ToString(format));
+                return Write(item.ToString(format, '{', '}', Context));
             }
             else
-            {
+            { 
                 return false;
             }
         }

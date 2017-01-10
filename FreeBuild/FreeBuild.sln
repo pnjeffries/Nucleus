@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeBuild.OpenTK", "FreeBui
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeBuild.MIDAS", "FreeBuild.MIDAS\FreeBuild.MIDAS.csproj", "{67A230AC-1237-42D5-9337-0A073B91F653}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeBuild.Revit", "FreeBuild.Revit\FreeBuild.Revit.csproj", "{E4E2CE0F-C3CF-4EA2-A5C2-E06B49939604}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{67A230AC-1237-42D5-9337-0A073B91F653}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67A230AC-1237-42D5-9337-0A073B91F653}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67A230AC-1237-42D5-9337-0A073B91F653}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4E2CE0F-C3CF-4EA2-A5C2-E06B49939604}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4E2CE0F-C3CF-4EA2-A5C2-E06B49939604}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4E2CE0F-C3CF-4EA2-A5C2-E06B49939604}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4E2CE0F-C3CF-4EA2-A5C2-E06B49939604}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

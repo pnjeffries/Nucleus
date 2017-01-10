@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeBuild.Conversion;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -19,9 +20,14 @@ namespace FreeBuild.Extensions
         /// <param name="path">The path, consisting of property names and sub-property names
         /// separated by '.' characters.  For example: 'PropertyName.SubPropertyName.SubSubPropertyName' etc.
         /// Parameterless methods may also be invoked by adding '()', i.e.:
-        /// 'PropertyName.SubMethodName().SubSubPropertyName'</param>
+        /// 'PropertyName.SubMethodName().SubSubPropertyName'.
+        /// Methods and properties on the optional context object may also be invoked in the same way, via a
+        /// '[CONTEXT]' redirection.  For example: '[CONTEXT].MethodName()'.  When switching to the context
+        /// object the SetSourceObject method on it will be called and the current object or property value
+        /// passed in.  This allows for complex operations to be performed in order to return a value
+        /// provided that functionality is implemented in a suitable context object provided.</param>
         /// <returns></returns>
-        public static object GetValue(this object obj, string path)
+        public static object GetValue(this object obj, string path, IStringConversionContext context = null)
         {
             foreach (string token in path.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries))
             {
@@ -29,14 +35,19 @@ namespace FreeBuild.Extensions
 
                 Type type = obj.GetType();
 
-                if (token.EndsWith("()")) // Method
+                if (token.EqualsIgnoreCase("[CONTEXT]"))
+                {
+                    context.SetSourceObject(obj);
+                    obj = context;
+                }
+                else if (token.EndsWith("()")) // Method
                 {
                     MethodInfo info = type.GetMethod(token.TrimEnd(')', '('));
                     if (info == null) return null;
                     else
                         obj = info.Invoke(obj, null);
                 }
-                else // Family...
+                else // Property...
                 {
                     PropertyInfo info = type.GetProperty(token);
                     if (info == null)
@@ -64,8 +75,12 @@ namespace FreeBuild.Extensions
         /// For example "The value of the subproperty is: {PropertyName.SubPropertyName}"</param>
         /// <param name="openTag">The opening tag for specifying property paths.  Default is '{'.</param>
         /// <param name="closeTag">The closing tag for specifying property paths.  Default is '}'.</param>
+        /// <param name="context">The (optional) string conversion context object.  If supplies this allows
+        /// the '[CONTEXT]' keyword to be used within property paths in order to access properties and
+        /// functions supplied on the context object.</param>
         /// <returns></returns>
-        public static string ToString(this object obj, string format, char openTag = '{', char closeTag = '}')
+        public static string ToString(this object obj, string format, char openTag = '{', char closeTag = '}',
+            IStringConversionContext context = null)
         {
             StringBuilder resultBuilder = new StringBuilder();
 

@@ -59,32 +59,31 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Default constructor
         /// </summary>
-        public Cloud()
+        public Cloud(GeometryAttributes attributes = null)
         {
             _Vertices = new VertexCollection(this);
+            Attributes = attributes;
         }
 
         /// <summary>
         /// Initialise a point cloud using the specified point locations
         /// </summary>
         /// <param name="points"></param>
-        public Cloud(IEnumerable<Vector> points, GeometryAttributes attributes = null) : this()
+        public Cloud(IEnumerable<Vector> points, GeometryAttributes attributes = null) : this(attributes)
         {
             foreach (Vector point in points)
             {
                 _Vertices.Add(new Vertex(point));
             }
-            Attributes = attributes;
         }
 
         /// <summary>
         /// Initialise a point cloud containing a single point
         /// </summary>
         /// <param name="point"></param>
-        public Cloud(Vector point, GeometryAttributes attributes = null) : this()
+        public Cloud(Vector point, GeometryAttributes attributes = null) : this(attributes)
         {
             _Vertices.Add(new Vertex(point));
-            Attributes = attributes;
         }
 
         #endregion

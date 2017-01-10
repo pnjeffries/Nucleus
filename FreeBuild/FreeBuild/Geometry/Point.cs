@@ -63,13 +63,16 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Protected parameterless constructor
         /// </summary>
-        protected Point() : base() { }
+        protected Point(GeometryAttributes attributes = null) : base()
+        {
+            Attributes = attributes;
+        }
 
         /// <summary>
         /// Vertex constructor.   Initialises this Point object with the specified vertex.
         /// </summary>
         /// <param name="vertex"></param>
-        public Point(Vertex vertex) : this()
+        public Point(Vertex vertex, GeometryAttributes attributes = null) : this(attributes)
         {
             _Vertex = vertex;
         }
@@ -79,7 +82,7 @@ namespace FreeBuild.Geometry
         /// Creates a Point object at the specified position.
         /// </summary>
         /// <param name="position"></param>
-        public Point(Vector position)
+        public Point(Vector position, GeometryAttributes attributes = null) : this(attributes)
         {
             _Vertex = new Vertex(position);
         }

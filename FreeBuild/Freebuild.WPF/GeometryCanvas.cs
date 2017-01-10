@@ -246,10 +246,11 @@ namespace FreeBuild.WPF
                     else if (shape is Cloud || shape is FB.Point)
                     {
                         Brush pointBrush = DefaultBrush;
-                        if (shape.Attributes != null && shape.Attributes.Brush != null)
+                        if (shape.Attributes?.Brush != null)
                         {
                             pointBrush = FBtoWPF.Convert(shape.Attributes.Brush);
                         }
+
                         foreach (Vertex v in shape.Vertices)
                         {
                             double diameter = PointDiameter * scaleFactor;
@@ -258,8 +259,8 @@ namespace FreeBuild.WPF
                             ellipse.Height = diameter;
                             ellipse.Fill = pointBrush;
 
-                            SetLeft(ellipse, v.X - diameter / 2);
-                            SetTop(ellipse, -v.Y - diameter / 2);
+                            SetLeft(ellipse, v.X - diameter / 2.0);
+                            SetTop(ellipse, -v.Y - diameter / 2.0);
 
                             Children.Add(ellipse);
                         }

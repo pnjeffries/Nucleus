@@ -106,8 +106,9 @@ namespace FreeBuild.Model
         /// <param name="baseName">The base name</param>
         /// <param name="ignore">Optional.  If specified, this object will be ignored during the search.</param>
         /// <param name="enforcePostFix">Optional.  If set true, a postfix numeral will always be applied, even if it is 1.</param>
+        /// <param name="includeSpace">Optional.  If true (default) a space will be inserted between the name and number</param>
         /// <returns></returns>
-        public string NextAvailableName(string baseName, TItem ignore = null, bool enforcePostFix = false)
+        public string NextAvailableName(string baseName, TItem ignore = null, bool enforcePostFix = false, bool includeSpace = true)
         {
             if (!enforcePostFix && FindByName(baseName) == null) return baseName;
             else
@@ -116,7 +117,9 @@ namespace FreeBuild.Model
                 if (enforcePostFix) postFix = 1;
                 while (postFix < 100000)
                 {
-                    string nextName = baseName + " " + postFix;
+                    string nextName = baseName;
+                    if (includeSpace) nextName += " ";
+                    nextName += postFix;
                     if (FindByName(nextName, ignore) == null) return nextName;
                     postFix++;
                 }

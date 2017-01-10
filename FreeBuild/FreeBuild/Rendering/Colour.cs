@@ -41,18 +41,30 @@ namespace FreeBuild.Rendering
         #region Constants
         /// <summary> An opaque solid black colour </summary>
         public static readonly Colour Black = new Colour(0, 0, 0);
+
         /// <summary> An opaque solid white colour </summary>
         public static readonly Colour White = new Colour(255, 255, 255);
+
         /// <summary> An opaque solid red colour </summary>
         public static readonly Colour Red = new Colour(255, 0, 0);
+
         /// <summary> An opaque solid green colour </summary>
         public static readonly Colour Green = new Colour(0, 255, 0);
+
         /// <summary> An opaque solid blue colour </summary>
         public static readonly Colour Blue = new Colour(0, 0, 255);
+
         /// <summary> An opaque solid yellow colour </summary>
         public static readonly Colour Yellow = new Colour(255, 255, 0);
-        /// <summary> An transparent colour </summary>
+
+        /// <summary> A transparent colour </summary>
         public static readonly Colour Transparent = new Colour(0, 0, 0, 0);
+
+        /// <summary> The shade of blue used in the Ramboll logo </summary>
+        public static readonly Colour RambollBlue = new Colour(0, 157, 244);
+
+        /// <summary> The shade of orange used in the Salamander logo </summary>
+        public static readonly Colour SalamanderOrange = new Colour(255, 97, 47);
 
         #endregion
 

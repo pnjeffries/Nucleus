@@ -53,6 +53,7 @@
     <Compile Include="Conversion\ConversionContext.cs" />
     <Compile Include="Conversion\ConversionOptions.cs" />
     <Compile Include="Conversion\IDMappingTable.cs" />
+    <Compile Include="Conversion\IStringConversionContext.cs" />
     <Compile Include="Conversion\ModelIDMappingTable.cs" />
     <Compile Include="Events\MessageRaisedEventArgs.cs" />
     <Compile Include="Exceptions\MatrixException.cs" />

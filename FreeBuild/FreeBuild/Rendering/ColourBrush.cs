@@ -64,6 +64,16 @@ namespace FreeBuild.Rendering
         /// </summary>
         public static ColourBrush Transparent { get { return new ColourBrush(Colour.Transparent); } }
 
+        /// <summary>
+        /// Get a single-colour brush in Ramboll blue
+        /// </summary>
+        public static ColourBrush RambollBlue { get { return new ColourBrush(Colour.RambollBlue); } }
+
+        /// <summary>
+        /// Get a single-colour brush in Salamander orange
+        /// </summary>
+        public static ColourBrush SalamanderOrange { get { return new ColourBrush(Colour.SalamanderOrange); } }
+
         #endregion
 
         #region Properties
