@@ -19,7 +19,7 @@ namespace FreeBuild.Tests
             doc.Model.Create.LinearElement(new Line(0, 0, 10, 0));
             doc.Model.RegenerateNodes(new NodeGenerationParameters());
 
-            var serialiser = new ModelDocumentTextSerialiser(new GWAFormat());
+            var serialiser = new ModelDocumentTextSerialiser(new GWAFormat(), new GWAContext());
             sw.Start();
             Core.Print(serialiser.Serialize(doc));
             sw.Stop();

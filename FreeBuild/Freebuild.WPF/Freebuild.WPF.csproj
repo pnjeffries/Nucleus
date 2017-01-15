@@ -94,6 +94,9 @@
       <DependentUpon>VectorFieldControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="SubTypeBindingSourceExtension.cs" />
+    <Compile Include="ViewScroller.xaml.cs">
+      <DependentUpon>ViewScroller.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WPFtoFB.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -132,6 +135,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PropertiesExpander.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewScroller.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

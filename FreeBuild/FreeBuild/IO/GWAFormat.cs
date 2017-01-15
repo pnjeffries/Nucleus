@@ -13,8 +13,12 @@ namespace FreeBuild.IO
 
         public GWAFormat() : base()
         {
-            Add(typeof(Node), "NODE.2, {NumericID}, {Position.X}, {Position.Y}, {Position.Z}");
-            Add(typeof(LinearElement), "ELEMENT.2, {NumericID}, {StartNode.NumericID}, {EndNode.NumericID}");
+            Add(typeof(Node), 
+                "NODE.2, {[CONTEXT].GetID()}, {Name}, NO_RGB, {Position.X}, {Position.Y}, {Position.Z}");
+            Add(typeof(LinearElement), 
+                "ELEMENT.2, {[CONTEXT].GetID()}, {Name}, NO_RGB, {[CONTEXT].ElementType()}, {Family.[CONTEXT].GetID()}, {[CONTEXT].ElementGroup()}, {StartNode.[CONTEXT].GetID()}, {EndNode.[CONTEXT].GetID()}, , {Orientation.Degrees}");
+            Add(typeof(SectionFamily), 
+                "PROP_SEC.1, {[CONTEXT].GetID()}, {Name}, , {[CONTEXT].SectionMaterial()}, {[CONTEXT].SectionDescription()}");
         }
 
         #endregion

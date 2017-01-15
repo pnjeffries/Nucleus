@@ -13,28 +13,26 @@
             <converters:BrushConverter x:Key="BrushConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Name="LayoutRoot">
-        
-            <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
-                <Viewbox>
-                    <ItemsControl Name="ItemsControl" ItemsSource="{Binding Layers}" MouseMove="HandleMouseMove">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <Canvas/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <local:GeometryCanvas Geometry="{Binding}" 
-                                                      DefaultBrush="{Binding Path=Brush, Converter={StaticResource BrushConverter}}"
-                                                      Visibility="{Binding Path=Visible, Converter={StaticResource BooleanVisibilityConverter}}"
-                                                      CurveThickness="{Binding Path=CurveThickness, RelativeSource={RelativeSource AncestorType=local:LayeredGeometryCanvas}}"/>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-
-                </Viewbox>
-            </ScrollViewer>
-        
+    <Grid Name="LayoutRoot" Background="Transparent">
+        <ItemsControl Name="ItemsControl" ItemsSource="{Binding Layers}" MouseMove="HandleMouseMove">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <local:GeometryCanvas Geometry="{Binding}" 
+                                          DefaultBrush="{Binding Path=Brush, Converter={StaticResource BrushConverter}}"
+                                          Visibility="{Binding Path=Visible, Converter={StaticResource BooleanVisibilityConverter}}"
+                                          CurveThickness="{Binding Path=CurveThickness, RelativeSource={RelativeSource AncestorType=local:LayeredGeometryCanvas}}"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <local:GeometryCanvas x:Name="OverlayCanvas"
+                              Geometry="{Binding Overlay}"
+                              IsHitTestVisible="False"
+                              CurveThickness="{Binding Path=CurveThickness}"
+                              Opacity="0.5"/>
     </Grid>
 </UserControl>

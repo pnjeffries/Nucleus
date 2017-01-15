@@ -157,6 +157,18 @@ namespace FreeBuild.Geometry
             }, true);
         }
 
+        /// <summary>
+        /// Static factory method to create a polyline representing a rectangle on the XY plane between the two specified
+        /// corner points.
+        /// </summary>
+        /// <param name="v0"></param>
+        /// <param name="v1"></param>
+        /// <returns></returns>
+        public static PolyLine Rectangle(Vector v0, Vector v1)
+        {
+            return Rectangle(Math.Min(v0.X, v1.X), Math.Min(v0.Y, v1.Y), Math.Max(v0.X, v1.X), Math.Max(v0.Y, v1.Y));
+        }
+
         #endregion
     }
 }

@@ -35,7 +35,6 @@ namespace FreeBuild.Geometry
     [Serializable]
     public class GeometryAttributes : DisplayAttributes
     {
-        private ColourBrush red;
         #region Properties
 
         /// <summary>
@@ -79,9 +78,14 @@ namespace FreeBuild.Geometry
             Brush = brush;
         }
 
-        public GeometryAttributes(ColourBrush red)
+        /// <summary>
+        /// Initialises a new GeometryAttributes object with the Brush initialised as 
+        /// a ColourBrush of the specified colour
+        /// </summary>
+        /// <param name="colour"></param>
+        public GeometryAttributes(Colour colour)
         {
-            this.red = red;
+            Brush = new ColourBrush(colour);
         }
 
         #endregion

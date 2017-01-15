@@ -145,6 +145,18 @@ namespace FreeBuild.Geometry
         public PlanarRegion() { }
 
         /// <summary>
+        /// Initialises a new quadrangular PlanarRegion with the specified corner points.
+        /// The four points specified should all lie on the same plane for the resulting surface to be valid.
+        /// </summary>
+        /// <param name="pt0"></param>
+        /// <param name="pt1"></param>
+        /// <param name="pt2"></param>
+        /// <param name="pt3"></param>
+        /// <param name="attributes"></param>
+        public PlanarRegion(Vector pt0, Vector pt1, Vector pt2, Vector pt3, GeometryAttributes attributes = null)
+            : this(new PolyLine(new Vector[] { pt0, pt1, pt2, pt3 }, true, attributes)) { }
+
+        /// <summary>
         /// Initialises a new PlanarSurface with the specified perimeter curve.
         /// </summary>
         /// <param name="perimeter"></param>

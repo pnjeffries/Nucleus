@@ -71,6 +71,21 @@ namespace FreeBuild.WPF
             set { SetValue(LayersProperty, value); }
         }
 
+        /// <summary>
+        /// Overlay geometry dependency property
+        /// </summary>
+        public static DependencyProperty OverlayProperty =
+            DependencyProperty.Register("Overlay", typeof(VertexGeometryCollection), typeof(LayeredGeometryCanvas));
+
+        /// <summary>
+        /// Overlay geometry property
+        /// </summary>
+        public VertexGeometryCollection Overlay
+        {
+            get { return (VertexGeometryCollection)GetValue(OverlayProperty); }
+            set { SetValue(OverlayProperty, value); }
+        }
+
         public static void OnCurveThicknessChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
         }
@@ -147,7 +162,11 @@ namespace FreeBuild.WPF
                 bBox.Scale(1.1);
                 ItemsControl.Width = bBox.SizeX;
                 ItemsControl.Height = bBox.SizeY;
-                ItemsControl.RenderTransform = new TranslateTransform(-bBox.MinX, bBox.MaxY);
+                var transform = new TranslateTransform(-bBox.MinX, bBox.MaxY);
+                ItemsControl.RenderTransform = transform;
+                OverlayCanvas.Width = bBox.SizeX;
+                OverlayCanvas.Height = bBox.SizeY;
+                OverlayCanvas.RenderTransform = transform;
                 CurveThickness = bBox.MaxSize * 0.0012;
             }
         }

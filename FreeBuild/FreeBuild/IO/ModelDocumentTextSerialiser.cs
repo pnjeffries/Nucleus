@@ -1,4 +1,5 @@
-﻿using FreeBuild.Model;
+﻿using FreeBuild.Conversion;
+using FreeBuild.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,10 +25,10 @@ namespace FreeBuild.IO
         /// Format constructor
         /// </summary>
         /// <param name="format"></param>
-        public ModelDocumentTextSerialiser(TextFormat format) : base(format) { }
+        public ModelDocumentTextSerialiser(TextFormat format, IStringConversionContext context = null) : base(format, context) { }
 
         #endregion
-
+         
         #region Methods
 
         public override bool WriteAll(ModelDocument source)

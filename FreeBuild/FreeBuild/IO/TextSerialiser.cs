@@ -84,9 +84,10 @@ namespace FreeBuild.IO
         /// Format constructor
         /// </summary>
         /// <param name="format"></param>
-        public TextSerialiser(TextFormat format)
+        public TextSerialiser(TextFormat format, IStringConversionContext context = null)
         {
             Format = format;
+            Context = context;
         }
 
         #endregion

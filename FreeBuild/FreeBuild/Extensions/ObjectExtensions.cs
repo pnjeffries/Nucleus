@@ -97,7 +97,7 @@ namespace FreeBuild.Extensions
                     tagLevel--;
                     if (tagLevel == 0)
                     {
-                        resultBuilder.Append(obj.GetValue(pathBuilder.ToString()));
+                        resultBuilder.Append(obj.GetValue(pathBuilder.ToString(), context));
                         pathBuilder.Clear();
                     }
                 }

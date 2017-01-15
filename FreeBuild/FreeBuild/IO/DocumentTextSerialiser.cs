@@ -1,4 +1,5 @@
 ﻿using FreeBuild.Base;
+using FreeBuild.Conversion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace FreeBuild.IO
         /// Format constructor
         /// </summary>
         /// <param name="format"></param>
-        public DocumentTextSerialiser(TextFormat format) : base(format) { }
+        public DocumentTextSerialiser(TextFormat format, IStringConversionContext context = null) : base(format, context) { }
 
         #endregion
     }
