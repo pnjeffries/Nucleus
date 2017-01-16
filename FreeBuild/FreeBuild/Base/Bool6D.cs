@@ -35,6 +35,7 @@ namespace FreeBuild.Base
     /// <remarks>
     /// This type is currently implemented as a struct rather than a class,
     /// though this will be subject to review and may be changed.</remarks>
+    [Serializable]
     public struct Bool6D
     {
         #region fields

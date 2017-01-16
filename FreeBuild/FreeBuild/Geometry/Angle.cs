@@ -53,6 +53,7 @@ namespace FreeBuild.Geometry
     /// Implicit converters to and from the double type are provided,
     /// so this type can be used as though it were an ordinary double.
     /// </summary>
+    [Serializable]
     public struct Angle : IComparable<Angle>
     {
         #region Constants

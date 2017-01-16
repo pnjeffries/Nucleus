@@ -126,6 +126,22 @@ namespace FreeBuild.Base
             return false;
         }
 
+        /// <summary>
+        /// Serialise this object to a Base64 Binary String
+        /// </summary>
+        /// <returns></returns>
+        public virtual byte[] ToBinary()
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(stream, this);
+                stream.Flush();
+                stream.Position = 0;
+                return stream.ToArray();
+            }
+        }
+
         #endregion
 
         #region Static Methods
@@ -136,7 +152,7 @@ namespace FreeBuild.Base
         /// <param name="filePath">The path of the file to be loaded.</param>
         /// <returns>The loaded document, if a document could indeed be loaded.
         /// Else, null.</returns>
-        public static T Load<T>(string filePath) where T : Document
+        public static T Load<T>(FilePath filePath) where T : Document
         {
             T result = null;
             IFormatter formatter = new BinaryFormatter();
@@ -148,6 +164,22 @@ namespace FreeBuild.Base
             result.FilePath = filePath;
             stream.Close();
             return result;
+        }
+
+        /// <summary>
+        /// Deserialize a document of the specified type from
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="binaryData">The binary data to deserialize</param>
+        /// <returns></returns>
+        public static T FromBinary<T>(byte[] binaryData) where T : Document
+        {
+            using (var stream = new MemoryStream(binaryData))
+            {
+                var formatter = new BinaryFormatter();
+                stream.Seek(0, SeekOrigin.Begin);
+                return formatter.Deserialize(stream) as T;
+            }
         }
 
         #endregion

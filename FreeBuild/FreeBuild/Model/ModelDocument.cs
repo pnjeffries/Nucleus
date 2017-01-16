@@ -93,5 +93,20 @@ namespace FreeBuild.Model
         }
 
         #endregion
+
+        #region Static Methods
+
+        /// <summary>
+        /// Load a ModelDocument from a file stored in binary format
+        /// </summary>
+        /// <param name="filePath">The path of the file to be loaded.</param>
+        /// <returns>The loaded document, if a document could indeed be loaded.
+        /// Else, null.</returns>
+        public static ModelDocument Load(FilePath filePath)
+        {
+            return Load<ModelDocument>(filePath);
+        }
+
+        #endregion
     }
 }

@@ -11,6 +11,16 @@ namespace FreeBuild.IO
     public class GWAContext : StringConversionContextBase
     {
         /// <summary>
+        /// Convert to integer
+        /// </summary>
+        /// <returns></returns>
+        public string ToInt()
+        {
+            if (SourceObject is bool && ((bool)SourceObject) == true) return "1";
+            else return "0";
+        }
+
+        /// <summary>
         /// Get the element type of the current element object
         /// </summary>
         /// <returns></returns>
@@ -52,11 +62,42 @@ namespace FreeBuild.IO
                 // TODO: Create section description
                 if (section.Profile != null)
                 {
-                    if (section.Profile.CatalogueName != null)
-                        return "STD CAT " + section.Profile.CatalogueName;
+                    //if (section.Profile.CatalogueName != null)
+                    //   return "CAT " + section.Profile.CatalogueName;
+                    if (section.Profile is SymmetricIProfile)
+                    {
+                        var profile = (SymmetricIProfile)section.Profile;
+                        return string.Format("STD I({0}) {1} {2} {3} {4}", "m", profile.Depth, profile.Width, profile.WebThickness, profile.FlangeThickness);
+                    }
+                    else if (section.Profile is RectangularHollowProfile)
+                    {
+                        var profile = (RectangularHollowProfile)section.Profile;
+                        return string.Format("STD RHS({0}) {1} {2} {3} {4}", "m", profile.Depth, profile.Width, profile.WebThickness, profile.FlangeThickness);
+                    }
+                    else if (section.Profile is RectangularHollowProfile)
+                    {
+                        var profile = (RectangularProfile)section.Profile;
+                        return string.Format("STD R({0}) {1} {2}", "m", profile.Depth, profile.Width);
+                    }
+                    else if (section.Profile is CircularHollowProfile)
+                    {
+                        var chsSection = (CircularHollowProfile)section.Profile;
+                        string.Format("STD CHS({0}) {1} {2}", "m", chsSection.Diameter, chsSection.WallThickness);
+                    }
+                    else if (section.Profile is CircularProfile)
+                    {
+                        var profile = (CircularProfile)section.Profile;
+                        return string.Format("STD C({0}) {1}", "m", profile.Diameter);
+                    }
+                    else if (section.Profile is TProfile)
+                    {
+                        var profile = (TProfile)section.Profile;
+                        return string.Format("STD T({0}) {1} {2} {3} {4}", "m", profile.Depth, profile.Width, profile.WebThickness, profile.FlangeThickness);
+                    }
+                    // TODO: Other types
                 }
             }
-            return "";
+            return "EXP";
         }
 
         /// <summary>
