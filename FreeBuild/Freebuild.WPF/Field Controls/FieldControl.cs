@@ -38,6 +38,7 @@ namespace FreeBuild.WPF
         private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((FieldControl)d).RaiseValueChanged(d, e);
+            ((FieldControl)d).OnValueChanged(e);
         }
 
         /// <summary>
@@ -61,6 +62,16 @@ namespace FreeBuild.WPF
 
 
         #region Methods
+
+        /// <summary>
+        /// Overridable member function called when the value of the control is changed
+        /// </summary>
+        /// <param name="d"></param>
+        /// <param name="e"></param>
+        protected virtual void OnValueChanged(DependencyPropertyChangedEventArgs e)
+        {
+           // By default does nothing!
+        }
 
         /// <summary>
         /// Set up this control to display the specified object property

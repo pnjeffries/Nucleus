@@ -45,9 +45,12 @@ namespace FreeBuild.Model
         /// <param name="sections"></param>
         public SectionFamilyCollection(IEnumerable<SectionFamily> sections)
         {
-            foreach (SectionFamily section in sections)
+            if (sections != null)
             {
-                Add(section);
+                foreach (SectionFamily section in sections)
+                {
+                    Add(section);
+                }
             }
         }
 

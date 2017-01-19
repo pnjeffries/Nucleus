@@ -13,7 +13,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Name="LayoutRoot">
-        <Expander>
+        <Expander  IsExpanded="True">
             <Expander.Header>
                 <DockPanel
                     HorizontalAlignment="{Binding HorizontalAlignment, 

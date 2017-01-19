@@ -122,6 +122,72 @@ namespace FreeBuild.Base
             return new Bool6D(!X, !Y, !Z, !XX, !YY, !ZZ);
         }
 
+        /// <summary>
+        /// Create a new Bool6D copying all values from this one
+        /// bar the new specified value of X.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public Bool6D WithX(bool value)
+        {
+            return new Bool6D(value, Y, Z, XX, YY, ZZ);
+        }
+
+        /// <summary>
+        /// Create a new Bool6D copying all values from this one
+        /// bar the new specified value of Y.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public Bool6D WithY(bool value)
+        {
+            return new Bool6D(X, value, Z, XX, YY, ZZ);
+        }
+
+        /// <summary>
+        /// Create a new Bool6D copying all values from this one
+        /// bar the new specified value of Z.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public Bool6D WithZ(bool value)
+        {
+            return new Bool6D(X, Y, value, XX, YY, ZZ);
+        }
+
+        /// <summary>
+        /// Create a new Bool6D copying all values from this one
+        /// bar the new specified value of XX.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public Bool6D WithXX(bool value)
+        {
+            return new Bool6D(X, Y, Z, value, YY, ZZ);
+        }
+
+        /// <summary>
+        /// Create a new Bool6D copying all values from this one
+        /// bar the new specified value of YY.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public Bool6D WithYY(bool value)
+        {
+            return new Bool6D(X, Y, Z, XX, value, ZZ);
+        }
+
+        /// <summary>
+        /// Create a new Bool6D copying all values from this one
+        /// bar the new specified value of ZZ.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public Bool6D WithZZ(bool value)
+        {
+            return new Bool6D(X, Y, Z, XX, YY, value);
+        }
+
         #endregion
     }
 }
