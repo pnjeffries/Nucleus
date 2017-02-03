@@ -67,7 +67,7 @@ namespace FreeBuild.Rendering
         /// <summary>
         /// Get a single-colour brush in Ramboll blue
         /// </summary>
-        public static ColourBrush RambollBlue { get { return new ColourBrush(Colour.RambollBlue); } }
+        public static ColourBrush RambollBlue { get { return new ColourBrush(Colour.RambollCyan); } }
 
         /// <summary>
         /// Get a single-colour brush in Salamander orange

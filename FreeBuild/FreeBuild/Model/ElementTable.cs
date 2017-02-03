@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +39,7 @@ namespace FreeBuild.Model
         /// <summary>
         /// Private backing field for NextNumericID property
         /// </summary>
+        [Copy(CopyBehaviour.COPY)]
         private long _NextNumericID = 1;
 
         /// <summary>

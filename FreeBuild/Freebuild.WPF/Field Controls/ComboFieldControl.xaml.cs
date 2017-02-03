@@ -1,4 +1,6 @@
-﻿using FreeBuild.UI;
+﻿using FreeBuild.Base;
+using FreeBuild.Rendering;
+using FreeBuild.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -95,14 +97,32 @@ namespace FreeBuild.WPF
             else
             {
                 AutoUIComboBoxAttribute cBA = property.GetCustomAttribute<AutoUIComboBoxAttribute>();
-                string textTemplate = "Name";
+                
                 if (cBA != null)
                 {
                     SetBinding(ItemsSourceProperty, cBA.ItemsSource);
                 }
                 ItemTemplate = new DataTemplate();
                 FrameworkElementFactory tbFactory = new FrameworkElementFactory(typeof(TextBlock));
-                tbFactory.SetBinding(TextBlock.TextProperty, new Binding(textTemplate));
+
+                if (typeof(INamed).IsAssignableFrom(property.PropertyType))
+                {
+                    string textTemplate = "Name";
+                    tbFactory.SetBinding(TextBlock.TextProperty, new Binding(textTemplate));
+                }
+                else
+                {
+                    tbFactory.SetBinding(TextBlock.TextProperty, new Binding());
+                    if (typeof(Colour).IsAssignableFrom(property.PropertyType))
+                    {
+                        Binding binding = new Binding();
+                        binding.Converter = new Converters.BrushConverter();
+                        tbFactory.SetBinding(TextBlock.BackgroundProperty, binding);
+                        tbFactory.SetBinding(TextBlock.ForegroundProperty, binding);
+                        tbFactory.SetValue(TextBlock.MinWidthProperty, 75d);
+                    }
+                }
+
                 ItemTemplate.VisualTree = tbFactory;
             }
         }

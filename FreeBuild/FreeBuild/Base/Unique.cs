@@ -38,7 +38,7 @@ namespace FreeBuild.Base
         #region Properties
 
         /// <summary>
-        /// Internal backing member for GUID property
+        /// Private backing field for GUID property
         /// </summary>
         [Copy(CopyBehaviour.DO_NOT_COPY)]
         private Guid _GUID = Guid.NewGuid();

@@ -31,6 +31,7 @@ namespace FreeBuild.Actions
     /// This is used during object history storage to determine the object's creation circumstances
     /// and can be used to update that object in future.
     /// </summary>
+    [Serializable]
     public class ExecutionInfo
     {
         /// <summary>

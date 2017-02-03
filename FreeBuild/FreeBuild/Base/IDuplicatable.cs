@@ -65,7 +65,7 @@ namespace FreeBuild.Base
         /// </summary>
         /// <param name="objectMap">The map of original objects to duplicated objects.</param>
         /// <returns>A duplicated copy of this object</returns>
-        public static T Duplicate<T>(this T obj, ref Dictionary<object, object> objectMap) where T : IDuplicatable
+        public static T Duplicate<T>(this T obj, ref Dictionary<object, object> objectMap, CopyBehaviour itemsBehaviour = CopyBehaviour.COPY) where T : IDuplicatable
         {
             if (obj.GetType().HasParameterlessConstructor())
             {
@@ -73,16 +73,21 @@ namespace FreeBuild.Base
                 if (objectMap == null) objectMap = new Dictionary<object, object>();
                 objectMap[obj] = clone; //Store the original-clone relationship in the map
                 clone.CopyFieldsFrom(obj, ref objectMap);
-                if (obj.GetType().IsEnumerable())
+                if (obj.GetType().IsCollection() && itemsBehaviour != CopyBehaviour.DO_NOT_COPY)
                 {
-                    IEnumerable source = (IEnumerable)obj;
-                    IEnumerable target = (IEnumerable)clone;
+                    ICollection source = (ICollection)obj;
+                    ICollection target = (ICollection)clone;
                     foreach (object item in source)
                     {
-
+                        CopyBehaviour behaviour = itemsBehaviour;
+                        object value = ValueToAssign(item, ref itemsBehaviour, itemsBehaviour, ref objectMap);
+                        if (target is IList)
+                        {
+                            ((IList)target).Add(value);
+                        }
+                        // TODO: Other types of collections?
                     }
                 }
-                //TODO: Deal with duplicating collections
 
                 return clone;
             }
@@ -134,7 +139,9 @@ namespace FreeBuild.Base
         /// be successfully transferred.
         /// The CopyAttribute will be used to determine the correct behaviour when copying fields
         /// accross - first on the field itself and then, if not set, on the type of the field.
-        /// If neither of these is specified the default is to do a 'shallow' or reference-copy.
+        /// If neither of these is specified the default is to do a 'shallow' or reference-copy on all objects
+        /// except for collection type, where the default is to not copy any fields *unless* they are
+        /// specifically annotated.
         /// </summary>
         /// <param name="source">The object to copy fields from.</param>
         /// <param name="objectMap">A map of original objects to their copies.  Used when duplicating multiple
@@ -158,43 +165,67 @@ namespace FreeBuild.Base
                     if (copyAtt == null) copyAtt = sourceField.FieldType.GetCustomAttribute(typeof(CopyAttribute)) as CopyAttribute;
 
                     CopyBehaviour behaviour = CopyBehaviour.COPY;
-                    if (copyAtt != null) behaviour = copyAtt.Behaviour;
+                    CopyBehaviour itemsBehaviour = CopyBehaviour.COPY;
+                    if (sourceType.IsCollection())
+                    {
+                        behaviour = CopyBehaviour.DO_NOT_COPY; //By default, do not copy fields from collection types
+                    }
+                    if (copyAtt != null)
+                    {
+                        behaviour = copyAtt.Behaviour;
+                        if (copyAtt is CollectionCopyAttribute)
+                        {
+                            itemsBehaviour = ((CollectionCopyAttribute)copyAtt).ItemsBehaviour;
+                        }
+                    }
+
                     if (behaviour != CopyBehaviour.DO_NOT_COPY)
                     {
                         object value = sourceField.GetValue(source);
-                        if (behaviour == CopyBehaviour.MAP ||
-                            behaviour == CopyBehaviour.MAP_OR_COPY ||
-                            behaviour == CopyBehaviour.MAP_OR_DUPLICATE)
-                        {
-                            //Attempt to map:
-                            if (objectMap != null && value != null && objectMap.ContainsKey(value))
-                            {
-                                value = objectMap[value];
-                                targetField.SetValue(target, value);
-                            }
-                            //Fallback behaviours on mapping fail:
-                            else if (behaviour == CopyBehaviour.MAP_OR_COPY) behaviour = CopyBehaviour.COPY;
-                            else if (behaviour == CopyBehaviour.MAP_OR_DUPLICATE) behaviour = CopyBehaviour.DUPLICATE;
-                            else behaviour = CopyBehaviour.DO_NOT_COPY;
-                        }
-                        //Non-mapping behaviours:
-                        if (behaviour == CopyBehaviour.DUPLICATE)
-                        {
-                            if (value is IDuplicatable)
-                            {
-                                IDuplicatable dupObj = value as IDuplicatable;
-                                value = dupObj.Duplicate(ref objectMap);
-                                targetField.SetValue(target, value);
-                            }
-                            else behaviour = CopyBehaviour.COPY;
-                        }
-                        if (behaviour == CopyBehaviour.COPY)
-                        {
-                            targetField.SetValue(target, value);
-                        }
+                        value = ValueToAssign(value, ref behaviour, itemsBehaviour, ref objectMap);
+                        if (behaviour != CopyBehaviour.DO_NOT_COPY) targetField.SetValue(target, value);
                     }
                 }
             }
         }
+
+        /// <summary>
+        /// Convert the value extracted from the source object into an equivalent value suitable
+        /// to be assigned to the target property, based on the copying behaviour assigned
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="behaviour"></param>
+        /// <param name="objectMap"></param>
+        /// <returns></returns>
+        private static object ValueToAssign(object value, ref CopyBehaviour behaviour, 
+            CopyBehaviour itemsBehaviour, ref Dictionary<object, object> objectMap)
+        {
+            if (behaviour == CopyBehaviour.MAP ||
+                            behaviour == CopyBehaviour.MAP_OR_COPY ||
+                            behaviour == CopyBehaviour.MAP_OR_DUPLICATE)
+            {
+                //Attempt to map:
+                if (objectMap != null && value != null && objectMap.ContainsKey(value))
+                {
+                    value = objectMap[value];
+                }
+                //Fallback behaviours on mapping fail:
+                else if (behaviour == CopyBehaviour.MAP_OR_COPY) behaviour = CopyBehaviour.COPY;
+                else if (behaviour == CopyBehaviour.MAP_OR_DUPLICATE) behaviour = CopyBehaviour.DUPLICATE;
+                else behaviour = CopyBehaviour.DO_NOT_COPY;
+            }
+            //Non-mapping behaviours:
+            if (behaviour == CopyBehaviour.DUPLICATE)
+            {
+                if (value is IDuplicatable)
+                {
+                    IDuplicatable dupObj = value as IDuplicatable;
+                    value = dupObj.Duplicate(ref objectMap, itemsBehaviour);
+                }
+                else behaviour = CopyBehaviour.COPY;
+            }
+            return value;
+        }
+        
     }
 }

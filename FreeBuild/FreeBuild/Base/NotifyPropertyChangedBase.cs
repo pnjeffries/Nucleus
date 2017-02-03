@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Events;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -43,10 +44,36 @@ namespace FreeBuild.Base
         /// <summary>
         /// Raise a PropertyChanged event for the specified property name
         /// </summary>
-        /// <param name="propertyName"></param>
+        /// <param name="propertyName">The name of the property</param>
         protected virtual void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        /// <summary>
+        /// Raise a PropertyChanged event for the specified property name,
+        /// utilising an extended version of the event arguments that includes the old
+        /// and new values of the property.
+        /// </summary>
+        /// <param name="propertyName">The name of the property</param>
+        /// <param name="oldValue">The original value of the property</param>
+        /// <param name="newValue">The new value of the property</param>
+        protected virtual void NotifyPropertyChanged(string propertyName, object oldValue, object newValue)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgsExtended(propertyName, oldValue, newValue));
+        }
+
+        /// <summary>
+        /// Raise a PropertyChanged event for the specified property name,
+        /// utilising an extended version of the event arguments that includes the old
+        /// and new values of the property.
+        /// </summary>
+        /// <param name="propertyName">The name of the property</param>
+        /// <param name="oldValue">The original value of the property</param>
+        /// <param name="newValue">The new value of the property</param>
+        protected virtual void NotifyPropertyChanged(ref string propertyName, ref object oldValue, ref object newValue)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgsExtended(propertyName, oldValue, newValue));
         }
 
         /// <summary>
@@ -71,6 +98,26 @@ namespace FreeBuild.Base
         protected void RaiseEvent(PropertyChangedEventHandler handler, object sender, PropertyChangedEventArgs args)
         {
             handler?.Invoke(sender, args);
+        }
+
+        /// <summary>
+        /// Helper method to modify the backing field of a property and perform associated activities
+        /// on a single line.
+        /// In addition to updating the specified backing field a PropertyChanged event will be
+        /// raised using the extended argument set that includes both previous and new values of
+        /// the property.  This can be used as the basis for undo operations.
+        /// </summary>
+        /// <typeparam name="T">The type of the property</typeparam>
+        /// <param name="backingField">The backing field to be changed</param>
+        /// <param name="newValue">The new value to be assigned</param>
+        /// <param name="propertyName">The name of the property</param>
+        /// <param name="notifyIfSame">If false (default), a property changed notification will not be raised
+        /// unless the old and new values of the property are not equal.  If true, it will be raised regardless.</param>
+        protected void ChangeProperty<T>(ref T backingField, T newValue, string propertyName, bool notifyIfSame = false)
+        {
+            T oldValue = backingField;
+            backingField = newValue;
+            if (notifyIfSame || !Equals(oldValue, newValue)) NotifyPropertyChanged(propertyName, oldValue, newValue);
         }
     }
 }

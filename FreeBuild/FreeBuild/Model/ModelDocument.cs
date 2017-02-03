@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using FreeBuild.Base;
+using FreeBuild.Conversion;
 using FreeBuild.IO;
 using System;
 using System.Collections.Generic;
@@ -37,9 +38,29 @@ namespace FreeBuild.Model
         #region Properties
 
         /// <summary>
-        /// The model contained within this document
+        /// The model contained within this document.
         /// </summary>
         public Model Model { get; protected set; }
+
+        /// <summary>
+        /// Private backing field for IDMappings property
+        /// </summary>
+        private IDMappingsDictionary _IDMappings = null;
+
+        /// <summary>
+        /// A record of the ID mapping tables generated when reading this document from or
+        /// writing it to files of other data types.
+        /// This data can be used to synchronise with other data files and read/write data in a
+        /// consistent form.
+        /// </summary>
+        public IDMappingsDictionary IDMappings
+        {
+            get
+            {
+                if (_IDMappings == null) _IDMappings = new IDMappingsDictionary();
+                return _IDMappings;
+            }
+        }
 
         #endregion
 

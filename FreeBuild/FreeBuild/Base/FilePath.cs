@@ -35,6 +35,8 @@ namespace FreeBuild.Base
     /// much of the same functionality as the System.IO.Path
     /// and File classes but in a non-static way that is 
     /// quicker to use and easier to bind to.
+    /// Can be used interchangably with file paths stored
+    /// as strings.
     /// </summary>
     [Serializable]
     public struct FilePath
@@ -55,6 +57,14 @@ namespace FreeBuild.Base
         }
 
         /// <summary>
+        /// Is the path set?  (i.e. is it non-null?)
+        /// </summary>
+        public bool IsSet
+        {
+            get { return Path != null; }
+        }
+
+        /// <summary>
         /// Does the file that this path points to exist?
         /// </summary>
         public bool Exists { get { return File.Exists(Path); } }
@@ -67,7 +77,8 @@ namespace FreeBuild.Base
         public string FileName { get { return System.IO.Path.GetFileName(Path); } }
 
         /// <summary>
-        /// Gets the extension of this filepath
+        /// Gets the extension of this filepath.
+        /// Includes the preceding '.'.
         /// </summary>
         public string Extension { get { return System.IO.Path.GetExtension(Path); } }
 

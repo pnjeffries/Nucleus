@@ -140,6 +140,27 @@ namespace FreeBuild.Model
             }
         }
 
+        /// <summary>
+        /// Private backing member variable for the Depth property
+        /// </summary>
+        private double _RootRadius;
+
+        /// <summary>
+        /// The root radius of the fillet between web and flange of this profile
+        /// </summary>
+        [Dimension(DimensionType.Distance)]
+        public double RootRadius
+        {
+            get { return _RootRadius; }
+            set
+            {
+                _RootRadius = value;
+                CatalogueName = null;
+                InvalidateCachedGeometry();
+                NotifyPropertyChanged("RootRadius");
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -156,12 +177,13 @@ namespace FreeBuild.Model
         /// <param name="width"></param>
         /// <param name="flangeThickness"></param>
         /// <param name="webThickness"></param>
-        protected LetterProfile(double depth, double width, double flangeThickness, double webThickness) : base()
+        protected LetterProfile(double depth, double width, double flangeThickness, double webThickness, double rootRadius) : base()
         {
             Depth = depth;
             Width = width;
             FlangeThickness = flangeThickness;
             WebThickness = webThickness;
+            RootRadius = rootRadius;
         }
 
 

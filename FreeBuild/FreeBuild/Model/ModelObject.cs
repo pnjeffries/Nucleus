@@ -191,6 +191,18 @@ namespace FreeBuild.Model
             base.NotifyPropertyChanged(propertyName);
         }
 
+        /// <summary>
+        /// Raise a PropertyChanged event for the specified property name
+        /// with extended arguments.
+        /// Will also update the stored last modification time.
+        /// </summary>
+        /// <param name="propertyName"></param>
+        protected override void NotifyPropertyChanged(string propertyName, object oldValue, object newValue)
+        {
+            _Modified = DateTime.UtcNow;
+            base.NotifyPropertyChanged(propertyName, oldValue, newValue);
+        }
+
         #endregion
 
     }

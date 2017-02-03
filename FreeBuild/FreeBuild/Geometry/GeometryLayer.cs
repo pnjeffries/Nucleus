@@ -39,6 +39,7 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Private backing field for the Name property
         /// </summary>
+        [Copy(CopyBehaviour.COPY)]
         private string _Name;
 
         /// <summary>
@@ -57,6 +58,7 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Private backing field for the Visible property
         /// </summary>
+        [Copy(CopyBehaviour.COPY)]
         private bool _Visible = true;
 
         /// <summary>
@@ -75,6 +77,7 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Private backing field for the Brush property
         /// </summary>
+        [Copy(CopyBehaviour.DUPLICATE)]
         private DisplayBrush _Brush = ColourBrush.Black;
 
         /// <summary>
@@ -94,6 +97,7 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Private backing field for the Tag property
         /// </summary>
+        [Copy(CopyBehaviour.COPY)]
         private string _Tag = null;
 
         /// <summary>

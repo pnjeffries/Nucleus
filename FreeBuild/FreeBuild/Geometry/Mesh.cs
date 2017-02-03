@@ -49,11 +49,16 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Private backing field for Vertices collection
+        /// </summary>
+        private VertexCollection _Vertices;
+
+        /// <summary>
         /// The collection of vertices which are used to define the geometry of this shape.
         /// The mesh may contain as many vertices as you like, with the connecting topology
         /// described by the Faces collection.
         /// </summary>
-        public override VertexCollection Vertices { get; }
+        public override VertexCollection Vertices { get { return _Vertices; } }
 
         /// <summary>
         /// Private backing field for Faces property
@@ -81,7 +86,7 @@ namespace FreeBuild.Geometry
         /// </summary>
         public Mesh()
         {
-            Vertices = new VertexCollection(this);
+            _Vertices = new VertexCollection(this);
         }
 
         /// <summary>

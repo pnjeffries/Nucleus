@@ -36,30 +36,6 @@ namespace FreeBuild.Model
     [Serializable]
     public class SymmetricIProfile : LetterProfile
     {
-        #region Properties
-
-        /// <summary>
-        /// Private backing member variable for the Depth property
-        /// </summary>
-        private double _RootRadius;
-
-        /// <summary>
-        /// The root radius of the fillet between web and flange of this profile
-        /// </summary>
-        [Dimension(DimensionType.Distance)]
-        public double RootRadius
-        {
-            get { return _RootRadius; }
-            set
-            {
-                _RootRadius = value;
-                CatalogueName = null;
-                InvalidateCachedGeometry();
-                NotifyPropertyChanged("RootRadius");
-            }
-        }
-
-        #endregion
 
         #region Constructors
 
@@ -77,10 +53,7 @@ namespace FreeBuild.Model
         /// <param name="webThickness">The thickness of the web</param>
         /// <param name="rootRadius">The fillet root radius between web and flange</param>
         public SymmetricIProfile(double depth, double width, double flangeThickness, double webThickness, double rootRadius = 0)
-            : base(depth, width, flangeThickness, webThickness)
-        {
-            RootRadius = rootRadius;
-        }
+            : base(depth, width, flangeThickness, webThickness, rootRadius) { }
 
         #endregion
 

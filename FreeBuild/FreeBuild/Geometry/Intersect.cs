@@ -251,6 +251,62 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Find the section(s) of a line which lie(s) inside the specified polygon
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="polygon"></param>
+        /// <returns></returns>
+        public static CurveCollection LineInPolygonXY(Line line, IList<Vertex> polygon)
+        {
+            CurveCollection result = new CurveCollection();
+            double tolerance = Tolerance.Geometric;
+            var intersections = new SortedList<double, Vector>();
+            
+            Vector ptL = line.StartPoint;
+            Vector vL = line.EndPoint - ptL;
+
+            for (int i = 0; i < polygon.Count; i++) // Loop through polygon's edges
+            {
+                Vertex vP0 = polygon[i];
+                Vertex vP1 = polygon.GetWrapped(i + 1);
+                Vector ptP = vP0.Position;
+                Vector vP = vP1.Position - ptP;
+                if (!vP.IsZero())
+                {
+                    double t0 = 0;
+                    double t1 = 0;
+                    Vector iPt = LineLineXY(ptL, vL, ptP, vP, ref t0, ref t1); // Find infinite line intersection
+                    if (iPt.IsValid() && t0 >= -tolerance && t0 <= 1 + tolerance && t1 >= -tolerance && t1 <= 1 + tolerance)
+                    {
+                        if (intersections.ContainsKey(t0)) intersections.Remove(t0); //if we have two intersections at the same point ignore both of them!
+                        else intersections.Add(t0, iPt);
+                    }
+                }
+            }
+
+            int j = 0;
+            if (polygon.PolygonContainmentXY(line.StartPoint))
+            {
+                if (intersections.Count == 0) result.Add(line); // Input line is wholly inside polygon
+                else
+                {
+                    result.Add(new Line(line.StartPoint, intersections.Values[0]));
+                    j += 1;
+                }
+            }
+            for (int i = j; i < intersections.Count; i += 2)
+            {
+                Vector endPt;
+                if (i + 1 < intersections.Count) endPt = intersections.Values[i + 1];
+                else endPt = line.EndPoint;
+
+                result.Add(new Line(intersections.Values[i], endPt));
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Find the overlapping region(s) between two polygons, represented as sets of vertices.
         /// Uses an algorithm similar to that presented in Efficient Clipping of Arbitrary Polygons
         /// by Gunter Greiner and Kai Hormann: http://davis.wpi.edu/~matt/courses/clipping/.

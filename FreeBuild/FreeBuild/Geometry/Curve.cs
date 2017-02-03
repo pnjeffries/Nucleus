@@ -292,7 +292,7 @@ namespace FreeBuild.Geometry
         /// <returns>The end vertex of the given segment, if it exists.  Else null.</returns>
         public virtual Vertex SegmentEnd(int index)
         {
-            if (Closed && index == Vertices.Count) return Start;
+            if (Closed && index == Vertices.Count - 1) return Start;
             else if (index < Vertices.Count - 1) return Vertices[index + 1];
             else return null;
         }

@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="DXFReader.cs" />
     <Compile Include="DXFtoFB.cs" />
+    <Compile Include="DXFWriter.cs" />
     <Compile Include="FBtoDXF.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

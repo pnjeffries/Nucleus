@@ -88,12 +88,13 @@ namespace FreeBuild.Geometry
         /// <param name="text">The text</param>
         /// <param name="textSize">The height of the text</param>
         public Label(Vector position, string text, double textSize = 1.0, 
-            VerticalSetOut verticalSetOut = VerticalSetOut.Top, HorizontalSetOut horizontalSetOut = HorizontalSetOut.Left) : base(position)
+            VerticalSetOut verticalSetOut = VerticalSetOut.Top, HorizontalSetOut horizontalSetOut = HorizontalSetOut.Left, GeometryAttributes attributes = null) : base(position)
         {
             Text = text;
             TextSize = textSize;
             VerticalSetOut = verticalSetOut;
             HorizontalSetOut = horizontalSetOut;
+            Attributes = attributes;
         }
 
         #endregion

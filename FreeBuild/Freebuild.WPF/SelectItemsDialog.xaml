@@ -1,0 +1,32 @@
+﻿<Window x:Class="FreeBuild.WPF.SelectItemsDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FreeBuild.WPF"
+             xmlns:fb="clr-namespace:FreeBuild.Base;assembly=FreeBuild"
+             mc:Ignorable="d" 
+             Height="240"
+             Width="160" 
+             WindowStyle="ToolWindow" ShowInTaskbar="False" Topmost="True" WindowStartupLocation="CenterScreen"
+             >
+    <Grid Name="LayoutRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ListBox Name="ListBox"
+                 ItemsSource="{Binding ItemsSource}"
+                 SelectionMode="{Binding SelectionMode}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Path=Name}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <UniformGrid Grid.Row="1" Columns="2">
+            <Button IsDefault="True" Click="OK_Click">OK</Button>
+            <Button IsCancel="True">Cancel</Button>
+        </UniformGrid>
+    </Grid>
+</Window>

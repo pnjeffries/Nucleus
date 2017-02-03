@@ -117,7 +117,7 @@ namespace FreeBuild.WPF
         /// <summary>
         /// The default diameter of points drawn on this canvas
         /// </summary>
-        public double PointDiameter { get; set; } = 0.25;
+        public double PointDiameter { get; set; } = 0.3;
 
         /// <summary>
         /// The default brush used to fill closed regions
@@ -165,126 +165,134 @@ namespace FreeBuild.WPF
         /// <param name="shape"></param>
         public void AddContents(VertexGeometry shape)
         {
-                if (shape is Curve)
+            if (shape is Curve)
+            {
+                Curve crv = (Curve)shape;
+                PathGeometry pathGeo = new PathGeometry();
+                pathGeo.Figures.Add(FBtoWPF.Convert(crv));
+
+                Path path = new Path();
+                path.DataContext = this;
+                if (crv.Attributes == null || crv.Attributes.Brush == null)
                 {
-                    Curve crv = (Curve)shape;
-                    PathGeometry pathGeo = new PathGeometry();
-                    pathGeo.Figures.Add(FBtoWPF.Convert(crv));
-
-                    Path path = new Path();
-                    path.DataContext = this;
-                    if (crv.Attributes == null || crv.Attributes.Brush == null)
-                    {
-                        path.Stroke = DefaultBrush;
-                    }
-                    else path.Stroke = FBtoWPF.Convert(crv.Attributes.Brush);
-                    path.SetBinding(Path.StrokeThicknessProperty, new Binding("CurveThickness"));
-
-                    //path.StrokeThickness = CurveThickness * scaleFactor;
-
-                    path.Data = pathGeo;
-                    path.StrokeLineJoin = PenLineJoin.Round;
-
-                    if (crv.Closed && FillBrush != null) path.Fill = FillBrush;
-                    //fillBrush = null;
-
-                    Children.Add(path);
+                    path.Stroke = DefaultBrush;
                 }
-                else if (shape is PlanarRegion)
+                else path.Stroke = FBtoWPF.Convert(crv.Attributes.Brush);
+                path.SetBinding(Path.StrokeThicknessProperty, new Binding("CurveThickness"));
+
+                //path.StrokeThickness = CurveThickness * scaleFactor;
+
+                path.Data = pathGeo;
+                path.StrokeLineJoin = PenLineJoin.Round;
+
+                if (crv.Closed && FillBrush != null) path.Fill = FillBrush;
+                //fillBrush = null;
+
+                path.Tag = shape;
+
+                Children.Add(path);
+            }
+            else if (shape is PlanarRegion)
+            {
+                PlanarRegion reg = (PlanarRegion)shape;
+                Curve perimeter = reg.Perimeter;
+                CurveCollection voids = reg.Voids;
+
+                PathGeometry perimeterPath = new PathGeometry();
+                perimeterPath.Figures.Add(FBtoWPF.Convert(perimeter));
+
+                CombinedGeometry cg = new CombinedGeometry();
+                cg.GeometryCombineMode = GeometryCombineMode.Exclude;
+                cg.Geometry1 = perimeterPath;
+
+                if (voids != null && voids.Count > 0)
                 {
-                    PlanarRegion reg = (PlanarRegion)shape;
-                    Curve perimeter = reg.Perimeter;
-                    CurveCollection voids = reg.Voids;
-
-                    PathGeometry perimeterPath = new PathGeometry();
-                    perimeterPath.Figures.Add(FBtoWPF.Convert(perimeter));
-
-                    CombinedGeometry cg = new CombinedGeometry();
-                    cg.GeometryCombineMode = GeometryCombineMode.Exclude;
-                    cg.Geometry1 = perimeterPath;
-
-                    if (voids != null && voids.Count > 0)
+                    PathGeometry inside = new PathGeometry();
+                    foreach (Curve vCrv in voids)
                     {
-                        PathGeometry inside = new PathGeometry();
-                        foreach (Curve vCrv in voids)
-                        {
-                            inside.Figures.Add(FBtoWPF.Convert(vCrv));
-                        }
-                        cg.Geometry2 = inside;
+                        inside.Figures.Add(FBtoWPF.Convert(vCrv));
                     }
-
-                    Path path = new Path();
-                    if (reg.Attributes == null || reg.Attributes.Brush == null)
-                    {
-                        path.Fill = DefaultBrush;
-                    }
-                    else path.Fill = FBtoWPF.Convert(reg.Attributes.Brush, 192);
-                    //path.Stroke = Brushes.Black;
-                    //path.StrokeThickness = 0.01;
-                    path.Data = cg;
-
-                    Children.Add(path);
+                    cg.Geometry2 = inside;
                 }
-                else if (shape is FB.Label)
+
+                Path path = new Path();
+                if (reg.Attributes == null || reg.Attributes.Brush == null)
                 {
-                    FB.Label label = (FB.Label)shape;
-
-                    TextBlock tB = new TextBlock();
-                    tB.DataContext = label;
-                    tB.Padding = new Thickness(0);
-                    tB.Text = label.Text;
-                    tB.SetBinding(TextBlock.TextProperty, new Binding("Text"));
-                    tB.FontSize = 1;//label.TextSize;
-                    tB.RenderTransform = new ScaleTransform(label.TextSize, label.TextSize);
-                    //tB.RenderTransformOrigin = new System.Windows.Point(0, 1);
-
-                    if (shape.Attributes != null && shape.Attributes.Brush != null)
-                    {
-                        tB.Foreground = FBtoWPF.Convert(shape.Attributes.Brush);
-                    }
-                    else tB.Foreground = DefaultBrush;
-
-                    FormattedText fT = new FormattedText(label.Text, CultureInfo.CurrentCulture, tB.FlowDirection,
-                        new Typeface(tB.FontFamily, tB.FontStyle, tB.FontWeight, tB.FontStretch), 1, tB.Foreground);
-
-                    double xOffset;
-                    if (label.HorizontalSetOut == HorizontalSetOut.Left) xOffset = 0;
-                    else if (label.HorizontalSetOut == HorizontalSetOut.Right) xOffset = fT.Width * label.TextSize;
-                    else xOffset = label.TextSize * fT.Width / 2;
-
-                    double yOffset;
-                    if (label.VerticalSetOut == VerticalSetOut.Top) yOffset = 0;
-                    else if (label.VerticalSetOut == VerticalSetOut.Bottom) yOffset = fT.Height * label.TextSize;
-                    else yOffset = label.TextSize * fT.Height / 2;
-
-                    SetLeft(tB, label.Position.X - xOffset);
-                    SetTop(tB, -label.Position.Y - yOffset);
-
-                    Children.Add(tB);
+                    path.Fill = DefaultBrush;
                 }
-                else if (shape is Cloud || shape is FB.Point)
+                else path.Fill = FBtoWPF.Convert(reg.Attributes.Brush, 192);
+                //path.Stroke = Brushes.Black;
+                //path.StrokeThickness = 0.01;
+                path.Data = cg;
+
+                path.Tag = shape;
+
+                Children.Add(path);
+            }
+            else if (shape is FB.Label)
+            {
+                FB.Label label = (FB.Label)shape;
+
+                TextBlock tB = new TextBlock();
+                tB.DataContext = label;
+                tB.Padding = new Thickness(0);
+                tB.Text = label.Text;
+                tB.SetBinding(TextBlock.TextProperty, new Binding("Text"));
+                tB.FontSize = 1;//label.TextSize;
+                tB.RenderTransform = new ScaleTransform(label.TextSize, label.TextSize);
+                //tB.RenderTransformOrigin = new System.Windows.Point(0, 1);
+
+                if (shape.Attributes != null && shape.Attributes.Brush != null)
                 {
-                    Brush pointBrush = DefaultBrush;
-                    if (shape.Attributes?.Brush != null)
-                    {
-                        pointBrush = FBtoWPF.Convert(shape.Attributes.Brush);
-                    }
-
-                    foreach (Vertex v in shape.Vertices)
-                    {
-                        double diameter = PointDiameter;
-                        Ellipse ellipse = new Ellipse();
-                        ellipse.Width = diameter;
-                        ellipse.Height = diameter;
-                        ellipse.Fill = pointBrush;
-
-                        SetLeft(ellipse, v.X - diameter / 2.0);
-                        SetTop(ellipse, -v.Y - diameter / 2.0);
-
-                        Children.Add(ellipse);
-                    }
+                    tB.Foreground = FBtoWPF.Convert(shape.Attributes.Brush);
                 }
-            
+                else tB.Foreground = DefaultBrush;
+
+                FormattedText fT = new FormattedText(label.Text, CultureInfo.CurrentCulture, tB.FlowDirection,
+                    new Typeface(tB.FontFamily, tB.FontStyle, tB.FontWeight, tB.FontStretch), 1, tB.Foreground);
+
+                double xOffset;
+                if (label.HorizontalSetOut == HorizontalSetOut.Left) xOffset = 0;
+                else if (label.HorizontalSetOut == HorizontalSetOut.Right) xOffset = fT.Width * label.TextSize;
+                else xOffset = label.TextSize * fT.Width / 2;
+
+                double yOffset;
+                if (label.VerticalSetOut == VerticalSetOut.Top) yOffset = 0;
+                else if (label.VerticalSetOut == VerticalSetOut.Bottom) yOffset = fT.Height * label.TextSize;
+                else yOffset = label.TextSize * fT.Height / 2;
+
+                SetLeft(tB, label.Position.X - xOffset);
+                SetTop(tB, -label.Position.Y - yOffset);
+
+                tB.Tag = shape;
+
+                Children.Add(tB);
+            }
+            else if (shape is Cloud || shape is FB.Point)
+            {
+                Brush pointBrush = DefaultBrush;
+                if (shape.Attributes?.Brush != null)
+                {
+                    pointBrush = FBtoWPF.Convert(shape.Attributes.Brush);
+                }
+
+                foreach (Vertex v in shape.Vertices)
+                {
+                    double diameter = PointDiameter;
+                    Ellipse ellipse = new Ellipse();
+                    ellipse.Width = diameter;
+                    ellipse.Height = diameter;
+                    ellipse.Fill = pointBrush;
+
+                    SetLeft(ellipse, v.X - diameter / 2.0);
+                    SetTop(ellipse, -v.Y - diameter / 2.0);
+
+                    ellipse.Tag = shape;
+
+                    Children.Add(ellipse);
+                }
+            }
+
         }
 
         /// <summary>

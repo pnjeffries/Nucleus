@@ -145,16 +145,16 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Default constructor
         /// </summary>
-        public PolyCurve()
+        public PolyCurve(GeometryAttributes attributes = null)
         {
-
+            Attributes = attributes;
         }
 
         /// <summary>
         /// Curve constructor.  Initialises a polycurve starting with the specifed curve
         /// </summary>
         /// <param name="curve"></param>
-        public PolyCurve(Curve curve)
+        public PolyCurve(Curve curve, GeometryAttributes attributes = null) : this(attributes)
         {
             SubCurves.Add(curve);
         }
@@ -163,7 +163,7 @@ namespace FreeBuild.Geometry
         /// Initialises a new polycurve 
         /// </summary>
         /// <param name="curves"></param>
-        public PolyCurve(IEnumerable<Curve> curves)
+        public PolyCurve(IEnumerable<Curve> curves, GeometryAttributes attributes = null) : this(attributes)
         {
             foreach (Curve crv in curves)
             {

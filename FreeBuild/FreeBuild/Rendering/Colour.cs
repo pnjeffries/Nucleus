@@ -61,10 +61,47 @@ namespace FreeBuild.Rendering
         public static readonly Colour Transparent = new Colour(0, 0, 0, 0);
 
         /// <summary> The shade of blue used in the Ramboll logo </summary>
-        public static readonly Colour RambollBlue = new Colour(0, 157, 244);
+        public static readonly Colour RambollCyan = new Colour(0, 157, 244);
+
+        /// <summary> The shade of dark grey used in the Ramboll standard palette </summary>
+        public static readonly Colour RambollDarkGrey = new Colour(121, 119, 102);
+
+        /// <summary> The shade of light blue used in the Ramboll standard palette </summary>
+        public static readonly Colour RambollLightBlue = new Colour(167, 211, 245);
+
+        /// <summary> The shade of light grey used in the Ramboll standard palette </summary>
+        public static readonly Colour RambollLightGrey = new Colour(208, 207, 197);
+
+        /// <summary> The shade of lime green used in the Ramboll standard palette </summary>
+        public static readonly Colour RambollLimeGreen = new Colour(161, 191, 54);
+
+        /// <summary> The shade of green used in the Ramboll standard palette </summary>
+        public static readonly Colour RambollGreen = new Colour(92, 165, 81);
+
+        /// <summary> The shade of magenta used in the Ramboll standard palette </summary>
+        public static readonly Colour RambollMagenta = new Colour(196, 0, 121);
+
+        /// <summary> The shade of magenta used in the Ramboll standard palette </summary>
+        public static readonly Colour RambollWarmRed = new Colour(198, 52, 24);
 
         /// <summary> The shade of orange used in the Salamander logo </summary>
         public static readonly Colour SalamanderOrange = new Colour(255, 97, 47);
+
+        /// <summary>
+        /// The standard Ramboll colour palette
+        /// </summary>
+        public static readonly Colour[] RambollPalette
+            = new Colour[]{
+                RambollLightBlue,
+                RambollLightGrey,
+                RambollLimeGreen,
+                RambollGreen,
+                RambollMagenta,
+                RambollWarmRed,
+                RambollCyan,
+                RambollDarkGrey,
+                Black};
+
 
         #endregion
 
@@ -225,6 +262,17 @@ namespace FreeBuild.Rendering
         }
 
         /// <summary>
+        /// Invert this colour, subtracting its RGB values from white
+        /// but keeping the same alpha value.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public Colour Invert(Colour other)
+        {
+            return new Rendering.Colour(A, 255 - R, 255 - G, 255 - B);
+        }
+
+        /// <summary>
         /// Convert this colour to an array of bytes
         /// </summary>
         /// <returns></returns>
@@ -240,6 +288,69 @@ namespace FreeBuild.Rendering
         public override string ToString()
         {
             return "#" + BitConverter.ToString(ToByteArray()).Replace("-", "");
+        }
+
+        #endregion
+
+        #region Static Methods
+
+        /// <summary>
+        /// Create a colour from hue, saturation and value
+        /// </summary>
+        /// <param name="h">Hue, range 0-360</param>
+        /// <param name="s">Saturation, range 0-255</param>
+        /// <param name="v">Value, range 0-255</param>
+        /// <param name="a">Alpha value, range 0-255</param>
+        /// <returns></returns>
+        public static Colour FromHSV(double h, double s, double v, byte a = 255)
+        {
+            // Normalise values
+            s /= 255;
+            v /= 255;
+            while (h < 0) h += 360;
+            while (h > 360) h -= 360;
+
+            // Set up intermediate values
+            double c = v * s;
+            double x = c * (1 - Math.Abs((h / 60) % 2 - 1));
+            double m = v - c;
+            double r = m;
+            double g = m;
+            double b = m;
+
+            // Adjust RGB values based on hue:
+            if (h < 60)
+            {
+                r += c;
+                g += x;
+            }
+            else if (h < 120)
+            {
+                r += x;
+                g += c;
+            }
+            else if (h < 180)
+            {
+                g += c;
+                b += x;
+            }
+            else if (h < 240)
+            {
+                g += x;
+                b += c;
+            }
+            else if (h < 300)
+            {
+                r += x;
+                b += c;
+            }
+            else
+            {
+                r += c;
+                b += x;
+            }
+
+            return new Colour(a, (byte)(255 * r), (byte)(255 * g), (byte)(255 * b));
         }
 
         #endregion

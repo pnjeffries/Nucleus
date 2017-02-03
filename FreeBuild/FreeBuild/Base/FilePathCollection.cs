@@ -38,6 +38,7 @@ namespace FreeBuild.Base
         /// <summary>
         /// Private backing field for MaximumStored property.
         /// </summary>
+        [Copy(CopyBehaviour.COPY)]
         private int _MaximumStored = 0;
 
         /// <summary>

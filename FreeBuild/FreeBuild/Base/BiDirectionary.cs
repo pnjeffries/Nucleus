@@ -28,11 +28,11 @@ using System.Threading.Tasks;
 namespace FreeBuild.Base
 {
     /// <summary>
-    /// A bi-directional dictionary that allows fast lookup of value by key or
-    /// of key by value
+    /// A bi-directional dictionary that stores pairs of values and allows fast
+    /// lookup of the second by the first or the first by the second.
     /// </summary>
-    /// <typeparam name="TFirst"></typeparam>
-    /// <typeparam name="TSecond"></typeparam>
+    /// <typeparam name="TFirst">The type of the first item in each pair</typeparam>
+    /// <typeparam name="TSecond">The type of the second item in each pair</typeparam>
     [Serializable]
     public class BiDirectionary<TFirst, TSecond> : IDictionary<TFirst, TSecond>
     {

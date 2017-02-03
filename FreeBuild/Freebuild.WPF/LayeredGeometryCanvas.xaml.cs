@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FB = FreeBuild.Geometry;
 
 namespace FreeBuild.WPF
 {
@@ -167,15 +168,44 @@ namespace FreeBuild.WPF
                 OverlayCanvas.Width = bBox.SizeX;
                 OverlayCanvas.Height = bBox.SizeY;
                 OverlayCanvas.RenderTransform = transform;
-                CurveThickness = bBox.MaxSize * 0.0012;
+                //CurveThickness = bBox.MaxSize * 0.0012;
             }
+        }
+
+        /// <summary>
+        /// Hit test result object used when checking which geometry this 
+        /// </summary>
+        private HitTestResult _hTR;
+
+        public VertexGeometry GeometryOver(FB.Vector point)
+        {
+            _hTR = null;
+            VisualTreeHelper.HitTest(ItemsControl,new HitTestFilterCallback(HitTestFilterCallback), new HitTestResultCallback(HitTestResultCallback), new PointHitTestParameters(FBtoWPF.Convert(point)));
+            if (_hTR != null)
+            {
+                FrameworkElement fE = _hTR.VisualHit as FrameworkElement;
+                if (fE != null && fE.Tag != null && fE.Tag is VertexGeometry)
+                {
+                    return (VertexGeometry)fE.Tag;
+                }
+            }
+            return null;
+        }
+
+        public HitTestFilterBehavior HitTestFilterCallback(DependencyObject o)
+        {
+            if (((FrameworkElement)o).Visibility == Visibility.Visible)
+                return HitTestFilterBehavior.Continue;
+            else return HitTestFilterBehavior.ContinueSkipSelfAndChildren;
+        }
+
+        public HitTestResultBehavior HitTestResultCallback(HitTestResult result)
+        {
+            _hTR = result;
+            return HitTestResultBehavior.Stop;
         }
 
         #endregion
 
-        private void HandleMouseMove(object sender, MouseEventArgs e)
-        {
-            
-        }
     }
 }

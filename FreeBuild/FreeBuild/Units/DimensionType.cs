@@ -39,13 +39,27 @@ namespace FreeBuild.Units
 
         /// <summary>
         /// A distance, or length, measurement.
+        /// Default unit: m
         /// </summary>
         Distance = 1,
 
         /// <summary>
         /// An angle or rotation measurement.
+        /// Default unit: Radians
         /// </summary>
-        Angle = 2
+        Angle = 2,
+
+        /// <summary>
+        /// A measurement of force.
+        /// Default unit: N
+        /// </summary>
+        Force = 100,
+
+        /// <summary>
+        /// A measurement of moments
+        /// Default unit: Nm
+        /// </summary>
+        Moments = 101,
        
         //TODO: Add more dimension types as and when needed
     }

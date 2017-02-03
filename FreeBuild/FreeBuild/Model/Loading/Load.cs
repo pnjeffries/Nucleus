@@ -40,20 +40,26 @@ namespace FreeBuild.Model
     /// Generic abstract base class for objects which represent a load of some kind applied to the model
     /// to be considered during analysis
     /// </summary>
-    /// <typeparam name="TAppliedTo">The type of object that this load applies to</typeparam>
-    /// <typeparam name="TAppliedToSet">The type of collection of TAppliedTo to use to store</typeparam>
+    /// <typeparam name="TApplication">The type of application rule applicable to this load</typeparam>
     [Serializable]
-    public abstract class Load<TAppliedTo, TAppliedToSet> : Load
-        where TAppliedTo : ModelObject
-        where TAppliedToSet : ModelObjectCollection<TAppliedTo>, new()
+    public abstract class Load<TApplication> : Load
+        where TApplication : class, ILoadApplication
     {
-        #region Properties
+        /// <summary>
+        /// Private backing field for AppliedTo property
+        /// </summary>
+        private LoadApplicationCollection<TApplication> _AppliedTo = null;
 
         /// <summary>
-        /// The collection of objects that this load is applied to
+        /// The set of application rules for this load
         /// </summary>
-        public TAppliedToSet AppliedTo { get; } = new TAppliedToSet();
-
-        #endregion
+        public LoadApplicationCollection<TApplication> AppliedTo
+        {
+            get
+            {
+                if (_AppliedTo == null) _AppliedTo = new LoadApplicationCollection<TApplication>();
+                return _AppliedTo;
+            }
+        }
     }
 }

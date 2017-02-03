@@ -370,7 +370,7 @@ namespace FreeBuild.Model
         {
             foreach (Element element in Elements)
             {
-                element.RegenerateNodes(options);
+                if (!element.IsDeleted) element.RegenerateNodes(options);
             }
         }
 

@@ -245,6 +245,18 @@ namespace FreeBuild.Geometry
             }
         }
 
+        /// <summary>
+        /// Flatten all vertices of this geometry to the specified Z level
+        /// </summary>
+        /// <param name="Z"></param>
+        public void Flatten(double Z)
+        {
+            foreach (Vertex v in Vertices)
+            {
+                v.Position = v.Position.WithZ(Z);
+            }
+        }
+
         #endregion
 
 

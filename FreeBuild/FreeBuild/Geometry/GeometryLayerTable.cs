@@ -48,7 +48,7 @@ namespace FreeBuild.Geometry
                     BoundingBox result = this[0].BoundingBox;
                     for (int i = 1; i < Count; i++)
                     {
-                        result.Include(this[1]);
+                        result.Include(this[i]);
                     }
                     return result;
                 }
@@ -69,6 +69,57 @@ namespace FreeBuild.Geometry
         {
             base.OnCollectionChanged();
             NotifyPropertyChanged("BoundingBox");
+        }
+
+        /// <summary>
+        /// Find and return the layer (if any) that the specified piece
+        /// of geometry is on.
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <returns>The layer the geometry is on, else null if no layer 
+        /// containing the geometry can be found</returns>
+        public GeometryLayer LayerOf(VertexGeometry geometry)
+        {
+            if (geometry.Attributes?.LayerName != null && Contains(geometry.Attributes.LayerName))
+            {
+                GeometryLayer result = this[geometry.Attributes.LayerName];
+                if (result.Contains(geometry.GUID)) return result;
+            }
+
+            foreach (GeometryLayer layer in this)
+            {
+                if (layer.Contains(geometry.GUID)) return layer;
+            }
+
+            return null; // Nothing found!
+        }
+
+        /// <summary>
+        /// Determines whether or not the layers within this table contain the
+        /// specified piece of geometry
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        public bool Contains(VertexGeometry geometry)
+        {
+            return LayerOf(geometry) != null;
+        }
+
+        /// <summary>
+        /// Get the layer with the specified name if it already exists or if
+        /// not create and return a new layer in this table with the given name
+        /// </summary>
+        /// <param name="layerName"></param>
+        /// <returns></returns>
+        public GeometryLayer GetOrCreate(string layerName)
+        {
+            if (Contains(layerName)) return this[layerName];
+            else
+            {
+                GeometryLayer result = new GeometryLayer(layerName);
+                Add(result);
+                return result;
+            }
         }
 
         #endregion

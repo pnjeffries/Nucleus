@@ -72,6 +72,8 @@ namespace FreeBuild.Model
 
         #endregion
 
+        #region Constructors
+
         /// <summary>
         /// Default constructor.  Initialises a new level situated at Z = 0.
         /// </summary>
@@ -95,5 +97,7 @@ namespace FreeBuild.Model
         {
             Name = name;
         }
+
+        #endregion
     }
 }

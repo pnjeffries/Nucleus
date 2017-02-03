@@ -43,9 +43,10 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actions\ExecutionHistory.cs" />
     <Compile Include="Actions\ExecutionInfo.cs" />
     <Compile Include="Base\Bool6D.cs" />
+    <Compile Include="Base\CollectionCopyAttribute.cs" />
+    <Compile Include="Conversion\IDMappingsDictionary.cs" />
     <Compile Include="Base\MessageRaiser.cs" />
     <Compile Include="Base\ObservablePair.cs" />
     <Compile Include="Base\SetFilter.cs" />
@@ -53,10 +54,12 @@
     <Compile Include="Conversion\ConversionContext.cs" />
     <Compile Include="Conversion\ConversionOptions.cs" />
     <Compile Include="Conversion\IDMappingTable.cs" />
+    <Compile Include="Conversion\IIDMappingTable.cs" />
     <Compile Include="Conversion\IStringConversionContext.cs" />
     <Compile Include="Conversion\ModelIDMappingTable.cs" />
     <Compile Include="Conversion\StringConversionContextBase.cs" />
     <Compile Include="Events\MessageRaisedEventArgs.cs" />
+    <Compile Include="Events\PropertyChangedEventArgsExtended.cs" />
     <Compile Include="Exceptions\MatrixException.cs" />
     <Compile Include="Exceptions\MeshConstructionException.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
@@ -85,7 +88,8 @@
     <Compile Include="Meshing\CoordinateSystemRemappingOption.cs" />
     <Compile Include="Meshing\DelaunayTriangle.cs" />
     <Compile Include="Meshing\MeshBuilder.cs" />
-    <Compile Include="Model\AreaLoad.cs" />
+    <Compile Include="Model\AngleProfile.cs" />
+    <Compile Include="Model\Loading\AreaLoad.cs" />
     <Compile Include="Model\CircularHollowProfile.cs" />
     <Compile Include="Model\CircularProfile.cs" />
     <Compile Include="Model\ElementOrientation.cs" />
@@ -93,19 +97,18 @@
     <Compile Include="Model\ElementVertex.cs" />
     <Compile Include="Model\FactoredCase.cs" />
     <Compile Include="Model\FactoredLoadCase.cs" />
+    <Compile Include="Model\Loading\ILoadApplication.cs" />
     <Compile Include="Model\IModelImporter.cs" />
     <Compile Include="DDTree\NodeDDTree.cs" />
     <Compile Include="Exceptions\GeometryException.cs" />
     <Compile Include="Extensions\DoubleExtensions.cs" />
     <Compile Include="Geometry\Angle.cs" />
     <Compile Include="Base\BiDirectionary.cs" />
-    <Compile Include="Base\ChainableBase.cs" />
     <Compile Include="Base\CopyAttribute.cs" />
     <Compile Include="Base\CopyBehaviour.cs" />
     <Compile Include="Base\EventBase.cs" />
     <Compile Include="Base\FilePath.cs" />
     <Compile Include="Base\FilePathCollection.cs" />
-    <Compile Include="Base\IChainable.cs" />
     <Compile Include="Base\IDeletable.cs" />
     <Compile Include="Base\IDuplicatable.cs" />
     <Compile Include="Base\INamed.cs" />
@@ -174,7 +177,9 @@
     <Compile Include="Model\LevelTable.cs" />
     <Compile Include="Model\LinearElement.cs" />
     <Compile Include="Model\LinearElementCollection.cs" />
-    <Compile Include="Model\Load.cs" />
+    <Compile Include="Model\Loading\Load.cs" />
+    <Compile Include="Model\Loading\LoadApplication.cs" />
+    <Compile Include="Model\Loading\LoadApplicationCollection.cs" />
     <Compile Include="Model\LoadCase.cs" />
     <Compile Include="Model\LoadCaseCollection.cs" />
     <Compile Include="Model\LoadCollection.cs" />
@@ -191,10 +196,12 @@
     <Compile Include="Model\Node.cs" />
     <Compile Include="Model\NodeCollection.cs" />
     <Compile Include="Model\NodeGenerationParameters.cs" />
+    <Compile Include="Model\NodeLoadApplication.cs" />
     <Compile Include="Model\PanelElement.cs" />
     <Compile Include="Model\NodeTable.cs" />
     <Compile Include="Model\PanelElementCollection.cs" />
     <Compile Include="Model\ParameterProfile.cs" />
+    <Compile Include="Model\PointLoad.cs" />
     <Compile Include="Model\ResultsCase.cs" />
     <Compile Include="Model\SectionProfile.cs" />
     <Compile Include="Model\RectangularHollowProfile.cs" />

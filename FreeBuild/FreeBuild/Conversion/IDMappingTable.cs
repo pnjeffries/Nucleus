@@ -33,7 +33,7 @@ namespace FreeBuild.Conversion
     /// <typeparam name="TFirstID"></typeparam>
     /// <typeparam name="TSecondID"></typeparam>
     [Serializable]
-    public class IDMappingTable<TFirstID, TSecondID> : Dictionary<string, BiDirectionary<TFirstID, TSecondID>>
+    public class IDMappingTable<TFirstID, TSecondID> : Dictionary<string, BiDirectionary<TFirstID, TSecondID>>, IIDMappingTable
     {
         #region Properties
 
@@ -63,6 +63,36 @@ namespace FreeBuild.Conversion
             get { return _SecondIDName; }
         }
 
+        private FilePath _FilePath;
+
+        /// <summary>
+        /// The path of the last file this ID mapping table applies to.
+        /// Use the LinkToFile method to populate this property and also to automatically
+        /// set the LastUsed date and time after a read or write operation.
+        /// </summary>
+        public FilePath FilePath
+        {
+            get { return _FilePath; }
+            set { _FilePath = value; }
+        }
+
+        /// <summary>
+        /// Private backing field for LastUsed property
+        /// </summary>
+        private DateTime _LastUsed = DateTime.UtcNow;
+
+        /// <summary>
+        /// The time (in Coordinated Universal Time, UTC) that this mapping table was last used to
+        /// convert to a file.  This should be set to DateTime.UtcNow immediately after a read or
+        /// write operation using this mapping has been completed.
+        /// Using the LinkToFile method will automatically set this property.
+        /// </summary>
+        public DateTime LastUsed
+        {
+            get { return _LastUsed; }
+            set { _LastUsed = value; }
+        }
+
         /// <summary>
         /// The name of the category used to store objects when no other category is specified.
         /// </summary>
@@ -86,6 +116,19 @@ namespace FreeBuild.Conversion
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Store the specified filepath and the current time
+        /// to the relevant properties in this table.
+        /// Call this method immediately after a read or write operation
+        /// using this mapping table to store a record of the file involved.
+        /// </summary>
+        /// <param name="filePath"></param>
+        public void LinkToFile(FilePath filePath)
+        {
+            FilePath = filePath;
+            LastUsed = DateTime.UtcNow;
+        }
 
         /// <summary>
         /// Determines whether this mapping table contains an entry within the second set stored
@@ -200,6 +243,17 @@ namespace FreeBuild.Conversion
         public void Add(TFirstID firstID, TSecondID secondID)
         {
             Add(DefaultCategory, firstID, secondID);
+        }
+
+        /// <summary>
+        /// Remove an entry from this mapping table
+        /// </summary>
+        /// <param name="category"></param>
+        /// <param name="firstID"></param>
+        public void Remove(string category, TFirstID firstID)
+        {
+            if (ContainsKey(category) && this[category].ContainsKey(firstID))
+                this[category].Remove(firstID);
         }
 
         #endregion

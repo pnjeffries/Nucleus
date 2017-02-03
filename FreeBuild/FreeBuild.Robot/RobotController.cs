@@ -513,21 +513,29 @@ namespace FreeBuild.Robot
             if (context.IDMap.HasSecondID(context.IDMap.NodeCategory, node.GUID))
             {
                 mappedID = int.Parse(context.IDMap.GetSecondID(context.IDMap.NodeCategory, node.GUID));
-                if (Robot.Project.Structure.Nodes.Exist(mappedID) != 0)
+                if (node.IsDeleted)
+                {
+                    Robot.Project.Structure.Nodes.Delete(mappedID);
+                    context.IDMap.Remove(node);
+                }
+                else if (Robot.Project.Structure.Nodes.Exist(mappedID) != 0)
                     rNode = Robot.Project.Structure.Nodes.Get(mappedID) as IRobotNode;
             }
-            if (rNode == null)
+            if (!node.IsDeleted)
             {
-                rNode = CreateRobotNode(node.Position.X, node.Position.Y, node.Position.Z, mappedID);
-            }
-            else
-            {
-                rNode.SetPosition(node.Position);
-            }
-            //TODO: Moar Data!
+                if (rNode == null)
+                {
+                    rNode = CreateRobotNode(node.Position.X, node.Position.Y, node.Position.Z, mappedID);
+                }
+                else
+                {
+                    rNode.SetPosition(node.Position);
+                }
+                //TODO: Moar Data!
 
-            //Store mapping:
-            context.IDMap.Add(node, rNode);
+                //Store mapping:
+                context.IDMap.Add(node, rNode);
+            }
             return rNode;
         }
 
@@ -549,26 +557,34 @@ namespace FreeBuild.Robot
             if (context.IDMap.HasSecondID(context.IDMap.BarCategory, element.GUID))
             {
                 mappedID = int.Parse(context.IDMap.GetSecondID(context.IDMap.BarCategory, element.GUID));
-                if (Robot.Project.Structure.Bars.Exist(mappedID) != 0)
+                if (element.IsDeleted)
+                {
+                    Robot.Project.Structure.Bars.Delete(mappedID);
+                    context.IDMap.Remove(element);
+                }
+                else if (Robot.Project.Structure.Bars.Exist(mappedID) != 0)
                     bar = Robot.Project.Structure.Bars.Get(mappedID) as IRobotBar;
             }
-            if (bar == null)
+            if (!element.IsDeleted)
             {
-                bar = CreateRobotBar(nodeID0, nodeID1, mappedID);
-            }
-            else
-            {
-                bar.StartNode = nodeID0;
-                bar.EndNode = nodeID1;
-            }
-            
-            if (element.Family != null)
-            {
-                bar.SetLabel(IRobotLabelType.I_LT_BAR_SECTION, this.GetMappedSectionID(element.Family, context));
-            }
-            //TODO: More data
+                if (bar == null)
+                {
+                    bar = CreateRobotBar(nodeID0, nodeID1, mappedID);
+                }
+                else
+                {
+                    bar.StartNode = nodeID0;
+                    bar.EndNode = nodeID1;
+                }
 
-            context.IDMap.Add(element, bar);
+                if (element.Family != null)
+                {
+                    bar.SetLabel(IRobotLabelType.I_LT_BAR_SECTION, this.GetMappedSectionID(element.Family, context));
+                }
+                //TODO: More data
+
+                context.IDMap.Add(element, bar);
+            }
 
             return bar;
         }
@@ -587,23 +603,34 @@ namespace FreeBuild.Robot
             if (context.IDMap.HasSecondID(context.IDMap.PanelCategory, element.GUID))
             {
                 mappedID = int.Parse(context.IDMap.GetSecondID(context.IDMap.PanelCategory, element.GUID));
-                if (Robot.Project.Structure.Objects.Exist(mappedID) != 0)
+                if (element.IsDeleted)
+                {
+                    Robot.Project.Structure.Objects.Delete(mappedID);
+                    context.IDMap.Remove(element);
+                }
+                else if (Robot.Project.Structure.Objects.Exist(mappedID) != 0)
                     obj = Robot.Project.Structure.Objects.Get(mappedID) as IRobotObjObject;
             }
-            if (obj == null)
+            if (!element.IsDeleted)
             {
-                obj = CreateRobotPanel(mappedID);
+                if (obj == null)
+                {
+                    obj = CreateRobotPanel(mappedID);
+                }
+
+                //TODO: Setup geometry:
+                if (element.Geometry is PlanarRegion)
+                {
+                    var pR = (PlanarRegion)element.Geometry;
+                    obj.Main.Geometry = FBtoROB.Convert(pR.Perimeter);
+                }
+                obj.Main.Attribs.Meshed = 1; //True?
+
+                obj.Initialize();
+                obj.Update();
+
+                context.IDMap.Add(element, obj);
             }
-
-            //TODO: Setup geometry:
-            if (element.Geometry is PlanarRegion)
-            {
-                var pR = (PlanarRegion)element.Geometry;
-                obj.Main.Geometry = FBtoROB.Convert(pR.Perimeter);
-            }
-
-            context.IDMap.Add(element, obj);
-
             return obj;
         }
 
@@ -620,25 +647,32 @@ namespace FreeBuild.Robot
             if (context.IDMap.HasSecondID(context.IDMap.SectionCategory, section.GUID))
             {
                 mappedID = context.IDMap.GetSecondID(context.IDMap.SectionCategory, section.GUID);
-                if (Robot.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_BAR_SECTION, mappedID) != 0)
+                if (section.IsDeleted)
+                {
+                    Robot.Project.Structure.Labels.Delete(IRobotLabelType.I_LT_BAR_SECTION, mappedID);
+                }
+                else if (Robot.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_BAR_SECTION, mappedID) != 0)
                     label = Robot.Project.Structure.Labels.Get(IRobotLabelType.I_LT_BAR_SECTION, mappedID) as IRobotLabel;
                 //label = Robot.Project.Structure.Labels.FindWithId(mappedID);
             }
-            if (label == null)
+            if (!section.IsDeleted)
             {
-                if (section.Name == null) section.Name = "Test"; //TEMP!
-                label = Robot.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, section.Name); //TODO: Enforce name uniqueness?
-                //TODO
+                if (label == null)
+                {
+                    if (section.Name == null) section.Name = "Test"; //TEMP!
+                    label = Robot.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, section.Name); //TODO: Enforce name uniqueness?
+                                                                                                                   //TODO
+                }
+
+                RobotBarSectionData rData = label.Data as RobotBarSectionData;
+                rData.Name = section.Name;
+                UpdateRobotSectionGeometry(rData, section.Profile);
+                //TODO: More data
+
+                context.IDMap.Add(section, label);
+
+                Robot.Project.Structure.Labels.Store(label);
             }
-
-            RobotBarSectionData rData = label.Data as RobotBarSectionData;
-            rData.Name = section.Name;
-            UpdateRobotSectionGeometry(rData, section.Profile);
-            //TODO: More data
-
-            context.IDMap.Add(section, label);
-
-            Robot.Project.Structure.Labels.Store(label);
 
             return label;
         }
@@ -942,6 +976,23 @@ namespace FreeBuild.Robot
             {
                 IRobotLabel label = sections.Get(i);
                 if (label != null) result.Add(label.Name);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Extract a list of all storey names in the currently open project
+        /// </summary>
+        /// <returns></returns>
+        public IList<string> AllStoreyNames()
+        {
+            RobotStoreyMngr storeys = Robot.Project.Structure.Storeys;
+            IList<string> result = new List<string>(storeys.Count);
+            for (int i = 1; i <= storeys.Count; i++)
+            {
+                RobotStorey storey = storeys.Get(i);
+                if (storey != null) result.Add(storey.Name);
+                
             }
             return result;
         }

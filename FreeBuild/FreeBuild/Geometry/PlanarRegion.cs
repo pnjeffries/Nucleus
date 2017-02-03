@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +39,7 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Private backing field for Perimeter property
         /// </summary>
+        [Copy(CopyBehaviour.DUPLICATE)]
         private Curve _Perimeter;
 
         /// <summary>
@@ -57,6 +59,7 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Private backing field for Voids property
         /// </summary>
+        [CollectionCopy(CopyBehaviour.DUPLICATE, CopyBehaviour.DUPLICATE)]
         private CurveCollection _Voids;
 
         /// <summary>

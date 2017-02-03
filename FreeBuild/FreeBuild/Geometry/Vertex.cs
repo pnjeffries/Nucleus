@@ -176,6 +176,14 @@ namespace FreeBuild.Geometry
         #region Constructors
 
         /// <summary>
+        /// Parameterless constructor.
+        /// </summary>
+        public Vertex()
+        {
+
+        }
+
+        /// <summary>
         /// Position constructor.
         /// Create a vertex with an explicitly defined position.
         /// </summary>

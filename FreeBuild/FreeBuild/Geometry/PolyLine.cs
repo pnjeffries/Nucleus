@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,6 +53,7 @@ namespace FreeBuild.Geometry
                 else return false;
             }
         }
+
 
         /// <summary>
         /// The collection of vertices which are used to define the geometry of this polyline.
@@ -111,6 +113,31 @@ namespace FreeBuild.Geometry
             Vertex result = new Vertex(pt);
             Vertices.Add(result);
             return result;
+        }
+
+        /// <summary>
+        /// Convert this polycurve into an equivalent list
+        /// of Line objects
+        /// </summary>
+        /// <returns></returns>
+        public IList<Line> ToLines()
+        {
+            var result = new List<Line>(SegmentCount);
+            for (int i = 0; i < SegmentCount; i++)
+            {
+                result.Add(new Geometry.Line(SegmentStart(i).Position, SegmentEnd(i).Position, Attributes));
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Convert this polyline into a polycurve containing
+        /// line objects representing the same geometry
+        /// </summary>
+        /// <returns></returns>
+        public PolyCurve ToPolyCurve()
+        {
+            return new PolyCurve(ToLines(), Attributes);
         }
 
         #endregion

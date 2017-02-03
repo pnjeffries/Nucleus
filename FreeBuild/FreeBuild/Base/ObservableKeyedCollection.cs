@@ -41,7 +41,8 @@ namespace FreeBuild.Base
     public abstract class ObservableKeyedCollection<TKey, TItem> : 
         KeyedCollection<TKey, TItem>, 
         INotifyCollectionChanged,
-        INotifyPropertyChanged
+        INotifyPropertyChanged,
+        IDuplicatable
     {
         #region Events
 
@@ -78,8 +79,7 @@ namespace FreeBuild.Base
         /// <param name="args"></param>
         private void RaiseEvent(NotifyCollectionChangedEventHandler handler, NotifyCollectionChangedEventArgs args)
         {
-            if (handler != null)
-                handler(this, args);
+            handler?.Invoke(this, args);
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace FreeBuild.Base
         /// <returns>True if the item was successfully added, false if an equivalent key already existed and it was not</returns>
         public bool TryAdd(TItem item)
         {
-            if (Contains(GetKeyForItem(item))) return false;
+            if (item == null || Contains(GetKeyForItem(item))) return false;
             else
             {
                 Add(item);
@@ -277,7 +277,7 @@ namespace FreeBuild.Base
         {
             TItem item = this[index];
             base.RemoveItem(index);
-            NotifyCollectionChanged(NotifyCollectionChangedAction.Remove, item);
+            NotifyCollectionChanged(NotifyCollectionChangedAction.Remove, item, index);
         }
 
         /// <summary>

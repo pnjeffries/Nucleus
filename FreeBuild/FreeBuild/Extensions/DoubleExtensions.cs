@@ -33,6 +33,18 @@ namespace FreeBuild.Extensions
     public static class DoubleExtensions
     {
         /// <summary>
+        /// Test for approximate equality between this double and another
+        /// </summary>
+        /// <param name="a">The first number</param>
+        /// <param name="b">The number to check against</param>
+        /// <param name="epsilon">The accuracy tolerance.  Values within this range of b will be treated as equal.</param>
+        /// <returns>True if this value is within epsilon of b, else false</returns>
+        public static bool Equals(this double a, double b, double epsilon)
+        {
+            return (a >= b - epsilon && a <= b + epsilon);
+        }
+
+        /// <summary>
         /// Gets the sign of the double, expressed as +1 for positive numbers
         /// and -1 for negative ones.  Zero is treated as being positive in this
         /// instance.
@@ -168,6 +180,18 @@ namespace FreeBuild.Extensions
                 if (newCurrentValue == currentValue)
                     return newValue;
             }
+        }
+
+        /// <summary>
+        /// Increment this number by the smallest step that will produce a differentiable
+        /// floating point number greater than this one
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static double NextValidValue(this double value)
+        {
+            long bits = BitConverter.DoubleToInt64Bits(value);
+            return BitConverter.Int64BitsToDouble(bits + 1);
         }
     }
 }

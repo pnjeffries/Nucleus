@@ -50,6 +50,20 @@ namespace FreeBuild.Geometry
             return result;
         }
 
+        /// <summary>
+        /// The total length of all curves within this collection
+        /// </summary>
+        /// <returns></returns>
+        public double TotalLength()
+        {
+            double result = 0;
+            foreach (Curve crv in this)
+            {
+                result += crv.Length;
+            }
+            return result;
+        }
+
         #endregion
 
     }

@@ -14,7 +14,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Name="LayoutRoot" Background="Transparent">
-        <ItemsControl Name="ItemsControl" ItemsSource="{Binding Layers}" MouseMove="HandleMouseMove">
+        <ItemsControl Name="ItemsControl" ItemsSource="{Binding Layers}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Canvas/>
@@ -25,6 +25,7 @@
                     <local:GeometryCanvas Geometry="{Binding}" 
                                           DefaultBrush="{Binding Path=Brush, Converter={StaticResource BrushConverter}}"
                                           Visibility="{Binding Path=Visible, Converter={StaticResource BooleanVisibilityConverter}}"
+                                          IsHitTestVisible="{Binding Path=Visible}"
                                           CurveThickness="{Binding Path=CurveThickness, RelativeSource={RelativeSource AncestorType=local:LayeredGeometryCanvas}}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
@@ -33,6 +34,11 @@
                               Geometry="{Binding Overlay}"
                               IsHitTestVisible="False"
                               CurveThickness="{Binding Path=CurveThickness}"
-                              Opacity="0.5"/>
+                              Opacity="0.5"
+                              >
+            <local:GeometryCanvas.Effect>
+                <DropShadowEffect ShadowDepth="0" Color="Cyan" Opacity="1" BlurRadius="0.1"/>
+            </local:GeometryCanvas.Effect>
+        </local:GeometryCanvas>
     </Grid>
 </UserControl>

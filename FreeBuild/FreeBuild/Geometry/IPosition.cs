@@ -162,5 +162,7 @@ namespace FreeBuild.Geometry
                 polygon.RemoveAt(polygon.Count - 1);
             }
         }
+
+        
     }
 }

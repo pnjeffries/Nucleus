@@ -192,6 +192,42 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
+        /// Remove a node record
+        /// </summary>
+        /// <param name="node"></param>
+        public void Remove(Node node)
+        {
+            Remove(NodeCategory, node.GUID);
+        }
+
+        /// <summary>
+        /// Remove an element record
+        /// </summary>
+        /// <param name="element"></param>
+        public void Remove(LinearElement element)
+        {
+            Remove(BarCategory, element.GUID);
+        }
+
+        /// <summary>
+        /// Remove a Panel entry
+        /// </summary>
+        /// <param name="element"></param>
+        public void Remove(PanelElement element)
+        {
+            Remove(PanelCategory, element.GUID);
+        }
+
+        /// <summary>
+        /// Remove a section entry
+        /// </summary>
+        /// <param name="section"></param>
+        public void Remove(SectionFamily section)
+        {
+            Remove(SectionCategory, section.GUID);
+        }
+
+        /// <summary>
         /// Get all nodes in the specified model which have a mapping entry in this table
         /// </summary>
         /// <param name="inModel"></param>

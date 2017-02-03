@@ -310,7 +310,9 @@ namespace FreeBuild.Geometry
 
         /// <summary>
         /// Sort the vertices of this face counter-clockwise around the specified point
-        /// in plan (i.e. in the XY plane).  This will essentially align this face 'upwards'
+        /// in plan (i.e. in the XY plane).  This will essentially align this face 'upwards'.
+        /// Note that this will only work in the case of convex polygons where the ordering
+        /// of vertices is not important.
         /// </summary>
         /// <param name="aroundPt"></param>
         public void SortVerticesAntiClockwise(Vector aroundPt)
@@ -332,7 +334,21 @@ namespace FreeBuild.Geometry
             SortVerticesAntiClockwise(XYCircumcentre);
         }
 
-       
+        /// <summary>
+        /// Is this face clockwise in the XY plane?
+        /// </summary>
+        /// <returns></returns>
+        public bool IsClockwiseXY()
+        {
+            double sum = 0;
+            for (int i = 0; i < Count; i++)
+            {
+                Vertex v1 = this[i];
+                Vertex v2 = this.GetWrapped(i + 1);
+                sum += (v2.X - v1.X) * (v2.Y + v1.Y);
+            }
+            return sum > 0;
+        }
 
         #endregion
 

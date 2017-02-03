@@ -41,10 +41,7 @@ namespace FreeBuild.Base
         /// <param name="args">The event args</param>
         protected void RaiseEvent(EventHandler handler, EventArgs args)
         {
-            if (handler != null)
-            {
-                handler(this, args);
-            }
+            handler?.Invoke(this, args);
         }
 
         /// <summary>
@@ -57,7 +54,7 @@ namespace FreeBuild.Base
         /// <param name="args">The event args</param>
         protected void RaiseEvent(EventHandler handler, object sender, EventArgs args)
         {
-            if (handler != null) handler(sender, args);
+            handler?.Invoke(sender, args);
         }
 
         /// <summary>
@@ -68,10 +65,7 @@ namespace FreeBuild.Base
         /// <param name="args">The event args</param>
         protected void RaiseEvent<TArgs>(EventHandler<TArgs> handler, TArgs args)
         {
-            if (handler != null)
-            {
-                handler(this, args);
-            }
+            handler?.Invoke(this, args);
         }
     }
 }

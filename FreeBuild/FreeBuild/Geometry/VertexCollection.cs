@@ -33,6 +33,7 @@ namespace FreeBuild.Geometry
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     [Serializable]
+    [CollectionCopy(CopyBehaviour.DUPLICATE, CopyBehaviour.DUPLICATE)]
     public class VertexCollection : OwnedCollection<Vertex, VertexGeometry>
     {
         

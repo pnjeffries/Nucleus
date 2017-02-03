@@ -141,6 +141,30 @@ namespace FreeBuild.Extensions
         }
 
         /// <summary>
+        /// Extract all members from this type that have been annotated with an AutoUIAttribute,
+        /// sorted by their order.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static IList<MemberInfo> GetAutoUIMembers(this Type type)
+        {
+            SortedList<double, MemberInfo> result = new SortedList<double, MemberInfo>();
+            MemberInfo[] mInfos = type.GetMembers();
+            foreach (MemberInfo mInfo in mInfos)
+            {
+                object[] attributes = mInfo.GetCustomAttributes(typeof(AutoUIAttribute), true);
+                if (attributes.Count() > 0)
+                {
+                    AutoUIAttribute aInput = (AutoUIAttribute)attributes[0];
+                    double keyValue = aInput.Order;
+                    while (result.ContainsKey(keyValue)) keyValue = keyValue.NextValidValue();
+                    result.Add(keyValue, mInfo);
+                }
+            }
+            return result.Values.ToList();
+        }
+
+        /// <summary>
         /// Extract all properties from this type that have been annotated with an AutoUIAttribute,
         /// sorted by their order.
         /// </summary>
@@ -157,11 +181,35 @@ namespace FreeBuild.Extensions
                 {
                     AutoUIAttribute aInput = (AutoUIAttribute)attributes[0];
                     double keyValue = aInput.Order;
-                    while (result.ContainsKey(keyValue)) keyValue += 0.0000001;
+                    while (result.ContainsKey(keyValue)) keyValue = keyValue.NextValidValue();
                     result.Add(keyValue, pInfo);
                 }
             }
-            return result.Values.ToList<PropertyInfo>();
+            return result.Values.ToList();
+        }
+
+        /// <summary>
+        /// Extract all methods from this type that have been annotated with an AutoUIAttribute,
+        /// sorted by their order.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static IList<MethodInfo> GetAutoUIMethods(this Type type)
+        {
+            SortedList<double, MethodInfo> result = new SortedList<double, MethodInfo>();
+            MethodInfo[] mInfos = type.GetMethods();
+            foreach (MethodInfo mInfo in mInfos)
+            {
+                object[] attributes = mInfo.GetCustomAttributes(typeof(AutoUIAttribute), true);
+                if (attributes.Count() > 0)
+                {
+                    AutoUIAttribute aInput = (AutoUIAttribute)attributes[0];
+                    double keyValue = aInput.Order;
+                    while (result.ContainsKey(keyValue)) keyValue = keyValue.NextValidValue();
+                    result.Add(keyValue, mInfo);
+                }
+            }
+            return result.Values.ToList();
         }
 
         /// <summary>

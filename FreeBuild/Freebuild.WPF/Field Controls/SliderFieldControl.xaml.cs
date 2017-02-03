@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FreeBuild.Geometry;
+using FreeBuild.WPF.Converters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -124,6 +126,15 @@ namespace FreeBuild.WPF
         public override void AdaptTo(PropertyInfo property)
         {
             base.AdaptTo(property);
+            if (property.PropertyType == typeof(Angle))
+            {
+                var binding = new Binding(property.Name);
+                binding.Converter = new RadiansDegreesConverter();
+                SetBinding(ValueProperty, binding);
+                Units = "°";
+                Maximum = 360;
+                Minimum = 0;
+            }
         }
 
         #endregion
