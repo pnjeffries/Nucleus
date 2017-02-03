@@ -13,12 +13,12 @@ namespace FreeBuild.IO
 
         public GWAFormat() : base()
         {
-            Add(typeof(Node), 
-                "NODE.2, {[CONTEXT].GetID()}, {Name}, NO_RGB, {Position.X}, {Position.Y}, {Position.Z}");
+            Add(typeof(Node),
+                "NODE\t {[CONTEXT].GetID()}\t{Name}\tNO_RGB\t{Position.X}\t{Position.Y}\t{Position.Z}\tNO_GRID\tGLOBAL\tREST\t{Fixity.X.[CONTEXT].ToInt()}\t{Fixity.Y.[CONTEXT].ToInt()}\t{Fixity.Z.[CONTEXT].ToInt()}\t{Fixity.XX.[CONTEXT].ToInt()}\t{Fixity.YY.[CONTEXT].ToInt()}\t{Fixity.ZZ.[CONTEXT].ToInt()}");
             Add(typeof(LinearElement), 
-                "ELEMENT.2, {[CONTEXT].GetID()}, {Name}, NO_RGB, {[CONTEXT].ElementType()}, {Family.[CONTEXT].GetID()}, {[CONTEXT].ElementGroup()}, {StartNode.[CONTEXT].GetID()}, {EndNode.[CONTEXT].GetID()}, , {Orientation.Degrees}");
+                "EL\t {[CONTEXT].GetID()}\t{Name}\tNO_RGB\t{[CONTEXT].ElementType()}\t{Family.[CONTEXT].GetID()}\t{[CONTEXT].ElementGroup()}\t{StartNode.[CONTEXT].GetID()}\t{EndNode.[CONTEXT].GetID()}\t\t{Orientation.Degrees}");
             Add(typeof(SectionFamily), 
-                "PROP_SEC.1, {[CONTEXT].GetID()}, {Name}, , {[CONTEXT].SectionMaterial()}, {[CONTEXT].SectionDescription()}");
+                "PROP_SEC\t{[CONTEXT].GetID()}\t{Name}\tNO_RGB\t{[CONTEXT].SectionMaterial()}\t{[CONTEXT].SectionDescription()}");
         }
 
         #endregion

@@ -53,6 +53,12 @@
     <Compile Include="Converters\RadiansDegreesConverter.cs" />
     <Compile Include="EnumBindingSourceExtension.cs" />
     <Compile Include="FBtoWPF.cs" />
+    <Compile Include="Field Controls\Bool6DFieldControl.xaml.cs">
+      <DependentUpon>Bool6DFieldControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Field Controls\Bool6DFieldsControl.xaml.cs">
+      <DependentUpon>Bool6DFieldsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Field Controls\CheckBoxFieldControl.xaml.cs">
       <DependentUpon>CheckBoxFieldControl.xaml</DependentUpon>
     </Compile>
@@ -113,6 +119,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Field Controls\Bool6DFieldControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Field Controls\Bool6DFieldsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Field Controls\CheckBoxFieldControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
