@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,6 +70,26 @@ namespace FreeBuild.Base
         /// The value about the ZZ axis
         /// </summary>
         public readonly bool ZZ;
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Returns true if all six values in this Bool6D are false
+        /// </summary>
+        public bool AllFalse
+        {
+            get { return !(X || Y || Z || XX || YY || ZZ); }
+        }
+
+        /// <summary>
+        /// Returns true if all six values in this Bool6D are true
+        /// </summary>
+        public bool AllTrue
+        {
+            get { return X && Y && Z && XX && YY && ZZ; }
+        }
 
         #endregion
 
@@ -186,6 +207,48 @@ namespace FreeBuild.Base
         public Bool6D WithZZ(bool value)
         {
             return new Bool6D(X, Y, Z, XX, YY, value);
+        }
+
+        /// <summary>
+        /// Turn this Bool6D into a string representing the current values
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            if (X) sb.Append("X");
+            if (Y) sb.Append("Y", "-");
+            if (Z) sb.Append("Z", "-");
+            if (XX) sb.Append("XX", "-");
+            if (YY) sb.Append("YY", "-");
+            if (ZZ) sb.Append("ZZ", "-");
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Turn this Bool6D to a string describing it as a restraint condition.
+        /// Gives the same result as ToString(), but with the additional special cases
+        /// of 'Pin' and 'Fixed' for translational and full restraint respectively.
+        /// </summary>
+        /// <returns></returns>
+        public string ToRestraintDescription()
+        {
+            var sb = new StringBuilder();
+            if (X && Y && Z)
+            {
+                if (XX && YY && ZZ) return "Fixed";
+                else sb.Append("Pin");
+            }
+            else
+            {
+                if (X) sb.Append("X");
+                if (Y) sb.Append("Y", "-");
+                if (Z) sb.Append("Z", "-");
+            }
+            if (XX) sb.Append("XX", "-");
+            if (YY) sb.Append("YY", "-");
+            if (ZZ) sb.Append("ZZ", "-");
+            return sb.ToString();
         }
 
         #endregion

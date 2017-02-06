@@ -366,11 +366,18 @@ namespace FreeBuild.Model
         /// the vertices of elements.
         /// </summary>
         /// <param name="options"></param>
-        public void RegenerateNodes(NodeGenerationParameters options)
+        public void GenerateNodes(NodeGenerationParameters options)
         {
             foreach (Element element in Elements)
             {
-                if (!element.IsDeleted) element.RegenerateNodes(options);
+                if (!element.IsDeleted) element.GenerateNodes(options);
+            }
+            if (options.DeleteUnusedNodes)
+            {
+                foreach (Node node in Nodes)
+                {
+                    if (!node.IsDeleted && node.GetConnectedElements().UndeletedCount() == 0) node.Delete();
+                }
             }
         }
 
@@ -416,6 +423,18 @@ namespace FreeBuild.Model
         private void ClearCachedData()
         {
             _BoundingBox = null;
+        }
+
+        /// <summary>
+        /// Clean this model of all deleted objects.  This will result in the
+        /// permenant removal of these objects from the model database.
+        /// </summary>
+        public void CleanDeleted()
+        {
+            foreach (IList<ModelObject> table in AllTables)
+            {
+                table.RemoveDeleted();
+            }
         }
 
         #endregion

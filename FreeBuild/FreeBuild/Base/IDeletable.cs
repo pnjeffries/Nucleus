@@ -101,6 +101,22 @@ namespace FreeBuild.Base
         }
 
         /// <summary>
+        /// Get the number of objects in this collection which are not deleted
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static int UndeletedCount<T>(this IEnumerable<T> list) where T:IDeletable
+        {
+            int count = 0;
+            foreach (T item in list)
+            {
+                if (!item.IsDeleted) count++;
+            }
+            return count;
+        }
+
+        /// <summary>
         /// Delete all objects in this collection.
         /// The objects themselves will not be immediately removed from the model
         /// but will instead be flagged for future removal and ignored wherever

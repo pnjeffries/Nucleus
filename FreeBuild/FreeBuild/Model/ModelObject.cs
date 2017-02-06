@@ -154,8 +154,9 @@ namespace FreeBuild.Model
         /// <summary>
         /// Delete this object.
         /// The object itself will not be immediately removed from the model
-        /// but will instead be flagged for future removal and ignored wherever
-        /// appropriate.
+        /// but will instead be flagged for future removal and ignored in most
+        /// operations.  Check the IsDeleted property to see whether this
+        /// object is marked for deletion.
         /// </summary>
         public void Delete()
         {

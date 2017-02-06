@@ -128,7 +128,7 @@ namespace FreeBuild.Model
         /// </summary>
         /// <param name="connectionTolerance"></param>
         /// <param name="model"></param>
-        public virtual void RegenerateNodes(NodeGenerationParameters options)
+        public virtual void GenerateNodes(NodeGenerationParameters options)
         {
             VertexGeometry geometry = GetGeometry();
             foreach (Vertex v in geometry.Vertices)

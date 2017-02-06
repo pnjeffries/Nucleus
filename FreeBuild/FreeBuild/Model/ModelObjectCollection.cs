@@ -34,7 +34,7 @@ namespace FreeBuild.Model
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     [Serializable]
-    public class ModelObjectCollection<TItem> : OwnedCollection<TItem, Model> where TItem : ModelObject
+    public class ModelObjectCollection<TItem> : OwnedCollection<TItem, Model>, IList<TItem> where TItem : ModelObject
     {
 
         #region Constructors

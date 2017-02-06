@@ -33,7 +33,7 @@ namespace FreeBuild.Base
     /// </summary>
     /// <typeparam name="TItem">The type of uniquely identifiable item</typeparam>
     [Serializable]
-    public class UniquesCollection<TItem> : ObservableKeyedCollection<Guid, TItem> where TItem : class, IUnique
+    public class UniquesCollection<TItem> : ObservableKeyedCollection<Guid, TItem>, IList<TItem> where TItem : class, IUnique
     {
         #region Constructors
 

@@ -471,7 +471,6 @@ namespace FreeBuild.Robot
             return Robot.Project.Structure.Nodes.Get(id) as IRobotNode;
         }
 
-
         /// <summary>
         /// Create a new bar within the currently open Robot document
         /// </summary>
@@ -497,6 +496,38 @@ namespace FreeBuild.Robot
         {
             if (id < 1) id = Robot.Project.Structure.Objects.FreeNumber;
             return Robot.Project.Structure.Objects.Create(id);
+        }
+
+        /// <summary>
+        /// Get (or create) the Robot support label that describes the given fixity conditions
+        /// </summary>
+        /// <param name="fixity"></param>
+        /// <returns></returns>
+        public IRobotLabel GetSupport(Bool6D fixity)
+        {
+            string name = fixity.ToRestraintDescription();
+            RobotLabelServer labels = Robot.Project.Structure.Labels;
+            if (labels.Exist(IRobotLabelType.I_LT_SUPPORT, name) != 0)
+                return labels.Get(IRobotLabelType.I_LT_SUPPORT, name);
+            else
+            {
+                IRobotLabel result = labels.Create(IRobotLabelType.I_LT_SUPPORT, name);
+                RobotNodeSupportData data = result.Data;
+                if (fixity.X) data.UX = 1;
+                else data.UX = 0;
+                if (fixity.Y) data.UY = 1;
+                else data.UY = 0;
+                if (fixity.Z) data.UZ = 1;
+                else data.UZ = 0;
+                if (fixity.XX) data.RX = 1;
+                else data.RX = 0;
+                if (fixity.YY) data.RY = 1;
+                else data.RY = 0;
+                if (fixity.ZZ) data.RZ = 1;
+                else data.RZ = 0;
+                labels.Store(result);
+                return result;
+            }
         }
 
         /// <summary>
@@ -530,6 +561,10 @@ namespace FreeBuild.Robot
                 else
                 {
                     rNode.SetPosition(node.Position);
+                }
+                if (!node.Fixity.AllFalse)
+                {
+                    rNode.SetLabel(IRobotLabelType.I_LT_SUPPORT, GetSupport(node.Fixity).Name);
                 }
                 //TODO: Moar Data!
 

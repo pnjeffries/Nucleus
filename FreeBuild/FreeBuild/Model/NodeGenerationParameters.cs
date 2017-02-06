@@ -45,6 +45,12 @@ namespace FreeBuild.Model
         /// </summary>
         public double ConnectionTolerance { get; set; } = 0;
 
+        /// <summary>
+        /// Delete nodes that are no longer connected to elements?
+        /// Used during model-level GenerateNodes calls only.
+        /// </summary>
+        public bool DeleteUnusedNodes { get; set; } = false;
+
         #endregion
 
         #region Constructors
@@ -56,6 +62,27 @@ namespace FreeBuild.Model
         public NodeGenerationParameters()
         {
             ConnectionTolerance = Tolerance.Geometric;
+        }
+
+        /// <summary>
+        /// Initialises a set of parameters with the specified values.
+        /// </summary>
+        /// <param name="connectionTolerance"></param>
+        /// <param name="deleteUnusedNodes"></param>
+        public NodeGenerationParameters(double connectionTolerance, bool deleteUnusedNodes = false)
+        {
+            ConnectionTolerance = connectionTolerance;
+            DeleteUnusedNodes = deleteUnusedNodes;
+        }
+
+        /// <summary>
+        /// Initialises a set of parameters with the specified DeleteUnusedNodes value and all
+        /// others set to defaults.
+        /// </summary>
+        /// <param name="deleteUnusedNodes"></param>
+        public NodeGenerationParameters(bool deleteUnusedNodes) : this()
+        {
+            DeleteUnusedNodes = deleteUnusedNodes;
         }
 
         #endregion

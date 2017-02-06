@@ -68,6 +68,7 @@
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\PropertyInfoExtensions.cs" />
     <Compile Include="Extensions\SortedListExtensions.cs" />
+    <Compile Include="Extensions\StringBuilderExtensions.cs" />
     <Compile Include="Geometry\Cloud.cs" />
     <Compile Include="Geometry\GeometryAttributes.cs" />
     <Compile Include="Geometry\GeometryLayer.cs" />
