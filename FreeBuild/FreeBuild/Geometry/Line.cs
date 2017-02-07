@@ -52,16 +52,11 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
-        /// Private backing field for Vertices property
-        /// </summary>
-        private VertexCollection _Vertices;
-
-        /// <summary>
         /// The collection of vertices which are used to define the geometry of this shape.
         /// The line will be defined as a straight line in between the first and last vertices
         /// in this collection.
         /// </summary>
-        public override VertexCollection Vertices { get; }// { return _Vertices; } }
+        public override VertexCollection Vertices { get; }
 
         /// <summary>
         /// Get the number of segments that this curve posesses.

@@ -32,6 +32,9 @@
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="RhinoCommon">
+      <HintPath>..\References\RhinoCommon.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -58,6 +61,8 @@
     <Compile Include="Conversion\IStringConversionContext.cs" />
     <Compile Include="Conversion\ModelIDMappingTable.cs" />
     <Compile Include="Conversion\StringConversionContextBase.cs" />
+    <Compile Include="DDTree\PositionDDTree.cs" />
+    <Compile Include="DDTree\VertexDDTree.cs" />
     <Compile Include="Events\MessageRaisedEventArgs.cs" />
     <Compile Include="Events\PropertyChangedEventArgsExtended.cs" />
     <Compile Include="Exceptions\MatrixException.cs" />
@@ -90,6 +95,7 @@
     <Compile Include="Meshing\DelaunayTriangle.cs" />
     <Compile Include="Meshing\MeshBuilder.cs" />
     <Compile Include="Model\AngleProfile.cs" />
+    <Compile Include="Model\LinearElementSet.cs" />
     <Compile Include="Model\Loading\AreaLoad.cs" />
     <Compile Include="Model\CircularHollowProfile.cs" />
     <Compile Include="Model\CircularProfile.cs" />
@@ -198,6 +204,7 @@
     <Compile Include="Model\NodeCollection.cs" />
     <Compile Include="Model\NodeGenerationParameters.cs" />
     <Compile Include="Model\NodeLoadApplication.cs" />
+    <Compile Include="Model\NodeSet.cs" />
     <Compile Include="Model\PanelElement.cs" />
     <Compile Include="Model\NodeTable.cs" />
     <Compile Include="Model\PanelElementCollection.cs" />

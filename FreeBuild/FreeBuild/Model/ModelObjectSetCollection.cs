@@ -12,7 +12,7 @@ namespace FreeBuild.Model
     /// <typeparam name="TSet"></typeparam>
     [Serializable]
     public class ModelObjectSetCollection<TSet> : ModelObjectCollection<TSet>
-        where TSet : ModelObjectSet
+        where TSet : ModelObjectSetBase
     {
     }
 }

@@ -13,7 +13,7 @@ namespace FreeBuild.Model
     /// filters which act upon that collection.
     /// </summary>
     [Serializable]
-    public abstract class ModelObjectSet : ModelObject
+    public abstract class ModelObjectSetBase : ModelObject
     {
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace FreeBuild.Model
     /// filters which act upon that collection.
     /// </summary>
     [Serializable]
-    public abstract class ModelObjectSet<TItem, TCollection> : ModelObjectSet
+    public abstract class ModelObjectSet<TItem, TCollection> : ModelObjectSetBase
          where TItem : ModelObject
         where TCollection : ModelObjectCollection<TItem>, new()
     {
@@ -58,7 +58,11 @@ namespace FreeBuild.Model
         /// </summary>
         public TCollection BaseCollection
         {
-            get { return _BaseCollection; }
+            get
+            {
+                if (_BaseCollection == null) _BaseCollection = new TCollection();
+                return _BaseCollection;
+            }
             set { _BaseCollection = value; NotifyPropertyChanged("BaseCollection"); }
         }
 
@@ -95,7 +99,11 @@ namespace FreeBuild.Model
         /// </summary>
         public TSubSetCollection SubSets
         {
-            get { return _SubSets; }
+            get
+            {
+                if (_SubSets == null) _SubSets = new TSubSetCollection();
+                return _SubSets;
+            }
             set { _SubSets = value; NotifyPropertyChanged("SubSets"); }
         }
 
@@ -134,6 +142,52 @@ namespace FreeBuild.Model
         public bool IsCircular
         {
             get { return ContainsReferenceTo((TSubSet)this); }
+        }
+
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Base default constructor
+        /// </summary>
+        public ModelObjectSet() { }
+
+        /// <summary>
+        /// Initialises an 'all objects' set
+        /// </summary>
+        /// <param name="all"></param>
+        public ModelObjectSet(bool all)
+        {
+            All = true;
+        }
+
+        /// <summary>
+        /// Initialises this set to contain a single item
+        /// </summary>
+        /// <param name="item"></param>
+        public ModelObjectSet(TItem item)
+        {
+            BaseCollection.Add(item);
+        }
+
+        /// <summary>
+        /// Initialises this set to contain the specified collection of items.
+        /// </summary>
+        /// <param name="items"></param>
+        public ModelObjectSet(TCollection baseCollection)
+        {
+            BaseCollection = baseCollection;
+        }
+
+        /// <summary>
+        /// Initialises a set containing all objects in the model,
+        /// filtered by the specified condition
+        /// </summary>
+        /// <param name="filter"></param>
+        public ModelObjectSet(TFilter filter) : this(true)
+        {
+            Filters.Add(filter);
         }
 
         #endregion
