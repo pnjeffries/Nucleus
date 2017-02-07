@@ -125,23 +125,23 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
-        /// Private backing field for Properties property
+        /// Private backing field for Families property
         /// </summary>
-        private FamilyTable _Properties;
+        private FamilyTable _Families;
 
         /// <summary>
-        /// Get the collection of volumetric properties that belong to this model.
+        /// Get the collection of families that belong to this model.
         /// </summary>
-        public FamilyTable Properties
+        public FamilyTable Families
         {
             get
             {
-                if (_Properties == null)
+                if (_Families == null)
                 {
-                    _Properties = new FamilyTable(this);
-                    _Properties.CollectionChanged += HandlesInternalCollectionChanged;
+                    _Families = new FamilyTable(this);
+                    _Families.CollectionChanged += HandlesInternalCollectionChanged;
                 }
-                return _Properties;
+                return _Families;
             }
         }
 
@@ -191,7 +191,7 @@ namespace FreeBuild.Model
             get
             {
                 return new IEnumerable<ModelObject>[]
-                    {_Materials, _Properties, _Levels, _Nodes, _Elements};
+                    {_Materials, _Families, _Levels, _Nodes, _Elements};
             }
         }
 
@@ -324,7 +324,7 @@ namespace FreeBuild.Model
         /// the model.</returns>
         public bool Add(Family property)
         {
-            return Properties.TryAdd(property);
+            return Families.TryAdd(property);
         }
 
         /// <summary>
@@ -356,7 +356,7 @@ namespace FreeBuild.Model
         {
             if (Elements.Contains(guid)) return Elements[guid];
             else if (Nodes.Contains(guid)) return Nodes[guid];
-            else if (Properties.Contains(guid)) return Properties[guid];
+            else if (Families.Contains(guid)) return Families[guid];
             else if (Materials.Contains(guid)) return Materials[guid];
             else return null;
         }
@@ -406,7 +406,7 @@ namespace FreeBuild.Model
             //Restore collection changed event handling
             if (_Elements != null) _Elements.CollectionChanged += HandlesInternalCollectionChanged;
             if (_Nodes != null) _Nodes.CollectionChanged += HandlesInternalCollectionChanged;
-            if (_Properties != null) _Properties.CollectionChanged += HandlesInternalCollectionChanged;
+            if (_Families != null) _Families.CollectionChanged += HandlesInternalCollectionChanged;
             if (_Materials != null) _Materials.CollectionChanged += HandlesInternalCollectionChanged;
             if (_Levels != null) _Levels.CollectionChanged += HandlesInternalCollectionChanged;
 
