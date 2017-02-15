@@ -37,12 +37,20 @@ namespace FreeBuild.Geometry
         #region Properties
 
         /// <summary>
+        /// Private backing field for the Vertices property
+        /// </summary>
+        private VertexCollection _Vertices;
+
+        /// <summary>
         /// The collection of vertices which are used to define the geometry of this shape.
         /// The first vertex defines the start point of the arc.  The second describes a point on
         /// the arc.  The third describes the end of the arc in the case of an open arc, or a distinct
         /// third point somewhere on the circle if the arc is closed.
         /// </summary>
-        public override VertexCollection Vertices { get; }
+        public override VertexCollection Vertices
+        {
+            get { return _Vertices; }
+        }
 
         /// <summary>
         /// Private backing member for Circle property
@@ -164,7 +172,7 @@ namespace FreeBuild.Geometry
         /// </summary>
         protected Arc()
         {
-            Vertices = new VertexCollection(this);
+            _Vertices = new VertexCollection(this);
         }
 
         /// <summary>

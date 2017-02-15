@@ -34,10 +34,15 @@ namespace FreeBuild.Geometry
     {
         #region Properties
 
+        private CurveCollection _SubCurves = new CurveCollection();
+
         /// <summary>
         /// The sub-curves of this PolyCurve
         /// </summary>
-        public CurveCollection SubCurves { get; } = new CurveCollection();
+        public CurveCollection SubCurves
+        {
+            get { return _SubCurves; }
+        }
 
         /// <summary>
         /// Whether this curve is closed.

@@ -7,8 +7,10 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 using FB = FreeBuild.Geometry;
 
 namespace FreeBuild.WPF
@@ -88,15 +90,43 @@ namespace FreeBuild.WPF
                 {
                     Button button = new Button();
                     button.Command = new InvokeMethodCommand(source, (MethodInfo)member);
-                    AutoUIAttribute autoUI = member.GetCustomAttribute<AutoUIAttribute>();
-                    if (autoUI != null)
+                    AutoUIAttribute autoAtt = member.GetCustomAttribute<AutoUIAttribute>();
+                    if (autoAtt != null)
                     {
-                        if (!string.IsNullOrWhiteSpace(autoUI.Label)) button.Content = autoUI.Label;
+                        // Use attribute-defined label if present:
+                        if (autoAtt != null && !string.IsNullOrWhiteSpace(autoAtt.Label))
+                            button.Content = autoAtt.Label;
+                        // Otherwise, use property name:
+                        else button.Content = member.Name;
+
+                        // Label binding:
+                        if (!string.IsNullOrWhiteSpace(autoAtt?.LabelBinding))
+                        {
+                            var bind = new Binding(autoAtt?.LabelBinding);
+                            //bind.FallbackValue = Label;
+                            button.SetBinding(Button.ContentProperty, bind);
+                        }
+
+                        // Visibility
+                        if (!string.IsNullOrWhiteSpace(autoAtt?.VisibilityBinding))
+                        {
+                            var vB = new Binding(autoAtt.VisibilityBinding);
+                            vB.Converter = new Converters.VisibilityConverter();
+                            button.SetBinding(Button.VisibilityProperty, vB);
+                        }
+
+                        // Tooltip
+                        if (!string.IsNullOrWhiteSpace(autoAtt?.ToolTip))
+                        {
+                            button.ToolTip = autoAtt.ToolTip;
+                        }
                     }
                     collection.Add(button);
                 }
             }
         }
+
+        
         
     }
 }

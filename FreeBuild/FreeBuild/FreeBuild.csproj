@@ -49,6 +49,7 @@
     <Compile Include="Actions\ExecutionInfo.cs" />
     <Compile Include="Base\Bool6D.cs" />
     <Compile Include="Base\CollectionCopyAttribute.cs" />
+    <Compile Include="Base\PathBinding.cs" />
     <Compile Include="Conversion\IDMappingsDictionary.cs" />
     <Compile Include="Base\MessageRaiser.cs" />
     <Compile Include="Base\ObservablePair.cs" />
@@ -91,6 +92,8 @@
     <Compile Include="IO\ModelDocumentTextSerialiser.cs" />
     <Compile Include="IO\TextFormat.cs" />
     <Compile Include="IO\TextSerialiser.cs" />
+    <Compile Include="Maths\LinearGraph.cs" />
+    <Compile Include="Maths\LinearIntervalGraph.cs" />
     <Compile Include="Meshing\CoordinateSystemRemappingOption.cs" />
     <Compile Include="Meshing\DelaunayTriangle.cs" />
     <Compile Include="Meshing\MeshBuilder.cs" />
@@ -99,8 +102,6 @@
     <Compile Include="Model\Loading\AreaLoad.cs" />
     <Compile Include="Model\CircularHollowProfile.cs" />
     <Compile Include="Model\CircularProfile.cs" />
-    <Compile Include="Model\ElementOrientation.cs" />
-    <Compile Include="Model\ElementOrientationAngle.cs" />
     <Compile Include="Model\ElementVertex.cs" />
     <Compile Include="Model\FactoredCase.cs" />
     <Compile Include="Model\FactoredLoadCase.cs" />
@@ -209,7 +210,6 @@
     <Compile Include="Model\NodeTable.cs" />
     <Compile Include="Model\PanelElementCollection.cs" />
     <Compile Include="Model\ParameterProfile.cs" />
-    <Compile Include="Model\PointLoad.cs" />
     <Compile Include="Model\ResultsCase.cs" />
     <Compile Include="Model\SectionProfile.cs" />
     <Compile Include="Model\RectangularHollowProfile.cs" />
@@ -240,6 +240,7 @@
     <Compile Include="Geometry\Vector.cs" />
     <Compile Include="Rendering\Colour.cs" />
     <Compile Include="Rendering\ColourBrush.cs" />
+    <Compile Include="Rendering\ColourCollection.cs" />
     <Compile Include="Rendering\DisplayAttributes.cs" />
     <Compile Include="Rendering\DisplayBrush.cs" />
     <Compile Include="Rendering\IRenderable.cs" />
@@ -248,6 +249,8 @@
     <Compile Include="Results\CaseResults.cs" />
     <Compile Include="Results\IModelObjectResult.cs" />
     <Compile Include="Results\IModelObjectResults.cs" />
+    <Compile Include="Results\LinearElementResults.cs" />
+    <Compile Include="Results\LinearElementResultTypes.cs" />
     <Compile Include="Results\ModelObjectResults.cs" />
     <Compile Include="Results\ModelResults.cs" />
     <Compile Include="Results\NodeResults.cs" />
@@ -255,9 +258,7 @@
     <Compile Include="Results\ResultsDictionary.cs" />
     <Compile Include="UI\AutoUIAttribute.cs" />
     <Compile Include="UI\AutoUIComboBoxAttribute.cs" />
-    <Compile Include="UI\IMouseInteraction.cs" />
     <Compile Include="UI\IUserInteraction.cs" />
-    <Compile Include="UI\MouseInteractionParameters.cs" />
     <Compile Include="Units\DimensionAttribute.cs" />
     <Compile Include="Units\DimensionType.cs" />
   </ItemGroup>

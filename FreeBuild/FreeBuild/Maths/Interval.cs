@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -205,6 +206,14 @@ namespace FreeBuild.Maths
             return Min == value && Max == value;
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return false;
+            else if (obj is Interval) return Equals((Interval)obj);
+            else if (typeof(double).IsAssignableFrom(obj.GetType())) return Equals((double)obj);
+            else return false;
+        }
+
         /// <summary>
         /// Is this interval less than another?
         /// The interval counts as less than another if its maximum value
@@ -335,6 +344,34 @@ namespace FreeBuild.Maths
         public Interval Union(Interval other)
         {
             return new Interval(Math.Min(Min, other.Min), Math.Max(Max, other.Max));
+        }
+
+        /// <summary>
+        /// Interpolate this Interval towards another
+        /// </summary>
+        /// <param name="towards">The interval to interpolate towards</param>
+        /// <param name="factor">The interpolation factor.  0 = this interval, 1 = the 'towards' interval</param>
+        /// <returns></returns>
+        public Interval Interoplate(Interval towards, double factor)
+        {
+            return new Interval(
+                Min.Interpolate(towards.Min, factor),
+                Max.Interpolate(towards.Max, factor));
+        }
+
+        /// <summary>
+        /// Interpolate this Interval towards another
+        /// </summary>
+        /// <param name="i1">The other interval to interpolate towards</param>
+        /// <param name="x0">The key value mapped to this interval</param>
+        /// <param name="x1">The key value mapped to the other interval</param>
+        /// <param name="x">The key value at the interpolation point</param>
+        /// <returns></returns>
+        public Interval Interpolate(Interval i1, double x0, double x1, double x)
+        {
+            return new Interval(
+                Min.Interpolate(i1.Min, x0, x1, x),
+                Max.Interpolate(i1.Max, x0, x1, x));
         }
 
         #endregion

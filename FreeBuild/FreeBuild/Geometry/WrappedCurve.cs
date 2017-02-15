@@ -30,6 +30,7 @@ namespace FreeBuild.Geometry
     /// Abstract base class for curves internally defined in some other
     /// library's native representation.
     /// </summary>
+    [Serializable]
     public abstract class WrappedCurve : Curve
     {
     }

@@ -76,12 +76,19 @@ namespace FreeBuild.Rendering
 
         #endregion
 
+
         #region Properties
+
+        private Colour _Colour = Colour.Black;
 
         /// <summary>
         /// The colour of the brush
         /// </summary>
-        public Colour Colour { get; set; } = Colour.Black;
+        public Colour Colour
+        {
+            get { return _Colour; }
+            set { _Colour = value; }
+        }
 
         /// <summary>
         /// Get the base colour for this display brush - a single

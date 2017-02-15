@@ -200,6 +200,24 @@ namespace FreeBuild.Geometry
             }
         }
 
+        /// <summary>
+        /// String constructor.
+        /// Creates a new vector by attempting to parse a string in the format
+        /// {X} [separator] {Y} [separator] {Z}.
+        /// </summary>
+        /// <param name="description"></param>
+        /// <param name="separator"></param>
+        public Vector(string description, char separator=',')
+        {
+            var tokens = description.Split(separator);
+            if (tokens.Count() > 0) X = double.Parse(tokens[0]);
+            else X = 0;
+            if (tokens.Count() > 1) Y = double.Parse(tokens[1]);
+            else Y = 0;
+            if (tokens.Count() > 2) Z = double.Parse(tokens[2]);
+            else Z = 0;
+        }
+
         #endregion
 
         #region Methods
@@ -369,6 +387,20 @@ namespace FreeBuild.Geometry
                 X + (towards.X - X) * factor,
                 Y + (towards.Y - Y) * factor,
                 Z + (towards.Z - Z) * factor);
+        }
+
+        /// <summary>
+        /// Interpolate between this vector and another corresponding to
+        /// a set of key values
+        /// </summary>
+        /// <param name="v1">The vector to interpolate towards</param>
+        /// <param name="x0">The key value mapped to this vector</param>
+        /// <param name="x1">The key value mapped to the other vector</param>
+        /// <param name="x">The value of the vector at the position to be interpolated</param>
+        /// <returns></returns>
+        public Vector Interpolate(Vector v1, double x0, double x1, double x)
+        {
+            return Interpolate(v1, (x - x0) / (x1 - x0));
         }
 
         /// <summary>

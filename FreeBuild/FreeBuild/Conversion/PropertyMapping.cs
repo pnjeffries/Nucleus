@@ -37,14 +37,32 @@ namespace FreeBuild.Conversion
         #region Properties
 
         /// <summary>
+        /// Private backing field for PathA property
+        /// </summary>
+        private string _PathA;
+
+        /// <summary>
         /// The path of the property on type A
         /// </summary>
-        public string PathA { get; set; }
+        public string PathA
+        {
+            get { return _PathA; }
+            set { _PathA = value; }
+        }
+
+        /// <summary>
+        /// Private backing field for PathB property
+        /// </summary>
+        private string _PathB;
 
         /// <summary>
         /// The path of the property of type B
         /// </summary>
-        public string PathB { get; set; }
+        public string PathB
+        {
+            get { return _PathB; }
+            set { _PathB = value; }
+        }
 
         /// <summary>
         /// The direction of this mapping.

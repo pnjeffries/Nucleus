@@ -35,9 +35,17 @@ namespace FreeBuild.Model
         #region Properties
 
         /// <summary>
+        /// Private backing field for Loads property
+        /// </summary>
+        private LoadCollection _Loads = new LoadCollection();
+
+        /// <summary>
         /// The set of loads which form this load case
         /// </summary>
-        public LoadCollection Loads { get; } = new LoadCollection();
+        public LoadCollection Loads
+        {
+            get { return _Loads; }
+        }
 
         #endregion
 

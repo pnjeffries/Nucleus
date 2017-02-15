@@ -33,8 +33,17 @@ namespace FreeBuild.Conversion
     public abstract class ConversionContext
     {
         /// <summary>
+        /// Private backing field for ExInfo property
+        /// </summary>
+        public ExecutionInfo _ExInfo = null;
+
+        /// <summary>
         /// The current execution information
         /// </summary>
-        public ExecutionInfo ExInfo { get; set; } = null;
+        public ExecutionInfo ExInfo
+        {
+            get { return _ExInfo; }
+            set { _ExInfo = value; }
+        }
     }
 }

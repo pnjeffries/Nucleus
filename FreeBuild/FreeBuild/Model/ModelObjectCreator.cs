@@ -36,10 +36,16 @@ namespace FreeBuild.Model
     {
         #region Properties
 
+        private Model _Model;
+
         /// <summary>
         /// The model that this creator works on
         /// </summary>
-        protected Model Model { get; private set; }
+        protected Model Model
+        {
+            get { return _Model; }
+            private set { _Model = value; }
+        }
 
         #endregion
 

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace FreeBuild.WPF
 {
@@ -72,12 +73,37 @@ namespace FreeBuild.WPF
         /// <param name="property"></param>
         public virtual void AdaptTo(PropertyInfo property)
         {
-            // Use attribute-defined label if present:
+            
             AutoUIAttribute autoAtt = property.GetCustomAttribute<AutoUIAttribute>();
+
+            // Use attribute-defined label if present:
             if (autoAtt != null && !string.IsNullOrWhiteSpace(autoAtt.Label))
                 Label = autoAtt.Label;
             // Otherwise, use property name:
             else Label = property.Name;
+
+            // Label binding:
+            if (!string.IsNullOrWhiteSpace(autoAtt?.LabelBinding))
+            {
+                var bind = new Binding(autoAtt?.LabelBinding);
+                //bind.FallbackValue = Label;
+                SetBinding(LabelProperty, bind);
+            }
+
+            // Visibility
+            if (!string.IsNullOrWhiteSpace(autoAtt?.VisibilityBinding))
+            {
+                var vB = new Binding(autoAtt.VisibilityBinding);
+                vB.Converter = new Converters.VisibilityConverter();
+                SetBinding(VisibilityProperty, vB);
+            }
+
+            // Tooltip
+            if (!string.IsNullOrWhiteSpace(autoAtt?.ToolTip))
+            {
+                ToolTip = autoAtt.ToolTip;
+            }
+           
         }
 
         #endregion

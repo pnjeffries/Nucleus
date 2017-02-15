@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +54,21 @@ namespace FreeBuild.Base
 
         #endregion
 
+        #region Constructors
+
+        /// <summary>
+        /// Initialise a new empty FilePathCollection with unlimited storage
+        /// </summary>
+        public FilePathCollection() : base() { }
+
+        /// <summary>
+        /// Initialise a new empty FilePathCollection 
+        /// </summary>
+        /// <param name="maximumStored"></param>
+        public FilePathCollection(int maximumStored) : this() { }
+
+        #endregion
+
         #region Methods
 
         protected override string GetKeyForItem(FilePath item)
@@ -62,15 +78,18 @@ namespace FreeBuild.Base
 
         protected void ShortenToLimit()
         {
-            while (Count > MaximumStored) RemoveAt(0);
+            if (MaximumStored > 0) while (Count > MaximumStored) this.RemoveLast();
         }
 
         protected override void InsertItem(int index, FilePath item)
         {
-            if (Contains(item)) Remove(item); //If the item already exists in the collection,
-            // remove it and insert it again at the new position.
-            base.InsertItem(index, item);
-            ShortenToLimit();
+            if (item.IsValid)
+            {
+                if (Contains(item)) Remove(item); //If the item already exists in the collection,
+                                                  // remove it and insert it again at the new position.
+                base.InsertItem(index, item);
+                ShortenToLimit();
+            }
         }
 
         #endregion

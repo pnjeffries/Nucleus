@@ -39,34 +39,88 @@ namespace FreeBuild.Geometry
         #region Properties
 
         /// <summary>
+        /// Private backing field for MinX property
+        /// </summary>
+        private double _MinX;
+
+        /// <summary>
         /// The minimum x-coordinate
         /// </summary>
-        public double MinX { get; set; }
+        public double MinX
+        {
+            get { return _MinX; }
+            set { _MinX = value; }
+        }
+
+        /// <summary>
+        /// Private backing field for MaxX property
+        /// </summary>
+        private double _MaxX;
 
         /// <summary>
         /// The maximum x-coordinate
         /// </summary>
-        public double MaxX { get; set; }
+        public double MaxX
+        {
+            get { return _MaxX; }
+            set { _MaxX = value; }
+        }
+
+        /// <summary>
+        /// Private backing field for MinY property
+        /// </summary>
+        private double _MinY;
 
         /// <summary>
         /// The minimum y-coordinate
         /// </summary>
-        public double MinY { get; set; }
+        public double MinY
+        {
+            get { return _MinY; }
+            set { _MinY = value; }
+        }
+
+        /// <summary>
+        /// Private backing field for MaxY property
+        /// </summary>
+        private double _MaxY;
 
         /// <summary>
         /// The maximum y-coordinate
         /// </summary>
-        public double MaxY { get; set; }
+        public double MaxY
+        {
+            get { return _MaxY; }
+            set { _MaxY = value; }
+        }
+
+        /// <summary>
+        /// Private backing field for MinZ property
+        /// </summary>
+        private double _MinZ;
 
         /// <summary>
         /// The minimum z-coordinate
         /// </summary>
-        public double MinZ { get; set; }
+        public double MinZ
+        {
+            get { return _MinZ; }
+            set { _MinZ = value; }
+        }
+
+        /// <summary>
+        /// Private backing field for MaxZ property
+        /// </summary>
+        private double _MaxZ;
 
         /// <summary>
         /// The maximum z-coordinate
         /// </summary>
-        public double MaxZ { get; set; }
+        public double MaxZ
+        {
+            get { return _MaxZ; }
+            set { _MaxZ = value; }
+        }
 
         /// <summary>
         /// Get the mid-point of the box in the X-axis

@@ -193,5 +193,31 @@ namespace FreeBuild.Extensions
             long bits = BitConverter.DoubleToInt64Bits(value);
             return BitConverter.Int64BitsToDouble(bits + 1);
         }
+
+        /// <summary>
+        /// Interpolate between this value and another
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="towards">The value to interpolate towards</param>
+        /// <param name="factor">The interpolation factor. 0 = this value, 1 = the 'towards' value</param>
+        /// <returns></returns>
+        public static double Interpolate(this double value, double towards, double factor)
+        {
+            return value + (towards - value) * factor;
+        }
+
+        /// <summary>
+        /// Interpolate between this value and another
+        /// </summary>
+        /// <param name="v0"></param>
+        /// <param name="v1">The value to be interpolated towards</param>
+        /// <param name="x0">The key value mapped to this value</param>
+        /// <param name="x1">The key value mapped to the other value</param>
+        /// <param name="x">The key value at the position to be interpolated</param>
+        /// <returns></returns>
+        public static double Interpolate(this double v0, double v1, double x0, double x1, double x)
+        {
+            return v0 + (v1 - v0) * (x - x0) / (x1 - x0);
+        }
     }
 }

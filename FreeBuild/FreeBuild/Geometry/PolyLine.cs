@@ -54,13 +54,20 @@ namespace FreeBuild.Geometry
             }
         }
 
+        /// <summary>
+        /// Private backing field for Vertices collection
+        /// </summary>
+        private VertexCollection _Vertices;
 
         /// <summary>
         /// The collection of vertices which are used to define the geometry of this polyline.
         /// The polyline will be defined as straight lines in between the vertices
         /// in this collection.
         /// </summary>
-        public override VertexCollection Vertices { get; }
+        public override VertexCollection Vertices
+        {
+            get { return _Vertices; }
+        }
 
         #endregion
 
@@ -71,7 +78,7 @@ namespace FreeBuild.Geometry
         /// </summary>
         public PolyLine()
         {
-            Vertices = new VertexCollection(this);
+            _Vertices = new VertexCollection(this);
         }
 
         /// <summary>

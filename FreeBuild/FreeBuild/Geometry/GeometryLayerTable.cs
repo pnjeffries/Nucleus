@@ -60,6 +60,7 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Private backing field for VertexTree property
         /// </summary>
+        [NonSerialized]
         private VertexDDTree _VertexTree = null;
 
         /// <summary>

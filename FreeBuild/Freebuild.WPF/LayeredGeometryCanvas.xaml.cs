@@ -96,7 +96,7 @@ namespace FreeBuild.WPF
         /// </summary>
         public static DependencyProperty CurveThicknessProperty =
             DependencyProperty.Register("CurveThickness", typeof(double), typeof(LayeredGeometryCanvas),
-            new FrameworkPropertyMetadata(0.1, FrameworkPropertyMetadataOptions.None,
+            new FrameworkPropertyMetadata(0.05, FrameworkPropertyMetadataOptions.None,
                 new PropertyChangedCallback(OnCurveThicknessChanged)));
 
         /// <summary>

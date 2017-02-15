@@ -21,6 +21,7 @@
 using FreeBuild.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,9 +38,10 @@ namespace FreeBuild.Base
     /// This type is currently implemented as a struct rather than a class,
     /// though this will be subject to review and may be changed.</remarks>
     [Serializable]
+    [DebuggerDisplay("{ToString()}")]
     public struct Bool6D
     {
-        #region fields
+        #region Fields
 
         /// <summary>
         /// The value in the X-direction
@@ -128,6 +130,36 @@ namespace FreeBuild.Base
         /// <param name="y"></param>
         /// <param name="z"></param>
         public Bool6D(bool x, bool y, bool z) : this(x, y, z, false, false, false) { }
+
+        public Bool6D(string description) : this(false)
+        {
+            var values = description.Split('-');
+            foreach (string value in values)
+            {
+                var trimmed = value.Trim();
+                if (trimmed.EqualsIgnoreCase("X")) X = true;
+                else if (trimmed.EqualsIgnoreCase("Y")) Y = true;
+                else if (trimmed.EqualsIgnoreCase("Z")) Z = true;
+                else if (trimmed.EqualsIgnoreCase("XX")) XX = true;
+                else if (trimmed.EqualsIgnoreCase("YY")) YY = true;
+                else if (trimmed.EqualsIgnoreCase("ZZ")) ZZ = true;
+                else if (trimmed.EqualsIgnoreCase("Pin"))
+                {
+                    X = true;
+                    Y = true;
+                    Z = true;
+                }
+                else if (trimmed.EqualsIgnoreCase("Fixed"))
+                {
+                    X = true;
+                    Y = true;
+                    Z = true;
+                    XX = true;
+                    YY = true;
+                    ZZ = true;
+                }
+            }
+        }
 
         #endregion
 

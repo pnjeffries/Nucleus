@@ -9,6 +9,8 @@ using Shapes = System.Windows.Shapes;
 using Media = System.Windows.Media;
 using FreeBuild.Rendering;
 using System.Windows.Controls;
+using System.Windows.Data;
+using FreeBuild.Base;
 
 namespace FreeBuild.WPF
 {
@@ -66,6 +68,18 @@ namespace FreeBuild.WPF
         {
             if (brush is ColourBrush) return Convert((ColourBrush)brush, alphaLimit);
             else return null;
+        }
+
+        /// <summary>
+        /// Convert a FreeBuild binding to a WPF one
+        /// </summary>
+        /// <param name="binding"></param>
+        /// <returns></returns>
+        public static Binding Convert(PathBinding binding)
+        {
+            var result = new Binding(binding.Path);
+            result.Source = binding.Source;
+            return result;
         }
 
         /// <summary>

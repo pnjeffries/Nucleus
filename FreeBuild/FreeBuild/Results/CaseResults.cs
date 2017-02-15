@@ -56,6 +56,46 @@ namespace FreeBuild.Results
             }
         }
 
+        /// <summary>
+        /// Get or set the results table for the specified linear element
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public LinearElementResults this[LinearElement element]
+        {
+            get { return this[element.GUID] as LinearElementResults; }
+            set { this[element.GUID] = value; }
+        }
+
+        /// <summary>
+        /// Get the result envelope graph for the specified element and result type
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public LinearIntervalGraph this[LinearElement element, LinearElementResultTypes type]
+        {
+            get { return this[element]?[type]; }
+        }
+
+        /// <summary>
+        /// Get the maximum and minimum result values for the specified element and result type
+        /// at the specified position along the element
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="type"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public Interval this[LinearElement element, LinearElementResultTypes type, double position]
+        {
+            get
+            {
+                var graph = this[element, type];
+                if (graph != null) return graph.ValueAt(position);
+                else return Interval.Unset;
+            }
+        }
+
         #endregion
 
         #region Constructors
