@@ -136,7 +136,7 @@ namespace FreeBuild.Robot
         /// <returns></returns>
         public SectionFamily GetMappedSectionProperty(string robotID, Model.Model model)
         {
-            if (HasFirstID(SectionCategory, robotID)) return model.Properties.TryGet(GetFirstID(SectionCategory, robotID)) as SectionFamily;
+            if (HasFirstID(SectionCategory, robotID)) return model.Families.TryGet(GetFirstID(SectionCategory, robotID)) as SectionFamily;
             return null;
         }
 
@@ -275,7 +275,7 @@ namespace FreeBuild.Robot
             {
                 foreach (Guid guid in this[SectionCategory].Keys)
                 {
-                    if (inModel.Properties.Contains(guid)) result.Add(inModel.Properties[guid]);
+                    if (inModel.Families.Contains(guid)) result.Add(inModel.Families[guid]);
                 }
             }
             return result;

@@ -192,7 +192,7 @@ namespace FreeBuild.Model
         {
             SectionFamily result = new SectionFamily();
             result = (SectionFamily)Model.History.Update(exInfo, result);
-            if (result.Name == null) result.Name = Model.Properties.NextAvailableName("Section", result, true);
+            if (result.Name == null) result.Name = Model.Families.NextAvailableName("Section", result, true);
             Model.Add(result);
             return result;
         }
@@ -212,7 +212,7 @@ namespace FreeBuild.Model
         {
             SectionFamily result = new SectionFamily();
             result = (SectionFamily)Model.History.Update(exInfo, result);
-            result.Name = Model.Properties.NextAvailableName(name, result);
+            result.Name = Model.Families.NextAvailableName(name, result);
             Model.Add(result);
             return result;
         }
@@ -231,7 +231,7 @@ namespace FreeBuild.Model
             SectionFamily result = new SectionFamily();
             result = (SectionFamily)Model.History.Update(exInfo, result);
             result.Profile = profile;
-            if (result.Name == null) result.Name = Model.Properties.NextAvailableName("Section", result, true);
+            if (result.Name == null) result.Name = Model.Families.NextAvailableName("Section", result, true);
             Model.Add(result);
             return result;
         }

@@ -111,7 +111,7 @@ namespace FreeBuild.Model
                 ModelObject original = Get(exInfo);
                 if (original != null && unique != null && original.GetType() == unique.GetType())
                 {
-                    original.CopyFieldsFrom(unique);
+                    //original.CopyFieldsFrom(unique);
                     original.Undelete();
                     exInfo.HistoryItemCount++;
                     return original;

@@ -364,7 +364,7 @@ namespace FreeBuild.Robot
             if (nodes.Count > 0) RaiseMessage("Writing Nodes...");
             UpdateRobotNodesFromModel(model, nodes, context);
 
-            FamilyCollection properties = model.Properties;
+            FamilyCollection properties = model.Families;
             if (context.Options.Update) properties = properties.Modified(context.Options.UpdateSince);
             if (properties.Count > 0) RaiseMessage("Writing Properties...");
             UpdateRobotPropertiesFromModel(model, properties, context);
