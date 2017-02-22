@@ -11,7 +11,83 @@ namespace FreeBuild.Maths
     /// </summary>
     public class LinearIntervalGraph : LinearGraph<Interval>
     {
+        #region Properties
+
+        /// <summary>
+        /// Does this graph represent an envelope that encloses a range of values rather than
+        /// just a single curve
+        /// </summary>
+        public bool IsEnvelope
+        {
+            get
+            {
+                foreach (Interval value in Values)
+                    if (!value.IsSingularity) return true;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Get the range of key values currently stored in this data set
+        /// </summary>
+        public Interval ValueRange
+        {
+            get
+            {
+                Interval result = Interval.Unset;
+                foreach (Interval value in Values)
+                {
+                    if (!result.IsValid) result = value;
+                    else result = result.Union(value);
+                }
+                return result;
+            }
+        }
+
+        #endregion
+
+
+        #region Constructors
+
+        /// <summary>
+        /// Initialises a new blank LinearIntervalGraph
+        /// </summary>
+        public LinearIntervalGraph() : base() { }
+
+        /// <summary>
+        /// Initialise a new LinearGraph from a list of values.
+        /// The values will be plotted against their indices.
+        /// </summary>
+        /// <param name="values"></param>
+        public LinearIntervalGraph(IList<Interval> values) : base(values) { }
+
+        /// <summary>
+        /// Initialise a new LinearIntervalGraph from a list of values.
+        /// The values will be converted to intervals and plotted against their indices.
+        /// </summary>
+        /// <param name="values"></param>
+        public LinearIntervalGraph(IList<double> values) : base()
+        {
+            for (int i = 0; i < values.Count; i++)
+            {
+                Add(i, new Interval(values[i]));
+            }
+        }
+
+        #endregion
+
         #region Methods
+
+        /// <summary>
+        /// Adds an element with the specified key and value into the
+        /// graph.  The value will be automatically converted into an Interval.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public void Add(double key, double value)
+        {
+            Add(key, new Interval(value));
+        }
 
         protected override Interval Interpolate(int i0, int i1, double t)
         {

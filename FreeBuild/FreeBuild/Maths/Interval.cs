@@ -278,6 +278,18 @@ namespace FreeBuild.Maths
         }
 
         /// <summary>
+        /// Evaluate the normalised parameter (where 0 is Min and 1 is Max) of
+        /// the specified value's position related to this interval
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public double ParameterOf(double value)
+        {
+            double size = Size;
+            return size != 0 ? (value - Min) / size : 0;
+        }
+
+        /// <summary>
         /// Does this interval include the specified value?
         /// </summary>
         /// <param name="value"></param>
@@ -372,6 +384,35 @@ namespace FreeBuild.Maths
             return new Interval(
                 Min.Interpolate(i1.Min, x0, x1, x),
                 Max.Interpolate(i1.Max, x0, x1, x));
+        }
+
+        /// <summary>
+        /// Generate a set of evently-spaced 'reasonable' rounded numbers within
+        /// this interval, to be used as such things as generating grid lines on graphs
+        /// </summary>
+        /// <param name="divisions">The target number of divisions.  The ultimate number of values may be slightly more or less than this depending on rounding</param>
+        /// <returns></returns>
+        public IList<double> ReasonableDivisions(int divisions)
+        {
+            var result = new List<double>();
+            int digits = divisions.Digits();
+            double increment = (Size/divisions).RoundToSignificantFigures(digits);
+            if (increment > 0)
+            {
+                // Start at 0 if 0 is included in this interval:
+                if (Contains(0))
+                {
+                    int negDivs = (int)Math.Floor(-Min / increment);
+                    for (int i = negDivs; i > 0; i--) result.Add(i * -increment);
+                    int posDivs = (int)Math.Floor(Max / increment);
+                    for (int i = 0; i <= posDivs; i++) result.Add(i * increment);
+                }
+                else
+                {
+                    for (double value = Min.RoundToSignificantFigures(digits); value < Max; value += increment) result.Add(value);
+                }
+            }
+            return result;
         }
 
         #endregion

@@ -105,7 +105,7 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="startPoint">The start point of the line</param>
         /// <param name="endPoint">The end point of the line</param>
-        public Line(Vector startPoint, Vector endPoint, GeometryAttributes attributes = null): this()
+        public Line(Vector startPoint, Vector endPoint, GeometryAttributes attributes = null) : this()
         {
             Vertices.Add(new Vertex(startPoint));
             Vertices.Add(new Vertex(endPoint));
@@ -121,7 +121,7 @@ namespace FreeBuild.Geometry
         /// <param name="x1">The x coordinate of the line end</param>
         /// <param name="y1">The y coordinate of the line end</param>
         /// <param name="z1">The z coordinate of the line end</param>
-        public Line(double x0, double y0, double z0, double x1, double y1, double z1, GeometryAttributes attributes = null) 
+        public Line(double x0, double y0, double z0, double x1, double y1, double z1, GeometryAttributes attributes = null)
             : this(new Vector(x0, y0, z0), new Vector(x1, y1, z1), attributes) { }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="startVertex">The start vertex of the line.  This should not be shared with any other geometry.</param>
         /// <param name="endVertex">The end vertex of the line.  This should not be shared with any other geometry.Thi</param>
-        public Line(Vertex startVertex, Vertex endVertex): this()
+        public Line(Vertex startVertex, Vertex endVertex) : this()
         {
             Vertices.Add(startVertex);
             Vertices.Add(endVertex);
@@ -203,6 +203,23 @@ namespace FreeBuild.Geometry
         {
             Start.Position = startPt;
             End.Position = endPt;
+        }
+
+        /// <summary>
+        /// Generate a set of evenly-spaced points along this line
+        /// by dividing it into the specified number of segments.
+        /// The resulting number of points will be divisions + 1
+        /// </summary>
+        /// <param name="divisions"></param>
+        /// <returns></returns>
+        public Vector[] Divide(int divisions)
+        {
+            Vector[] result = new Vector[divisions + 1];
+            for (int i = 0; i <= divisions; i++)
+            {
+                result[i] = StartPoint.Interpolate(EndPoint, (double)i * 1.0 / divisions);
+            }
+            return result;
         }
 
         #endregion

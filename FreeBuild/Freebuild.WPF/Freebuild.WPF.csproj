@@ -51,12 +51,14 @@
     <Compile Include="Converters\CountVisibilityConverter.cs" />
     <Compile Include="Converters\ExpanderHeaderWidthConverter.cs" />
     <Compile Include="Converters\AreEqualConverter.cs" />
+    <Compile Include="Converters\GraphPointsConverter.cs" />
     <Compile Include="Converters\GreaterThanConverter.cs" />
+    <Compile Include="Converters\IntConverter.cs" />
     <Compile Include="Converters\IsTypeConverter.cs" />
     <Compile Include="Converters\MultiplicationConverter.cs" />
     <Compile Include="Converters\RadiansDegreesConverter.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
-    <Compile Include="DependencyObjectExtensions.cs" />
+    <Compile Include="Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="EnumBindingSourceExtension.cs" />
     <Compile Include="FBtoWPF.cs" />
     <Compile Include="Field Controls\Bool6DFieldControl.xaml.cs">
@@ -93,6 +95,7 @@
       <DependentUpon>LayeredGeometryCanvas.xaml</DependentUpon>
     </Compile>
     <Compile Include="IsNullDataTemplateSelector.cs" />
+    <Compile Include="LineGraphCanvas.cs" />
     <Compile Include="ProfileCanvas.cs" />
     <Compile Include="PropertiesExpander.xaml.cs">
       <DependentUpon>PropertiesExpander.xaml</DependentUpon>

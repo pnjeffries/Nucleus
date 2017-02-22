@@ -11,12 +11,46 @@ namespace FreeBuild.Maths
     /// </summary>
     public abstract class LinearGraph<TValue> : SortedList<double, TValue>
     {
+        #region Properties
+
+        /// <summary>
+        /// Get the range of key values currently stored in this data set
+        /// </summary>
+        public Interval KeyRange
+        {
+            get
+            {
+                Interval result = Interval.Unset;
+                foreach (double key in Keys)
+                {
+                    if (!result.IsValid) result = new Interval(key);
+                    else result = result.Include(key);
+                }
+                return result;
+            }
+        }
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
         /// Initialise a new empty LinearGraph
         /// </summary>
         public LinearGraph() : base() { }
+
+        /// <summary>
+        /// Initialise a new LinearGraph from a list of values.
+        /// The values will be plotted against their indices.
+        /// </summary>
+        /// <param name="values"></param>
+        public LinearGraph(IList<TValue> values)
+        {
+            for (int i = 0; i < values.Count; i++)
+            {
+                Add(i, values[i]);
+            }
+        }
 
         #endregion
 

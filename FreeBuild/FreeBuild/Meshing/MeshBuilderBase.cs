@@ -453,11 +453,48 @@ namespace FreeBuild.Meshing
             topology.Add(basePoints);
             topology.Add(tipPoints);
             AddLoft(topology, true);
+            FillStartToEnd(basePoints); // Cap bottom
         }
 
-        public void FillBoundary(Vector[] pts)
+        /// <summary>
+        /// Add a set of vertices and faces to this mesh representing a facetted cone
+        /// </summary>
+        /// <param name="tip"></param>
+        /// <param name="baseCircle"></param>
+        /// <param name="baseResolution"></param>
+        public void AddFacetCone(Vector tip, Circle baseCircle, int baseResolution)
         {
+            IList<Vector> basePoints = baseCircle.Divide(baseResolution);
+            for (int i = 0; i < basePoints.Count; i++)
+            {
+                AddFace(tip, basePoints[i], basePoints.GetWrapped(i + 1));
+            }
+            FillStartToEnd(basePoints);
+        }
 
+        /// <summary>
+        /// Add a set of vertices and faces to this mesh representing a cylinder
+        /// by extruding a circle
+        /// </summary>
+        /// <param name="baseCircle">The base circle forming one end of the cylinder</param>
+        /// <param name="height">The height of the cylinder - i.e. the extrusion distance of the
+        /// base circle along it's own normal</param>
+        /// <param name="resolution">The number of points around the circle at which to create
+        /// vertices to define the cylinder.</param>
+        public void AddCylinder(Circle baseCircle, double height, int resolution)
+        {
+            IList<Vector> basePoints = baseCircle.Divide(resolution);
+            IList<Vector> topPoints = new Vector[basePoints.Count];
+            for (int i = 0; i < basePoints.Count; i++)
+            {
+                topPoints[i] = basePoints[i] + baseCircle.L * height;
+            }
+            IList<IList<Vector>> topology = new List<IList<Vector>>();
+            topology.Add(basePoints);
+            topology.Add(topPoints);
+            AddLoft(topology, true);
+            FillStartToEnd(basePoints); // Cap bottom
+            FillStartToEndReverse(topPoints); // Cap top
         }
     }
 

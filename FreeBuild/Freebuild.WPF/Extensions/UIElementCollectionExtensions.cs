@@ -48,7 +48,7 @@ namespace FreeBuild.WPF
                     {
                         control = new ComboFieldControl();
                     }
-                    else if (pType.IsAssignableFrom(typeof(double))) // Numbers
+                    else if (pType.IsAssignableFrom(typeof(double)) || pType.IsAssignableFrom(typeof(int))) // Numbers
                     {
                         control = new SliderFieldControl();
                     }
