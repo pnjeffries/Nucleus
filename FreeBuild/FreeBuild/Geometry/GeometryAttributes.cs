@@ -38,15 +38,33 @@ namespace FreeBuild.Geometry
         #region Properties
 
         /// <summary>
+        /// Private backing field for LayerName property
+        /// </summary>
+        private string _LayerName = null;
+
+        /// <summary>
         /// The name of the layer (if any) on which this object should be displayed
         /// </summary>
-        public string LayerName { get; set; } = null;
+        public string LayerName
+        {
+            get { return _LayerName; }
+            set { ChangeProperty(ref _LayerName, value, "LayerName"); }
+        }
+
+        /// <summary>
+        /// Private backing field for SourceID property
+        /// </summary>
+        private string _SourceID = null;
 
         /// <summary>
         /// The ID of the source object from which this geometry was generated or
         /// to which it is otherwise linked.
         /// </summary>
-        public string SourceID { get; set; } = null;
+        public string SourceID
+        {
+            get { return _SourceID; }
+            set { _SourceID = value; }
+        }
         
         #endregion
 
@@ -62,20 +80,22 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="sourceID"></param>
         /// <param name="layerName"></param>
-        public GeometryAttributes(string sourceID, string layerName = null, DisplayBrush brush = null)
+        public GeometryAttributes(string sourceID, string layerName = null, DisplayBrush brush = null, double thickness = 1.0)
         {
             SourceID = sourceID;
             LayerName = layerName;
             Brush = brush;
+            Weight = thickness;
         }
 
         /// <summary>
         /// Brush constructor.  Initialises a new GeometryAttributes object with the specified display brush.
         /// </summary>
         /// <param name="brush"></param>
-        public GeometryAttributes(DisplayBrush brush)
+        public GeometryAttributes(DisplayBrush brush, double thickness = 1.0)
         {
             Brush = brush;
+            Weight = thickness;
         }
 
         /// <summary>
@@ -83,9 +103,10 @@ namespace FreeBuild.Geometry
         /// a ColourBrush of the specified colour
         /// </summary>
         /// <param name="colour"></param>
-        public GeometryAttributes(Colour colour)
+        public GeometryAttributes(Colour colour, double thickness = 1.0)
         {
             Brush = new ColourBrush(colour);
+            Weight = thickness;
         }
 
         #endregion

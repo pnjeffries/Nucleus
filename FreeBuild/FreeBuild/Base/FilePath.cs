@@ -25,6 +25,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Reflection;
+using System.Xml.Serialization;
+using System.Xml;
+using System.Xml.Schema;
+using FreeBuild.Extensions;
 
 namespace FreeBuild.Base
 {
@@ -39,21 +43,29 @@ namespace FreeBuild.Base
     /// as strings.
     /// </summary>
     [Serializable]
-    public struct FilePath
+    public struct FilePath : IXmlSerializable
     {
         #region Properties
 
         /// <summary>
+        /// Private backing field for Path property
+        /// </summary>
+        private string _Path;
+
+        /// <summary>
         /// The full string value of the filepath
         /// </summary>
-        public string Path { get; }
+        public string Path
+        {
+            get { return _Path; }
+        }
 
         /// <summary>
         /// Is the path a valid file location?
         /// </summary>
         public bool IsValid
         {
-            get { return !string.IsNullOrWhiteSpace(Path); } //TODO: Other checks?
+            get { return !string.IsNullOrWhiteSpace(_Path); } //TODO: Other checks?
         }
 
         /// <summary>
@@ -61,31 +73,36 @@ namespace FreeBuild.Base
         /// </summary>
         public bool IsSet
         {
-            get { return Path != null; }
+            get { return _Path != null; }
         }
 
         /// <summary>
         /// Does the file that this path points to exist?
         /// </summary>
-        public bool Exists { get { return File.Exists(Path); } }
+        public bool Exists { get { return File.Exists(_Path); } }
 
         /// <summary>
         /// Gets the name of the file at the end of the path,
         /// including its extension but not the preceding
         /// directory structure.
         /// </summary>
-        public string FileName { get { return System.IO.Path.GetFileName(Path); } }
+        public string FileName { get { return System.IO.Path.GetFileName(_Path); } }
 
         /// <summary>
         /// Gets the extension of this filepath.
         /// Includes the preceding '.'.
         /// </summary>
-        public string Extension { get { return System.IO.Path.GetExtension(Path); } }
+        public string Extension { get { return System.IO.Path.GetExtension(_Path); } }
 
         /// <summary>
         /// Gets the directory of the filepath
         /// </summary>
-        public string Directory { get { return System.IO.Path.GetDirectoryName(Path); } }
+        public string Directory { get { return System.IO.Path.GetDirectoryName(_Path); } }
+
+        /// <summary>
+        /// Get this filepath shortened to 50 characters or less
+        /// </summary>
+        public string Shortened { get { return Directory.TruncateMiddle(80 - FileName.Length) + "\\" + FileName; } }
 
         #endregion
 
@@ -97,7 +114,7 @@ namespace FreeBuild.Base
         /// <param name="path"></param>
         public FilePath(string path)
         {
-            Path = path ?? "";
+            _Path = path ?? "";
         }
 
         #endregion
@@ -134,6 +151,22 @@ namespace FreeBuild.Base
         public static FilePath DirectoryOf(Assembly assembly)
         {
             return new FilePath(assembly.Location).Directory;
+        }
+
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            _Path = reader.ReadString();
+            reader.ReadEndElement();
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteString(_Path);
         }
 
         #endregion

@@ -43,6 +43,26 @@ namespace FreeBuild.Geometry
         /// </summary>
         public BoundingBox BoundingBox { get { return new BoundingBox(this); } }
 
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Get a collection containing all of the vertices belonging to the geometry in this collection
+        /// </summary>
+        /// <returns></returns>
+        public VertexCollection AllVertices()
+        {
+            var result = new VertexCollection();
+            foreach (VertexGeometry geom in this)
+            {
+                foreach (Vertex v in geom.Vertices)
+                {
+                    result.Add(v);
+                }
+            }
+            return result;
+        }
 
         #endregion
     }
@@ -53,6 +73,22 @@ namespace FreeBuild.Geometry
     [Serializable]
     public class VertexGeometryCollection : VertexGeometryCollection<VertexGeometry>
     {
+        #region Constructors
+
+        public VertexGeometryCollection() : base() { }
+
+        public VertexGeometryCollection(VertexGeometryCollection collection) : base()
+        {
+            foreach (VertexGeometry vG in collection) Add(vG);
+        }
+
+        public VertexGeometryCollection(CurveCollection collection) : base()
+        {
+            foreach (VertexGeometry vG in collection) Add(vG);
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>

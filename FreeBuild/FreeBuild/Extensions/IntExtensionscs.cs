@@ -50,5 +50,17 @@ namespace FreeBuild.Extensions
         {
             return value % 2 != 0;
         }
+
+        /// <summary>
+        /// Get the number of digits used in the decimal representation
+        /// of this integer.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static int Digits(this int value)
+        {
+            if (value == 0) return 1;
+            else return (int)Math.Floor(Math.Log10(Math.Abs(value)) + 1);
+        }
     }
 }

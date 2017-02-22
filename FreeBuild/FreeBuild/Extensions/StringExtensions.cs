@@ -226,5 +226,43 @@ namespace FreeBuild.Extensions
             return count;
         }
 
+        /// <summary>
+        /// Trim an occurrences of the specified suffix from the end of this string
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="suffixToRemove"></param>
+        /// <param name="comparisonType"></param>
+        /// <returns></returns>
+        public static string TrimEnd(this string input, string suffixToRemove, StringComparison comparisonType = StringComparison.CurrentCulture)
+        {
+
+            if (input != null && suffixToRemove != null)
+            {
+                while (input.EndsWith(suffixToRemove, comparisonType))
+                {
+                    input = input.Substring(0, input.Length - suffixToRemove.Length);
+                }
+            }
+            return input;
+        }
+
+        /// <summary>
+        /// Shorten this string to within the set maximum number of characters
+        /// by truncating the middle of the string with an ellipsis
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="maxChars"></param>
+        /// <returns></returns>
+        public static string TruncateMiddle(this string input, int maxChars, string separator = "...")
+        {
+            if (input.Length > maxChars)
+            {
+                int startLength = Math.Max((maxChars - separator.Length) / 2, 0);
+                int endLength = Math.Max(maxChars - separator.Length - startLength, 0);
+                return input.Substring(0, startLength) + separator + (input.Substring(input.Length - endLength));
+            }
+            else return input;
+        }
+
     }
 }

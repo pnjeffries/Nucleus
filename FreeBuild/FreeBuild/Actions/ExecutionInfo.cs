@@ -35,10 +35,20 @@ namespace FreeBuild.Actions
     public class ExecutionInfo
     {
         /// <summary>
+        /// Private backing field for ExecutionID property
+        /// </summary>
+        private Guid _ExecutionID = Guid.NewGuid();
+
+        /// <summary>
         /// The unique identifier of this particular execution.
         /// This will be different each time and can be used to tell execution runs apart.
         /// </summary>
-        public Guid ExecutionID { get; } = Guid.NewGuid();
+        public Guid ExecutionID { get { return _ExecutionID; } }
+
+        /// <summary>
+        /// Private backing field for SourceReference property
+        /// </summary>
+        private string _SourceReference = null;
 
         /// <summary>
         /// The reference string used to identify the source of execution of an action,
@@ -47,20 +57,42 @@ namespace FreeBuild.Actions
         /// For example, this may be the GUID of the calling grasshopper component.
         /// Defaults to null when the source is not parametric (i.e. when called manually).
         /// </summary>
-        public string SourceReference { get; set; } = null;
+        public string SourceReference
+        {
+            get { return _SourceReference; }
+            set { _SourceReference = value; }
+        }
+
+        /// <summary>
+        /// Private backing field for Iteration property
+        /// </summary>
+        private int _Iteration = 0;
 
         /// <summary>
         /// The iteration number of this execution.  This will increment when the same source calls
         /// this action multiple times during the same update cycle - for example when a list of inputs
         /// is plugged into a Grasshopper component.
         /// </summary>
-        public int Iteration { get; set; } = 0;
+        public int Iteration
+        {
+            get { return _Iteration; }
+            set { _Iteration = value; }
+        }
+
+        /// <summary>
+        /// Private backing field for HistoryItemCount property
+        /// </summary>
+        private int _HistoryItemCount = 0;
 
         /// <summary>
         /// The number of history-tracked items that have been created or updated during this execution.
         /// This will be incremented automatically by the source history manager 
         /// </summary>
-        public int HistoryItemCount { get; set; } = 0;
+        public int HistoryItemCount
+        {
+            get { return _HistoryItemCount; }
+            set { _HistoryItemCount = value; }
+        }
 
         /// <summary>
         /// Default constructor for manual execution

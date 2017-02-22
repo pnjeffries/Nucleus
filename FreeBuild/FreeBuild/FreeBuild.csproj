@@ -32,6 +32,9 @@
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="RhinoCommon">
+      <HintPath>..\References\RhinoCommon.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,6 +49,7 @@
     <Compile Include="Actions\ExecutionInfo.cs" />
     <Compile Include="Base\Bool6D.cs" />
     <Compile Include="Base\CollectionCopyAttribute.cs" />
+    <Compile Include="Base\PathBinding.cs" />
     <Compile Include="Conversion\IDMappingsDictionary.cs" />
     <Compile Include="Base\MessageRaiser.cs" />
     <Compile Include="Base\ObservablePair.cs" />
@@ -58,10 +62,13 @@
     <Compile Include="Conversion\IStringConversionContext.cs" />
     <Compile Include="Conversion\ModelIDMappingTable.cs" />
     <Compile Include="Conversion\StringConversionContextBase.cs" />
+    <Compile Include="DDTree\PositionDDTree.cs" />
+    <Compile Include="DDTree\VertexDDTree.cs" />
     <Compile Include="Events\MessageRaisedEventArgs.cs" />
     <Compile Include="Events\PropertyChangedEventArgsExtended.cs" />
     <Compile Include="Exceptions\MatrixException.cs" />
     <Compile Include="Exceptions\MeshConstructionException.cs" />
+    <Compile Include="Extensions\IDictionaryExtensions.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Extensions\IListExtensions.cs" />
     <Compile Include="Extensions\IntExtensionscs.cs" />
@@ -70,6 +77,7 @@
     <Compile Include="Extensions\SortedListExtensions.cs" />
     <Compile Include="Extensions\StringBuilderExtensions.cs" />
     <Compile Include="Geometry\Cloud.cs" />
+    <Compile Include="Geometry\DerivedGeometryDictionary.cs" />
     <Compile Include="Geometry\GeometryAttributes.cs" />
     <Compile Include="Geometry\GeometryLayer.cs" />
     <Compile Include="Geometry\GeometryLayerTable.cs" />
@@ -86,15 +94,18 @@
     <Compile Include="IO\ModelDocumentTextSerialiser.cs" />
     <Compile Include="IO\TextFormat.cs" />
     <Compile Include="IO\TextSerialiser.cs" />
+    <Compile Include="Maths\GraphLineData.cs" />
+    <Compile Include="Maths\GraphLineDataCollection.cs" />
+    <Compile Include="Maths\LinearGraph.cs" />
+    <Compile Include="Maths\LinearIntervalGraph.cs" />
     <Compile Include="Meshing\CoordinateSystemRemappingOption.cs" />
     <Compile Include="Meshing\DelaunayTriangle.cs" />
     <Compile Include="Meshing\MeshBuilder.cs" />
     <Compile Include="Model\AngleProfile.cs" />
+    <Compile Include="Model\LinearElementSet.cs" />
     <Compile Include="Model\Loading\AreaLoad.cs" />
     <Compile Include="Model\CircularHollowProfile.cs" />
     <Compile Include="Model\CircularProfile.cs" />
-    <Compile Include="Model\ElementOrientation.cs" />
-    <Compile Include="Model\ElementOrientationAngle.cs" />
     <Compile Include="Model\ElementVertex.cs" />
     <Compile Include="Model\FactoredCase.cs" />
     <Compile Include="Model\FactoredLoadCase.cs" />
@@ -184,6 +195,7 @@
     <Compile Include="Model\LoadCase.cs" />
     <Compile Include="Model\LoadCaseCollection.cs" />
     <Compile Include="Model\LoadCollection.cs" />
+    <Compile Include="Model\Loading\UniformNodeLoadApplication.cs" />
     <Compile Include="Model\Material.cs" />
     <Compile Include="Model\MaterialCollection.cs" />
     <Compile Include="Model\MaterialTable.cs" />
@@ -198,11 +210,11 @@
     <Compile Include="Model\NodeCollection.cs" />
     <Compile Include="Model\NodeGenerationParameters.cs" />
     <Compile Include="Model\NodeLoadApplication.cs" />
+    <Compile Include="Model\NodeSet.cs" />
     <Compile Include="Model\PanelElement.cs" />
     <Compile Include="Model\NodeTable.cs" />
     <Compile Include="Model\PanelElementCollection.cs" />
     <Compile Include="Model\ParameterProfile.cs" />
-    <Compile Include="Model\PointLoad.cs" />
     <Compile Include="Model\ResultsCase.cs" />
     <Compile Include="Model\SectionProfile.cs" />
     <Compile Include="Model\RectangularHollowProfile.cs" />
@@ -233,6 +245,7 @@
     <Compile Include="Geometry\Vector.cs" />
     <Compile Include="Rendering\Colour.cs" />
     <Compile Include="Rendering\ColourBrush.cs" />
+    <Compile Include="Rendering\ColourCollection.cs" />
     <Compile Include="Rendering\DisplayAttributes.cs" />
     <Compile Include="Rendering\DisplayBrush.cs" />
     <Compile Include="Rendering\IRenderable.cs" />
@@ -241,6 +254,8 @@
     <Compile Include="Results\CaseResults.cs" />
     <Compile Include="Results\IModelObjectResult.cs" />
     <Compile Include="Results\IModelObjectResults.cs" />
+    <Compile Include="Results\LinearElementResults.cs" />
+    <Compile Include="Results\LinearElementResultTypes.cs" />
     <Compile Include="Results\ModelObjectResults.cs" />
     <Compile Include="Results\ModelResults.cs" />
     <Compile Include="Results\NodeResults.cs" />
@@ -248,9 +263,7 @@
     <Compile Include="Results\ResultsDictionary.cs" />
     <Compile Include="UI\AutoUIAttribute.cs" />
     <Compile Include="UI\AutoUIComboBoxAttribute.cs" />
-    <Compile Include="UI\IMouseInteraction.cs" />
     <Compile Include="UI\IUserInteraction.cs" />
-    <Compile Include="UI\MouseInteractionParameters.cs" />
     <Compile Include="Units\DimensionAttribute.cs" />
     <Compile Include="Units\DimensionType.cs" />
   </ItemGroup>

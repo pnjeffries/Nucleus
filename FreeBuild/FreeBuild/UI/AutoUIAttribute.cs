@@ -46,6 +46,27 @@ namespace FreeBuild.UI
         /// </summary>
         public string Label { get; set; } = null;
 
+        /// <summary>
+        /// The name of the string property on the same object which governs the
+        /// label test of the generated UI control.  If this property is null or invalid
+        /// then the label will use the Label property of this attribute or failing that
+        /// the name of the property itself.
+        /// </summary>
+        public string LabelBinding { get; set; } = null;
+
+        /// <summary>
+        /// The name of the boolean property on the same object which governs
+        /// the visibility of the generated UI control.  This property must return
+        /// true when the control should be visible and false when it should be
+        /// collapsed.  If this is omitted then the control will always be visible.
+        /// </summary>
+        public string VisibilityBinding { get; set; } = null;
+
+        /// <summary>
+        /// The tooltip to be displayed when the mouse is over the generated UI control.
+        /// </summary>
+        public string ToolTip { get; set; } = null;
+
         #endregion
 
         #region Constructors

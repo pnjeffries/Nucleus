@@ -41,8 +41,9 @@ namespace FreeBuild.Model
     /// to be considered during analysis
     /// </summary>
     /// <typeparam name="TApplication">The type of application rule applicable to this load</typeparam>
+    /// <typeparam name="TValue">The type of the load value to be applied</typeparam>
     [Serializable]
-    public abstract class Load<TApplication> : Load
+    public abstract class Load<TApplication, TValue> : Load
         where TApplication : class, ILoadApplication
     {
         /// <summary>
@@ -60,6 +61,20 @@ namespace FreeBuild.Model
                 if (_AppliedTo == null) _AppliedTo = new LoadApplicationCollection<TApplication>();
                 return _AppliedTo;
             }
+        }
+
+        /// <summary>
+        /// Private backing field for Value property
+        /// </summary>
+        private TValue _Value;
+
+        /// <summary>
+        /// The value of the load
+        /// </summary>
+        public TValue Value
+        {
+            get { return _Value; }
+            set { ChangeProperty(ref _Value, value, "Value"); }
         }
     }
 }

@@ -229,6 +229,29 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
+        /// Private backing field for the DerivedGeometry property
+        /// </summary>
+        [NonSerialized] //TEMP!
+        private DerivedGeometryDictionary _DerivedGeometry = null;
+        
+        /// <summary>
+        /// Storage for derived geometric objects attached to this element.
+        /// These represent geometric forms that the element may be represented by
+        /// or may attain under certain circumstances (such as structural deflection plots)
+        /// but they do not form part of the idealised defining geometry of the element - for
+        /// the set-out geometry of the element consult the Geometry property instead.
+        /// NOTE: Currently Not Serialized - temporary data only
+        /// </summary>
+        public DerivedGeometryDictionary DerivedGeometry
+        {
+            get
+            {
+                if (_DerivedGeometry == null) _DerivedGeometry = new DerivedGeometryDictionary(this);
+                return _DerivedGeometry;
+            }
+        }
+
+        /// <summary>
         /// Private backing member variable for the Family property
         /// </summary>
         private TFamily _Family;
@@ -248,6 +271,9 @@ namespace FreeBuild.Model
             }
         }
 
+        /// <summary>
+        /// Private backing field for Orientation property
+        /// </summary>
         private Angle _Orientation = Angle.Zero;
 
         /// <summary>

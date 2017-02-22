@@ -85,7 +85,7 @@ namespace FreeBuild.WPF
 
         public static DependencyProperty CurveThicknessProperty =
             DependencyProperty.Register("CurveThickness", typeof(double), typeof(GeometryCanvas),
-            new FrameworkPropertyMetadata(0.01, FrameworkPropertyMetadataOptions.None));//,
+            new FrameworkPropertyMetadata(0.005, FrameworkPropertyMetadataOptions.None));//,
                 //new PropertyChangedCallback(OnCurveThicknessChanged)));
 
         /// <summary>
@@ -172,15 +172,38 @@ namespace FreeBuild.WPF
                 pathGeo.Figures.Add(FBtoWPF.Convert(crv));
 
                 Path path = new Path();
-                path.DataContext = this;
-                if (crv.Attributes == null || crv.Attributes.Brush == null)
-                {
-                    path.Stroke = DefaultBrush;
-                }
-                else path.Stroke = FBtoWPF.Convert(crv.Attributes.Brush);
-                path.SetBinding(Path.StrokeThicknessProperty, new Binding("CurveThickness"));
+                path.DataContext = crv;
+                //if (crv.Attributes == null || crv.Attributes.Brush == null)
+                //{
+                //    path.Stroke = DefaultBrush;
+                //}
+                //else path.Stroke = FBtoWPF.Convert(crv.Attributes.Brush);
+                var strokeBinding = new Binding("Attributes.Brush");
+                strokeBinding.Converter = new Converters.BrushConverter();
+                strokeBinding.FallbackValue = DefaultBrush;
+                path.SetBinding(Path.StrokeProperty, strokeBinding);
 
-                //path.StrokeThickness = CurveThickness * scaleFactor;
+                path.StrokeStartLineCap = PenLineCap.Round;
+                path.StrokeEndLineCap = PenLineCap.Round;
+
+                var thicknessBinding = new Binding("CurveThickness");
+                thicknessBinding.Source = this;
+
+                if (crv.Attributes == null)
+                {
+                    path.SetBinding(Path.StrokeThicknessProperty, thicknessBinding);
+                }
+                else
+                { 
+                    var mBinding = new MultiBinding();
+                    mBinding.Converter = new Converters.MultiplicationConverter();
+                    mBinding.Bindings.Add(thicknessBinding);
+                    mBinding.Bindings.Add(new Binding("Attributes.Weight"));
+
+                    path.SetBinding(Path.StrokeThicknessProperty, mBinding);
+                }
+
+                //path.StrokeThickness = CurveThickness;// * scaleFactor;
 
                 path.Data = pathGeo;
                 path.StrokeLineJoin = PenLineJoin.Round;
@@ -216,11 +239,17 @@ namespace FreeBuild.WPF
                 }
 
                 Path path = new Path();
-                if (reg.Attributes == null || reg.Attributes.Brush == null)
-                {
-                    path.Fill = DefaultBrush;
-                }
-                else path.Fill = FBtoWPF.Convert(reg.Attributes.Brush, 192);
+                path.DataContext = shape;
+                //if (reg.Attributes == null || reg.Attributes.Brush == null)
+                //{
+                //    path.Fill = DefaultBrush;
+                //}
+                //else path.Fill = FBtoWPF.Convert(reg.Attributes.Brush, 192);
+                var fillBinding = new Binding("Attributes.Brush");
+                fillBinding.Converter = new Converters.BrushConverter();
+                fillBinding.FallbackValue = DefaultBrush;
+                fillBinding.ConverterParameter = 192;
+                path.SetBinding(Path.FillProperty, fillBinding);
                 //path.Stroke = Brushes.Black;
                 //path.StrokeThickness = 0.01;
                 path.Data = cg;
@@ -236,17 +265,19 @@ namespace FreeBuild.WPF
                 TextBlock tB = new TextBlock();
                 tB.DataContext = label;
                 tB.Padding = new Thickness(0);
-                tB.Text = label.Text;
-                tB.SetBinding(TextBlock.TextProperty, new Binding("Text"));
-                tB.FontSize = 1;//label.TextSize;
+                if (label.TextBinding != null)
+                {
+                    tB.SetBinding(TextBlock.TextProperty, FBtoWPF.Convert(label.TextBinding));
+                }
+                else tB.SetBinding(TextBlock.TextProperty, new Binding("Text"));
+                tB.FontSize = 1; //label.TextSize;
                 tB.RenderTransform = new ScaleTransform(label.TextSize, label.TextSize);
                 //tB.RenderTransformOrigin = new System.Windows.Point(0, 1);
 
-                if (shape.Attributes != null && shape.Attributes.Brush != null)
-                {
-                    tB.Foreground = FBtoWPF.Convert(shape.Attributes.Brush);
-                }
-                else tB.Foreground = DefaultBrush;
+                var fillBinding = new Binding("Attributes.Brush");
+                fillBinding.Converter = new Converters.BrushConverter();
+                fillBinding.FallbackValue = DefaultBrush;
+                tB.SetBinding(TextBlock.ForegroundProperty, fillBinding);
 
                 FormattedText fT = new FormattedText(label.Text, CultureInfo.CurrentCulture, tB.FlowDirection,
                     new Typeface(tB.FontFamily, tB.FontStyle, tB.FontWeight, tB.FontStretch), 1, tB.Foreground);
@@ -270,19 +301,21 @@ namespace FreeBuild.WPF
             }
             else if (shape is Cloud || shape is FB.Point)
             {
-                Brush pointBrush = DefaultBrush;
-                if (shape.Attributes?.Brush != null)
-                {
-                    pointBrush = FBtoWPF.Convert(shape.Attributes.Brush);
-                }
+                double diameter = PointDiameter;
+                if (shape.Attributes != null) diameter *= shape.Attributes.Weight;
 
                 foreach (Vertex v in shape.Vertices)
                 {
-                    double diameter = PointDiameter;
+                    
                     Ellipse ellipse = new Ellipse();
                     ellipse.Width = diameter;
                     ellipse.Height = diameter;
-                    ellipse.Fill = pointBrush;
+                    ellipse.DataContext = shape;
+
+                    var fillBinding = new Binding("Attributes.Brush");
+                    fillBinding.Converter = new Converters.BrushConverter();
+                    fillBinding.FallbackValue = DefaultBrush;
+                    ellipse.SetBinding(Ellipse.FillProperty, fillBinding);
 
                     SetLeft(ellipse, v.X - diameter / 2.0);
                     SetTop(ellipse, -v.Y - diameter / 2.0);

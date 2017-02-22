@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.UI
+namespace FreeBuild.Results
 {
     /// <summary>
-    /// Interaction parameters for mouse-based user interactions
+    /// Enum of linear element analysis result types
     /// </summary>
-    public class MouseInteractionParameters
+    public enum LinearElementResultTypes
     {
+        
     }
 }

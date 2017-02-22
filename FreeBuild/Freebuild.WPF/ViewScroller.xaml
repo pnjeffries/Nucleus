@@ -9,7 +9,7 @@
              >
     <ContentControl.Template>
         <ControlTemplate TargetType="UserControl">
-            <ScrollViewer Name="ScrollViewer" 
+            <ScrollViewer
                       VerticalScrollBarVisibility="Auto" 
                       HorizontalScrollBarVisibility="Auto"
                       PreviewMouseWheel="ScrollViewer_PreviewMouseWheel"

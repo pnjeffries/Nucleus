@@ -47,11 +47,18 @@
     <Compile Include="AutoUIUniformGrid.cs" />
     <Compile Include="Converters\BooleanVisibilityConverter.cs" />
     <Compile Include="Converters\BrushConverter.cs" />
+    <Compile Include="Converters\CollectionNotEmptyConverter.cs" />
     <Compile Include="Converters\CountVisibilityConverter.cs" />
     <Compile Include="Converters\ExpanderHeaderWidthConverter.cs" />
     <Compile Include="Converters\AreEqualConverter.cs" />
+    <Compile Include="Converters\GraphPointsConverter.cs" />
+    <Compile Include="Converters\GreaterThanConverter.cs" />
+    <Compile Include="Converters\IntConverter.cs" />
     <Compile Include="Converters\IsTypeConverter.cs" />
+    <Compile Include="Converters\MultiplicationConverter.cs" />
     <Compile Include="Converters\RadiansDegreesConverter.cs" />
+    <Compile Include="Converters\VisibilityConverter.cs" />
+    <Compile Include="Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="EnumBindingSourceExtension.cs" />
     <Compile Include="FBtoWPF.cs" />
     <Compile Include="Field Controls\Bool6DFieldControl.xaml.cs">
@@ -88,6 +95,7 @@
       <DependentUpon>LayeredGeometryCanvas.xaml</DependentUpon>
     </Compile>
     <Compile Include="IsNullDataTemplateSelector.cs" />
+    <Compile Include="LineGraphCanvas.cs" />
     <Compile Include="ProfileCanvas.cs" />
     <Compile Include="PropertiesExpander.xaml.cs">
       <DependentUpon>PropertiesExpander.xaml</DependentUpon>
@@ -107,10 +115,11 @@
       <DependentUpon>VectorFieldControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="SubTypeBindingSourceExtension.cs" />
-    <Compile Include="UIElementCollectionExtensions.cs" />
+    <Compile Include="Extensions\UIElementCollectionExtensions.cs" />
     <Compile Include="ViewScroller.xaml.cs">
       <DependentUpon>ViewScroller.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Extensions\VisualExtensions.cs" />
     <Compile Include="WPFtoFB.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +178,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

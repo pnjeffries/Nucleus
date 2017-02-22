@@ -584,10 +584,6 @@ namespace FreeBuild.Robot
         {
             int mappedID = -1;
             IRobotBar bar = null;
-            Node startNode = element.StartNode; //TODO: Make bulletproof!
-            Node endNode = element.EndNode; //TODO: Make bulletproof!
-            int nodeID0 = GetMappedNodeID(startNode, context);
-            int nodeID1 = GetMappedNodeID(endNode, context);
 
             if (context.IDMap.HasSecondID(context.IDMap.BarCategory, element.GUID))
             {
@@ -602,6 +598,11 @@ namespace FreeBuild.Robot
             }
             if (!element.IsDeleted)
             {
+                Node startNode = element.StartNode; //TODO: Make bulletproof!
+                Node endNode = element.EndNode; //TODO: Make bulletproof!
+                int nodeID0 = GetMappedNodeID(startNode, context);
+                int nodeID1 = GetMappedNodeID(endNode, context);
+
                 if (bar == null)
                 {
                     bar = CreateRobotBar(nodeID0, nodeID1, mappedID);

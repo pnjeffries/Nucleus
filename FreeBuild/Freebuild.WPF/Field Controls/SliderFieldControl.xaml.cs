@@ -135,6 +135,16 @@ namespace FreeBuild.WPF
                 Maximum = 360;
                 Minimum = 0;
             }
+            else if (property.PropertyType == typeof(int))
+            {
+                Maximum = 10;
+                Minimum = 0;
+                TickFrequency = 1;
+                IsSnapToTickEnabled = true;
+                var binding = new Binding(property.Name);
+                binding.Converter = new IntConverter();
+                SetBinding(ValueProperty, binding);
+            }
         }
 
         #endregion

@@ -68,6 +68,49 @@ namespace FreeBuild.Results
             }
         }
 
+        /// <summary>
+        /// Get the results table for the specified linear element under the specified case
+        /// </summary>
+        /// <param name="rCase"></param>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public LinearElementResults this[ResultsCase rCase, LinearElement element]
+        {
+            get { return this[rCase]?[element]; }
+        }
+
+        /// <summary>
+        /// Get the results interval graph along the specified linear element for the given
+        /// case and result type
+        /// </summary>
+        /// <param name="rCase"></param>
+        /// <param name="element"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public LinearIntervalGraph this[ResultsCase rCase, LinearElement element, LinearElementResultTypes type]
+        {
+            get { return this[rCase, element]?[type]; }
+        }
+
+        /// <summary>
+        /// Get the maximum and minimum result interval for the specified case, linear element, type and position
+        /// along the element.
+        /// </summary>
+        /// <param name="rCase"></param>
+        /// <param name="element"></param>
+        /// <param name="type"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public Interval this[ResultsCase rCase, LinearElement element, LinearElementResultTypes type, double position]
+        {
+            get
+            {
+                var graph = this[rCase, element, type];
+                if (graph != null) return graph.ValueAt(position);
+                else return Interval.Unset;
+            }
+        }
+
         #endregion
 
         #region Constructors

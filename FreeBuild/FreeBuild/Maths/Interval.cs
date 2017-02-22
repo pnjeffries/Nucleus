@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -205,6 +206,14 @@ namespace FreeBuild.Maths
             return Min == value && Max == value;
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return false;
+            else if (obj is Interval) return Equals((Interval)obj);
+            else if (typeof(double).IsAssignableFrom(obj.GetType())) return Equals((double)obj);
+            else return false;
+        }
+
         /// <summary>
         /// Is this interval less than another?
         /// The interval counts as less than another if its maximum value
@@ -266,6 +275,18 @@ namespace FreeBuild.Maths
         public double ValueAt(double parameter)
         {
             return Min + parameter * (Max - Min);
+        }
+
+        /// <summary>
+        /// Evaluate the normalised parameter (where 0 is Min and 1 is Max) of
+        /// the specified value's position related to this interval
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public double ParameterOf(double value)
+        {
+            double size = Size;
+            return size != 0 ? (value - Min) / size : 0;
         }
 
         /// <summary>
@@ -335,6 +356,63 @@ namespace FreeBuild.Maths
         public Interval Union(Interval other)
         {
             return new Interval(Math.Min(Min, other.Min), Math.Max(Max, other.Max));
+        }
+
+        /// <summary>
+        /// Interpolate this Interval towards another
+        /// </summary>
+        /// <param name="towards">The interval to interpolate towards</param>
+        /// <param name="factor">The interpolation factor.  0 = this interval, 1 = the 'towards' interval</param>
+        /// <returns></returns>
+        public Interval Interoplate(Interval towards, double factor)
+        {
+            return new Interval(
+                Min.Interpolate(towards.Min, factor),
+                Max.Interpolate(towards.Max, factor));
+        }
+
+        /// <summary>
+        /// Interpolate this Interval towards another
+        /// </summary>
+        /// <param name="i1">The other interval to interpolate towards</param>
+        /// <param name="x0">The key value mapped to this interval</param>
+        /// <param name="x1">The key value mapped to the other interval</param>
+        /// <param name="x">The key value at the interpolation point</param>
+        /// <returns></returns>
+        public Interval Interpolate(Interval i1, double x0, double x1, double x)
+        {
+            return new Interval(
+                Min.Interpolate(i1.Min, x0, x1, x),
+                Max.Interpolate(i1.Max, x0, x1, x));
+        }
+
+        /// <summary>
+        /// Generate a set of evently-spaced 'reasonable' rounded numbers within
+        /// this interval, to be used as such things as generating grid lines on graphs
+        /// </summary>
+        /// <param name="divisions">The target number of divisions.  The ultimate number of values may be slightly more or less than this depending on rounding</param>
+        /// <returns></returns>
+        public IList<double> ReasonableDivisions(int divisions)
+        {
+            var result = new List<double>();
+            int digits = divisions.Digits();
+            double increment = (Size/divisions).RoundToSignificantFigures(digits);
+            if (increment > 0)
+            {
+                // Start at 0 if 0 is included in this interval:
+                if (Contains(0))
+                {
+                    int negDivs = (int)Math.Floor(-Min / increment);
+                    for (int i = negDivs; i > 0; i--) result.Add(i * -increment);
+                    int posDivs = (int)Math.Floor(Max / increment);
+                    for (int i = 0; i <= posDivs; i++) result.Add(i * increment);
+                }
+                else
+                {
+                    for (double value = Min.RoundToSignificantFigures(digits); value < Max; value += increment) result.Add(value);
+                }
+            }
+            return result;
         }
 
         #endregion

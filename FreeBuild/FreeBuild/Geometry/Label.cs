@@ -1,4 +1,5 @@
-﻿using FreeBuild.Model;
+﻿using FreeBuild.Base;
+using FreeBuild.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,8 +26,29 @@ namespace FreeBuild.Geometry
         /// </summary>
         public string Text
         {
-            get { return _Text; }
+            get
+            {
+                if (_TextBinding != null) return _TextBinding.Value(this)?.ToString();
+                return _Text;
+            }
             set { _Text = value;  NotifyPropertyChanged("Text"); }
+        }
+
+        /// <summary>
+        /// Private backing field for the TextBinding property
+        /// </summary>
+        private PathBinding _TextBinding = null;
+
+        /// <summary>
+        /// Optional binding for the label's Text property.
+        /// Allows for a source object and path to be specified
+        /// from which the value of the Text property will be retrieved,
+        /// overriding the locally defined value.
+        /// </summary>
+        public PathBinding TextBinding
+        {
+            get { return _TextBinding; }
+            set { ChangeProperty(ref _TextBinding, value, "TextBinding"); }
         }
 
         /// <summary>
@@ -88,9 +110,30 @@ namespace FreeBuild.Geometry
         /// <param name="text">The text</param>
         /// <param name="textSize">The height of the text</param>
         public Label(Vector position, string text, double textSize = 1.0, 
-            VerticalSetOut verticalSetOut = VerticalSetOut.Top, HorizontalSetOut horizontalSetOut = HorizontalSetOut.Left, GeometryAttributes attributes = null) : base(position)
+            VerticalSetOut verticalSetOut = VerticalSetOut.Top, HorizontalSetOut horizontalSetOut = HorizontalSetOut.Left,
+            GeometryAttributes attributes = null) : base(position)
         {
             Text = text;
+            TextSize = textSize;
+            VerticalSetOut = verticalSetOut;
+            HorizontalSetOut = horizontalSetOut;
+            Attributes = attributes;
+        }
+
+        /// <summary>
+        /// Initialises a new label with a bound text value
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="textBinding"></param>
+        /// <param name="textSize"></param>
+        /// <param name="verticalSetOut"></param>
+        /// <param name="horizontalSetOut"></param>
+        /// <param name="attributes"></param>
+        public Label(Vector position, PathBinding textBinding, double textSize = 1.0,
+            VerticalSetOut verticalSetOut = VerticalSetOut.Top, HorizontalSetOut horizontalSetOut = HorizontalSetOut.Left,
+            GeometryAttributes attributes = null) : base(position)
+        {
+            TextBinding = textBinding;
             TextSize = textSize;
             VerticalSetOut = verticalSetOut;
             HorizontalSetOut = horizontalSetOut;

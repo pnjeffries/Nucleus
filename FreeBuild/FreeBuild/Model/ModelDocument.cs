@@ -38,9 +38,18 @@ namespace FreeBuild.Model
         #region Properties
 
         /// <summary>
+        /// Private backing field for Model property.
+        /// </summary>
+        private Model _Model;
+
+        /// <summary>
         /// The model contained within this document.
         /// </summary>
-        public Model Model { get; protected set; }
+        public Model Model
+        {
+            get { return _Model; }
+            protected set { _Model = value; }
+        }
 
         /// <summary>
         /// Private backing field for IDMappings property

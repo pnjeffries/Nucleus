@@ -31,7 +31,7 @@ using System.Threading.Tasks;
 namespace FreeBuild.IO
 {
     /// <summary>
-    /// A class to parse CSV data and generate data
+    /// A class to parse CSV data and generate objects based upon it
     /// </summary>
     /// <typeparam name="TBase">The base type of the data to be constructed</typeparam>
     public class CSVParser<TBase> : MessageRaiser

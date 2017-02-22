@@ -121,5 +121,41 @@ namespace FreeBuild.Extensions
             }
             return result;
         }
+
+        /// <summary>
+        /// Get the index of the last item in the list
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static int LastIndex<T>(this IList<T> list)
+        {
+            return list.Count - 1;
+        }
+
+        /// <summary>
+        /// Remove the last item in this list, for
+        /// safety checking first whether there are any items within
+        /// the list.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        public static void RemoveLast<T>(this IList<T> list)
+        {
+            int i = list.LastIndex();
+            if (i >= 0) list.RemoveAt(i);
+        }
+
+        /// <summary>
+        /// Remove the first item in this list,
+        /// for safety checking first whether there are any items to remove.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        public static void RemoveFirst<T>(this IList<T> list)
+        {
+            if (list.Count > 0) list.RemoveAt(0);
+        }
+
     }
 }

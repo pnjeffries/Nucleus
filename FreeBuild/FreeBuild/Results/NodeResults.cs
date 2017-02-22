@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace FreeBuild.Results
 {
     /// <summary>
-    /// Results storage table for nodes
+    /// Results storage table for nodes, keyed by result type
     /// </summary>
     [Serializable]
     public class NodeResults : ModelObjectResults<NodeResultTypes, Interval>

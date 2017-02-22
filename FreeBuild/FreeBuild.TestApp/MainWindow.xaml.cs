@@ -40,7 +40,7 @@ namespace FreeBuild.TestApp
             MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(verts);
             //Dictionary<Vertex, MeshFace> voronoi = Mesh.VoronoiFromDelaunay(verts, faces);
             //ShapeCollection geometry = new MeshFaceCollection(voronoi.Values).ExtractFaceBoundaries();
-            VertexGeometryCollection geometry = faces.ExtractFaceBoundaries();
+            VertexGeometryCollection geometry = new VertexGeometryCollection(faces.ExtractFaceBoundaries());
             geometry.Add(new Cloud(verts.ExtractPoints()));
             DelaunayCanvas.Geometry = geometry;
         }
@@ -66,7 +66,7 @@ namespace FreeBuild.TestApp
             PolyLine rect = PolyLine.Rectangle(0,-10,10, 0);
             outFaces = outFaces.TrimToPolygonXY(rect.Vertices);
             outFaces = outFaces.TrimToPolygonXY(rect.Vertices); //Test duplicate edges
-            VertexGeometryCollection geometry = outFaces.ExtractFaceBoundaries();
+            VertexGeometryCollection geometry = new VertexGeometryCollection(outFaces.ExtractFaceBoundaries());
             //ShapeCollection geometry = faces.ExtractFaceBoundaries();
             geometry.Add(new Cloud(verts.ExtractPoints()));
             VoronoiCanvas.Geometry = geometry;

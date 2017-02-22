@@ -25,7 +25,12 @@ namespace FreeBuild.Geometry
         public Vertex Vertex
         {
             get { return _Vertex; }
-            set { _Vertex = value; NotifyGeometryUpdated(); }
+            set
+            {
+                _Vertex = value;
+                _Vertices = null;
+                NotifyGeometryUpdated();
+            }
         }
 
         public override bool IsValid
@@ -36,11 +41,15 @@ namespace FreeBuild.Geometry
             }
         }
 
+        [NonSerialized]
+        private VertexCollection _Vertices;
+
         public override VertexCollection Vertices
         {
             get
             {
-                return new VertexCollection(Vertex);
+                if (_Vertices == null) _Vertices = new VertexCollection(Vertex);
+                return _Vertices;
             }
         }
 

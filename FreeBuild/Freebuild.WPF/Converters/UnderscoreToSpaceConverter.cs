@@ -12,7 +12,7 @@ namespace FreeBuild.WPF.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string str = value as string;
+            string str = value.ToString();
             return str.Replace('_', ' ');
         }
 

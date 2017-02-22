@@ -103,27 +103,33 @@ namespace FreeBuild.WPF
                     SetBinding(ItemsSourceProperty, cBA.ItemsSource);
                 }
                 ItemTemplate = new DataTemplate();
-                FrameworkElementFactory tbFactory = new FrameworkElementFactory(typeof(TextBlock));
+                FrameworkElementFactory fEFactory = new FrameworkElementFactory(typeof(TextBlock));
 
                 if (typeof(INamed).IsAssignableFrom(property.PropertyType))
                 {
                     string textTemplate = "Name";
-                    tbFactory.SetBinding(TextBlock.TextProperty, new Binding(textTemplate));
+                    fEFactory.SetBinding(TextBlock.TextProperty, new Binding(textTemplate));
                 }
                 else
                 {
-                    tbFactory.SetBinding(TextBlock.TextProperty, new Binding());
+                   
                     if (typeof(Colour).IsAssignableFrom(property.PropertyType))
                     {
+                        fEFactory = new FrameworkElementFactory(typeof(Border));
+
                         Binding binding = new Binding();
                         binding.Converter = new Converters.BrushConverter();
-                        tbFactory.SetBinding(TextBlock.BackgroundProperty, binding);
-                        tbFactory.SetBinding(TextBlock.ForegroundProperty, binding);
-                        tbFactory.SetValue(TextBlock.MinWidthProperty, 75d);
+                        fEFactory.SetBinding(Border.BackgroundProperty, binding);
+                        fEFactory.SetValue(Border.HeightProperty, 16d);
+                        fEFactory.SetValue(Border.WidthProperty, 16d);
+                    }
+                    else
+                    {
+                        fEFactory.SetBinding(TextBlock.TextProperty, new Binding());
                     }
                 }
 
-                ItemTemplate.VisualTree = tbFactory;
+                ItemTemplate.VisualTree = fEFactory;
             }
         }
 

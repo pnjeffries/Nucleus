@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using FreeBuild.Base;
+using FreeBuild.DDTree;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -56,6 +57,24 @@ namespace FreeBuild.Geometry
             }
         }
 
+        /// <summary>
+        /// Private backing field for VertexTree property
+        /// </summary>
+        [NonSerialized]
+        private VertexDDTree _VertexTree = null;
+
+        /// <summary>
+        /// Get a Divided-Dimension Tree structure containing all vertices belonging to 
+        /// </summary>
+        public VertexDDTree VertexTree
+        {
+            get
+            {
+                if (_VertexTree == null) _VertexTree = CreateVertexTree();
+                return _VertexTree;
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -69,6 +88,24 @@ namespace FreeBuild.Geometry
         {
             base.OnCollectionChanged();
             NotifyPropertyChanged("BoundingBox");
+            _VertexTree = null;
+        }
+
+        protected override void InsertItem(int index, GeometryLayer item)
+        {
+            base.InsertItem(index, item);
+            item.CollectionChanged += Item_CollectionChanged;
+        }
+
+        protected override void SetItem(int index, GeometryLayer item)
+        {
+            base.SetItem(index, item);
+            item.CollectionChanged += Item_CollectionChanged;
+        }
+
+        private void Item_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            OnCollectionChanged();
         }
 
         /// <summary>
@@ -121,6 +158,34 @@ namespace FreeBuild.Geometry
                 return result;
             }
         }
+
+        /// <summary>
+        /// Get all the geometry 
+        /// </summary>
+        /// <returns></returns>
+        public VertexGeometryCollection AllGeometry()
+        {
+            var result = new VertexGeometryCollection();
+            foreach (GeometryLayer layer in this)
+            {
+                foreach (VertexGeometry geometry in layer)
+                {
+                    result.Add(geometry);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Create a Divided-Dimension Tree for the vertices of all the geometry in this table
+        /// </summary>
+        /// <returns></returns>
+        public VertexDDTree CreateVertexTree()
+        {
+            return new VertexDDTree(AllGeometry().AllVertices());
+        }
+
+       
 
         #endregion
     }

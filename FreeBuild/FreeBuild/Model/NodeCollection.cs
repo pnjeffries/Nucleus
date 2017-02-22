@@ -69,6 +69,16 @@ namespace FreeBuild.Model
             return this.Modified<NodeCollection, Node>(since);
         }
 
+        /// <summary>
+        /// Convert this collection to a set, which may be parametrically
+        /// filtered.
+        /// </summary>
+        /// <returns></returns>
+        public NodeSet ToSet()
+        {
+            return new NodeSet(this);
+        }
+
         #endregion
     }
 }

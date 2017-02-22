@@ -90,7 +90,7 @@ namespace FreeBuild.Geometry
         public abstract bool IsValid { get; }
 
         /// <summary>
-        /// 
+        /// Private backing field for Attributes property
         /// </summary>
         private GeometryAttributes _Attributes = null;
 
@@ -102,7 +102,7 @@ namespace FreeBuild.Geometry
         public GeometryAttributes Attributes
         {
             get { return _Attributes; }
-            set { _Attributes = value; }
+            set { _Attributes = value;  NotifyPropertyChanged("Attributes"); }
         }
 
         /// <summary>

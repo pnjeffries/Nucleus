@@ -34,9 +34,18 @@ namespace FreeBuild.Rendering
     public abstract class RenderingParameters
     {
         /// <summary>
+        /// Private backing field for CursorPosition property
+        /// </summary>
+        private Vector _CursorPosition = Vector.Unset;
+
+        /// <summary>
         /// The current position of the 3D cursor during dynamically-drawn selection operations
         /// </summary>
-        public Vector CursorPosition { get; set; } = Vector.Unset;
+        public Vector CursorPosition
+        {
+            get { return _CursorPosition; }
+            set { _CursorPosition = value; }
+        }
 
     }
 }

@@ -47,14 +47,32 @@ namespace FreeBuild.Maths
         public abstract double this[int i, int j] { get; set; }
 
         /// <summary>
+        /// Private backing field for Rows property
+        /// </summary>
+        private int _Rows;
+
+        /// <summary>
         /// The number of rows in this matrix
         /// </summary>
-        public int Rows { get; protected set; }
+        public int Rows
+        {
+            get { return _Rows; }
+            protected set { _Rows = value; }
+        }
+
+        /// <summary>
+        /// Private backing field for Columns property
+        /// </summary>
+        private int _Columns;
 
         /// <summary>
         /// The number of columns in this matrix
         /// </summary>
-        public int Columns { get; protected set; }
+        public int Columns
+        {
+            get { return _Columns; }
+            protected set { _Columns = value; }
+        }
 
         /// <summary>
         /// Returns true if this is a square matrix -

@@ -37,9 +37,8 @@ namespace FreeBuild.Geometry
         #region Properties
 
         /// <summary>
-        /// Private backing field for Vertices property
+        /// Private backing field for the Vertices property
         /// </summary>
-        [CollectionCopy(CopyBehaviour.DUPLICATE, CopyBehaviour.DUPLICATE)]
         private VertexCollection _Vertices;
 
         /// <summary>

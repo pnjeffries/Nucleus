@@ -29,17 +29,17 @@ namespace FreeBuild.Tests
             //Reflection_Tests.PrintFields(typeof(SymmetricIProfile));
             //Reflection_Tests.PrintProperties(typeof(SymmetricIProfile));
 
-            GWA_Tests.SerializeToGWA();
+            //GWA_Tests.SerializeToGWA();
 
             TimeSpan ts1 = new TimeSpan();
-            TimeSpan ts2 = new TimeSpan();
+            //TimeSpan ts2 = new TimeSpan();
 
             int runs = 10;
 
             //Mesh tests:
             for (int i = 0; i < runs; i++)
             {
-                ts1 += Mesh_Tests.DelaunayTest(10000);
+                ts1 += Mesh_Tests.DelaunayTest(2000);
                 //ts2 += Mesh_Tests.DelaunayTest(10000);
             }
 
