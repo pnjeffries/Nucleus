@@ -304,7 +304,7 @@ namespace Salamander.Rhino
         /// <returns></returns>
         public static Guid BakeOrReplace(Guid objID, VertexGeometry geometry)
         {
-            if (objID != Guid.Empty && ObjectExists(objID) && Replace(objID, geometry))
+            if (objID != Guid.Empty && Replace(objID, geometry))
                 return objID;
             else
                 return Bake(geometry);
@@ -338,6 +338,18 @@ namespace Salamander.Rhino
         public static bool DeleteObject(Guid objID)
         {
             return RhinoDoc.ActiveDoc.Objects.Delete(objID, true);
+        }
+
+        /// <summary>
+        /// Undelete an 
+        /// </summary>
+        /// <param name="objID"></param>
+        /// <returns></returns>
+        public static bool UndeleteObject(Guid objID)
+        {
+            RhinoObject rObj = GetObject(objID);
+            if (rObj == null) return false;
+            return RhinoDoc.ActiveDoc.Objects.Undelete(rObj);
         }
 
         /// <summary>

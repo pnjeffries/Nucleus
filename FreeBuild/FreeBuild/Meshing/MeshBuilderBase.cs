@@ -442,15 +442,18 @@ namespace FreeBuild.Meshing
         /// <param name="baseResolution">The number of positions around the cone where mesh facets will be generated.</param>
         public void AddCone(Vector tip, Circle baseCircle, int baseResolution)
         {
-            IList<Vector> basePoints = baseCircle.Divide(baseResolution - 1);
+           Vector[] basePoints = baseCircle.Divide(baseResolution);
+            Vector[] reversedPts = new Vector[basePoints.Length];
+
             //if (basePoints.Count >= baseResolution) basePoints.RemoveAt(baseResolution); //Get rid of duplicate last point
             IList<Vector> tipPoints = new List<Vector>();
-            for (int i = 0; i < basePoints.Count; i++)
+            for (int i = 0; i < basePoints.Length; i++)
             {
+                reversedPts[basePoints.Length - 1 - i] = basePoints[i];
                 tipPoints.Add(tip);
             }
             IList<IList<Vector>> topology = new List<IList<Vector>>();
-            topology.Add(basePoints);
+            topology.Add(reversedPts);
             topology.Add(tipPoints);
             AddLoft(topology, true);
         }

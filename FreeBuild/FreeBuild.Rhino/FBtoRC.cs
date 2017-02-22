@@ -1,4 +1,6 @@
 ﻿using FreeBuild.Geometry;
+using FreeBuild.Rendering;
+using Rhino.Display;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +55,29 @@ namespace FreeBuild.Rhino
         public static RC.Plane Convert(Plane plane)
         {
             return new RC.Plane(Convert(plane.Origin), ConvertVector(plane.X), ConvertVector(plane.Y));
+        }
+
+        /// <summary>
+        /// Convert a FreeBuild colour to a System.Drawing.Colour
+        /// </summary>
+        /// <param name="colour"></param>
+        /// <returns></returns>
+        public static System.Drawing.Color Convert(Colour colour)
+        {
+            return System.Drawing.Color.FromArgb(colour.A, colour.R, colour.G, colour.B);
+        }
+
+        /// <summary>
+        /// Convert a FreeBuild DisplayBrush to a Rhino DisplayMaterial
+        /// </summary>
+        /// <param name="brush"></param>
+        /// <returns></returns>
+        public static DisplayMaterial Convert(DisplayBrush brush)
+        {
+            DisplayMaterial result = new DisplayMaterial();
+            result.Diffuse = Convert(brush.BaseColour);
+            result.Emission = Convert(brush.BaseColour);
+            return result;
         }
 
         /// <summary>

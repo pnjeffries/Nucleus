@@ -222,6 +222,7 @@ namespace FreeBuild.Base
             if (XX) sb.Append("XX", "-");
             if (YY) sb.Append("YY", "-");
             if (ZZ) sb.Append("ZZ", "-");
+            if (sb.Length == 0) sb.Append("-");
             return sb.ToString();
         }
 
@@ -248,6 +249,7 @@ namespace FreeBuild.Base
             if (XX) sb.Append("XX", "-");
             if (YY) sb.Append("YY", "-");
             if (ZZ) sb.Append("ZZ", "-");
+            if (sb.Length == 0) sb.Append("-");
             return sb.ToString();
         }
 

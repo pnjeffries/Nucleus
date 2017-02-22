@@ -46,6 +46,15 @@ namespace FreeBuild.Model
         /// <param name="model"></param>
         protected NodeCollection(Model model) : base(model) { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="node"></param>
+        public NodeCollection(Node node) : base()
+        {
+            Add(node);
+        }
+
         #endregion
 
         #region Methods

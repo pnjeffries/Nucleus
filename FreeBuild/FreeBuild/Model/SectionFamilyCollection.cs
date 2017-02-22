@@ -40,7 +40,16 @@ namespace FreeBuild.Model
         public SectionFamilyCollection() : base() { }
 
         /// <summary>
-        /// Initialise a new SectionPropertyCollection containing the specified set of sections
+        /// Initialise a new SectionFamilyCollection containing the specified single item
+        /// </summary>
+        /// <param name="section"></param>
+        public SectionFamilyCollection(SectionFamily section) : base()
+        {
+            Add(section);
+        }
+
+        /// <summary>
+        /// Initialise a new SectionFamilyCollection containing the specified set of sections
         /// </summary>
         /// <param name="sections"></param>
         public SectionFamilyCollection(IEnumerable<SectionFamily> sections)

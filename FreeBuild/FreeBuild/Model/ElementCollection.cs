@@ -158,6 +158,16 @@ namespace FreeBuild.Model
         public ElementCollection() : base() { }
 
         /// <summary>
+        /// Initialise a new collection containing the specified single element
+        /// </summary>
+        /// <param name="element"></param>
+        public ElementCollection(Element element) : base()
+        {
+            Add(element);
+        }
+
+
+        /// <summary>
         /// Owner constructor.  Initialises an empty ElementCollection with the specified owner
         /// </summary>
         /// <param name="model"></param>

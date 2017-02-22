@@ -1,6 +1,7 @@
 ﻿using FreeBuild.Geometry;
 using FreeBuild.Rendering;
 using Rhino;
+using Rhino.Display;
 using Rhino.DocObjects;
 using System;
 using System.Collections.Generic;
