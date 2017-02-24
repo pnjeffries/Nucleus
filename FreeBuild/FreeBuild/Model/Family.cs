@@ -33,7 +33,7 @@ namespace FreeBuild.Model
     /// 3D solid object.
     /// </summary>
     [Serializable]
-    public abstract class Family : ModelObject
+    public abstract class Family : DataOwner<FamilyDataStore, IFamilyDataComponent>
     {
         #region Methods
 

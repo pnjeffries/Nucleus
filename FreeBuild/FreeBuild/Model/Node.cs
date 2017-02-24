@@ -33,7 +33,7 @@ namespace FreeBuild.Model
     /// between multiple vertices within different objects.
     /// </summary>
     [Serializable]
-    public class Node : ModelObject, IPosition
+    public class Node : DataOwner<NodeDataStore, INodeDataComponent>, IPosition
     {
         #region Properties
 

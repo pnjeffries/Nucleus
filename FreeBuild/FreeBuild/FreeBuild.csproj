@@ -87,6 +87,7 @@
     <Compile Include="Geometry\Point.cs" />
     <Compile Include="Geometry\Label.cs" />
     <Compile Include="Geometry\VertexRule.cs" />
+    <Compile Include="Geometry\WeightedVertex.cs" />
     <Compile Include="IO\CSVParser.cs" />
     <Compile Include="IO\DocumentTextSerialiser.cs" />
     <Compile Include="IO\GWAContext.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="IO\ModelDocumentTextSerialiser.cs" />
     <Compile Include="IO\TextFormat.cs" />
     <Compile Include="IO\TextSerialiser.cs" />
+    <Compile Include="Maths\Expression.cs" />
     <Compile Include="Maths\GraphLineData.cs" />
     <Compile Include="Maths\GraphLineDataCollection.cs" />
     <Compile Include="Maths\LinearGraph.cs" />
@@ -102,6 +104,10 @@
     <Compile Include="Meshing\DelaunayTriangle.cs" />
     <Compile Include="Meshing\MeshBuilder.cs" />
     <Compile Include="Model\AngleProfile.cs" />
+    <Compile Include="Model\FamilyDataStore.cs" />
+    <Compile Include="Model\IDataComponent.cs" />
+    <Compile Include="Model\IFamilyDataComponent.cs" />
+    <Compile Include="Model\INodeDataComponent.cs" />
     <Compile Include="Model\LinearElementSet.cs" />
     <Compile Include="Model\Loading\AreaLoad.cs" />
     <Compile Include="Model\CircularHollowProfile.cs" />
@@ -181,7 +187,7 @@
     <Compile Include="Model\FaceFamily.cs" />
     <Compile Include="Model\ElementTable.cs" />
     <Compile Include="Geometry\HorizontalSetOut.cs" />
-    <Compile Include="Model\IElementData.cs" />
+    <Compile Include="Model\IElementDataComponent.cs" />
     <Compile Include="Model\IElementOrientation.cs" />
     <Compile Include="Model\LetterProfile.cs" />
     <Compile Include="Model\Level.cs" />
@@ -208,9 +214,12 @@
     <Compile Include="Model\ModelSourceHistory.cs" />
     <Compile Include="Model\Node.cs" />
     <Compile Include="Model\NodeCollection.cs" />
+    <Compile Include="Model\NodeDataStore.cs" />
+    <Compile Include="Model\NodeDataType.cs" />
     <Compile Include="Model\NodeGenerationParameters.cs" />
     <Compile Include="Model\NodeLoadApplication.cs" />
     <Compile Include="Model\NodeSet.cs" />
+    <Compile Include="Model\NodeSupport.cs" />
     <Compile Include="Model\PanelElement.cs" />
     <Compile Include="Model\NodeTable.cs" />
     <Compile Include="Model\PanelElementCollection.cs" />

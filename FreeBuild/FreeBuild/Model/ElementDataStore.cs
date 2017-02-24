@@ -31,7 +31,7 @@ namespace FreeBuild.Model
     /// Stores element data keyed by the type of data.
     /// </summary>
     [Serializable]
-    public class ElementDataStore : DataStore<IElementData>
+    public class ElementDataStore : DataStore<IElementDataComponent>
     {
     }
 }

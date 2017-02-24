@@ -179,8 +179,10 @@ namespace FreeBuild.Geometry
         /// <param name="clean">Clean up construction Super Triangle.  If true, any remaining fragments of the
         /// initial generating supertriangle will be removed from the output face list.  Set this to false
         /// if planning on using this mesh for subsequent voronoi generation so that the edge cells can be extended.</param>
+        /// <param name="outerVerts">Optional.  If input and non-null, this collection will be populated with the exterior vertices - those connected
+        /// to the original supertriangle</param>
         public static MeshFaceCollection DelaunayTriangulationXY(VertexCollection vertices, 
-            MeshFaceCollection faces = null, BoundingBox bounds = null, bool clean = true)
+            MeshFaceCollection faces = null, BoundingBox bounds = null, bool clean = true, VertexCollection outerVerts = null)
         {
             List<Vertex> vertexList = vertices.ToList();
             vertexList.Sort();
@@ -235,27 +237,34 @@ namespace FreeBuild.Geometry
                         }
                     }
                 }
-        
 
-                //Add triangle fan between all remaining edges and the new vertex
+                // Add triangle fan between all remaining edges and the new vertex
                 foreach (MeshEdge edge in edges)
                 {
                     faces.Add(new DelaunayTriangle(edge, v));
                 }
             }
 
-            //Remove the super triangle and any triangles still attached to it
+            // Extract outer vertices
+            if (outerVerts != null)
+            {
+                var outerFaces = faces.AllWithVertices(new VertexCollection(superTriangle));
+                foreach (Vertex v in outerFaces.ExtractVertices()) outerVerts.Add(v);
+            }
+
+            // Remove the super triangle and any triangles still attached to it
             if (clean) faces.RemoveAllWithVertices(new VertexCollection(superTriangle));
 
             return faces;
         }
 
         /// <summary>
-        /// Convert a set of mesh faces generated via 
+        /// Convert a set of mesh faces generated via delaunay triangulation into its dual -
+        /// the voronoi diagram of the vertices.
         /// </summary>
         /// <param name="triangles"></param>
         /// <returns></returns>
-        public static Dictionary<Vertex, MeshFace> VoronoiFromDelaunay(VertexCollection vertices, MeshFaceCollection faces)
+        public static Dictionary<Vertex, MeshFace> VoronoiFromDelaunay(VertexCollection vertices, MeshFaceCollection faces, bool weighted = false)
         {
             var cells = new Dictionary<Vertex, MeshFace>(); //The generated voronoi cells
 
@@ -266,14 +275,22 @@ namespace FreeBuild.Geometry
 
             foreach (MeshFace face in faces)
             {
-                Vector centre = face.XYCircumcentre;
-                Vertex newVert = new Vertex(centre);
-                foreach (Vertex v in face)
+                Vertex newVert;
+                if (weighted)
                 {
-                    if (cells.ContainsKey(v))
+                    face.WeightedVoronoiPoints(cells);
+                }
+                else
+                {
+                    newVert = new Vertex(face.XYCircumcentre);
+
+                    foreach (Vertex v in face)
                     {
-                        MeshFace cell = cells[v];
-                        cell.Add(newVert);
+                        if (cells.ContainsKey(v))
+                        {
+                            MeshFace cell = cells[v];
+                            cell.Add(newVert);
+                        }
                     }
                 }
             }

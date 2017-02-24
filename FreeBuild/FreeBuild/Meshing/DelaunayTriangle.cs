@@ -181,9 +181,9 @@ namespace FreeBuild.Meshing
         /// <returns></returns>
         internal static DelaunayTriangle GenerateSuperTriangleXY(BoundingBox box)
         {
-            Vertex v0 = new Vertex(box.MinX + box.SizeX * 2, box.MinY);
-            Vertex v1 = new Vertex(box.MinX, box.MinY + box.SizeY * 2);
-            Vertex v2 = new Vertex(box.MinX, box.MinY);
+            Vertex v0 = new Vertex(box.MinX + box.SizeX * 2, box.MinY - box.SizeY);
+            Vertex v1 = new Vertex(box.MinX + box.SizeX/2, box.MinY + box.SizeY * 2);
+            Vertex v2 = new Vertex(box.MinX - box.SizeX, box.MinY - box.SizeY);
 
             return new DelaunayTriangle(v0, v1, v2);
         }

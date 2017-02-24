@@ -245,7 +245,8 @@ namespace FreeBuild.Model
             TCollection result = new TCollection();
             foreach (TItem obj in collection)
             {
-                if (obj.HasData<TData>()) result.Add(obj);
+                DataOwner dO = obj as DataOwner;
+                if (dO != null && dO.HasData(typeof(TData))) result.Add(obj);
             }
             return result;
         }

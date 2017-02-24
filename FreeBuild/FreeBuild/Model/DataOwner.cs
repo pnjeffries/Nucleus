@@ -28,12 +28,49 @@ using System.Threading.Tasks;
 namespace FreeBuild.Model
 {
     /// <summary>
+    /// Abstract base class for model objects which own data components.
+    /// These objects contain a data store which can be used to hold data of various kinds
+    /// attached to this object in an easily extensible way.
+    /// </summary>
+    [Serializable]
+    public abstract class DataOwner : ModelObject
+    {
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        protected DataOwner() : base() { }
+
+        /// <summary>
+        /// Duplication constructor
+        /// </summary>
+        /// <param name="other"></param>
+        protected DataOwner(DataOwner other) : base(other) { }
+
+        #endregion
+
+        /// <summary>
+        /// Check whether this object has any attached data components
+        /// </summary>
+        public abstract bool HasData();
+
+        /// <summary>
+        /// Check whether this object has any attached data components of the specified type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public abstract bool HasData(Type componentType);
+
+    }
+
+    /// <summary>
     /// Abstract generic base class for model objects which own data components.
     /// These objects contain a data store which can be used to hold data of various kinds
     /// attached to this object in an easily extensible way.
     /// </summary>
     [Serializable]
-    public abstract class DataOwner<TDataStore, TData> : Named
+    public abstract class DataOwner<TDataStore, TData> : DataOwner
         where TDataStore : DataStore<TData>, new()
         where TData : class
     {
@@ -80,9 +117,21 @@ namespace FreeBuild.Model
         /// <summary>
         /// Check whether this object has any attached data components
         /// </summary>
-        public bool HasData()
+        public override bool HasData()
         {
                 return _Data != null && _Data.Count > 0;
+        }
+
+        /// <summary>
+        /// Check whether this object has any attached data components of the specified type
+        /// </summary>
+        /// <param name="componentType"></param>
+        /// <returns></returns>
+        public override bool HasData(Type componentType)
+        {
+            if (typeof(TData).IsAssignableFrom(componentType))
+                return _Data != null && Data.ContainsKey(componentType);
+            return false;
         }
 
         /// <summary>
@@ -133,27 +182,5 @@ namespace FreeBuild.Model
         #endregion
     }
 
-    /// <summary>
-    /// Abstract base class for model objects which own data components.
-    /// These objects contain a data store which can be used to hold data of various kinds
-    /// attached to this object in an easily extensible way.
-    /// </summary>
-    [Serializable]
-    public abstract class DataOwner : DataOwner<DataStore, object>
-    {
-        #region Constructors
-
-        /// <summary>
-        /// Default constructor
-        /// </summary>
-        protected DataOwner() : base() { }
-
-        /// <summary>
-        /// Duplication constructor
-        /// </summary>
-        /// <param name="other"></param>
-        protected DataOwner(DataOwner other) : base(other) { }
-
-        #endregion
-    }
+    
 }

@@ -257,6 +257,84 @@ namespace FreeBuild.Geometry
             return centre;
         }
 
+        public void WeightedVoronoiPoints(Dictionary<Vertex, MeshFace> cells)
+        {
+            Vertex vA = this[0];
+            Vertex vB = this[1];
+            Vertex vC = this[2];  
+
+            double wA = 1.0;
+            double wB = 1.0;
+            double wC = 1.0;
+
+            if (vA is WeightedVertex)
+                wA = ((WeightedVertex)vA).Weighting;
+            if (vB is WeightedVertex)
+                wB = ((WeightedVertex)vB).Weighting;
+            if (vC is WeightedVertex)
+                wC = ((WeightedVertex)vC).Weighting;
+
+            Vector A = vA.Position;
+            Vector B = vB.Position;
+            Vector C = vC.Position;
+
+            Vector AB = B - A;
+            Vector BC = C - B;
+            Vector CA = A - C;
+
+            Vector ptAB = A + AB * wA / (wA + wB);
+            Vector ptBC = B + BC * wB / (wB + wC);
+            Vector ptCA = C + CA * wC / (wC + wA);
+
+            Vector cAB = Intersect.LineLineXY(ptAB, AB.PerpendicularXY(), ptBC, BC.PerpendicularXY());
+            Vector cBC = Intersect.LineLineXY(ptBC, BC.PerpendicularXY(), ptCA, CA.PerpendicularXY());
+            Vector cCA = Intersect.LineLineXY(ptCA, CA.PerpendicularXY(), ptAB, AB.PerpendicularXY());
+
+            Vector centre = (cAB + cBC + cCA) / 3;
+
+            //Vector midAB = A + AB * 0.5;
+            //Vector midBC = B + BC * 0.5;
+
+            //Vector centre = Intersect.LineLineXY(midAB, AB.PerpendicularXY(), midBC, BC.PerpendicularXY());
+
+            //Vector ACen = (centre - A) * wA;
+            //Vector BCen = (centre - B) * wB;
+            //Vector CCen = (centre - C) * wC;
+
+            //centre += (ACen + BCen + CCen) / 3;// (wA + wB + wC);
+            //Vector centre = (ptAB + ptBC + ptCA) / 3;
+
+            Vertex vAB = new Vertex(ptAB);
+            Vertex vBC = new Vertex(ptBC);
+            Vertex vCA = new Vertex(ptCA);
+            Vertex vCentre = new Vertex(centre);
+
+            if (cells.ContainsKey(vA))
+            {
+                MeshFace cell = cells[vA];
+                cell.Add(vAB);
+                cell.Add(vCentre);
+                cell.Add(vCA);
+            }
+
+            if (cells.ContainsKey(vB))
+            {
+                MeshFace cell = cells[vB];
+                cell.Add(vAB);
+                cell.Add(vCentre);
+                cell.Add(vBC);
+            }
+
+            if (cells.ContainsKey(vC))
+            {
+                MeshFace cell = cells[vC];
+                cell.Add(vBC);
+                cell.Add(vCentre);
+                cell.Add(vCA);
+            }
+
+        }
+
         /// <summary>
         /// Tests whether a point lies in the circumcircle of this face.  Used during delaunay
         /// triangulation on the XY plane.

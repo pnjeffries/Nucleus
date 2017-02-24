@@ -79,6 +79,22 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Get all mesh faces in this collection that contain any vertices
+        /// shared with the specified vertex collection
+        /// </summary>
+        /// <param name="vertices"></param>
+        /// <returns></returns>
+        public MeshFaceCollection AllWithVertices(VertexCollection vertices)
+        {
+            var result = new MeshFaceCollection();
+            foreach(MeshFace face in this)
+            { 
+                if (face.ContainsAnyVertex(vertices)) result.Add(face);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Extract the boundary curves of each mesh face in this collection
         /// </summary>
         /// <returns></returns>
@@ -88,6 +104,23 @@ namespace FreeBuild.Geometry
             foreach (MeshFace face in this)
             {
                 result.Add(face.GetBoundary());
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Extract all vertices belonging to the faces in this collection
+        /// </summary>
+        /// <returns></returns>
+        public VertexCollection ExtractVertices()
+        {
+            var result = new VertexCollection();
+            foreach(MeshFace face in this)
+            {
+                foreach(Vertex v in face)
+                {
+                    if (!result.Contains(v.GUID)) result.Add(v);
+                }
             }
             return result;
         }

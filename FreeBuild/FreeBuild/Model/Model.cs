@@ -37,7 +37,7 @@ namespace FreeBuild.Model
     /// BIM or analysis model.
     /// </summary>
     [Serializable]
-    public class Model : Unique
+    public class Model : Named
     {
         #region Events
 

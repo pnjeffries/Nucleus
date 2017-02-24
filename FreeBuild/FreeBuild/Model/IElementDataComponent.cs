@@ -31,7 +31,7 @@ namespace FreeBuild.Model
     /// Interface for objects which contain data that can be attached to
     /// an element.
     /// </summary>
-    public interface IElementData
+    public interface IElementDataComponent : IDataComponent
     {
     }
 }

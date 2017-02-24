@@ -32,7 +32,7 @@ namespace FreeBuild.Model
     /// and form the top-level of data within that model.
     /// </summary>
     [Serializable]
-    public abstract class ModelObject : DataOwner, IDeletable, IOwned<Model>
+    public abstract class ModelObject : Named, IDeletable, IOwned<Model>
     {
 
         #region Properties
