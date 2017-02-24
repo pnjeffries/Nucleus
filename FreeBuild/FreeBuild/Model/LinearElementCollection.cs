@@ -32,6 +32,24 @@ namespace FreeBuild.Model
     [Serializable]
     public class LinearElementCollection : ElementCollection<LinearElement, LinearElementCollection>
     {
+        #region Constructors
+
+        /// <summary>
+        /// Initialise a new empty LinearElementCollection
+        /// </summary>
+        public LinearElementCollection() : base() { }
+
+        /// <summary>
+        /// Initialise a new LinearElementCollection containing the specified single item
+        /// </summary>
+        /// <param name="element"></param>
+        public LinearElementCollection(LinearElement element) : base()
+        {
+            Add(element);
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
