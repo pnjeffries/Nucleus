@@ -66,6 +66,7 @@
     <Compile Include="DDTree\VertexDDTree.cs" />
     <Compile Include="Events\MessageRaisedEventArgs.cs" />
     <Compile Include="Events\PropertyChangedEventArgsExtended.cs" />
+    <Compile Include="Exceptions\ExpressionException.cs" />
     <Compile Include="Exceptions\MatrixException.cs" />
     <Compile Include="Exceptions\MeshConstructionException.cs" />
     <Compile Include="Extensions\IDictionaryExtensions.cs" />
@@ -95,11 +96,17 @@
     <Compile Include="IO\ModelDocumentTextSerialiser.cs" />
     <Compile Include="IO\TextFormat.cs" />
     <Compile Include="IO\TextSerialiser.cs" />
+    <Compile Include="Maths\EvaluationContext.cs" />
     <Compile Include="Maths\Expression.cs" />
     <Compile Include="Maths\GraphLineData.cs" />
     <Compile Include="Maths\GraphLineDataCollection.cs" />
+    <Compile Include="Maths\IEvaluationContext.cs" />
     <Compile Include="Maths\LinearGraph.cs" />
     <Compile Include="Maths\LinearIntervalGraph.cs" />
+    <Compile Include="Maths\ValueExpression.cs" />
+    <Compile Include="Maths\BinaryOperationExpression.cs" />
+    <Compile Include="Maths\UnaryOperationExpression.cs" />
+    <Compile Include="Maths\ReferenceExpression.cs" />
     <Compile Include="Meshing\CoordinateSystemRemappingOption.cs" />
     <Compile Include="Meshing\DelaunayTriangle.cs" />
     <Compile Include="Meshing\MeshBuilder.cs" />

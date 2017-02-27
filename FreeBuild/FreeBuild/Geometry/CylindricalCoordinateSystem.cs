@@ -142,7 +142,7 @@ namespace FreeBuild.Geometry
         {
             Origin = origin;
             A = aAxis;
-            L = A.Cross(onPlane);
+            L = A.Cross(onPlane).Unitize();
         }
 
         /// <summary>

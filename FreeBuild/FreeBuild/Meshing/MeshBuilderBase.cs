@@ -456,7 +456,7 @@ namespace FreeBuild.Meshing
             topology.Add(reversedPts);
             topology.Add(tipPoints);
             AddLoft(topology, true);
-            FillStartToEnd(basePoints); // Cap bottom
+            FillStartToEndReverse(basePoints, 0); // Cap bottom
         }
 
         /// <summary>
@@ -472,7 +472,7 @@ namespace FreeBuild.Meshing
             {
                 AddFace(tip, basePoints[i], basePoints.GetWrapped(i + 1));
             }
-            FillStartToEnd(basePoints);
+            FillStartToEndReverse(basePoints, 0);
         }
 
         /// <summary>
