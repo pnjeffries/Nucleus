@@ -30,7 +30,7 @@
                 <TextBlock Text="{Binding Path=Label}" VerticalAlignment="Center"
                            Visibility="{Binding Path=Label, Converter={StaticResource NullOrEmptyVisibilityConverter}}"/>
             </local:SnapBorder>
-            <TextBox Grid.Column="1" Text="{Binding Path=Value, StringFormat={}{0:0.#######}, Mode=TwoWay}" 
+            <TextBox Grid.Column="1" Text="{Binding Path=Value, StringFormat={}{0:0.#######}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
                  VerticalAlignment="Center"></TextBox>
             <local:SnapBorder Grid.Column="2">
                 <TextBlock Text="{Binding Path=Units}" VerticalAlignment="Center" Margin="1"

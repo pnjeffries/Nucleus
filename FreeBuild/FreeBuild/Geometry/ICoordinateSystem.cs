@@ -36,16 +36,20 @@ namespace FreeBuild.Geometry
         /// one defined in local coordinates of this coordinate system.
         /// </summary>
         /// <param name="vector">A vector in the global coordinate system.</param>
+        /// <param name="direction">If true, this vector represents a direction rather than a point
+        /// and will be transformed without reference to the origin.</param>
         /// <returns>A vector in local coordinates</returns>
-        Vector GlobalToLocal(Vector vector);
+        Vector GlobalToLocal(Vector vector, bool direction = false);
 
         /// <summary>
         /// Convert a vector defined in the local coordinate system into
         /// one defined in global coordinates
         /// </summary>
         /// <param name="vector">A vector in the local coordinate system.</param>
+        /// <param name="direction">If true, this vector represents a direction rather than a point
+        /// and will be transformed without reference to the origin.</param>
         /// <returns>A vector in global coordinates</returns>
-        Vector LocalToGlobal(Vector vector);
+        Vector LocalToGlobal(Vector vector, bool direction = false);
 
         /// <summary>
         /// Convert a set of coordinates defined in the local coordinate system
@@ -54,7 +58,9 @@ namespace FreeBuild.Geometry
         /// <param name="c0">The first coordinate.</param>
         /// <param name="c1">The second coordinate.</param>
         /// <param name="c2">The third coordinate.</param>
+        /// <param name="direction">If true, this vector represents a direction rather than a point
+        /// and will be transformed without reference to the origin.</param>
         /// <returns>A vector representing a position in the global cartesian coordinate system.</returns>
-        Vector LocalToGlobal(double c0, double c1, double c2 = 0);
+        Vector LocalToGlobal(double c0, double c1, double c2 = 0, bool direction = false);
     }
 }

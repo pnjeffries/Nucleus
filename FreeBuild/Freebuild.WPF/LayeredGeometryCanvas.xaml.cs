@@ -205,6 +205,18 @@ namespace FreeBuild.WPF
             return HitTestResultBehavior.Stop;
         }
 
+        ///// <summary>
+        ///// Force a refresh of the geometry generation on each layer
+        ///// </summary>
+        //public void ForceRefresh()
+        //{
+        //    foreach (GeometryLayer layer in Layers)
+        //    {
+        //        GeometryCanvas canvas = ItemsControl.ItemContainerGenerator.ContainerFromItem(layer) as GeometryCanvas;
+        //        canvas.RefreshContents();
+        //    }
+        //}
+
         #endregion
 
     }

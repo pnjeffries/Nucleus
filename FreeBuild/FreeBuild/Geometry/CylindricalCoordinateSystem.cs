@@ -191,16 +191,30 @@ namespace FreeBuild.Geometry
         /// where X = radius, Y = theta, Z = z
         /// </summary>
         /// <param name="vector">A cartesian vector in the global coordinate system.</param>
+        /// <param name="direction">If true, this vector represents a direction rather than a point
+        /// and will be transformed without reference to the origin.</param>
         /// <returns>A vector in local coordinates, where X = radius, Y = theta, Z = z</returns>
-        public Vector GlobalToLocal(Vector vector)
+        public Vector GlobalToLocal(Vector vector, bool direction = false)
         {
-            Vector relative = vector - Origin;
-            double z = relative.Dot(L);
-            Vector onPlane = relative - L * z;
-            double r = onPlane.Magnitude();
-            Vector localY = L.Cross(A);
-            double theta = Math.Atan2(onPlane.Dot(localY), onPlane.Dot(A));
-            return new Vector(r, theta, z);
+            if (direction)
+            {
+                double z = vector.Dot(L);
+                Vector onPlane = vector - L * z;
+                double r = onPlane.Magnitude();
+                Vector localY = L.Cross(A);
+                double theta = Math.Atan2(onPlane.Dot(localY), onPlane.Dot(A));
+                return new Vector(r, theta, z);
+            }
+            else
+            { 
+                Vector relative = vector - Origin;
+                double z = relative.Dot(L);
+                Vector onPlane = relative - L * z;
+                double r = onPlane.Magnitude();
+                Vector localY = L.Cross(A);
+                double theta = Math.Atan2(onPlane.Dot(localY), onPlane.Dot(A));
+                return new Vector(r, theta, z);
+            }
         }
 
         /// <summary>
@@ -209,10 +223,16 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="vector">A vector in the local coordinate system,
         /// where X = radius and Y = theta.</param>
+        /// <param name="direction">If true, this vector represents a direction rather than a point
+        /// and will be transformed without reference to the origin.</param>
         /// <returns>A vector in global cartesian coordinates</returns>
-        public Vector LocalToGlobal(Vector vector)
+        public Vector LocalToGlobal(Vector vector, bool direction = false)
         {
-            return Origin + A.Rotate(L, vector.Y) * vector.X + L * vector.Z;
+            if (direction)
+            {
+                return A.Rotate(L, vector.Y) * vector.X + L * vector.Z;
+            } 
+            else return Origin + A.Rotate(L, vector.Y) * vector.X + L * vector.Z;
         }
 
         /// <summary>
@@ -222,10 +242,14 @@ namespace FreeBuild.Geometry
         /// <param name="r">The radial distance to the point on the reference plane</param>
         /// <param name="theta">The rotation from the polar axis, A</param>
         /// <param name="z">The distance from the reference plane</param>
+        /// <param name="direction">If true, this vector represents a direction rather than a point
+        /// and will be transformed without reference to the origin.</param>
         /// <returns>A vector representing a position in the global cartesian coordinate system.</returns>
-        public Vector LocalToGlobal(double r, double theta, double z = 0)
+        public Vector LocalToGlobal(double r, double theta, double z = 0, bool direction = false)
         {
-            return Origin + A.Rotate(L, theta) * r + L * z;
+            if (direction)
+                return A.Rotate(L, theta) * r + L * z;
+            else return Origin + A.Rotate(L, theta) * r + L * z;
         }
 
         /// <summary>

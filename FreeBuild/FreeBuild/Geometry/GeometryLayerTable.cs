@@ -58,6 +58,31 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Get the bounding box of all geometry on visible layers within this table
+        /// </summary>
+        public BoundingBox VisibleBoundingBox
+        {
+            get
+            {
+                if (Count > 0)
+                {
+                    BoundingBox result = null;// this[0].BoundingBox;
+                    for (int i = 0; i < Count; i++)
+                    {
+                        GeometryLayer layer = this[i];
+                        if (layer.Visible)
+                        {
+                            if (result == null) result = layer.BoundingBox;
+                            result.Include(layer);
+                        }
+                    }
+                    return result;
+                }
+                else return null;
+            }
+        }
+
+        /// <summary>
         /// Private backing field for VertexTree property
         /// </summary>
         [NonSerialized]
@@ -88,6 +113,7 @@ namespace FreeBuild.Geometry
         {
             base.OnCollectionChanged();
             NotifyPropertyChanged("BoundingBox");
+            NotifyPropertyChanged("VisibleBoundingBox");
             _VertexTree = null;
         }
 

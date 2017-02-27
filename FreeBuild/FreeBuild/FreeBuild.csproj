@@ -87,6 +87,7 @@
     <Compile Include="Geometry\PlanarRegion.cs" />
     <Compile Include="Geometry\Point.cs" />
     <Compile Include="Geometry\Label.cs" />
+    <Compile Include="Model\UserCoordinateSystem.cs" />
     <Compile Include="Geometry\VertexRule.cs" />
     <Compile Include="Geometry\WeightedVertex.cs" />
     <Compile Include="IO\CSVParser.cs" />
@@ -212,6 +213,7 @@
     <Compile Include="Model\Material.cs" />
     <Compile Include="Model\MaterialCollection.cs" />
     <Compile Include="Model\MaterialTable.cs" />
+    <Compile Include="Model\ModelCoordinateSystem.cs" />
     <Compile Include="Model\ModelDocumentCollection.cs" />
     <Compile Include="Model\ModelObject.cs" />
     <Compile Include="Model\ModelObjectCollection.cs" />

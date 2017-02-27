@@ -139,6 +139,36 @@ namespace FreeBuild.Base
             return Path.GetHashCode();
         }
 
+        /// <summary>
+        /// Returns a version of this FilePath with it's file extension trimmed off
+        /// </summary>
+        /// <returns></returns>
+        public FilePath TrimExtension()
+        {
+            return new FilePath(Directory + "\\" + System.IO.Path.GetFileNameWithoutExtension(Path));
+        }
+
+        /// <summary>
+        /// Returns a version of this FilePath with the specified new extension
+        /// </summary>
+        /// <param name="newExtension">The extension to use.  If not preceded with a '.' one will be added automatically</param>
+        /// <returns></returns>
+        public FilePath ChangeExtension(string newExtension)
+        {
+            return TrimExtension() + (newExtension.StartsWith(".") ? newExtension : "." + newExtension);
+        }
+
+        /// <summary>
+        /// Returns a copy of this FilePath with a suffix appended to the filename, inserted between the
+        /// file name and extension
+        /// </summary>
+        /// <param name="suffix"></param>
+        /// <returns></returns>
+        public FilePath AddNameSuffix(string suffix)
+        {
+            return new FilePath(TrimExtension() + suffix + Extension);
+        }
+
         #endregion
 
         #region Static Methods

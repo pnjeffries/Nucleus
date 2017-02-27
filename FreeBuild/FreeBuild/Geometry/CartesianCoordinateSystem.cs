@@ -193,11 +193,19 @@ namespace FreeBuild.Geometry
         /// one defined in local coordinates of this coordinate system.
         /// </summary>
         /// <param name="vector">A vector in the global coordinate system.</param>
+        /// <param name="direction"></param>
         /// <returns>A vector in local coordinates</returns>
-        public Vector GlobalToLocal(Vector vector)
+        public Vector GlobalToLocal(Vector vector, bool direction = false)
         {
-            Vector relV = vector - Origin;
-            return new Vector(relV.Dot(X), relV.Dot(Y), relV.Dot(Z));
+            if (direction)
+            {
+                return new Vector(vector.Dot(X), vector.Dot(Y), vector.Dot(Z));
+            }
+            else
+            {
+                Vector relV = vector - Origin;
+                return new Vector(relV.Dot(X), relV.Dot(Y), relV.Dot(Z));
+            }
         }
 
         /// <summary>
@@ -205,10 +213,16 @@ namespace FreeBuild.Geometry
         /// one defined in global coordinates
         /// </summary>
         /// <param name="vector">A vector in the local coordinate system.</param>
+        /// <param name="direction">If true, this vector represents a direction rather than a point
+        /// and will not be scaled.</param>
         /// <returns>A vector in global coordinates</returns>
-        public Vector LocalToGlobal(Vector vector)
+        public Vector LocalToGlobal(Vector vector, bool direction = false)
         {
-            return Origin + X * vector.X + Y * vector.Y + Z * vector.Z;
+            if (direction)
+            {
+                return X * vector.X + Y * vector.Y + Z * vector.Z;
+            }
+            else return Origin + X * vector.X + Y * vector.Y + Z * vector.Z;
         }
 
         /// <summary>
@@ -219,9 +233,10 @@ namespace FreeBuild.Geometry
         /// <param name="y">The second coordinate.</param>
         /// <param name="z">The third coordinate.</param>
         /// <returns>A vector representing a position in the global cartesian coordinate system.</returns>
-        public Vector LocalToGlobal(double x, double y, double z = 0)
+        public Vector LocalToGlobal(double x, double y, double z = 0, bool direction = false)
         {
-            return Origin + X * x + Y * y + Z * z;
+            if (direction) return X * x + Y * y + Z * z;
+            else return Origin + X * x + Y * y + Z * z;
         }
 
         /// <summary>
