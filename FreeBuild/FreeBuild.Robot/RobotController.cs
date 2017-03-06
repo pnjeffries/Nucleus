@@ -198,7 +198,15 @@ namespace FreeBuild.Robot
                         node.Position = nodePosition;
                         node.Undelete();
                     }
+
+                    if (robotNode.HasLabel(IRobotLabelType.I_LT_SUPPORT) != 0)
+                    {
+                        // Support condition:
+                        node.SetData(ROBtoFB.Convert(robotNode.GetLabel(IRobotLabelType.I_LT_SUPPORT).Data));
+                    }
+
                     //TODO: Copy over data
+
 
                     //Store mapping data:
                     context.IDMap.Add(node, robotNode);
@@ -562,10 +570,13 @@ namespace FreeBuild.Robot
                 {
                     rNode.SetPosition(node.Position);
                 }
-                if (!node.Fixity.AllFalse)
-                {
-                    rNode.SetLabel(IRobotLabelType.I_LT_SUPPORT, GetSupport(node.Fixity).Name);
-                }
+
+                // Support conditions:
+                NodeSupport support = node.GetData<NodeSupport>();
+                if (support != null && !support.Fixity.AllFalse) // Set support
+                    rNode.SetLabel(IRobotLabelType.I_LT_SUPPORT, GetSupport(support.Fixity).Name);
+                else if (rNode.HasLabel(IRobotLabelType.I_LT_SUPPORT) != 0) // Remove existing support
+                    rNode.RemoveLabel(IRobotLabelType.I_LT_SUPPORT);
                 //TODO: Moar Data!
 
                 //Store mapping:
@@ -911,6 +922,8 @@ namespace FreeBuild.Robot
 
         #endregion
 
+        #region Get ID Methods
+
         /// <summary>
         /// Extract a list of all node IDs in the currently open project
         /// </summary>
@@ -1032,6 +1045,10 @@ namespace FreeBuild.Robot
             }
             return result;
         }
+
+        #endregion
+
+        #region Extract Individual Data Items By Type
 
         /// <summary>
         /// Extract data of the specified type for the specified node
@@ -1249,6 +1266,8 @@ namespace FreeBuild.Robot
             else if (dataType == SectionDataType.I_ZZ) return data.GetValue(IRobotBarSectionDataValue.I_BSDV_IZ);
             return null;
         }
+
+        #endregion
 
         #endregion
     }

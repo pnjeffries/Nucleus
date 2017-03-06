@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Model
+namespace FreeBuild.Model.Loading
 {
     /// <summary>
-    /// Application rule to apply loads directly to nodes
+    /// A force load applied directly to a set of nodes
     /// </summary>
-    public class NodeLoadApplication : LoadApplication
+    public class NodeLoad : ForceLoad<NodeSet>
     {
+        
     }
 }

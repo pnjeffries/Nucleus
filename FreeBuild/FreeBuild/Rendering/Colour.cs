@@ -209,7 +209,7 @@ namespace FreeBuild.Rendering
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return A.GetHashCode() ^ R.GetHashCode() ^ G.GetHashCode() ^ B.GetHashCode();
+            return A * 16777216 + R *65536 + G*256 + B;
         }
 
         /// <summary>

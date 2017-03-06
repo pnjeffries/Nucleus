@@ -125,6 +125,27 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
+        /// Private backing field for CoordinateSystems property
+        /// </summary>
+        private UserCoordinateSystemReferenceTable _CoordinateSystems;
+
+        /// <summary>
+        /// Get the collection of user-defined coordinate systems that belong to this model
+        /// </summary>
+        public UserCoordinateSystemReferenceTable CoordinateSystems
+        {
+            get
+            {
+                if (_CoordinateSystems == null)
+                {
+                    _CoordinateSystems = new UserCoordinateSystemReferenceTable(); //TODO: Link to model?
+                    _CoordinateSystems.CollectionChanged += HandlesInternalCollectionChanged;
+                }
+                return _CoordinateSystems;
+            }
+        }
+
+        /// <summary>
         /// Private backing field for Families property
         /// </summary>
         private FamilyTable _Families;
@@ -191,7 +212,7 @@ namespace FreeBuild.Model
             get
             {
                 return new IEnumerable<ModelObject>[]
-                    {_Materials, _Families, _Levels, _Nodes, _Elements};
+                    {_CoordinateSystems, _Materials, _Families, _Levels, _Nodes, _Elements};
             }
         }
 
@@ -306,6 +327,18 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
+        /// Add a new user-defined coordinate system to this model, if it does not
+        /// already exist within it
+        /// </summary>
+        /// <param name="cSystem">The user-defined coordinate system to be added.</param>
+        /// <returns>True if the coordinate system could be added, 
+        /// false if it already existed within the model.</returns>
+        public bool Add(UserCoordinateSystemReference cSystem)
+        {
+            return CoordinateSystems.TryAdd(cSystem);
+        }
+
+        /// <summary>
         /// Add a new level to this model, if it does not already exist within it
         /// </summary>
         /// <param name="level">The level to be added.</param>
@@ -358,6 +391,8 @@ namespace FreeBuild.Model
             else if (Nodes.Contains(guid)) return Nodes[guid];
             else if (Families.Contains(guid)) return Families[guid];
             else if (Materials.Contains(guid)) return Materials[guid];
+            else if (Levels.Contains(guid)) return Levels[guid];
+            else if (CoordinateSystems.Contains(guid)) return CoordinateSystems[guid];
             else return null;
         }
 

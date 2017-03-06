@@ -97,6 +97,11 @@ namespace FreeBuild.Model
             }
         }
 
+        /// <summary>
+        /// Get the local coordinate system of this element
+        /// </summary>
+        public abstract ICoordinateSystem LocalCoordinateSystem { get; }
+
         #endregion
 
         #region Methods
@@ -284,6 +289,18 @@ namespace FreeBuild.Model
         {
             get { return _Orientation; }
             set { _Orientation = value; NotifyPropertyChanged("Orientation"); }
+        }
+
+        /// <summary>
+        /// Get the local coordinate system of this element
+        /// </summary>
+        public override ICoordinateSystem LocalCoordinateSystem
+        {
+            get
+            {
+                throw new NotImplementedException();
+                //if (_Geometry != null) return _Geometry.
+            }
         }
 
         #endregion

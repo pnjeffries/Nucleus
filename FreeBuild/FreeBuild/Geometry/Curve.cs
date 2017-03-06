@@ -67,6 +67,17 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Get the parameter-space domain of this curve
+        /// </summary>
+        public virtual Interval Domain
+        {
+            get
+            {
+                return new Interval(0, 1.0);
+            }
+        }
+
+        /// <summary>
         /// Get the vertex at the start of the curve (if there is one)
         /// </summary>
         public virtual Vertex Start
@@ -226,6 +237,50 @@ namespace FreeBuild.Geometry
             
             Vertex end = SegmentEnd(span); //Find the span end vertex
             return (end.Position - start.Position).Unitize(); //Interpolate position
+        }
+
+        /// <summary>
+        /// Evaluate the local coordinate system at a position along this curve.
+        /// By convention, the x-axis of the local coordinate system will point along the
+        /// curve and the z-axis will be orientated as closely as possible to global Z, unless
+        /// the x-axis lies within a certain angular limit of z, in which case the global X axis
+        /// will be used instead.
+        /// </summary>
+        /// <param name="tSpan">A normalised parameter defining a point along this curve.
+        /// Note that parameter-space is not necessarily uniform and does not equate to a normalised length.
+        /// 0 = span start, 1 = span end.</param>
+        /// <param name="orientation">The orientation angle.  The rotation of the Y and Z axes of the coordinate 
+        /// system around the X axis, relative to default reference orientation.</param>
+        /// <returns></returns>
+        public virtual CartesianCoordinateSystem LocalCoordinateSystem(double t, Angle orientation)
+        {
+            return LocalCoordinateSystem(t, orientation, Angle.FromDegrees(1));
+        }
+
+        /// <summary>
+        /// Evaluate the local coordinate system at a position along this curve.
+        /// By convention, the x-axis of the local coordinate system will point along the
+        /// curve and the z-axis will be orientated as closely as possible to global Z, unless
+        /// the x-axis lies within a certain angular limit of z, in which case the global X axis
+        /// will be used instead.
+        /// </summary>
+        /// <param name="tSpan">A normalised parameter defining a point along this curve.
+        /// Note that parameter-space is not necessarily uniform and does not equate to a normalised length.
+        /// 0 = span start, 1 = span end.</param>
+        /// <param name="orientation">The orientation angle.  The rotation of the Y and Z axes of the coordinate 
+        /// system around the X axis, relative to default reference orientation.</param>
+        /// <param name="zLimit">The angular limit within which if the local X and global Z approach each other,
+        /// local Z will be aligned towards global X rather than global Z.  By default, this is 1 degree.</param>
+        /// <returns></returns>
+        public virtual CartesianCoordinateSystem LocalCoordinateSystem(double t, Angle orientation, Angle zLimit)
+        {
+            if (Closed) t = t % 1.0;
+
+            // Calculate span
+            double tSpan = t * SegmentCount;
+            int span = (int)Math.Floor(tSpan);
+            tSpan = tSpan % 1.0; //Position in span
+            return LocalCoordinateSystem(span, tSpan, orientation, zLimit);
         }
 
         /// <summary>

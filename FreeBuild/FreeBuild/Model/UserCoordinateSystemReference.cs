@@ -7,7 +7,11 @@ using System.Threading.Tasks;
 
 namespace FreeBuild.Model
 {
-    public class UserCoordinateSystem : ModelCoordinateSystem, ICoordinateSystem
+    /// <summary>
+    /// A coordinate system reference that wraps a user-defined coordinate system
+    /// </summary>
+    [Serializable]
+    public class UserCoordinateSystemReference : CoordinateSystemReference
     {
         #region Properties
 
@@ -33,7 +37,7 @@ namespace FreeBuild.Model
         /// Initialise a new user coordinate system aligned to the
         /// global coordinate system
         /// </summary>
-        public UserCoordinateSystem() : base()
+        public UserCoordinateSystemReference() : base()
         {
             _CoordinateSystem = CartesianCoordinateSystem.Global;
         }
@@ -43,7 +47,7 @@ namespace FreeBuild.Model
         /// </summary>
         /// <param name="name"></param>
         /// <param name="cSystem"></param>
-        public UserCoordinateSystem(string name, ICoordinateSystem cSystem) : base()
+        public UserCoordinateSystemReference(string name, ICoordinateSystem cSystem) : base()
         {
             Name = name;
             _CoordinateSystem = cSystem;
@@ -53,22 +57,30 @@ namespace FreeBuild.Model
 
         #region Methods
 
+        /// <summary>
+        /// Get the coordinate system defined by this object for the specified position along a linear element
+        /// </summary>
+        /// <param name="element">The linear element the coordinate system relates to</param>
+        /// <param name="t">The position along the linear element that the coordinate system relates to</param>
+        /// <returns></returns>
+        public override ICoordinateSystem GetCoordinateSystem(LinearElement element, double t)
+        {
+            return CoordinateSystem;
+        }
+
         public Vector GlobalToLocal(Vector vector, bool direction = false)
         {
-            if (_CoordinateSystem != null) return _CoordinateSystem.GlobalToLocal(vector, direction);
-            else return Vector.Unset;
+            return _CoordinateSystem.GlobalToLocal(vector, direction);
         }
 
         public Vector LocalToGlobal(Vector vector, bool direction = false)
         {
-            if (_CoordinateSystem != null) return _CoordinateSystem.LocalToGlobal(vector, direction);
-            else return Vector.Unset;
+            return _CoordinateSystem.LocalToGlobal(vector, direction);
         }
 
         public Vector LocalToGlobal(double c0, double c1, double c2 = 0, bool direction = false)
         {
-            if (_CoordinateSystem != null) return _CoordinateSystem.LocalToGlobal(c0, c1, c2, direction);
-            else return Vector.Unset;
+            return _CoordinateSystem.LocalToGlobal(c0, c1, c2, direction);
         }
 
         #endregion

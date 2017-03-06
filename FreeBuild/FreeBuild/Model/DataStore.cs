@@ -147,6 +147,25 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
+        /// Add the specified data component to this store.  This will replace
+        /// any attached data component of the same type.
+        /// </summary>
+        /// <param name="component"></param>
+        public void SetData<T>(T component) where T : class, TData
+        {
+            this[typeof(T)] = component;
+        }
+
+        /// <summary>
+        /// Remove an attached data component of the specified type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public bool RemoveData<T>() where T : class, TData
+        {
+            return Remove(typeof(T));
+        }
+
+        /// <summary>
         /// Does this data store contain data of the specified type?
         /// </summary>
         /// <typeparam name="T">The type of data component to check for</typeparam>
@@ -155,6 +174,16 @@ namespace FreeBuild.Model
         {
             Type tType = typeof(T);
             return ContainsKey(tType);
+        }
+
+        /// <summary>
+        /// Does this data store contain data of the specified type?
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public bool HasData(Type type)
+        {
+            return ContainsKey(type);
         }
 
         /// <summary>
@@ -190,13 +219,69 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
-        /// Add a new data object to this data store.  If this data store already contains a data
+        /// Add a new data component to this data store.  If this data store already contains a data
         /// object of the same type, it will be replaced.
         /// </summary>
         /// <param name="data"></param>
         public void Add(TData data)
         {
             if (data != null) this[data.GetType()] = data;
+        }
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Base class for data stores which allow component types to be specified via an additional
+    /// [XXX]DataType enum
+    /// </summary>
+    /// <typeparam name="TData"></typeparam>
+    /// <typeparam name="TTypeEnum"></typeparam>
+    public abstract class DataStore<TData, TTypeEnum> : DataStore<TData>
+        where TData : class
+        where TTypeEnum : struct
+    {
+        #region Properties
+
+        /// <summary>
+        /// Get a data component of a standard built-in type
+        /// </summary>
+        /// <param name="typeEnum"></param>
+        /// <returns></returns>
+        public TData this[TTypeEnum typeEnum]
+        {
+            get { return this[GetRepresentedType(typeEnum)]; }
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Get the type represented by the specified data type enum
+        /// </summary>
+        /// <param name="typeEnum"></param>
+        /// <returns></returns>
+        protected abstract Type GetRepresentedType(TTypeEnum typeEnum);
+
+        /// <summary>
+        /// Get a data component of a standard built-in type
+        /// </summary>
+        /// <param name="typeEnum"></param>
+        /// <returns></returns>
+        public TData GetData(TTypeEnum typeEnum)
+        {
+            return this[typeEnum];
+        }
+
+        /// <summary>
+        /// Does this data store contain data of the specified type?
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public bool HasData(TTypeEnum typeEnum)
+        {
+            return HasData(GetRepresentedType(typeEnum));
         }
 
         #endregion

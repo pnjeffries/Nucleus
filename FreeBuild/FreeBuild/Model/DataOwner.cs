@@ -179,6 +179,16 @@ namespace FreeBuild.Model
             return Data.GetAllData<T>();
         }
 
+        /// <summary>
+        /// Attach a data component to this object
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        public void SetData<T>(T data) where T : class, TData
+        {
+            Data.SetData<T>(data);
+        }
+
         #endregion
     }
 

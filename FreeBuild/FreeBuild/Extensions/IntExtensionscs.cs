@@ -62,5 +62,16 @@ namespace FreeBuild.Extensions
             if (value == 0) return 1;
             else return (int)Math.Floor(Math.Log10(Math.Abs(value)) + 1);
         }
+
+        /// <summary>
+        /// Get the absolute value of this integer
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static int Abs(this int value)
+        {
+            return Math.Abs(value);
+        }
+
     }
 }

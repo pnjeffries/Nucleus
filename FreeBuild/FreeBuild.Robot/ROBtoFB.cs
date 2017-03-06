@@ -170,6 +170,22 @@ namespace FreeBuild.Robot
             return new Line(PositionOf(bar.Start, structureNodes), PositionOf(bar.End, structureNodes));
         }
 
+        /// <summary>
+        /// Convert RobotNodeSupportData to a FreeBuild node support
+        /// </summary>
+        /// <param name="support"></param>
+        /// <returns></returns>
+        public static NodeSupport Convert(RobotNodeSupportData support)
+        {
+            var result = new NodeSupport(
+                new Base.Bool6D(support.UX != 0, support.UY != 0, support.UZ != 0,
+                support.RX != 0, support.RY != 0, support.RX != 0));
+            if (support.Alpha != 0 || support.Beta != 0 || support.Gamma != 0)
+            {
+                // TODO
+            }
+            return result;
+        }
         
     }
 }

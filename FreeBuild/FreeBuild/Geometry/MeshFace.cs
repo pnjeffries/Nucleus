@@ -214,6 +214,57 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Get the squared length of the edge at the specified index
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public double EdgeLengthSquared(int index)
+        {
+            return this[index].DistanceToSquared(this.GetWrapped(index + 1));
+        }
+
+        /// <summary>
+        /// Get the index of the longest edge of this face
+        /// </summary>
+        /// <returns></returns>
+        public int LongestEdge()
+        {
+            int iMax = 0;
+            double lMax = 0;
+            for (int i = 0; i < Count; i++)
+            {
+                double l = EdgeLengthSquared(i);
+                if (l > lMax)
+                {
+                    lMax = l;
+                    iMax = i;
+                }
+            }
+            return iMax;
+        }
+
+        /// <summary>
+        /// Is the edge at the specified index shared with the specified other face?
+        /// </summary>
+        /// <param name="index">The edge index</param>
+        /// <param name="withFace">The face to check against</param>
+        /// <returns></returns>
+        public bool IsSharedEdge(int index, MeshFace withFace)
+        {
+            int i0 = withFace.IndexOf(this[index]);
+            if (i0 >= 0)
+            {
+                int i1 = withFace.IndexOf(this.GetWrapped(index + 1));
+                if (i1 >= 0)
+                {
+                    int dist = (i0 - i1).Abs();
+                    return dist == 1 || dist == withFace.Count;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Extract the position vectors of all vertices in this face to
         /// an array.
         /// </summary>

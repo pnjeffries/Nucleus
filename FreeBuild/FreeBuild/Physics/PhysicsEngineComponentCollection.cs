@@ -5,13 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Model
+namespace FreeBuild.Physics
 {
     /// <summary>
-    /// Interface for loading application rules.
-    /// Determines how a particular load is applied to the model.
+    /// A collection of physics engine components
     /// </summary>
-    public interface ILoadApplication : IUnique
+    public class PhysicsEngineComponentCollection : UniquesCollection<IPhysicsEngineComponent>
     {
     }
 }

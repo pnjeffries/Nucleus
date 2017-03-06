@@ -55,6 +55,22 @@ namespace FreeBuild.Geometry
         /// </summary>
         public Vector EndPoint { get { return End.Position; } }
 
+        /// <summary>
+        /// Get the length of this edge
+        /// </summary>
+        public double Length
+        {
+            get { return StartPoint.DistanceTo(EndPoint); }
+        }
+
+        /// <summary>
+        /// Get the squared length of this edge
+        /// </summary>
+        public double LengthSquared
+        {
+            get { return StartPoint.DistanceToSquared(EndPoint); }
+        }
+
         #endregion
 
         #region Constructor

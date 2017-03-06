@@ -415,6 +415,16 @@ namespace FreeBuild.Maths
             return result;
         }
 
+        /// <summary>
+        /// Wrap the specified value to the bounds of this interval
+        /// </summary>
+        /// <param name="value">The value to wrap</param>
+        /// <returns></returns>
+        public double Wrap(double value)
+        {
+            return Min + (value - Min) % Size;
+        }
+
         #endregion
 
         #region Operators

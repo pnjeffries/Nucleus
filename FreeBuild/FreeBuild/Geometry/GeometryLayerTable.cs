@@ -129,6 +129,25 @@ namespace FreeBuild.Geometry
             item.CollectionChanged += Item_CollectionChanged;
         }
 
+        protected override void ClearItems()
+        {
+            foreach (GeometryLayer item in this)
+            {
+                item.CollectionChanged -= Item_CollectionChanged;
+            }
+            base.ClearItems();
+        }
+
+        protected override void RemoveItem(int index)
+        {
+            if (index >= 0 && index < Count)
+            {
+                GeometryLayer item = this[index];
+                item.CollectionChanged -= Item_CollectionChanged;
+            }
+            base.RemoveItem(index);
+        }
+
         private void Item_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             OnCollectionChanged();

@@ -198,7 +198,7 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
-        /// Create a new (or update an existing) section property in the model
+        /// Create a new (or update an existing) section family in the model
         /// </summary>
         /// <param name="name">The name of the section. 
         /// May be modified with a numerical suffix if the name already exists in
@@ -207,7 +207,7 @@ namespace FreeBuild.Model
         /// If an object has been created previously with matching execution information then
         /// instead of creating a new item this previous one will be updated and returned instead.
         /// This enables this method to be used parametrically.</param>
-        /// <returns></returns>
+        /// <returns>The created or updated </returns>
         public SectionFamily SectionProperty(string name, ExecutionInfo exInfo = null)
         {
             SectionFamily result = new SectionFamily();
@@ -218,20 +218,41 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
-        /// Create a new (or update an existing) section property in the model
+        /// Create a new (or update an existing) section family in the model
         /// </summary>
         /// <param name="profile">The section profile to assign to the new property.</param>
         /// <param name="exInfo">Optional.  The execution information of the current action.
         /// If an object has been created previously with matching execution information then
         /// instead of creating a new item this previous one will be updated and returned instead.
         /// This enables this method to be used parametrically.</param>
-        /// <returns></returns>
+        /// <returns>The created or updated section family</returns>
         public SectionFamily SectionProperty(SectionProfile profile, ExecutionInfo exInfo = null)
         {
             SectionFamily result = new SectionFamily();
             result = (SectionFamily)Model.History.Update(exInfo, result);
             result.Profile = profile;
             if (result.Name == null) result.Name = Model.Families.NextAvailableName("Section", result, true);
+            Model.Add(result);
+            return result;
+        }
+
+        /// <summary>
+        /// Create a new (or update an existing) coordinate system in the model
+        /// </summary>
+        /// <param name="cSystem">The geometry coordinate system to assign as this user system</param>
+        /// <param name="name">Optional.  The name of the user coordinate system.  If not specified a
+        /// name will be automatically generated.</param>
+        /// <param name="exInfo">Optional.  The execution information of the current action.
+        /// If an object has been created previously with matching execution information then
+        /// instead of creating a new item this previous one will be updated and returned instead.
+        /// This enables this method to be used parametrically.</param>
+        /// <returns>The created or updated user coordinate system.</returns>
+        public UserCoordinateSystemReference UserCoordinateSystemReference(ICoordinateSystem cSystem, string name = null, ExecutionInfo exInfo = null)
+        {
+            UserCoordinateSystemReference result = new UserCoordinateSystemReference();
+            result = (UserCoordinateSystemReference)Model.History.Update(exInfo, result);
+            if (name != null) result.Name = name;
+            if (result.Name == null) result.Name = Model.CoordinateSystems.NextAvailableName("Coordinate System", result, true);
             Model.Add(result);
             return result;
         }

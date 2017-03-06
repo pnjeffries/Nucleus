@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Maths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,40 +39,41 @@ namespace FreeBuild.Model
 
     /// <summary>
     /// Generic abstract base class for objects which represent a load of some kind applied to the model
-    /// to be considered during analysis
+    /// to be considered during an analysis
     /// </summary>
-    /// <typeparam name="TApplication">The type of application rule applicable to this load</typeparam>
-    /// <typeparam name="TValue">The type of the load value to be applied</typeparam>
+    /// <typeparam name="TAppliedTo">The type of the set of objects to which this load can be applied</typeparam>
     [Serializable]
-    public abstract class Load<TApplication, TValue> : Load
-        where TApplication : class, ILoadApplication
+    public abstract class Load<TAppliedTo> : Load
+        where TAppliedTo : ModelObjectSetBase, new()
     {
         /// <summary>
         /// Private backing field for AppliedTo property
         /// </summary>
-        private LoadApplicationCollection<TApplication> _AppliedTo = null;
+        private TAppliedTo _AppliedTo;
 
         /// <summary>
-        /// The set of application rules for this load
+        /// The set of objects that this load is applied to
         /// </summary>
-        public LoadApplicationCollection<TApplication> AppliedTo
+        public TAppliedTo AppliedTo
         {
             get
             {
-                if (_AppliedTo == null) _AppliedTo = new LoadApplicationCollection<TApplication>();
+                if (_AppliedTo == null) _AppliedTo = new TAppliedTo();
+                _AppliedTo.Model = Model;
                 return _AppliedTo;
             }
         }
 
+
         /// <summary>
         /// Private backing field for Value property
         /// </summary>
-        private TValue _Value;
+        private Expression _Value;
 
         /// <summary>
         /// The value of the load
         /// </summary>
-        public TValue Value
+        public Expression Value
         {
             get { return _Value; }
             set { ChangeProperty(ref _Value, value, "Value"); }

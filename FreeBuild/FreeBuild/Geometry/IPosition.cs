@@ -163,6 +163,53 @@ namespace FreeBuild.Geometry
             }
         }
 
+        /// <summary>
+        /// Find the closest object in this enumerable to the specified position
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="positions"></param>
+        /// <param name="toThis"></param>
+        /// <returns></returns>
+        public static T FindClosest<T>(this IEnumerable<T> positions, IPosition toThis)
+            where T:class, IPosition
+        {
+            T result = null;
+            double minDist = 0;
+            foreach (T position in positions)
+            {
+                double dist = position.DistanceToSquared(toThis);
+                if (result == null || dist < minDist)
+                {
+                    result = position;
+                    minDist = dist;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Find the distance to the closest object in this enumerable to the specified position
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="positions"></param>
+        /// <param name="toThis"></param>
+        /// <returns></returns>
+        public static double ClosestDistanceSquared<T>(this IEnumerable<T> positions, IPosition toThis)
+              where T:class, IPosition
+        {
+            T result = null;
+            double minDist = 0;
+            foreach (T position in positions)
+            {
+                double dist = position.DistanceToSquared(toThis);
+                if (result == null || dist < minDist)
+                {
+                    result = position;
+                    minDist = dist;
+                }
+            }
+            return minDist;
+        }
         
     }
 }

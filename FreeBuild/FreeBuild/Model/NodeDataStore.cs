@@ -10,20 +10,17 @@ namespace FreeBuild.Model
     /// Extensible storage mechanism for adding attached data to nodes
     /// </summary>
     [Serializable]
-    public class NodeDataStore : DataStore<INodeDataComponent>
+    public class NodeDataStore : DataStore<INodeDataComponent, NodeDataType>
     {
-        #region Properties
 
-        /// <summary>
-        /// Get a standard type of node attached data
-        /// </summary>
-        /// <param name="dataType"></param>
-        /// <returns></returns>
-        public INodeDataComponent this[NodeDataType dataType]
+        #region Methods
+
+        protected override Type GetRepresentedType(NodeDataType typeEnum)
         {
-            get { return this[dataType.RepresentedType()]; }
+            return typeEnum.RepresentedType();
         }
 
         #endregion
+
     }
 }
