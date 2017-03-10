@@ -31,7 +31,16 @@ namespace FreeBuild.Model
     /// Stores element data keyed by the type of data.
     /// </summary>
     [Serializable]
-    public class ElementDataStore : DataStore<IElementDataComponent>
+    public class ElementDataStore : DataStore<IElementDataComponent, Element>
     {
+        #region Constructors
+
+        /// <summary>
+        /// Initialise a new Element data store belonging to the specified element
+        /// </summary>
+        /// <param name="owner"></param>
+        public ElementDataStore(Element owner) : base(owner) { }
+
+        #endregion
     }
 }

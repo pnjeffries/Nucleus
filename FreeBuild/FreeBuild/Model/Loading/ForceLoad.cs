@@ -13,7 +13,7 @@ namespace FreeBuild.Model
     /// </summary>
     /// <typeparam name="TAppliedTo"></typeparam>
     public abstract class ForceLoad<TAppliedTo> : Load<TAppliedTo>
-        where TAppliedTo : ModelObjectSetBase
+        where TAppliedTo : ModelObjectSetBase, new()
     {
         #region Properties
 

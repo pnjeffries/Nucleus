@@ -25,6 +25,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
+using FreeBuild.Base;
+using System.ComponentModel;
 
 namespace FreeBuild.Model
 {
@@ -33,10 +35,27 @@ namespace FreeBuild.Model
     /// </summary>
     /// <typeparam name="TData">The type of data that this store will contain</typeparam>
     [Serializable]
-    public abstract class DataStore<TData> : Dictionary<Type, TData>
+    public abstract class DataStore<TData, TOwner> : ObservableKeyedCollection<Type, TData>, IOwned<TOwner>
         where TData : class
     {
+
         #region Properties
+
+        /// <summary>
+        /// Private backing field for Owner property
+        /// </summary>
+        private TOwner _Owner;
+
+        /// <summary>
+        /// The object that this data store belongs to
+        /// </summary>
+        public TOwner Owner { get { return _Owner; } }
+
+
+        private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Get a data component within this store by it's type name.
@@ -53,26 +72,36 @@ namespace FreeBuild.Model
         #region Constructors
 
         /// <summary>
-        /// Serialisation constructor
+        /// Default constructor
         /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
-        protected DataStore(SerializationInfo info, StreamingContext context) : base(info, context)
+        public DataStore() : base()
         {
 
         }
 
         /// <summary>
-        /// Default constructor
+        /// Initialise a new DataStore with the given owner
         /// </summary>
-        public DataStore()
+        /// <param name="owner"></param>
+        public DataStore(TOwner owner) : base()
         {
-
+            _Owner = owner;
         }
 
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Get the key for the specified item
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        protected override Type GetKeyForItem(TData item)
+        {
+            return item.GetType();
+        }
+
 
         /// <summary>
         /// Get a datacomponent from this store by it's type name.
@@ -84,12 +113,12 @@ namespace FreeBuild.Model
         public TData GetData(string typeName)
         {
             Type tType = Type.GetType(typeName);
-            if (tType == null || !ContainsKey(tType))
+            if (tType == null || !Contains(tType))
             {
                 //If the type name could not be resolved, search through the collection for anything with the specified name
-                foreach (KeyValuePair<Type,TData> kvp in this)
+                foreach (TData item in this)
                 {
-                    if (kvp.Key.Name.EqualsIgnoreCase(typeName)) return kvp.Value;
+                    if (item.GetType().Name.EqualsIgnoreCase(typeName)) return item;
                 }
             }
             else
@@ -108,7 +137,7 @@ namespace FreeBuild.Model
         public T GetData<T>() where T : class, TData
         {
             Type tType = typeof(T);
-            if (ContainsKey(tType)) return this[tType] as T;
+            if (Contains(tType)) return this[tType] as T;
             //Finding sub-types disabled for the sake of speed:
             //else
             //{
@@ -130,7 +159,7 @@ namespace FreeBuild.Model
         public T GetData<T>(bool create) where T: class, TData, new()
         {
             Type tType = typeof(T);
-            if (ContainsKey(tType)) return this[tType] as T;
+            if (Contains(tType)) return this[tType] as T;
             else
             {
                 //Finding sub-types disabled for the sake of speed:
@@ -139,7 +168,7 @@ namespace FreeBuild.Model
                 if (create)
                 {
                     T newData = new T();
-                    this[tType] = newData;
+                    SetData(newData);
                     return newData;
                 }
             }
@@ -151,9 +180,14 @@ namespace FreeBuild.Model
         /// any attached data component of the same type.
         /// </summary>
         /// <param name="component"></param>
-        public void SetData<T>(T component) where T : class, TData
+        public void SetData(TData component)
         {
-            this[typeof(T)] = component;
+            Type type = component.GetType();
+            if (Contains(type))
+            {
+                Remove(type);
+            }
+            Add(component);
         }
 
         /// <summary>
@@ -173,7 +207,7 @@ namespace FreeBuild.Model
         public bool HasData<T>() where T : class, TData
         {
             Type tType = typeof(T);
-            return ContainsKey(tType);
+            return Contains(tType);
         }
 
         /// <summary>
@@ -183,7 +217,7 @@ namespace FreeBuild.Model
         /// <returns></returns>
         public bool HasData(Type type)
         {
-            return ContainsKey(type);
+            return Contains(type);
         }
 
         /// <summary>
@@ -195,10 +229,9 @@ namespace FreeBuild.Model
         public IList<T> GetAllData<T>() where T: TData
         {
             IList<T> result = new List<T>();
-            Type tType = typeof(T);
-            foreach (Type keyType in Keys)
+            foreach (TData item in this)
             {
-                if (tType.IsAssignableFrom(keyType)) result.Add((T)this[keyType]);
+                if (item is T) result.Add((T)item);
             }
             return result;
         }
@@ -210,22 +243,11 @@ namespace FreeBuild.Model
         /// <returns></returns>
         public IList<T> GetAllData<T>(IList<T> addTo) where T:TData
         {
-            Type tType = typeof(T);
-            foreach (Type keyType in Keys)
+            foreach (TData item in this)
             {
-                if (tType.IsAssignableFrom(keyType)) addTo.Add((T)this[keyType]);
+                if (item is T) addTo.Add((T)item);
             }
             return addTo;
-        }
-
-        /// <summary>
-        /// Add a new data component to this data store.  If this data store already contains a data
-        /// object of the same type, it will be replaced.
-        /// </summary>
-        /// <param name="data"></param>
-        public void Add(TData data)
-        {
-            if (data != null) this[data.GetType()] = data;
         }
 
         #endregion
@@ -237,7 +259,7 @@ namespace FreeBuild.Model
     /// </summary>
     /// <typeparam name="TData"></typeparam>
     /// <typeparam name="TTypeEnum"></typeparam>
-    public abstract class DataStore<TData, TTypeEnum> : DataStore<TData>
+    public abstract class DataStore<TData, TOwner, TTypeEnum> : DataStore<TData, TOwner>
         where TData : class
         where TTypeEnum : struct
     {
@@ -252,6 +274,24 @@ namespace FreeBuild.Model
         {
             get { return this[GetRepresentedType(typeEnum)]; }
         }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public DataStore() : base()
+        {
+
+        }
+
+        /// <summary>
+        /// Initialise a new DataStore with the given owner
+        /// </summary>
+        /// <param name="owner"></param>
+        public DataStore(TOwner owner) : base(owner) { }
 
         #endregion
 
@@ -287,32 +327,5 @@ namespace FreeBuild.Model
         #endregion
     }
 
-    /// <summary>
-    /// Extensible storage mechanism for adding tagged data to model objects
-    /// </summary>
-    [Serializable]
-    public class DataStore : DataStore<object>
-    {
-        #region Constructor
-
-        /// <summary>
-        /// Serialisation constructor
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
-        protected DataStore(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-
-        }
-
-        /// <summary>
-        /// Default constructor
-        /// </summary>
-        public DataStore()
-        {
-
-        }
-
-        #endregion
-    }
+    
 }

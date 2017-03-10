@@ -74,7 +74,7 @@ namespace FreeBuild.IO
                         var profile = (RectangularHollowProfile)section.Profile;
                         return string.Format("STD RHS({0}) {1} {2} {3} {4}", "m", profile.Depth, profile.Width, profile.WebThickness, profile.FlangeThickness);
                     }
-                    else if (section.Profile is RectangularHollowProfile)
+                    else if (section.Profile is RectangularProfile)
                     {
                         var profile = (RectangularProfile)section.Profile;
                         return string.Format("STD R({0}) {1} {2}", "m", profile.Depth, profile.Width);

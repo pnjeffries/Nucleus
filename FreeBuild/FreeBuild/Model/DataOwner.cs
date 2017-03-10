@@ -70,8 +70,8 @@ namespace FreeBuild.Model
     /// attached to this object in an easily extensible way.
     /// </summary>
     [Serializable]
-    public abstract class DataOwner<TDataStore, TData> : DataOwner
-        where TDataStore : DataStore<TData>, new()
+    public abstract class DataOwner<TDataStore, TData, TOwner> : DataOwner
+        where TDataStore : DataStore<TData, TOwner>
         where TData : class
     {
         #region Properties
@@ -90,7 +90,7 @@ namespace FreeBuild.Model
         {
             get
             {
-                if (_Data == null) _Data = new TDataStore();
+                if (_Data == null) _Data = NewDataStore();
                 return _Data;
             }
         }
@@ -108,11 +108,17 @@ namespace FreeBuild.Model
         /// Duplication constructor
         /// </summary>
         /// <param name="other"></param>
-        protected DataOwner(DataOwner<TDataStore,TData> other) : base(other) { }
+        protected DataOwner(DataOwner<TDataStore,TData, TOwner> other) : base(other) { }
 
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Create a new data store suitable for this datatype
+        /// </summary>
+        /// <returns></returns>
+        protected abstract TDataStore NewDataStore();
 
         /// <summary>
         /// Check whether this object has any attached data components
@@ -130,7 +136,7 @@ namespace FreeBuild.Model
         public override bool HasData(Type componentType)
         {
             if (typeof(TData).IsAssignableFrom(componentType))
-                return _Data != null && Data.ContainsKey(componentType);
+                return _Data != null && Data.Contains(componentType);
             return false;
         }
 
@@ -184,9 +190,9 @@ namespace FreeBuild.Model
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public void SetData<T>(T data) where T : class, TData
+        public void SetData(TData data)
         {
-            Data.SetData<T>(data);
+            Data.SetData(data);
         }
 
         #endregion
