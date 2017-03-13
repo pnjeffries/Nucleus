@@ -33,7 +33,7 @@ namespace FreeBuild.Model
     /// attached to this object in an easily extensible way.
     /// </summary>
     [Serializable]
-    public abstract class DataOwner : ModelObject
+    public abstract class DataOwner : ModelObject, IDataOwner
     {
         #region Constructors
 
@@ -42,13 +42,15 @@ namespace FreeBuild.Model
         /// </summary>
         protected DataOwner() : base() { }
 
-        /// <summary>
+        /// <summary
         /// Duplication constructor
         /// </summary>
         /// <param name="other"></param>
         protected DataOwner(DataOwner other) : base(other) { }
 
         #endregion
+
+        #region Methods
 
         /// <summary>
         /// Check whether this object has any attached data components
@@ -62,6 +64,23 @@ namespace FreeBuild.Model
         /// <returns></returns>
         public abstract bool HasData(Type componentType);
 
+        /// <summary>
+        /// Notify this owner that a property of a data component has been changed.
+        /// This may then be 'bubbled' upwards with a new event.
+        /// </summary>
+        /// <param name="component"></param>
+        /// <param name="propertyName"></param>
+        public virtual void NotifyComponentPropertyChanged(object component, string propertyName)
+        {
+            if (component == null)
+            {
+                NotifyPropertyChanged(string.Format("Data[{0}]", propertyName));
+            }
+            else NotifyPropertyChanged(string.Format("Data[{0}].{1}", component.GetType().Name, propertyName));
+        }
+
+        #endregion
+
     }
 
     /// <summary>
@@ -73,6 +92,7 @@ namespace FreeBuild.Model
     public abstract class DataOwner<TDataStore, TData, TOwner> : DataOwner
         where TDataStore : DataStore<TData, TOwner>
         where TData : class
+        where TOwner : IDataOwner
     {
         #region Properties
 
@@ -197,6 +217,4 @@ namespace FreeBuild.Model
 
         #endregion
     }
-
-    
 }

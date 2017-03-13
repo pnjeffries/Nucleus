@@ -37,6 +37,7 @@ namespace FreeBuild.Model
     [Serializable]
     public abstract class DataStore<TData, TOwner> : ObservableKeyedCollection<Type, TData>, IOwned<TOwner>
         where TData : class
+        where TOwner : IDataOwner
     {
 
         #region Properties
@@ -50,12 +51,6 @@ namespace FreeBuild.Model
         /// The object that this data store belongs to
         /// </summary>
         public TOwner Owner { get { return _Owner; } }
-
-
-        private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
 
         /// <summary>
         /// Get a data component within this store by it's type name.
@@ -102,6 +97,60 @@ namespace FreeBuild.Model
             return item.GetType();
         }
 
+        protected void RegisterPropertyChanged(TData item)
+        {
+            if (Owner != null && item != null && item is INotifyPropertyChanged)
+                ((INotifyPropertyChanged)item).PropertyChanged += Item_PropertyChanged;
+        }
+
+        protected void UnregisterPropertyChanged(TData item)
+        {
+            if (Owner != null && item != null && item is INotifyPropertyChanged)
+                ((INotifyPropertyChanged)item).PropertyChanged -= Item_PropertyChanged;
+        }
+
+        private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (Owner != null) Owner.NotifyComponentPropertyChanged(sender, e.PropertyName);
+        }
+
+        private void NotifyOwnerItemChanged(Type type)
+        {
+            if (Owner != null) Owner.NotifyComponentPropertyChanged(null, type.Name);
+        }
+
+        protected override void SetItem(int index, TData item)
+        {
+            base.SetItem(index, item);
+            RegisterPropertyChanged(item);
+            NotifyOwnerItemChanged(item.GetType());
+        }
+
+        protected override void InsertItem(int index, TData item)
+        {
+            base.InsertItem(index, item);
+            RegisterPropertyChanged(item);
+            NotifyOwnerItemChanged(item.GetType());
+        }
+
+        protected override void RemoveItem(int index)
+        {
+            TData item = this[index];
+            base.RemoveItem(index);
+            UnregisterPropertyChanged(item);
+            NotifyOwnerItemChanged(item.GetType());
+        }
+
+        protected override void ClearItems()
+        {
+            foreach (TData item in this)
+            {
+                UnregisterPropertyChanged(item);
+                NotifyOwnerItemChanged(item.GetType());
+            }
+            base.ClearItems();
+            
+        }
 
         /// <summary>
         /// Get a datacomponent from this store by it's type name.
@@ -261,10 +310,10 @@ namespace FreeBuild.Model
     /// <typeparam name="TTypeEnum"></typeparam>
     public abstract class DataStore<TData, TOwner, TTypeEnum> : DataStore<TData, TOwner>
         where TData : class
+        where TOwner : IDataOwner
         where TTypeEnum : struct
     {
-        #region Properties
-
+        #region 
         /// <summary>
         /// Get a data component of a standard built-in type
         /// </summary>

@@ -29,8 +29,9 @@ namespace FreeBuild.Extensions
         /// <returns></returns>
         public static object GetValue(this object obj, string path, IStringConversionContext context = null)
         {
-            foreach (string token in path.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string substring in path.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries))
             {
+                string token = substring;
                 if (obj == null) { return null; }
 
                 Type type = obj.GetType();
@@ -49,7 +50,23 @@ namespace FreeBuild.Extensions
                 }
                 else // Property...
                 {
-                    PropertyInfo info = type.GetProperty(token);
+                    PropertyInfo info;
+                    string key = null;
+                    if (token.EndsWith("]"))
+                    {
+                        token = token.TrimEnd(']');
+                        int keyStart = token.LastIndexOf('[');
+                        if (keyStart >= 0)
+                        {
+                            key = token.Substring(keyStart + 1);
+                            token = token.Substring(0, keyStart);
+                        }
+                    }
+                    if (key != null)
+                    {
+                        info = type.GetProperty(token,new Type[] { key.GetType() });
+                    }
+                    else info = type.GetProperty(token);
                     if (info == null)
                     {
                         //...or Field?
@@ -59,7 +76,11 @@ namespace FreeBuild.Extensions
                             obj = fInfo.GetValue(obj);
                     }
                     else
-                        obj = info.GetValue(obj, null);
+                    {
+                        if (key != null)
+                            obj = info.GetValue(obj, new object[] { key });
+                        else obj = info.GetValue(obj, null);
+                    }
                 }
             }
             return obj;

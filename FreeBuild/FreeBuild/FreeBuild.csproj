@@ -89,6 +89,7 @@
     <Compile Include="Geometry\Point.cs" />
     <Compile Include="Geometry\Label.cs" />
     <Compile Include="Model\GlobalCoordinateSystemReference.cs" />
+    <Compile Include="Model\IDataOwner.cs" />
     <Compile Include="Model\LoadCaseTable.cs" />
     <Compile Include="Model\Loading\LinearElementLoad.cs" />
     <Compile Include="Model\Loading\ForceLoad.cs" />
