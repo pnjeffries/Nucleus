@@ -43,7 +43,7 @@ namespace FreeBuild.Geometry
         /// <returns>The XY intersection point, if one exists.  Else (the lines are null or parallel) Vector.Unset</returns>
         public static Vector LineLineXY(Vector pt0, Vector v0, Vector pt1, Vector v1)
         {
-            if (v0.X == 0)
+            if (v0.X.Abs() < 0.00000001)
             {
                 if (v1.X == 0) return Vector.Unset;
                 else
@@ -54,7 +54,7 @@ namespace FreeBuild.Geometry
                     return new Vector(x, m2 * x + c2, pt0.Z);
                 }
             }
-            else if (v1.X == 0)
+            else if (v1.X.Abs() < 0.00000001)
             {
                 double m1 = v0.Y / v0.X;
                 double c1 = pt0.Y - m1 * pt0.X;

@@ -188,6 +188,51 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
+        /// Private backing field for the Sets property
+        /// </summary>
+        private ModelObjectSetTable _Sets;
+
+        /// <summary>
+        /// The collection of stored sets that belong to this model.
+        /// Sets represent parametric groupings of model objects that can be referenced
+        /// in load applications etc.
+        /// </summary>
+        public ModelObjectSetTable Sets
+        {
+            get
+            {
+                if (_Sets == null)
+                {
+                    _Sets = new ModelObjectSetTable(this);
+                    _Sets.CollectionChanged += HandlesInternalCollectionChanged;
+                }
+                return _Sets;
+            }
+        }
+
+        /// <summary>
+        /// Private backing field for Loading property
+        /// </summary>
+        private LoadCaseTable _Loading;
+
+        /// <summary>
+        /// Get the collection of loading that is applied to this model,
+        /// stored by load case.
+        /// </summary>
+        public LoadCaseTable Loading
+        {
+            get
+            {
+                if (_Loading == null)
+                {
+                    _Loading = new LoadCaseTable(this);
+                    _Loading.CollectionChanged += HandlesInternalCollectionChanged;
+                }
+                return _Loading;
+            }
+        }
+
+        /// <summary>
         /// Get a single flat collection which contains all sub-objects within
         /// this model, for easy iteration through the entire database in one go.
         /// This collection is compiled when called from the different sub-tables
@@ -212,7 +257,7 @@ namespace FreeBuild.Model
             get
             {
                 return new IEnumerable<ModelObject>[]
-                    {_CoordinateSystems, _Materials, _Families, _Levels, _Nodes, _Elements};
+                    {_CoordinateSystems, _Materials, _Families, _Levels, _Nodes, _Elements, _Sets, _Loading};
             }
         }
 
@@ -393,6 +438,7 @@ namespace FreeBuild.Model
             else if (Materials.Contains(guid)) return Materials[guid];
             else if (Levels.Contains(guid)) return Levels[guid];
             else if (CoordinateSystems.Contains(guid)) return CoordinateSystems[guid];
+            else if (Sets.Contains(guid)) return Sets[guid];
             else return null;
         }
 
@@ -444,6 +490,8 @@ namespace FreeBuild.Model
             if (_Families != null) _Families.CollectionChanged += HandlesInternalCollectionChanged;
             if (_Materials != null) _Materials.CollectionChanged += HandlesInternalCollectionChanged;
             if (_Levels != null) _Levels.CollectionChanged += HandlesInternalCollectionChanged;
+            if (_CoordinateSystems != null) _CoordinateSystems.CollectionChanged += HandlesInternalCollectionChanged;
+            if (_Sets != null) _Sets.CollectionChanged += HandlesInternalCollectionChanged;
 
             foreach (ModelObject unique in Everything)
             {

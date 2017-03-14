@@ -256,6 +256,17 @@ namespace FreeBuild.Geometry
         public BoundingBox(Vector point) : this(point.X, point.Y, point.Z) { }
 
         /// <summary>
+        /// Initialse a bounding box between the specified corner points
+        /// </summary>
+        /// <param name="pt0"></param>
+        /// <param name="pt1"></param>
+        public BoundingBox(Vector pt0, Vector pt1)
+            : this(Math.Min(pt0.X, pt1.X), Math.Max(pt0.X, pt1.X),
+                  Math.Min(pt0.Y, pt1.Y), Math.Max(pt0.Y, pt1.Y),
+                  Math.Min(pt0.Z, pt1.Z), Math.Max(pt0.Z, pt1.Z))
+        { }
+
+        /// <summary>
         /// Constructor to fit a bounding box around a set of points.
         /// </summary>
         /// <param name="points">The points to fit the bounding box around</param>
@@ -510,20 +521,6 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
-        /// Does this bounding box contain the specified point?
-        /// </summary>
-        /// <param name="point">The point to test for containment</param>
-        /// <returns>True if the point falls inside, or is on the surface of, 
-        /// this box</returns>
-        public bool Contains(Vector point)
-        {
-            return (point.IsValid() &&
-                point.X >= MinX && point.X <= MaxX &&
-                point.Y >= MinY && point.Y <= MaxY &&
-                point.Z >= MinZ && point.Z <= MaxZ);
-        }
-
-        /// <summary>
         /// Generate a random point inside this bounding box
         /// </summary>
         /// <param name="rng">The random number generator used to generate the point</param>
@@ -590,6 +587,45 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Does this bounding box contain the specified point?
+        /// </summary>
+        /// <param name="point">The point to test for containment</param>
+        /// <returns>True if the point falls inside, or is on the surface of, 
+        /// this box</returns>
+        public bool Contains(Vector point)
+        {
+            return (point.IsValid() &&
+                point.X >= MinX && point.X <= MaxX &&
+                point.Y >= MinY && point.Y <= MaxY &&
+                point.Z >= MinZ && point.Z <= MaxZ);
+        }
+
+        /// <summary>
+        /// Does this bounding box entirely contain the specified other bounding box?
+        /// To test for partial containment use the Overlaps function instead
+        /// </summary>
+        /// <param name="box"></param>
+        /// <returns></returns>
+        public bool Contains(BoundingBox other)
+        {
+            return (
+                other.MinX >= MinX && other.MaxX <= MaxX &&
+                other.MinY >= MinY && other.MaxY <= MaxY &&
+                other.MinZ >= MinZ && other.MaxZ <= MaxZ);
+        }
+
+        /// <summary>
+        /// Does this bounding box entirely contain the specified geometry?
+        /// To test for partial containment use the Overlaps function instead
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        public bool Contains(VertexGeometry geometry)
+        {
+            return Contains(geometry.BoundingBox);
+        }
+
+        /// <summary>
         /// Check whether the specified box region overlaps this box.
         /// </summary>
         /// <param name="minX"></param>
@@ -614,6 +650,16 @@ namespace FreeBuild.Geometry
         public bool Overlaps(BoundingBox other)
         {
             return Overlaps(other.MinX, other.MaxX, other.MinY, other.MaxY, other.MinZ, other.MaxZ);
+        }
+
+        /// <summary>
+        /// Does this bounding box overlap that of the specified geometry object?
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        public bool Overlaps(VertexGeometry geometry)
+        {
+            return Overlaps(geometry.BoundingBox);
         }
 
         /// <summary>

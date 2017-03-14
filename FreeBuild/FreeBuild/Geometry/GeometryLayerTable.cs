@@ -230,7 +230,23 @@ namespace FreeBuild.Geometry
             return new VertexDDTree(AllGeometry().AllVertices());
         }
 
-       
+        /// <summary>
+        /// Get the geometry in this table that falls within the specified axis-aligned bounding box
+        /// </summary>
+        /// <param name="bounds">The bounding box to check</param>
+        /// <param name="inclusive">If true, the output can include objects that lie partially within the bounds, else
+        /// the geometry must be entirely contained by the box to be included</param>
+        /// <param name="visibleLayersOnly">If true (default) only layers which are currently visible will be considered</param>
+        public VertexGeometryCollection GeometryInBounds(BoundingBox bounds, bool inclusive, bool visibleLayersOnly = true)
+        {
+            var result = new VertexGeometryCollection();
+            foreach (GeometryLayer layer in this)
+            {
+                if (!visibleLayersOnly || layer.Visible)
+                    layer.GeometryInBounds(bounds, inclusive, result);
+            }
+            return result;
+        }
 
         #endregion
     }

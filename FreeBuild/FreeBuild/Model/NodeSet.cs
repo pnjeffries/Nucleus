@@ -15,8 +15,8 @@ namespace FreeBuild.Model
     public class NodeSet : ModelObjectSet<
         Node, 
         NodeCollection, 
-        SetFilter<Node>, 
-        SetFilterCollection<SetFilter<Node>, Node>,
+        ISetFilter<Node>, 
+        SetFilterCollection<ISetFilter<Node>, Node>,
         NodeSet, ModelObjectSetCollection<NodeSet>>
     {
         #region Constructors
@@ -29,7 +29,7 @@ namespace FreeBuild.Model
         {
         }
 
-        public NodeSet(SetFilter<Node> filter) : base(filter)
+        public NodeSet(ISetFilter<Node> filter) : base(filter)
         {
         }
 

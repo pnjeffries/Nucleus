@@ -19,12 +19,12 @@ namespace FreeBuild.Maths
         /// <summary>
         /// Private backing field for Data property
         /// </summary>
-        private LinearIntervalGraph _Data;
+        private LinearIntervalDataSet _Data;
 
         /// <summary>
         /// The line data
         /// </summary>
-        public LinearIntervalGraph Data
+        public LinearIntervalDataSet Data
         {
             get { return _Data; }
             set { ChangeProperty(ref _Data, value, "Data"); }
@@ -39,7 +39,7 @@ namespace FreeBuild.Maths
         /// </summary>
         /// <param name="name"></param>
         /// <param name="data"></param>
-        public GraphLineData(string name, LinearIntervalGraph data)
+        public GraphLineData(string name, LinearIntervalDataSet data)
         {
             Name = name;
             Data = data;

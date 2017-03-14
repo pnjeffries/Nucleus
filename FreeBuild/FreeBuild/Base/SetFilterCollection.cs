@@ -11,7 +11,7 @@ namespace FreeBuild.Base
     /// </summary>
     [Serializable]
     public class SetFilterCollection<TFilter, TItem> : UniquesCollection<TFilter>
-        where TFilter : SetFilter<TItem>
+        where TFilter : class, ISetFilter<TItem>
     {
         /// <summary>
         /// Does the specified item pass all filters in this collection?

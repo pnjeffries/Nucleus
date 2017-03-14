@@ -15,6 +15,9 @@ namespace FreeBuild.Physics
     {
         #region Properties
 
+        /// <summary>
+        /// Private backing field for Components property
+        /// </summary>
         private PhysicsEngineComponentCollection _Components = new PhysicsEngineComponentCollection();
 
         /// <summary>
@@ -26,6 +29,22 @@ namespace FreeBuild.Physics
             get { return _Components; }
         }
 
+        /// <summary>
+        /// Private backing field for MaximumTimeStep property
+        /// </summary>
+        private double _MaximumTimeStep = 0;
+
+        /// <summary>
+        /// The maximum allowable time-step per cycle.  If the time step entered in a cycle is
+        /// greater than this then it will be split into several sub-cycles of no more than this
+        /// limit.  If set to 0 no limit will be applied.
+        /// </summary>
+        public double MaximumTimeStep
+        {
+            get { return _MaximumTimeStep; }
+            set { ChangeProperty(ref _MaximumTimeStep, value, "MaximumTimeStep"); }
+        }
+
         #endregion
 
         #region Constructors
@@ -34,6 +53,15 @@ namespace FreeBuild.Physics
         /// Initialise a new blank physics engine
         /// </summary>
         public PhysicsEngine() { }
+
+        /// <summary>
+        /// Initialise a new physics engine to run the specified simulation components
+        /// </summary>
+        /// <param name="components"></param>
+        public PhysicsEngine(PhysicsEngineComponentCollection components) : this()
+        {
+            Components.AddRange(components);
+        }
 
         #endregion
 
@@ -46,7 +74,7 @@ namespace FreeBuild.Physics
         {
             foreach (IPhysicsEngineComponent component in Components)
             {
-                component.Startup(this);
+                component.Start(this);
             }
         }
 

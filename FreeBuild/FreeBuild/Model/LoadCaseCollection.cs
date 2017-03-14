@@ -12,5 +12,15 @@ namespace FreeBuild.Model
     [Serializable]
     public class LoadCaseCollection : ModelObjectCollection<LoadCase>
     {
+        /// <summary>
+        /// Initialise a new blank load case collection
+        /// </summary>
+        public LoadCaseCollection() : base() { }
+
+        /// <summary>
+        /// Initialse a new load case collection owned by the specified model
+        /// </summary>
+        /// <param name="model"></param>
+        protected LoadCaseCollection(Model model) : base(model) { }
     }
 }

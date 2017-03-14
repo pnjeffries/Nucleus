@@ -12,5 +12,20 @@ namespace FreeBuild.Model
     [Serializable]
     public abstract class ResultsCase : ModelObject
     {
+
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        protected ResultsCase() : base() { }
+
+        /// <summary>
+        /// Name constructor
+        /// </summary>
+        /// <param name="name"></param>
+        protected ResultsCase(string name) : base(name) { }
+
+        #endregion
     }
 }

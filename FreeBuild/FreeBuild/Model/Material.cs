@@ -33,5 +33,19 @@ namespace FreeBuild.Model
     [Serializable]
     public abstract class Material : ModelObject
     {
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public Material() : base() { }
+
+        /// <summary>
+        /// Name constructor
+        /// </summary>
+        /// <param name="name"></param>
+        public Material(string name) : base(name) { }
+
+        #endregion
     }
 }

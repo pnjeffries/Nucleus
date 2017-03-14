@@ -116,13 +116,11 @@ namespace FreeBuild.Meshing
         /// <returns></returns>
         internal override bool XYCircumcircleContainmentQuickCheck(Vertex point)
         {
-            // See https://en.wikipedia.org/wiki/Delaunay_triangulation#Algorithms for methodology -
-            // Calculates the determinant of a matrix containing the vertex and point coordinates
-            // If vertices are counterclockwise and point lies inside, determinant will be > 0
-
+            
             if (_ExcludeFromContainmentCheck) return false;
 
-            if (!_Circumcentre.IsValid()) _Circumcentre = CalculateXYCircumcentre();
+            if (!_Circumcentre.IsValid())
+                _Circumcentre = CalculateXYCircumcentre();
             if (_CircumRadiusSquared < 0) _CircumRadiusSquared = this[0].Position.XYDistanceToSquared(_Circumcentre);
 
             double xDistSqd = (_Circumcentre.X - point.X).Squared();
@@ -134,6 +132,10 @@ namespace FreeBuild.Meshing
                 if (_Circumcentre.X < point.X && xDistSqd > _CircumRadiusSquared) _ExcludeFromContainmentCheck = true;
                 return false;
             }
+
+            // See https://en.wikipedia.org/wiki/Delaunay_triangulation#Algorithms for methodology -
+            // Calculates the determinant of a matrix containing the vertex and point coordinates
+            // If vertices are counterclockwise and point lies inside, determinant will be > 0
 
             /*Vertex v0 = this[0];
             Vertex v1 = this[1];
@@ -181,7 +183,7 @@ namespace FreeBuild.Meshing
         /// <returns></returns>
         internal static DelaunayTriangle GenerateSuperTriangleXY(BoundingBox box)
         {
-            Vertex v0 = new Vertex(box.MinX + box.SizeX * 2, box.MinY - box.SizeY);
+            Vertex v0 = new Vertex(box.MinX + box.SizeX * 2, box.MinY - 2*box.SizeY);
             Vertex v1 = new Vertex(box.MinX + box.SizeX/2, box.MinY + box.SizeY * 2);
             Vertex v2 = new Vertex(box.MinX - box.SizeX, box.MinY - box.SizeY);
 

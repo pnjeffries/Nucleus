@@ -19,7 +19,7 @@ namespace FreeBuild.Physics
         /// </summary>
         /// <param name="engine"></param>
         /// <returns></returns>
-        bool Startup(PhysicsEngine engine);
+        bool Start(PhysicsEngine engine);
 
         /// <summary>
         /// Perform the simulation steps governed by this component

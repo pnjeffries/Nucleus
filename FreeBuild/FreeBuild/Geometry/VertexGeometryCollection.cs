@@ -64,6 +64,22 @@ namespace FreeBuild.Geometry
             return result;
         }
 
+        /// <summary>
+        /// Get the geometry in this collection that falls within the specified axis-aligned bounding box
+        /// </summary>
+        /// <param name="bounds">The bounding box to check</param>
+        /// <param name="inclusive">If true, the output can include objects that lie partially within the bounds, else
+        /// the geometry must be entirely contained by the box to be included</param>
+        /// <param name="addToThis">The output collection, to which passing geometry should be added</param>
+        public void GeometryInBounds(BoundingBox bounds, bool inclusive, VertexGeometryCollection<TShape> addToThis)
+        {
+            foreach (TShape vG in this)
+            {
+                if (!addToThis.Contains(vG.GUID) && (inclusive && bounds.Overlaps(vG)) || (!inclusive && bounds.Contains(vG)))
+                    addToThis.Add(vG);
+            }
+        }
+
         #endregion
     }
 
@@ -122,6 +138,19 @@ namespace FreeBuild.Geometry
                     result.Add(new GeometryLayer(layerName));
                 result[layerName].Add(geometry);
             }
+            return result;
+        }
+
+        /// <summary>
+        /// Get the geometry in this collection that falls within the specified axis-aligned bounding box
+        /// </summary>
+        /// <param name="bounds">The bounding box to check</param>
+        /// <param name="inclusive">If true, the output can include objects that lie partially within the bounds, else
+        /// the geometry must be entirely contained by the box to be included</param>
+        public VertexGeometryCollection GeometryInBounds(BoundingBox bounds, bool inclusive)
+        {
+            VertexGeometryCollection result = new Geometry.VertexGeometryCollection();
+            GeometryInBounds(bounds, inclusive, result);
             return result;
         }
 

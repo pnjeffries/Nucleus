@@ -13,7 +13,7 @@ namespace FreeBuild.Model
     /// filters which act upon that collection.
     /// </summary>
     public class LinearElementSet : ModelObjectSet<LinearElement, LinearElementCollection,
-        SetFilter<LinearElement>, SetFilterCollection<SetFilter<LinearElement>, LinearElement>,
+        ISetFilter<LinearElement>, SetFilterCollection<ISetFilter<LinearElement>, LinearElement>,
         LinearElementSet, ModelObjectSetCollection<LinearElementSet>>
     {
         protected override LinearElementCollection GetItemsInModel()

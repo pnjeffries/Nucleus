@@ -32,13 +32,19 @@ namespace FreeBuild.Maths
         #region Constructors
 
         /// <summary>
-        /// Initialise a new number expression
+        /// Initialise a new value expression with the given description and value
         /// </summary>
         /// <param name="description"></param>
         public ValueExpression(string description, object value) : base(description)
         {
             _Value = value;
         }
+
+        /// <summary>
+        /// Initialise a new value expression with the given double value
+        /// </summary>
+        /// <param name="value"></param>
+        public ValueExpression(double value) : this(value.ToString(), value) { }
 
         #endregion
 

@@ -60,10 +60,7 @@ namespace FreeBuild.Model
         /// Name constructor.  Initialises a new load case with the specified name.
         /// </summary>
         /// <param name="name">The load case name</param>
-        public LoadCase(string name) : this()
-        {
-            Name = name;
-        }
+        public LoadCase(string name) : base(name) { }
 
         #endregion
     }
