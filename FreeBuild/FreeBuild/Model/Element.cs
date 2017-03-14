@@ -37,7 +37,7 @@ namespace FreeBuild.Model
     /// determines how that design representation converts into a 3D solid object.
     /// </summary>
     [Serializable]
-    public abstract class Element : DataOwner<ElementDataStore, IElementDataComponent>, IElement
+    public abstract class Element : DataOwner<ElementDataStore, IElementDataComponent, Element>, IElement
     {
 
         #region Properties
@@ -105,6 +105,11 @@ namespace FreeBuild.Model
         #endregion
 
         #region Methods
+
+        protected override ElementDataStore NewDataStore()
+        {
+            return new ElementDataStore(this);
+        }
 
         /// <summary>
         /// Notify this element that one or more of its vertices or another aspect

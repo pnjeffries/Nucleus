@@ -33,7 +33,7 @@ namespace FreeBuild.Model
     /// 3D solid object.
     /// </summary>
     [Serializable]
-    public abstract class Family : DataOwner<FamilyDataStore, IFamilyDataComponent>
+    public abstract class Family : DataOwner<FamilyDataStore, IFamilyDataComponent, Family>
     {
         #region Methods
 
@@ -45,6 +45,11 @@ namespace FreeBuild.Model
         {
             if (Model != null) return Model.Elements.AllWith(this);
             else return new ElementCollection();
+        }
+
+        protected override FamilyDataStore NewDataStore()
+        {
+            return new FamilyDataStore(this);
         }
 
         #endregion

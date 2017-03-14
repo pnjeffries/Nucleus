@@ -74,7 +74,7 @@ namespace FreeBuild.IO
         {
             Type baseType = typeof(TBase);
             if (!baseType.IsAbstract) _SubTypes.Add(baseType.Name, baseType);
-            IList<Type> types = baseType.GetSubTypes();
+            IList<Type> types = baseType.GetSubTypes(false);
             foreach (Type type in types)
             {
                 _SubTypes.Add(type.Name, type);

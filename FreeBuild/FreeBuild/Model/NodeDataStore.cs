@@ -10,8 +10,14 @@ namespace FreeBuild.Model
     /// Extensible storage mechanism for adding attached data to nodes
     /// </summary>
     [Serializable]
-    public class NodeDataStore : DataStore<INodeDataComponent, NodeDataType>
+    public class NodeDataStore : DataStore<INodeDataComponent, Node, NodeDataType>
     {
+
+        #region Constructors
+
+        public NodeDataStore(Node owner) : base(owner) { }
+
+        #endregion
 
         #region Methods
 

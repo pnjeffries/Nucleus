@@ -95,6 +95,7 @@
     <Compile Include="Model\ElementSet.cs" />
     <Compile Include="Model\GlobalCoordinateSystemReference.cs" />
     <Compile Include="Model\IsotropicMaterial.cs" />
+    <Compile Include="Model\IDataOwner.cs" />
     <Compile Include="Model\LoadCaseTable.cs" />
     <Compile Include="Model\Loading\AreaLoad.cs" />
     <Compile Include="Model\Loading\LinearElementLoad.cs" />

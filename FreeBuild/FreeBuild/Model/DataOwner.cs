@@ -33,7 +33,7 @@ namespace FreeBuild.Model
     /// attached to this object in an easily extensible way.
     /// </summary>
     [Serializable]
-    public abstract class DataOwner : ModelObject
+    public abstract class DataOwner : ModelObject, IDataOwner
     {
         #region Constructors
 
@@ -42,13 +42,15 @@ namespace FreeBuild.Model
         /// </summary>
         protected DataOwner() : base() { }
 
-        /// <summary>
+        /// <summary
         /// Duplication constructor
         /// </summary>
         /// <param name="other"></param>
         protected DataOwner(DataOwner other) : base(other) { }
 
         #endregion
+
+        #region Methods
 
         /// <summary>
         /// Check whether this object has any attached data components
@@ -62,6 +64,23 @@ namespace FreeBuild.Model
         /// <returns></returns>
         public abstract bool HasData(Type componentType);
 
+        /// <summary>
+        /// Notify this owner that a property of a data component has been changed.
+        /// This may then be 'bubbled' upwards with a new event.
+        /// </summary>
+        /// <param name="component"></param>
+        /// <param name="propertyName"></param>
+        public virtual void NotifyComponentPropertyChanged(object component, string propertyName)
+        {
+            if (component == null)
+            {
+                NotifyPropertyChanged(string.Format("Data[{0}]", propertyName));
+            }
+            else NotifyPropertyChanged(string.Format("Data[{0}].{1}", component.GetType().Name, propertyName));
+        }
+
+        #endregion
+
     }
 
     /// <summary>
@@ -70,9 +89,10 @@ namespace FreeBuild.Model
     /// attached to this object in an easily extensible way.
     /// </summary>
     [Serializable]
-    public abstract class DataOwner<TDataStore, TData> : DataOwner
-        where TDataStore : DataStore<TData>, new()
+    public abstract class DataOwner<TDataStore, TData, TOwner> : DataOwner
+        where TDataStore : DataStore<TData, TOwner>
         where TData : class
+        where TOwner : IDataOwner
     {
         #region Properties
 
@@ -90,7 +110,7 @@ namespace FreeBuild.Model
         {
             get
             {
-                if (_Data == null) _Data = new TDataStore();
+                if (_Data == null) _Data = NewDataStore();
                 return _Data;
             }
         }
@@ -108,11 +128,17 @@ namespace FreeBuild.Model
         /// Duplication constructor
         /// </summary>
         /// <param name="other"></param>
-        protected DataOwner(DataOwner<TDataStore,TData> other) : base(other) { }
+        protected DataOwner(DataOwner<TDataStore,TData, TOwner> other) : base(other) { }
 
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Create a new data store suitable for this datatype
+        /// </summary>
+        /// <returns></returns>
+        protected abstract TDataStore NewDataStore();
 
         /// <summary>
         /// Check whether this object has any attached data components
@@ -130,7 +156,7 @@ namespace FreeBuild.Model
         public override bool HasData(Type componentType)
         {
             if (typeof(TData).IsAssignableFrom(componentType))
-                return _Data != null && Data.ContainsKey(componentType);
+                return _Data != null && Data.Contains(componentType);
             return false;
         }
 
@@ -184,13 +210,11 @@ namespace FreeBuild.Model
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public void SetData<T>(T data) where T : class, TData
+        public void SetData(TData data)
         {
-            Data.SetData<T>(data);
+            Data.SetData(data);
         }
 
         #endregion
     }
-
-    
 }

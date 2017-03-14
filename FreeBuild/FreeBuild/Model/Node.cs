@@ -33,7 +33,7 @@ namespace FreeBuild.Model
     /// between multiple vertices within different objects.
     /// </summary>
     [Serializable]
-    public class Node : DataOwner<NodeDataStore, INodeDataComponent>, IPosition
+    public class Node : DataOwner<NodeDataStore, INodeDataComponent, Node>, IPosition
     {
         #region Properties
 
@@ -141,6 +141,11 @@ namespace FreeBuild.Model
         #endregion
 
         #region Methods
+
+        protected override NodeDataStore NewDataStore()
+        {
+            return new NodeDataStore(this);
+        }
 
         /// <summary>
         /// Get a collection of all elements connected to this node
