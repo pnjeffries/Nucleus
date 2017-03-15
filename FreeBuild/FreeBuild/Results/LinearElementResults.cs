@@ -11,7 +11,7 @@ namespace FreeBuild.Results
     /// Result storage table for elements, keyed by result type
     /// </summary>
     [Serializable]
-    public class LinearElementResults : ModelObjectResults<LinearElementResultTypes, LinearIntervalGraph>
+    public class LinearElementResults : ModelObjectResults<LinearElementResultTypes, LinearIntervalDataSet>
     {
         #region Properties
 

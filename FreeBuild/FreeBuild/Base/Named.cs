@@ -75,6 +75,15 @@ namespace FreeBuild.Base
             Name = other.Name;
         }
 
+        /// <summary>
+        /// Name constructor
+        /// </summary>
+        /// <param name="name"></param>
+        protected Named(string name) : base()
+        {
+            Name = name;
+        }
+
         #endregion
     }
 }

@@ -73,7 +73,7 @@ namespace FreeBuild.Results
         /// <param name="element"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public LinearIntervalGraph this[LinearElement element, LinearElementResultTypes type]
+        public LinearIntervalDataSet this[LinearElement element, LinearElementResultTypes type]
         {
             get { return this[element]?[type]; }
         }

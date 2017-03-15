@@ -199,14 +199,26 @@ namespace FreeBuild.Geometry
             MeshFace superTriangle = DelaunayTriangle.GenerateSuperTriangleXY(bounds);
             faces.Add(superTriangle);
 
+
+
             // Include each vertex in the meshing one at a time
             foreach (Vertex v in vertexList)
             {
+
+            //for (int k = 0; k < 8; k++)
+            //{
+            //    Vertex v = vertexList[k];
+            //    if (k == 7)
+            //    {
+            //        bool bum = true;
+            //    }
+
                 IList<MeshEdge> edges = new List<MeshEdge>(); //The edges of replaced triangles
 
                 for (int i = faces.Count - 1; i >= 0; i--)
                 {
                     MeshFace face = faces[i];
+                    
                     if (face.XYCircumcircleContainmentQuickCheck(v)) //The vertex lies within the circumcircle of this face
                     {
                         //The edges of the triangle are added to the current edge set...

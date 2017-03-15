@@ -100,7 +100,26 @@ namespace FreeBuild.WPF
                 
                 if (cBA != null)
                 {
-                    SetBinding(ItemsSourceProperty, cBA.ItemsSource);
+                    if (string.IsNullOrWhiteSpace(cBA.ExtraItemsSource))
+                        SetBinding(ItemsSourceProperty, cBA.ItemsSource);
+                    else
+                    {
+                        // Bind to both the standard and extra item sources
+                        CompositeCollection collection = new CompositeCollection();
+                        var c1 = new CollectionContainer();
+                        var b1 = new Binding("DataContext." + cBA.ItemsSource);
+                        b1.Source = this;
+                        BindingOperations.SetBinding(c1, CollectionContainer.CollectionProperty, b1);
+                        collection.Add(c1);
+
+                        var c2 = new CollectionContainer();
+                        var b2 = new Binding("DataContext." + cBA.ExtraItemsSource);
+                        b2.Source = this;
+                        BindingOperations.SetBinding(c2, CollectionContainer.CollectionProperty, b2);
+                        collection.Add(c2);
+
+                        ItemsSource = collection;
+                    }
                 }
                 ItemTemplate = new DataTemplate();
                 FrameworkElementFactory fEFactory = new FrameworkElementFactory(typeof(TextBlock));

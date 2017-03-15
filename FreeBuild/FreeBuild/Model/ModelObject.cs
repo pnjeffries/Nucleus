@@ -147,6 +147,12 @@ namespace FreeBuild.Model
             // Other properties not necessary to copy
         }
 
+        /// <summary>
+        /// Name constructor
+        /// </summary>
+        /// <param name="name"></param>
+        protected ModelObject(string name) : base(name) { }
+
         #endregion
 
         #region Methods

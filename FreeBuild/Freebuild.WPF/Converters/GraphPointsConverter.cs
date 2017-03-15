@@ -22,9 +22,9 @@ namespace FreeBuild.WPF.Converters
             bool flipXY = false;
             if (parameter != null && parameter is bool) flipXY = (bool)parameter;
             PointCollection result = new PointCollection();
-            if (value is LinearIntervalGraph)
+            if (value is LinearIntervalDataSet)
             {
-                var graph = (LinearIntervalGraph)value;
+                var graph = (LinearIntervalDataSet)value;
                 foreach (KeyValuePair<double, Interval> kvp in graph)
                 {
                     System.Windows.Point pt;

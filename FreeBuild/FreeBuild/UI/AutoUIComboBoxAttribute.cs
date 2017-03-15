@@ -40,6 +40,12 @@ namespace FreeBuild.UI
         /// </summary>
         public string ItemsSource { get; set; }
 
+        /// <summary>
+        /// The path of the property to use for additional 'special' items to be included
+        /// in the 
+        /// </summary>
+        public string ExtraItemsSource { get; set; } = null;
+
         #endregion
 
         #region Constructor

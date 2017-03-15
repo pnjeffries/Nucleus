@@ -7,18 +7,19 @@ using System.Threading.Tasks;
 namespace FreeBuild.Model
 {
     /// <summary>
-    /// A table of load cases, providing the top-level representation of
-    /// structural loading in the model
+    /// A table of ModelObjectSets to be stored in a Model
     /// </summary>
-    public class LoadCaseTable : LoadCaseCollection
+    public class ModelObjectSetTable : ModelObjectSetCollection
     {
         #region Constructors
 
         /// <summary>
-        /// Initialise a new LoadCaseTable belonging to the specified model
+        /// Owner constructor.  Initialises a model object set collection with an owning model.
         /// </summary>
         /// <param name="model"></param>
-        public LoadCaseTable(Model model) : base(model) { }
+        public ModelObjectSetTable(Model model) : base(model)
+        {
+        }
 
         #endregion
     }

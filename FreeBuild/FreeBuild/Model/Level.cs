@@ -99,5 +99,39 @@ namespace FreeBuild.Model
         }
 
         #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Is this level higher than the other specified level
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool IsAbove(Level other)
+        {
+            return Z > other.Z;
+        }
+
+        /// <summary>
+        /// Is this level lower than the other specified level
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool IsBelow(Level other)
+        {
+            return Z < other.Z;
+        }
+
+        /// <summary>
+        /// Is this level coincident with the other specified level
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool IsCoincident(Level other)
+        {
+            return Z == other.Z; //TODO: Tolerance?
+        }
+
+        #endregion
     }
 }

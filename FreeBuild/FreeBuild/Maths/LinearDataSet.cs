@@ -9,7 +9,7 @@ namespace FreeBuild.Maths
     /// <summary>
     /// An interpolatable data set of values along a single axis.
     /// </summary>
-    public abstract class LinearGraph<TValue> : SortedList<double, TValue>
+    public abstract class LinearDataSet<TValue> : SortedList<double, TValue>
     {
         #region Properties
 
@@ -37,14 +37,14 @@ namespace FreeBuild.Maths
         /// <summary>
         /// Initialise a new empty LinearGraph
         /// </summary>
-        public LinearGraph() : base() { }
+        public LinearDataSet() : base() { }
 
         /// <summary>
         /// Initialise a new LinearGraph from a list of values.
         /// The values will be plotted against their indices.
         /// </summary>
         /// <param name="values"></param>
-        public LinearGraph(IList<TValue> values)
+        public LinearDataSet(IList<TValue> values)
         {
             for (int i = 0; i < values.Count; i++)
             {
@@ -60,10 +60,14 @@ namespace FreeBuild.Maths
         /// Get (or interpolate) the value at the specified parameter
         /// </summary>
         /// <param name="t">The parameter at which to retrieve or derive a value</param>
+        /// <param name="extrapolate">If set to true, values outside the currently stored key range
+        /// will be extrapolated from the tangency of the end values.  Otherwise the default value
+        /// will be returned instead.</param>
         /// <returns></returns>
-        public TValue ValueAt(double t)
+        public TValue ValueAt(double t, bool extrapolate = false)
         {
-            if (ContainsKey(t)) return this[t]; // SHortcut: exact datapoint
+            if (!extrapolate && (t < Keys[0] || t > Keys.Last())) return default(TValue);
+            if (ContainsKey(t)) return this[t]; // Shortcut: exact datapoint
             if (Count == 1) return Values[0]; // Shortcut: single value
             else if (Count == 2) return Interpolate(0, 1, t); // Shortcut: only two values
 

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace FreeBuild.Maths
 {
     /// <summary>
-    /// A linear graph that plots numeric intervals along a single axis
+    /// A linear data set that plots numeric intervals along a single axis
     /// </summary>
-    public class LinearIntervalGraph : LinearGraph<Interval>
+    public class LinearIntervalDataSet : LinearDataSet<Interval>
     {
         #region Properties
 
@@ -46,31 +46,43 @@ namespace FreeBuild.Maths
 
         #endregion
 
-
         #region Constructors
 
         /// <summary>
-        /// Initialises a new blank LinearIntervalGraph
+        /// Initialises a new blank LinearIntervalDataSet
         /// </summary>
-        public LinearIntervalGraph() : base() { }
+        public LinearIntervalDataSet() : base() { }
 
         /// <summary>
-        /// Initialise a new LinearGraph from a list of values.
+        /// Initialise a new LinearIntervalDataSet from a list of values.
         /// The values will be plotted against their indices.
         /// </summary>
         /// <param name="values"></param>
-        public LinearIntervalGraph(IList<Interval> values) : base(values) { }
+        public LinearIntervalDataSet(IList<Interval> values) : base(values) { }
 
         /// <summary>
-        /// Initialise a new LinearIntervalGraph from a list of values.
+        /// Initialise a new LinearIntervalDataSet from a list of values.
         /// The values will be converted to intervals and plotted against their indices.
         /// </summary>
         /// <param name="values"></param>
-        public LinearIntervalGraph(IList<double> values) : base()
+        public LinearIntervalDataSet(IList<double> values) : base()
         {
             for (int i = 0; i < values.Count; i++)
             {
                 Add(i, new Interval(values[i]));
+            }
+        }
+
+        /// <summary>
+        /// Initialise a new LinearIntervalDataSet from a LinearDoubleDataSet,
+        /// converting each double value to an equivalent Interval
+        /// </summary>
+        /// <param name="doubleSet"></param>
+        public LinearIntervalDataSet(LinearDoubleDataSet doubleSet) : base()
+        {
+            foreach (KeyValuePair<double, double> kvp in doubleSet)
+            {
+                Add(kvp.Key, kvp.Value);
             }
         }
 
@@ -99,9 +111,9 @@ namespace FreeBuild.Maths
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public LinearIntervalGraph Envelope(LinearIntervalGraph other)
+        public LinearIntervalDataSet Envelope(LinearIntervalDataSet other)
         {
-            var result = new LinearIntervalGraph();
+            var result = new LinearIntervalDataSet();
             int iA = 0;
             int iB = 0;
             double tA = Keys[0];
@@ -138,6 +150,36 @@ namespace FreeBuild.Maths
             }
             return result;
 
+        }
+
+        /// <summary>
+        /// Get the single set of data points that represent the maximum values
+        /// of this envelope
+        /// </summary>
+        /// <returns></returns>
+        public LinearDoubleDataSet MaxValues()
+        {
+            var result = new LinearDoubleDataSet();
+            foreach (KeyValuePair<double, Interval> kvp in this)
+            {
+                result.Add(kvp.Key, kvp.Value.Max);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Get the set of data points that represent the minimum values
+        /// of this envelope
+        /// </summary>
+        /// <returns></returns>
+        public LinearDoubleDataSet MinValues()
+        {
+            var result = new LinearDoubleDataSet();
+            foreach (KeyValuePair<double, Interval> kvp in this)
+            {
+                result.Add(kvp.Key, kvp.Value.Min);
+            }
+            return result;
         }
 
         #endregion

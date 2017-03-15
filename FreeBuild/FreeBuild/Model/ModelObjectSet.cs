@@ -78,7 +78,7 @@ namespace FreeBuild.Model
     public abstract class ModelObjectSet<TItem, TCollection, TFilter, TFilterCollection, TSubSet, TSubSetCollection> : ModelObjectSet<TItem, TCollection>
         where TItem : ModelObject
         where TCollection : ModelObjectCollection<TItem>, new()
-        where TFilter : SetFilter<TItem>
+        where TFilter : class, ISetFilter<TItem>
         where TFilterCollection : SetFilterCollection<TFilter, TItem>, new()
         where TSubSet : ModelObjectSet<TItem, TCollection, TFilter, TFilterCollection, TSubSet, TSubSetCollection>
         where TSubSetCollection : ModelObjectSetCollection<TSubSet>, new()
@@ -202,8 +202,18 @@ namespace FreeBuild.Model
         /// <param name="item"></param>
         public void Add(TItem item)
         {
-            if (BaseCollection == null) BaseCollection = new TCollection();
             BaseCollection.TryAdd(item);
+        }
+
+        /// <summary>
+        /// Add a collection of items to the base collection of this set, to be considered for
+        /// inclusion.  Note that adding an item to this set does not guarantee its inclusion 
+        /// should said item fail to pass any of the specified set filters.
+        /// </summary>
+        /// <param name="items"></param>
+        public void Add(TCollection items)
+        {
+            BaseCollection.TryAddRange(items);
         }
 
         /// <summary>
