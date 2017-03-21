@@ -62,7 +62,6 @@
     <Compile Include="Converters\TreeViewLineConverter.cs" />
     <Compile Include="Converters\UndeletedCountConverter.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
-    <Compile Include="DataTable.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="EnumBindingSourceExtension.cs" />
     <Compile Include="FBtoWPF.cs" />

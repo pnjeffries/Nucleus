@@ -14,6 +14,7 @@ namespace FreeBuild.IO
     /// </summary>
     public class ModelDocumentTextSerialiser : DocumentTextSerialiser<ModelDocument>
     {
+
         #region Constructors
 
         /// <summary>
@@ -33,8 +34,10 @@ namespace FreeBuild.IO
 
         public override bool WriteAll(ModelDocument source)
         {
+            if (CustomHeader != null) Write(CustomHeader);
             Write(source); // Document header
             WriteModel(source.Model); // Model data
+            if (CustomFooter != null) Write(CustomFooter);
             return true;
         }
 

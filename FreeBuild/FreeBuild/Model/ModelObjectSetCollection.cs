@@ -33,6 +33,7 @@ namespace FreeBuild.Model
     /// <summary>
     /// A collection of ModelObjectSets
     /// </summary>
+    [Serializable]
     public class ModelObjectSetCollection : ModelObjectSetCollection<ModelObjectSetBase>
     {
         #region Constructors
