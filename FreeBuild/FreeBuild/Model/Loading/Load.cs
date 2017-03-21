@@ -34,7 +34,23 @@ namespace FreeBuild.Model
     [Serializable]
     public abstract class Load : ModelObject
     {
+        #region Properties
 
+        /// <summary>
+        /// Private backing field for Case property
+        /// </summary>
+        private LoadCase _Case;
+
+        /// <summary>
+        /// The load case to which this load belongs
+        /// </summary>
+        public LoadCase Case
+        {
+            get { return _Case; }
+            set { ChangeProperty(ref _Case, value, "Case"); }
+        }
+
+        #endregion
     }
 
     /// <summary>

@@ -22,6 +22,7 @@ using FreeBuild.Base;
 using FreeBuild.Events;
 using FreeBuild.Exceptions;
 using FreeBuild.Geometry;
+using FreeBuild.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +48,7 @@ namespace FreeBuild.Model
         /// geometry.  This collection will be generated as necessary and adding or removing
         /// objects from it will not have any effect on the geometry.
         /// </summary>
+        [AutoUI(Order = 310)]
         public NodeCollection Nodes
         {
             get
@@ -64,6 +66,7 @@ namespace FreeBuild.Model
         /// <summary>
         /// IElement Geometry implementation
         /// </summary>
+        [AutoUI(Order = 300)]
         VertexGeometry IElement.Geometry
         {
             get
@@ -75,6 +78,7 @@ namespace FreeBuild.Model
         /// <summary>
         /// IElement Family implementation
         /// </summary>
+        [AutoUI(Order = 305)]
         Family IElement.Family
         {
             get

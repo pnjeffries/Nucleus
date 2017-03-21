@@ -32,6 +32,22 @@ namespace FreeBuild.Model
     [Serializable]
     public class LoadCollection : ModelObjectCollection<Load>
     {
+        #region Constructors
+
+        public LoadCollection()
+        {
+        }
+
+        protected LoadCollection(Model model) : base(model)
+        {
+        }
+
+        public LoadCollection(IEnumerable<IEnumerable<Load>> toBeCombined) : base(toBeCombined)
+        {
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -54,6 +70,21 @@ namespace FreeBuild.Model
             where TData : class
         {
             return this.AllWithDataComponent<LoadCollection, Load, TData>();
+        }
+
+        /// <summary>
+        /// Get all loads in this table that belong to the specified load case
+        /// </summary>
+        /// <param name="loadCase"></param>
+        /// <returns></returns>
+        public LoadCollection AllInCase(LoadCase loadCase)
+        {
+            var result = new LoadCollection();
+            foreach (Load load in this)
+            {
+                if (load.Case == loadCase) result.Add(load);
+            }
+            return result;
         }
 
         #endregion

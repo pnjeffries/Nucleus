@@ -20,6 +20,7 @@
 
 using FreeBuild.Base;
 using FreeBuild.Geometry;
+using FreeBuild.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +43,7 @@ namespace FreeBuild.Model
         /// the overall geometry of this object.
         /// The set-out curve of 1D Elements, the surface of slabs, etc.
         /// </summary>
+        [AutoUI(Order = 300)]
         VertexGeometry Geometry { get; }
 
         /// <summary>
@@ -49,6 +51,7 @@ namespace FreeBuild.Model
         /// geometry of this element should be interpreted to produce a 
         /// full 3D solid object
         /// </summary>
+        [AutoUIComboBox(Order = 310)]
         Family Family { get; }
 
         /// <summary>

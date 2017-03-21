@@ -143,6 +143,51 @@ namespace FreeBuild.Geometry
             return result;
         }
 
+        /// <summary>
+        /// Quadrangulate this mesh by merging adjacent tris into quads.
+        /// The algorithm will prioritise merging the longest edges first
+        /// </summary>
+        public void Quadrangulate()
+        {
+            // Populate lists:
+            var sortedLists = new SortedList<double, IList<MeshFace>>(Count / 2);
+
+            foreach (MeshFace face in this)
+            {
+                if (face.IsTri)
+                {
+                    double longEdge = face.LongestEdgeLengthSquared();
+
+                    if (!sortedLists.ContainsKey(longEdge))
+                        sortedLists.Add(longEdge, new MeshFaceCollection());
+
+                    sortedLists[longEdge].Add(face);
+                }
+            }
+
+            foreach (IList<MeshFace> faceSet in sortedLists.Values)
+            {
+                for (int i = 0; i < faceSet.Count - 1; i++)
+                {
+                    MeshFace faceA = faceSet[i];
+                    for (int j = i + 1; j < faceSet.Count; j++)
+                    {
+                        MeshFace faceB = faceSet[j];
+                        if (faceA.SharedVertexCount(faceB) == 2) // Has a shared edge
+                        {
+                            // Merge faces and replace:
+                            Remove(faceA);
+                            Remove(faceB);
+                            Add(faceA.MergeWith(faceB));
+
+                            faceSet.RemoveAt(j);
+                            j = faceSet.Count;
+                        }
+                    }
+                }
+            }
+        }
+
         #endregion
     }
 }

@@ -89,7 +89,8 @@ namespace FreeBuild.Geometry
         private VertexDDTree _VertexTree = null;
 
         /// <summary>
-        /// Get a Divided-Dimension Tree structure containing all vertices belonging to 
+        /// Get a Divided-Dimension Tree structure containing all vertices belonging to
+        /// geometry in this table
         /// </summary>
         public VertexDDTree VertexTree
         {
@@ -125,6 +126,11 @@ namespace FreeBuild.Geometry
 
         protected override void SetItem(int index, GeometryLayer item)
         {
+            if (index >= 0 && index < Count)
+            {
+                GeometryLayer pItem = this[index];
+                pItem.CollectionChanged -= Item_CollectionChanged;
+            }
             base.SetItem(index, item);
             item.CollectionChanged += Item_CollectionChanged;
         }
@@ -205,7 +211,8 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
-        /// Get all the geometry 
+        /// Get all the geometry objects contained within this layer table as
+        /// a single flat collection
         /// </summary>
         /// <returns></returns>
         public VertexGeometryCollection AllGeometry()
@@ -219,6 +226,16 @@ namespace FreeBuild.Geometry
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Get all the vertices contained within all the geometry on all the
+        /// layers in this table in a single flat collection.
+        /// </summary>
+        /// <returns></returns>
+        public VertexCollection AllVertices()
+        {
+            return AllGeometry().AllVertices();
         }
 
         /// <summary>
@@ -246,6 +263,17 @@ namespace FreeBuild.Geometry
                     layer.GeometryInBounds(bounds, inclusive, result);
             }
             return result;
+        }
+
+        /// <summary>
+        /// Convert any polycurves that consist only of line segments into polylines
+        /// </summary>
+        public void RationalisePolyCurves()
+        {
+            foreach (GeometryLayer layer in this)
+            {
+                layer.RationalisePolycurves();
+            }
         }
 
         #endregion

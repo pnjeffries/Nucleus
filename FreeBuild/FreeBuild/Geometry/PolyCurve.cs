@@ -409,6 +409,43 @@ namespace FreeBuild.Geometry
             }
         }
 
+        /// <summary>
+        /// Could this PolyCurve be accurately represented using a polyline?
+        /// </summary>
+        /// <returns></returns>
+        public bool IsPolyline()
+        {
+            foreach (Curve crv in SubCurves)
+            {
+                if (!(crv is Line || crv is PolyLine))
+                    return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Convert this polycurve to a (typically lighter)
+        /// polyline utilising the same vertex positions.
+        /// </summary>
+        /// <returns></returns>
+        public PolyLine ToPolyLine()
+        {
+            var pts = new List<Vector>();
+            bool closed = Closed;
+            pts.Add(StartPoint);
+            for (int i = 0; i < SubCurves.Count - 1; i++)
+            {
+                Curve crv = SubCurves[i];
+                var vertices = crv.Vertices;
+                for (int j = 1; j < vertices.Count; j++)
+                {
+                    pts.Add(vertices[j].Position);
+                }
+            }
+
+            return new PolyLine(pts, closed, Attributes);
+        }
+
         #endregion
 
         #region Static Methods

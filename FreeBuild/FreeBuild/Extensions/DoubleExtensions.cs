@@ -266,5 +266,6 @@ namespace FreeBuild.Extensions
             double scale = Math.Pow(10, Math.Floor(Math.Log10(Math.Abs(value))) + 1);
             return scale * Math.Round(value / scale, digits);
         }
+
     }
 }

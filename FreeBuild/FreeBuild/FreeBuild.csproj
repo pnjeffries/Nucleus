@@ -49,6 +49,7 @@
     <Compile Include="Actions\ExecutionInfo.cs" />
     <Compile Include="Base\Bool6D.cs" />
     <Compile Include="Base\CollectionCopyAttribute.cs" />
+    <Compile Include="Base\KeyedCollection.cs" />
     <Compile Include="Model\FamilyFilter.cs" />
     <Compile Include="Base\ISetFilter.cs" />
     <Compile Include="Base\PathBinding.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Model\Loading\LinearElementLoad.cs" />
     <Compile Include="Model\Loading\ForceLoad.cs" />
     <Compile Include="Model\Loading\NodeLoad.cs" />
+    <Compile Include="Model\LoadTable.cs" />
     <Compile Include="Model\LocalCoordinateSystemReference.cs" />
     <Compile Include="Model\CoordinateSystemReferenceCollection.cs" />
     <Compile Include="Model\ModelObjectSetTable.cs" />
