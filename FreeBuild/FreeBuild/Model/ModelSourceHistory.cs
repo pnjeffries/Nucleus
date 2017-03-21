@@ -190,6 +190,8 @@ namespace FreeBuild.Model
             CleanIteration(exInfo.SourceReference, exInfo.Iteration, exInfo.HistoryItemCount);
         }
 
+        // TODO: Remove deleted objects to avoid the ghosts of long-gone objects from hanging around
+
         #endregion
     }
 }

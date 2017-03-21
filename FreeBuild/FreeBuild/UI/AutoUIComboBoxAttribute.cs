@@ -53,6 +53,11 @@ namespace FreeBuild.UI
         /// <summary>
         /// Constructor
         /// </summary>
+        public AutoUIComboBoxAttribute() : base() { }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
         /// <param name="itemsSource"></param>
         public AutoUIComboBoxAttribute(string itemsSource):base()
         {

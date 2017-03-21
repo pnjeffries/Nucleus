@@ -1,6 +1,7 @@
 ﻿using FreeBuild.Base;
 using FreeBuild.Rendering;
 using FreeBuild.UI;
+using FreeBuild.WPF.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -105,20 +106,7 @@ namespace FreeBuild.WPF
                     else
                     {
                         // Bind to both the standard and extra item sources
-                        CompositeCollection collection = new CompositeCollection();
-                        var c1 = new CollectionContainer();
-                        var b1 = new Binding("DataContext." + cBA.ItemsSource);
-                        b1.Source = this;
-                        BindingOperations.SetBinding(c1, CollectionContainer.CollectionProperty, b1);
-                        collection.Add(c1);
-
-                        var c2 = new CollectionContainer();
-                        var b2 = new Binding("DataContext." + cBA.ExtraItemsSource);
-                        b2.Source = this;
-                        BindingOperations.SetBinding(c2, CollectionContainer.CollectionProperty, b2);
-                        collection.Add(c2);
-
-                        ItemsSource = collection;
+                        ItemsSource = cBA.GetCombinedSourceCollection(this);
                     }
                 }
                 ItemTemplate = new DataTemplate();

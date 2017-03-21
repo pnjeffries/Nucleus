@@ -44,6 +44,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoUIDataGrid.cs" />
     <Compile Include="AutoUIWrapPanel.cs" />
     <Compile Include="AutoUIUniformGrid.cs" />
     <Compile Include="BindingGrouplessDataGrid.cs" />
@@ -57,11 +58,14 @@
     <Compile Include="Converters\GreaterThanConverter.cs" />
     <Compile Include="Converters\IntConverter.cs" />
     <Compile Include="Converters\IsTypeConverter.cs" />
+    <Compile Include="Converters\ModelTableConverter.cs" />
     <Compile Include="Converters\MultiplicationConverter.cs" />
     <Compile Include="Converters\RadiansDegreesConverter.cs" />
     <Compile Include="Converters\TreeViewLineConverter.cs" />
     <Compile Include="Converters\UndeletedCountConverter.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
+    <Compile Include="DataTable.cs" />
+    <Compile Include="Extensions\AutoUIComboBoxAttributeExtensions.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="EnumBindingSourceExtension.cs" />
     <Compile Include="FBtoWPF.cs" />

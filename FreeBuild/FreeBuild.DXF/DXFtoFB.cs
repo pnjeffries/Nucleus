@@ -236,10 +236,11 @@ namespace FreeBuild.DXF
 
         /// <summary>
         /// Convert a netDXF HatchBoundaryPath to a FreeBuild PolyCurve
+        /// or PolyLine
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static PolyCurve Convert(nDE.HatchBoundaryPath path)
+        public static Curve Convert(nDE.HatchBoundaryPath path)
         {
             PolyCurve result = new PolyCurve();
             foreach (nDE.HatchBoundaryPath.Edge edge in path.Edges)
@@ -250,7 +251,8 @@ namespace FreeBuild.DXF
                     result.Add((Curve)edgeRep);
                 }
             }
-            return result;
+            if (result.IsPolyline()) return result.ToPolyLine();
+            else return result;
         }
 
         /// <summary>

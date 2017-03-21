@@ -244,6 +244,33 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Get the squared length of the longest edge of this face
+        /// </summary>
+        /// <returns></returns>
+        public double LongestEdgeLengthSquared()
+        {
+            double lMax = 0;
+            for (int i = 0; i < Count; i++)
+            {
+                double l = EdgeLengthSquared(i);
+                if (l > lMax)
+                {
+                    lMax = l;
+                }
+            }
+            return lMax;
+        }
+
+        /// <summary>
+        /// Get the length of the longest edge of this face
+        /// </summary>
+        /// <returns></returns>
+        public double LongestEdgeLength()
+        {
+            return LongestEdgeLengthSquared().Root();
+        }
+
+        /// <summary>
         /// Is the edge at the specified index shared with the specified other face?
         /// </summary>
         /// <param name="index">The edge index</param>
@@ -438,6 +465,21 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Count the number of vertices in the specified collection that
+        /// also form part of this face
+        /// </summary>
+        /// <returns></returns>
+        public int SharedVertexCount(IEnumerable<Vertex> vertices)
+        {
+            int count = 0;
+            foreach (Vertex v in vertices)
+            {
+                if (Contains(v)) count++;
+            }
+            return count;
+        }
+
+        /// <summary>
         /// Sort the vertices of this face counter-clockwise around the specified point
         /// in plan (i.e. in the XY plane).  This will essentially align this face 'upwards'.
         /// Note that this will only work in the case of convex polygons where the ordering
@@ -477,6 +519,47 @@ namespace FreeBuild.Geometry
                 sum += (v2.X - v1.X) * (v2.Y + v1.Y);
             }
             return sum > 0;
+        }
+
+        /// <summary>
+        /// Merge this mesh face together with another, adjacent one
+        /// to form a single larger face
+        /// </summary>
+        /// <param name="other">The mesh face to merge with this one.
+        /// Must share two vertices and one edge with this face and be in the same orientation.</param>
+        /// <returns></returns>
+        public MeshFace MergeWith(MeshFace other)
+        {
+            var result = new MeshFace();
+            bool switched = false;
+            for (int i = 0; i < Count; i++)
+            {
+                // Add the vertices from this face to the result
+                Vertex v = this[i];
+                result.Add(v);
+                if (!switched)
+                {
+                    
+                    int iOther = other.IndexOf(v);
+                    if (iOther >= 0) // Found first shared vertex
+                    {
+                        Vertex nextV = this.GetWrapped(i + 1);
+                        if (other.Contains(nextV))
+                        {
+                            switched = true;
+                            // Add the bridging vertices from the other face to the result:
+                            for (int j = 1; j < other.Count - 1; j++)
+                            {
+                                Vertex v2 = other.GetWrapped(j + iOther);
+                                result.Add(v2);
+                                // Currently assuming that the faces share two vertices and a single edge...
+                                //TODO: Check
+                            }
+                        }
+                    }
+                }
+            }
+            return result;
         }
 
         #endregion

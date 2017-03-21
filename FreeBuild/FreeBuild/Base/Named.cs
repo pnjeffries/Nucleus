@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +44,7 @@ namespace FreeBuild.Base
         /// <summary>
         /// The name, or mark, of this object
         /// </summary>
+        [AutoUI(Order = 100)]
         public virtual string Name
         {
             get

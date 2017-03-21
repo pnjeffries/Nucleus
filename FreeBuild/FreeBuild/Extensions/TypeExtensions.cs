@@ -343,5 +343,49 @@ namespace FreeBuild.Extensions
             }
         }
 
+        /// <summary>
+        /// Get the type of the items stored within this collection type
+        /// </summary>
+        /// <param name="collectionType"></param>
+        /// <returns></returns>
+        public static Type GetItemType(this Type collectionType)
+        {
+            Type iEnum = FindIEnumerable(collectionType);
+            if (iEnum == null) return collectionType;
+            else return iEnum.GetGenericArguments()[0];
+        }
+
+        /// <summary>
+        /// Get the generic IEnumerable type of the specified collection type
+        /// </summary>
+        /// <param name="collectionType"></param>
+        /// <returns></returns>
+        private static Type FindIEnumerable(Type collectionType)
+        {
+            if (collectionType != null)
+            {
+                if (collectionType.IsGenericType)
+                {
+                    foreach (Type arg in collectionType.GetGenericArguments())
+                    {
+                        Type iEnum = typeof(IEnumerable<>).MakeGenericType(arg);
+                        if (iEnum.IsAssignableFrom(collectionType)) return iEnum;
+                    }
+                }
+                Type[] interfaces = collectionType.GetInterfaces();
+                if (interfaces != null && interfaces.Length > 0)
+                {
+                    foreach (Type iface in interfaces)
+                    {
+                        Type iEnum = FindIEnumerable(iface);
+                        if (iEnum != null) return iEnum;
+                    }
+                }
+                if (collectionType.BaseType != null && collectionType.BaseType != typeof(object))
+                    return FindIEnumerable(collectionType.BaseType);
+            }
+            return null;
+        }
+
     }
 }

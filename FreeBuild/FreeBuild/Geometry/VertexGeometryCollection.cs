@@ -154,6 +154,36 @@ namespace FreeBuild.Geometry
             return result;
         }
 
+        /// <summary>
+        /// Convert any polycurves in this collection that can be expressed accurately as polylines
+        /// into PolyLine objects
+        /// </summary>
+        public void RationalisePolycurves()
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                VertexGeometry vG = this[i];
+                if (vG is PolyCurve)
+                {
+                    PolyCurve pC = (PolyCurve)vG;
+                    if (pC.IsPolyline())
+                    {
+                        this[i] = pC.ToPolyLine();
+                    }
+                }
+                else if (vG is PlanarRegion)
+                {
+                    PlanarRegion pR = (PlanarRegion)vG;
+                    if (pR.Perimeter is PolyCurve)
+                    {
+                        PolyCurve pC = (PolyCurve)pR.Perimeter;
+                        if (pC.IsPolyline()) pR.Perimeter = pC.ToPolyLine();
+                    }
+
+                }
+            }
+        }
+
         #endregion
     }
 

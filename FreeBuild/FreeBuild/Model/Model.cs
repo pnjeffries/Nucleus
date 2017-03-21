@@ -211,24 +211,45 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
-        /// Private backing field for Loading property
+        /// Private backing field for Loads property
         /// </summary>
-        private LoadCaseTable _Loading;
+        private LoadTable _Loads;
 
         /// <summary>
-        /// Get the collection of loading that is applied to this model,
-        /// stored by load case.
+        /// The loads applied to this model
         /// </summary>
-        public LoadCaseTable Loading
+        public LoadTable Loads
         {
             get
             {
-                if (_Loading == null)
+                if (_Loads == null)
                 {
-                    _Loading = new LoadCaseTable(this);
-                    _Loading.CollectionChanged += HandlesInternalCollectionChanged;
+                    _Loads = new LoadTable(this);
+                    _Loads.CollectionChanged += HandlesInternalCollectionChanged;
                 }
-                return _Loading;
+                return _Loads;
+            }
+
+        }
+
+        /// <summary>
+        /// Private backing field for Loading property
+        /// </summary>
+        private LoadCaseTable _LoadCases;
+
+        /// <summary>
+        /// The load cases stored in this model
+        /// </summary>
+        public LoadCaseTable LoadCases
+        {
+            get
+            {
+                if (_LoadCases == null)
+                {
+                    _LoadCases = new LoadCaseTable(this);
+                    _LoadCases.CollectionChanged += HandlesInternalCollectionChanged;
+                }
+                return _LoadCases;
             }
         }
 
@@ -257,7 +278,7 @@ namespace FreeBuild.Model
             get
             {
                 return new IEnumerable<ModelObject>[]
-                    {_CoordinateSystems, _Materials, _Families, _Levels, _Nodes, _Elements, _Sets, _Loading};
+                    {_CoordinateSystems, _Materials, _Families, _Levels, _Nodes, _Elements, _Sets, _LoadCases, _Loads};
             }
         }
 
@@ -417,12 +438,49 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
+        /// Add a new object set to this model, if it does not already exist within it
+        /// </summary>
+        /// <param name="set">The set to be added.</param>
+        /// <returns>True if the material could be added, false if it had already
+        /// been added to  the model.</returns>
+        public bool Add(ModelObjectSetBase set)
+        {
+            return Sets.TryAdd(set);
+        }
+
+        /// <summary>
+        /// Add a new load case to this model, if it does not already exist within it
+        /// </summary>
+        /// <param name="loadCase">The load case to be added.</param>
+        /// <returns>True if the load case could be added, false if it had already
+        /// been added to the model.</returns>
+        public bool Add(LoadCase loadCase)
+        {
+            return LoadCases.TryAdd(loadCase);
+        }
+
+        /// <summary>
+        /// Add a new load to this model, if it does not already exist within it
+        /// </summary>
+        /// <param name="load">The load to be added</param>
+        /// <returns>True if the load could be added, false if it had already been added to the model.</returns>
+        public bool Add(Load load)
+        {
+            return Loads.TryAdd(load);
+        }
+
+        /// <summary>
         /// Register a new object with this model for event handling
         /// </summary>
         /// <param name="unique"></param>
         protected void Register(ModelObject unique)
         {
             unique.PropertyChanged += HandlesObjectPropertyChanged;
+            //if (unique is LoadCase)
+            //{
+            //    var lC = (LoadCase)unique;
+            //    lC.Loads.CollectionChanged += HandlesInternalCollectionChanged;
+            //}
         }
 
         /// <summary>
@@ -432,13 +490,27 @@ namespace FreeBuild.Model
         /// <returns></returns>
         public ModelObject GetObject(Guid guid)
         {
-            if (Elements.Contains(guid)) return Elements[guid];
-            else if (Nodes.Contains(guid)) return Nodes[guid];
-            else if (Families.Contains(guid)) return Families[guid];
-            else if (Materials.Contains(guid)) return Materials[guid];
-            else if (Levels.Contains(guid)) return Levels[guid];
-            else if (CoordinateSystems.Contains(guid)) return CoordinateSystems[guid];
-            else if (Sets.Contains(guid)) return Sets[guid];
+            if (_Elements != null && _Elements.Contains(guid)) return _Elements[guid];
+            else if (_Nodes != null && _Nodes.Contains(guid)) return _Nodes[guid];
+            else if (_Loads != null && _Loads.Contains(guid)) return _Loads[guid];
+            else if (_LoadCases != null && _LoadCases.Contains(guid)) return _LoadCases[guid];
+            else if (_Families != null && _Families.Contains(guid)) return _Families[guid];
+            else if (_Materials != null && _Materials.Contains(guid)) return _Materials[guid];
+            else if (_Levels != null && _Levels.Contains(guid)) return _Levels[guid];
+            else if (_CoordinateSystems != null && _CoordinateSystems.Contains(guid)) return _CoordinateSystems[guid];
+            else if (_Sets != null && _Sets.Contains(guid)) return _Sets[guid];
+            else return null;
+        }
+
+        /// <summary>
+        /// Get the table from this model (if any) responsible for storing the specified type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public IEnumerable<ModelObject> GetTableFor(Type type)
+        {
+            if (typeof(Family).IsAssignableFrom(type)) return Families;
+            //TODO;
             else return null;
         }
 
@@ -492,6 +564,7 @@ namespace FreeBuild.Model
             if (_Levels != null) _Levels.CollectionChanged += HandlesInternalCollectionChanged;
             if (_CoordinateSystems != null) _CoordinateSystems.CollectionChanged += HandlesInternalCollectionChanged;
             if (_Sets != null) _Sets.CollectionChanged += HandlesInternalCollectionChanged;
+            if (_LoadCases != null) _LoadCases.CollectionChanged += HandlesInternalCollectionChanged;
 
             foreach (ModelObject unique in Everything)
             {
@@ -510,7 +583,8 @@ namespace FreeBuild.Model
 
         /// <summary>
         /// Clean this model of all deleted objects.  This will result in the
-        /// permenant removal of these objects from the model database.
+        /// permenant removal of these objects from the model database and it will
+        /// no longer be possible to successfully undelete them.
         /// </summary>
         public void CleanDeleted()
         {

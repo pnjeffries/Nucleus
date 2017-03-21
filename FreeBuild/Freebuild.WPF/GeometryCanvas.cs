@@ -85,7 +85,7 @@ namespace FreeBuild.WPF
 
         public static DependencyProperty CurveThicknessProperty =
             DependencyProperty.Register("CurveThickness", typeof(double), typeof(GeometryCanvas),
-            new FrameworkPropertyMetadata(0.005, FrameworkPropertyMetadataOptions.None));//,
+            new FrameworkPropertyMetadata(0.05, FrameworkPropertyMetadataOptions.None));//,
                 //new PropertyChangedCallback(OnCurveThicknessChanged)));
 
         /// <summary>
@@ -186,24 +186,26 @@ namespace FreeBuild.WPF
                 path.StrokeStartLineCap = PenLineCap.Round;
                 path.StrokeEndLineCap = PenLineCap.Round;
 
-                var thicknessBinding = new Binding("CurveThickness");
-                thicknessBinding.Source = this;
+                //var thicknessBinding = new Binding("CurveThickness");
+                //thicknessBinding.Source = this;
 
                 if (crv.Attributes == null)
                 {
-                    path.SetBinding(Path.StrokeThicknessProperty, thicknessBinding);
+                    //path.SetBinding(Path.StrokeThicknessProperty, thicknessBinding);
+                    path.StrokeThickness = CurveThickness;
                 }
                 else
-                { 
-                    var mBinding = new MultiBinding();
+                {
+                    /*var mBinding = new MultiBinding();
                     mBinding.Converter = new Converters.MultiplicationConverter();
                     mBinding.Bindings.Add(thicknessBinding);
                     mBinding.Bindings.Add(new Binding("Attributes.Weight"));
 
-                    path.SetBinding(Path.StrokeThicknessProperty, mBinding);
+                    path.SetBinding(Path.StrokeThicknessProperty, mBinding);*/
+                    path.StrokeThickness = CurveThickness * crv.Attributes.Weight;
                 }
 
-                //path.StrokeThickness = CurveThickness;// * scaleFactor;
+                // * scaleFactor;
 
                 path.Data = pathGeo;
                 path.StrokeLineJoin = PenLineJoin.Round;

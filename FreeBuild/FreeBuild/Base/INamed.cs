@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using FreeBuild.Extensions;
+using FreeBuild.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,7 @@ namespace FreeBuild.Base
         /// <summary>
         /// The name of this object
         /// </summary>
+        [AutoUI(100)]
         string Name { get; set; }
     }
 

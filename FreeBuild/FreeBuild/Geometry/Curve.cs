@@ -171,6 +171,18 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Evaluate a point on this curve a specified distance from the start or end.
+        /// </summary>
+        /// <param name="length">The length along the line </param>
+        /// <param name="fromEnd"></param>
+        /// <returns></returns>
+        public Vector PointAtLength(double length, bool fromEnd = false)
+        {
+            if (!fromEnd) return StartPoint.Interpolate(EndPoint, length / Length);
+            else return EndPoint.Interpolate(StartPoint, length / Length);
+        }
+
+        /// <summary>
         /// Evaluate a point defined by a parameter within a specified span.
         /// </summary>
         /// <param name="span">The index of the span.  Valid range 0 to SegmentCount - 1</param>
