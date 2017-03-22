@@ -15,10 +15,28 @@ namespace FreeBuild.WPF
 {
     public class AutoUIDataGrid : DataGrid
     {
+        private bool _GenerateSubTypeColumns = true;
+
+        /// <summary>
+        /// If set to true, columns will be generated for all detected sub-types
+        /// of the items source type as well as the base.
+        /// </summary>
+        public bool GenerateSubTypeColumns
+        {
+            get { return _GenerateSubTypeColumns; }
+            set { _GenerateSubTypeColumns = value; }
+        }
+
+        #region Constructors
+
         public AutoUIDataGrid() : base()
         {
             AutoGenerateColumns = false; // Do not want to use standard column generation logic
         }
+
+        #endregion
+
+        #region Methods
 
         protected override void OnItemsSourceChanged(IEnumerable oldValue, IEnumerable newValue)
         {
@@ -39,13 +57,23 @@ namespace FreeBuild.WPF
 
         protected void GenerateAutoUIColumns(Type type)
         {
-            IList<PropertyInfo> properties = type.GetAutoUIProperties();
-            GenerateAutoUIColumns(properties);
+            if (GenerateSubTypeColumns)
+            {
+                IList<Type> subTypes = type.GetSubTypes();
+                IList<PropertyInfo> properties = subTypes.GetAutoUIProperties();
+                GenerateAutoUIColumns(properties);
+            }
+            else
+            {
+                IList<PropertyInfo> properties = type.GetAutoUIProperties();
+                GenerateAutoUIColumns(properties);
+            }
         }
 
         protected void GenerateAutoUIColumns(IList<PropertyInfo> properties)
         {
             Columns.Clear(); // Clear previous columns
+            // TODO: Keep manually-added columns?
 
             foreach (PropertyInfo property in properties)
             {
@@ -58,7 +86,8 @@ namespace FreeBuild.WPF
                     var comboColumn = new DataGridComboBoxColumn();
                     column = comboColumn;
                     comboColumn.SelectedItemBinding = binding;
-                    //TODO: Set ItemsSource binding
+
+                    // Set ItemsSource binding:
                     Binding sourceBinding;
                     if (string.IsNullOrEmpty(cBA.ItemsSource))
                          sourceBinding = new Binding(cBA.ItemsSource);
@@ -84,5 +113,7 @@ namespace FreeBuild.WPF
             }
 
         }
+
+        #endregion
     }
 }

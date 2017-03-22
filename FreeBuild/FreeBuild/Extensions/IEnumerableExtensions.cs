@@ -31,6 +31,21 @@ namespace FreeBuild.Extensions
     /// </summary>
     public static class IEnumerableExtensions
     {
-
+        /// <summary>
+        /// Get a collection of all the unique types currently contained within this collection
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        public static IEnumerable<Type> ContainedTypes<T>(this IEnumerable<T> collection)
+        {
+            HashSet<Type> set = new HashSet<Type>();
+            foreach(T obj in collection)
+            {
+                Type type = obj.GetType();
+                if (!set.Contains(type)) set.Add(type);
+            }
+            return set;
+        }
     }
 }

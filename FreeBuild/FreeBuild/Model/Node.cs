@@ -20,6 +20,7 @@
 
 using FreeBuild.Base;
 using FreeBuild.Geometry;
+using FreeBuild.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +46,7 @@ namespace FreeBuild.Model
         /// <summary>
         /// The spatial position of this node
         /// </summary>
+        [AutoUI(300)]
         public Vector Position
         {
             get { return _Position; }

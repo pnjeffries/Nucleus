@@ -202,6 +202,7 @@ namespace FreeBuild.Model
         /// data such as vertex nodes, use the ReplaceGeometry function instead of directly
         /// setting this property.
         /// </summary>
+        [AutoUI(410)]
         public TShape Geometry
         {
             get { return _Geometry; }
@@ -275,6 +276,7 @@ namespace FreeBuild.Model
         /// geometry of this element should be interpreted to produce a 
         /// full 3D solid object
         /// </summary>
+        [AutoUIComboBox(Order = 420)]
         public TFamily Family
         {
             get { return _Family; }
@@ -294,6 +296,7 @@ namespace FreeBuild.Model
         /// The orientation description of this element - determines the relative orientation
         /// of the local coordinate system of this element.
         /// </summary>
+        [AutoUI(430)]
         public Angle Orientation
         {
             get { return _Orientation; }

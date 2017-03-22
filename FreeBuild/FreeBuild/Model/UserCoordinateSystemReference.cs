@@ -1,4 +1,5 @@
 ﻿using FreeBuild.Geometry;
+using FreeBuild.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace FreeBuild.Model
         /// <summary>
         /// The geometric coordinate system stored within this object
         /// </summary>
+        [AutoUI(300)]
         public ICoordinateSystem CoordinateSystem
         {
             get { return _CoordinateSystem; }

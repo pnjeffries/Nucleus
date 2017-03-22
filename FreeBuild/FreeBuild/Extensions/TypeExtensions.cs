@@ -189,6 +189,33 @@ namespace FreeBuild.Extensions
         }
 
         /// <summary>
+        /// Extract all properties from this set of types that have been annotated with an
+        /// AutoUIAttribute, sorted by their order.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static IList<PropertyInfo> GetAutoUIProperties(this IEnumerable<Type> types)
+        {
+            SortedList<double, PropertyInfo> result = new SortedList<double, PropertyInfo>();
+            foreach (Type type in types)
+            {
+                PropertyInfo[] pInfos = type.GetProperties();
+                foreach (PropertyInfo pInfo in pInfos)
+                {
+                    object[] attributes = pInfo.GetCustomAttributes(typeof(AutoUIAttribute), true);
+                    if (attributes.Count() > 0)
+                    {
+                        AutoUIAttribute aInput = (AutoUIAttribute)attributes[0];
+                        double keyValue = aInput.Order;
+                        while (result.ContainsKey(keyValue)) keyValue = keyValue.NextValidValue();
+                        result.Add(keyValue, pInfo);
+                    }
+                }
+            }
+            return result.Values.ToList();
+        }
+
+        /// <summary>
         /// Extract all methods from this type that have been annotated with an AutoUIAttribute,
         /// sorted by their order.
         /// </summary>
@@ -219,7 +246,7 @@ namespace FreeBuild.Extensions
         /// <param name="allAssemblies">If true, all loaded assembles will be checked, else only the assembly the 
         /// base type is defined in.</param>
         /// <returns></returns>
-        public static IList<Type> GetSubTypes(this Type type, bool allAssemblies = true)
+        public static IList<Type> GetSubTypes(this Type type, bool allAssemblies = false)
         {
             IList<Type> result = new List<Type>();
             if (allAssemblies)

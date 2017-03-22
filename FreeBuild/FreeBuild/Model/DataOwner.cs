@@ -20,6 +20,7 @@
 
 using FreeBuild.Base;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -78,6 +79,12 @@ namespace FreeBuild.Model
             }
             else NotifyPropertyChanged(string.Format("Data[{0}].{1}", component.GetType().Name, propertyName));
         }
+
+        /// <summary>
+        /// Get a flat collection of all the data components currently attached to this object
+        /// </summary>
+        /// <returns></returns>
+         public abstract IList AllAttachedDataComponents();
 
         #endregion
 
@@ -213,6 +220,15 @@ namespace FreeBuild.Model
         public void SetData(TData data)
         {
             Data.SetData(data);
+        }
+
+        /// <summary>
+        /// Get a flat list of all data components currently attached to this object.
+        /// </summary>
+        /// <returns></returns>
+        public override IList AllAttachedDataComponents()
+        {
+            return Data;
         }
 
         #endregion
