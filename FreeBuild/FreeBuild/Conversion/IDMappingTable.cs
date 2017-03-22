@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
 namespace FreeBuild.Conversion
 {
@@ -111,6 +112,10 @@ namespace FreeBuild.Conversion
         {
             _FirstIDName = firstIDName;
             _SecondIDName = secondIDName;
+        }
+
+        protected IDMappingTable(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
         }
 
         #endregion

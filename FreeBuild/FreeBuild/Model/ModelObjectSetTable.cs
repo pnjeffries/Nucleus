@@ -9,6 +9,7 @@ namespace FreeBuild.Model
     /// <summary>
     /// A table of ModelObjectSets to be stored in a Model
     /// </summary>
+    [Serializable]
     public class ModelObjectSetTable : ModelObjectSetCollection
     {
         #region Constructors

@@ -308,6 +308,7 @@ namespace FreeBuild.Model
     /// </summary>
     /// <typeparam name="TData"></typeparam>
     /// <typeparam name="TTypeEnum"></typeparam>
+    [Serializable]
     public abstract class DataStore<TData, TOwner, TTypeEnum> : DataStore<TData, TOwner>
         where TData : class
         where TOwner : IDataOwner

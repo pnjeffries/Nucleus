@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
 namespace FreeBuild.Robot
 {
@@ -50,6 +51,10 @@ namespace FreeBuild.Robot
         public RobotIDMappingTable(string mappedIDName = "FreeBuild") : base(mappedIDName, "Robot")
         {
 
+        }
+
+        protected RobotIDMappingTable(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
         }
 
         #endregion

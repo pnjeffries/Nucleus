@@ -202,11 +202,13 @@ namespace FreeBuild.IO
         /// Serialise the specified source object to text and
         /// write it to the specified stream.
         /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="source"></param>
-        public void Serialize(Stream stream, TSource source)
+        /// <param name="stream">The stream to write to</param>
+        /// <param name="source">The source object to serialise</param>
+        public void Serialize(Stream stream, TSource source, string openingText = null, string closingText = null)
         {
+            if (openingText != null) Write(openingText);
             WriteAll(source);
+            if (closingText != null) Write(closingText);
             var sw = new StreamWriter(stream);
             sw.Write(Output);
             sw.Dispose();

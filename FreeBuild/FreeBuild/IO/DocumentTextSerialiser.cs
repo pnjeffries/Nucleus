@@ -15,6 +15,43 @@ namespace FreeBuild.IO
     public abstract class DocumentTextSerialiser<TSource> : TextSerialiser<TSource>
         where TSource : Document
     {
+        #region Properties
+
+        /// <summary>
+        /// Private backing field for CustomHeader property
+        /// </summary>
+        private string _CustomHeader = null;
+
+        /// <summary>
+        /// Get or set a custom header to be written before the main body of text.
+        /// Can be used to include customised titles, extra header data etc.
+        /// If null will be ignored.
+        /// </summary>
+        public string CustomHeader
+        {
+            get { return _CustomHeader; }
+            set { _CustomHeader = value; }
+        }
+
+
+        /// <summary>
+        /// Private backing field for CustomFooter property
+        /// </summary>
+        private string _CustomFooter = null;
+
+        /// <summary>
+        /// Get or set a custom footer to be written after the main body of text.
+        /// Can be used to include additional data, closing tags, footer comments etc.
+        /// If null will be ignored.
+        /// </summary>
+        public string CustomFooter
+        {
+            get { return _CustomFooter; }
+            set { _CustomFooter = value; }
+        }
+
+        #endregion
+
         #region constructors
 
         /// <summary>

@@ -10,6 +10,7 @@ namespace FreeBuild.Model
     /// A table of load cases, providing the top-level representation of
     /// structural loading in the model
     /// </summary>
+    [Serializable]
     public class LoadCaseTable : LoadCaseCollection
     {
         #region Constructors

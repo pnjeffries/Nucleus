@@ -167,10 +167,10 @@ namespace FreeBuild.Geometry
         #region Constructors
 
         /// <summary>
-        /// Default constructor.  Initialises an arc with no geometry.
+        /// Default constructor.  Initialises an invalid arc with no geometry.
         /// Will not be valid.
         /// </summary>
-        protected Arc()
+        public Arc()
         {
             _Vertices = new VertexCollection(this);
         }
