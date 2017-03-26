@@ -120,7 +120,7 @@ namespace FreeBuild.Maths
 
         /// <summary>
         /// Constructor creating a singularity interval with
-        /// maximum and minimum 
+        /// maximum and minimum set to the specified value
         /// </summary>
         /// <param name="value"></param>
         public Interval(double value)

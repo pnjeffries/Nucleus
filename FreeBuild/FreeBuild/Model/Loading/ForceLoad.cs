@@ -1,4 +1,5 @@
 ﻿using FreeBuild.Geometry;
+using FreeBuild.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,7 @@ namespace FreeBuild.Model
         /// The axis (of the coordinate system specified by the Axes property)
         /// along which or about which this force is applied
         /// </summary>
+        [AutoUIComboBox(Order=450)]
         public Direction Direction
         {
             get { return _Direction; }
@@ -42,6 +44,7 @@ namespace FreeBuild.Model
         /// in 3D space.  The direction property determines which axis of this
         /// system is used.
         /// </summary>
+        [AutoUIComboBox(Order=475)]
         public CoordinateSystemReference Axes
         {
             get { return _Axes; }

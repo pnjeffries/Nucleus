@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +43,7 @@ namespace FreeBuild.Model
         /// <summary>
         /// The z-coordinate of the level
         /// </summary>
+        [AutoUI(400)]
         public double Z
         {
             get { return _Z; }

@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using FreeBuild.Base;
+using FreeBuild.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +46,7 @@ namespace FreeBuild.Model
         /// <summary>
         /// The description of the profile of this section property
         /// </summary>
+        [AutoUI(400)]
         public SectionProfile Profile
         {
             get { return _Profile; }
@@ -76,7 +78,7 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
-        /// The collection of profiles which make up the 
+        /// The collection of profiles which make up the section
         /// </summary>
         public SectionProfileCollection  Profiles
         {
