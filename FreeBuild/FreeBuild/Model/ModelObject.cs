@@ -210,6 +210,15 @@ namespace FreeBuild.Model
             base.NotifyPropertyChanged(propertyName, oldValue, newValue);
         }
 
+        /// <summary>
+        /// ToString override
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return Description;
+        }
+
         #endregion
 
     }

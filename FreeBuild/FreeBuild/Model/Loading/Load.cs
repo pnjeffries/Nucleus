@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using FreeBuild.Maths;
+using FreeBuild.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,7 @@ namespace FreeBuild.Model
         /// <summary>
         /// The load case to which this load belongs
         /// </summary>
+        [AutoUIComboBox(Order=300)]
         public LoadCase Case
         {
             get { return _Case; }
@@ -70,6 +72,7 @@ namespace FreeBuild.Model
         /// <summary>
         /// The set of objects that this load is applied to
         /// </summary>
+        [AutoUI(500)]
         public TAppliedTo AppliedTo
         {
             get
@@ -89,6 +92,7 @@ namespace FreeBuild.Model
         /// <summary>
         /// The value of the load
         /// </summary>
+        [AutoUI(600)]
         public Expression Value
         {
             get { return _Value; }
