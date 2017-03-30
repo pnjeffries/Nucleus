@@ -307,13 +307,13 @@ namespace FreeBuild.WPF
                         var graph = data.Data;
                         foreach (KeyValuePair<double, Interval> kvp in graph)
                         {
-                            points.Add(ToPoint(kvp.Key, kvp.Value.Max, xRange, yRange));
+                            points.Add(ToPoint(kvp.Key, kvp.Value.End, xRange, yRange));
                         }
                         if (graph.IsEnvelope)
                         {
                             foreach (KeyValuePair<double, Interval> kvp in graph.Reverse())
                             {
-                                points.Add(ToPoint(kvp.Key, kvp.Value.Min, xRange, yRange));
+                                points.Add(ToPoint(kvp.Key, kvp.Value.Start, xRange, yRange));
                             }
                         }
 

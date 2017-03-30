@@ -154,6 +154,30 @@ namespace FreeBuild.Geometry
             Radians = other.Radians;
         }
 
+        /// <summary>
+        /// Initialise the angle from a text string.
+        /// Valid input values are numeric strings which may optionally
+        /// end with 'π' or '°' to denote values specified in multiples
+        /// of PI or degrees respectively.
+        /// </summary>
+        /// <param name="description"></param>
+        public Angle(string description)
+        {
+            description = description.Trim();
+            if (description.EndsWith("π"))
+            {
+                Radians = double.Parse(description.TrimEnd('π')) * Math.PI;
+            }
+            else if (description.EndsWith("°"))
+            {
+                Radians = double.Parse(description.TrimEnd('°')) * 180 * Math.PI;
+            }
+            else
+            {
+                Radians = double.Parse(description);
+            }
+        }
+
         #endregion
 
         #region Methods

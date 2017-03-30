@@ -246,9 +246,10 @@ namespace FreeBuild.Extensions
         /// <param name="allAssemblies">If true, all loaded assembles will be checked, else only the assembly the 
         /// base type is defined in.</param>
         /// <returns></returns>
-        public static IList<Type> GetSubTypes(this Type type, bool allAssemblies = false)
+        public static IList<Type> GetSubTypes(this Type type, bool allAssemblies = false, bool includeSelf = false)
         {
             IList<Type> result = new List<Type>();
+            if (includeSelf) result.Add(type);
             if (allAssemblies)
             {
                 foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())

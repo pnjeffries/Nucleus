@@ -59,7 +59,7 @@ namespace FreeBuild.WPF
         {
             if (GenerateSubTypeColumns)
             {
-                IList<Type> subTypes = type.GetSubTypes();
+                IList<Type> subTypes = type.GetSubTypes(false, true);
                 IList<PropertyInfo> properties = subTypes.GetAutoUIProperties();
                 GenerateAutoUIColumns(properties);
             }

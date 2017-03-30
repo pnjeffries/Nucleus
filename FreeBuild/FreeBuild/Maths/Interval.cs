@@ -52,12 +52,12 @@ namespace FreeBuild.Maths
         /// <summary>
         /// The minimum, or start, value of this interval.
         /// </summary>
-        public readonly double Min;
+        public readonly double Start;
 
         /// <summary>
         /// The maximum, or end, value of this interval.
         /// </summary>
-        public readonly double Max;
+        public readonly double End;
 
         #endregion
 
@@ -70,7 +70,7 @@ namespace FreeBuild.Maths
         /// <returns></returns>
         public bool IsValid
         {
-            get { return !double.IsNaN(Min) && !double.IsNaN(Max); }
+            get { return !double.IsNaN(Start) && !double.IsNaN(End); }
         }
 
         /// <summary>
@@ -79,18 +79,18 @@ namespace FreeBuild.Maths
         /// <returns></returns>
         public bool IsSingularity
         {
-            get { return Min == Max; }
+            get { return Start == End; }
         }
 
         /// <summary>
         /// The mid-point of this interval
         /// </summary>
-        public double Mid { get { return (Min + Max) / 2; } }
+        public double Mid { get { return (Start + End) / 2; } }
 
         /// <summary>
         /// The size, or length, of this interval
         /// </summary>
-        public double Size { get { return (Max - Min); } }
+        public double Size { get { return (End - Start); } }
 
         /// <summary>
         /// Gets the indexed bound of this interval.
@@ -102,17 +102,33 @@ namespace FreeBuild.Maths
         {
             get
             {
-                if (index == 0) return Min;
-                else if (index == 1) return Max;
+                if (index == 0) return Start;
+                else if (index == 1) return End;
                 else throw new IndexOutOfRangeException();
             }
+        }
+
+        /// <summary>
+        /// Does this interval represent a range of values which increases from start to finish
+        /// </summary>
+        public bool IsIncreasing
+        {
+            get { return Start < End; }
+        }
+
+        /// <summary>
+        /// Does this interval represent a range of
+        /// </summary>
+        public bool IsDecreasing
+        {
+            get { return Start > End; }
         }
 
         /// <summary>
         /// Get the signed value of the greatest absolute value in this interval.
         /// This will return whichever of Max and Min has the largest (unsigned) magnitude.
         /// </summary>
-        public double AbsMax { get { return Math.Abs(Max) > Math.Abs(Min) ? Max : Min; } }
+        public double AbsMax { get { return Math.Abs(End) > Math.Abs(Start) ? End : Start; } }
 
         #endregion
 
@@ -125,8 +141,8 @@ namespace FreeBuild.Maths
         /// <param name="value"></param>
         public Interval(double value)
         {
-            Min = value;
-            Max = value;
+            Start = value;
+            End = value;
         }
 
         /// <summary>
@@ -138,8 +154,8 @@ namespace FreeBuild.Maths
         /// <param name="max"></param>
         public Interval(double min, double max)
         {
-            Min = min;
-            Max = max;
+            Start = min;
+            End = max;
         }
 
         /// <summary>
@@ -151,13 +167,13 @@ namespace FreeBuild.Maths
         {
             if (val1 < val2)
             {
-                Min = Math.Min(val1, val3);
-                Max = Math.Max(val2, val3);
+                Start = Math.Min(val1, val3);
+                End = Math.Max(val2, val3);
             }
             else
             {
-                Min = Math.Min(val2, val3);
-                Max = Math.Max(val1, val3);
+                Start = Math.Min(val2, val3);
+                End = Math.Max(val1, val3);
             }
         }
 
@@ -176,8 +192,8 @@ namespace FreeBuild.Maths
                 if (val < min) min = val;
                 if (val > max) max = val;
             }
-            Min = min;
-            Max = max;
+            Start = min;
+            End = max;
         }
 
         #endregion
@@ -191,7 +207,7 @@ namespace FreeBuild.Maths
         /// <returns></returns>
         public bool Equals(Interval other)
         {
-            return Min == other.Min && Max == other.Max; 
+            return Start == other.Start && End == other.End; 
         }
 
         /// <summary>
@@ -203,7 +219,7 @@ namespace FreeBuild.Maths
         /// <returns></returns>
         public bool Equals(double value)
         {
-            return Min == value && Max == value;
+            return Start == value && End == value;
         }
 
         public override bool Equals(object obj)
@@ -223,7 +239,7 @@ namespace FreeBuild.Maths
         /// <returns></returns>
         public bool LesserThan(Interval other)
         {
-            return Max < other.Min;
+            return End < other.Start;
         }
 
         /// <summary>
@@ -235,7 +251,7 @@ namespace FreeBuild.Maths
         /// <returns></returns>
         public bool GreaterThan(Interval other)
         {
-            return Min > other.Max;
+            return Start > other.End;
         }
 
         /// <summary>
@@ -245,13 +261,13 @@ namespace FreeBuild.Maths
         /// <returns></returns>
         public int CompareTo(Interval other)
         {
-            if (Min < other.Min)
+            if (Start < other.Start)
                 return -1;
-            if (Min > other.Min)
+            if (Start > other.Start)
                 return 1;
-            if (Max < other.Max)
+            if (End < other.End)
                 return -1;
-            if (Max > other.Max)
+            if (End > other.End)
                 return 1;
             return 0;
         }
@@ -263,7 +279,7 @@ namespace FreeBuild.Maths
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return Min.GetHashCode() ^ Max.GetHashCode();
+            return Start.GetHashCode() ^ End.GetHashCode();
         }
 
         /// <summary>
@@ -274,7 +290,7 @@ namespace FreeBuild.Maths
         /// <returns></returns>
         public double ValueAt(double parameter)
         {
-            return Min + parameter * (Max - Min);
+            return Start + parameter * (End - Start);
         }
 
         /// <summary>
@@ -286,7 +302,7 @@ namespace FreeBuild.Maths
         public double ParameterOf(double value)
         {
             double size = Size;
-            return size != 0 ? (value - Min) / size : 0;
+            return size != 0 ? (value - Start) / size : 0;
         }
 
         /// <summary>
@@ -296,7 +312,7 @@ namespace FreeBuild.Maths
         /// <returns>True if the specified value falls on or between the interval limits, else false.</returns>
         public bool Contains(double value)
         {
-            return value >= Min && value <= Max;
+            return value >= Start && value <= End;
         }
 
         /// <summary>
@@ -306,7 +322,7 @@ namespace FreeBuild.Maths
         /// <returns></returns>
         public bool Contains(Interval other)
         {
-            return Min <= other.Min && Max >= other.Max;
+            return Start <= other.Start && End >= other.End;
         }
 
         /// <summary>
@@ -316,7 +332,7 @@ namespace FreeBuild.Maths
         /// <returns></returns>
         public bool Overlaps(Interval other)
         {
-            return Min <= other.Max && Max >= other.Min;
+            return Start <= other.End && End >= other.Start;
         }
 
         /// <summary>
@@ -328,9 +344,9 @@ namespace FreeBuild.Maths
         /// Or, Interval.Unset if there is no overlap.</returns>
         public Interval Overlap(Interval other)
         {
-            if (Min <= other.Max && Max >= other.Min)
+            if (Start <= other.End && End >= other.Start)
             {
-                return new Interval(Math.Max(Min, other.Min), Math.Min(Max, other.Max));
+                return new Interval(Math.Max(Start, other.Start), Math.Min(End, other.End));
             }
             else return Unset;
         }
@@ -342,8 +358,8 @@ namespace FreeBuild.Maths
         /// <returns></returns
         public Interval Include(double value)
         {
-            if (value > Max) return new Interval(Min, value);
-            else if (value < Min) return new Interval(value, Max);
+            if (value > End) return new Interval(Start, value);
+            else if (value < Start) return new Interval(value, End);
             else return this;
         }
 
@@ -355,7 +371,7 @@ namespace FreeBuild.Maths
         /// values of the two intervals.</returns>
         public Interval Union(Interval other)
         {
-            return new Interval(Math.Min(Min, other.Min), Math.Max(Max, other.Max));
+            return new Interval(Math.Min(Start, other.Start), Math.Max(End, other.End));
         }
 
         /// <summary>
@@ -367,8 +383,8 @@ namespace FreeBuild.Maths
         public Interval Interoplate(Interval towards, double factor)
         {
             return new Interval(
-                Min.Interpolate(towards.Min, factor),
-                Max.Interpolate(towards.Max, factor));
+                Start.Interpolate(towards.Start, factor),
+                End.Interpolate(towards.End, factor));
         }
 
         /// <summary>
@@ -382,8 +398,8 @@ namespace FreeBuild.Maths
         public Interval Interpolate(Interval i1, double x0, double x1, double x)
         {
             return new Interval(
-                Min.Interpolate(i1.Min, x0, x1, x),
-                Max.Interpolate(i1.Max, x0, x1, x));
+                Start.Interpolate(i1.Start, x0, x1, x),
+                End.Interpolate(i1.End, x0, x1, x));
         }
 
         /// <summary>
@@ -402,14 +418,14 @@ namespace FreeBuild.Maths
                 // Start at 0 if 0 is included in this interval:
                 if (Contains(0))
                 {
-                    int negDivs = (int)Math.Floor(-Min / increment);
+                    int negDivs = (int)Math.Floor(-Start / increment);
                     for (int i = negDivs; i > 0; i--) result.Add(i * -increment);
-                    int posDivs = (int)Math.Floor(Max / increment);
+                    int posDivs = (int)Math.Floor(End / increment);
                     for (int i = 0; i <= posDivs; i++) result.Add(i * increment);
                 }
                 else
                 {
-                    for (double value = Min.RoundToSignificantFigures(digits); value < Max; value += increment) result.Add(value);
+                    for (double value = Start.RoundToSignificantFigures(digits); value < End; value += increment) result.Add(value);
                 }
             }
             return result;
@@ -422,7 +438,7 @@ namespace FreeBuild.Maths
         /// <returns></returns>
         public double Wrap(double value)
         {
-            return Min + (value - Min) % Size;
+            return Start + (value - Start) % Size;
         }
 
         #endregion
@@ -434,7 +450,7 @@ namespace FreeBuild.Maths
         /// Adds a double value to both max and min of an interval.
         /// </summary>
         public static Interval operator +(Interval i, double d)
-            => new Interval(i.Min + d, i.Max + d);
+            => new Interval(i.Start + d, i.End + d);
 
         /// <summary>
         /// Addition operator override.
@@ -444,7 +460,7 @@ namespace FreeBuild.Maths
         /// <param name="d"></param>
         /// <returns></returns>
         public static Interval operator +(double d, Interval i)
-            => new Interval(i.Min + d, i.Max + d);
+            => new Interval(i.Start + d, i.End + d);
 
         /// <summary>
         /// Addition operator override.  
@@ -455,7 +471,7 @@ namespace FreeBuild.Maths
         /// <param name="i2"></param>
         /// <returns></returns>
         public static Interval operator +(Interval i1, Interval i2)
-            => new Interval(i1.Min + i2.Min);
+            => new Interval(i1.Start + i2.Start);
 
         /// <summary>
         /// Subtraction operator override.  Subtracts a double from both
@@ -465,7 +481,7 @@ namespace FreeBuild.Maths
         /// <param name="d"></param>
         /// <returns></returns>
         public static Interval operator -(Interval i, double d)
-            => new Interval(i.Min - d, i.Max - d);
+            => new Interval(i.Start - d, i.End - d);
 
         /// <summary>
         /// Subtraction operator override.
@@ -476,7 +492,7 @@ namespace FreeBuild.Maths
         /// <param name="d"></param>
         /// <returns></returns>
         public static Interval operator -(double d, Interval i)
-            => new Interval(d - i.Max, d - i.Min);
+            => new Interval(d - i.End, d - i.Start);
 
         /// <summary>
         /// Subtraction operator override.
@@ -487,7 +503,7 @@ namespace FreeBuild.Maths
         /// <param name="i2"></param>
         /// <returns></returns>
         public static Interval operator -(Interval i1, Interval i2)
-            => new Interval(i1.Min - i2.Max, i1.Max - i2.Min);
+            => new Interval(i1.Start - i2.End, i1.End - i2.Start);
 
         /// <summary>
         /// Multiplication operator override.
@@ -497,7 +513,7 @@ namespace FreeBuild.Maths
         /// <param name="d"></param>
         /// <returns></returns>
         public static Interval operator *(Interval i, double d)
-            => new Interval(i.Min * d, i.Max * d);
+            => new Interval(i.Start * d, i.End * d);
 
         /// <summary>
         /// Multiplication operator override.
@@ -507,7 +523,7 @@ namespace FreeBuild.Maths
         /// <param name="d"></param>
         /// <returns></returns>
         public static Interval operator *(double d, Interval i)
-            => new Interval(i.Min * d, i.Max * d);
+            => new Interval(i.Start * d, i.End * d);
 
         /// <summary>
         /// Multiplication operator override.
@@ -518,7 +534,7 @@ namespace FreeBuild.Maths
         /// <param name="i2"></param>
         /// <returns></returns>
         public static Interval operator *(Interval i1, Interval i2)
-            => new Interval(i1.Min*i2.Min, i1.Max*i2.Max);
+            => new Interval(i1.Start*i2.Start, i1.End*i2.End);
 
         /// <summary>
         /// Division operator override.
@@ -528,7 +544,7 @@ namespace FreeBuild.Maths
         /// <param name="d"></param>
         /// <returns></returns>
         public static Interval operator /(Interval i, double d)
-            => new Interval(i.Min / d, i.Max / d);
+            => new Interval(i.Start / d, i.End / d);
 
         /// <summary>
         /// Division operator override.
@@ -539,7 +555,7 @@ namespace FreeBuild.Maths
         /// <param name="i"></param>
         /// <returns></returns>
         public static Interval operator /(double d, Interval i)
-            => new Interval(d / i.Max, d / i.Min);
+            => new Interval(d / i.End, d / i.Start);
 
         /// <summary>
         /// Equality operator override

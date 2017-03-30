@@ -162,7 +162,7 @@ namespace FreeBuild.Maths
             var result = new LinearDoubleDataSet();
             foreach (KeyValuePair<double, Interval> kvp in this)
             {
-                result.Add(kvp.Key, kvp.Value.Max);
+                result.Add(kvp.Key, kvp.Value.End);
             }
             return result;
         }
@@ -177,7 +177,7 @@ namespace FreeBuild.Maths
             var result = new LinearDoubleDataSet();
             foreach (KeyValuePair<double, Interval> kvp in this)
             {
-                result.Add(kvp.Key, kvp.Value.Min);
+                result.Add(kvp.Key, kvp.Value.Start);
             }
             return result;
         }

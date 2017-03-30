@@ -205,16 +205,20 @@ namespace FreeBuild.Geometry
         /// Creates a new vector by attempting to parse a string in the format
         /// {X} [separator] {Y} [separator] {Z}.
         /// </summary>
-        /// <param name="description"></param>
-        /// <param name="separator"></param>
-        public Vector(string description, char separator=',')
+        /// <param name="description">The string to be parsed</param>
+        /// <param name="separator">The character used to denote the separations between coordinates.
+        /// By default this is taken as being a comma.</param>
+        /// <param name="scalingFactor">An optional scaling factor which can be used to
+        /// convert from non-SI units.  Each component of the vector will be multiplied by
+        /// this value.</param>
+        public Vector(string description, char separator=',', double scalingFactor = 1.0)
         {
             var tokens = description.Split(separator);
-            if (tokens.Count() > 0) X = double.Parse(tokens[0]);
+            if (tokens.Count() > 0) X = double.Parse(tokens[0]) * scalingFactor;
             else X = 0;
-            if (tokens.Count() > 1) Y = double.Parse(tokens[1]);
+            if (tokens.Count() > 1) Y = double.Parse(tokens[1]) * scalingFactor;
             else Y = 0;
-            if (tokens.Count() > 2) Z = double.Parse(tokens[2]);
+            if (tokens.Count() > 2) Z = double.Parse(tokens[2]) * scalingFactor;
             else Z = 0;
         }
 

@@ -28,8 +28,8 @@ namespace FreeBuild.WPF.Converters
                 foreach (KeyValuePair<double, Interval> kvp in graph)
                 {
                     System.Windows.Point pt;
-                    if (!flipXY) pt = new System.Windows.Point(kvp.Key, kvp.Value.Max);
-                    else pt = new System.Windows.Point(kvp.Value.Max, kvp.Key);
+                    if (!flipXY) pt = new System.Windows.Point(kvp.Key, kvp.Value.End);
+                    else pt = new System.Windows.Point(kvp.Value.End, kvp.Key);
                     result.Add(pt);
                 }
                 if (graph.IsEnvelope)
@@ -37,8 +37,8 @@ namespace FreeBuild.WPF.Converters
                     foreach (KeyValuePair<double, Interval> kvp in graph.Reverse())
                     {
                         System.Windows.Point pt;
-                        if (!flipXY) pt = new System.Windows.Point(kvp.Key, kvp.Value.Min);
-                        else pt = new System.Windows.Point(kvp.Value.Min, kvp.Key);
+                        if (!flipXY) pt = new System.Windows.Point(kvp.Key, kvp.Value.Start);
+                        else pt = new System.Windows.Point(kvp.Value.Start, kvp.Key);
                         result.Add(pt);
                     }
                 }

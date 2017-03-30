@@ -158,7 +158,7 @@ namespace FreeBuild.Geometry
         public Interval X
         {
             get { return new Interval(MinX, MaxX); }
-            set { MinX = value.Min; MaxX = value.Max; }
+            set { MinX = value.Start; MaxX = value.End; }
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace FreeBuild.Geometry
         public Interval Y
         {
             get { return new Interval(MinY, MaxY); }
-            set { MinY = value.Min; MaxY = value.Max; }
+            set { MinY = value.Start; MaxY = value.End; }
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace FreeBuild.Geometry
         public Interval Z
         {
             get { return new Interval(MinZ, MaxZ); }
-            set { MinZ = value.Min; MaxZ = value.Max; }
+            set { MinZ = value.Start; MaxZ = value.End; }
         }
 
         /// <summary>
