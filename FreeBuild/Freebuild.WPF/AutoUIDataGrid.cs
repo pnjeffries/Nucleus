@@ -78,6 +78,7 @@ namespace FreeBuild.WPF
             foreach (PropertyInfo property in properties)
             {
                 Binding binding = new Binding(property.Name);
+                binding.Converter = new TextConverter();
                 DataGridColumn column;
                 AutoUIAttribute aUI = property.GetCustomAttribute<AutoUIAttribute>(); ;
                 if (property.HasAttribute(typeof(AutoUIComboBoxAttribute)))

@@ -194,8 +194,9 @@ namespace FreeBuild.Extensions
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static IList<PropertyInfo> GetAutoUIProperties(this IEnumerable<Type> types)
+        public static IList<PropertyInfo> GetAutoUIProperties(this IEnumerable<Type> types, bool allowDuplicateNames = false)
         {
+            HashSet<string> names = new HashSet<string>();
             SortedList<double, PropertyInfo> result = new SortedList<double, PropertyInfo>();
             foreach (Type type in types)
             {
@@ -203,12 +204,13 @@ namespace FreeBuild.Extensions
                 foreach (PropertyInfo pInfo in pInfos)
                 {
                     object[] attributes = pInfo.GetCustomAttributes(typeof(AutoUIAttribute), true);
-                    if (attributes.Count() > 0)
+                    if (attributes.Count() > 0 && (allowDuplicateNames || !names.Contains(pInfo.Name)))
                     {
                         AutoUIAttribute aInput = (AutoUIAttribute)attributes[0];
                         double keyValue = aInput.Order;
                         while (result.ContainsKey(keyValue)) keyValue = keyValue.NextValidValue();
                         result.Add(keyValue, pInfo);
+                        names.Add(pInfo.Name);
                     }
                 }
             }
