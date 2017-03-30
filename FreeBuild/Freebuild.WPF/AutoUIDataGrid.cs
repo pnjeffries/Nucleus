@@ -1,4 +1,5 @@
-﻿using FreeBuild.Extensions;
+﻿using FreeBuild.Base;
+using FreeBuild.Extensions;
 using FreeBuild.UI;
 using FreeBuild.WPF.Converters;
 using System;
@@ -74,11 +75,16 @@ namespace FreeBuild.WPF
         {
             Columns.Clear(); // Clear previous columns
             // TODO: Keep manually-added columns?
+            Model.Model model = null;
+            if (ItemsSource != null && ItemsSource is IOwned<Model.Model>)
+            {
+                model = ((IOwned<Model.Model>)ItemsSource).Owner;
+            }
 
             foreach (PropertyInfo property in properties)
             {
                 Binding binding = new Binding(property.Name);
-                binding.Converter = new TextConverter();
+                binding.Converter = new TextConverter(model);
                 DataGridColumn column;
                 AutoUIAttribute aUI = property.GetCustomAttribute<AutoUIAttribute>(); ;
                 if (property.HasAttribute(typeof(AutoUIComboBoxAttribute)))
