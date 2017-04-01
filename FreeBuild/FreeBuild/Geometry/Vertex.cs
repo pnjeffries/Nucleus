@@ -329,6 +329,15 @@ namespace FreeBuild.Geometry
             return _Position.X.CompareTo(other.X);
         }
 
+        /// <summary>
+        /// Covert this vertex to its string representation
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return Position.ToString();
+        }
+
         #endregion
 
     }

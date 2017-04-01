@@ -148,19 +148,33 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
-        /// Calculate the surface area of this mesh's faces
+        /// Calculate the surface area of this mesh's faces.
+        /// NOTE: CENTROID CALCULATION NOT CURRENTLY IMPLEMENTED
         /// </summary>
         /// <param name="centroid"></param>
         /// <returns></returns>
         public override double CalculateArea(out Vector centroid)
         {
-            throw new NotImplementedException();
+            double result = 0;
             foreach (MeshFace face in Faces)
             {
-                //TODO!
+                double faceArea = face.CalculateArea();
+                result += faceArea;
+                //TODO: Implement centroid calc
             }
+
+            throw new NotImplementedException(); // Just so I don't forget!
+
+            centroid = Vector.Unset; // TEMP!
+
+            return result;
         }
-        
+
+        public override string ToString()
+        {
+            return "Mesh";
+        }
+
 
         #endregion
 
@@ -214,7 +228,7 @@ namespace FreeBuild.Geometry
             //        bool bum = true;
             //    }
 
-                IList<MeshEdge> edges = new List<MeshEdge>(); //The edges of replaced triangles
+                IList<TemporaryMeshEdge> edges = new List<TemporaryMeshEdge>(); //The edges of replaced triangles
 
                 for (int i = faces.Count - 1; i >= 0; i--)
                 {
@@ -238,7 +252,7 @@ namespace FreeBuild.Geometry
                 //Replaced with bespoke version 
                 for (int i = edges.Count - 2; i >= 0; i--)
                 {
-                    MeshEdge itemA = edges[i];
+                    TemporaryMeshEdge itemA = edges[i];
                     for (int j = edges.Count - 1; j > i; j--)
                     {
                         if (itemA.Equals(edges[j]))
@@ -252,7 +266,7 @@ namespace FreeBuild.Geometry
                 }
 
                 // Add triangle fan between all remaining edges and the new vertex
-                foreach (MeshEdge edge in edges)
+                foreach (TemporaryMeshEdge edge in edges)
                 {
                     faces.Add(new DelaunayTriangle(edge, v));
                 }

@@ -211,6 +211,11 @@ namespace FreeBuild.Geometry
             return 0;
         }
 
+        public override string ToString()
+        {
+            return "Planar Region";
+        }
+
         #endregion
     }
 }

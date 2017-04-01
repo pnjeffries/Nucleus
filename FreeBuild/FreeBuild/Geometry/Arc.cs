@@ -440,6 +440,11 @@ namespace FreeBuild.Geometry
                 return ((theta * 2) - Math.Sin(theta * 2)) * (radius.Power(4)) / 16;
         }
 
+        public override string ToString()
+        {
+            return "Arc";
+        }
+
         #endregion
 
         #region Static Methods

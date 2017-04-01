@@ -97,5 +97,14 @@ namespace FreeBuild.Geometry
         }
 
         #endregion
+
+        #region Methods
+
+        public override string ToString()
+        {
+            return "Point{" + Vertex.ToString() + "}";
+        }
+
+        #endregion
     }
 }

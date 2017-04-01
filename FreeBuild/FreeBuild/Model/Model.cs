@@ -138,7 +138,7 @@ namespace FreeBuild.Model
             {
                 if (_CoordinateSystems == null)
                 {
-                    _CoordinateSystems = new UserCoordinateSystemReferenceTable(); //TODO: Link to model?
+                    _CoordinateSystems = new UserCoordinateSystemReferenceTable(this); //TODO: Link to model?
                     _CoordinateSystems.CollectionChanged += HandlesInternalCollectionChanged;
                 }
                 return _CoordinateSystems;

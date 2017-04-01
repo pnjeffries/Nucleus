@@ -446,6 +446,11 @@ namespace FreeBuild.Geometry
             return new PolyLine(pts, closed, Attributes);
         }
 
+        public override string ToString()
+        {
+            return "PolyCurve";
+        }
+
         #endregion
 
         #region Static Methods

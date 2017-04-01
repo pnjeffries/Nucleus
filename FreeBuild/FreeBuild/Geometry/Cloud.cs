@@ -114,6 +114,11 @@ namespace FreeBuild.Geometry
             return vertex;
         }
 
+        public override string ToString()
+        {
+            return "Point Cloud";
+        }
+
         #endregion
 
     }

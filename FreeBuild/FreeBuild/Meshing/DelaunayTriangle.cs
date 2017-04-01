@@ -91,7 +91,7 @@ namespace FreeBuild.Meshing
         /// </summary>
         /// <param name="edge"></param>
         /// <param name="v"></param>
-        public DelaunayTriangle(MeshEdge edge, Vertex v) : base(edge, v) { }
+        public DelaunayTriangle(TemporaryMeshEdge edge, Vertex v) : base(edge, v) { }
 
         #endregion
 

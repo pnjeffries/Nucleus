@@ -123,7 +123,7 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="edge"></param>
         /// <param name="v"></param>
-        public MeshFace(MeshEdge edge, Vertex v) : base(3)
+        public MeshFace(TemporaryMeshEdge edge, Vertex v) : base(3)
         {
             Add(edge.Start);
             Add(edge.End);
@@ -194,18 +194,18 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public MeshEdge GetEdge(int index)
+        public TemporaryMeshEdge GetEdge(int index)
         {
-            return new MeshEdge(this[index], this.GetWrapped(index + 1));
+            return new TemporaryMeshEdge(this[index], this.GetWrapped(index + 1));
         }
 
         /// <summary>
         /// Get all edges of this face
         /// </summary>
         /// <returns></returns>
-        public MeshEdge[] GetEdges()
+        public TemporaryMeshEdge[] GetEdges()
         {
-            MeshEdge[] result = new MeshEdge[Count];
+            TemporaryMeshEdge[] result = new TemporaryMeshEdge[Count];
             for (int i = 0; i < Count; i++)
             {
                 result[i] = GetEdge(i);
@@ -558,6 +558,27 @@ namespace FreeBuild.Geometry
                         }
                     }
                 }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Calculate the surface area of this face using the half cross-product formula.
+        /// For quad and n-gon faces, the face will be treated as a triangle fan around the first vertex
+        /// (i.e. it is assumed to be non-reentrant).
+        /// </summary>
+        /// <returns></returns>
+        public double CalculateArea()
+        {
+            double result = 0;
+            Vertex vA = this[0];
+            for (int i = 0; i < Count - 2; i++)
+            {
+                Vertex vB = this[i + 1];
+                Vertex vC = this[i + 2];
+                Vector AB = vB.Position - vA.Position;
+                Vector AC = vC.Position - vA.Position;
+                result += (AB.Cross(AC)).Magnitude() / 2;
             }
             return result;
         }

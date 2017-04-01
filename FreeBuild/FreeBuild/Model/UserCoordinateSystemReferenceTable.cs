@@ -13,6 +13,16 @@ namespace FreeBuild.Model
     [Serializable]
     public class UserCoordinateSystemReferenceTable : UserCoordinateSystemReferenceCollection
     {
+        #region Constructors
+
+        /// <summary>
+        /// Owner constructor.  Initialises a model object collection with an owning model.
+        /// </summary>
+        /// <param name="model"></param>
+        public UserCoordinateSystemReferenceTable(Model model) : base(model) { }
+
+        #endregion
+
         #region Methods
 
         /// <summary>

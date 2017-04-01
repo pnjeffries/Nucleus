@@ -624,6 +624,10 @@ namespace FreeBuild.Geometry
             return IxxR + aR * yCR * yCR + IxxT + aT * yCT * yCT;
         }
 
+        public override string ToString()
+        {
+            return "Curve";
+        }
 
         #endregion
     }

@@ -14,6 +14,16 @@ namespace FreeBuild.Model
     public abstract class CoordinateSystemReferenceCollection<TItem> : ModelObjectCollection<TItem>
         where TItem : CoordinateSystemReference
     {
+        /// <summary>
+        /// Default constructor.  Initialises a new model object collection
+        /// </summary>
+        public CoordinateSystemReferenceCollection() : base() { }
+
+        /// <summary>
+        /// Owner constructor.  Initialises a model object collection with an owning model.
+        /// </summary>
+        /// <param name="model"></param>
+        protected CoordinateSystemReferenceCollection(Model model) : base(model) { }
     }
 
     /// <summary>
@@ -22,5 +32,15 @@ namespace FreeBuild.Model
     [Serializable]
     public class CoordinateSystemReferenceCollection : CoordinateSystemReferenceCollection<CoordinateSystemReference>
     {
+        /// <summary>
+        /// Default constructor.  Initialises a new model object collection
+        /// </summary>
+        public CoordinateSystemReferenceCollection() : base() { }
+
+        /// <summary>
+        /// Owner constructor.  Initialises a model object collection with an owning model.
+        /// </summary>
+        /// <param name="model"></param>
+        protected CoordinateSystemReferenceCollection(Model model) : base(model) { }
     }
 }

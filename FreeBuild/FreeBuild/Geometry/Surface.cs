@@ -51,6 +51,11 @@ namespace FreeBuild.Geometry
             return CalculateArea(out centroid);
         }
 
+        public override string ToString()
+        {
+            return "Surface";
+        }
+
         #endregion
     }
 }

@@ -222,6 +222,11 @@ namespace FreeBuild.Geometry
             return result;
         }
 
+        public override string ToString()
+        {
+            return "Line{" + Start.ToString() + " to " + End.ToString() + "}";
+        }
+
         #endregion
 
     }
