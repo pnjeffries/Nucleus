@@ -123,7 +123,7 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="edge"></param>
         /// <param name="v"></param>
-        public MeshFace(TemporaryMeshEdge edge, Vertex v) : base(3)
+        public MeshFace(MeshEdge edge, Vertex v) : base(3)
         {
             Add(edge.Start);
             Add(edge.End);
@@ -194,23 +194,56 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public TemporaryMeshEdge GetEdge(int index)
+        public MeshEdge GetEdge(int index)
         {
-            return new TemporaryMeshEdge(this[index], this.GetWrapped(index + 1));
+            return new MeshEdge(this[index], this.GetWrapped(index + 1));
         }
 
         /// <summary>
         /// Get all edges of this face
         /// </summary>
         /// <returns></returns>
-        public TemporaryMeshEdge[] GetEdges()
+        public MeshEdge[] GetEdges()
         {
-            TemporaryMeshEdge[] result = new TemporaryMeshEdge[Count];
+            MeshEdge[] result = new MeshEdge[Count];
             for (int i = 0; i < Count; i++)
             {
                 result[i] = GetEdge(i);
             }
             return result;
+        }
+
+        /// <summary>
+        /// Find the index of the closest edge in this mesh face to the specified point
+        /// </summary>
+        /// <param name="toPoint">The point to check against</param>
+        /// <returns></returns>
+        public int ClosestEdge(Vector toPoint)
+        {
+            int minIndex = -1;
+            double minDist = double.MaxValue;
+            for (int i = 0; i < Count; i++)
+            {
+                double dist = DistanceToEdgeSquared(i, toPoint);
+                if (minIndex < 0 || dist < minDist)
+                {
+                    minIndex = i;
+                    minDist = dist;
+                }
+            }
+            return minIndex;
+        }
+
+        /// <summary>
+        /// Calculate the square of the distance from the specified position to the edge at the specified index
+        /// </summary>
+        /// <param name="index">The edge index to test against</param>
+        /// <param name="point">The point to test</param>
+        /// <returns></returns>
+        public double DistanceToEdgeSquared(int index, Vector point)
+        {
+            Vector cPt = Line.ClosestPoint(this[index].Position, this.GetWrapped(index + 1).Position, point);
+            return point.DistanceToSquared(cPt);
         }
 
         /// <summary>

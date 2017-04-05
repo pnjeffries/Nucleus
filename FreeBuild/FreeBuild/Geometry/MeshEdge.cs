@@ -31,7 +31,7 @@ namespace FreeBuild.Geometry
     /// A temporary construct used during certain mesh operations - does not
     /// form part of the core definition of a mesh geometry
     /// </summary>
-    public struct TemporaryMeshEdge
+    public struct MeshEdge
     {
         #region Properties
 
@@ -80,7 +80,7 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="start"></param>
         /// <param name="end"></param>
-        public TemporaryMeshEdge(Vertex start, Vertex end)
+        public MeshEdge(Vertex start, Vertex end)
         {
             Start = start;
             End = end;
@@ -97,10 +97,10 @@ namespace FreeBuild.Geometry
 
         public override bool Equals(object obj)
         {
-            return this == (TemporaryMeshEdge)obj;
+            return this == (MeshEdge)obj;
         }
 
-        public bool Equals(ref TemporaryMeshEdge other)
+        public bool Equals(ref MeshEdge other)
         {
             return ((Start == other.Start && End == other.End) || (Start == other.End && End == other.Start));
         }
@@ -116,7 +116,7 @@ namespace FreeBuild.Geometry
         /// <param name="edge1"></param>
         /// <param name="edge2"></param>
         /// <returns></returns>
-        public static bool operator == (TemporaryMeshEdge edge1, TemporaryMeshEdge edge2)
+        public static bool operator == (MeshEdge edge1, MeshEdge edge2)
         {
             //if (ReferenceEquals(edge1, edge2)) return true;
             //else if ((object)edge1 == null || (object)edge2 == null) return false;
@@ -131,7 +131,7 @@ namespace FreeBuild.Geometry
         /// <param name="edge1"></param>
         /// <param name="edge2"></param>
         /// <returns></returns>
-        public static bool operator != (TemporaryMeshEdge edge1, TemporaryMeshEdge edge2)
+        public static bool operator != (MeshEdge edge1, MeshEdge edge2)
         {
             return !(edge1 == edge2);
         }

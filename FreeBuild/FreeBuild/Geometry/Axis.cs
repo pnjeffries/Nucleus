@@ -134,7 +134,7 @@ namespace FreeBuild.Geometry
         /// <returns>The parameter on this axis describing the closest point to the other axis.
         /// Use PointAt to resolve this into a vector if required.</returns>
         /// <remarks>Algorithm based on http://geomalgorithms.com/a07-_distance.html </remarks>
-        public double Closest(Axis other, out double t)
+        public double ClosestParameter(Axis other, out double t)
         {
             Vector w0 = Origin - other.Origin; //w0 = P0 - Q0
             double a = Direction.Dot(Direction); //a = u*u
@@ -156,10 +156,10 @@ namespace FreeBuild.Geometry
         /// <returns>The parameter on this axis describing the closest point to the other axis.
         /// Use PointAt to resolve this into a vector if required.</returns>
         /// <remarks>Algorithm based on http://geomalgorithms.com/a07-_distance.html </remarks>
-        public double Closest(Axis other)
+        public double ClosestParameter(Axis other)
         {
             double t;
-            return Closest(other, out t);
+            return ClosestParameter(other, out t);
         }
 
         /// <summary>
@@ -199,7 +199,35 @@ namespace FreeBuild.Geometry
             return pt0 + v0 * s;
         }
 
-       
+        /// <summary>
+        /// Find the position along an infinite axis expressed by an origin point and
+        /// direction which is closest to a point, expressed as a multiplication factor of that
+        /// direction vector from that origin.
+        /// </summary>
+        /// <param name="origin">The origin point of the axis</param>
+        /// <param name="direction">The direction vector of the axis</param>
+        /// <param name="point">The point to find the closest distance to</param>
+        /// <returns></returns>
+        public static double ClosestParameter(Vector origin, Vector direction, Vector point)
+        {
+            Vector OP = point - origin;
+            return OP.Dot(direction) / direction.MagnitudeSquared();
+        }
+
+        /// <summary>
+        /// Find the position along an infinite axis expressed by an origin point and
+        /// direction which is closest to a point, expressed as a point
+        /// </summary>
+        /// <param name="origin">The origin point of the axis</param>
+        /// <param name="direction">The direction vector of the axis</param>
+        /// <param name="point">The point to find the closest distance to</param>
+        /// <returns></returns>
+        public static Vector ClosestPoint(Vector origin, Vector direction, Vector point)
+        {
+            Vector OP = point - origin;
+            double t = OP.Dot(direction) / direction.MagnitudeSquared();
+            return origin + direction * t;
+        }
 
         #endregion
     }

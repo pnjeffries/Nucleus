@@ -150,5 +150,31 @@ namespace FreeBuild.Model
 
         #endregion
 
+        #region Methods
+
+        /// <summary>
+        /// Orientate this element such that the local Z axis at the centre of the element
+        /// will point as closely as possible towards the given point, plus an additional offset angle
+        /// </summary>
+        /// <param name="point">The point to orientate the element Z axis towards</param>
+        /// <param name="offset">An offset angle to be applied to the calculated orientation angle</param>
+        public void OrientateTowards(Vector point, Angle offset)
+        {
+            var coordSys = Geometry.LocalCoordinateSystem(0.5, Angle.Zero);
+            Orientation = coordSys.YZPlane().GlobalToLocal(point).Angle + offset;
+        }
+
+        /// <summary>
+        /// Orientate this element such that the local Z axis at the centre of the element
+        /// will point as closely as possible towards the given point.
+        /// </summary>
+        /// <param name="point">The point to orientate the element Z axis towards</param>
+        public void OrientateTowards(Vector point)
+        {
+            OrientateTowards(point, Angle.Zero);
+        }
+
+        #endregion
+
     }
 }

@@ -461,15 +461,22 @@ namespace FreeBuild.Geometry
         /// <param name="depth">The depth of the rectangle</param>
         /// <param name="width">The width of the rectangle</param>
         /// <returns></returns>
-        public static PolyCurve Rectangle(double depth, double width)
+        public static PolyCurve Rectangle(double depth, double width, double cornerRadius = 0.0)
         {
+            cornerRadius = Math.Max(cornerRadius, 0.0);
             double x = width / 2;
             double y = depth / 2;
+            double x2 = Math.Max(width / 2 - cornerRadius, 0.0);
+            double y2 = Math.Max(depth / 2 - cornerRadius, 0.0);
 
-            PolyCurve result = new PolyCurve(new Line(x,y,-x, y));
-            result.AddLine(-x, -y);
-            result.AddLine(x, -y);
-            result.AddLine(x, y);
+            PolyCurve result = new PolyCurve(new Line(x2,y,-x2, y));
+            if (cornerRadius > 0) result.AddArcTangent(new Vector(-1, 0, 0), new Vector(-x, y2));
+            result.AddLine(-x, -y2);
+            if (cornerRadius > 0) result.AddArc(-x2, y);
+            result.AddLine(x2, -y);
+            if (cornerRadius > 0) result.AddArc(x, -y2);
+            result.AddLine(x, y2);
+            if (cornerRadius > 0) result.AddArc(x2, y);
 
             return result;
         }

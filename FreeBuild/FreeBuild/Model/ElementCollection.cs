@@ -103,6 +103,19 @@ namespace FreeBuild.Model
             }
         }
 
+        /// <summary>
+        /// Generate or update nodes within this collection to structurally represent
+        /// the vertices of elements.
+        /// </summary>
+        /// <param name="options"></param>
+        public void GenerateNodes(NodeGenerationParameters options)
+        {
+            foreach (Element element in this)
+            {
+                if (!element.IsDeleted) element.GenerateNodes(options);
+            }
+        }
+
         #endregion
     }
 

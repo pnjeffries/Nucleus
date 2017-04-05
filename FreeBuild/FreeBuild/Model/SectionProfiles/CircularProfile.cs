@@ -25,58 +25,38 @@ using System.Text;
 using System.Threading.Tasks;
 using FreeBuild.Geometry;
 using FreeBuild.Units;
+using FreeBuild.Extensions;
 
 namespace FreeBuild.Model
 {
     /// <summary>
-    /// Parametric profile type to represent rectangular profiles and
+    /// Parametric profile type to represent circular profiles and
     /// to act as a base class for section types which have a broadly
-    /// rectangular shape and posess width and height dimensions.
+    /// circular shape and posess a diameter dimension.
     /// </summary>
     [Serializable]
-    public class RectangularProfile : ParameterProfile
+    public class CircularProfile : ParameterProfile
     {
         #region Properties
 
         /// <summary>
         /// Private backing member variable for the Depth property
         /// </summary>
-        private double _Depth;
+        private double _Diameter;
 
         /// <summary>
         /// The depth of the section
         /// </summary>
         [Dimension(DimensionType.Distance)]
-        public double Depth
+        public double Diameter
         {
-            get { return _Depth; }
+            get { return _Diameter; }
             set
             {
-                _Depth = value;
+                _Diameter = value;
                 CatalogueName = null;
                 InvalidateCachedGeometry();
-                NotifyPropertyChanged("Depth");
-            }
-        }
-
-        /// <summary>
-        /// Private backing member variable for the Width property
-        /// </summary>
-        private double _Width;
-
-        /// <summary>
-        /// The width of the section
-        /// </summary>
-        [Dimension(DimensionType.Distance)]
-        public double Width
-        {
-            get { return _Width; }
-            set
-            {
-                _Width = value;
-                CatalogueName = null;
-                InvalidateCachedGeometry();
-                NotifyPropertyChanged("Width");
+                NotifyPropertyChanged("Diameter");
             }
         }
 
@@ -87,7 +67,7 @@ namespace FreeBuild.Model
         /// It gives the overall bounding dimension of the profile
         /// (i.e. the depth between extreme points).
         /// </summary>
-        public override double OverallDepth { get { return _Depth; } }
+        public override double OverallDepth { get { return _Diameter; } }
 
         /// <summary>
         /// Get the overall width of this section profile.
@@ -96,26 +76,37 @@ namespace FreeBuild.Model
         /// It gives the overall bounding dimension of the profile
         /// (i.e. the width between extreme points).
         /// </summary>
-        public override double OverallWidth { get { return _Width; } }
+        public override double OverallWidth { get { return _Diameter; } }
 
         #endregion
 
         #region Constructors
 
         /// <summary>
-        /// Default constructor
+        /// Initialises a new Circular profile without any set parameters.
         /// </summary>
-        public RectangularProfile() { }
+        public CircularProfile() { }
 
         /// <summary>
-        /// Initialises a Rectangular profile with the specified depth and width
+        /// Initialises a new Circlular profile with the specified diameter
         /// </summary>
-        /// <param name="depth">The depth of the section</param>
-        /// <param name="width">The width of the section</param>
-        public RectangularProfile(double depth, double width)
+        /// <param name="diameter"></param>
+        public CircularProfile(double diameter)
         {
-            Depth = depth;
-            Width = width;
+            Diameter = diameter;
+        }
+
+        // <summary>
+        /// Initialise a CircularProfile based on dimensions specified by a string.
+        /// The string should consist of numeric values in mm separated by spaces,
+        /// x's or the multiplication sign '×' and in the order Depth, Width,
+        /// Flange Thickness, Web Thickness, Root Radius
+        /// </summary>
+        /// <param name="dimensionString"></param>
+        public CircularProfile(string dimensionString)
+        {
+            string[] tokens = dimensionString.Split('x', '×', ' ');
+            if (tokens.Length > 0) Diameter = tokens[0].ToDouble(0) / 1000;
         }
 
         #endregion
@@ -124,12 +115,18 @@ namespace FreeBuild.Model
 
         protected override Curve GeneratePerimeter()
         {
-            return PolyCurve.Rectangle(Depth, Width);
+            return new Arc(new Circle(Diameter / 2));
         }
 
         protected override CurveCollection GenerateVoids()
         {
             return new CurveCollection();
+        }
+
+        public override string GenerateDescription()
+        {
+            return string.Format("Circ {0:0.##}",
+                Diameter * 1000);
         }
 
         #endregion

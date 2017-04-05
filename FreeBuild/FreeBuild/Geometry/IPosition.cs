@@ -70,6 +70,31 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Find the distance between the position of this object and the
+        /// position of another IPosition-implementing object
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public static double DistanceTo(this IPosition thisIPos, Vector point)
+        {
+            return thisIPos.Position.DistanceTo(point);
+        }
+
+        /// <summary>
+        /// Find the squared distance between the position of this object and
+        /// the position of another IPosition-implementing object.
+        /// This operation will be more efficient that the DistanceTo alternative
+        /// as it does not involve a (slow) square-root operation.
+        /// </summary>
+        /// <param name="thisIPos"></param>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public static double DistanceToSquared(this IPosition thisIPos, Vector point)
+        {
+            return thisIPos.Position.DistanceToSquared(point);
+        }
+
+        /// <summary>
         /// Check for containment of a point within a polygon with these vertices on the XY plane
         /// </summary>
         /// <param name="point">The point to test for containment</param>
@@ -182,6 +207,34 @@ namespace FreeBuild.Geometry
                 {
                     result = position;
                     minDist = dist;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Find the closest object in this set to the specified position that lies in the specified direction
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="positions"></param>
+        /// <param name="toPoint"></param>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public static T FindClosestInDirection<T>(this IEnumerable<T> positions, Vector toPoint, Vector direction)
+            where T:class, IPosition
+        {
+            T result = null;
+            double minDist = 0;
+            foreach (T position in positions)
+            {
+                if (position.Position.IsInDirection(direction, toPoint))
+                {
+                    double dist = position.DistanceToSquared(toPoint);
+                    if (result == null || dist < minDist)
+                    {
+                        result = position;
+                        minDist = dist;
+                    }
                 }
             }
             return result;

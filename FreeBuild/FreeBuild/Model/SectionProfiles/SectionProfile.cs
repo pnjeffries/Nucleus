@@ -236,6 +236,68 @@ namespace FreeBuild.Model
             }
         }
 
+        public override string ToString()
+        {
+            if (CatalogueName != null) return CatalogueName;
+            else return GenerateDescription();
+        }
+
+        /// <summary>
+        /// Generate the string description of this profi
+        /// </summary>
+        /// <returns></returns>
+        public abstract string GenerateDescription();
+
+        #endregion
+
+        #region Static Methods
+
+        public static SectionProfile FromDescription(string description, SectionProfileLibrary catalogue = null)
+        {
+            if (catalogue != null)
+            {
+                // Check in catalogue:
+                SectionProfile profile = catalogue.GetByCatalogueName(description);
+                if (profile != null) return profile;
+            }
+
+            string[] tokens = description.Split(' ');
+            if (tokens.Length > 1)
+            {
+                switch(tokens[0].Trim().ToUpper())
+                {
+                    case "I":
+                        return new SymmetricIProfile(tokens[1]);
+                    case "T":
+                        return new TProfile(tokens[1]);
+                    case "A":
+                        return new AngleProfile(tokens[1]);
+                    case "CIRC":
+                        return new CircularProfile(tokens[1]);
+                    case "CHS":
+                        return new CircularHollowProfile(tokens[1]);
+                    case "RECT":
+                        return new RectangularProfile(tokens[1]);
+                    case "RHS":
+                        return new RectangularProfile(tokens[1]);
+                }
+                throw new NotImplementedException(); //If we're here, we haven't caught the case
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Split the specified dimesion string into its constituent parts for subsequent
+        /// parsing as dimension parameters
+        /// </summary>
+        /// <param name="dimensionString"></param>
+        /// <returns></returns>
+        protected string[] TokeniseDimensionString(string dimensionString)
+        {
+            return dimensionString.Split('x', '×', ' ');
+        }
+
         #endregion
     }
 }

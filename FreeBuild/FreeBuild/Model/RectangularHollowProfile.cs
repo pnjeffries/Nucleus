@@ -25,6 +25,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FreeBuild.Geometry;
+using FreeBuild.Extensions;
 
 namespace FreeBuild.Model
 {
@@ -101,11 +102,29 @@ namespace FreeBuild.Model
         /// <param name="width"></param>
         /// <param name="flangeThickness"></param>
         /// <param name="webThickness"></param>
-        public RectangularHollowProfile(double depth, double width, double flangeThickness, double webThickness)
-            :base(depth, width)
+        public RectangularHollowProfile(double depth, double width, double flangeThickness, double webThickness, double cornerRadius = 0.0)
+            :base(depth, width, cornerRadius)
         {
             FlangeThickness = flangeThickness;
             WebThickness = webThickness;
+        }
+
+        /// <summary>
+        /// Initialise a rectangular hollow profile based on dimensions specified by a string.
+        /// The string should consist of numeric values in mm separated by spaces,
+        /// x's or the multiplication sign '×' and in the order Depth, Width, Flange Thickness,
+        /// Web Thickness, Corner Radius
+        /// Corner Radius
+        /// </summary>
+        /// <param name="dimensionString"></param>
+        public RectangularHollowProfile(string dimensionString)
+        {
+            string[] tokens = TokeniseDimensionString(dimensionString);
+            if (tokens.Length > 0) Depth = tokens[0].ToDouble(0) / 1000;
+            if (tokens.Length > 1) Width = tokens[1].ToDouble(0) / 1000;
+            if (tokens.Length > 2) FlangeThickness = tokens[2].ToDouble(0) / 1000;
+            if (tokens.Length > 3) WebThickness = tokens[3].ToDouble(0) / 1000;
+            if (tokens.Length > 4) CornerRadius = tokens[4].ToDouble(0) / 1000;
         }
 
         #endregion
@@ -115,9 +134,19 @@ namespace FreeBuild.Model
         protected override CurveCollection GenerateVoids()
         {
             CurveCollection result = new CurveCollection();
-            Curve voidCrv = PolyCurve.Rectangle(Depth - 2 * FlangeThickness, Width - 2 * WebThickness);
+            Curve voidCrv = 
+                PolyCurve.Rectangle(
+                    Depth - 2 * FlangeThickness, 
+                    Width - 2 * WebThickness,
+                    CornerRadius - Math.Max(FlangeThickness, WebThickness));
             if (voidCrv != null) result.Add(voidCrv);
             return result;
+        }
+
+        public override string GenerateDescription()
+        {
+            return string.Format("RHS {0:0.##}×{1:0.##}×{2:0.##}×{3:0.##}",
+                Depth * 1000, Width * 1000, FlangeThickness * 1000, WebThickness * 1000);
         }
 
         #endregion

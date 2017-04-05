@@ -24,6 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FreeBuild.Geometry;
+using FreeBuild.Extensions;
 
 namespace FreeBuild.Model
 {
@@ -79,6 +80,19 @@ namespace FreeBuild.Model
             WallThickness = wallThickness;
         }
 
+        // <summary>
+        /// Initialise a CircularProfile based on dimensions specified by a string.
+        /// The string should consist of numeric values in mm separated by spaces,
+        /// x's or the multiplication sign '×' and in the order Diameter, Wall Thickness.
+        /// </summary>
+        /// <param name="dimensionString"></param>
+        public CircularHollowProfile(string dimensionString)
+        {
+            string[] tokens = dimensionString.Split('x', '×', ' ');
+            if (tokens.Length > 0) Diameter = tokens[0].ToDouble(0) / 1000;
+            if (tokens.Length > 1) WallThickness = tokens[1].ToDouble(0) / 1000;
+        }
+
         #endregion
 
         #region Methods
@@ -92,6 +106,12 @@ namespace FreeBuild.Model
                 if (voidCrv != null) result.Add(voidCrv);
             }
             return result;
+        }
+
+        public override string GenerateDescription()
+        {
+            return string.Format("CHS {0:0.##}×{1:0.##}",
+                Diameter * 1000, WallThickness * 1000);
         }
 
         #endregion

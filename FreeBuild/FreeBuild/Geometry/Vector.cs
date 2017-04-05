@@ -708,6 +708,29 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Test whether this position lies in a particular direction from a point.
+        /// This test will return true for angle differences of below 90 degrees (non-inclusive)
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <param name="fromPoint"></param>
+        /// <returns></returns>
+        public bool IsInDirection(Vector direction, Vector fromPoint)
+        {
+            return (this - fromPoint).Dot(direction) > 0;
+        }
+
+        /// <summary>
+        /// Flip (or not) this vector to face in the same overall direction as another
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public Vector AlignTo(Vector other)
+        {
+            if (Dot(other) >= 0) return this;
+            else return Reverse(); 
+        }
+
+        /// <summary>
         /// Create a copy of this vector with its components rounded to the nearest whole
         /// increment
         /// </summary>

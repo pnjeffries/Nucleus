@@ -25,6 +25,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FreeBuild.Geometry;
+using FreeBuild.Extensions;
 
 namespace FreeBuild.Model
 {
@@ -184,6 +185,23 @@ namespace FreeBuild.Model
             FlangeThickness = flangeThickness;
             WebThickness = webThickness;
             RootRadius = rootRadius;
+        }
+
+        // <summary>
+        /// Initialise a LetterProfile based on dimensions specified by a string.
+        /// The string should consist of numeric values in mm separated by spaces,
+        /// x's or the multiplication sign '×' and in the order Depth, Width,
+        /// Flange Thickness, Web Thickness, Root Radius
+        /// </summary>
+        /// <param name="dimensionString"></param>
+        protected LetterProfile(string dimensionString)
+        {
+            string[] tokens = dimensionString.Split('x', '×', ' ');
+            if (tokens.Length > 0) Depth = tokens[0].ToDouble(0) / 1000;
+            if (tokens.Length > 1) Width = tokens[1].ToDouble(0) / 1000;
+            if (tokens.Length > 2) FlangeThickness = tokens[2].ToDouble(0) / 1000;
+            if (tokens.Length > 3) WebThickness = tokens[3].ToDouble(0) / 1000;
+            if (tokens.Length > 4) RootRadius = tokens[4].ToDouble(0) / 1000;
         }
 
 

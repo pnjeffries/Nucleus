@@ -171,14 +171,15 @@ namespace FreeBuild.Model
         /// </summary>
         /// <param name="newPosition"></param>
         /// <param name="dragVertices"></param>
-        public void MoveTo(Vector newPosition, bool dragVertices = true)
+        public void MoveTo(Vector newPosition, bool dragVertices = true, ElementCollection excludeElements = null)
         {
             Vector move = newPosition - Position;
             if (dragVertices)
             {
                 foreach (Vertex v in Vertices)
                 {
-                    v.Position += move;
+                    if (excludeElements == null || v.Element == null || !excludeElements.Contains(v.Element))
+                        v.Position += move;
                 }
             }
         }

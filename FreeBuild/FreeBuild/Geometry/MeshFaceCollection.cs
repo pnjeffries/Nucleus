@@ -144,6 +144,21 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Find and return the first face in this collection that encloses the specified
+        /// point in the XY plane.
+        /// </summary>
+        /// <param name="point">The point to test for</param>
+        /// <returns></returns>
+        public MeshFace FaceContainingXY(Vector point)
+        {
+            foreach (MeshFace face in this)
+            {
+                if (face.PolygonContainmentXY(point)) return face;
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Quadrangulate this mesh by merging adjacent tris into quads.
         /// The algorithm will prioritise merging the longest edges first
         /// </summary>

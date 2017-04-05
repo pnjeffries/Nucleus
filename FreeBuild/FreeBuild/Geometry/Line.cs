@@ -229,5 +229,25 @@ namespace FreeBuild.Geometry
 
         #endregion
 
+        #region Static Methods
+
+        /// <summary>
+        /// Find the closest point on a line segment specified by start and end points to
+        /// a test point.
+        /// </summary>
+        /// <param name="startPt">The start point of the line</param>
+        /// <param name="endPt">The end point of the line</param>
+        /// <param name="testPt">The point from which the distance is to be checked</param>
+        /// <returns></returns>
+        public static Vector ClosestPoint(Vector startPt, Vector endPt, Vector testPt)
+        {
+            Vector direction = endPt - startPt;
+            double t = Axis.ClosestParameter(startPt, direction, testPt);
+            if (t < 0) return startPt;
+            else if (t > 1.0) return endPt;
+            else return startPt + direction * t;
+        }
+
+        #endregion
     }
 }

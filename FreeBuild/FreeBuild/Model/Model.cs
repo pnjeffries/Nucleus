@@ -521,10 +521,8 @@ namespace FreeBuild.Model
         /// <param name="options"></param>
         public void GenerateNodes(NodeGenerationParameters options)
         {
-            foreach (Element element in Elements)
-            {
-                if (!element.IsDeleted) element.GenerateNodes(options);
-            }
+            Elements.GenerateNodes(options);
+
             if (options.DeleteUnusedNodes)
             {
                 foreach (Node node in Nodes)

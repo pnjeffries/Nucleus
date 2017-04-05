@@ -109,6 +109,24 @@ namespace FreeBuild.Extensions
         }
 
         /// <summary>
+        /// Convert this string to a double.  If the conversion cannot be made,
+        /// the specified fallback value (default: NaN) will be retured.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="fallbackValue">The value to be returned in the case that this string
+        /// cannot be successfully parsed into a double.</param>
+        /// <returns></returns>
+        public static double ToDouble(this string str, double fallbackValue = double.NaN)
+        {
+            double result;
+            if (double.TryParse(str, out result))
+            {
+                return result;
+            }
+            else return fallbackValue;
+        }
+
+        /// <summary>
         /// Removes all non-letter characters from the start and end of this string.
         /// </summary>
         /// <param name="str"></param>

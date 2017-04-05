@@ -175,6 +175,7 @@ namespace FreeBuild.Geometry
             return "Mesh";
         }
 
+        
 
         #endregion
 
@@ -195,7 +196,7 @@ namespace FreeBuild.Geometry
         /// initial generating supertriangle will be removed from the output face list.  Set this to false
         /// if planning on using this mesh for subsequent voronoi generation so that the edge cells can be extended.</param>
         /// <param name="outerVerts">Optional.  If input and non-null, this collection will be populated with the exterior vertices - those connected
-        /// to the original supertriangle</param>
+        /// to the original supertriangle.  If 'clean' is false, this will instead return the supertriangle vertices.</param>
         public static MeshFaceCollection DelaunayTriangulationXY(VertexCollection vertices, 
             MeshFaceCollection faces = null, BoundingBox bounds = null, bool clean = true, VertexCollection outerVerts = null)
         {
@@ -228,7 +229,7 @@ namespace FreeBuild.Geometry
             //        bool bum = true;
             //    }
 
-                IList<TemporaryMeshEdge> edges = new List<TemporaryMeshEdge>(); //The edges of replaced triangles
+                IList<MeshEdge> edges = new List<MeshEdge>(); //The edges of replaced triangles
 
                 for (int i = faces.Count - 1; i >= 0; i--)
                 {
@@ -252,7 +253,7 @@ namespace FreeBuild.Geometry
                 //Replaced with bespoke version 
                 for (int i = edges.Count - 2; i >= 0; i--)
                 {
-                    TemporaryMeshEdge itemA = edges[i];
+                    MeshEdge itemA = edges[i];
                     for (int j = edges.Count - 1; j > i; j--)
                     {
                         if (itemA.Equals(edges[j]))
@@ -266,7 +267,7 @@ namespace FreeBuild.Geometry
                 }
 
                 // Add triangle fan between all remaining edges and the new vertex
-                foreach (TemporaryMeshEdge edge in edges)
+                foreach (MeshEdge edge in edges)
                 {
                     faces.Add(new DelaunayTriangle(edge, v));
                 }
@@ -275,8 +276,12 @@ namespace FreeBuild.Geometry
             // Extract outer vertices
             if (outerVerts != null)
             {
-                var outerFaces = faces.AllWithVertices(new VertexCollection(superTriangle));
-                foreach (Vertex v in outerFaces.ExtractVertices()) outerVerts.Add(v);
+                if (clean)
+                {
+                    var outerFaces = faces.AllWithVertices(new VertexCollection(superTriangle));
+                    foreach (Vertex v in outerFaces.ExtractVertices()) outerVerts.Add(v);
+                }
+                else foreach (Vertex v in superTriangle) outerVerts.Add(v);
             }
 
             // Remove the super triangle and any triangles still attached to it
