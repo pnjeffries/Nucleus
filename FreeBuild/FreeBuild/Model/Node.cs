@@ -182,6 +182,26 @@ namespace FreeBuild.Model
                         v.Position += move;
                 }
             }
+            Position = newPosition;
+        }
+
+        /// <summary>
+        /// Calculate the average of the vectors from this node position to the centroid of connected elements.
+        /// </summary>
+        /// <returns></returns>
+        public Vector AverageConnectionDirection()
+        {
+            Vector result = Vector.Zero;
+            int count = 0;
+            foreach (Vertex v in Vertices)
+            {
+                if (v.Owner != null)
+                {
+                    //TODO
+                    //VertexGeometry vG = 
+                }
+            }
+            throw new NotImplementedException();
         }
 
         #endregion

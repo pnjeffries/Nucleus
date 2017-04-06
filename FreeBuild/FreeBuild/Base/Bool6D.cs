@@ -39,7 +39,7 @@ namespace FreeBuild.Base
     /// though this will be subject to review and may be changed.</remarks>
     [Serializable]
     [DebuggerDisplay("{ToString()}")]
-    public struct Bool6D
+    public struct Bool6D : IEquatable<Bool6D>
     {
         #region Fields
 
@@ -284,6 +284,79 @@ namespace FreeBuild.Base
             if (sb.Length == 0) sb.Append("-");
             return sb.ToString();
         }
+
+        /// <summary>
+        /// Obtain a new Bool6D with each dimension the logical OR
+        /// of the equivalent component in this and another Bool6D
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public Bool6D Or(Bool6D other)
+        {
+            return new Bool6D(
+                X || other.X,
+                Y || other.Y,
+                Z || other.Z,
+                XX || other.XX,
+                YY || other.YY,
+                ZZ || other.ZZ);
+        }
+
+        /// <summary>
+        /// Obtain a new Bool6D with each dimension the logical AND
+        /// of the equivalent component in this and another Bool6D
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public Bool6D And(Bool6D other)
+        {
+            return new Bool6D(
+                X && other.X,
+                Y && other.Y,
+                Z && other.Z,
+                XX && other.XX,
+                YY && other.YY,
+                ZZ && other.ZZ);
+        }
+
+        /// <summary>
+        /// Does this Bool6D equal another?
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(Bool6D other)
+        {
+            return X == other.X && Y == other.Y && Z == other.Z &&
+                XX == other.XX && YY == other.YY && ZZ == other.ZZ;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Bool6D) return Equals((Bool6D)obj);
+            else return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode()
+                ^ XX.GetHashCode() ^ YY.GetHashCode() ^ ZZ.GetHashCode();
+        }
+
+        #endregion
+
+        #region Operators
+
+        public static Bool6D operator |(Bool6D a, Bool6D b)
+            => a.Or(b);
+
+        public static Bool6D operator &(Bool6D a, Bool6D b)
+            => a.And(b);
+
+        public static bool operator ==(Bool6D a, Bool6D b)
+            => a.Equals(b);
+
+        public static bool operator !=(Bool6D a, Bool6D b)
+            => !a.Equals(b);
 
         #endregion
     }

@@ -341,12 +341,15 @@ namespace FreeBuild.Meshing
         public void FillBetween(IList<Vector> pointStrip1, IList<Vector> pointStrip2, bool reverse = false, bool close = false)
         {
             int max = Math.Max(pointStrip1.Count, pointStrip2.Count) - 1;
+            // Calculate adjustment factors for the case where one strip has less items than the other:
+            double factor1 = ((double)pointStrip1.Count) / max;
+            double factor2 = ((double)pointStrip2.Count) / max;
             for (int i = 0; i < max; i++)
             {
-                Vector v1 = pointStrip2.GetBounded(i, reverse);
-                Vector v2 = pointStrip1.GetBounded(i);
-                Vector v3 = pointStrip1.GetBounded(i + 1);
-                Vector v4 = pointStrip2.GetBounded(i + 1, reverse);
+                Vector v1 = pointStrip2.GetBounded((int)Math.Round(i*factor2), reverse);
+                Vector v2 = pointStrip1.GetBounded((int)Math.Round(i*factor1));
+                Vector v3 = pointStrip1.GetBounded((int)Math.Round((i + 1)*factor1));
+                Vector v4 = pointStrip2.GetBounded((int)Math.Round((i + 1)*factor2), reverse);
                 AddFace(v1, v2, v3, v4);
             }
             if (close)
@@ -366,7 +369,6 @@ namespace FreeBuild.Meshing
         /// <param name="element"></param>
         public void AddSectionPreview(LinearElement element)
         {
-
             SectionFamily section = element.Family;
             Curve geometry = element.Geometry;
             Angle orientation = 0;
@@ -498,6 +500,11 @@ namespace FreeBuild.Meshing
             AddLoft(topology, true);
             FillStartToEnd(basePoints); // Cap bottom
             FillStartToEndReverse(topPoints); // Cap top
+        }
+
+        public void AddNodeSupport(Node node, NodeSupport support)
+        {
+
         }
     }
 

@@ -251,7 +251,7 @@
     <Compile Include="Model\SectionProfiles\ParameterProfile.cs" />
     <Compile Include="Model\ResultsCase.cs" />
     <Compile Include="Model\SectionProfiles\SectionProfile.cs" />
-    <Compile Include="Model\RectangularHollowProfile.cs" />
+    <Compile Include="Model\SectionProfiles\RectangularHollowProfile.cs" />
     <Compile Include="Model\SectionProfiles\RectangularProfile.cs" />
     <Compile Include="Model\SectionProfileCollection.cs" />
     <Compile Include="Model\SectionProfileLibrary.cs" />

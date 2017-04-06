@@ -54,6 +54,20 @@ namespace FreeBuild.Base
             protected set { _FilePath = value; NotifyPropertyChanged("FilePath"); }
         }
 
+        /// <summary>
+        /// Private backing field for LastSaved property
+        /// </summary>
+        private DateTime _LastSaved = DateTime.UtcNow;
+
+        /// <summary>
+        /// The time and date that this document was last saved.
+        /// </summary>
+        public DateTime LastSaved
+        {
+            get { return _LastSaved; }
+            set { _LastSaved = value; }
+        }
+
         #endregion
 
         #region Methods
@@ -89,6 +103,7 @@ namespace FreeBuild.Base
                 formatter.Serialize(stream, this);
                 stream.Close();
                 FilePath = filePath; //Store filepath
+                LastSaved = DateTime.UtcNow;
                 return true;
             }
             catch
@@ -117,6 +132,7 @@ namespace FreeBuild.Base
                 textSerialiser.Serialize(stream, this as T);
                 stream.Close();
                 FilePath = filePath; //Store filepath
+                LastSaved = DateTime.UtcNow;
                 return true;
             }
             catch

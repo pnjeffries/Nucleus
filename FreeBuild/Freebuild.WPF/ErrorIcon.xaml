@@ -1,0 +1,96 @@
+﻿<UserControl x:Class="FreeBuild.WPF.ErrorIcon"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FreeBuild.WPF"
+             mc:Ignorable="d" 
+             Height="44" Width="44" >
+    <Grid>
+        <Canvas>
+            <Grid Width="44" Height="44" Visibility="Visible">
+            <Ellipse>
+                <Ellipse.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <LinearGradientBrush.GradientStops>
+                            <GradientStopCollection>
+                                <GradientStop Color="OrangeRed" Offset="0" />
+                                <GradientStop Color="DarkRed" Offset="1" />
+                            </GradientStopCollection>
+                        </LinearGradientBrush.GradientStops>
+                    </LinearGradientBrush>
+                </Ellipse.Fill>
+                <Ellipse.Stroke>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <LinearGradientBrush.GradientStops>
+                            <GradientStopCollection>
+                                <GradientStop Color="transparent" Offset="0" />
+                                <GradientStop Color="#44ffffff" Offset="1" />
+                            </GradientStopCollection>
+                        </LinearGradientBrush.GradientStops>
+                    </LinearGradientBrush>
+                </Ellipse.Stroke>
+            </Ellipse>
+            <Ellipse Opacity="0.5" Stroke="Transparent" Margin="1">
+                <Ellipse.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <LinearGradientBrush.GradientStops>
+                            <GradientStopCollection>
+                                <GradientStop Color="white" Offset="0" />
+                                <GradientStop Color="transparent" Offset="1" />
+                            </GradientStopCollection>
+                        </LinearGradientBrush.GradientStops>
+                    </LinearGradientBrush>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Path Stretch="Fill" Width="20" Height="20" StrokeThickness="5" Stroke="#FFFFFFFF" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M 200,0 L 0,200 M 0,0 L 200,200" />
+        </Grid>
+        <Grid Width="44" Height="44" Visibility="Visible" Canvas.Top="80" Canvas.Left="0">
+            <Grid.OpacityMask>
+                <LinearGradientBrush x:Uid="LinearGradientBrush20" StartPoint="0,1" EndPoint="0,0">
+                    <GradientStop x:Uid="GradientStop44" Offset="0" Color="#3000" />
+                    <GradientStop x:Uid="GradientStop45" Offset="0.9" Color="Transparent" />
+                </LinearGradientBrush>
+            </Grid.OpacityMask>
+            <Grid.RenderTransform>
+                <ScaleTransform ScaleX="1" ScaleY="-0.85" />
+            </Grid.RenderTransform>
+            <Ellipse x:Uid="Ellipse3">
+                <Ellipse.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <LinearGradientBrush.GradientStops>
+                            <GradientStopCollection>
+                                <GradientStop Color="OrangeRed" Offset="0" />
+                                <GradientStop Color="DarkRed" Offset="1" />
+                            </GradientStopCollection>
+                        </LinearGradientBrush.GradientStops>
+                    </LinearGradientBrush>
+                </Ellipse.Fill>
+                <Ellipse.Stroke>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <LinearGradientBrush.GradientStops>
+                            <GradientStopCollection>
+                                <GradientStop Color="transparent" Offset="0" />
+                                <GradientStop Color="#44ffffff" Offset="1" />
+                            </GradientStopCollection>
+                        </LinearGradientBrush.GradientStops>
+                    </LinearGradientBrush>
+                </Ellipse.Stroke>
+            </Ellipse>
+            <Ellipse Opacity="0.5" Stroke="Transparent" Margin="1">
+                <Ellipse.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <LinearGradientBrush.GradientStops>
+                            <GradientStopCollection>
+                                <GradientStop Color="white" Offset="0" />
+                                <GradientStop  Color="transparent" Offset="1" />
+                            </GradientStopCollection>
+                        </LinearGradientBrush.GradientStops>
+                    </LinearGradientBrush>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Path x:Uid="Path2" Stretch="Fill" Width="20" Height="20" StrokeThickness="5" Stroke="#FFFFFFFF" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M 200,0 L 0,200 M 0,0 L 200,200" />
+        </Grid>
+        </Canvas>
+    </Grid>
+</UserControl>

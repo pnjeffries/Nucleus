@@ -65,6 +65,9 @@
     <Compile Include="Converters\TreeViewLineConverter.cs" />
     <Compile Include="Converters\UndeletedCountConverter.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
+    <Compile Include="ErrorIcon.xaml.cs">
+      <DependentUpon>ErrorIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Extensions\AutoUIComboBoxAttributeExtensions.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="EnumBindingSourceExtension.cs" />
@@ -104,6 +107,9 @@
     </Compile>
     <Compile Include="IsNullDataTemplateSelector.cs" />
     <Compile Include="LineGraphCanvas.cs" />
+    <Compile Include="MessageDialog.xaml.cs">
+      <DependentUpon>MessageDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ProfileCanvas.cs" />
     <Compile Include="PropertiesExpander.xaml.cs">
       <DependentUpon>PropertiesExpander.xaml</DependentUpon>
@@ -137,6 +143,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="ErrorIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Field Controls\Bool6DFieldControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -170,6 +180,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="LayeredGeometryCanvas.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MessageDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
