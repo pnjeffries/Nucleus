@@ -223,10 +223,18 @@ namespace FreeBuild.Geometry
             if (Closed) t = t % 1.0;
 
             //Calculate span
-            double tSpan = t * SegmentCount;
-            int span = (int)Math.Floor(tSpan);
-            tSpan = tSpan % 1.0; //Position in span
-            return TangentAt(span, tSpan);
+            if (t == 1.0)
+            {
+                return TangentAt(SegmentCount - 1, 1.0);
+            }
+            else
+            {
+                int segCount = SegmentCount;
+                double tSpan = t * segCount;
+                int span = (int)Math.Floor(tSpan);
+                tSpan = tSpan % 1.0; //Position in span
+                return TangentAt(span, tSpan);
+            }
         }
 
         /// <summary>

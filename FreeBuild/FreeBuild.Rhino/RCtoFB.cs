@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RC = Rhino.Geometry;
+using R = Rhino;
 
 namespace FreeBuild.Rhino
 {
@@ -18,7 +19,20 @@ namespace FreeBuild.Rhino
     public static class RCtoFB
     {
         /// <summary>
-        /// Convert a Rhino point to a FreeBuild vector
+        /// Get the current length conversion factor from the current Rhino document units to 
+        /// SI units (m) in which FreeBuild objects are defined.
+        /// </summary>
+        public static double ConversionFactor
+        {
+            get
+            {
+                return RhinoMath.UnitScale(RhinoDoc.ActiveDoc.ModelUnitSystem, UnitSystem.Meters);
+            }
+        }
+
+        /// <summary>
+        /// Convert a Rhino point to a FreeBuild vector.
+        /// This will automatically be converted into the current Rhino units.
         /// </summary>
         /// <param name="point">The point to convert</param>
         /// <returns>A new vector with the same components as the Rhino one.
@@ -26,12 +40,17 @@ namespace FreeBuild.Rhino
         public static Vector Convert(RC.Point3d point)
         {
             if (point.IsValid)
-                return new Vector(point.X, point.Y, point.Z);
+            {
+                double f = ConversionFactor;
+                return new Vector(point.X * f, point.Y * f, point.Z * f);
+            }
             else return Vector.Unset;
         }
 
         /// <summary>
-        /// Convert a Rhino vector to a FreeBuild one
+        /// Convert a Rhino vector to a FreeBuild one.
+        /// This is assumed to be unitless and will *not* automatically be
+        /// converted into the current Rhino units.
         /// </summary>
         /// <param name="vector">The vector to convert</param>
         /// <returns></returns>
@@ -64,6 +83,18 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
+        /// Convert a Rhino point object to a FreeBuild one
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public static Point Convert(RC.Point point)
+        {
+            if (point.IsValid)
+                return new Point(Convert(point.Location));
+            else return null;
+        }
+
+        /// <summary>
         /// Convert a Rhino line to a FreeBuild one
         /// </summary>
         /// <param name="line">The line to be converted</param>
@@ -85,6 +116,7 @@ namespace FreeBuild.Rhino
             if (arc.IsCircle)
             {
                 //TODO
+                throw new NotImplementedException();
             }
             else return new Arc(Convert(arc.StartPoint), Convert(arc.MidPoint), Convert(arc.EndPoint));
             throw new NotImplementedException();
@@ -216,6 +248,7 @@ namespace FreeBuild.Rhino
         public static VertexGeometry Convert(RC.GeometryBase geometry)
         {
             if (geometry is RC.Curve) return Convert((RC.Curve)geometry);
+            if (geometry is RC.Point) return Convert((RC.Point)geometry);
             else throw new NotImplementedException();
         }
 

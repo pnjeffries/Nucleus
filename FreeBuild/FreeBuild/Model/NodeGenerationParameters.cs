@@ -85,6 +85,11 @@ namespace FreeBuild.Model
             DeleteUnusedNodes = deleteUnusedNodes;
         }
 
+        public NodeGenerationParameters(ExecutionInfo exInfo)
+        {
+            ExInfo = exInfo;
+        }
+
         #endregion
     }
 }

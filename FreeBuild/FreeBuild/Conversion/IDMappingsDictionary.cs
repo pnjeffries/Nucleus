@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
 namespace FreeBuild.Conversion
 {
@@ -14,6 +15,7 @@ namespace FreeBuild.Conversion
     [Serializable]
     public class IDMappingsDictionary : Dictionary<FilePath, IIDMappingTable>
     {
+
         #region Methods
 
         /// <summary>
@@ -75,6 +77,18 @@ namespace FreeBuild.Conversion
                 }
             }
             return result;
+        }
+
+        #endregion
+
+        #region Constructors
+
+        public IDMappingsDictionary() : base()
+        { }
+
+
+        protected IDMappingsDictionary(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
         }
 
         #endregion

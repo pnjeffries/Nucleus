@@ -183,7 +183,7 @@ namespace FreeBuild.Base
         }
 
         /// <summary>
-        /// Deserialize a document of the specified type from
+        /// Deserialize a document of the specified type from binary data
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="binaryData">The binary data to deserialize</param>

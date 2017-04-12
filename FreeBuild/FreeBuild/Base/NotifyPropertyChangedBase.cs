@@ -77,6 +77,16 @@ namespace FreeBuild.Base
         }
 
         /// <summary>
+        /// Raise a PropertyChanged event for several property names at once.
+        /// </summary>
+        /// <param name="propertyNames">The name(s) of the changed property</param>
+        protected void NotifyPropertiesChanged(params string[] propertyNames)
+        {
+            foreach (string propertyName in propertyNames)
+                NotifyPropertyChanged(propertyName);
+        }
+
+        /// <summary>
         /// Raise an event.
         /// Checks for a null handler before raising.
         /// </summary>

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RC = Rhino.Geometry;
+using R = Rhino;
 
 namespace FreeBuild.Rhino
 {
@@ -16,13 +17,44 @@ namespace FreeBuild.Rhino
     public static class FBtoRC
     {
         /// <summary>
-        /// Convert a FreeBuild vector representing a point to a RhinoCommon point
+        /// Get the current length conversion factor from SI units (m) in which FreeBuild objects are defined
+        /// to the current Rhino document units.
+        /// </summary>
+        public static double ConversionFactor
+        {
+            get
+            {
+                return R.RhinoMath.UnitScale(R.UnitSystem.Meters, R.RhinoDoc.ActiveDoc.ModelUnitSystem);
+            }
+        }
+
+        /// <summary>
+        /// Convert a FreeBuild vector representing a point to a RhinoCommon point.
+        /// This will be automatically scaled to the current Rhino unit system.
         /// </summary>
         /// <param name="point">The vector to convert to a point</param>
+        /// <param name="unitless">If true, the vector will not be scaled</param>
         /// <returns>If the input point is valid, a new RhinoCommon Point3d, else Point3d.Unset</returns>
         public static RC.Point3d Convert(Vector point)
         {
-            if (point.IsValid()) return new RC.Point3d(point.X, point.Y, point.Z);
+            double f = ConversionFactor;
+            if (point.IsValid()) return new RC.Point3d(point.X * f, point.Y * f, point.Z * f);
+            else return RC.Point3d.Unset;
+        }
+
+        /// <summary>
+        /// Convert a FreeBuild vector representing a point to a RhinoCommon point.
+        /// This will be automatically scaled to the current Rhino unit system unless the
+        /// optional unitless parameter is set to true.
+        /// </summary>
+        /// <param name="point">The vector to convert to a point</param>
+        /// <param name="unitless">If true, the vector will not be scaled</param>
+        /// <returns>If the input point is valid, a new RhinoCommon Point3d, else Point3d.Unset</returns>
+        public static RC.Point3d Convert(Vector point, bool unitless)
+        {
+            double f = 1.0;
+            if (!unitless) f = ConversionFactor;
+            if (point.IsValid()) return new RC.Point3d(point.X * f, point.Y * f, point.Z * f);
             else return RC.Point3d.Unset;
         }
 
@@ -44,7 +76,8 @@ namespace FreeBuild.Rhino
         /// <returns></returns>
         public static RC.BoundingBox Convert(BoundingBox box)
         {
-            return new RC.BoundingBox(box.MinX, box.MinY, box.MinZ, box.MaxX, box.MaxY, box.MaxZ);
+            double f = ConversionFactor;
+            return new RC.BoundingBox(box.MinX * f, box.MinY * f, box.MinZ * f, box.MaxX * f, box.MaxY * f, box.MaxZ * f);
         }
 
         /// <summary>
@@ -87,7 +120,7 @@ namespace FreeBuild.Rhino
         /// <returns></returns>
         public static RC.Circle Convert(Circle circle)
         {
-            return new RC.Circle(Convert(circle.Plane()), circle.Radius);
+            return new RC.Circle(Convert(circle.Plane()), circle.Radius * ConversionFactor);
         }
 
         /// <summary>

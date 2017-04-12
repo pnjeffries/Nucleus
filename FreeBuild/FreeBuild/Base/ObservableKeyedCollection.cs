@@ -311,6 +311,7 @@ namespace FreeBuild.Base
                 else if (!Equals(value, combinedValue))
                     return multiValue;
             }
+            //if (combinedValue == null) combinedValue = nullValue; //?
             return combinedValue;
         }
 
