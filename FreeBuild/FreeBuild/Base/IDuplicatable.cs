@@ -69,7 +69,7 @@ namespace FreeBuild.Base
         {
             if (obj.GetType().HasParameterlessConstructor())
             {
-                T clone = (T)Activator.CreateInstance(obj.GetType()); //Create a blank instance of the relevant type
+                T clone = (T)Activator.CreateInstance(obj.GetType(), true); //Create a blank instance of the relevant type
                 if (objectMap == null) objectMap = new Dictionary<object, object>();
                 objectMap[obj] = clone; //Store the original-clone relationship in the map
                 clone.CopyFieldsFrom(obj, ref objectMap);

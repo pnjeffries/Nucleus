@@ -178,7 +178,7 @@ namespace FreeBuild.Model
         /// If the deletion flag on this object is set it will be unset and
         /// the object restored.
         /// </summary>
-        public void Undelete()
+        public virtual void Undelete()
         {
             if (_IsDeleted)
             {
