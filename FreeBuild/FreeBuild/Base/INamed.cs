@@ -60,5 +60,26 @@ namespace FreeBuild.Base
             }
             return null;
         }
+
+        /// <summary>
+        /// Create a string which lists all of the names of the objects in this collection
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <param name="collection"></param>
+        /// <param name="separator"></param>
+        /// <param name="nullReplacement"></param>
+        /// <returns></returns>
+        public static string ToNames<TItem>(this ICollection<TItem> collection, string separator = ", ", string nullReplacement = "")
+            where TItem: INamed
+        {
+            var sb = new StringBuilder();
+            foreach (TItem item in collection)
+            {
+                if (sb.Length > 0) sb.Append(separator);
+                if (item.Name == null) sb.Append(nullReplacement);
+                sb.Append(item.Name);
+            }
+            return sb.ToString();
+        }
     }
 }

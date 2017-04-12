@@ -144,10 +144,10 @@ namespace FreeBuild.Geometry
             get { return _Node; }
             set
             {
-                //De-register with old node
+                // De-register with old node
                 if (_Node != null) _Node.Vertices.Remove(this);
                 _Node = value;
-                //Register with new node
+                // Register with new node
                 if (_Node != null) _Node.Vertices.TryAdd(this);
                 NotifyPropertyChanged("Node");
             }

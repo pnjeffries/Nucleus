@@ -70,9 +70,14 @@ namespace FreeBuild.Geometry
         #region Constructors
 
         /// <summary>
+        /// Default parameterless constructor
+        /// </summary>
+        protected Point() : base() { }
+
+        /// <summary>
         /// Protected parameterless constructor
         /// </summary>
-        protected Point(GeometryAttributes attributes = null) : base()
+        protected Point(GeometryAttributes attributes) : base()
         {
             Attributes = attributes;
         }

@@ -219,6 +219,15 @@ namespace FreeBuild.Base
         }
 
         /// <summary>
+        /// Remove multiple items from this collection
+        /// </summary>
+        /// <param name="items"></param>
+        public void RemoveRange(IEnumerable<TItem> items)
+        {
+            foreach (var item in items) Remove(item);
+        }
+
+        /// <summary>
         /// Attempt to add a collection of items to the end of this collection,
         /// checking whether each item has a matching key before adding it.
         /// </summary>

@@ -50,6 +50,9 @@
     <Compile Include="Base\Bool6D.cs" />
     <Compile Include="Base\CollectionCopyAttribute.cs" />
     <Compile Include="Base\KeyedCollection.cs" />
+    <Compile Include="Geometry\Grid.cs" />
+    <Compile Include="Geometry\GridLineCollection.cs" />
+    <Compile Include="Geometry\GridLineGenerator.cs" />
     <Compile Include="Geometry\LinkedMeshEdge.cs" />
     <Compile Include="Model\FamilyFilter.cs" />
     <Compile Include="Base\ISetFilter.cs" />
