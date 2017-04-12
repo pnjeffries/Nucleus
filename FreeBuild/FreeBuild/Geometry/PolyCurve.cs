@@ -466,8 +466,8 @@ namespace FreeBuild.Geometry
             cornerRadius = Math.Max(cornerRadius, 0.0);
             double x = width / 2;
             double y = depth / 2;
-            double x2 = Math.Max(width / 2 - cornerRadius, 0.0);
-            double y2 = Math.Max(depth / 2 - cornerRadius, 0.0);
+            double x2 = Math.Max(x - cornerRadius, 0.0);
+            double y2 = Math.Max(y - cornerRadius, 0.0);
 
             PolyCurve result = new PolyCurve(new Line(x2,y,-x2, y));
             if (cornerRadius > 0) result.AddArcTangent(new Vector(-1, 0), new Vector(-x, y2));
