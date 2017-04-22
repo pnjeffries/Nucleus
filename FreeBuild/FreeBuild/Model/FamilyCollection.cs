@@ -51,7 +51,7 @@ namespace FreeBuild.Model
         #region Methods
 
         /// <summary>
-        /// Extract all Section Properties from this collection
+        /// Extract all Section Families from this collection
         /// </summary>
         /// <returns></returns>
         public SectionFamilyCollection GetSections()
@@ -61,6 +61,21 @@ namespace FreeBuild.Model
             {
                 if (vProp is SectionFamily)
                     result.Add((SectionFamily)vProp);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Extract all Panel Families from this collection
+        /// </summary>
+        /// <returns></returns>
+        public PanelFamilyCollection GetPanelFamilies()
+        {
+            var result = new PanelFamilyCollection();
+            foreach (Family family in this)
+            {
+                if (family is PanelFamily)
+                    result.Add((PanelFamily)family);
             }
             return result;
         }

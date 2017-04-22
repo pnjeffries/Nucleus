@@ -52,5 +52,45 @@ namespace FreeBuild.Model
         }
 
         #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Set the force exerted by this load by specifying a direction vector and
+        /// a value.  The direction and axis system will be derived from this information.
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <param name="value"></param>
+        public void SetForce(Vector direction, double value)
+        {
+            direction = direction.Unitize();
+            if (direction.IsXOnly())
+            {
+                Direction = Direction.X;
+                Value = value / direction.X;
+                Axes = CoordinateSystemReference.Global;
+            }
+            else if (direction.IsYOnly())
+            {
+                Direction = Direction.Y;
+                Value = value / direction.Y;
+                Axes = CoordinateSystemReference.Global;
+            }
+            else if (direction.IsZOnly())
+            {
+                Direction = Direction.Z;
+                Value = value / direction.Z;
+                Axes = CoordinateSystemReference.Global;
+            }
+            else
+            {
+                //Need to generate axes:
+                Axes = new UserCoordinateSystemReference("[Locally Defined]", new CartesianCoordinateSystem(new Vector(), direction));
+                Direction = Direction.Z;
+                Value = value;
+            }
+        }
+
+        #endregion
     }
 }

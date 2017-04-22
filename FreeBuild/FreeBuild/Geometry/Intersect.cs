@@ -428,7 +428,7 @@ namespace FreeBuild.Geometry
                     // Build resultant polygons
                     result = new List<TPolygon>();
 
-                    while (intersectionsA.Count > 0)
+                    while (intersectionsA.Count > 1) //TODO: Test and Review!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     {
                         LineLineIntersection startInt = intersectionsA.First().Value;// null;
                         // Find the first remaining intersection that is an entry point

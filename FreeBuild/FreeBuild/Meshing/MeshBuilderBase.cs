@@ -115,9 +115,9 @@ namespace FreeBuild.Meshing
         public int AddFace(MeshFace face)
         {
             if (face.Count == 3)
-                return AddFace(face[0].VertexIndex, face[1].VertexIndex, face[2].VertexIndex); //TRI
+                return AddFace(face[0].Number, face[1].Number, face[2].Number); //TRI
             else if (face.Count > 3)
-                return AddFace(face[0].VertexIndex, face[1].VertexIndex, face[2].VertexIndex, face[3].VertexIndex); //QUAD
+                return AddFace(face[0].Number, face[1].Number, face[2].Number, face[3].Number); //QUAD
             else
                 return -1;
         }

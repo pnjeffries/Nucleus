@@ -43,7 +43,13 @@ namespace FreeBuild.WPF.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value != null)
-                return value.ToString();
+            {
+                if (value is Angle)
+                {
+                    return ((Angle)value).Degrees.ToString() + "°";
+                }
+                else return value.ToString();
+            }
             else return null;
         }
 

@@ -150,7 +150,7 @@ namespace FreeBuild.Geometry
             }
             else if (description.EndsWith("°"))
             {
-                Radians = double.Parse(description.TrimEnd('°')) * 180 * Math.PI;
+                Radians = double.Parse(description.TrimEnd('°')) / 180 * Math.PI;
             }
             else
             {

@@ -83,8 +83,24 @@ namespace FreeBuild.Model
         {
             get
             {
-                throw new NotImplementedException();
+                return GetFamily();
             }
+        }
+
+        /// <summary>
+        /// Private backing field for Orientation property
+        /// </summary>
+        private Angle _Orientation = Angle.Zero;
+
+        /// <summary>
+        /// The orientation description of this element - determines the relative orientation
+        /// of the local coordinate system of this element.
+        /// </summary>
+        [AutoUI(430)]
+        public Angle Orientation
+        {
+            get { return _Orientation; }
+            set { _Orientation = value; NotifyPropertyChanged("Orientation"); }
         }
 
         /// <summary>
@@ -280,22 +296,6 @@ namespace FreeBuild.Model
                 _Family = value;
                 NotifyPropertyChanged("Family");
             }
-        }
-
-        /// <summary>
-        /// Private backing field for Orientation property
-        /// </summary>
-        private Angle _Orientation = Angle.Zero;
-
-        /// <summary>
-        /// The orientation description of this element - determines the relative orientation
-        /// of the local coordinate system of this element.
-        /// </summary>
-        [AutoUI(430)]
-        public Angle Orientation
-        {
-            get { return _Orientation; }
-            set { _Orientation = value; NotifyPropertyChanged("Orientation"); }
         }
 
         #endregion

@@ -28,11 +28,27 @@ using System.Threading.Tasks;
 namespace FreeBuild.Model
 {
     /// <summary>
-    /// Abstract base class for materials
+    /// Base class for materials
     /// </summary>
     [Serializable]
-    public abstract class Material : ModelObject
+    public class Material : ModelObject
     {
+        //TODO: Add material properties
+
+        #region Constants
+
+        /// <summary>
+        /// Default Steel material
+        /// </summary>
+        public static Material Steel { get { return new Material("Steel"); } }
+
+        /// <summary>
+        /// Default Concrete material
+        /// </summary>
+        public static Material Concrete { get { return new Material("Concrete"); } }
+
+        #endregion
+
         #region Constructors
 
         /// <summary>

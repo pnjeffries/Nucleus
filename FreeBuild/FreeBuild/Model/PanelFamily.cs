@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,8 +33,57 @@ namespace FreeBuild.Model
     /// a 3D solid geometry
     /// </summary>
     [Serializable]
-    public class FaceFamily : Family
+    public class PanelFamily : Family
     {
-        //TODO
+        #region Properties
+
+        private BuildUpLayerCollection _BuildUp;
+
+        /// <summary>
+        /// The collection of build-up layers that define the through-thickness
+        /// properties of this family
+        /// </summary>
+        public BuildUpLayerCollection BuildUp
+        {
+            get
+            {
+                if (_BuildUp == null) _BuildUp = new BuildUpLayerCollection();
+                return _BuildUp;
+            }
+        }
+
+        /// <summary>
+        /// Private backing field for the SetOut property
+        /// </summary>
+        private VerticalSetOut _SetOut = VerticalSetOut.Centroid;
+
+        /// <summary>
+        /// The set-out position of the layers
+        /// </summary>
+        public VerticalSetOut SetOut
+        {
+            get { return _SetOut; }
+            set { ChangeProperty(ref _SetOut, value, "SetOut"); }
+        }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initialise a new blank Panel Family
+        /// </summary>
+        public PanelFamily() : base() { }
+
+        /// <summary>
+        /// Initialse a new Panel Family with the given name
+        /// </summary>
+        /// <param name="name"></param>
+        public PanelFamily(string name) : this()
+        {
+            Name = name;
+        }
+
+        #endregion
     }
 }

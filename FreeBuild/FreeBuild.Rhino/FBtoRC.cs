@@ -227,13 +227,27 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
+        /// Convert a FreeBuild Mesh to a RhinoCommon one
+        /// </summary>
+        /// <param name="mesh"></param>
+        /// <returns></returns>
+        public static RC.Mesh Convert(Mesh mesh)
+        {
+            var builder = new RhinoMeshBuilder();
+            builder.AddMesh(mesh);
+            builder.Finalize();
+            return builder.Mesh;
+        }
+
+        /// <summary>
         /// Convert a FreeBuild surface to Rhino geometry
         /// </summary>
         /// <param name="surface"></param>
         /// <returns></returns>
         public static RC.GeometryBase Convert(Surface surface)
         {
-            if (surface is PlanarRegion) return Convert((PlanarRegion)surface);
+            if (surface is Mesh) return Convert((Mesh)surface);
+            else if (surface is PlanarRegion) return Convert((PlanarRegion)surface);
             return null;
         }
 

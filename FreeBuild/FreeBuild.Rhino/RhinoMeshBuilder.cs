@@ -25,7 +25,7 @@ namespace FreeBuild.Rhino
         public override int AddVertex(Vertex v)
         {
             int index = AddVertex(v.Position);
-            v.VertexIndex = index;
+            v.Number = index;
             return index;
         }
 

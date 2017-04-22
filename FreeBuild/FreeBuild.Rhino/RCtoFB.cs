@@ -220,10 +220,11 @@ namespace FreeBuild.Rhino
         /// <summary>
         /// Convert a planar Rhino surface to a FreeBuild planar region
         /// </summary>
-        /// <param name="surface"></param>
+        /// <param name="brep"></param>
         /// <returns></returns>
-        public static PlanarRegion ConvertToPlanarRegion(RC.Surface surface)
+        public static PlanarRegion ConvertToPlanarRegion(RC.Brep brep)
         {
+            
             throw new NotImplementedException();
             //TODO!
         }
@@ -235,9 +236,19 @@ namespace FreeBuild.Rhino
         /// <returns></returns>
         public static Surface Convert(RC.Surface surface)
         {
-            if (surface.IsPlanar()) return ConvertToPlanarRegion(surface);
+            if (surface.IsPlanar()) return ConvertToPlanarRegion(surface.ToBrep());
             else
                 throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Convert a Rhino BRep to a FreeBuild surface
+        /// </summary>
+        /// <param name="brep"></param>
+        /// <returns></returns>
+        public static Surface Convert(RC.Brep brep)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -248,7 +259,11 @@ namespace FreeBuild.Rhino
         public static VertexGeometry Convert(RC.GeometryBase geometry)
         {
             if (geometry is RC.Curve) return Convert((RC.Curve)geometry);
-            if (geometry is RC.Point) return Convert((RC.Point)geometry);
+            else if (geometry is RC.Point) return Convert((RC.Point)geometry);
+            else if (geometry is RC.Surface) return Convert((RC.Surface)geometry);
+            else if (geometry is RC.Mesh) return Convert((RC.Mesh)geometry);
+            else if (geometry is RC.Brep && ((RC.Brep)geometry).IsSurface)
+                return Convert(((RC.Brep)geometry).Surfaces[0]);
             else throw new NotImplementedException();
         }
 

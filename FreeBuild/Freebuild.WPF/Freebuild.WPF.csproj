@@ -97,6 +97,9 @@
     <Compile Include="Field Controls\LabelledControl.cs" />
     <Compile Include="AutoUIStackPanel.cs" />
     <Compile Include="Converters\IsEqualConverter.cs" />
+    <Compile Include="Field Controls\SetFieldControl.xaml.cs">
+      <DependentUpon>SetFieldControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Field Controls\XYZControl.xaml.cs">
       <DependentUpon>XYZControl.xaml</DependentUpon>
     </Compile>
@@ -160,6 +163,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Field Controls\ComboFieldControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Field Controls\SetFieldControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

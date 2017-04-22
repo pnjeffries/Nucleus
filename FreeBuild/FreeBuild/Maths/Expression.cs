@@ -431,5 +431,17 @@ namespace FreeBuild.Maths
 
         #endregion
 
+        #region Operators
+
+        /// <summary>
+        /// Convert a double value into an expression
+        /// </summary>
+        /// <param name="v"></param>
+        public static implicit operator Expression(double v)
+        {
+            return new ValueExpression(v);
+        }
+
+        #endregion
     }
 }

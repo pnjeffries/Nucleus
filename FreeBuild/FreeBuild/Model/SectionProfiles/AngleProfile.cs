@@ -17,7 +17,7 @@ namespace FreeBuild.Model
         /// <summary>
         /// Default constructor
         /// </summary>
-        protected AngleProfile() : base() { }
+        public AngleProfile() : base() { }
 
         /// <summary>
         /// Initialises a profile with the specified dimensions
@@ -26,7 +26,7 @@ namespace FreeBuild.Model
         /// <param name="width"></param>
         /// <param name="flangeThickness"></param>
         /// <param name="webThickness"></param>
-        protected AngleProfile(double depth, double width, double flangeThickness, double webThickness, double rootRadius = 0) 
+        public AngleProfile(double depth, double width, double flangeThickness, double webThickness, double rootRadius = 0) 
             : base(depth, width, flangeThickness, webThickness, rootRadius) { }
 
         /// <summary>

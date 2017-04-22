@@ -1,5 +1,6 @@
 ﻿using FreeBuild.Base;
 using FreeBuild.Extensions;
+using FreeBuild.Model;
 using FreeBuild.UI;
 using FreeBuild.WPF.Converters;
 using System;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
@@ -85,27 +87,55 @@ namespace FreeBuild.WPF
             {
                 Binding binding = new Binding(property.Name);
                 binding.Converter = new TextConverter(model);
+                if (!property.CanWrite) binding.Mode = BindingMode.OneWay;
                 DataGridColumn column;
                 AutoUIAttribute aUI = property.GetCustomAttribute<AutoUIAttribute>(); ;
                 if (property.HasAttribute(typeof(AutoUIComboBoxAttribute)))
                 {
                     AutoUIComboBoxAttribute cBA = property.GetCustomAttribute<AutoUIComboBoxAttribute>();
-                    var comboColumn = new DataGridComboBoxColumn();
+                    /*var comboColumn = new DataGridComboBoxColumn();
                     column = comboColumn;
-                    comboColumn.SelectedItemBinding = binding;
+                    comboColumn.SelectedItemBinding = binding;*/
+
+                    /*BindingOperations.SetBinding(comboColumn, DataGridComboBoxColumn.ItemsSourceProperty,
+                        sourceBinding);*/
+
+                    var comboColumn = new DataGridTemplateColumn();
+                    column = comboColumn;
+
+                    var cellTemplate = new DataTemplate();
+                    var tbFactory = new FrameworkElementFactory(typeof(TextBlock));
+                    tbFactory.SetBinding(TextBlock.TextProperty, binding);
+                    cellTemplate.VisualTree = tbFactory;
+                    comboColumn.CellTemplate = cellTemplate;
+
+                    var editTemplate = new DataTemplate();
+                    var cbFactory = new FrameworkElementFactory(typeof(ComboBox));
+                    cbFactory.SetValue(ComboBox.IsTextSearchEnabledProperty, true);
+                    cbFactory.SetValue(ComboBox.IsEditableProperty, true);
+                    cbFactory.SetValue(ComboBox.PaddingProperty, new Thickness(2.0,0.0, 2.0, 0.0));
+                    cbFactory.SetBinding(ComboBox.TextProperty, binding);
 
                     // Set ItemsSource binding:
                     Binding sourceBinding;
-                    if (string.IsNullOrEmpty(cBA.ItemsSource))
-                         sourceBinding = new Binding(cBA.ItemsSource);
+                    if (!string.IsNullOrEmpty(cBA.ItemsSource))
+                        sourceBinding = new Binding(cBA.ItemsSource);
                     else
                     {
                         sourceBinding = new Binding();
-                        sourceBinding.Converter = new ModelTableConverter();
-                        sourceBinding.ConverterParameter = property.PropertyType;
+                        if (typeof(Family).IsAssignableFrom(property.PropertyType))
+                        {
+                            sourceBinding.Path = new PropertyPath("Model.Families");
+                        }
+                        //sourceBinding.Converter = new ModelTableConverter();
+                        //sourceBinding.ConverterParameter = property.PropertyType;
                     }
-                    BindingOperations.SetBinding(comboColumn, DataGridComboBoxColumn.ItemsSourceProperty,
-                        sourceBinding);
+
+                    cbFactory.SetBinding(ComboBox.SelectedItemProperty, new Binding(property.Name));
+                    cbFactory.SetBinding(ComboBox.ItemsSourceProperty, sourceBinding);
+
+                    editTemplate.VisualTree = cbFactory;
+                    comboColumn.CellEditingTemplate = editTemplate;
                 }
                 else
                 {

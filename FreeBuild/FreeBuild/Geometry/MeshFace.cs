@@ -78,6 +78,18 @@ namespace FreeBuild.Geometry
             get { return CalculateXYCircumcentre(); }
         }
 
+        /// <summary>
+        /// Get the normal vector of this face
+        /// </summary>
+        public Vector Normal
+        {
+            get
+            {
+                return CalculateNormal();
+                //TODO: Possibly cache this?
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -211,6 +223,65 @@ namespace FreeBuild.Geometry
                 result[i] = GetEdge(i);
             }
             return result;
+        }
+
+        /// <summary>
+        /// Get the edge link of this face at the specified index
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public virtual MeshEdgeLink GetEdgeLink(int index)
+        {
+            return new MeshEdgeLink(this[index], this.GetWrapped(index + 1), this);
+        }
+
+        /// <summary>
+        /// Generate a short string description of this edge in the format
+        /// "[Lowest Vertex Number]:[Highest Vertex Number]".  This can be used
+        /// as a key to check for shared edges easily.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public string GetEdgeNumberKey(int index)
+        {
+            Vertex v0 = this[index];
+            Vertex v1 = this.GetWrapped(index + 1);
+            if (v0.Number < v1.Number) return v0.Number.ToString() + ":" + v1.Number.ToString();
+            else return v1.Number.ToString() + ":" + v0.Number.ToString();
+        }
+
+        /// <summary>
+        /// Ensure that the edge link at the specified index has been included in the specified dictionary
+        /// </summary>
+        /// <param name="index">The edge index</param>
+        /// <param name="linkDictionary"></param>
+        public virtual MeshEdgeLink EnsureEdgeLinkGeneration(int index, Dictionary<string, MeshEdgeLink> linkDictionary)
+        {
+            string key = GetEdgeNumberKey(index);
+            if (linkDictionary.ContainsKey(key))
+            {
+                MeshEdgeLink link = linkDictionary[key];
+                if (!link.Faces.Contains(this)) link.Faces.Add(this);
+                return link;
+            }
+            else
+            {
+                MeshEdgeLink link = GetEdgeLink(index);
+                linkDictionary.Add(key, link);
+                return link;
+            }
+        }
+
+        /// <summary>
+        /// Ensure that edge links for this face have been included in the specified dictionary
+        /// </summary>
+        /// <param name="linkDictionary"></param>
+        public void EnsureEdgeLinkGeneration(Dictionary<string, MeshEdgeLink> linkDictionary)
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                EnsureEdgeLinkGeneration(i, linkDictionary);
+            }
         }
 
         /// <summary>
@@ -368,7 +439,11 @@ namespace FreeBuild.Geometry
             return centre;
         }
 
-        public void WeightedVoronoiPoints(Dictionary<Vertex, MeshFace> cells)
+        /// <summary>
+        /// DOES NOT WORK!  DO NOT USE!
+        /// </summary>
+        /// <param name="cells"></param>
+        internal void WeightedVoronoiPoints(Dictionary<Vertex, MeshFace> cells)
         {
             Vertex vA = this[0];
             Vertex vB = this[1];
@@ -616,7 +691,29 @@ namespace FreeBuild.Geometry
             return result;
         }
 
+        /// <summary>
+        /// Calculate the normal vector for this face
+        /// </summary>
+        /// <returns></returns>
+        public Vector CalculateNormal()
+        {
+            Vector result = new Vector();
+            Vertex vA = this[0];
+            for (int i = 0; i < Count - 2; i++)
+            {
+                Vertex vB = this[i + 1];
+                Vertex vC = this[i + 2];
+                Vector AB = vB.Position - vA.Position;
+                Vector AC = vC.Position - vA.Position;
+                result += AB.Cross(AC);
+            }
+            if (Count > 3) result /= Count - 2; //If quad (or n-gon), average the result
+            return result;
+        }
+
         #endregion
+
+
 
     }
 }

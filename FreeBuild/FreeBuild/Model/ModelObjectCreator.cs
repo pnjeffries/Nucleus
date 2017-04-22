@@ -30,7 +30,8 @@ using System.Threading.Tasks;
 namespace FreeBuild.Model
 {
     /// <summary>
-    /// Create new objects in the model or update previously created ones.
+    /// A component of a model which acts as a factory class to create new objects 
+    /// in the model or update previously created ones with matching execution information.
     /// </summary>
     public class ModelObjectCreator
     {
@@ -181,14 +182,14 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
-        /// Create a new (or update an existing) section property in the model
+        /// Create a new (or update an existing) section family in the model
         /// </summary>
         /// <param name="exInfo">Optional.  The execution information of the current action.
         /// If an object has been created previously with matching execution information then
         /// instead of creating a new item this previous one will be updated and returned instead.
         /// This enables this method to be used parametrically.</param>
         /// <returns></returns>
-        public SectionFamily SectionProperty(ExecutionInfo exInfo = null)
+        public SectionFamily SectionFamily(ExecutionInfo exInfo = null)
         {
             SectionFamily result = new SectionFamily();
             result = (SectionFamily)Model.History.Update(exInfo, result);
@@ -208,7 +209,7 @@ namespace FreeBuild.Model
         /// instead of creating a new item this previous one will be updated and returned instead.
         /// This enables this method to be used parametrically.</param>
         /// <returns>The created or updated </returns>
-        public SectionFamily SectionProperty(string name, ExecutionInfo exInfo = null)
+        public SectionFamily SectionFamily(string name, ExecutionInfo exInfo = null)
         {
             SectionFamily result = new SectionFamily();
             result = (SectionFamily)Model.History.Update(exInfo, result);
@@ -226,12 +227,49 @@ namespace FreeBuild.Model
         /// instead of creating a new item this previous one will be updated and returned instead.
         /// This enables this method to be used parametrically.</param>
         /// <returns>The created or updated section family</returns>
-        public SectionFamily SectionProperty(SectionProfile profile, ExecutionInfo exInfo = null)
+        public SectionFamily SectionFamily(SectionProfile profile, ExecutionInfo exInfo = null)
         {
             SectionFamily result = new SectionFamily();
             result = (SectionFamily)Model.History.Update(exInfo, result);
             result.Profile = profile;
             if (result.Name == null) result.Name = Model.Families.NextAvailableName("Section", result, true);
+            Model.Add(result);
+            return result;
+        }
+
+        /// <summary>
+        /// Create a new (or update an existing) face family in the model
+        /// </summary>
+        /// <param name="exInfo">Optional.  The execution information of the current action.
+        /// If an object has been created previously with matching execution information then
+        /// instead of creating a new item this previous one will be updated and returned instead.
+        /// This enables this method to be used parametrically.</param>
+        /// <returns></returns>
+        public PanelFamily FaceFamily(ExecutionInfo exInfo = null)
+        {
+            PanelFamily result = new PanelFamily();
+            result = (PanelFamily)Model.History.Update(exInfo, result);
+            if (result.Name == null) result.Name = Model.Families.NextAvailableName("Face Family", result, true);
+            Model.Add(result);
+            return result;
+        }
+
+        /// <summary>
+        /// Create a new (or update an existing) face family in the model
+        /// </summary>
+        /// <param name="name">The name of the family. 
+        /// May be modified with a numerical suffix if the name already exists in
+        /// the model.</param>
+        /// <param name="exInfo">Optional.  The execution information of the current action.
+        /// If an object has been created previously with matching execution information then
+        /// instead of creating a new item this previous one will be updated and returned instead.
+        /// This enables this method to be used parametrically.</param>
+        /// <returns>The created or updated </returns>
+        public PanelFamily FaceFamily(string name, ExecutionInfo exInfo = null)
+        {
+            PanelFamily result = new PanelFamily();
+            result = (PanelFamily)Model.History.Update(exInfo, result);
+            result.Name = Model.Families.NextAvailableName(name, result);
             Model.Add(result);
             return result;
         }
@@ -257,6 +295,24 @@ namespace FreeBuild.Model
             return result;
         }
 
+        /// <summary>
+        /// Create a new (or update an existing) load case in the model
+        /// </summary>
+        /// <param name="name">The name of the load case</param>
+        /// <param name="exInfo">Optional.  The execution information of the current action.
+        /// If an object has been created previously with matching execution information then
+        /// instead of creating a new item this previous one will be updated and returned instead.
+        /// This enables this method to be used parametrically.</param>
+        /// <returns>The created or updated load case.</returns>
+        public LoadCase LoadCase(string name, ExecutionInfo exInfo = null)
+        {
+            LoadCase result = new LoadCase();
+            result = (LoadCase)Model.History.Update(exInfo, result);
+            if (name != null) result.Name = name;
+            if (result.Name == null) result.Name = Model.LoadCases.NextAvailableName("Load Case", result, true);
+            Model.Add(result);
+            return result;
+        }
 
         #endregion
     }

@@ -156,7 +156,8 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Private backing field for VertexIndex property
         /// </summary>
-        private int _VertexIndex = UnsetIndex;
+        [NonSerialized]
+        private int _Number = UnsetIndex;
 
         /// <summary>
         /// The index of this vertex.
@@ -165,10 +166,10 @@ namespace FreeBuild.Geometry
         /// This does *not* necessarily correspond to the position of this vertex in
         /// the containing shape.
         /// </summary>
-        public int VertexIndex
+        public int Number
         {
-            get { return _VertexIndex; }
-            set { _VertexIndex = value; }
+            get { return _Number; }
+            set { _Number = value; }
         }
 
         #endregion

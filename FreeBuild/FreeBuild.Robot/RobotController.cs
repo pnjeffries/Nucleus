@@ -229,7 +229,7 @@ namespace FreeBuild.Robot
                 {
                     SectionFamily section = context.IDMap.GetMappedSectionProperty(label, model);
                     if (section == null)
-                        section = model.Create.SectionProperty(context.ExInfo);
+                        section = model.Create.SectionFamily(context.ExInfo);
 
                     //TODO: Copy over data
                     RobotBarSectionData data = label.Data;

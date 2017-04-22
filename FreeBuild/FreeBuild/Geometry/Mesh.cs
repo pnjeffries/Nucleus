@@ -175,7 +175,32 @@ namespace FreeBuild.Geometry
             return "Mesh";
         }
 
-        
+        /// <summary>
+        /// Assign numbers to the vertices in this mesh based on their position in the collection.
+        /// The vertex Number property will be written to and may be overwritten if a previous value
+        /// has been stored there.
+        /// </summary>
+        public void AssignVertexNumbers()
+        {
+            for (int i = 0; i < _Vertices.Count; i++)
+            {
+                _Vertices[i].Number = i;
+            }
+        }
+
+        /// <summary>
+        /// Generate a link of the links between edges in this mesh
+        /// </summary>
+        /// <returns></returns>
+        public IList<MeshEdgeLink> GenerateEdgeLinks()
+        {
+            var linkDictionary = new Dictionary<string, MeshEdgeLink>();
+            foreach (MeshFace face in Faces)
+            {
+                face.EnsureEdgeLinkGeneration(linkDictionary);
+            }
+            return linkDictionary.Values.ToList();
+        }
 
         #endregion
 

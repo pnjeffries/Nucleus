@@ -183,7 +183,7 @@ namespace FreeBuild.Geometry
         {
             foreach (Vertex v in this)
             {
-                v.VertexIndex = startingIndex;
+                v.Number = startingIndex;
                 startingIndex++;
             }
         }

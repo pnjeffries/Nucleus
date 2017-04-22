@@ -67,6 +67,25 @@ namespace FreeBuild.Model
             }
         }
 
+        /// <summary>
+        /// Private backing field for FaceFamilies property
+        /// </summary>
+        private PanelFamilyCollection _PanelFamilies = null;
+
+        /// <summary>
+        /// The subset of panel properties in this table.
+        /// Generated when necessary and cached.  Do not modify - modifications to this
+        /// collection will have no effect on the source table.
+        /// </summary>
+        public PanelFamilyCollection PanelFamilies
+        {
+            get
+            {
+                if (_PanelFamilies == null) _PanelFamilies = GetPanelFamilies();
+                return _PanelFamilies;
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -85,6 +104,7 @@ namespace FreeBuild.Model
         {
             //Clear cached data:
             _Sections = null;
+            _PanelFamilies = null;
         }
 
         protected override void SetNumericID(Family item)

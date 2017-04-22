@@ -33,7 +33,7 @@ namespace FreeBuild.Extensions
     public static class ICollectionExtensions
     {
         /// <summary>
-        /// Does the specified collection contain any item of the specified type?
+        /// Does this collection contain any item of the specified type?
         /// </summary>
         /// <param name="col"></param>
         /// <param name="type"></param>
@@ -48,6 +48,24 @@ namespace FreeBuild.Extensions
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Does this collection contain only objects of the given type or its subclasses?
+        /// </summary>
+        /// <param name="col"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool ContainsOnlyType(this ICollection col, Type type)
+        {
+            foreach (object item in col)
+            {
+                if (!type.IsAssignableFrom(item.GetType()))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         /// <summary>
