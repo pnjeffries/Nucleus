@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using FreeBuild.Extensions;
+using FreeBuild.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -239,6 +240,33 @@ namespace FreeBuild.Base
         public Bool6D WithZZ(bool value)
         {
             return new Bool6D(X, Y, Z, XX, YY, value);
+        }
+
+        /// <summary>
+        /// Create a new Bool6D copying all values from this one
+        /// but overriding the specififed dimension
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public Bool6D With(Direction direction, bool value)
+        {
+            switch (direction)
+            {
+                case Direction.X:
+                    return WithX(value);
+                case Direction.Y:
+                    return WithY(value);
+                case Direction.Z:
+                    return WithZ(value);
+                case Direction.XX:
+                    return WithXX(value);
+                case Direction.YY:
+                    return WithYY(value);
+                case Direction.ZZ:
+                    return WithZZ(value);
+            }
+            return this;
         }
 
         /// <summary>

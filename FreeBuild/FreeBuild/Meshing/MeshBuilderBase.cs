@@ -502,9 +502,20 @@ namespace FreeBuild.Meshing
             FillStartToEndReverse(topPoints); // Cap top
         }
 
-        public void AddNodeSupport(Node node, NodeSupport support)
+        /// <summary>
+        /// Add a set of vertices and faces to this mesh representing a nodal support
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="support"></param>
+        public void AddNodeSupport(Node node, NodeSupport support, double scale = 0.5)
         {
-
+            if (support != null && !support.Fixity.AllFalse)
+            {
+                var tip = node.Position;
+                Vector direction = new Vector(0, 0, scale);
+                var circle = new Circle(scale, new CylindricalCoordinateSystem(tip - direction, new Vector(new Angle(Math.PI / 4)), Vector.UnitY));
+                AddFacetCone(tip, circle, 4);
+            }
         }
     }
 
