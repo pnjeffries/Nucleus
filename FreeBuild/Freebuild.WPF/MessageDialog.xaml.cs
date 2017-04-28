@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeBuild.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,15 @@ namespace FreeBuild.WPF
     /// </summary>
     public partial class MessageDialog : Window
     {
+        #region Properties
+
+        /// <summary>
+        /// The value to be returned when this dialog closes
+        /// </summary>
+        public object ReturnValue { get; set; } = null;
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -36,6 +46,34 @@ namespace FreeBuild.WPF
             foreach (string message in messages)
             {
                 TextBox.Document.Blocks.Add(new Paragraph(new Run(message)));
+            }
+        }
+
+        /// <summary>
+        /// Initialise a new MessageDialog with the specified title displaying the specified message
+        /// and offering the specified set of options
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="message"></param>
+        public MessageDialog(string title, string message, params UIOption[] options)
+        {
+            InitializeComponent();
+
+            this.Title = title;
+            TextBox.Document.Blocks.Clear();
+            TextBox.Document.Blocks.Add(new Paragraph(new Run(message)));
+
+            if (options.Length > 0)
+            {
+                ButtonsPanel.Children.Clear();
+                foreach (UIOption option in options)
+                {
+                    Button button = new Button();
+                    button.Content = option.Text;
+                    button.Tag = option.ReturnValue;
+                    button.Click += OptionButton_Click;
+                    ButtonsPanel.Children.Add(button);
+                }
             }
         }
 
@@ -72,6 +110,14 @@ namespace FreeBuild.WPF
             Close();
         }
 
+        private void OptionButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            ReturnValue = button.Tag;
+            if (ReturnValue is bool) DialogResult = (bool)ReturnValue;
+            Close();
+        }
+
         #endregion
 
         #region Static Methods
@@ -96,6 +142,21 @@ namespace FreeBuild.WPF
         {
             MessageDialog mD = new MessageDialog(title, exception, prefaceMessage);
             mD.ShowDialog();
+        }
+
+        /// <summary>
+        /// Show a new MessageDialog window offering the specified set of options.
+        /// Returns the ReturnValue of the selected option (if any).
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="message"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public static object ShowOptions(string title, string message, params UIOption[] options)
+        {
+            MessageDialog mD = new MessageDialog(title, message, options);
+            mD.ShowDialog();
+            return mD.ReturnValue;
         }
 
         #endregion

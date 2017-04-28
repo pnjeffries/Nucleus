@@ -267,6 +267,15 @@ namespace FreeBuild.Geometry
         { }
 
         /// <summary>
+        /// Initialise a bounding box containing a sphere of a given radius around a point
+        /// </summary>
+        /// <param name="pt"></param>
+        /// <param name="radius"></param>
+        public BoundingBox(Vector pt, double radius)
+            : this(pt.X - radius, pt.X + radius, pt.Y - radius, pt.Y + radius, pt.Z - radius, pt.Z + radius)
+        { }
+
+        /// <summary>
         /// Constructor to fit a bounding box around a set of points.
         /// </summary>
         /// <param name="points">The points to fit the bounding box around</param>

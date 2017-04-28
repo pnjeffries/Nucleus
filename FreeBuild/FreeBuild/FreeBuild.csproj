@@ -310,6 +310,7 @@
     <Compile Include="UI\AutoUIAttribute.cs" />
     <Compile Include="UI\AutoUIComboBoxAttribute.cs" />
     <Compile Include="UI\IUserInteraction.cs" />
+    <Compile Include="UI\UIOption.cs" />
     <Compile Include="Units\DimensionAttribute.cs" />
     <Compile Include="Units\DimensionType.cs" />
   </ItemGroup>

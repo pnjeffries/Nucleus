@@ -106,6 +106,17 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Radius, Coordinate System constructor.
+        /// Creates a circle on the XY plane of the given coordinate system with the specified radius.
+        /// </summary>
+        /// <param name="radius"></param>
+        /// <param name="cSystem"></param>
+        public Circle(double radius, CartesianCoordinateSystem cSystem) : base(cSystem)
+        {
+            Radius = radius;
+        }
+
+        /// <summary>
         /// Duplication constructor.
         /// Create a copy of the other circle.
         /// </summary>

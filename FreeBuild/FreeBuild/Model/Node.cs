@@ -197,11 +197,22 @@ namespace FreeBuild.Model
             {
                 if (v.Owner != null)
                 {
-                    //TODO
-                    //VertexGeometry vG = 
+                    VertexGeometry vG = v.Owner;
+                    if (vG is Curve)
+                    {
+                        Curve crv = (Curve)vG;
+                        Vector midPt = crv.PointAt(0.5);
+                        if (midPt.IsValid())
+                        {
+                            result += (midPt - Position).Unitize();
+                            count += 1;
+                        }
+                    }
+                    //TODO: To surface centroid?
                 }
             }
-            throw new NotImplementedException();
+            if (count > 1) result /= count;
+            return result;
         }
 
         #endregion

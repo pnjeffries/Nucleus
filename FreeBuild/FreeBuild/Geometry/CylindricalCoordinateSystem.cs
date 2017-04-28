@@ -123,7 +123,7 @@ namespace FreeBuild.Geometry
         /// plane's origin.
         /// </summary>
         /// <param name="plane"></param>
-        public CylindricalCoordinateSystem(Plane plane)
+        public CylindricalCoordinateSystem(CartesianCoordinateSystem plane)
         {
             Origin = plane.Origin;
             L = plane.Z;

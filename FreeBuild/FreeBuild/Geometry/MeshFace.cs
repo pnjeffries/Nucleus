@@ -713,7 +713,5 @@ namespace FreeBuild.Geometry
 
         #endregion
 
-
-
     }
 }

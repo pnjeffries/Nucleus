@@ -169,6 +169,7 @@ namespace FreeBuild.Robot
             UpdateModelSectionsFromRobotFile(model, context);
             UpdateModelNodesFromRobotFile(model, robotNodes, context);
             UpdateModelLinearElementsFromRobotFile(model, robotNodes, context);
+            UpdateModelPanelElementsFromRobotFile(model, robotNodes, context);
             RaiseMessage("Data reading completed.");
             return false;
         }
@@ -181,6 +182,7 @@ namespace FreeBuild.Robot
         /// <param name="context"></param>
         private void UpdateModelNodesFromRobotFile(Model.Model model, IRobotCollection robotNodes, RobotConversionContext context)
         {
+            RaiseMessage("Reading Nodes...");
             //Delete all mapped nodes:
             if (context.Options.DeleteMissingObjects) context.IDMap.AllMappedNodes(model).DeleteAll();
 
@@ -221,13 +223,14 @@ namespace FreeBuild.Robot
         /// <param name="context"></param>
         private void UpdateModelSectionsFromRobotFile(Model.Model model, RobotConversionContext context)
         {
+            RaiseMessage("Reading Sections...");
             IRobotCollection sections = Robot.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_BAR_SECTION);
             for (int i = 1; i <= sections.Count; i++)
             {
                 IRobotLabel label = sections.Get(i);
                 if (label != null)
                 {
-                    SectionFamily section = context.IDMap.GetMappedSectionProperty(label, model);
+                    SectionFamily section = context.IDMap.GetMappedSectionFamily(label, model);
                     if (section == null)
                         section = model.Create.SectionFamily(context.ExInfo);
 
@@ -251,6 +254,8 @@ namespace FreeBuild.Robot
         /// <param name="context"></param>
         private void UpdateModelLinearElementsFromRobotFile(Model.Model model, IRobotCollection robotNodes, RobotConversionContext context)
         {
+            RaiseMessage("Reading Bars...");
+
             //Delete all previously mapped linear elements:
             if (context.Options.DeleteMissingObjects) context.IDMap.AllMappedLinearElements(model).DeleteAll();
 
@@ -274,7 +279,7 @@ namespace FreeBuild.Robot
                     if (bar.HasLabel(IRobotLabelType.I_LT_BAR_SECTION) != 0)
                     {
                         string sectionID = bar.GetLabelName(IRobotLabelType.I_LT_BAR_SECTION);
-                        element.Family = context.IDMap.GetMappedSectionProperty(sectionID, model);
+                        element.Family = context.IDMap.GetMappedSectionFamily(sectionID, model);
                     }
                     //TODO: Copy over data
 
@@ -286,18 +291,16 @@ namespace FreeBuild.Robot
 
         private void UpdateModelPanelElementsFromRobotFile(Model.Model model, IRobotCollection robotNodes, RobotConversionContext context)
         {
-            /*IRobotCollection pEls = Robot.Project.Structure.FiniteElems.GetAll();
-            for (int i = 1; i <= pEls.Count; i++)
-            {
-                IRobotFiniteElement pEl = pEls.Get(i);
-                
-                // TODO
-            }*/
+            RaiseMessage("Reading Slabs...");
+
+            //Delete all previously mapped panel elements:
+            if (context.Options.DeleteMissingObjects) context.IDMap.AllMappedPanelElements(model).DeleteAll();
+
             IRobotCollection objs = Robot.Project.Structure.Objects.GetAll();
             for (int i = 1; i <= objs.Count; i++)
             {
                 RobotObjObject rOO = objs.Get(i);
-                if (rOO != null && rOO.StructuralType == IRobotObjectStructuralType.I_OST_SLAB && rOO.Host < 1)
+                if (rOO != null && rOO.Host < 1) // && rOO.StructuralType == IRobotObjectStructuralType.I_OST_SLAB
                 {
                     RobotGeoObject geometry = rOO.Main.Geometry;
                     Curve border = ROBtoFB.Convert(geometry);
@@ -327,6 +330,60 @@ namespace FreeBuild.Robot
                         context.IDMap.Add(pEl, rOO);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Update the load cases in a FreeBuild model to match those in a Robot file
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="context"></param>
+        private void UpdateModelLoadsFromRobotFile(Model.Model model, RobotConversionContext context)
+        {
+            RaiseMessage("Reading Loads...");
+
+            RobotCaseCollection cases = Robot.Project.Structure.Cases.GetAll();
+            for (int i = 1; i <= cases.Count; i++)
+            {
+                IRobotCase rCase = cases.Get(i);
+                LoadCase lCase = context.IDMap.GetMappedLoadCase(rCase.Number.ToString(), model);
+                if (lCase == null) //Create new load case
+                    lCase = model.Create.LoadCase(rCase.Name, context.ExInfo);
+                else
+                {
+                    lCase.Name = rCase.Name;
+                    lCase.Undelete();
+                }
+                // TODO: Copy over more data
+                if (rCase is RobotSimpleCase)
+                {
+                    RobotSimpleCase sCase = (RobotSimpleCase)rCase;
+                    var records = sCase.Records;
+                    for (int j = 1; j <= records.Count; j++)
+                    {
+                        RobotLoadRecord record = (RobotLoadRecord)records.Get(i);
+                        Load load = context.IDMap.GetMappedLoad(record.UniqueId.ToString(), model);
+                        if (record.Type == IRobotLoadRecordType.I_LRT_NODE_FORCE)
+                        {
+                            //TODO: Create node load
+                        }
+                        else if (record.Type == IRobotLoadRecordType.I_LRT_BAR_UNIFORM)
+                        {
+                            //TODO: Create UDL
+                        }
+                        else if (record.Type == IRobotLoadRecordType.I_LRT_UNIFORM)
+                        {
+                            //TODO: Panel load
+                        }
+                        else if (record.Type == IRobotLoadRecordType.I_LRT_IN_CONTOUR)
+                        {
+                            //TODO: Area load?
+                        }
+                    }
+                }
+
+                // Store mapping:
+                context.IDMap.Add(lCase, rCase);
             }
         }
 
@@ -422,6 +479,10 @@ namespace FreeBuild.Robot
                 {
                     UpdateRobotSection((SectionFamily)property, context);
                 }
+                else if (property is PanelFamily)
+                {
+                    UpdateRobotThickness((PanelFamily)property, context);
+                }
             }
             return true;
         }
@@ -456,6 +517,12 @@ namespace FreeBuild.Robot
                 UpdateRobotPanel(element, context);
             }
             return true;
+        }
+
+        private bool UpdateRobotLoadCasesFromModel(Model.Model model, LoadCaseCollection loadCases, RobotConversionContext context)
+        {
+            //TODO
+            return false;
         }
 
         #endregion
@@ -500,10 +567,12 @@ namespace FreeBuild.Robot
         /// <param name="id">Optional.  The ID number to be assigned to the object.
         /// If omitted or lower than 1, the next free number will be used.</param>
         /// <returns></returns>
-        public IRobotObjObject CreateRobotPanel(int id = -1)
+        public IRobotObjObject CreateRobotPanel(Curve perimeter, int id = -1)
         {
             if (id < 1) id = Robot.Project.Structure.Objects.FreeNumber;
-            return Robot.Project.Structure.Objects.Create(id);
+            Robot.Project.Structure.Objects.CreateContour(id, FBtoROB.Convert(perimeter.Facet(Angle.FromDegrees(10))));
+            return (RobotObjObject)Robot.Project.Structure.Objects.Get(id);
+            //return Robot.Project.Structure.Objects.Create(id);
         }
 
         /// <summary>
@@ -662,21 +731,37 @@ namespace FreeBuild.Robot
             {
                 if (obj == null)
                 {
-                    obj = CreateRobotPanel(mappedID);
-                }
-
-                //TODO: Setup geometry:
-                if (element.Geometry is PlanarRegion)
-                {
                     var pR = (PlanarRegion)element.Geometry;
-                    obj.Main.Geometry = FBtoROB.Convert(pR.Perimeter);
+                    if (element.Geometry is PlanarRegion)
+                    {
+                        obj = CreateRobotPanel(pR.Perimeter, mappedID);
+                    }
+                    else if (element.Geometry is Mesh)
+                    {
+                        //TODO: Meshes!
+                    }
                 }
-                obj.Main.Attribs.Meshed = 1; //True?
 
-                obj.Initialize();
-                obj.Update();
+                if (obj != null)
+                {
+                    //TODO: Setup geometry:
+                    /*if (element.Geometry is PlanarRegion)
+                    {
+                        var pR = (PlanarRegion)element.Geometry;
+                        obj.Main.Geometry = FBtoROB.Convert(pR.Perimeter);
+                    }*/
 
-                context.IDMap.Add(element, obj);
+                    obj.Main.Attribs.Meshed = 1; //True
+                    if (element.Family != null)
+                    {
+                        obj.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, GetMappedThicknessID(element.Family, context));
+                    }
+                    
+                    obj.Initialize();
+                    obj.Update();
+
+                    context.IDMap.Add(element, obj);
+                }
             }
             return obj;
         }
@@ -891,6 +976,48 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
+        /// Update or create a Robot Thickness property linked to a FreeBuild panel family
+        /// </summary>
+        /// <param name="family"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public IRobotLabel UpdateRobotThickness(PanelFamily family, RobotConversionContext context)
+        {
+            string mappedID;
+            IRobotLabel label = null;
+            if (context.IDMap.HasSecondID(context.IDMap.ThicknessCategory, family.GUID))
+            {
+                mappedID = context.IDMap.GetSecondID(context.IDMap.ThicknessCategory, family.GUID);
+                if (family.IsDeleted)
+                {
+                    Robot.Project.Structure.Labels.Delete(IRobotLabelType.I_LT_PANEL_THICKNESS, mappedID);
+                }
+                else if (Robot.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_PANEL_THICKNESS, mappedID) != 0)
+                    label = Robot.Project.Structure.Labels.Get(IRobotLabelType.I_LT_PANEL_THICKNESS, mappedID) as IRobotLabel;
+            }
+            if (!family.IsDeleted)
+            {
+                if (label == null)
+                {
+                    if (family.Name == null) family.Name = "Test"; //TEMP!
+                    label = Robot.Project.Structure.Labels.Create(IRobotLabelType.I_LT_PANEL_THICKNESS, family.Name); //TODO: Enforce name uniqueness?
+                }
+            }
+
+            RobotThicknessData rData = label.Data as RobotThicknessData;
+            rData.ThicknessType = IRobotThicknessType.I_TT_HOMOGENEOUS; //TEMP
+            IRobotThicknessHomoData homogeneousData = (IRobotThicknessHomoData)rData.Data;
+            homogeneousData.Type = IRobotThicknessHomoType.I_THT_CONSTANT;
+            homogeneousData.ThickConst = family.BuildUp.TotalThickness;
+
+            context.IDMap.Add(family, label);
+
+            Robot.Project.Structure.Labels.Store(label);
+
+            return label;
+        }
+
+        /// <summary>
         /// Retrieve a mapped robot node ID for the specified node.
         /// A new node in robot will be generated if nothing is currently mapped.
         /// </summary>
@@ -918,6 +1045,21 @@ namespace FreeBuild.Robot
                 return context.IDMap.GetSecondID(context.IDMap.SectionCategory, section.GUID);
             else
                 return UpdateRobotSection(section, context).Name;
+        }
+
+        /// <summary>
+        /// Retrieve a mapped Robot thickness label name for the specified family.
+        /// A new thickness in Robot will be generated if nothing is currently mapped.
+        /// </summary>
+        /// <param name="family"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public string GetMappedThicknessID(PanelFamily family, RobotConversionContext context)
+        {
+            if (context.IDMap.HasSecondID(context.IDMap.ThicknessCategory, family.GUID))
+                return context.IDMap.GetSecondID(context.IDMap.ThicknessCategory, family.GUID);
+            else
+                return UpdateRobotThickness(family, context).Name;
         }
 
         #endregion

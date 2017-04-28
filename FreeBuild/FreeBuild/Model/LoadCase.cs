@@ -34,6 +34,8 @@ namespace FreeBuild.Model
     {
         #region Properties
 
+
+
         #endregion
 
         #region Constructors

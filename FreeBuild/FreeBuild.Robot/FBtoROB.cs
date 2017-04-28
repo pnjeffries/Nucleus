@@ -28,6 +28,23 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
+        /// Convert an array of FreeBuild vectors to a RobotPointsArray
+        /// </summary>
+        /// <param name="pts"></param>
+        /// <returns></returns>
+        public static RobotPointsArray Convert(Vector[] pts)
+        {
+            var result = new RobotPointsArray();
+            result.SetSize(pts.Length);
+            for (int i = 0; i < pts.Length; i++)
+            {
+                Vector pt = pts[i];
+                result.Set(i + 1, pt.X,pt.Y,pt.Z);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Add a line segment to the end of the specified Robot polyline
         /// </summary>
         /// <param name="result"></param>

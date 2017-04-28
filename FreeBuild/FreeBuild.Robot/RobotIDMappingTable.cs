@@ -38,7 +38,20 @@ namespace FreeBuild.Robot
         /// </summary>
         public string SectionCategory { get { return "Sections"; } }
 
-        
+        /// <summary>
+        /// The name of the category under which thickness properties are stored
+        /// </summary>
+        public string ThicknessCategory { get { return "Thickness"; } }
+
+        /// <summary>
+        /// The name of the category under which load cases are stored
+        /// </summary>
+        public string CaseCategory { get { return "Cases"; } }
+
+        /// <summary>
+        /// The name of the category under which loads are stored
+        /// </summary>
+        public string LoadCategory { get { return "Loads"; } }
 
         #endregion
 
@@ -134,26 +147,73 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Get the FreeBuild section property, if any, mapped to the specified robot section label ID
+        /// Get the FreeBuild section family, if any, mapped to the specified robot section label ID
         /// </summary>
         /// <param name="robotID"></param>
         /// <param name="model"></param>
         /// <returns></returns>
-        public SectionFamily GetMappedSectionProperty(string robotID, Model.Model model)
+        public SectionFamily GetMappedSectionFamily(string robotID, Model.Model model)
         {
             if (HasFirstID(SectionCategory, robotID)) return model.Families.TryGet(GetFirstID(SectionCategory, robotID)) as SectionFamily;
             return null;
         }
 
         /// <summary>
-        /// Get the FreeBuild section property, if any, mapped to the ID of the specified 
+        /// Get the FreeBuild section property, if any, mapped to the ID of the specified label
         /// </summary>
         /// <param name="label"></param>
         /// <param name="model"></param>
         /// <returns></returns>
-        public SectionFamily GetMappedSectionProperty(IRobotLabel label, Model.Model model)
+        public SectionFamily GetMappedSectionFamily(IRobotLabel label, Model.Model model)
         {
-            return GetMappedSectionProperty(label.Name, model);
+            return GetMappedSectionFamily(label.Name, model);
+        }
+
+        /// <summary>
+        /// Get the FreeBuild panel family, if any, mapped to the specified robot thickness label ID
+        /// </summary>
+        /// <param name="robotID"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public PanelFamily GetMappedPanelFamily(string robotID, Model.Model model)
+        {
+            if (HasFirstID(ThicknessCategory, robotID)) return model.Families.TryGet(GetFirstID(ThicknessCategory, robotID)) as PanelFamily;
+            return null;
+        }
+
+        /// <summary>
+        /// Get the FreeBuild panel family, if any, mapped to the specified robot thickness label
+        /// </summary>
+        /// <param name="robotID"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public PanelFamily GetMappedPanelFamily(IRobotLabel label, Model.Model model)
+        {
+            return GetMappedPanelFamily(label.Name, model);
+        }
+
+        /// <summary>
+        /// Get the FreeBuild load case, if any, mapped to the specified robotID
+        /// </summary>
+        /// <param name="robotID"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public LoadCase GetMappedLoadCase(string robotID, Model.Model model)
+        {
+            if (HasFirstID(CaseCategory, robotID)) return model.LoadCases.TryGet(GetFirstID(CaseCategory, robotID)) as LoadCase;
+            return null;
+        }
+
+        /// <summary>
+        /// Get the FreeBuild load, if any, mapped to the specified robotID
+        /// </summary>
+        /// <param name="robotID"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public Load GetMappedLoad(string robotID, Model.Model model)
+        {
+            if (HasFirstID(CaseCategory, robotID)) return model.Loads.TryGet(GetFirstID(LoadCategory, robotID)) as Load;
+            return null;
         }
 
         /// <summary>
@@ -197,6 +257,36 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
+        /// Add a new Panel Family entry to this mapping table
+        /// </summary>
+        /// <param name="family"></param>
+        /// <param name="label"></param>
+        public void Add(PanelFamily family, IRobotLabel label)
+        {
+            Add(ThicknessCategory, family.GUID, label.Name);
+        }
+
+        /// <summary>
+        /// Add a new Load Case entry to this mapping table
+        /// </summary>
+        /// <param name="loadCase"></param>
+        /// <param name="rCase"></param>
+        public void Add(LoadCase loadCase, IRobotCase rCase)
+        {
+            Add(CaseCategory, loadCase.GUID, rCase.Number.ToString());
+        }
+
+        /// <summary>
+        /// Add a new Load entry to this mapping table
+        /// </summary>
+        /// <param name="load"></param>
+        /// <param name="rLoad"></param>
+        public void Add(Load load, RobotLoadRecord rLoad)
+        {
+            Add(CaseCategory, load.GUID, rLoad.UniqueId.ToString());
+        }
+
+        /// <summary>
         /// Remove a node record
         /// </summary>
         /// <param name="node"></param>
@@ -233,6 +323,24 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
+        /// Remove a panel family entry
+        /// </summary>
+        /// <param name="family"></param>
+        public void Remove(PanelFamily family)
+        {
+            Remove(ThicknessCategory, family.GUID);
+        }
+
+        /// <summary>
+        /// Remove a load case entry
+        /// </summary>
+        /// <param name="lCase"></param>
+        public void Remove(LoadCase lCase)
+        {
+            Remove(CaseCategory, lCase.GUID);
+        }
+
+        /// <summary>
         /// Get all nodes in the specified model which have a mapping entry in this table
         /// </summary>
         /// <param name="inModel"></param>
@@ -261,6 +369,24 @@ namespace FreeBuild.Robot
             if (ContainsKey(BarCategory))
             {
                 foreach (Guid guid in this[BarCategory].Keys)
+                {
+                    if (inModel.Elements.Contains(guid)) result.Add(inModel.Elements[guid]);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Get all linear elements in the specified model which have a mapping entry in this table
+        /// </summary>
+        /// <param name="inModel"></param>
+        /// <returns></returns>
+        public ElementCollection AllMappedPanelElements(Model.Model inModel)
+        {
+            var result = new ElementCollection();
+            if (ContainsKey(PanelCategory))
+            {
+                foreach (Guid guid in this[PanelCategory].Keys)
                 {
                     if (inModel.Elements.Contains(guid)) result.Add(inModel.Elements[guid]);
                 }

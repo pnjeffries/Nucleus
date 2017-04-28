@@ -115,17 +115,20 @@ namespace FreeBuild.Rhino
         {
             if (arc.IsCircle)
             {
-                //TODO
-                throw new NotImplementedException();
+                return new Arc(Convert(new RC.Circle(arc)));
             }
             else return new Arc(Convert(arc.StartPoint), Convert(arc.MidPoint), Convert(arc.EndPoint));
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Convert a Rhino circle to a FreeBuild one
+        /// </summary>
+        /// <param name="circle"></param>
+        /// <returns></returns>
         public static Circle Convert(RC.Circle circle)
         {
-            //TODO
-            throw new NotImplementedException();
+            return new Circle(circle.Radius, Convert(circle.Plane));
         }
 
         /// <summary>
@@ -222,11 +225,35 @@ namespace FreeBuild.Rhino
         /// </summary>
         /// <param name="brep"></param>
         /// <returns></returns>
-        public static PlanarRegion ConvertToPlanarRegion(RC.Brep brep)
+        public static PlanarRegion ConvertToPlanarRegion(RC.Brep brep, RC.BrepFace face)
         {
-            
             throw new NotImplementedException();
             //TODO!
+            if (face.IsPlanar())
+            {
+                int[] iEdges = face.AdjacentEdges();
+                RC.Curve[] curves = new RC.Curve[iEdges.Length];
+                for (int i = 0; i < iEdges.Length; i++)
+                {
+                    RC.BrepEdge bEdge = brep.Edges[i];
+                    curves[i] = bEdge;
+                }
+                var joined = RC.Curve.JoinCurves(curves);
+                if (joined.Length > 0)
+                {
+                    Curve boundary = Convert(joined[0]);
+                    var result = new PlanarRegion(boundary);
+                    // NOTE: This assumes that the outer boundary will be the first
+                    // joined curve.  TODO: Check this!
+                    for (int i = 1; i < joined.Length; i++)
+                    {
+                        Curve voidCrv = Convert(joined[i]);
+                        result.Voids.Add(voidCrv);
+                    }
+                    return result;
+                }
+            }
+            return null;
         }
 
         /// <summary>
@@ -236,9 +263,7 @@ namespace FreeBuild.Rhino
         /// <returns></returns>
         public static Surface Convert(RC.Surface surface)
         {
-            if (surface.IsPlanar()) return ConvertToPlanarRegion(surface.ToBrep());
-            else
-                throw new NotImplementedException();
+            return Convert(surface.ToBrep());
         }
 
         /// <summary>
@@ -248,6 +273,12 @@ namespace FreeBuild.Rhino
         /// <returns></returns>
         public static Surface Convert(RC.Brep brep)
         {
+            if (brep.Faces.Count > 0)
+            {
+                // TODO: Convert ALL faces
+                RC.BrepFace face = brep.Faces[0];
+                if (face.IsPlanar()) return ConvertToPlanarRegion(brep, face);
+            }
             throw new NotImplementedException();
         }
 
@@ -262,8 +293,8 @@ namespace FreeBuild.Rhino
             else if (geometry is RC.Point) return Convert((RC.Point)geometry);
             else if (geometry is RC.Surface) return Convert((RC.Surface)geometry);
             else if (geometry is RC.Mesh) return Convert((RC.Mesh)geometry);
-            else if (geometry is RC.Brep && ((RC.Brep)geometry).IsSurface)
-                return Convert(((RC.Brep)geometry).Surfaces[0]);
+            else if (geometry is RC.Brep)
+                return Convert(((RC.Brep)geometry));
             else throw new NotImplementedException();
         }
 
