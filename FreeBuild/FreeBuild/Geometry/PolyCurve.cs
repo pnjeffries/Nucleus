@@ -472,7 +472,7 @@ namespace FreeBuild.Geometry
             PolyCurve result = new PolyCurve(new Line(x2,y,-x2, y));
             if (cornerRadius > 0) result.AddArcTangent(new Vector(-1, 0), new Vector(-x, y2));
             result.AddLine(-x, -y2);
-            if (cornerRadius > 0) result.AddArcTangent(new Vector(0,-1), new Vector(-x2, y));
+            if (cornerRadius > 0) result.AddArcTangent(new Vector(0,-1), new Vector(-x2, -y));
             result.AddLine(x2, -y);
             if (cornerRadius > 0) result.AddArcTangent(new Vector(1,0), new Vector(x, -y2));
             result.AddLine(x, y2);
