@@ -106,6 +106,7 @@ namespace FreeBuild.Model
         /// <summary>
         /// Private backing field for Data property
         /// </summary>
+        [Copy(CopyBehaviour.DUPLICATE)]
         private TDataStore _Data;
 
         /// <summary>

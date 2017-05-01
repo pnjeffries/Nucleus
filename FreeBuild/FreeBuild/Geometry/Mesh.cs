@@ -101,6 +101,18 @@ namespace FreeBuild.Geometry
             }
         }
 
+        /// <summary>
+        /// Initialise a mesh with the specified vertices and faces.
+        /// The vertices used should not already form part of any other geometry definition.
+        /// </summary>
+        /// <param name="verts"></param>
+        /// <param name="faces"></param>
+        public Mesh(VertexCollection verts, MeshFaceCollection faces) : this()
+        {
+            foreach (Vertex v in verts) Vertices.Add(v);
+            foreach (MeshFace f in faces) Faces.Add(f);
+        }
+
         #endregion
 
         #region Methods
@@ -180,11 +192,11 @@ namespace FreeBuild.Geometry
         /// The vertex Number property will be written to and may be overwritten if a previous value
         /// has been stored there.
         /// </summary>
-        public void AssignVertexNumbers()
+        public void AssignVertexNumbers(int firstNumber = 0)
         {
             for (int i = 0; i < _Vertices.Count; i++)
             {
-                _Vertices[i].Number = i;
+                _Vertices[i].Number = i + firstNumber;
             }
         }
 

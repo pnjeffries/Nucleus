@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Maths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,7 +54,7 @@ namespace FreeBuild.Geometry
         {
             get
             {
-                return StartPoint.Equals(EndPoint, Tolerance.Geometric);
+                return StartPoint.Equals(EndPoint, Tolerance.Distance);
             }
             protected set { }
         }
@@ -265,7 +266,7 @@ namespace FreeBuild.Geometry
                     start = onPlane.GlobalToLocal(start);
                     end = onPlane.GlobalToLocal(end);
                 }
-                result += XYAreaUnder(start.X, start.Y, end.X, end.Y, ref centroid);
+                result += MathsHelper.AreaUnder(start.X, start.Y, end.X, end.Y, ref centroid);
                 Vector subCentroid;
                 double subArea = subCrv.CalculateEnclosedArea(out subCentroid, onPlane);
                 result += subArea;

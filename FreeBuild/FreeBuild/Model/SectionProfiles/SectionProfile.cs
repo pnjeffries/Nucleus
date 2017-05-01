@@ -243,7 +243,7 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
-        /// Generate the string description of this profi
+        /// Generate the string description of this profile
         /// </summary>
         /// <returns></returns>
         public abstract string GenerateDescription();
@@ -252,13 +252,19 @@ namespace FreeBuild.Model
 
         #region Static Methods
 
+        /// <summary>
+        /// Create a new SectionProfile based on a string description.
+        /// </summary>
+        /// <param name="description"></param>
+        /// <param name="catalogue"></param>
+        /// <returns></returns>
         public static SectionProfile FromDescription(string description, SectionProfileLibrary catalogue = null)
         {
             if (catalogue != null)
             {
                 // Check in catalogue:
                 SectionProfile profile = catalogue.GetByCatalogueName(description);
-                if (profile != null) return profile;
+                if (profile != null) return profile.Duplicate();
             }
 
             string[] tokens = description.Split(' ');
@@ -281,7 +287,7 @@ namespace FreeBuild.Model
                     case "RHS":
                         return new RectangularProfile(tokens[1]);
                 }
-                throw new NotImplementedException(); //If we're here, we haven't caught the case
+                throw new NotImplementedException("The specified section profile description could not be parsed successfully."); //If we're here, we haven't caught the case
             }
 
             return null;

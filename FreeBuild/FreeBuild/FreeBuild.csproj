@@ -54,6 +54,7 @@
     <Compile Include="Geometry\GridLineCollection.cs" />
     <Compile Include="Geometry\GridLineGenerator.cs" />
     <Compile Include="Geometry\MeshEdgeLink.cs" />
+    <Compile Include="Maths\MathsHelper.cs" />
     <Compile Include="Model\PanelFamilyCollection.cs" />
     <Compile Include="Model\BuildUpLayer.cs" />
     <Compile Include="Model\BuildUpLayerCollection.cs" />

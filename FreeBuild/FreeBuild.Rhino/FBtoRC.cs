@@ -149,6 +149,7 @@ namespace FreeBuild.Rhino
                 {
                     points.Add(Convert(vertex.Position));
                 }
+                if (polyline.Closed) points.Add(Convert(polyline.StartPoint));
                 return new RC.PolylineCurve(points);
             }
             return null;

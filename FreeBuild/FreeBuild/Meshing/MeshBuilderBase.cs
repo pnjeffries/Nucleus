@@ -35,6 +35,17 @@ namespace FreeBuild.Meshing
     /// </summary>
     public abstract class MeshBuilderBase
     {
+        #region Properties
+
+        /// <summary>
+        /// The limiting angle to be used when facetting curves for meshing
+        /// </summary>
+        public Angle FacetAngle { get; set; } = Angle.FromDegrees(20);
+
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Finalize the mesh building.
         /// Will apply any necessary last steps to the mesh generation.
@@ -288,7 +299,7 @@ namespace FreeBuild.Meshing
             }
             else
             {
-                Vector[] pointStrip = profile.Facet(Angle.FromDegrees(20));
+                Vector[] pointStrip = profile.Facet(FacetAngle);
                 if (remapping == CoordinateSystemRemappingOption.RemapNegYZ) pointStrip = pointStrip.RemapZnegXY();
                 else if (remapping == CoordinateSystemRemappingOption.RemapYZ) pointStrip = pointStrip.RemapZXY();
                 AddSweep(frames, pointStrip, profile.Closed);
@@ -340,11 +351,11 @@ namespace FreeBuild.Meshing
         /// <param name="close">If true, an additional face will be added closing the loop</param>
         public void FillBetween(IList<Vector> pointStrip1, IList<Vector> pointStrip2, bool reverse = false, bool close = false)
         {
-            int max = Math.Max(pointStrip1.Count, pointStrip2.Count) - 1;
+            int max = Math.Max(pointStrip1.Count, pointStrip2.Count);
             // Calculate adjustment factors for the case where one strip has less items than the other:
             double factor1 = ((double)pointStrip1.Count) / max;
             double factor2 = ((double)pointStrip2.Count) / max;
-            for (int i = 0; i < max; i++)
+            for (int i = 0; i < max - 1; i++)
             {
                 Vector v1 = pointStrip2.GetBounded((int)Math.Round(i*factor2), reverse);
                 Vector v2 = pointStrip1.GetBounded((int)Math.Round(i*factor1));
@@ -385,7 +396,7 @@ namespace FreeBuild.Meshing
         /// <param name="orientation"></param>
         public void AddSectionPreview(Curve geometry, SectionFamily section, Angle orientation)
         { 
-            Angle tolerance = Angle.FromDegrees(20); //TODO: Make adjustable
+            Angle tolerance = FacetAngle;
             if (section != null && geometry != null && section.Profile != null)
             {
                 
@@ -437,6 +448,108 @@ namespace FreeBuild.Meshing
         }
 
         /// <summary>
+        /// Add a set of vertices and faces to the mesh representing a panel with thickness
+        /// </summary>
+        /// <param name="element"></param>
+        public void AddPanelPreview(PanelElement element)
+        {
+            AddPanelPreview(element.Geometry, element.Family);
+        }
+
+        /// <summary>
+        /// Add a set of vertices and faces to the mesh representing a panel with thickness.
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <param name="family"></param>
+        public virtual void AddPanelPreview(Surface geometry, PanelFamily family)
+        {
+            if (geometry.IsValid)
+            {
+                if (geometry is PlanarRegion)
+                {
+                    PlanarRegion region = (PlanarRegion)geometry;
+                    double thickness = family.BuildUp.TotalThickness;
+                    AddPlanarRegion(region, thickness, thickness * family.SetOut.FactorFromTop());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add a set of vertices and faces to the mesh representing a planar region with optional thickness
+        /// </summary>
+        /// <param name="region"></param>
+        /// <param name="thickness"></param>
+        /// <param name="topOffset"></param>
+        public void AddPlanarRegion(PlanarRegion region, double thickness = 0, double topOffset = 0)
+        {
+            Plane plane = region.Plane;
+            Vector[] perimeter = region.Perimeter.Facet(FacetAngle);
+            Vector[] mappedPerimeter = perimeter.GlobalToLocal(plane);
+            VertexCollection vertices = new VertexCollection(mappedPerimeter);
+            List<Vector[]> voidPerimeters = null;
+            List<Vector[]> mappedVoidPerimeters = null;
+            if (region.HasVoids) //Voids if present
+            {
+                voidPerimeters = new List<Vector[]>();
+                mappedVoidPerimeters = new List<Vector[]>();
+                foreach (Curve voidCrv in region.Voids)
+                {
+                    Vector[] voidPerimeter = voidCrv.Facet(FacetAngle);
+                    voidPerimeters.Add(voidPerimeter);
+                    Vector[] mappedVoidPerimeter = voidPerimeter.GlobalToLocal(plane);
+                    mappedVoidPerimeters.Add(mappedVoidPerimeter);
+                    foreach (Vector pt in mappedVoidPerimeter) vertices.Add(new Vertex(pt));
+                }
+            }
+
+            MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(vertices);
+            faces.CullOutsideXY(mappedPerimeter);
+
+            if (mappedVoidPerimeters != null)
+            {
+                foreach (Vector[] voidPerimeter in mappedVoidPerimeters)
+                {
+                    faces.CullInsideXY(voidPerimeter);
+                }
+            }
+            
+            vertices.MoveLocalToGlobal(plane);
+            if (topOffset != 0)
+            {
+                Vector topMove = plane.Z * topOffset;
+                vertices.Move(topMove);
+                perimeter = perimeter.Move(topMove);
+
+                if (voidPerimeters != null)
+                {
+                    for (int i = 0; i < voidPerimeters.Count; i++)
+                    {
+                        voidPerimeters[i] = voidPerimeters[i].Move(topMove);
+                    }
+                }
+            }
+            Mesh mesh = new Mesh(vertices, faces);
+            AddMesh(mesh);
+            if (thickness != 0)
+            {
+                Vector bottomMove = plane.Z * -thickness;
+                mesh.Move(bottomMove);
+                AddMesh(mesh);
+                Vector[] bottomPerimeter = perimeter.Move(bottomMove);
+                FillBetween(perimeter, bottomPerimeter, false, true);
+
+                if (voidPerimeters != null)
+                {
+                    foreach (Vector[] voidPerimeter in voidPerimeters)
+                    {
+                        FillBetween(voidPerimeter, voidPerimeter.Move(bottomMove));
+                    }
+                }
+            }
+
+        }
+
+        /// <summary>
         /// Add a set of vertices and faces to this mesh representing a cone
         /// </summary>
         /// <param name="tip">The point at the tip of the cone</param>
@@ -444,7 +557,7 @@ namespace FreeBuild.Meshing
         /// <param name="baseResolution">The number of positions around the cone where mesh facets will be generated.</param>
         public void AddCone(Vector tip, Circle baseCircle, int baseResolution)
         {
-           Vector[] basePoints = baseCircle.Divide(baseResolution);
+            Vector[] basePoints = baseCircle.Divide(baseResolution);
             Vector[] reversedPts = new Vector[basePoints.Length];
 
             //if (basePoints.Count >= baseResolution) basePoints.RemoveAt(baseResolution); //Get rid of duplicate last point
@@ -517,6 +630,8 @@ namespace FreeBuild.Meshing
                 AddFacetCone(tip, circle, 4);
             }
         }
+
+        #endregion
     }
 
     /// <summary>

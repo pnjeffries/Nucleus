@@ -1,4 +1,5 @@
 ﻿using FreeBuild.Extensions;
+using FreeBuild.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,6 +65,54 @@ namespace FreeBuild.Maths
         public LinearIntervalDataSet ToIntervals()
         {
             return new Maths.LinearIntervalDataSet(this);
+        }
+
+        /// <summary>
+        /// Calculate the signed area under the line, over the specified key range
+        /// </summary>
+        /// <param name="xRange">The range over which the area is to be calculated</param>
+        /// <param name="centroid"></param>
+        /// <returns></returns>
+        public double CalculateAreaUnder(Interval xRange, out Vector centroid)
+        {
+            double result = 0;
+            centroid = new Vector();
+
+            for (int i = 0; i < Count - 1; i++)
+            {
+                double x0 = Keys[i];
+
+                if (x0 < xRange.End) //Is segment start < end of range?
+                {
+                    double x1 = Keys[i + 1];
+
+                    if (x1 > xRange.Start) //Is segment end > start of range?
+                    {
+                        // Segment falls within specified range
+                        double y0, y1;
+                        if (xRange.Start > x0) //The range starts within this segment
+                        {
+                            x0 = xRange.Start;
+                            y0 = ValueAt(x0);
+                        }
+                        else y0 = Values[i];
+
+
+                        if (xRange.End < x1) //The range ends within this segment
+                        {
+                            x1 = xRange.End;
+                            y1 = ValueAt(x1);
+                        }
+                        else y1 = Values[i + 1];
+
+                        result += MathsHelper.AreaUnder(x0, y0, x1, y1, ref centroid);
+                    }     
+                }
+                else //Shortcut to end:
+                    i = Count;
+            }
+            centroid /= result;
+            return result;
         }
 
         #endregion

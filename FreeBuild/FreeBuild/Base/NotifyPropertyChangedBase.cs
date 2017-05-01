@@ -123,7 +123,7 @@ namespace FreeBuild.Base
         /// <param name="propertyName">The name of the property</param>
         /// <param name="notifyIfSame">If false (default), a property changed notification will not be raised
         /// unless the old and new values of the property are not equal.  If true, it will be raised regardless.</param>
-        protected void ChangeProperty<T>(ref T backingField, T newValue, string propertyName, bool notifyIfSame = false)
+        protected virtual void ChangeProperty<T>(ref T backingField, T newValue, string propertyName, bool notifyIfSame = false)
         {
             T oldValue = backingField;
             backingField = newValue;

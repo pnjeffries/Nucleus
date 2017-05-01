@@ -47,7 +47,7 @@ namespace FreeBuild.Model
         {
             get
             {
-                if (_BuildUp == null) _BuildUp = new BuildUpLayerCollection();
+                if (_BuildUp == null) _BuildUp = new BuildUpLayerCollection(this);
                 return _BuildUp;
             }
         }
@@ -82,6 +82,19 @@ namespace FreeBuild.Model
         public PanelFamily(string name) : this()
         {
             Name = name;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Notify this family that one of its constituant layers has been modified
+        /// </summary>
+        /// <param name="layer"></param>
+        internal void NotifyBuildUpChanged(BuildUpLayer layer)
+        {
+            NotifyPropertyChanged("BuildUp");
         }
 
         #endregion

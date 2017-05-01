@@ -134,7 +134,7 @@ namespace FreeBuild.Geometry
             if (points.Count > 0)
             {
                 Vector result = points[0].Position;
-                for (int i = 0; i < points.Count; i++)
+                for (int i = 1; i < points.Count; i++)
                 {
                     result += points[i].Position;
                 }
