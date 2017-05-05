@@ -1062,6 +1062,87 @@ namespace FreeBuild.Geometry
             }
             return result;
         }
+
+        /// <summary>
+        /// Move all vectors in this array along a translation vector and return the result
+        /// </summary>
+        /// <param name="vectors"></param>
+        /// <param name="translation"></param>
+        /// <returns></returns>
+        public static Vector[] Move(this Vector[] vectors, Vector translation)
+        {
+            Vector[] result = new Vector[vectors.Length];
+            for (int i = 0; i < vectors.Length; i++)
+            {
+                result[i] = vectors[i] + translation;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Remap all vectors in this array from the global coordinate system to the local coordinate
+        /// system specified.
+        /// </summary>
+        /// <param name="vectors"></param>
+        /// <param name="cSystem"></param>
+        /// <returns></returns>
+        public static Vector[] GlobalToLocal(this Vector[] vectors, ICoordinateSystem cSystem, bool direction = false)
+        {
+            Vector[] result = new Vector[vectors.Length];
+            for (int i = 0; i < vectors.Length; i++)
+            {
+                result[i] = cSystem.GlobalToLocal(vectors[i], direction);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Remap all vectors in this array from the local coordinate system specified to the global
+        /// coordinate system.
+        /// </summary>
+        /// <param name="vectors"></param>
+        /// <param name="cSystem"></param>
+        /// <returns></returns>
+        public static Vector[] LocalToGlobal(this Vector[] vectors, ICoordinateSystem cSystem, bool direction = false)
+        {
+            Vector[] result = new Vector[vectors.Length];
+            for (int i = 0; i < vectors.Length; i++)
+            {
+                result[i] = cSystem.LocalToGlobal(vectors[i], direction);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Check for containment of a point within a polygon with these vertices on the XY plane
+        /// </summary>
+        /// <param name="point">The point to test for containment</param>
+        /// <returns>True if the point is inside (or on) the polygon, else false.</returns>
+        /// <remarks>This is a copy of the IPosition list extension method of the same name.
+        /// Changes made to one must be manually adapted to the other.</remarks>
+        public static bool PolygonContainmentXY(this IList<Vector> polygon, Vector point)
+        {
+            if (polygon.Count > 2)
+            {
+                int count = 0;
+                Vector lastPoint = polygon[0];
+                bool onLine = false;
+                for (int i = 1; i < polygon.Count; i++)
+                {
+                    Vector nextPoint = polygon[i];
+                    if (Intersect.XRayLineSegmentXYCheck(ref point, ref lastPoint, ref nextPoint, out onLine))
+                        count++;
+                    if (onLine) return true; //TODO: Review
+                    lastPoint = nextPoint;
+                }
+                Vector startPoint = polygon[0];
+                if (Intersect.XRayLineSegmentXYCheck(ref point, ref lastPoint, ref startPoint, out onLine))
+                    count++;
+                if (onLine) return true; //TODO: Review
+                return count.IsOdd();
+            }
+            else return false;
+        }
     }
 }
 

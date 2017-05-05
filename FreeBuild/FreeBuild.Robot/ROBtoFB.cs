@@ -52,7 +52,7 @@ namespace FreeBuild.Robot
             {
                 RobotGeoSegment segment = segments.Get(i);
                 Vector pt = Convert(segment.P1);
-                if (i == segments.Count && pt.Equals(result.StartPoint, Tolerance.Geometric))
+                if (i == segments.Count && pt.Equals(result.StartPoint, Tolerance.Distance))
                 {
                     result.Close(true);
                 }

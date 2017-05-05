@@ -87,13 +87,33 @@ namespace FreeBuild.Geometry
         /// </summary>
         /// <param name="points"></param>
         /// <param name="close"></param>
-        public PolyLine(IEnumerable<Vector> points, bool close = false, GeometryAttributes attributes = null) : this()
+        public PolyLine(IEnumerable<Vector> points, bool close, GeometryAttributes attributes = null) : this()
         {
             foreach(Vector pt in points)
             {
                 Vertices.Add(new Vertex(pt));
             }
             Closed = close;
+            Attributes = attributes;
+        }
+
+        /// <summary>
+        /// Points constructor.
+        /// Creates a polyline between the specified set of points
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="close"></param>
+        public PolyLine(IEnumerable<Vector> points, GeometryAttributes attributes = null) : this()
+        {
+            foreach (Vector pt in points)
+            {
+                Vertices.Add(new Vertex(pt));
+            }
+            if (Vertices.Count > 1 && Vertices.First().DistanceToSquared(Vertices.Last()) <= Tolerance.Distance * Tolerance.Distance)
+            {
+                Vertices.RemoveAt(Vertices.Count - 1);
+                Closed = true;
+            }
             Attributes = attributes;
         }
 

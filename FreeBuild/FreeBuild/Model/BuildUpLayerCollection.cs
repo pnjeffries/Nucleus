@@ -11,7 +11,7 @@ namespace FreeBuild.Model
     /// A collection of BuildUpLayer objects
     /// </summary>
     [Serializable]
-    public class BuildUpLayerCollection : UniquesCollection<BuildUpLayer>
+    public class BuildUpLayerCollection : OwnedCollection<BuildUpLayer, PanelFamily>
     {
         #region Properties
 
@@ -44,12 +44,34 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
+        /// Initialise a new blank Build-Up Layer Collection belonging to the specified family
+        /// </summary>
+        /// <param name="owner"></param>
+        public BuildUpLayerCollection(PanelFamily owner) : base(owner) { }
+
+        /// <summary>
         /// Initialise a new BuildUpLayerCollection containing the specified layer
         /// </summary>
         /// <param name="layer"></param>
         public BuildUpLayerCollection(BuildUpLayer layer) : base()
         {
             Add(layer);
+        }
+
+        protected override void SetItemOwner(BuildUpLayer item)
+        {
+            if (Owner != null)
+            {
+                item.Family = Owner;
+            }
+        }
+
+        protected override void ClearItemOwner(BuildUpLayer item)
+        {
+            if (Owner != null)
+            {
+                item.Family = null;
+            }
         }
 
         #endregion

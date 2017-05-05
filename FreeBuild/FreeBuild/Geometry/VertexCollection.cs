@@ -203,6 +203,52 @@ namespace FreeBuild.Geometry
             return result;
         }
 
+        /// <summary>
+        /// Move the vertices in this collection along the specified translation vector
+        /// </summary>
+        /// <param name="translation"></param>
+        public virtual void Move(Vector translation)
+        {
+            Transform(new Transform(translation));
+        }
+
+        /// <summary>
+        /// Apply the specified transformation to all of the vertices in this collection
+        /// </summary>
+        public virtual void Transform(Transform transform)
+        {
+            foreach (Vertex v in this)
+            {
+                v.Transform(transform);
+            }
+        }
+
+        /// <summary>
+        /// Move all vertices in this collection from the global coordinate system
+        /// to equivalent positions in the specified local coordinate system
+        /// </summary>
+        /// <param name="cSystem"></param>
+        public void MoveGlobalToLocal(ICoordinateSystem cSystem)
+        {
+            foreach (Vertex v in this)
+            {
+                v.Position = cSystem.GlobalToLocal(v.Position);
+            }
+        }
+
+        /// <summary>
+        /// Move all vertices in this collection from the local coordinate system specified
+        /// to equivalent positions in global 3D space
+        /// </summary>
+        /// <param name="cSystem"></param>
+        public void MoveLocalToGlobal(ICoordinateSystem cSystem)
+        {
+            foreach (Vertex v in this)
+            {
+                v.Position = cSystem.LocalToGlobal(v.Position);
+            }
+        }
+
         #endregion
     }
 }

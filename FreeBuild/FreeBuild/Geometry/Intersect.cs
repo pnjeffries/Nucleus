@@ -259,7 +259,7 @@ namespace FreeBuild.Geometry
         public static CurveCollection LineInPolygonXY(Line line, IList<Vertex> polygon)
         {
             CurveCollection result = new CurveCollection();
-            double tolerance = Tolerance.Geometric;
+            double tolerance = Tolerance.Distance;
             var intersections = new SortedList<double, Vector>();
             
             Vector ptL = line.StartPoint;

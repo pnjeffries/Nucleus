@@ -61,7 +61,7 @@ namespace FreeBuild.Model
         /// </summary>
         public NodeGenerationParameters()
         {
-            ConnectionTolerance = Tolerance.Geometric;
+            ConnectionTolerance = Tolerance.Distance;
         }
 
         /// <summary>

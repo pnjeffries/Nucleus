@@ -227,8 +227,6 @@ namespace FreeBuild.Rhino
         /// <returns></returns>
         public static PlanarRegion ConvertToPlanarRegion(RC.Brep brep, RC.BrepFace face)
         {
-            throw new NotImplementedException();
-            //TODO!
             if (face.IsPlanar())
             {
                 int[] iEdges = face.AdjacentEdges();

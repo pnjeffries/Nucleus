@@ -37,4 +37,23 @@ namespace FreeBuild.Geometry
         Bottom,
         Origin
     }
+
+    /// <summary>
+    /// Extension methods for the VerticalSetOut Enum
+    /// </summary>
+    public static class VerticalSetOutExtensions
+    {
+        /// <summary>
+        /// Get the position of the set-out level as a proportion of the thickness
+        /// of a panel.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static double FactorFromTop(this VerticalSetOut value)
+        {
+            if (value == VerticalSetOut.Top) return 0;
+            else if (value == VerticalSetOut.Bottom) return 1;
+            else return 0.5;
+        }
+    }
 }

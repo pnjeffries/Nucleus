@@ -311,6 +311,20 @@ namespace Salamander.Rhino
         }
 
         /// <summary>
+        /// Replace a point object if it exists or bake a new one if it does not
+        /// </summary>
+        /// <param name="objID"></param>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public static Guid BakeOrReplacePoint(Guid objID, Vector point)
+        {
+            if (objID != Guid.Empty && ReplacePoint(objID, point))
+                return objID;
+            else
+                return BakePoint(point);
+        }
+
+        /// <summary>
         /// Helper function to get an object by it's GUID
         /// </summary>
         /// <param name="objID"></param>

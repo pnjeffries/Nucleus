@@ -45,6 +45,7 @@ namespace FreeBuild.Model
         /// <summary>
         /// Private backing field for Owner property
         /// </summary>
+        [Copy(CopyBehaviour.MAP)]
         private TOwner _Owner;
 
         /// <summary>

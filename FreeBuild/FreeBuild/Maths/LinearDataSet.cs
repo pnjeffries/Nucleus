@@ -30,6 +30,23 @@ namespace FreeBuild.Maths
             }
         }
 
+        /// <summary>
+        /// Is this data set uniform?  i.e. are all of the assigned values equal?
+        /// </summary>
+        public bool IsUniform
+        {
+            get
+            {
+                if (Count > 0)
+                {
+                    TValue value = Values[0];
+                    for (int i = 1; i < Count; i++)
+                        if (!value.Equals(Values[i])) return false;
+                }
+                return true;
+            }
+        }
+
         #endregion
 
         #region Constructors

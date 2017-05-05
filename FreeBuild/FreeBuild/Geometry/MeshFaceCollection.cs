@@ -130,7 +130,8 @@ namespace FreeBuild.Geometry
         /// on the XY plane
         /// </summary>
         /// <param name="boundary"></param>
-        /// <param name="vertices"></param>
+        /// <param name="vertices">Optional.  The collection of vertices to which new vertices created during
+        /// this process should be added.</param>
         /// <returns></returns>
         public MeshFaceCollection TrimToPolygonXY(IList<Vertex> boundary, IList<Vertex> vertices = null)
         {
@@ -141,6 +142,30 @@ namespace FreeBuild.Geometry
                 if (splitFaces != null) foreach (MeshFace sFace in splitFaces) result.Add(sFace);
             }
             return result;
+        }
+
+        /// <summary>
+        /// Remove from this collection any faces whose circumcentre falls outside the specified boundary on the XY plane
+        /// </summary>
+        /// <param name="boundary"></param>
+        public void CullOutsideXY(IList<Vector> boundary)
+        {
+            for (int i = Count - 1; i >= 0; i--)
+            {
+                if (!boundary.PolygonContainmentXY(this[i].AveragePoint())) RemoveAt(i);
+            }
+        }
+
+        /// <summary>
+        /// Remove from this collection any faces whose circumcentre falls inside the specified boundary on the XY plane
+        /// </summary>
+        /// <param name="boundary"></param>
+        public void CullInsideXY(IList<Vector> boundary)
+        {
+            for (int i = Count - 1; i >= 0; i--)
+            {
+                if (boundary.PolygonContainmentXY(this[i].AveragePoint())) RemoveAt(i);
+            }
         }
 
         /// <summary>
