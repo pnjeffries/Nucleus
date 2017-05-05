@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Base;
 using FreeBuild.Exceptions;
 using FreeBuild.Extensions;
 using FreeBuild.Geometry;
@@ -214,6 +215,65 @@ namespace FreeBuild.Meshing
         {
             AddVertices(mesh.Vertices);
             AddFaces(mesh.Faces);
+        }
+
+        /// <summary>
+        /// Add vertices and faces to the mesh to represent a cuboid of the specified dimensions,
+        /// with its base on the XY plane of the specified coordinate system.
+        /// </summary>
+        /// <param name="baseWidth"></param>
+        /// <param name="baseDepth"></param>
+        /// <param name="height"></param>
+        /// <param name="cSystem"></param>
+        public void AddCuboid(double width, double depth, double height, CartesianCoordinateSystem cSystem)
+        {
+            AddTruncatedPyramid(width, depth, width, depth, height, cSystem);
+        }
+
+        /// <summary>
+        /// Add vertices and faces to the mesh to represent a flat-topped pyramid of the specified dimensions,
+        /// with its base on the XY plane of the specified coordinate system.
+        /// </summary>
+        /// <param name="baseWidth"></param>
+        /// <param name="baseDepth"></param>
+        /// <param name="height"></param>
+        /// <param name="cSystem"></param>
+        public void AddTruncatedPyramid(double baseWidth, double baseDepth, double topWidth, double topDepth, double height, CartesianCoordinateSystem cSystem)
+        {
+            double bw2 = baseWidth / 2;
+            double bd2 = baseDepth / 2;
+            double tw2 = topWidth / 2;
+            double td2 = baseWidth / 2;
+            //Base points:
+            Vector b0 = new Vector(bw2, bd2);
+            Vector b1 = new Vector(bw2, -bd2);
+            Vector b2 = new Vector(-bw2, -bd2);
+            Vector b3 = new Vector(-bw2, bd2);
+            //Top points:
+            Vector t0 = new Vector(tw2, td2, height);
+            Vector t1 = new Vector(tw2, -td2, height);
+            Vector t2 = new Vector(-tw2, -td2, height);
+            Vector t3 = new Vector(-tw2, td2, height);
+
+            if (cSystem != null)
+            {
+                b0 = cSystem.LocalToGlobal(b0);
+                b1 = cSystem.LocalToGlobal(b1);
+                b2 = cSystem.LocalToGlobal(b2);
+                b3 = cSystem.LocalToGlobal(b3);
+
+                t0 = cSystem.LocalToGlobal(t0);
+                t1 = cSystem.LocalToGlobal(t1);
+                t2 = cSystem.LocalToGlobal(t2);
+                t3 = cSystem.LocalToGlobal(t3);
+            }
+
+            if (baseWidth != 0 && baseWidth != 0) AddFace(b0, b1, b2, b3); // Bottom
+            if (topWidth != 0 && topDepth != 0) AddFace(t3, t2, t1, t0); // Top
+            AddFace(t1, t2, b2, b1); // Front
+            AddFace(t2, t3, b3, b2); // Left
+            AddFace(t3, t0, b0, b3); // Back
+            AddFace(t0, t1, b1, b0); // Right
         }
 
         /// <summary>
@@ -507,14 +567,55 @@ namespace FreeBuild.Meshing
         /// </summary>
         /// <param name="node"></param>
         /// <param name="support"></param>
-        public void AddNodeSupport(Node node, NodeSupport support, double scale = 0.5)
+        public void AddNodeSupport(Node node, NodeSupport support, double scale = 1.0)
         {
             if (support != null && !support.Fixity.AllFalse)
             {
                 var tip = node.Position;
-                Vector direction = new Vector(0, 0, scale);
-                var circle = new Circle(scale, new CylindricalCoordinateSystem(tip - direction, new Vector(new Angle(Math.PI / 4)), Vector.UnitY));
-                AddFacetCone(tip, circle, 4);
+
+                Vector connections = node.AverageConnectionDirection();
+
+                Direction dir = support.Fixity.PrimaryAxis();
+                Vector direction = new Vector(dir);
+                Bool6D fixity = support.Fixity.ReOrientate(dir);
+
+                // TOOD: Orientate to support axes
+
+                // Flip the direction vector if it will coincide with the connecting elements:
+                if (!connections.IsZero() && direction.Dot(connections) > 0) direction = direction.Reverse();
+
+                // Moment restraints
+                double topWidth = 0;
+                double topDepth = 0;
+                if (fixity.YY) topDepth = scale;
+                if (fixity.XX) topWidth = scale;
+
+                CartesianCoordinateSystem cSystem = new CartesianCoordinateSystem(tip - direction * scale/2, direction);
+                AddTruncatedPyramid(scale, scale, 0, 0, scale/2, cSystem);
+
+                int rollerRes = 10;
+                // Translational rollers:
+                if (!fixity.X && !fixity.Y)
+                {
+                    //2-way rollers
+                    AddCylinder(new Circle(scale / 4, cSystem.LocalToGlobal(0, -scale/2, scale / 4), cSystem.X), scale, rollerRes);
+                    AddCylinder(new Circle(scale / 4, cSystem.LocalToGlobal(-scale / 2, 0, scale / 4), cSystem.Y), scale, rollerRes);
+                }
+                else if (!fixity.X)
+                {
+                    //X-rollers
+                    AddCylinder(new Circle(scale / 4, cSystem.LocalToGlobal(-scale / 2, -scale / 4, scale / 4), cSystem.Y), scale, rollerRes);
+                    AddCylinder(new Circle(scale / 4, cSystem.LocalToGlobal(-scale / 2, scale / 4, scale / 4), cSystem.Y), scale, rollerRes);
+                }
+                else if (!fixity.Y)
+                {
+                    //Y-rollers
+                    AddCylinder(new Circle(scale / 4, cSystem.LocalToGlobal(-scale / 4, -scale / 2, scale / 4), cSystem.X), scale, rollerRes);
+                    AddCylinder(new Circle(scale / 4, cSystem.LocalToGlobal(scale / 4, -scale / 2, scale / 4), cSystem.X), scale, rollerRes);
+                }
+
+                //var circle = new Circle(scale, new CylindricalCoordinateSystem(tip - direction, direction, new Angle(Math.PI/4))); //new Vector(new Angle(Math.PI / 4)), Vector.UnitY));
+                //AddFacetCone(tip, circle, 4);
             }
         }
     }

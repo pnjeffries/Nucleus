@@ -132,6 +132,24 @@ namespace FreeBuild.Base
         /// <param name="z"></param>
         public Bool6D(bool x, bool y, bool z) : this(x, y, z, false, false, false) { }
 
+        /// <summary>
+        /// Initialise a Bool6D with only the specified direction set to true
+        /// </summary>
+        /// <param name="direction"></param>
+        public Bool6D(Direction direction) : this(false)
+        {
+            if (direction == Direction.X) X = true;
+            if (direction == Direction.Y) Y = true;
+            if (direction == Direction.Z) Z = true;
+            if (direction == Direction.XX) XX = true;
+            if (direction == Direction.YY) YY = true;
+            if (direction == Direction.ZZ) ZZ = true;
+        }
+
+        /// <summary>
+        /// Initialise a Bool6D from a text description.
+        /// </summary>
+        /// <param name="description"></param>
         public Bool6D(string description) : this(false)
         {
             var values = description.Split('-');
@@ -270,6 +288,23 @@ namespace FreeBuild.Base
         }
 
         /// <summary>
+        /// Re-orientate this 6D boolean such that the specified axis direction
+        /// becomes the new Z-axis.  This is equivalent to a 90 degree rotation
+        /// to take the specified axis to the vertical position.
+        /// </summary>
+        /// <param name="newZ"></param>
+        /// <returns></returns>
+        public Bool6D ReOrientate(Direction newZ)
+        {
+            if (newZ == Direction.X || newZ == Direction.XX)
+                return new Bool6D(Z, Y, X, ZZ, YY, XX);
+            else if (newZ == Direction.Y || newZ == Direction.YY)
+                return new Bool6D(X, Z, Y, XX, ZZ, YY);
+            else
+                return this;
+        }
+
+        /// <summary>
         /// Turn this Bool6D into a string representing the current values
         /// </summary>
         /// <returns></returns>
@@ -368,6 +403,25 @@ namespace FreeBuild.Base
         {
             return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode()
                 ^ XX.GetHashCode() ^ YY.GetHashCode() ^ ZZ.GetHashCode();
+        }
+
+        /// <summary>
+        /// Retrieve direction axis pointing in the direction of one of the
+        /// global axes, determined by the true values of this 6D boolean.
+        /// The Z axis is prioritised, followed by X and then Y.
+        /// This is intended for geometrical display purposes and has no
+        /// deeper significance.
+        /// </summary>
+        /// <returns></returns>
+        public Direction PrimaryAxis()
+        {
+            if (Z) return Direction.Z;
+            else if (X) return Direction.X;
+            else if (Y) return Direction.Y;
+            else if (ZZ) return Direction.Z;
+            else if (XX) return Direction.X;
+            else if (YY) return Direction.Y;
+            else return Direction.Z;
         }
 
         #endregion

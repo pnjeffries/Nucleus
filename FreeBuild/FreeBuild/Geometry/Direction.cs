@@ -15,10 +15,10 @@ namespace FreeBuild.Geometry
     {
         X = 1,
         Y = 2,
-        Z = 3,
-        XX = 4,
-        YY = 5,
-        ZZ = 6
+        Z = 4,
+        XX = 8,
+        YY = 16,
+        ZZ = 32
     }
 
     /// <summary>

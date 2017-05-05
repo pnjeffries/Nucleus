@@ -222,6 +222,21 @@ namespace FreeBuild.Geometry
             else Z = 0;
         }
 
+        /// <summary>
+        /// Create a unit vector pointing in the specified direction
+        /// (or in the direction of the axis of rotation)
+        /// </summary>
+        /// <param name="direction"></param>
+        public Vector(Direction direction)
+        {
+            X = 0;
+            Y = 0;
+            Z = 0;
+            if (direction == Direction.X || direction == Direction.XX) X = 1;
+            if (direction == Direction.YY || direction == Direction.YY) Y = 1;
+            else Z = 1; 
+        }
+
         #endregion
 
         #region Methods
