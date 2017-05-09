@@ -837,6 +837,20 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Get the dimensional axis in which this vector has its largest component
+        /// </summary>
+        /// <returns></returns>
+        public Direction PrimaryAxis()
+        {
+            double absX = X.Abs();
+            double absY = Y.Abs();
+            double absZ = Z.Abs();
+            if (absX > absZ && absX >= absY) return Direction.X;
+            else if (absY > absZ && absY > absX) return Direction.Y;
+            else return Direction.Z;
+        }
+
+        /// <summary>
         /// ToString override
         /// </summary>
         /// <returns></returns>

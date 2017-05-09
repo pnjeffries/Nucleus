@@ -149,8 +149,7 @@ namespace FreeBuild.Model
                 UnregisterPropertyChanged(item);
                 NotifyOwnerItemChanged(item.GetType());
             }
-            base.ClearItems();
-            
+            base.ClearItems();      
         }
 
         /// <summary>

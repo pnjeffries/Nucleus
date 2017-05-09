@@ -94,6 +94,28 @@ namespace FreeBuild.Base
             get { return X && Y && Z && XX && YY && ZZ; }
         }
 
+        /// <summary>
+        /// Get the value in the specified direction
+        /// </summary>
+        /// <param name="dir"></param>
+        /// <returns></returns>
+        public bool this[Direction dir]
+        {
+            get
+            {
+                switch (dir)
+                {
+                    case Direction.X: return X;
+                    case Direction.Y: return Y;
+                    case Direction.Z: return Z;
+                    case Direction.XX: return XX;
+                    case Direction.YY: return YY;
+                    case Direction.ZZ: return ZZ;
+                }
+                return false;
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -422,6 +444,21 @@ namespace FreeBuild.Base
             else if (XX) return Direction.X;
             else if (YY) return Direction.Y;
             else return Direction.Z;
+        }
+
+        /// <summary>
+        /// Retrieve direction axis pointing in the direction of one of the
+        /// global axes, determined by the true values of this 6D boolean.
+        /// The specified direction is favoured if true.  Otherwise
+        /// the Z axis is prioritised, followed by X and then Y.
+        /// This is intended for geometrical display purposes and has no
+        /// deeper significance.
+        /// </summary>
+        /// <returns></returns>
+        public Direction PrimaryAxis(Direction favour)
+        {
+            if (this[favour]) return favour;
+            else return PrimaryAxis();
         }
 
         #endregion
