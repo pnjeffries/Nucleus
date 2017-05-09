@@ -688,7 +688,7 @@ namespace FreeBuild.Meshing
 
                 Vector connections = node.AverageConnectionDirection();
 
-                Direction dir = support.Fixity.PrimaryAxis();
+                Direction dir = support.Fixity.PrimaryAxis(connections.PrimaryAxis());
                 Vector direction = new Vector(dir);
                 Bool6D fixity = support.Fixity.ReOrientate(dir);
 

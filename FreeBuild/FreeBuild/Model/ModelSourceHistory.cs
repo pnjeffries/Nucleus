@@ -129,11 +129,31 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
+        /// Clean up the nodes associated with this object.
+        /// Will delete any nodes attached to this object that are
+        /// not connected to any undeleted elements.
+        /// </summary>
+        /// <param name="unique"></param>
+        private void CleanNodes(ModelObject unique)
+        {
+            if (unique is Element)
+            {
+                Element el = (Element)unique;
+                foreach (Node node in el.Nodes)
+                {
+                    if (node.ConnectionCount() == 0) node.Delete();
+                }
+            }
+        }
+
+        /// <summary>
         /// Mark all items after the specified iteration number as deleted
         /// </summary>
         /// <param name="sourceRef"></param>
         /// <param name="iteration"></param>
-        public void CleanSubsequentIterations(string sourceRef, int iteration)
+        /// <param name="cleanNodes">If true, nodes on deleted elements that are not connected to
+        /// any other undeleted elements will be deleted also</param>
+        public void CleanSubsequentIterations(string sourceRef, int iteration, bool cleanNodes = true)
         {
             if (SourceMap.ContainsKey(sourceRef))
             {
@@ -143,7 +163,11 @@ namespace FreeBuild.Model
                     IList<ModelObject> uniques = iterations[i];
                     foreach (ModelObject unique in uniques)
                     {
-                        if (unique != null) unique.Delete();
+                        if (unique != null)
+                        {
+                            unique.Delete();
+                            if (cleanNodes) CleanNodes(unique);
+                        }
                     }
                 }
             }
@@ -153,9 +177,11 @@ namespace FreeBuild.Model
         /// Mark all items after the iteration number of the execution info as deleted
         /// </summary>
         /// <param name="exInfo"></param>
-        public void CleanSubsequentIterations(ExecutionInfo exInfo)
+        /// <param name="cleanNodes">If true, nodes on deleted elements that are not connected to
+        /// any other undeleted elements will be deleted also</param>
+        public void CleanSubsequentIterations(ExecutionInfo exInfo, bool cleanNodes = true)
         {
-            CleanSubsequentIterations(exInfo.SourceReference, exInfo.Iteration);
+            CleanSubsequentIterations(exInfo.SourceReference, exInfo.Iteration, cleanNodes);
         }
 
         /// <summary>
@@ -164,7 +190,9 @@ namespace FreeBuild.Model
         /// <param name="sourceRef"></param>
         /// <param name="iteration"></param>
         /// <param name="historyItemCount"></param>
-        public void CleanIteration(string sourceRef, int iteration, int historyItemCount)
+        /// <param name="cleanNodes">If true, nodes on deleted elements that are not connected to
+        /// any other undeleted elements will be deleted also</param>
+        public void CleanIteration(string sourceRef, int iteration, int historyItemCount, bool cleanNodes = true)
         {
             if (SourceMap.ContainsKey(sourceRef))
             {
@@ -175,7 +203,11 @@ namespace FreeBuild.Model
                     for (int j = historyItemCount; j < uniques.Count; j++)
                     {
                         ModelObject unique = uniques[j];
-                        if (unique != null) unique.Delete();
+                        if (unique != null)
+                        {
+                            unique.Delete();
+                            if (cleanNodes) CleanNodes(unique);
+                        }
                     }
                 }
             }
@@ -185,12 +217,43 @@ namespace FreeBuild.Model
         /// Mark all items after the current iteration after the current historyItemCount as deleted
         /// </summary>
         /// <param name="exInfo"></param>
-        public void CleanIteration(ExecutionInfo exInfo)
+        public void CleanIteration(ExecutionInfo exInfo, bool cleanNodes = true)
         {
-            CleanIteration(exInfo.SourceReference, exInfo.Iteration, exInfo.HistoryItemCount);
+            CleanIteration(exInfo.SourceReference, exInfo.Iteration, exInfo.HistoryItemCount, cleanNodes);
         }
 
         // TODO: Remove deleted objects to avoid the ghosts of long-gone objects from hanging around
+
+        /// <summary>
+        /// Remove from the items stored under greater history count numbers the component of
+        /// the specified type
+        /// </summary>
+        /// <param name="componentType"></param>
+        /// <param name="sourceRef"></param>
+        /// <param name="iteration"></param>
+        /// <param name="historyItemCount"></param>
+        /// <remarks>Intended to help tidy up parametric assignments (such as node supports) which
+        /// could persist while the input nodes have changed.  Not currently used.</remarks>
+        public void CleanIterationData(Type componentType, string sourceRef, int iteration, int historyItemCount)
+        {
+            if (SourceMap.ContainsKey(sourceRef))
+            {
+                IList<IList<ModelObject>> iterations = SourceMap[sourceRef];
+                for (int i = iteration + 1; i < iterations.Count; i++)
+                {
+                    IList<ModelObject> uniques = iterations[i];
+                    for (int j = historyItemCount; j < uniques.Count; j++)
+                    {
+                        ModelObject unique = uniques[j];
+                        if (unique != null && !unique.IsDeleted && unique is DataOwner)
+                        {
+                            DataOwner dO = (DataOwner)unique;
+                            dO.CleanData(componentType);
+                        }
+                    }
+                }
+            }
+        }
 
         #endregion
     }

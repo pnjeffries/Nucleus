@@ -152,14 +152,36 @@ namespace FreeBuild.Model
         /// <summary>
         /// Get a collection of all elements connected to this node
         /// </summary>
+        /// <param name="undeletedOnly">If true, only elements that are not marked
+        /// as deleted will be returned</param>
         /// <returns></returns>
-        public ElementCollection GetConnectedElements()
+        public ElementCollection GetConnectedElements(bool undeletedOnly = true)
         {
             var result = new ElementCollection();
 
             foreach (Vertex v in Vertices)
             {
-                if (v.Element != null) result.Add(v.Element);
+                if (v.Element != null && 
+                    (!undeletedOnly || !v.Element.IsDeleted))
+                    result.Add(v.Element);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get the number of elements connected to this node
+        /// </summary>
+        /// <param name="undeletedOnly">If true, only elements not marked as deleted will
+        /// be counted</param>
+        /// <returns></returns>
+        public int ConnectionCount(bool undeletedOnly = true)
+        {
+            int result = 0;
+
+            foreach (Vertex v in Vertices)
+            {
+                if (v.Element != null && !v.Element.IsDeleted) result++;
             }
 
             return result;

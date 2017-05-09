@@ -66,6 +66,12 @@ namespace FreeBuild.Model
         public abstract bool HasData(Type componentType);
 
         /// <summary>
+        /// Remove any attached data components of the specified type
+        /// </summary>
+        /// <param name="ofType"></param>
+        public abstract bool CleanData(Type componentType);
+
+        /// <summary>
         /// Notify this owner that a property of a data component has been changed.
         /// This may then be 'bubbled' upwards with a new event.
         /// </summary>
@@ -221,6 +227,15 @@ namespace FreeBuild.Model
         public void SetData(TData data)
         {
             Data.SetData(data);
+        }
+
+        /// <summary>
+        /// Remove any attached data components of the specified type
+        /// </summary>
+        /// <param name="ofType"></param>
+        public override bool CleanData(Type ofType)
+        {
+            return Data.Remove(ofType);
         }
 
         /// <summary>
