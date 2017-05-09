@@ -85,7 +85,10 @@ namespace FreeBuild.Model
             if (result == null)
             {
                 result = new Node(position);
+                //result = (Node)Model.History.Update(exInfo, result);
+                result.Position = position;
             }
+            else result.Undelete();
             Model.Add(result);
             return result;
         }

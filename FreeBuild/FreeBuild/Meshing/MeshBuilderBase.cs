@@ -254,7 +254,7 @@ namespace FreeBuild.Meshing
             double bw2 = baseWidth / 2;
             double bd2 = baseDepth / 2;
             double tw2 = topWidth / 2;
-            double td2 = baseWidth / 2;
+            double td2 = topDepth / 2;
             //Base points:
             Vector b0 = new Vector(bw2, bd2);
             Vector b1 = new Vector(bw2, -bd2);
@@ -671,8 +671,8 @@ namespace FreeBuild.Meshing
             topology.Add(basePoints);
             topology.Add(topPoints);
             AddLoft(topology, true);
-            FillStartToEnd(basePoints); // Cap bottom
-            FillStartToEndReverse(topPoints); // Cap top
+            FillStartToEnd(basePoints, 0); // Cap bottom
+            FillStartToEndReverse(topPoints, 0); // Cap top
         }
 
         /// <summary>
@@ -695,36 +695,37 @@ namespace FreeBuild.Meshing
                 // TOOD: Orientate to support axes
 
                 // Flip the direction vector if it will coincide with the connecting elements:
-                if (!connections.IsZero() && direction.Dot(connections) > 0) direction = direction.Reverse();
+                if (!connections.IsZero() && direction.Dot(connections) < 0) direction = direction.Reverse();
 
                 // Moment restraints
                 double topWidth = 0;
                 double topDepth = 0;
-                if (fixity.YY) topDepth = scale;
-                if (fixity.XX) topWidth = scale;
+                if (fixity.XX) topDepth = scale;
+                if (fixity.YY) topWidth = scale;
 
                 CartesianCoordinateSystem cSystem = new CartesianCoordinateSystem(tip - direction * scale/2, direction);
-                AddTruncatedPyramid(scale, scale, 0, 0, scale/2, cSystem);
+                AddTruncatedPyramid(scale, scale, topWidth, topDepth, scale/2, cSystem);
 
                 int rollerRes = 10;
+                double rD = 6.0;
                 // Translational rollers:
                 if (!fixity.X && !fixity.Y)
                 {
                     //2-way rollers
-                    AddCylinder(new Circle(scale / 4, cSystem.LocalToGlobal(0, -scale/2, scale / 4), cSystem.X), scale, rollerRes);
-                    AddCylinder(new Circle(scale / 4, cSystem.LocalToGlobal(-scale / 2, 0, scale / 4), cSystem.Y), scale, rollerRes);
+                    AddCylinder(new Circle(scale / rD, cSystem.LocalToGlobal(0, -scale/2, -scale / rD), cSystem.Y), scale, rollerRes);
+                    AddCylinder(new Circle(scale / rD, cSystem.LocalToGlobal(-scale / 2, 0, -scale / rD), cSystem.X), scale, rollerRes);
                 }
                 else if (!fixity.X)
                 {
                     //X-rollers
-                    AddCylinder(new Circle(scale / 4, cSystem.LocalToGlobal(-scale / 2, -scale / 4, scale / 4), cSystem.Y), scale, rollerRes);
-                    AddCylinder(new Circle(scale / 4, cSystem.LocalToGlobal(-scale / 2, scale / 4, scale / 4), cSystem.Y), scale, rollerRes);
+                    AddCylinder(new Circle(scale / rD, cSystem.LocalToGlobal(-scale / 4, -scale / 2, -scale / rD), cSystem.Y), scale, rollerRes);
+                    AddCylinder(new Circle(scale / rD, cSystem.LocalToGlobal(scale / 4, - scale / 2, -scale / rD), cSystem.Y), scale, rollerRes);
                 }
                 else if (!fixity.Y)
                 {
                     //Y-rollers
-                    AddCylinder(new Circle(scale / 4, cSystem.LocalToGlobal(-scale / 4, -scale / 2, scale / 4), cSystem.X), scale, rollerRes);
-                    AddCylinder(new Circle(scale / 4, cSystem.LocalToGlobal(scale / 4, -scale / 2, scale / 4), cSystem.X), scale, rollerRes);
+                    AddCylinder(new Circle(scale / rD, cSystem.LocalToGlobal(-scale / 2, -scale / 4, -scale / rD), cSystem.X), scale, rollerRes);
+                    AddCylinder(new Circle(scale / rD, cSystem.LocalToGlobal(- scale / 2, scale / 4, -scale / rD), cSystem.X), scale, rollerRes);
                 }
 
                 //var circle = new Circle(scale, new CylindricalCoordinateSystem(tip - direction, direction, new Angle(Math.PI/4))); //new Vector(new Angle(Math.PI / 4)), Vector.UnitY));

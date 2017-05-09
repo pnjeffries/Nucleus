@@ -112,7 +112,7 @@ namespace FreeBuild.Geometry
         {
             Origin = origin;
             L = lAxis;
-            Vector yTemp = L.Cross(Vector.UnitX);
+            Vector yTemp = (L.IsXOnly() ? L.Cross(Vector.UnitZ) : L.Cross(Vector.UnitX)).Unitize();
             A = yTemp.Cross(L);
         }
 
