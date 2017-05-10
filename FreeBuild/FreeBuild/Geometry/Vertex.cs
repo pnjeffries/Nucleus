@@ -130,6 +130,7 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Internal backing member for node property
         /// </summary>
+        [Copy(CopyBehaviour.DO_NOT_COPY)]
         private Node _Node = null;
 
         /// <summary>

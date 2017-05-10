@@ -12,6 +12,24 @@ namespace FreeBuild.Model
     [Serializable]
     public class PanelElementCollection : ElementCollection<PanelElement, PanelElementCollection>
     {
+        #region Constructors
+
+        /// <summary>
+        /// Initialise a new blank PanelElementCollection
+        /// </summary>
+        public PanelElementCollection() : base() { }
+
+        /// <summary>
+        /// Initialise a new PanelElementCollection containing the specified single element
+        /// </summary>
+        /// <param name="element"></param>
+        public PanelElementCollection(PanelElement element) : base()
+        {
+            Add(element);
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>

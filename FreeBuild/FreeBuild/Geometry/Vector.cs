@@ -233,7 +233,7 @@ namespace FreeBuild.Geometry
             Y = 0;
             Z = 0;
             if (direction == Direction.X || direction == Direction.XX) X = 1;
-            if (direction == Direction.YY || direction == Direction.YY) Y = 1;
+            else if (direction == Direction.Y || direction == Direction.YY) Y = 1;
             else Z = 1; 
         }
 

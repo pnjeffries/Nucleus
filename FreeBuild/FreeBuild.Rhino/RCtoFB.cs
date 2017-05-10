@@ -239,19 +239,47 @@ namespace FreeBuild.Rhino
                 var joined = RC.Curve.JoinCurves(curves);
                 if (joined.Length > 0)
                 {
-                    Curve boundary = Convert(joined[0]);
-                    var result = new PlanarRegion(boundary);
-                    // NOTE: This assumes that the outer boundary will be the first
-                    // joined curve.  TODO: Check this!
-                    for (int i = 1; i < joined.Length; i++)
+                    RC.Curve outer = outerCurve(joined);
+                    if (outer != null)
                     {
-                        Curve voidCrv = Convert(joined[i]);
-                        result.Voids.Add(voidCrv);
+                        Curve boundary = Convert(outer);
+                        var result = new PlanarRegion(boundary);
+                        for (int i = 0; i < joined.Length; i++)
+                        {
+                            if (joined[i] != outer)
+                            {
+                                Curve voidCrv = Convert(joined[i]);
+                                result.Voids.Add(voidCrv);
+                            }
+                        }
+                        return result;
                     }
-                    return result;
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Find the curve in this collection which encloses the others
+        /// </summary>
+        /// <param name="curves"></param>
+        /// <returns></returns>
+        private static RC.Curve outerCurve(IList<RC.Curve> curves)
+        {
+            if (curves.Count == 0) return null;
+            RC.Curve result = curves[0];
+            RC.Plane plane;
+            if (!result.TryGetPlane(out plane)) return null;
+            for (int i = 1; i < curves.Count; i++)
+            {
+                RC.Curve curve = curves[i];
+                var containment = RC.Curve.PlanarClosedCurveRelationship(result, curve, plane, Tolerance.Distance);
+                if (containment == RC.RegionContainment.BInsideA)
+                {
+                    result = curve;
+                }
+            }
+            return result;
         }
 
         /// <summary>
