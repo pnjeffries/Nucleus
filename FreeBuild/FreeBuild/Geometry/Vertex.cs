@@ -305,6 +305,7 @@ namespace FreeBuild.Geometry
                         }
                         else Node.Position = Position;
                     }
+                    Node.Undelete();
                 }
             }
         }

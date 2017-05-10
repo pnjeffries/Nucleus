@@ -11,6 +11,7 @@ namespace FreeBuild.Geometry
     /// <summary>
     /// A dictionary to store derived element geometry
     /// </summary>
+    [Serializable]
     public class DerivedGeometryDictionary : Dictionary<string, VertexGeometry>, IOwned<Element>
     {
         #region Properties
