@@ -175,9 +175,9 @@ namespace FreeBuild.Robot
         /// <param name="robotID"></param>
         /// <param name="model"></param>
         /// <returns></returns>
-        public PanelFamily GetMappedPanelFamily(string robotID, Model.Model model)
+        public BuildUpFamily GetMappedPanelFamily(string robotID, Model.Model model)
         {
-            if (HasFirstID(ThicknessCategory, robotID)) return model.Families.TryGet(GetFirstID(ThicknessCategory, robotID)) as PanelFamily;
+            if (HasFirstID(ThicknessCategory, robotID)) return model.Families.TryGet(GetFirstID(ThicknessCategory, robotID)) as BuildUpFamily;
             return null;
         }
 
@@ -187,7 +187,7 @@ namespace FreeBuild.Robot
         /// <param name="robotID"></param>
         /// <param name="model"></param>
         /// <returns></returns>
-        public PanelFamily GetMappedPanelFamily(IRobotLabel label, Model.Model model)
+        public BuildUpFamily GetMappedPanelFamily(IRobotLabel label, Model.Model model)
         {
             return GetMappedPanelFamily(label.Name, model);
         }
@@ -261,7 +261,7 @@ namespace FreeBuild.Robot
         /// </summary>
         /// <param name="family"></param>
         /// <param name="label"></param>
-        public void Add(PanelFamily family, IRobotLabel label)
+        public void Add(BuildUpFamily family, IRobotLabel label)
         {
             Add(ThicknessCategory, family.GUID, label.Name);
         }
@@ -326,7 +326,7 @@ namespace FreeBuild.Robot
         /// Remove a panel family entry
         /// </summary>
         /// <param name="family"></param>
-        public void Remove(PanelFamily family)
+        public void Remove(BuildUpFamily family)
         {
             Remove(ThicknessCategory, family.GUID);
         }

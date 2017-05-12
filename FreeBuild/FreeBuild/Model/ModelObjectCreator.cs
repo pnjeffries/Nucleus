@@ -85,7 +85,7 @@ namespace FreeBuild.Model
             if (result == null)
             {
                 result = new Node(position);
-                //result = (Node)Model.History.Update(exInfo, result);
+                result = (Node)Model.History.Update(exInfo, result);
                 result.Position = position;
             }
             else result.Undelete();
@@ -248,11 +248,11 @@ namespace FreeBuild.Model
         /// instead of creating a new item this previous one will be updated and returned instead.
         /// This enables this method to be used parametrically.</param>
         /// <returns></returns>
-        public PanelFamily FaceFamily(ExecutionInfo exInfo = null)
+        public BuildUpFamily BuildUpFamily(ExecutionInfo exInfo = null)
         {
-            PanelFamily result = new PanelFamily();
-            result = (PanelFamily)Model.History.Update(exInfo, result);
-            if (result.Name == null) result.Name = Model.Families.NextAvailableName("Face Family", result, true);
+            BuildUpFamily result = new BuildUpFamily();
+            result = (BuildUpFamily)Model.History.Update(exInfo, result);
+            if (result.Name == null) result.Name = Model.Families.NextAvailableName("Build-Up", result, true);
             Model.Add(result);
             return result;
         }
@@ -268,10 +268,10 @@ namespace FreeBuild.Model
         /// instead of creating a new item this previous one will be updated and returned instead.
         /// This enables this method to be used parametrically.</param>
         /// <returns>The created or updated </returns>
-        public PanelFamily FaceFamily(string name, ExecutionInfo exInfo = null)
+        public BuildUpFamily BuildUpFamily(string name, ExecutionInfo exInfo = null)
         {
-            PanelFamily result = new PanelFamily();
-            result = (PanelFamily)Model.History.Update(exInfo, result);
+            BuildUpFamily result = new BuildUpFamily();
+            result = (BuildUpFamily)Model.History.Update(exInfo, result);
             result.Name = Model.Families.NextAvailableName(name, result);
             Model.Add(result);
             return result;

@@ -479,9 +479,9 @@ namespace FreeBuild.Robot
                 {
                     UpdateRobotSection((SectionFamily)property, context);
                 }
-                else if (property is PanelFamily)
+                else if (property is BuildUpFamily)
                 {
-                    UpdateRobotThickness((PanelFamily)property, context);
+                    UpdateRobotThickness((BuildUpFamily)property, context);
                 }
             }
             return true;
@@ -981,7 +981,7 @@ namespace FreeBuild.Robot
         /// <param name="family"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public IRobotLabel UpdateRobotThickness(PanelFamily family, RobotConversionContext context)
+        public IRobotLabel UpdateRobotThickness(BuildUpFamily family, RobotConversionContext context)
         {
             string mappedID;
             IRobotLabel label = null;
@@ -1008,7 +1008,7 @@ namespace FreeBuild.Robot
             rData.ThicknessType = IRobotThicknessType.I_TT_HOMOGENEOUS; //TEMP
             IRobotThicknessHomoData homogeneousData = (IRobotThicknessHomoData)rData.Data;
             homogeneousData.Type = IRobotThicknessHomoType.I_THT_CONSTANT;
-            homogeneousData.ThickConst = family.BuildUp.TotalThickness;
+            homogeneousData.ThickConst = family.Layers.TotalThickness;
 
             context.IDMap.Add(family, label);
 
@@ -1054,7 +1054,7 @@ namespace FreeBuild.Robot
         /// <param name="family"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public string GetMappedThicknessID(PanelFamily family, RobotConversionContext context)
+        public string GetMappedThicknessID(BuildUpFamily family, RobotConversionContext context)
         {
             if (context.IDMap.HasSecondID(context.IDMap.ThicknessCategory, family.GUID))
                 return context.IDMap.GetSecondID(context.IDMap.ThicknessCategory, family.GUID);

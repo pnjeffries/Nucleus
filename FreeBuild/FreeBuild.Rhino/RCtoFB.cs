@@ -274,7 +274,7 @@ namespace FreeBuild.Rhino
             {
                 RC.Curve curve = curves[i];
                 var containment = RC.Curve.PlanarClosedCurveRelationship(result, curve, plane, Tolerance.Distance);
-                if (containment == RC.RegionContainment.BInsideA)
+                if (containment == RC.RegionContainment.AInsideB)
                 {
                     result = curve;
                 }

@@ -33,22 +33,22 @@ namespace FreeBuild.Model
     /// a 3D solid geometry
     /// </summary>
     [Serializable]
-    public class PanelFamily : Family
+    public class BuildUpFamily : Family
     {
         #region Properties
 
-        private BuildUpLayerCollection _BuildUp;
+        private BuildUpLayerCollection _Layers;
 
         /// <summary>
         /// The collection of build-up layers that define the through-thickness
         /// properties of this family
         /// </summary>
-        public BuildUpLayerCollection BuildUp
+        public BuildUpLayerCollection Layers
         {
             get
             {
-                if (_BuildUp == null) _BuildUp = new BuildUpLayerCollection(this);
-                return _BuildUp;
+                if (_Layers == null) _Layers = new BuildUpLayerCollection(this);
+                return _Layers;
             }
         }
 
@@ -73,13 +73,13 @@ namespace FreeBuild.Model
         /// <summary>
         /// Initialise a new blank Panel Family
         /// </summary>
-        public PanelFamily() : base() { }
+        public BuildUpFamily() : base() { }
 
         /// <summary>
         /// Initialse a new Panel Family with the given name
         /// </summary>
         /// <param name="name"></param>
-        public PanelFamily(string name) : this()
+        public BuildUpFamily(string name) : this()
         {
             Name = name;
         }

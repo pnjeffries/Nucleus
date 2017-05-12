@@ -7,36 +7,36 @@ using System.Threading.Tasks;
 namespace FreeBuild.Model
 {
     /// <summary>
-    /// A collection of panel families
+    /// A collection of build-up families
     /// </summary>
     [Serializable]
-    public class PanelFamilyCollection : ModelObjectCollection<PanelFamily>
+    public class BuildUpFamilyCollection : ModelObjectCollection<BuildUpFamily>
     {
         #region Constructors
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        public PanelFamilyCollection() : base() { }
+        public BuildUpFamilyCollection() : base() { }
 
         /// <summary>
-        /// Initialise a new PanelFamilyCollection containing the specified single item
+        /// Initialise a new BuildUpFamilyCollection containing the specified single item
         /// </summary>
         /// <param name="family"></param>
-        public PanelFamilyCollection(PanelFamily family) : base()
+        public BuildUpFamilyCollection(BuildUpFamily family) : base()
         {
             Add(family);
         }
 
         /// <summary>
-        /// Initialise a new PanelFamilyCollection containing the specified set of sections
+        /// Initialise a new BuildUpFamilyCollection containing the specified set of families
         /// </summary>
         /// <param name="families"></param>
-        public PanelFamilyCollection(IEnumerable<PanelFamily> families)
+        public BuildUpFamilyCollection(IEnumerable<BuildUpFamily> families)
         {
             if (families != null)
             {
-                foreach (PanelFamily family in families)
+                foreach (BuildUpFamily family in families)
                 {
                     Add(family);
                 }

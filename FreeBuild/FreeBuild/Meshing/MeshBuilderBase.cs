@@ -521,14 +521,14 @@ namespace FreeBuild.Meshing
         /// </summary>
         /// <param name="geometry"></param>
         /// <param name="family"></param>
-        public virtual void AddPanelPreview(Surface geometry, PanelFamily family)
+        public virtual void AddPanelPreview(Surface geometry, BuildUpFamily family)
         {
             if (geometry.IsValid)
             {
                 if (geometry is PlanarRegion)
                 {
                     PlanarRegion region = (PlanarRegion)geometry;
-                    double thickness = family.BuildUp.TotalThickness;
+                    double thickness = family.Layers.TotalThickness;
                     AddPlanarRegion(region, thickness, thickness * family.SetOut.FactorFromTop());
                 }
             }

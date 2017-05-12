@@ -12,7 +12,7 @@ namespace FreeBuild.Model
     /// part of the build-up definition of a Face Family
     /// </summary>
     [Serializable]
-    public class BuildUpLayer : Unique, IOwned<PanelFamily>
+    public class BuildUpLayer : Unique, IOwned<BuildUpFamily>
     {
         #region Properties
 
@@ -48,21 +48,42 @@ namespace FreeBuild.Model
         /// Private backing field for Family property
         /// </summary>
         [Copy(CopyBehaviour.MAP)]
-        private PanelFamily _Family;
+        private BuildUpFamily _Family;
 
         /// <summary>
         /// The family that this layer is part of
         /// </summary>
-        public PanelFamily Family
+        public BuildUpFamily Family
         {
             get { return _Family; }
             internal set { _Family = value; }
         }
 
-        PanelFamily IOwned<PanelFamily>.Owner
+        BuildUpFamily IOwned<BuildUpFamily>.Owner
         {
             get { return _Family; }
         }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initialise a new blank build-up layer
+        /// </summary>
+        public BuildUpLayer() : base() { }
+
+        /// <summary>
+        /// Initialise a new build-up layer of the specified thickness and material
+        /// </summary>
+        /// <param name="thickness"></param>
+        /// <param name="material"></param>
+        public BuildUpLayer(double thickness, Material material) : base()
+        {
+            Thickness = thickness;
+            Material = material;
+        }
+
 
         #endregion
 
