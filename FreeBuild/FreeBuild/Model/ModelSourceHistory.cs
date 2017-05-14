@@ -96,6 +96,26 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
+        /// Delete all objects created by the specified source
+        /// </summary>
+        /// <param name="sourceReference"></param>
+        public void DeleteAllFromSource(string sourceReference, bool cleanNodes = true)
+        {
+            if (SourceMap.ContainsKey(sourceReference))
+            {
+                var iterations = SourceMap[sourceReference];
+                foreach (var iteration in iterations)
+                {
+                    foreach (ModelObject obj in iteration)
+                    {
+                        obj.Delete();
+                        if (cleanNodes) CleanNodes(obj);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Replace the previous data stored with this execution information with the specified new value.
         /// If a stored object exists and is of the same type as the new one, it will be updated to match the new values
         /// otherwise the record will be replaced with the new object.
