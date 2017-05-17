@@ -57,7 +57,7 @@
     <Compile Include="Geometry\MeshEdgeLink.cs" />
     <Compile Include="IO\UniqueFormatter.cs" />
     <Compile Include="Maths\MathsHelper.cs" />
-    <Compile Include="Model\PanelFamilyCollection.cs" />
+    <Compile Include="Model\BuildUpFamilyCollection.cs" />
     <Compile Include="Model\BuildUpLayer.cs" />
     <Compile Include="Model\BuildUpLayerCollection.cs" />
     <Compile Include="Model\FamilyFilter.cs" />
@@ -221,7 +221,7 @@
     <Compile Include="Base\Document.cs" />
     <Compile Include="Geometry\WrappedCurve.cs" />
     <Compile Include="Model\ElementCollection.cs" />
-    <Compile Include="Model\PanelFamily.cs" />
+    <Compile Include="Model\BuildUpFamily.cs" />
     <Compile Include="Model\ElementTable.cs" />
     <Compile Include="Geometry\HorizontalSetOut.cs" />
     <Compile Include="Model\IElementDataComponent.cs" />

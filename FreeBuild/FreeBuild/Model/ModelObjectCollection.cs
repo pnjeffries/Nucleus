@@ -111,7 +111,7 @@ namespace FreeBuild.Model
         /// <returns></returns>
         public string NextAvailableName(string baseName, TItem ignore = null, bool enforcePostFix = false, bool includeSpace = true)
         {
-            if (!enforcePostFix && FindByName(baseName) == null) return baseName;
+            if (!enforcePostFix && FindByName(baseName, ignore) == null) return baseName;
             else
             {
                 int postFix = 2;

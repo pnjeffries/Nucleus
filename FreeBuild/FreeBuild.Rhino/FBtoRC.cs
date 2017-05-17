@@ -136,6 +136,17 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
+        /// Convert a FreeBuild line to a RhinoCommon line struct
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns></returns>
+        public static RC.Line ConvertToLine(Line line)
+        {
+            if (line.IsValid) return new RC.Line(Convert(line.StartPoint), Convert(line.EndPoint));
+            else return RC.Line.Unset;
+        }
+
+        /// <summary>
         /// Convert a FreeBuild polyline into a RhinoCommon PolylineCurve
         /// </summary>
         /// <param name="polyline">The polyline to convert</param>

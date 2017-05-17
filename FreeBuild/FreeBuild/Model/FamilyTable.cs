@@ -70,14 +70,14 @@ namespace FreeBuild.Model
         /// <summary>
         /// Private backing field for FaceFamilies property
         /// </summary>
-        private PanelFamilyCollection _PanelFamilies = null;
+        private BuildUpFamilyCollection _PanelFamilies = null;
 
         /// <summary>
         /// The subset of panel properties in this table.
         /// Generated when necessary and cached.  Do not modify - modifications to this
         /// collection will have no effect on the source table.
         /// </summary>
-        public PanelFamilyCollection PanelFamilies
+        public BuildUpFamilyCollection PanelFamilies
         {
             get
             {

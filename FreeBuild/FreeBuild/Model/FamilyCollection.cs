@@ -69,13 +69,13 @@ namespace FreeBuild.Model
         /// Extract all Panel Families from this collection
         /// </summary>
         /// <returns></returns>
-        public PanelFamilyCollection GetPanelFamilies()
+        public BuildUpFamilyCollection GetPanelFamilies()
         {
-            var result = new PanelFamilyCollection();
+            var result = new BuildUpFamilyCollection();
             foreach (Family family in this)
             {
-                if (family is PanelFamily)
-                    result.Add((PanelFamily)family);
+                if (family is BuildUpFamily)
+                    result.Add((BuildUpFamily)family);
             }
             return result;
         }
