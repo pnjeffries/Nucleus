@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 Paul Jeffries
+﻿                                                                                                                                                                                     // Copyright (c) 2016 Paul Jeffries
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Geometry
+namespace FreeBuild.Geometry                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
 {
     /// <summary>
     /// Abstract base class for curves internally defined in some other

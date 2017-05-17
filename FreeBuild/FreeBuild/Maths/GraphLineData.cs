@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace FreeBuild.Maths
 {
+
     /// <summary>
     /// Wrapper for graph line data,
     /// used to present it in a graph

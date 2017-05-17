@@ -50,10 +50,12 @@
     <Compile Include="Base\Bool6D.cs" />
     <Compile Include="Base\CollectionCopyAttribute.cs" />
     <Compile Include="Base\KeyedCollection.cs" />
+    <Compile Include="Extensions\NotifyCollectionChangedEventArgsExtensions.cs" />
     <Compile Include="Geometry\Grid.cs" />
     <Compile Include="Geometry\GridLineCollection.cs" />
     <Compile Include="Geometry\GridLineGenerator.cs" />
     <Compile Include="Geometry\MeshEdgeLink.cs" />
+    <Compile Include="IO\UniqueFormatter.cs" />
     <Compile Include="Maths\MathsHelper.cs" />
     <Compile Include="Model\PanelFamilyCollection.cs" />
     <Compile Include="Model\BuildUpLayer.cs" />
@@ -312,6 +314,12 @@
     <Compile Include="UI\AutoUIComboBoxAttribute.cs" />
     <Compile Include="UI\IUserInteraction.cs" />
     <Compile Include="UI\UIOption.cs" />
+    <Compile Include="Undo\CollectionUndoState.cs" />
+    <Compile Include="Undo\PropertyUndoStage.cs" />
+    <Compile Include="Undo\UndoManager.cs" />
+    <Compile Include="Undo\UndoStage.cs" />
+    <Compile Include="Undo\UndoState.cs" />
+    <Compile Include="Undo\UndoStageCollection.cs" />
     <Compile Include="Units\DimensionAttribute.cs" />
     <Compile Include="Units\DimensionType.cs" />
   </ItemGroup>

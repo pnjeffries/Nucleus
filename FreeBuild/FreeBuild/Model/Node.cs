@@ -50,7 +50,7 @@ namespace FreeBuild.Model
         public Vector Position
         {
             get { return _Position; }
-            set { _Position = value;  NotifyPropertyChanged("Position"); }
+            set { _Position = value; NotifyPropertyChanged("Position"); }
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace FreeBuild.Model
 
             foreach (Vertex v in Vertices)
             {
-                if (v.Element != null && 
+                if (v.Element != null &&
                     (!undeletedOnly || !v.Element.IsDeleted))
                     result.Add(v.Element);
             }
@@ -237,7 +237,64 @@ namespace FreeBuild.Model
             return result;
         }
 
+        /// <summary>
+        /// Merge the properties of another node with this one.
+        /// </summary>
+        /// <param name="other">The node to merge into this one</param>
+        /// <param name="averagePositions">If true, the node position will
+        /// be set to the average of the original value and the position of
+        /// the other.</param>
+        public void Merge(Node other, bool averagePositions = false)
+        {
+            if (HasData() && other.HasData())
+            {
+                Data.Merge(other.Data);
+            }
+        }
+
         #endregion
 
+    }
+
+    /// <summary>
+    /// Static extension methods for collections of nodes
+    /// </summary>
+    public static class NodeExtensions
+    {
+        /// <summary>
+        /// Merge a collection of nodes into one node.
+        /// The lowest-numbered node will be retained, the others
+        /// will have their data merged into that one and be deleted.
+        /// </summary>
+        /// <param name="nodes">The collection of nodes to merge.  Note that any
+        /// deleted nodes which you do not want to include in this merge should be
+        /// removed prior to running this operation.</param>
+        /// <param name="averagePositions">If true, the resultant node position will
+        /// be set to the average of the node positions.  Otherwise, the position of the
+        /// original node will be retained.</param>
+        /// <returns></returns>
+        public static Node Merge(this IList<Node> nodes, bool averagePositions = false)
+        {
+            int i = nodes.IndexOfLowestNumericID();
+            if (i < 0) return null;
+            Node result = nodes[i];
+            Vector average = new Vector();
+            for (int j = 0; j < nodes.Count; j++)
+            {
+                Node node = nodes[j];
+                average += node.Position;
+                if (j != i)
+                {
+                    result.Merge(node);
+                    node.Delete();
+                }
+            }
+            if (averagePositions)
+            {
+                average /= nodes.Count;
+                result.Position = average;
+            }
+            return result;
+        }
     }
 }

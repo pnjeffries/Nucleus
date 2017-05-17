@@ -46,5 +46,11 @@ namespace FreeBuild.Tests
                 if (t.IsClass && t.GetCustomAttribute(typeof(SerializableAttribute)) == null) Core.Print(t.Name);
             }
         }
+
+        public static void PrintDependencies(Type type)
+        {
+            var types = type.GetDependencies();
+            foreach (Type t in types) if (t.IsClass) Core.Print(t.Name);
+        }
     }
 }

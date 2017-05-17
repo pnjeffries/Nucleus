@@ -314,11 +314,14 @@ namespace FreeBuild.DDTree
             {
                 foreach (T item in _Children)
                 {
-                    double distSquaredTo = _Tree.DistanceSquaredBetween(pt, item);
-                    if (distSquaredTo < distanceSquared && !object.ReferenceEquals(item, ignore))
+                    if (_Tree.CanReturn(item) && !object.ReferenceEquals(item, ignore))
                     {
-                        distanceSquared = distSquaredTo;
-                        result = item;
+                        double distSquaredTo = _Tree.DistanceSquaredBetween(pt, item);
+                        if (distSquaredTo < distanceSquared)
+                        {
+                            distanceSquared = distSquaredTo;
+                            result = item;
+                        }
                     }
                 }
             }
@@ -415,7 +418,5 @@ namespace FreeBuild.DDTree
                 }
             }
         }
-
-
     }
 }

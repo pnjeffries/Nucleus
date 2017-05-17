@@ -101,6 +101,7 @@ namespace FreeBuild.Base
                                          FileMode.Create,
                                          FileAccess.Write, FileShare.None);
                 formatter.Serialize(stream, this);
+                stream.Flush();
                 stream.Close();
                 FilePath = filePath; //Store filepath
                 LastSaved = DateTime.UtcNow;
@@ -130,6 +131,7 @@ namespace FreeBuild.Base
                                          FileMode.Create,
                                          FileAccess.Write, FileShare.None);
                 textSerialiser.Serialize(stream, this as T);
+                stream.Flush();
                 stream.Close();
                 FilePath = filePath; //Store filepath
                 LastSaved = DateTime.UtcNow;
@@ -176,6 +178,7 @@ namespace FreeBuild.Base
                                       FileMode.Open,
                                       FileAccess.Read,
                                       FileShare.Read);
+            stream.Seek(0, SeekOrigin.Begin);
             result = formatter.Deserialize(stream) as T;
             result.FilePath = filePath;
             stream.Close();

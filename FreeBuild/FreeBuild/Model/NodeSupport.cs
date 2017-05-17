@@ -76,5 +76,15 @@ namespace FreeBuild.Model
         {
             Axes = axes;
         }
+
+        public void Merge(INodeDataComponent other)
+        {
+            if (other is NodeSupport)
+            {
+                NodeSupport otherS = (NodeSupport)other;
+                Fixity = Fixity.Or(otherS.Fixity);
+                //TODO: Axis merging
+            }
+        }
     }
 }

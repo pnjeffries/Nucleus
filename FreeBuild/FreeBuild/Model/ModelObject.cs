@@ -222,4 +222,35 @@ namespace FreeBuild.Model
         #endregion
 
     }
+
+    /// <summary>
+    /// Static extension methods for collections of ModelObjects
+    /// </summary>
+    public static class ModelObjectExtensions
+    {
+        /// <summary>
+        /// Find the index of the item in this list with the lowest NumericID
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static int IndexOfLowestNumericID<T>(this IList<T> list)
+            where T : ModelObject
+        {
+            if (list == null || list.Count == 0) return -1;
+
+            int result = 0;
+            long lowestID = list[0].NumericID;
+            for (int i = 1; i < list.Count; i++)
+            {
+                if (list[i].NumericID < lowestID)
+                {
+                    lowestID = list[i].NumericID;
+                    result = i;
+                }
+            }
+
+            return result;
+        }
+    }
 }

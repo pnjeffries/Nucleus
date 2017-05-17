@@ -46,8 +46,7 @@ namespace FreeBuild.Model
         public double ConnectionTolerance { get; set; } = 0;
 
         /// <summary>
-        /// Delete nodes that are no longer connected to elements?
-        /// Used during model-level GenerateNodes calls only.
+        /// Delete encoungered nodes that are no longer connected to elements?
         /// </summary>
         public bool DeleteUnusedNodes { get; set; } = false;
 

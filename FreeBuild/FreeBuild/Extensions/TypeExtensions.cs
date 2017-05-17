@@ -287,12 +287,13 @@ namespace FreeBuild.Extensions
         /// <param name="outFields">The collection of field infos to be populated</param>
         /// <param name="flags">A bitmask composed of one or more BindingFlags which specify 
         /// how the search is conduted</param>
-        public static void GetAllFields(this Type type, ICollection<FieldInfo> outFields, BindingFlags flags)
+        public static void GetAllFields(this Type type, ICollection<FieldInfo> outFields, BindingFlags flags, bool ignoreNonSerialised = false)
         {
             foreach (var field in type.GetFields(flags))
             {
                 // Ignore inherited fields.
-                if (field.DeclaringType == type) //Necessary?
+                if (field.DeclaringType == type && //Necessary?
+                    (!ignoreNonSerialised || field.GetCustomAttribute(typeof(NonSerializedAttribute)) == null)) 
                     outFields.Add(field);
             }
 
@@ -307,11 +308,21 @@ namespace FreeBuild.Extensions
         /// <param name="type"></param>
         /// <param name="flags">A bitmask composed of one or more BindingFlags which specify 
         /// how the search is conduted</param>
-        public static ICollection<FieldInfo> GetAllFields(this Type type, BindingFlags flags)
+        public static IList<FieldInfo> GetAllFields(this Type type, BindingFlags flags, bool ignoreNonSerialised = false)
         {
             var result = new List<FieldInfo>();
-            type.GetAllFields(result, flags);
+            type.GetAllFields(result, flags, ignoreNonSerialised);
             return result;
+        }
+
+        /// <summary>
+        /// Get all fields of this type, including private ones inherited from base classes
+        /// </summary>
+        /// <param name="type"></param>
+        public static IList<FieldInfo> GetAllFields(this Type type, bool ignoreNonSerialised = false)
+        {
+            BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
+            return type.GetAllFields(flags, ignoreNonSerialised);
         }
 
         /// <summary>
@@ -333,6 +344,22 @@ namespace FreeBuild.Extensions
                     result = baseType.GetBaseField(name, flags);
             }
             return result;
+        }
+
+        /// <summary>
+        /// Searches for the specified public or private field recursively.  
+        /// If it cannot be found within this type, the base class hierarchy 
+        /// will be searched also.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="name">The name of the field to find</param>
+        /// <param name="flags">>A bitmask composed of one or more BindingFlags which specify 
+        /// how the search is conduted</param>
+        /// <returns>The FieldInfo if found, else null</returns>
+        public static FieldInfo GetBaseField(this Type type, string name)
+        {
+            BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
+            return GetBaseField(type, name, flags);
         }
 
         /// <summary>
@@ -359,13 +386,19 @@ namespace FreeBuild.Extensions
             return result;
         }
 
+        /// <summary>
+        /// Get a collection of all types which this type relies on for its definition
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="ignoreNonSerialised"></param>
+        /// <returns></returns>
         public static void GetDependencies(this Type type, ICollection<Type> output, bool ignoreNonSerialised = false)
         {
             if (!output.Contains(type))
             {
                 output.Add(type);
                 if (type.BaseType != null) type.BaseType.GetDependencies(output, ignoreNonSerialised);
-                foreach (FieldInfo fI in type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                foreach (FieldInfo fI in type.GetAllFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                 {
                     if (!ignoreNonSerialised || fI.GetCustomAttribute(typeof(NonSerializedAttribute)) == null)
                     fI.FieldType.GetDependencies(output, ignoreNonSerialised);

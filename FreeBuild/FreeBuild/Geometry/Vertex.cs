@@ -292,21 +292,34 @@ namespace FreeBuild.Geometry
                 else
                 {
                     // Node already exists - check and update it
-                    if (Position.DistanceToSquared(Node.Position) > options.ConnectionTolerance.Squared())
+                    double dist = Node.DistanceToSquared(this);
+                    if (dist > options.ConnectionTolerance.Squared())
                     {
                         // Check for other connections that share this node:
                         if (Node.Vertices.Count > 1)
                         {
-                            double dist = Node.DistanceToSquared(this);
-                            if (dist > options.ConnectionTolerance && model != null)
+                            if (model != null)
                             {
                                 // Node is too far away - split and create new node
                                 Node = model.Create.Node(Position, options.ConnectionTolerance, options.ExInfo);
                             }
                         }
-                        else Node.Position = Position;
+                        else
+                        {
+                            // Check for other nodes at the end position to connect to:
+                            Node node = model.Nodes.ClosestNodeTo(Position, options.ConnectionTolerance);
+                            if (node != null && !node.IsDeleted)
+                            {
+                                if (options.DeleteUnusedNodes) Node.Delete();
+                                Node = node;
+                            }
+                            else
+                            {
+                                Node.Position = Position;
+                                Node.Undelete();
+                            }
+                        }
                     }
-                    Node.Undelete();
                 }
             }
         }

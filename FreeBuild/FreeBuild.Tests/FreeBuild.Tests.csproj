@@ -50,6 +50,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reflection_Tests.cs" />
+    <Compile Include="UniqueFormatter_Tests.cs" />
     <Compile Include="Word_Tests.cs" />
   </ItemGroup>
   <ItemGroup>

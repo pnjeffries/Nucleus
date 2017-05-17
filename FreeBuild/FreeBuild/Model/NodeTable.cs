@@ -86,7 +86,7 @@ namespace FreeBuild.Model
 
         /// <summary>
         /// Find the closest node in this collection to the
-        /// specified point
+        /// specified point.  
         /// </summary>
         /// <param name="point">The search point</param>
         /// <param name="maxDistance">The maximum distance within which to look for nodes</param>

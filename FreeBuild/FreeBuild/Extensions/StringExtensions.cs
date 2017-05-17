@@ -223,6 +223,12 @@ namespace FreeBuild.Extensions
             return result;
         }
 
+        /// <summary>
+        /// Determines whether this string and another are equal, ignoring differences in case
+        /// </summary>
+        /// <param name="thisString"></param>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public static bool EqualsIgnoreCase(this string thisString, string other)
         {
             if (thisString == null) return (other == null);
@@ -282,5 +288,25 @@ namespace FreeBuild.Extensions
             else return input;
         }
 
+        /// <summary>
+        /// Get the chunk of text that starts from the specified index and proceeds
+        /// up to the next found instance of the specified character
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="index">The start index of the chunk.  This will be updated to the
+        /// start position of the next chunk</param>
+        /// <param name="toChar"></param>
+        /// <returns></returns>
+        public static string NextChunk(this string str, ref int index, params char[] toChar)
+        {
+            int startIndex = index;
+            index = str.IndexOfAny(toChar, startIndex) + 1;
+            if (index <= 0)
+            {
+                index = str.Length;
+                return str.Substring(startIndex);
+            }
+            else return str.Substring(startIndex, index - startIndex - 1);
+        }
     }
 }

@@ -303,7 +303,7 @@ namespace FreeBuild.Base
         /// </summary>
         /// <param name="propertyDelegate">A lambda function that returns a particular property for each item in the selection</param>
         /// <param name="multiValue">The value that should be returned to indicate multiple inconsistent values</param>
-        /// <param name="nullValue">The value that should be returned if </param>
+        /// <param name="nullValue">The value that should be returned if there are no items in this collection</param>
         /// <returns>The consistent value that is shared between all items, if that is the case, else the input multiValue</returns>
         public TValue CombinedValue<TValue>(Func<TItem, TValue> propertyDelegate, TValue multiValue = default(TValue), TValue nullValue = default(TValue))
         {

@@ -221,5 +221,19 @@ namespace FreeBuild.DDTree
                     return pt.Z;
             }
         }
+
+
+        /// <summary>
+        /// Overridable function which allows filtering of results for
+        /// certain sub-types.  Returns true if the specified item
+        /// is a valid result from tree search operations, false if
+        /// it is not (if, for example, it is marked as deleted)
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public virtual bool CanReturn(T item)
+        {
+            return true;
+        }
     }
 }

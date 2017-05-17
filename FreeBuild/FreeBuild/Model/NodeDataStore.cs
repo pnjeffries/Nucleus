@@ -26,6 +26,34 @@ namespace FreeBuild.Model
             return typeEnum.RepresentedType();
         }
 
+        /// <summary>
+        /// Merge the data in the specified other data store into this one,
+        /// merging existing components of matching types and adding those
+        /// which are unique.
+        /// </summary>
+        /// <param name="other"></param>
+        public void Merge(NodeDataStore other)
+        {
+            // Merge shared component types:
+            foreach (INodeDataComponent component in this)
+            {
+                Type type = component.GetType();
+                if (other.Contains(type))
+                {
+                    component.Merge(other[type]);
+                }
+            }
+
+            // Add component types exclusive to the other:
+            foreach (INodeDataComponent component in other)
+            {
+                if (!Contains(component.GetType()))
+                {
+                    Add(component);
+                }
+            }
+        }
+
         #endregion
 
     }

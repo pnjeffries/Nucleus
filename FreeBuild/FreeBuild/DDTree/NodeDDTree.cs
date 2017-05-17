@@ -168,5 +168,11 @@ namespace FreeBuild.DDTree
             return result;
         }
 
+        public override bool CanReturn(Node item)
+        {
+            // Filter out deleted nodes:
+            return !item.IsDeleted;
+        }
+
     }
 }

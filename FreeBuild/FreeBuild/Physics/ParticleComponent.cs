@@ -15,5 +15,10 @@ namespace FreeBuild.Physics
     public class ParticleComponent : INodeDataComponent
     {
         //TODO
+
+        public void Merge(INodeDataComponent other)
+        {
+            //TODO
+        }
     }
 }
