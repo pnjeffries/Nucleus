@@ -107,6 +107,7 @@ namespace FreeBuild.Undo
                     if (ActiveStage != null && !ActiveStage.Contains(state))
                     {
                         ActiveStage.Add(state);
+                        if (!UndoStack.Contains(ActiveStage)) AddUndoStage(ActiveStage);
                     }
                     else
                     {
@@ -169,7 +170,7 @@ namespace FreeBuild.Undo
         /// </summary>
         public void EndStage()
         {
-            AddUndoStage(ActiveStage);
+            //AddUndoStage(ActiveStage);
             ActiveStage = null;
         }
 
@@ -185,6 +186,7 @@ namespace FreeBuild.Undo
                 UndoStack.RemoveAt(UndoStack.Count - 1);
                 UndoStage redo = stage.Undo();
                 AddRedoStage(redo);
+                BeginStage();
             }
             Locked = false;
         }
@@ -200,7 +202,8 @@ namespace FreeBuild.Undo
                 UndoStage stage = RedoStack[RedoStack.Count - 1];
                 RedoStack.RemoveAt(RedoStack.Count - 1);
                 UndoStage redo = stage.Undo();
-                AddUndoStage(redo);
+                AddUndoStage(redo, false);
+                BeginStage();
             }
             Locked = false;
         }
@@ -261,7 +264,7 @@ namespace FreeBuild.Undo
         /// for arguments will result in a new UndoState being automatically created
         /// </summary>
         /// <param name="obj"></param>
-        public void WatchProperties(INotifyPropertyChanged obj)
+        public virtual void WatchProperties(INotifyPropertyChanged obj)
         {
             obj.PropertyChanged += Obj_PropertyChanged;
         }

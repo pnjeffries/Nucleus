@@ -81,6 +81,15 @@ namespace FreeBuild.Geometry
             this[2, 3] = translationVector.Z;
         }
 
+        /// <summary>
+        /// Initialise a transform based on copying data from another matrix
+        /// </summary>
+        /// <param name="other"></param>
+        public Transform(Matrix other) : this()
+        {
+            SetBlock(0, 0, other);
+        }
+
         #endregion
     }
 }

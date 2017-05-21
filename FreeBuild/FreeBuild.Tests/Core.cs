@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FreeBuild.Model;
+using FreeBuild.Geometry;
 
 namespace FreeBuild.Tests
 {
@@ -11,6 +13,28 @@ namespace FreeBuild.Tests
         public static void Print(string message)
         {
             Console.WriteLine(message);
+        }
+
+        public static ModelDocument GenerateTestModel(int floors = 10)
+        {
+            ModelDocument doc = new ModelDocument();
+
+            double floorHeight = 4;
+
+            for (int i = 0; i < floors; i++)
+            {
+                double z = floorHeight * (i + 1);
+                for (int j = 0; j < 10; j += 2)
+                {
+                    doc.Model.Create.LinearElement(new Line(0, j, z, 10, j, z));
+                }
+                doc.Model.Create.LinearElement(new Line(0, 0, z, 0, 10, z));
+                doc.Model.Create.LinearElement(new Line(10, 0, z, 10, 10, z));
+            }
+
+            doc.Model.GenerateNodes(new NodeGenerationParameters());
+
+            return doc;
         }
     }
 }

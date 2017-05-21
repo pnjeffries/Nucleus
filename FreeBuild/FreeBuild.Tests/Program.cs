@@ -22,6 +22,8 @@ namespace FreeBuild.Tests
             Console.WriteLine(" f) Unserialisable Types");
             Console.WriteLine(" g) GWA Serialisation");
             Console.WriteLine(" h) Uniques Serialisation");
+            Console.WriteLine(" i) Matrix Inversion");
+            Console.WriteLine(" j) Node Creation Tree Speed");
 
             char option = Console.ReadKey(true).KeyChar;
 
@@ -84,6 +86,16 @@ namespace FreeBuild.Tests
             if (option == 'a' || option == 'h')
             {
                 UniqueFormatter_Tests.SerializeToFormat();
+            }
+
+            if (option == 'a' || option == 'i')
+            {
+                Matrix_Tests.InverseTest();
+            }
+
+            if (option == 'a' || option == 'j')
+            {
+                DDTree_Tests.NodeCreation(10);
             }
 
             Console.Read();

@@ -615,6 +615,12 @@ namespace FreeBuild.Model
             //Bubble property changed events upwards:
             RaiseEvent(ObjectPropertyChanged, sender, e);
             ClearCachedData();
+
+            if (sender is Node)
+            {
+                //If node moved, clear tree:
+                if (e.PropertyName == "Position") Nodes.SpatialTree = null; //TODO: Review
+            }
         }
 
         #endregion

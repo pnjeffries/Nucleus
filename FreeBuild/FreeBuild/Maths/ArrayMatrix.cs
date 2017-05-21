@@ -156,6 +156,15 @@ namespace FreeBuild.Maths
                 { a41, a42, a43, a44 } };
         }
 
+        /// <summary>
+        /// Constructor creating a clone of an existing matrix
+        /// </summary>
+        /// <param name="other"></param>
+        public ArrayMatrix(Matrix other) : base(other.Rows, other.Columns)
+        {
+            SetBlock(0, 0, other);
+        }
+
         #endregion
 
         #region Methods

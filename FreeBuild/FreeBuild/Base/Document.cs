@@ -92,15 +92,23 @@ namespace FreeBuild.Base
         /// </summary>
         /// <param name="filePath">The filepath to save the document to</param>
         /// <returns>True if the file was successfully saved, else false</returns>
-        public virtual bool SaveAs(FilePath filePath)
+        public virtual bool SaveAs(FilePath filePath, DocumentSaveFileType type = DocumentSaveFileType.Binary)
         {
             try
             {
-                IFormatter formatter = new BinaryFormatter();
                 Stream stream = new FileStream(filePath,
                                          FileMode.Create,
                                          FileAccess.Write, FileShare.None);
-                formatter.Serialize(stream, this);
+                if (type == DocumentSaveFileType.Binary)
+                {
+                    IFormatter formatter = new BinaryFormatter();
+                    formatter.Serialize(stream, this);
+                }
+                else if (type == DocumentSaveFileType.ASS)
+                {
+                    var formatter = new UniqueFormatter();
+                    formatter.Serialize(stream, this);
+                }
                 stream.Flush();
                 stream.Close();
                 FilePath = filePath; //Store filepath
@@ -170,16 +178,25 @@ namespace FreeBuild.Base
         /// <param name="filePath">The path of the file to be loaded.</param>
         /// <returns>The loaded document, if a document could indeed be loaded.
         /// Else, null.</returns>
-        public static T Load<T>(FilePath filePath) where T : Document
+        public static T Load<T>(FilePath filePath, DocumentSaveFileType type = DocumentSaveFileType.Binary) where T : Document
         {
             T result = null;
-            IFormatter formatter = new BinaryFormatter();
+            
             Stream stream = new FileStream(filePath,
                                       FileMode.Open,
                                       FileAccess.Read,
                                       FileShare.Read);
             stream.Seek(0, SeekOrigin.Begin);
-            result = formatter.Deserialize(stream) as T;
+            if (type == DocumentSaveFileType.Binary)
+            {
+                IFormatter formatter = new BinaryFormatter();
+                result = formatter.Deserialize(stream) as T;
+            }
+            else if (type == DocumentSaveFileType.ASS)
+            {
+                var formatter = new UniqueFormatter();
+                result = formatter.Deserialize(stream) as T;
+            }
             result.FilePath = filePath;
             stream.Close();
             return result;

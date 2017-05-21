@@ -21,12 +21,18 @@ namespace FreeBuild.Undo
         public UndoStage Undo()
         {
             var redo = new UndoStage();
-            foreach (UndoState state in this)
+            for (int i = Count - 1; i >= 0; i--)
             {
+                UndoState state = this[i];
                 if (state.IsValid)
                 {
-                    redo.Add(state.GenerateRedo());
-                    state.Restore();
+                    try
+                    {
+                        redo.Add(state.GenerateRedo());
+                        state.Restore();
+                    }
+                    catch { }
+                    
                 }
             }
             return redo;

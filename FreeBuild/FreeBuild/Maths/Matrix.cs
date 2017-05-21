@@ -41,8 +41,8 @@ namespace FreeBuild.Maths
         /// <summary>
         /// Gets or sets the value at a specific position in the matrix
         /// </summary>
-        /// <param name="i">The column index</param>
-        /// <param name="j">The row index</param>
+        /// <param name="i">The row index</param>
+        /// <param name="j">The column index</param>
         /// <returns>The value at [i,j] in this matrix</returns>
         public abstract double this[int i, int j] { get; set; }
 
@@ -512,7 +512,7 @@ namespace FreeBuild.Maths
         public Matrix Adjugate()
         {
             if (Rows != Columns) throw new MatrixException("Matrix is not square and therefore has no adjugate.");
-            Matrix AT = Transpose();
+            Matrix AT = this;//Transpose();
             Matrix result = CreateNewMatrix(AT.Rows, AT.Columns);
             Parallel.For(0, Rows, i =>
             {
@@ -522,7 +522,7 @@ namespace FreeBuild.Maths
                     result[i, j] = sMatrix.Determinant() * Math.Pow(-1, i + j + 2);
                 }
             });
-            return result;
+            return result.Transpose();
         }
 
         /// <summary>
@@ -560,8 +560,12 @@ namespace FreeBuild.Maths
                 double result = 0;
                 Parallel.For(0, Columns, j =>
                 {
-                    Matrix subMatrix = SubMatrix(0, j);
-                    DoubleExtensions.InterlockedAdd(ref result, subMatrix.Determinant());
+                    double a = this[0, j];
+                    if (a != 0)
+                    {
+                        Matrix subMatrix = SubMatrix(0, j);
+                        DoubleExtensions.InterlockedAdd(ref result, a * subMatrix.Determinant());
+                    }
                 });
                 return result;
             }
@@ -581,11 +585,30 @@ namespace FreeBuild.Maths
             return result;
         }
 
-        ///// <summary>
-        ///// Create a duplicate of this matrix
-        ///// </summary>
-        ///// <returns></returns>
+        /// <summary>
+        /// Create a duplicate of this matrix
+        /// </summary>
+        /// <returns></returns>
         public abstract Matrix Duplicate();
+
+        /// <summary>
+        /// Get the contents of this matrix expressed as a string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    sb.Append(this[i, j].ToString());
+                    if (j < Columns - 1) sb.Append('\t');
+                }
+                if (i < Rows - 1) sb.AppendLine();
+            }
+            return sb.ToString();
+        }
 
         #endregion
 

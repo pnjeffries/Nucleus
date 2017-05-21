@@ -16,11 +16,9 @@ namespace FreeBuild.Tests
         public static TimeSpan SerializeToFormat()
         {
             var sw = new Stopwatch();
-            ModelDocument doc = new ModelDocument();
-            doc.Model.Create.LinearElement(new Line(0, 0, 10, 0));
-            doc.Model.GenerateNodes(new NodeGenerationParameters());
+            ModelDocument doc = Core.GenerateTestModel(1000);
 
-            sw.Start();
+            /*sw.Start();
             var formatter = new UniqueFormatter();
             formatter.Serialize(null, doc);
             sw.Stop();
@@ -29,7 +27,18 @@ namespace FreeBuild.Tests
 
             var formatter2 = new UniqueFormatter();
             formatter2.Serialize(null, null);
-            formatter2.ReadFormat(new StringReader(format).ReadLine());
+            formatter2.ReadFormat(new StringReader(format).ReadLine());*/
+
+            sw.Start();
+            doc.SaveAs("C:/TEMP/SerializationControl.bin", DocumentSaveFileType.Binary);
+            sw.Stop();
+            Core.Print("Binary: " + sw.Elapsed);
+
+            sw.Reset();
+            sw.Start();
+            doc.SaveAs("C:/TEMP/SerializationTest.ass", DocumentSaveFileType.ASS);
+            sw.Stop();
+            Core.Print("ASS: " + sw.Elapsed);
 
             return sw.Elapsed;
         }

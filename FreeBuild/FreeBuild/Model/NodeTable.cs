@@ -59,7 +59,8 @@ namespace FreeBuild.Model
 
         /// <summary>
         /// The spatial divided-dimension tree of this node collection.
-        /// Speeds up spatial-based searches of node position
+        /// Speeds up spatial-based searches of node position.
+        /// Generated automatically when required.
         /// </summary>
         public NodeDDTree SpatialTree
         {
@@ -67,6 +68,10 @@ namespace FreeBuild.Model
             {
                 if (_SpatialTree == null) _SpatialTree = new NodeDDTree(this);
                 return _SpatialTree;
+            }
+            set
+            {
+                _SpatialTree = value;
             }
         }
 
@@ -102,6 +107,18 @@ namespace FreeBuild.Model
         protected override void OnCollectionChanged()
         {
             //Clear cached data:
+            //_SpatialTree = null;
+        }
+
+        protected override void InsertItem(int index, Node item)
+        {
+            base.InsertItem(index, item);
+            if (_SpatialTree != null) _SpatialTree.Add(item);
+        }
+
+        protected override void SetItem(int index, Node item)
+        {
+            base.SetItem(index, item);
             _SpatialTree = null;
         }
 

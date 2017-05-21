@@ -42,5 +42,24 @@ namespace FreeBuild.Tests
             Core.Print(sw.Elapsed.ToString());
             return sw.Elapsed;
         }
+
+        public static TimeSpan InverseTest()
+        {
+            Core.Print("Inverse Test:");
+            Stopwatch sw = new Stopwatch();
+            Matrix A = new ArrayMatrix(
+                1, 0, 0, 2,
+                0, 1, 0, -3,
+                0, 0, 1, 5,
+                0, 0, 0, 1);
+            Core.Print(A.ToString());
+            Core.Print("Determinant: " + A.Determinant().ToString());
+            //Core.Print(A.Adjugate().ToString());
+            sw.Start();
+            Matrix A1 = A.Inverse();
+            sw.Stop();
+            Core.Print(A1.ToString());
+            return sw.Elapsed;
+        }
     }
 }

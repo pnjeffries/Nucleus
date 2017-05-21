@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core.cs" />
+    <Compile Include="DDTree_Tests.cs" />
     <Compile Include="GWA_Tests.cs" />
     <Compile Include="Matrix_Tests.cs" />
     <Compile Include="Mesh_Tests.cs" />
