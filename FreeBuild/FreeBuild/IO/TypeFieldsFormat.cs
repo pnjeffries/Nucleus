@@ -17,6 +17,11 @@ namespace FreeBuild.IO
         #region Properties
 
         /// <summary>
+        /// The alias of the type
+        /// </summary>
+        public string Alias { get; set; }
+
+        /// <summary>
         /// The type
         /// </summary>
         public Type Type { get; set; }
@@ -36,18 +41,38 @@ namespace FreeBuild.IO
         /// </summary>
         /// <param name="type"></param>
         /// <param name="fields"></param>
-        public TypeFieldsFormat(Type type, IList<FieldInfo> fields)
+        public TypeFieldsFormat(string alias, Type type, IList<FieldInfo> fields)
         {
+            Alias = alias;
             Type = type;
             Fields = fields;
         }
 
-        public TypeFieldsFormat(Type type)
+        public TypeFieldsFormat(string alias, Type type)
         {
+            Alias = alias;
             Type = type;
-            Fields = type.GetAllFields(true);
+            Fields = type.GetAllFields(true, FilterField);
         }
 
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Determine whether or not the specified field is suitable
+        /// </summary>
+        /// <param name="fI"></param>
+        /// <returns></returns>
+        public bool FilterField(FieldInfo fI)
+        {
+            if (fI.MemberType == MemberTypes.Event)
+            {
+                return false;
+            }
+            return true;
+        }
 
         #endregion
     }

@@ -316,11 +316,11 @@ namespace FreeBuild.Geometry
                             else
                             {
                                 Node.Position = Position;
-                                Node.Undelete();
                             }
                         }
                     }
                 }
+                if (Node.IsDeleted) Node.Undelete(); //Make sure the node isn't deleted
             }
         }
 

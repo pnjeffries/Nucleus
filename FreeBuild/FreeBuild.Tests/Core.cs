@@ -17,6 +17,8 @@ namespace FreeBuild.Tests
 
         public static ModelDocument GenerateTestModel(int floors = 10)
         {
+            Core.Print("Generating test model of " + floors * 12 + " elements...");
+
             ModelDocument doc = new ModelDocument();
 
             double floorHeight = 4;
@@ -33,6 +35,8 @@ namespace FreeBuild.Tests
             }
 
             doc.Model.GenerateNodes(new NodeGenerationParameters());
+
+            Core.Print("Done.");
 
             return doc;
         }

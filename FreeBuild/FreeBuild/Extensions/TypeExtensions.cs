@@ -287,14 +287,17 @@ namespace FreeBuild.Extensions
         /// <param name="outFields">The collection of field infos to be populated</param>
         /// <param name="flags">A bitmask composed of one or more BindingFlags which specify 
         /// how the search is conduted</param>
-        public static void GetAllFields(this Type type, ICollection<FieldInfo> outFields, BindingFlags flags, bool ignoreNonSerialised = false)
+        public static void GetAllFields(this Type type, ICollection<FieldInfo> outFields, BindingFlags flags, bool ignoreNonSerialised = false, Func<FieldInfo, bool> filter = null)
         {
             foreach (var field in type.GetFields(flags))
             {
                 // Ignore inherited fields.
                 if (field.DeclaringType == type && //Necessary?
-                    (!ignoreNonSerialised || field.GetCustomAttribute(typeof(NonSerializedAttribute)) == null)) 
+                    (!ignoreNonSerialised || field.GetCustomAttribute(typeof(NonSerializedAttribute)) == null)
+                    && (filter == null || filter(field)))
+                {
                     outFields.Add(field);
+                }
             }
 
             var baseType = type.BaseType;
@@ -308,10 +311,11 @@ namespace FreeBuild.Extensions
         /// <param name="type"></param>
         /// <param name="flags">A bitmask composed of one or more BindingFlags which specify 
         /// how the search is conduted</param>
-        public static IList<FieldInfo> GetAllFields(this Type type, BindingFlags flags, bool ignoreNonSerialised = false)
+        /// <param name="ignoreNonSerialised"></param>
+        public static IList<FieldInfo> GetAllFields(this Type type, BindingFlags flags, bool ignoreNonSerialised = false, Func<FieldInfo, bool> filter = null)
         {
             var result = new List<FieldInfo>();
-            type.GetAllFields(result, flags, ignoreNonSerialised);
+            type.GetAllFields(result, flags, ignoreNonSerialised, filter);
             return result;
         }
 
@@ -319,10 +323,10 @@ namespace FreeBuild.Extensions
         /// Get all fields of this type, including private ones inherited from base classes
         /// </summary>
         /// <param name="type"></param>
-        public static IList<FieldInfo> GetAllFields(this Type type, bool ignoreNonSerialised = false)
+        public static IList<FieldInfo> GetAllFields(this Type type, bool ignoreNonSerialised = false, Func<FieldInfo, bool> filter = null)
         {
             BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
-            return type.GetAllFields(flags, ignoreNonSerialised);
+            return type.GetAllFields(flags, ignoreNonSerialised, filter);
         }
 
         /// <summary>

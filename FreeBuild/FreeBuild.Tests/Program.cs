@@ -1,4 +1,5 @@
-﻿using FreeBuild.Geometry;
+﻿using FreeBuild.Extensions;
+using FreeBuild.Geometry;
 using FreeBuild.Model;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace FreeBuild.Tests
     {
         static void Main(string[] args)
         {
+            //Console.WriteLine("NodeSupport".TruncatePascal(6));
             Console.WriteLine("Select test to run:");
             Console.WriteLine(" a) All");
             Console.WriteLine(" b) Dependency Extraction");
@@ -24,6 +26,8 @@ namespace FreeBuild.Tests
             Console.WriteLine(" h) Uniques Serialisation");
             Console.WriteLine(" i) Matrix Inversion");
             Console.WriteLine(" j) Node Creation Tree Speed");
+            Console.WriteLine(" k) Word Reading");
+            Console.WriteLine(" l) Word Writing");
 
             char option = Console.ReadKey(true).KeyChar;
 
@@ -49,8 +53,7 @@ namespace FreeBuild.Tests
                 }
             }
 
-            //Doc tests:
-            //Word_Tests.ReadDocTest();
+            
 
             //Reflection_Tests.PrintFields(typeof(SymmetricIProfile));
             //Reflection_Tests.PrintProperties(typeof(SymmetricIProfile));
@@ -96,6 +99,17 @@ namespace FreeBuild.Tests
             if (option == 'a' || option == 'j')
             {
                 DDTree_Tests.NodeCreation(10);
+            }
+
+            if (option == 'a' || option == 'k')
+            {
+                //Doc tests:
+                Word_Tests.ReadDocTest();
+            }
+
+            if (option == 'a' || option == 'l')
+            {
+                Word_Tests.WriteDocTest();
             }
 
             Console.Read();

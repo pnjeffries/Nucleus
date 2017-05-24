@@ -288,6 +288,44 @@ namespace FreeBuild.Extensions
             else return input;
         }
 
+        public static string TruncatePascal(this string input, int maxChars)
+        {
+            if (input.Length > maxChars)
+            {
+                var sb = new StringBuilder();
+                int count = input.CountUpper();
+                if (count == 0) return input.Substring(0, maxChars); //All lower-case
+                int segLength = maxChars / count;
+                if (segLength < 1) segLength = 1;
+                int i = 0;
+                while ((i = input.IndexOfUpper(i)) >= 0 && sb.Length < maxChars)
+                {
+                    for (int j = 0; j < segLength; j++)
+                    {
+                        sb.Append(input[i + j]);
+                    }
+                    i += segLength;
+                }
+                return sb.ToString();
+            }
+            else return input;
+        }
+
+        /// <summary>
+        /// Count the number of upper-case characters in this string
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static int CountUpper(this string input)
+        {
+            int count = 0;
+            foreach (char c in input)
+            {
+                if (char.IsUpper(c)) count++;
+            }
+            return count;
+        }
+
         /// <summary>
         /// Get the chunk of text that starts from the specified index and proceeds
         /// up to the next found instance of the specified character
@@ -299,14 +337,53 @@ namespace FreeBuild.Extensions
         /// <returns></returns>
         public static string NextChunk(this string str, ref int index, params char[] toChar)
         {
+            char c;
+            return str.NextChunk(out c, ref index, toChar);
+        }
+
+        /// <summary>
+        /// Get the chunk of text that starts from the specified index and proceeds
+        /// up to the next found instance of the specified character
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="terminator">The found character which terminates this chunk</param>
+        /// <param name="index">The start index of the chunk.  This will be updated to the
+        /// start position of the next chunk</param>
+        /// <param name="toChar"></param>
+        /// <returns></returns>
+        public static string NextChunk(this string str, out char terminator, ref int index, params char[] toChar)
+        {
             int startIndex = index;
-            index = str.IndexOfAny(toChar, startIndex) + 1;
-            if (index <= 0)
+            index = str.IndexOfAny(toChar, startIndex);
+            if (index < 0)
             {
+                terminator = default(char);
                 index = str.Length;
                 return str.Substring(startIndex);
             }
-            else return str.Substring(startIndex, index - startIndex - 1);
+            else
+            {
+                terminator = str[index];
+                index += 1;
+                return str.Substring(startIndex, index - startIndex - 1);
+            }
+        }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="startIndex"></param>
+        /// <returns></returns>
+        public static int IndexOfUpper(this string str, int startIndex)
+        {
+            for (int i = startIndex; i < str.Length; i++)
+            {
+                if (char.IsUpper(str[i])) return i;
+            }
+            return -1;
         }
     }
 }

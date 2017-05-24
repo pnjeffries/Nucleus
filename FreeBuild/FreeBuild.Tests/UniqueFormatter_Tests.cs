@@ -1,4 +1,5 @@
-﻿using FreeBuild.Geometry;
+﻿using FreeBuild.Base;
+using FreeBuild.Geometry;
 using FreeBuild.IO;
 using FreeBuild.Model;
 using System;
@@ -29,14 +30,32 @@ namespace FreeBuild.Tests
             formatter2.Serialize(null, null);
             formatter2.ReadFormat(new StringReader(format).ReadLine());*/
 
+            var filePathB = "C:/TEMP/SerializationControl.bin";
+
             sw.Start();
-            doc.SaveAs("C:/TEMP/SerializationControl.bin", DocumentSaveFileType.Binary);
+            doc.SaveAs(filePathB, DocumentSaveFileType.Binary);
+            sw.Stop();
+            Core.Print("Binary: " + sw.Elapsed);
+
+            var filePath = "C:/TEMP/SerializationTest.ass";
+
+            sw.Reset();
+            sw.Start();
+            doc.SaveAs(filePath, DocumentSaveFileType.ASS);
+            sw.Stop();
+            Core.Print("ASS: " + sw.Elapsed);
+
+            Core.Print("Reading:");
+
+            sw.Reset();
+            sw.Start();
+            ModelDocument mDocB = Document.Load<ModelDocument>(filePathB, DocumentSaveFileType.Binary);
             sw.Stop();
             Core.Print("Binary: " + sw.Elapsed);
 
             sw.Reset();
             sw.Start();
-            doc.SaveAs("C:/TEMP/SerializationTest.ass", DocumentSaveFileType.ASS);
+            ModelDocument mDoc = Document.Load<ModelDocument>(filePath, DocumentSaveFileType.ASS);
             sw.Stop();
             Core.Print("ASS: " + sw.Elapsed);
 

@@ -45,6 +45,21 @@ namespace FreeBuild.Base
     [Serializable]
     public struct FilePath : IXmlSerializable
     {
+        #region Constants
+
+        /// <summary>
+        /// Get a filepath representing the path of the current AppData directory
+        /// </summary>
+        public static FilePath AppData
+        {
+            get
+            {
+                return new FilePath(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+            }
+        }
+
+        #endregion
+
         #region Properties
 
         /// <summary>

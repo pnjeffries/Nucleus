@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,31 +22,36 @@ namespace FreeBuild.IO
         #region Constants
 
         /// <summary> Character used to denote the opening of a block of data </summary>
-        private const char OPEN_DATABLOCK = '{';
+        private const char OPEN_DATABLOCK = '\u0002';
 
         /// <summary> Character used to denote the closing of a block of data </summary>
-        private const char CLOSE_DATABLOCK = '}';
+        private const char CLOSE_DATABLOCK = '\u0003';
 
         /// <summary> Character used to separate fields and items in a block of data </summary>
-        private const char SEPARATOR = ';';
+        private const char SEPARATOR = '\u001E';
 
         /// <summary> Character used to separate key-value pairs in a block of data </summary>
-        private const char KEY_SEPARATOR = ':';
+        private const char KEY_SEPARATOR = '\u001F';
 
         /// <summary> String that denotes the start of format definition </summary>
-        private const string FORMAT = "FORMAT:";
+        private const string FORMAT = "FOR\u001D";
 
         /// <summary> String that denotes the start of data records </summary>
-        private const string DATA = "DATA:";
+        private const string DATA = "DAT\u001D";
 
         #endregion
 
         #region Fields
 
         /// <summary>
-        /// The type:format dictionary
+        /// The type alias:format dictionary
         /// </summary>
         private Dictionary<string, TypeFieldsFormat> _Format;
+
+        /// <summary>
+        /// The dictionar of type aliases
+        /// </summary>
+        private Dictionary<Type, string> _Aliases;
 
         /// <summary>
         /// The list of Unique objects to be written or reconstructed
@@ -66,28 +72,23 @@ namespace FreeBuild.IO
 
         #region Methods
 
-        public void Serialize(Stream stream, object source)
+        public void Serialize(Stream stream, IUnique source)
         {
             _Format = new Dictionary<string, TypeFieldsFormat>();
+            _Aliases = new Dictionary<Type, string>();
             _Uniques = new UniquesCollection();
             _Writer = new StreamWriter(stream);
 
-            _Writer.WriteLine(DATA);
-
             // Write base item:
-            SerializeItem(source);
-
-            _Writer.WriteLine();
+            _Writer.WriteLine(SerializeItem(source));
 
             // Write uniques:
             int i = 0;
             while (i < _Uniques.Count)
             {
                 IUnique unique = _Uniques[i];
-                SerializeItem(unique);
+                _Writer.WriteLine(SerializeItem(unique));
                 i++;
-
-                _Writer.WriteLine();
             }
 
             //_Writer.WriteLine();
@@ -98,7 +99,12 @@ namespace FreeBuild.IO
             _Writer.Flush();
         }
 
-        protected void WriteValue(object value)
+        /// <summary>
+        /// Write 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="sb"></param>
+        protected void WriteValue(object value, StringBuilder sb)
         {
             if (value == null)
             {
@@ -111,16 +117,113 @@ namespace FreeBuild.IO
                 if (!_Uniques.Contains(unique.GUID)) _Uniques.Add(unique);
 
                 //TODO: Write GUID
-                _Writer.Write(unique.GUID);
+                sb.Append(unique.GUID);
             }
             else
             {
-                SerializeItem(value);
+                WriteObject(value, sb);
             }
         }
 
+        /// <summary>
+        /// Serialize a unique item to a string
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        protected string SerializeItem(IUnique source)
+        {
+            var sb = new StringBuilder();
+            sb.Append(DATA);
+            sb.Append(source.GUID);
+            sb.Append(KEY_SEPARATOR);
+            WriteObject(source, sb);
+            return sb.ToString();
+        }
 
-        protected void SerializeItem(object source)
+        protected void WriteObject(object source, StringBuilder sb)
+        {
+            Type type = source.GetType();
+
+            if (type.IsPrimitive)
+            {
+                sb.Append(source.ToString());
+            }
+            else if (type.IsAssignableFrom(typeof(string)))
+            {
+                sb.Append(source.ToString());
+            }
+            else if (type.IsSerializable)
+            {
+                string typeAlias = SerializeType(type);
+                TypeFieldsFormat format = _Format[typeAlias];
+
+                sb.Append(typeAlias);
+                sb.Append(OPEN_DATABLOCK);
+
+                int valueCount = 0;
+
+                // Write fields:
+                foreach (FieldInfo field in format.Fields)
+                {
+                    if (valueCount > 0) sb.Append(SEPARATOR);
+
+                    object value = field.GetValue(source);
+                    WriteValue(value, sb);
+
+                    valueCount++;
+                }
+
+                // Write items:
+                if (type.IsArray)
+                {
+                    foreach (object item in (IEnumerable)source)
+                    {
+                        if (valueCount > 0) sb.Append(SEPARATOR);
+
+                        WriteValue(item, sb);
+
+                        valueCount++;
+                    }
+                }
+
+                sb.Append(CLOSE_DATABLOCK);
+            }
+        }
+
+        /// <summary>
+        /// Get the alias of the specified type, writing the type format description
+        /// to the stream if it has not already been done for this type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        protected string SerializeType(Type type)
+        {
+            if (_Aliases.ContainsKey(type))
+            {
+                return _Aliases[type];
+            }
+            else
+            {
+                //Generate alias:
+                string abbreviation = type.Name.TruncatePascal(6);
+                string alias = abbreviation;
+                int i = 2;
+                while (_Format.ContainsKey(alias))
+                {
+                    alias = abbreviation + i;
+                    i++;
+                }
+                _Aliases.Add(type, alias);
+                var format = new TypeFieldsFormat(alias, type);
+                _Format.Add(alias, format);
+                _Writer.WriteLine(ToFormatDescription(format));
+                return alias;
+            }
+        }
+
+        
+
+        /*protected void SerializeItemX(object source)
         {
             if (source != null)
             {
@@ -166,7 +269,7 @@ namespace FreeBuild.IO
                         if (valueCount > 0) _Writer.Write(SEPARATOR);
 
                         object value = field.GetValue(source);
-                        WriteValue(value);
+                        WriteValue(value, sb);
 
                         valueCount++;
                     }
@@ -189,7 +292,7 @@ namespace FreeBuild.IO
                 }
 
             }
-        }
+        }*/
 
         /// <summary>
         /// Construct a format descriptor from a type name and a list of serialisable fields
@@ -200,6 +303,9 @@ namespace FreeBuild.IO
         public string ToFormatDescription(TypeFieldsFormat format)
         {
             var sb = new StringBuilder();
+            sb.Append(FORMAT);
+            sb.Append(format.Alias);
+            sb.Append(KEY_SEPARATOR);
             sb.Append(format.Type.AssemblyQualifiedName);
             sb.Append(OPEN_DATABLOCK);
             for (int i = 0; i < format.Fields.Count; i++)
@@ -235,7 +341,8 @@ namespace FreeBuild.IO
         public TypeFieldsFormat ReadFormat(string line)
         {
             TypeFieldsFormat result;
-            int i = 0;
+            int i = FORMAT.Length;
+            string alias = line.NextChunk(ref i, KEY_SEPARATOR);
             string typeName = line.NextChunk(ref i, OPEN_DATABLOCK);
             Type type = GetType(typeName);
             var fields = new List<FieldInfo>();
@@ -249,8 +356,9 @@ namespace FreeBuild.IO
                     fields.Add(field);
                 }
             }
-            result = new TypeFieldsFormat(type, fields);
-            if (_Format != null) _Format.Add(typeName, result);
+            result = new TypeFieldsFormat(alias, type, fields);
+            if (_Format != null) _Format.Add(alias, result);
+            if (_Aliases != null) _Aliases.Add(type, alias);
             return result;
         }
 
@@ -269,6 +377,9 @@ namespace FreeBuild.IO
         {
             IUnique result = null;
 
+            _Format = new Dictionary<string, TypeFieldsFormat>();
+            _Aliases = new Dictionary<Type, string>();
+            _Uniques = new UniquesCollection();
             _Reader = new StreamReader(stream);
 
             //First, read through once to end:
@@ -276,17 +387,159 @@ namespace FreeBuild.IO
 
             while ((line = _Reader.ReadLine()) != null)
             {
-                int i = 0;
-                string idChunk = line.NextChunk(ref i, KEY_SEPARATOR);
-                string typeChunk = line.NextChunk(ref i, OPEN_DATABLOCK);
-
+                if (line.StartsWith(FORMAT))
+                {
+                    ReadFormat(line);
+                }
+                else if (line.StartsWith(DATA))
+                {
+                    // Initial pass: Create object
+                    int i = DATA.Length;
+                    string guid = line.NextChunk(ref i, KEY_SEPARATOR);
+                    string typeAlias = line.NextChunk(ref i, OPEN_DATABLOCK);
+                    if (_Format.ContainsKey(typeAlias))
+                    {
+                        TypeFieldsFormat format = _Format[typeAlias];
+                        IUnique unique = FormatterServices.GetUninitializedObject(format.Type) as IUnique;
+                        FieldInfo fI = format.Type.GetBaseField("_GUID"); // Will not work if backing field is named differently!
+                        // TODO: Fix?
+                        fI.SetValue(unique, new Guid(guid));
+                        _Uniques.Add(unique);
+                        if (result == null) result = unique; // Set primary output object
+                    }
+                    else RaiseError("Formatting data for type alias '" + typeAlias + "' not found.");
+                }
             }
 
+            //Next: Second pass - populate fields with data
+
+            //Rewind:
+            stream.Seek(0, SeekOrigin.Begin);
+            _Reader = new StreamReader(stream);
+
+            while ((line = _Reader.ReadLine()) != null)
+            {
+                if (line.StartsWith(DATA))
+                {
+                    // Initial pass: Create object
+                    int i = DATA.Length;
+                    string guid = line.NextChunk(ref i, KEY_SEPARATOR);
+                    string typeAlias = line.NextChunk(ref i, OPEN_DATABLOCK);
+                    if (_Format.ContainsKey(typeAlias))
+                    {
+                        TypeFieldsFormat format = _Format[typeAlias];
+                        object unique = _Uniques[new Guid(guid)];
+                        PopulateFields(ref unique, format, ref i, line);
+                    }
+                }
+            }
 
             //TODO
-            return null;
+            return result;
         }
 
+        /// <summary>
+        /// Convert from a string to an object of the specified type,
+        /// where for 
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        protected object String2Object(string str, Type type)
+        {
+            if (typeof(IUnique).IsAssignableFrom(type))
+            {
+                Guid guid = new Guid(str);
+                return _Uniques[guid];
+            }
+            else return Convert.ChangeType(str, type);
+        }
+
+        protected void PopulateFields(ref object target, TypeFieldsFormat format, ref int i, string line)
+        {
+            string chunk;
+            int j = 0;
+            IList items = null; //Items for array reinstantiation
+            while (i < line.Length)// && j < format.Fields.Count())
+            {
+                char c;
+                chunk = line.NextChunk(out c, ref i, SEPARATOR, OPEN_DATABLOCK, CLOSE_DATABLOCK);
+                if (c == SEPARATOR || c == CLOSE_DATABLOCK)
+                {
+                    // Chunk is simple value
+                    if (!string.IsNullOrEmpty(chunk))
+                    {
+                        if (j < format.Fields.Count())
+                        {
+                            FieldInfo fI = format.Fields[j];
+                            object value = String2Object(chunk, fI.FieldType);
+                            fI.SetValue(target, value);
+                        }
+                        else if (target is IList)
+                        {
+                            if (format.Type.ContainsGenericParameters)
+                            {
+                                //TODO
+                            }
+                        }
+                    }
+                    j++;
+
+                    if (c == CLOSE_DATABLOCK)
+                    {
+                        // The current object definition is finished - can step out
+                        return;
+                    }
+                }
+                else if (c == OPEN_DATABLOCK)
+                {
+                    // Chunk is the type alias of an embedded object
+                    if (_Format.ContainsKey(chunk))
+                    {
+                        TypeFieldsFormat subFormat = _Format[chunk];
+                        object value = FormatterServices.GetUninitializedObject(subFormat.Type);
+                        PopulateFields(ref value, subFormat, ref i, line);
+                        if (j < format.Fields.Count)
+                        {
+                            // Is sub-object belonging to a field
+                            FieldInfo fI = format.Fields[j];
+                            fI.SetValue(target, value);
+                        }
+                        else if (target is Array)
+                        {
+                            // TODO
+                        }
+                        else if (target is IList)
+                        {
+                            // Is an entry in the target collection
+                            IList list = (IList)target;
+                            list.Add(value);
+                        }
+                        //j++;
+                        //i++; //Skip the next separator?
+                    }
+                    else if (c == KEY_SEPARATOR)
+                    {
+                        // Is a key-value pair in a dictionary
+                        // TODO
+                    }
+                    else
+                    {
+                        RaiseError("Formatting data for type alias '" + chunk + "' not found.");
+                    }
+                }
+                else
+                {
+                    // Line is not closed correctly - must be a multiline string
+                    // TODO
+                }
+            }
+        }
+
+        protected void RaiseError(string message)
+        {
+            throw new Exception(message);
+        }
         
 
         #endregion

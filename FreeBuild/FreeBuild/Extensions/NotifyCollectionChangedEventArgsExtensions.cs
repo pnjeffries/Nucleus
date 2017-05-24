@@ -21,11 +21,11 @@ namespace FreeBuild.Extensions
         {
             if (args.Action == NotifyCollectionChangedAction.Add)
             {
-                return new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, args.NewItems);
+                return new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, args.NewItems, args.NewStartingIndex);
             }
             else if (args.Action == NotifyCollectionChangedAction.Remove)
             {
-                return new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, args.OldItems);
+                return new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, args.OldItems, args.OldStartingIndex);
             }
             else if (args.Action == NotifyCollectionChangedAction.Move)
             {
