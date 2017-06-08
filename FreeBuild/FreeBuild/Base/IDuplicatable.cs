@@ -18,12 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using FreeBuild.Base;
 using FreeBuild.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,11 +52,13 @@ namespace FreeBuild.Base
         /// are intended to be unique to this object, which will themselves
         /// be duplicated.
         /// </summary>
+        /// <param name="itemsBehaviour">The duplication behaviour of items contained within
+        /// this object, if this object is a collection</param>
         /// <returns>A duplicated copy of this object</returns>
-        public static T Duplicate<T>(this T obj) where T : IDuplicatable
+        public static T Duplicate<T>(this T obj, CopyBehaviour itemsBehaviour = CopyBehaviour.COPY) where T : IDuplicatable
         {
             Dictionary<object, object> objMap = null;
-            return obj.Duplicate(ref objMap);
+            return obj.Duplicate(ref objMap, itemsBehaviour);
         }
 
         /// <summary>
@@ -65,43 +69,50 @@ namespace FreeBuild.Base
         /// </summary>
         /// <param name="objectMap">The map of original objects to duplicated objects.</param>
         /// <returns>A duplicated copy of this object</returns>
-        public static T Duplicate<T>(this T obj, ref Dictionary<object, object> objectMap, CopyBehaviour itemsBehaviour = CopyBehaviour.COPY) where T : IDuplicatable
+        public static T Duplicate<T>(this T obj, ref Dictionary<object, object> objectMap, CopyBehaviour itemsBehaviour = CopyBehaviour.COPY) 
+            where T : IDuplicatable
         {
+            T clone;
             if (obj.GetType().HasParameterlessConstructor())
             {
-                T clone = (T)Activator.CreateInstance(obj.GetType(), true); //Create a blank instance of the relevant type
-                if (objectMap == null) objectMap = new Dictionary<object, object>();
-                objectMap[obj] = clone; //Store the original-clone relationship in the map
-                clone.CopyFieldsFrom(obj, ref objectMap);
-                if (obj.GetType().IsCollection() && itemsBehaviour != CopyBehaviour.DO_NOT_COPY)
-                {
-                    ICollection source = (ICollection)obj;
-                    ICollection target = (ICollection)clone;
-                    foreach (object item in source)
-                    {
-                        CopyBehaviour behaviour = itemsBehaviour;
-                        object value = ValueToAssign(item, ref itemsBehaviour, itemsBehaviour, ref objectMap);
-                        if (target is IList)
-                        {
-                            ((IList)target).Add(value);
-                        }
-                        // TODO: Other types of collections?
-                    }
-                }
-
-                return clone;
+                clone = (T)Activator.CreateInstance(obj.GetType(), true); //Create a blank instance of the relevant type
             }
-            else return default(T);
+            else
+            {
+                // As a (potentially dangerous) fallback:
+                clone = (T)FormatterServices.GetUninitializedObject(typeof(T));
+            }
+
+            if (objectMap == null) objectMap = new Dictionary<object, object>();
+            objectMap[obj] = clone; //Store the original-clone relationship in the map
+            clone.CopyFieldsFrom(obj, ref objectMap);
+            if (obj.GetType().IsCollection() && itemsBehaviour != CopyBehaviour.DO_NOT_COPY)
+            {
+                ICollection source = (ICollection)obj;
+                ICollection target = (ICollection)clone;
+                foreach (object item in source)
+                {
+                    CopyBehaviour behaviour = itemsBehaviour;
+                    object value = ValueToAssign(item, ref itemsBehaviour, itemsBehaviour, ref objectMap);
+                    if (target is IList)
+                    {
+                        ((IList)target).Add(value);
+                    }
+                    // TODO: Other types of collections?
+                }
+            }
+
+            return clone;
         }
 
-        /// <summary>
-        /// Populate the properties of this object by copying them from equivalent public
-        /// fields on another object.  The properties to be copied must share names and types
-        /// in order to be successfully transferred.
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="source"></param>
-        public static void CopyPropertiesFrom(this object target, object source)
+    /// <summary>
+    /// Populate the properties of this object by copying them from equivalent public
+    /// fields on another object.  The properties to be copied must share names and types
+    /// in order to be successfully transferred.
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="source"></param>
+    public static void CopyPropertiesFrom(this object target, object source)
         {
             Type targetType = target.GetType();
             Type sourceType = source.GetType();

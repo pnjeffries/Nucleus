@@ -92,6 +92,7 @@ namespace FreeBuild.Geometry
         /// <summary>
         /// Private backing field for Attributes property
         /// </summary>
+        [Copy(CopyBehaviour.DUPLICATE)]
         private GeometryAttributes _Attributes = null;
 
         /// <summary>

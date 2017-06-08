@@ -126,10 +126,9 @@ namespace FreeBuild.IO
         public bool Write(object item)
         {
             if (item == null) return false;
-            Type type = _Format.Keys.ClosestAncestor(item.GetType());
-            if (type != null)
-            {
-                string format = _Format[type];
+            string format = _Format.FormatFor(item);
+            if (format != null)
+            { 
                 return Write(item.ToString(format, '{', '}', Context));
             }
             else

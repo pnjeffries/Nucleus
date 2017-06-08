@@ -77,7 +77,7 @@ namespace FreeBuild.Base
         /// </summary>
         public object Value(object target = null)
         {
-            if (_Source != null) return _Source.GetValue(Path);
+            if (_Source != null) return _Source.GetFromPath(Path);
             else return null;
         }
 

@@ -29,12 +29,34 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Should this be updated since the last mdofications, rather than being a full rewrite of the
+        /// Should this be updated since the last modfications, rather than being a full rewrite of the
         /// file.
         /// </summary>
         public bool Update
         {
             get { return _UpdateSince != DateTime.MinValue; }
         }
+
+        #region Constructors
+
+        /// <summary>
+        /// Initialise a new RobotConversionOptions with the default values
+        /// </summary>
+        public RobotConversionOptions()
+        {
+
+        }
+
+        /// <summary>
+        /// Initialise a new RobotConversionOptions set to update objects
+        /// modified since the specified date
+        /// </summary>
+        /// <param name="updateSince"></param>
+        public RobotConversionOptions(DateTime updateSince)
+        {
+            UpdateSince = updateSince;
+        }
+
+        #endregion
     }
 }

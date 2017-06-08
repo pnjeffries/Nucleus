@@ -164,6 +164,15 @@ namespace FreeBuild.Model
             return newProfile;
         }
 
+        /// <summary>
+        /// Get the material of the outermost profile of this section
+        /// </summary>
+        /// <returns></returns>
+        public override Material GetPrimaryMaterial()
+        {
+            return Profile?.Material;
+        }
+
         #endregion
     }
 }

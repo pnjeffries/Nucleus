@@ -12,6 +12,12 @@ namespace FreeBuild.Model
     /// </summary>
     public class BlockFamily : Family
     {
+        //TODO!
 
+        public override Material GetPrimaryMaterial()
+        {
+            //TODO!
+            throw new NotImplementedException();
+        }
     }
 }

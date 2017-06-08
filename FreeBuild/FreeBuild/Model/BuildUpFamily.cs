@@ -97,6 +97,15 @@ namespace FreeBuild.Model
             NotifyPropertyChanged("BuildUp");
         }
 
+        /// <summary>
+        /// Get the material of the first layer in this build-up
+        /// </summary>
+        /// <returns></returns>
+        public override Material GetPrimaryMaterial()
+        {
+            return Layers?.First()?.Material;
+        }
+
         #endregion
     }
 }

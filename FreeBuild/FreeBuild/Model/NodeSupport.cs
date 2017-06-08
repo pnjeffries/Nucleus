@@ -50,6 +50,8 @@ namespace FreeBuild.Model
 
         #endregion
 
+        #region Constructors
+
         /// <summary>
         /// Initialise a new node support with no data
         /// </summary>
@@ -77,6 +79,10 @@ namespace FreeBuild.Model
             Axes = axes;
         }
 
+        #endregion
+
+        #region Methods
+
         public void Merge(INodeDataComponent other)
         {
             if (other is NodeSupport)
@@ -86,5 +92,7 @@ namespace FreeBuild.Model
                 //TODO: Axis merging
             }
         }
+
+        #endregion
     }
 }

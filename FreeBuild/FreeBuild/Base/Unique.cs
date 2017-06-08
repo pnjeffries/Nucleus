@@ -33,7 +33,8 @@ namespace FreeBuild.Base
     /// Unique objects are uniquely identifiable via a GUID
     /// </summary>
     [Serializable]
-    public abstract class Unique : NotifyPropertyChangedBase, IUnique, IDuplicatable
+    public abstract class Unique 
+        : NotifyPropertyChangedBase, IUnique, IDuplicatable, IUniqueWithModifiableGUID
     {
         #region Properties
 
@@ -47,6 +48,11 @@ namespace FreeBuild.Base
         /// The GUID of this object, which can be used to uniquely identify it. 
         /// </summary>
         public Guid GUID { get { return _GUID; } }
+
+        void IUniqueWithModifiableGUID.SetGUID(Guid guid)
+        {
+            _GUID = guid;
+        }
 
         #endregion
     }

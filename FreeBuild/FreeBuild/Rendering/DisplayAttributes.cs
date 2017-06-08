@@ -11,7 +11,7 @@ namespace FreeBuild.Rendering
     /// A set of attributes which determine how an object should be rendered
     /// </summary>
     [Serializable]
-    public class DisplayAttributes : NotifyPropertyChangedBase
+    public class DisplayAttributes : NotifyPropertyChangedBase, IDuplicatable
     {
         /// <summary>
         /// Private backing field for the Brush property

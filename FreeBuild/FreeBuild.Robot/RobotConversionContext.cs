@@ -43,7 +43,8 @@ namespace FreeBuild.Robot
         /// </summary>
         /// <param name="idMap"></param>
         /// <param name="options"></param>
-        public RobotConversionContext(RobotIDMappingTable idMap, RobotConversionOptions options) : this(idMap)
+        public RobotConversionContext(RobotIDMappingTable idMap, RobotConversionOptions options) 
+            : this(idMap)
         {
             Options = options;
         }

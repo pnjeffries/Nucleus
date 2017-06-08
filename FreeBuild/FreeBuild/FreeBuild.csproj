@@ -49,6 +49,7 @@
     <Compile Include="Actions\ExecutionInfo.cs" />
     <Compile Include="Base\Bool6D.cs" />
     <Compile Include="Base\CollectionCopyAttribute.cs" />
+    <Compile Include="Base\IUniqueWithModifiableGUID.cs" />
     <Compile Include="Base\KeyedCollection.cs" />
     <Compile Include="Extensions\NotifyCollectionChangedEventArgsExtensions.cs" />
     <Compile Include="Geometry\Grid.cs" />

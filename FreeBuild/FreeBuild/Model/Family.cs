@@ -52,6 +52,14 @@ namespace FreeBuild.Model
             return new FamilyDataStore(this);
         }
 
+        /// <summary>
+        /// Get the primary material of which this family is composed.
+        /// This will be the material of the outer profile for Sections,
+        /// the thickest layer for Build-Up families and so on.
+        /// </summary>
+        /// <returns></returns>
+        public abstract Material GetPrimaryMaterial();
+
         #endregion
     }
 }

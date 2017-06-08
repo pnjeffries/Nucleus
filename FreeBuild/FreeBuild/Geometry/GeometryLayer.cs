@@ -116,6 +116,14 @@ namespace FreeBuild.Geometry
         #region Constructor
 
         /// <summary>
+        /// Default constructor
+        /// </summary>
+        public GeometryLayer()
+        {
+
+        }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="name">The name of the layer</param>

@@ -373,6 +373,35 @@ namespace FreeBuild.IO
             return result;
         }
 
+        /// <summary>
+        /// Read a record string, which consists of a prefix,
+        /// an OPEN_DATABLOCK character, some sub-records and a 
+        /// matching CLOSE_DATABLOCK character.
+        /// </summary>
+        /// <returns></returns>
+        public string ReadRecord()
+        {
+            var sb = new StringBuilder();
+            int levels = 0;
+            int strLevels = 0;
+            while (!_Reader.EndOfStream)
+            {
+                char c = Convert.ToChar(_Reader.Read());
+                sb.Append(c);
+                if (c == OPEN_DATABLOCK) levels += 1;
+                else if (c == CLOSE_DATABLOCK)
+                {
+                    levels -= 1;
+                    if (levels == 0) return sb.ToString();
+                }
+                //TODO: Open/Close strings?
+            }
+            if (sb.Length > 0)
+                return sb.ToString();
+            else
+                return null;
+        }
+
         public IUnique Deserialize(Stream stream)
         {
             IUnique result = null;
@@ -401,9 +430,16 @@ namespace FreeBuild.IO
                     {
                         TypeFieldsFormat format = _Format[typeAlias];
                         IUnique unique = FormatterServices.GetUninitializedObject(format.Type) as IUnique;
-                        FieldInfo fI = format.Type.GetBaseField("_GUID"); // Will not work if backing field is named differently!
-                        // TODO: Fix?
-                        fI.SetValue(unique, new Guid(guid));
+                        if (unique is IUniqueWithModifiableGUID)
+                        {
+                            var uniqueMG = (IUniqueWithModifiableGUID)unique;
+                            uniqueMG.SetGUID(new Guid(guid));
+                        }
+                        else
+                        {
+                            FieldInfo fI = format.Type.GetBaseField("_GUID"); // Will not work if backing field is named differently!
+                            fI.SetValue(unique, new Guid(guid));
+                        }
                         _Uniques.Add(unique);
                         if (result == null) result = unique; // Set primary output object
                     }
@@ -452,6 +488,7 @@ namespace FreeBuild.IO
                 Guid guid = new Guid(str);
                 return _Uniques[guid];
             }
+            //TODO: IntPtr?
             else return Convert.ChangeType(str, type);
         }
 
@@ -479,6 +516,21 @@ namespace FreeBuild.IO
                         {
                             if (format.Type.ContainsGenericParameters)
                             {
+                                Type type = format.Type.GenericTypeArguments[0];
+                                object value = String2Object(chunk, type);
+                                if (target is Array)
+                                {
+                                    if (items == null)
+                                    {
+                                        //TODO!!! Create list of required type!
+                                    }
+                                    items.Add(value);
+                                }
+                                else
+                                {
+                                    IList list = (IList)target;
+                                    list.Add(value);
+                                }
                                 //TODO
                             }
                         }
@@ -488,6 +540,18 @@ namespace FreeBuild.IO
                     if (c == CLOSE_DATABLOCK)
                     {
                         // The current object definition is finished - can step out
+
+                        if (items != null)
+                        {
+                            Type type = format.Type.GenericTypeArguments[0];
+                            Array targetArray = Array.CreateInstance(type, items.Count);
+                            for (int k = 0; k < items.Count; k++)
+                            {
+                                targetArray.SetValue(items[k],k);
+                            }
+                            target = targetArray;
+                        }
+
                         return;
                     }
                 }
@@ -507,7 +571,11 @@ namespace FreeBuild.IO
                         }
                         else if (target is Array)
                         {
-                            // TODO
+                            if (items == null)
+                            {
+                                //TODO: Create list of specified type
+                            }
+                            items.Add(value);
                         }
                         else if (target is IList)
                         {

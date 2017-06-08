@@ -1,4 +1,5 @@
-﻿using FreeBuild.Events;
+﻿using FreeBuild.Base;
+using FreeBuild.Events;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace FreeBuild.Undo
     /// <summary>
     /// Class for general undo/redo management
     /// </summary>
-    public class UndoManager
+    public class UndoManager : NotifyPropertyChangedBase
     {
         /// <summary>
         /// Private backing field for the MaxStackSize property
@@ -29,8 +30,26 @@ namespace FreeBuild.Undo
             set
             {
                 _MaxStackSize = value;
+                NotifyPropertyChanged("MaxStackSize");
                 //TODO: Limit stacks
+                LimitUndoStackSize();
+                LimitRedoStackSize();
             }
+        }
+
+        /// <summary>
+        /// Private backing field for Active property
+        /// </summary>
+        private bool _Active = true;
+
+        /// <summary>
+        /// Gets or sets whether the undo manager is active.
+        /// If false, undo states will not be stored.
+        /// </summary>
+        public bool Active
+        {
+            get { return _Active; }
+            set { _Active = value; }
         }
 
         /// <summary>
@@ -100,11 +119,11 @@ namespace FreeBuild.Undo
         /// <param name="clearRedo">If true, the redo stack will be invalidated</param>
         public void AddUndoState(UndoState state, bool clearRedo = true)
         {
-            if (!Locked)
+            if (!Locked && Active)
             {
                 if (state != null && state.IsValid)
                 {
-                    if (ActiveStage != null && !ActiveStage.Contains(state))
+                    if (ActiveStage != null)// && !ActiveStage.Contains(state))
                     {
                         ActiveStage.Add(state);
                         if (!UndoStack.Contains(ActiveStage)) AddUndoStage(ActiveStage);
@@ -138,6 +157,17 @@ namespace FreeBuild.Undo
         }
 
         /// <summary>
+        /// Reduce the size of the Undo stack to the specified maximum
+        /// </summary>
+        private void LimitUndoStackSize()
+        {
+            while (UndoStack.Count > _MaxStackSize)
+            {
+                UndoStack.RemoveAt(0);
+            }
+        }
+
+        /// <summary>
         /// Add a new stage to the redo stack
         /// </summary>
         /// <param name="stage"></param>
@@ -150,6 +180,17 @@ namespace FreeBuild.Undo
                 {
                     RedoStack.RemoveAt(0);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Reduce the size of the Undo stack to the specified maximum
+        /// </summary>
+        private void LimitRedoStackSize()
+        {
+            while (RedoStack.Count > _MaxStackSize)
+            {
+                RedoStack.RemoveAt(0);
             }
         }
 
@@ -213,6 +254,7 @@ namespace FreeBuild.Undo
         /// </summary>
         public virtual void ClearUndoStack()
         {
+            BeginStage();
             UndoStack.Clear();
             RedoStack.Clear();
         }

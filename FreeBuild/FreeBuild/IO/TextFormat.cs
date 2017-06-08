@@ -1,4 +1,5 @@
 ﻿using FreeBuild.Base;
+using FreeBuild.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +16,12 @@ namespace FreeBuild.IO
     public class TextFormat : Dictionary<Type, string>
     {
         #region Constants
+
+        /// <summary>
+        /// The symbol used within text formats to denote a step-out to the
+        /// current context
+        /// </summary>
+        public const string CONTEXT = "~CONTEXT";
 
         /// <summary>
         /// The character sequence that denotes the start of a type name
@@ -108,6 +115,22 @@ namespace FreeBuild.IO
             // Store last:
             if (currentType != null && !string.IsNullOrWhiteSpace(currentFormat))
                 this[currentType] = currentFormat;
+        }
+
+        /// <summary>
+        /// Get the format string (if one exists) for the specified object
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public virtual string FormatFor(object source)
+        {
+            Type type = this.Keys.ClosestAncestor(source.GetType());
+            if (type != null)
+            {
+                string format = this[type];
+                return format;
+            }
+            else return null;
         }
 
         #endregion

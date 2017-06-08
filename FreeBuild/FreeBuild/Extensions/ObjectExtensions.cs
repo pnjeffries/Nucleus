@@ -1,4 +1,5 @@
 ﻿using FreeBuild.Conversion;
+using FreeBuild.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace FreeBuild.Extensions
         /// passed in.  This allows for complex operations to be performed in order to return a value
         /// provided that functionality is implemented in a suitable context object provided.</param>
         /// <returns></returns>
-        public static object GetValue(this object obj, string path, IStringConversionContext context = null)
+        public static object GetFromPath(this object obj, string path, IStringConversionContext context = null)
         {
             foreach (string substring in path.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries))
             {
@@ -36,14 +37,14 @@ namespace FreeBuild.Extensions
 
                 Type type = obj.GetType();
 
-                if (token.EqualsIgnoreCase("[CONTEXT]"))
+                if (token.EqualsIgnoreCase(TextFormat.CONTEXT))
                 {
                     context.SetSourceObject(obj);
                     obj = context;
                 }
                 else if (token.EndsWith("()")) // Method
                 {
-                    MethodInfo info = type.GetMethod(token.TrimEnd(')', '('));
+                    MethodInfo info = type.GetMethod(token.TrimEnd(')', '('), new Type[] { });
                     if (info == null) return null;
                     else
                         obj = info.Invoke(obj, null);
@@ -64,7 +65,7 @@ namespace FreeBuild.Extensions
                     }
                     if (key != null)
                     {
-                        info = type.GetProperty(token,new Type[] { key.GetType() });
+                        info = type.GetProperty(token, new Type[] { key.GetType() });
                     }
                     else info = type.GetProperty(token);
                     if (info == null)
@@ -107,6 +108,38 @@ namespace FreeBuild.Extensions
 
             StringBuilder pathBuilder = new StringBuilder();
 
+            context.SubComponentIndex = 0;
+
+            if (context.HasSubComponentsToWrite(obj))
+            {
+                //Sub-items:
+                while (context.HasSubComponentsToWrite(obj))
+                {
+                    CreateFormattedString(obj, format, openTag, closeTag, context, resultBuilder, pathBuilder);
+                    context.SubComponentIndex++;
+                }
+            }
+            else
+            {
+                CreateFormattedString(obj, format, openTag, closeTag, context, resultBuilder, pathBuilder);
+            }
+
+            return resultBuilder.ToString();
+        }
+
+        /// <summary>
+        /// Generate a formatted string which represents the object or a subcomponent of it
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="format"></param>
+        /// <param name="openTag"></param>
+        /// <param name="closeTag"></param>
+        /// <param name="context"></param>
+        /// <param name="resultBuilder"></param>
+        /// <param name="pathBuilder"></param>
+        private static void CreateFormattedString(this object obj, string format, char openTag, char closeTag,
+            IStringConversionContext context, StringBuilder resultBuilder, StringBuilder pathBuilder)
+        {
             int tagLevel = 0;
 
             for (int i = 0; i < format.Length; i++)
@@ -118,7 +151,7 @@ namespace FreeBuild.Extensions
                     tagLevel--;
                     if (tagLevel == 0)
                     {
-                        resultBuilder.Append(obj.GetValue(pathBuilder.ToString(), context));
+                        resultBuilder.Append(obj.GetFromPath(pathBuilder.ToString(), context));
                         pathBuilder.Clear();
                     }
                 }
@@ -132,9 +165,6 @@ namespace FreeBuild.Extensions
                 }
             }
 
-            return resultBuilder.ToString();
         }
-
-        
     }
 }
