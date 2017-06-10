@@ -129,7 +129,7 @@ namespace FreeBuild.IO
             string format = _Format.FormatFor(item);
             if (format != null)
             { 
-                return Write(item.ToString(format, '{', '}', Context));
+                return Write(item.ToString(format, '{', '}', TextFormat.IF, TextFormat.THEN, Context));
             }
             else
             { 

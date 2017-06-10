@@ -21,13 +21,25 @@ namespace FreeBuild.IO
         /// The symbol used within text formats to denote a step-out to the
         /// current context
         /// </summary>
-        public const string CONTEXT = "~CONTEXT";
+        public const string CONTEXT = "*";
+
+        /// <summary>
+        /// The symbol used within text formats to denote the start of a conditional
+        /// format
+        /// </summary>
+        public const string IF = "???";
+
+        /// <summary>
+        /// The symbol used within text formats to close the condition of a conditional
+        /// section of a format
+        /// </summary>
+        public const string THEN = ":";
 
         /// <summary>
         /// The character sequence that denotes the start of a type name
         /// when loading this format from a file
         /// </summary>
-        private static string _TYPE_START = ":::";
+        private static string _TYPE_START = ">>>";
 
         #endregion
 
@@ -59,6 +71,18 @@ namespace FreeBuild.IO
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Write out this TextFormat to a text file
+        /// </summary>
+        /// <param name="filePath"></param>
+        public void Save(FilePath filePath)
+        {
+            var writer = new StreamWriter(filePath);
+            writer.Write(ToString());
+            writer.Flush();
+            writer.Close();
+        }
 
         /// <summary>
         /// Load type formats from a text file
@@ -107,6 +131,7 @@ namespace FreeBuild.IO
                     }
                     else
                     {
+                        if (currentFormat.Length > 0) currentFormat += Environment.NewLine;
                         currentFormat += line;
                     }
                 }
@@ -131,6 +156,18 @@ namespace FreeBuild.IO
                 return format;
             }
             else return null;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (KeyValuePair<Type, string> kvp in this)
+            {
+                sb.Append(_TYPE_START).AppendLine(kvp.Key.Name); //TODO: Full type name?
+                sb.AppendLine(kvp.Value);
+                sb.AppendLine();
+            }
+            return sb.ToString();
         }
 
         #endregion
