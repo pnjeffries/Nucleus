@@ -74,6 +74,24 @@ namespace FreeBuild.IO
         }
 
         /// <summary>
+        /// Test whether a PanelElement source object has a representation
+        /// that can be written out as a mesh
+        /// </summary>
+        /// <returns></returns>
+        public bool HasMeshRepresentation()
+        {
+            if (SourceObject is PanelElement)
+            {
+                PanelElement pEl = (PanelElement)SourceObject;
+                if (pEl.Geometry is Mesh)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Convert to integer
         /// </summary>
         /// <returns></returns>

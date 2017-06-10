@@ -385,5 +385,26 @@ namespace FreeBuild.Extensions
             }
             return -1;
         }
+
+        /// <summary>
+        /// Does this string contain the specified substring, starting from the specified
+        /// index?
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool AppearsAt(this string str, int startIndex, string value)
+        {
+            if (startIndex >= 0 && startIndex <= str.Length - value.Length)
+            {
+                for (int i = 0; i < value.Length; i++)
+                {
+                    if (str[startIndex + i] != value[i]) return false;
+                }
+                return true;
+            }
+            return false;
+        }
     }
 }

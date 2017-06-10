@@ -102,7 +102,7 @@ namespace FreeBuild.Extensions
         /// functions supplied on the context object.</param>
         /// <returns></returns>
         public static string ToString(this object obj, string format, char openTag = '{', char closeTag = '}',
-            IStringConversionContext context = null)
+            string ifTag = TextFormat.IF, string thenTag = TextFormat.THEN, IStringConversionContext context = null)
         {
             StringBuilder resultBuilder = new StringBuilder();
 
@@ -115,13 +115,15 @@ namespace FreeBuild.Extensions
                 //Sub-items:
                 while (context.HasSubComponentsToWrite(obj))
                 {
-                    CreateFormattedString(obj, format, openTag, closeTag, context, resultBuilder, pathBuilder);
+                    CreateFormattedString(obj, format, openTag, closeTag,
+                        ifTag, thenTag, context, resultBuilder, pathBuilder);
                     context.SubComponentIndex++;
                 }
             }
             else
             {
-                CreateFormattedString(obj, format, openTag, closeTag, context, resultBuilder, pathBuilder);
+                CreateFormattedString(obj, format, openTag, closeTag, 
+                    ifTag, thenTag, context, resultBuilder, pathBuilder);
             }
 
             return resultBuilder.ToString();
@@ -138,33 +140,96 @@ namespace FreeBuild.Extensions
         /// <param name="resultBuilder"></param>
         /// <param name="pathBuilder"></param>
         private static void CreateFormattedString(this object obj, string format, char openTag, char closeTag,
-            IStringConversionContext context, StringBuilder resultBuilder, StringBuilder pathBuilder)
+            string ifTag, string thenTag, IStringConversionContext context, StringBuilder resultBuilder, StringBuilder pathBuilder)
         {
             int tagLevel = 0;
 
+            //IF stages:
+            const int NO_IFS = 0; //Not current in a conditional
+            const int IF_CONDITION = 1; //Parsing the condition
+            const int IF_TRUE = 2; //If statement is true
+            const int IF_FALSE = 3; //If statement is false
+
+            int ifLevel = NO_IFS;
+            
             for (int i = 0; i < format.Length; i++)
             {
                 char c = format[i];
-                if (c == openTag) tagLevel++; // Open tag
-                else if (c == closeTag && tagLevel > 0) // Close tag
+
+                if (ifTag != null && format.AppearsAt(i, ifTag))
                 {
-                    tagLevel--;
-                    if (tagLevel == 0)
+                    i += ifTag.Length - 1; //Jump forward
+                    if (ifLevel != NO_IFS)
                     {
-                        resultBuilder.Append(obj.GetFromPath(pathBuilder.ToString(), context));
-                        pathBuilder.Clear();
+                        ifLevel = NO_IFS; //Close if
+                    }
+                    else
+                    {
+                        ifLevel = IF_CONDITION; //Open if
+                        tagLevel++; //Look to recieve a value
                     }
                 }
-                else if (tagLevel == 0) //Use text verbatim
+                else if (ifLevel == NO_IFS || ifLevel == IF_TRUE)
                 {
-                    resultBuilder.Append(c);
+                    
+                    if (c == openTag) tagLevel++; // Open tag
+                                                  //TODO: End of line
+                    else if (c == closeTag && tagLevel > 0) // Close tag
+                    {
+                        tagLevel--;
+                        if (tagLevel == 0)
+                        {
+                            resultBuilder.Append(obj.GetFromPath(pathBuilder.ToString(), context));
+                            pathBuilder.Clear();
+                        }
+                    }
+                    else if (tagLevel == 0) //Use text verbatim
+                    {
+                        resultBuilder.Append(c);
+                    }
+                    else //Tags open
+                    {
+                        pathBuilder.Append(c);
+                    }
                 }
-                else //Tags open
+                else if (ifLevel == IF_CONDITION)
                 {
-                    pathBuilder.Append(c);
+                    if (format.AppearsAt(i,thenTag))
+                    {
+                        string expression = pathBuilder.ToString().Trim();
+                        pathBuilder.Clear();
+                        //Invert via the '!' operator
+                        bool invert = false;
+                        if (expression.StartsWith("!"))
+                        {
+                            invert = true;
+                            expression = expression.TrimStart('!');
+                        }
+                        object condition = obj.GetFromPath(expression);
+                        
+                        if ((condition == null || (condition is bool && !(bool)condition)) != invert)
+                        {
+                            // Condition is null or false - do not write
+                            ifLevel = IF_FALSE;
+                        }
+                        else
+                        {
+                            // Condition is true or non-null
+                            ifLevel = IF_TRUE;
+                        }
+                    }
+                    else
+                    {
+                        pathBuilder.Append(c);
+                    }
+                }
+
+                //End conditionals after a newline
+                if (ifLevel != NO_IFS && c == '\n')
+                {
+                    ifLevel = NO_IFS;
                 }
             }
-
         }
     }
 }
