@@ -139,8 +139,8 @@ namespace FreeBuild.Base
                                          FileMode.Create,
                                          FileAccess.Write, FileShare.None);
                 textSerialiser.Serialize(stream, this as T);
-                stream.Flush();
-                stream.Close();
+                //stream.Flush();
+                //stream.Close();
                 FilePath = filePath; //Store filepath
                 LastSaved = DateTime.UtcNow;
                 return true;

@@ -232,7 +232,7 @@ namespace FreeBuild.IO
         /// <returns></returns>
         public string GetID(object obj)
         {
-            if (obj is ModelObject)
+            if (obj != null && obj is ModelObject)
             {
                 ModelObject mObj = (ModelObject)obj;
                 if (IDMap.ContainsKey(mObj.GUID))
