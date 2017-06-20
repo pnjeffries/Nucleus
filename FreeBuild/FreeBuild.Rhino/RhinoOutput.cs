@@ -10,8 +10,9 @@ using FreeBuild.Rhino;
 using RC = Rhino.Geometry;
 using FB = FreeBuild.Geometry;
 using Rhino.DocObjects;
+using FreeBuild.Rendering;
 
-namespace Salamander.Rhino
+namespace FreeBuild.Rhino
 {
     public static class RhinoOutput
     {
@@ -165,7 +166,7 @@ namespace Salamander.Rhino
         /// <param name="endPoint"></param>
         /// <returns></returns>
         public static bool ReplaceLine(Guid obj, Point3d startPoint, Point3d endPoint)
-        { 
+        {
             return ReplaceLine(obj, new RC.Line(startPoint, endPoint));
         }
 
@@ -259,6 +260,36 @@ namespace Salamander.Rhino
             else throw new NotImplementedException();
 
             return result;
+        }
+
+        /// <summary>
+        /// Bake a layered table of FreeBuild geometry to Rhino equivalent
+        /// geometries and layers
+        /// </summary>
+        /// <param name="geometryTable"></param>
+        /// <returns></returns>
+        public static void BakeAll(GeometryLayerTable geometryTable)
+        {
+            foreach (GeometryLayer layer in geometryTable)
+            {
+                BakeAll(layer);
+            }
+        }
+
+        /// <summary>
+        /// Bake all geometry in the specified layer into Rhino on an
+        /// equivalent layer
+        /// </summary>
+        /// <param name="layer"></param>
+        public static void BakeAll(GeometryLayer layer)
+        {
+            int layerID = GetLayerID(layer.Name);
+            if (layer.Brush != null) SetLayerColour(layerID, layer.Brush.BaseColour);
+            foreach (VertexGeometry vG in layer)
+            {
+                Guid gID = Bake(vG);
+                SetObjectLayer(gID, layerID);
+            }
         }
 
         /// <summary>
@@ -479,6 +510,32 @@ namespace Salamander.Rhino
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Set the default display colour of the layer with the specified path.
+        /// If no layer already exists with that path a new one will be created.
+        /// </summary>
+        /// <param name="layerPath"></param>
+        /// <param name="colour"></param>
+        /// <returns></returns>
+        public static bool SetLayerColour(string layerPath, Colour colour)
+        {
+            int layerID = GetLayerID(layerPath);
+            return SetLayerColour(layerID, colour);
+        }
+
+        /// <summary>
+        /// Set the default display colour of the layer with the specified ID.
+        /// </summary>
+        /// <param name="layerPath"></param>
+        /// <param name="colour"></param>
+        /// <returns></returns>
+        public static bool SetLayerColour(int layerID, Colour colour)
+        {
+            var layer = RhinoDoc.ActiveDoc.Layers[layerID];
+            layer.Color = FBtoRC.Convert(colour);
+            return layer.CommitChanges();
         }
 
         /// <summary>

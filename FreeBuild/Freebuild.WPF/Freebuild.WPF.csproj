@@ -71,6 +71,7 @@
     <Compile Include="Extensions\AutoUIComboBoxAttributeExtensions.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="EnumBindingSourceExtension.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="FBtoWPF.cs" />
     <Compile Include="Field Controls\Bool6DFieldControl.xaml.cs">
       <DependentUpon>Bool6DFieldControl.xaml</DependentUpon>

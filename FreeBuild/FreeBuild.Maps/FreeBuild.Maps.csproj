@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{20DE5F48-B713-4109-825F-A8D1BCEF7A35}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{E7D0D787-CF2F-4D97-8256-F7C0D9250683}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FreeBuild.Tests</RootNamespace>
-    <AssemblyName>FreeBuild.Tests</AssemblyName>
+    <RootNamespace>FreeBuild.Maps</RootNamespace>
+    <AssemblyName>FreeBuild.Maps</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,6 +30,30 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GeoAPI, Version=1.7.4.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+      <HintPath>..\packages\GeoAPI.1.7.4\lib\net45\GeoAPI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GoogleMaps.LocationServices, Version=0.1.6329.16944, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GoogleMaps.LocationServices.1.2.0.1\lib\net40\GoogleMaps.LocationServices.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NetTopologySuite, Version=1.14.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetTopologySuite.1.14\lib\net45\NetTopologySuite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OsmSharp, Version=5.0.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.5.0.8\lib\net45\OsmSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, PublicKeyToken=2573bf8a1bdddcd5, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetTopologySuite.1.14\lib\net45\PowerCollections.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,39 +64,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core.cs" />
-    <Compile Include="DDTree_Tests.cs" />
-    <Compile Include="GWA_Tests.cs" />
-    <Compile Include="Matrix_Tests.cs" />
-    <Compile Include="Mesh_Tests.cs" />
-    <Compile Include="Map_Tests.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="MapExtractor.cs" />
+    <Compile Include="OsmNodeExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reflection_Tests.cs" />
-    <Compile Include="UniqueFormatter_Tests.cs" />
-    <Compile Include="Word_Tests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FreeBuild.DXF\FreeBuild.DXF.csproj">
-      <Project>{36955035-2ed9-4e01-a440-c95c1051b0bb}</Project>
-      <Name>FreeBuild.DXF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FreeBuild.Maps\FreeBuild.Maps.csproj">
-      <Project>{e7d0d787-cf2f-4d97-8256-f7c0d9250683}</Project>
-      <Name>FreeBuild.Maps</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FreeBuild.Word\FreeBuild.Word.csproj">
-      <Project>{96aacd57-169f-48ae-a568-f1ae0eef7626}</Project>
-      <Name>FreeBuild.Word</Name>
-    </ProjectReference>
     <ProjectReference Include="..\FreeBuild\FreeBuild.csproj">
-      <Project>{7635522c-178f-4db5-9106-ff8dfd4b833b}</Project>
+      <Project>{7635522C-178F-4DB5-9106-FF8DFD4B833B}</Project>
       <Name>FreeBuild</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="GoogleMaps.LocationServices.readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

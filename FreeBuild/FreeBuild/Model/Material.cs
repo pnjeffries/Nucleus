@@ -31,7 +31,7 @@ namespace FreeBuild.Model
     /// Base class for materials
     /// </summary>
     [Serializable]
-    public class Material : ModelObject
+    public abstract class Material : ModelObject
     {
         //TODO: Add material properties
 
@@ -40,12 +40,62 @@ namespace FreeBuild.Model
         /// <summary>
         /// Default Steel material
         /// </summary>
-        public static Material Steel { get { return new Material("Steel"); } }
+        public static Material Steel { get { return new IsoMaterial("Steel"); } }
 
         /// <summary>
         /// Default Concrete material
         /// </summary>
-        public static Material Concrete { get { return new Material("Concrete"); } }
+        public static Material Concrete { get { return new IsoMaterial("Concrete"); } }
+
+        /// <summary>
+        /// Get a default Wood material
+        /// </summary>
+        public static Material Wood { get { return new IsoMaterial("Wood"); } }
+
+        /// <summary>
+        /// Default Aluminium material
+        /// </summary>
+        public static Material Aluminium { get { return new IsoMaterial("Aluminium"); } }
+
+        /// <summary>
+        /// Default Glass material
+        /// </summary>
+        public static Material Glass { get { return new IsoMaterial("Glass"); } }
+
+        /// <summary>
+        /// Get a collection of all the default materials
+        /// </summary>
+        public static MaterialCollection Defaults
+        {
+            get
+            {
+                var result = new MaterialCollection();
+                result.Add(Steel);
+                result.Add(Concrete);
+                result.Add(Wood);
+                result.Add(Aluminium);
+                result.Add(Glass);
+                return result;
+            }
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Private backing field for Density property
+        /// </summary>
+        private double _Density = 0;
+
+        /// <summary>
+        /// The density of the material, in kg/m³
+        /// </summary>
+        public double Density
+        {
+            get { return _Density; }
+            set { ChangeProperty(ref _Density, value, "Density"); }
+        }
 
         #endregion
 

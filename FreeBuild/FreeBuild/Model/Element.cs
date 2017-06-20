@@ -117,6 +117,36 @@ namespace FreeBuild.Model
             }
         }
 
+        /// <summary>
+        /// Get a collection of element vertex wrappers for this element
+        /// </summary>
+        public IList<ElementVertex> ElementVertices
+        {
+            get
+            {
+                var result = new List<ElementVertex>();
+                var vertices = GetGeometry().Vertices;
+                foreach (var v in vertices)
+                {
+                    result.Add(new ElementVertex(this, v));
+                }
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Get the element vertex wrapper for the specified vertex index
+        /// </summary>
+        /// <param name="i"></param>
+        /// <returns></returns>
+        public ElementVertex this[int i]
+        {
+            get
+            {
+                return new ElementVertex(this, GetGeometry()?.Vertices?[i]);
+            }
+        }
+
         #endregion
 
         #region Methods

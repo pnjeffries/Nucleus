@@ -1,4 +1,5 @@
-﻿using FreeBuild.Events;
+﻿using FreeBuild.Base;
+using FreeBuild.Events;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -109,7 +110,16 @@ namespace FreeBuild.Undo
                 PropertyInfo pI = targetType.GetProperty(PropertyName);
                 if (pI != null)
                 {
-                    pI.SetValue(Target, PropertyValue, null);
+                    if (pI.CanWrite)
+                    {
+                        pI.SetValue(Target, PropertyValue, null);
+                    }
+                    else if (Target is IDeletable && PropertyName == "IsDeleted")
+                    {
+                        IDeletable deletable = (IDeletable)Target;
+                        if ((bool)PropertyValue == true) deletable.Delete();
+                        else deletable.Undelete();
+                    }
                 }
             }
         }

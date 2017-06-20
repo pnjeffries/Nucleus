@@ -56,6 +56,7 @@
     <Compile Include="Geometry\GridLineCollection.cs" />
     <Compile Include="Geometry\GridLineGenerator.cs" />
     <Compile Include="Geometry\MeshEdgeLink.cs" />
+    <Compile Include="IO\CustomSerializationBinder.cs" />
     <Compile Include="IO\DocumentSaveFileType.cs" />
     <Compile Include="IO\TypeFieldsFormat.cs" />
     <Compile Include="IO\UniqueFormatter.cs" />
@@ -108,8 +109,10 @@
     <Compile Include="Model\BlockFamily.cs" />
     <Compile Include="Model\ElementSet.cs" />
     <Compile Include="Model\GlobalCoordinateSystemReference.cs" />
+    <Compile Include="Model\IsoMaterial.cs" />
     <Compile Include="Model\IsotropicMaterial.cs" />
     <Compile Include="Model\IDataOwner.cs" />
+    <Compile Include="Model\IVertexDataComponent.cs" />
     <Compile Include="Model\LoadCaseTable.cs" />
     <Compile Include="Model\Loading\AreaLoad.cs" />
     <Compile Include="Model\Loading\LinearElementLoad.cs" />
@@ -289,6 +292,8 @@
     <Compile Include="Model\FamilyTable.cs" />
     <Compile Include="Model\UserCoordinateSystemReferenceCollection.cs" />
     <Compile Include="Model\UserCoordinateSystemReferenceTable.cs" />
+    <Compile Include="Model\VertexDataStore.cs" />
+    <Compile Include="Model\VertexReleases.cs" />
     <Compile Include="Physics\IPhysicsEngineComponent.cs" />
     <Compile Include="Physics\ParticleComponent.cs" />
     <Compile Include="Physics\PhysicsEngine.cs" />

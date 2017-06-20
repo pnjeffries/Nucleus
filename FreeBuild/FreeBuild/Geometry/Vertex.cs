@@ -28,6 +28,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections;
 
 namespace FreeBuild.Geometry
 {
@@ -39,7 +40,8 @@ namespace FreeBuild.Geometry
     /// </summary>
     [Serializable]
     [DebuggerDisplay("Vertex( {X} , {Y} , {Z}) ")]
-    public class Vertex : Unique, IOwned<VertexGeometry>, IPosition, IComparable<Vertex>
+    public class Vertex : 
+        Unique, IOwned<VertexGeometry>, IPosition, IComparable<Vertex>, IDataOwner
     {
         #region Static Fields
 
@@ -173,6 +175,26 @@ namespace FreeBuild.Geometry
             set { _Number = value; }
         }
 
+        /// <summary>
+        /// Private backing field for Data property
+        /// </summary>
+        [Copy(CopyBehaviour.DUPLICATE)]
+        private VertexDataStore _Data;
+
+        /// <summary>
+        /// The store of data objects attached to this model object.
+        /// This container can be used to add and retrieve data objects of specific
+        /// types.
+        /// </summary>
+        public VertexDataStore Data
+        {
+            get
+            {
+                if (_Data == null) _Data = new VertexDataStore();
+                return _Data;
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -261,6 +283,42 @@ namespace FreeBuild.Geometry
         }
 
         /// <summary>
+        /// Notify this owner that a property of a data component has been changed.
+        /// This may then be 'bubbled' upwards with a new event.
+        /// </summary>
+        /// <param name="component"></param>
+        /// <param name="propertyName"></param>
+        public virtual void NotifyComponentPropertyChanged(object component, string propertyName)
+        {
+            //TODO: Review
+            if (component == null)
+            {
+                NotifyPropertyChanged(string.Format("Data[{0}]", propertyName));
+            }
+            else NotifyPropertyChanged(string.Format("Data[{0}].{1}", component.GetType().Name, propertyName));
+        }
+
+        /// <summary>
+        /// Check whether this object has any attached data components
+        /// </summary>
+        public bool HasData()
+        {
+            return _Data != null && _Data.Count > 0;
+        }
+
+        /// <summary>
+        /// Check whether this object has any attached data components of the specified type
+        /// </summary>
+        /// <param name="componentType"></param>
+        /// <returns></returns>
+        public bool HasData(Type componentType)
+        {
+            if (typeof(IVertexDataComponent).IsAssignableFrom(componentType))
+                return _Data != null && Data.Contains(componentType);
+            return false;
+        }
+
+        /// <summary>
         /// Calculate the offset of the position of this vertex from
         /// the node that it is connected to.
         /// </summary>
@@ -270,6 +328,76 @@ namespace FreeBuild.Geometry
             if (_Node == null) return Vector.Unset; //TODO: Review?
             else return _Position - _Node.Position;
         }
+
+        /// <summary>
+        /// Check whether this object has any attached data components of the specified type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public bool HasData<T>() where T : class, IVertexDataComponent
+        {
+            return _Data != null && Data.HasData<T>();
+        }
+
+        /// <summary>
+        /// Get the data component of the specified type attached to this object (if one exists)
+        /// </summary>
+        /// <typeparam name="T">The type of the attached data component to be retrieved</typeparam>
+        /// <returns></returns>
+        public T GetData<T>() where T : class, IVertexDataComponent
+        {
+            return _Data?.GetData<T>();
+        }
+
+        /// <summary>
+        /// Get data of the specified generic type (or the closest available sub-type) attached to
+        /// this object.  If no data component of the specified type is found then optionally a
+        /// new one will be created.
+        /// </summary>
+        /// <typeparam name="T">The type of data component to be retrieved.</typeparam>
+        /// <param name="create">If true, a new data component of the specified type will
+        /// be created and returned should one not already exist.</param>
+        /// <returns></returns>
+        public T GetData<T>(bool create) where T : class, IVertexDataComponent, new()
+        {
+            return Data.GetData<T>(create);
+        }
+
+        /// <summary>
+        /// Get all data within this store that is of the specified generic type or which
+        /// is assignable to that type.
+        /// </summary>
+        /// <typeparam name="T">The type of data component to be retrieved.</typeparam>
+        /// <returns></returns>
+        public IList<T> GetAllData<T>() where T : IVertexDataComponent
+        {
+            return Data.GetAllData<T>();
+        }
+
+        /// <summary>
+        /// Attach a data component to this object
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        public void SetData(IVertexDataComponent data)
+        {
+            Data.SetData(data);
+        }
+
+        /// <summary>
+        /// Remove any attached data components of the specified type
+        /// </summary>
+        /// <param name="ofType"></param>
+        public bool CleanData(Type ofType)
+        {
+            return Data.Remove(ofType);
+        }
+
+        public IList AllAttachedDataComponents()
+        {
+            return Data;
+        }
+
 
         /// <summary>
         /// Generate a node at this vertex, if it does not already posess one.
@@ -332,6 +460,10 @@ namespace FreeBuild.Geometry
         public void CopyAttachedDataFrom(Vertex other)
         {
             Node = other.Node;
+            if (other.HasData())
+            {
+                _Data = other.Data.Duplicate();
+            }
             //Additional data should be copied here
         }
 
