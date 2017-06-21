@@ -56,5 +56,14 @@ namespace FreeBuild.Model
 
         #endregion
 
+        #region Operators
+
+        public static NodeDataStore operator +(NodeDataStore store, INodeDataComponent component)
+        {
+            store.SetData(component);
+            return store;
+        }
+
+        #endregion
     }
 }

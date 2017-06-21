@@ -911,7 +911,31 @@ namespace FreeBuild.Geometry
             return (s * (s - d01) * (s - d12) * (s - d20));
         }
 
+        /// <summary>
+        /// Create a Vector expressed in meters describing the position of a point on
+        /// the Earth given in latitude and longitude relative to an origin point also
+        /// described in latitude and longitude.
+        /// </summary>
+        /// <param name="latitude">The latitude of the point</param>
+        /// <param name="longitude">The longitude of the point</param>
+        /// <param name="originLatitude">The latitude of the origin</param>
+        /// <param name="originLongitude">The longitude of the origin</param>
+        /// <returns></returns>
+        public static Vector FromLatitudeAndLongitude(Angle latitude, Angle longitude,
+            Angle originLatitude, Angle originLongitude)
+        {
+            // Take the mid-point latitude as a reference to minimise inaccuracy:
+            Angle refLat = (latitude + originLatitude) / 2;
 
+            double factorX = Angle.MetersPerDegreeLongitude(refLat) * 180 / Math.PI; 
+            double factorY = Angle.MetersPerDegreeLatitude(refLat) * 180 / Math.PI;
+
+            // TODO: Use calculus to make this more accurate?
+
+            return new Vector(
+                (longitude - originLongitude) * factorX,
+                (latitude - originLatitude) * factorY);
+        }
 
         #endregion
 

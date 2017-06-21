@@ -28,6 +28,9 @@ namespace FreeBuild.Tests
             Console.WriteLine(" j) Node Creation Tree Speed");
             Console.WriteLine(" k) Word Reading");
             Console.WriteLine(" l) Word Writing");
+            Console.WriteLine(" m) Map Reading");
+            Console.WriteLine(" n) Address Finding");
+            Console.WriteLine(" o) Hyperlink detection");
 
             char option = Console.ReadKey(true).KeyChar;
 
@@ -110,6 +113,27 @@ namespace FreeBuild.Tests
             if (option == 'a' || option == 'l')
             {
                 Word_Tests.WriteDocTest();
+            }
+
+            if (option == 'a' || option == 'm')
+            {
+                Map_Tests.DownloadMapTest();
+            }
+
+            if (option == 'n') //Not automated due to need for user input
+            {
+                Console.WriteLine("Enter Address:");
+                string address = Console.ReadLine();
+                Console.WriteLine(Map_Tests.AddressToLat(address));
+                Map_Tests.DownloadAddressTest(address);
+            }
+
+            if (option == 'a' || option == 'o')
+            {
+                foreach (string str in "This is a test string (http://www.google.com) with some hyperlinks http://blog.ramboll.com/rcd/ in.".SplitHyperlinks())
+                {
+                    Console.WriteLine("'" + str + "'");
+                }
             }
 
             Console.Read();

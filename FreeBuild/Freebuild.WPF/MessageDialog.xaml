@@ -20,9 +20,12 @@
             <local:ErrorIcon x:Name="ErrorIcon" Margin="5" Visibility="Collapsed"></local:ErrorIcon>
             <RichTextBox Name="TextBox" 
                          Grid.Column="1"
-                         VerticalScrollBarVisibility="Auto"/>
+                         VerticalScrollBarVisibility="Auto"
+                         IsReadOnly="True"
+                         IsDocumentEnabled="true"/>
         </Grid>
         <StackPanel Name="ButtonsPanel" Grid.Row="1">
+            <CheckBox Name="ShowAgainCB" Margin="2" Visibility="Collapsed" IsChecked="{Binding Path = DoNotShowAgain}">Do not show this message again</CheckBox>
             <Button Name="OKButton" Click="OK_Click" IsDefault="true">OK</Button>
         </StackPanel>
     </Grid>

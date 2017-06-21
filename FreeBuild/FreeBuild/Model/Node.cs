@@ -246,9 +246,21 @@ namespace FreeBuild.Model
         /// the other.</param>
         public void Merge(Node other, bool averagePositions = false)
         {
-            if (HasData() && other.HasData())
+            if (HasData() || other.HasData())
             {
                 Data.Merge(other.Data);
+            }
+            if (other.Vertices != null)
+            {
+                // Replace vertex node references
+                foreach (Vertex v in other.Vertices)
+                {
+                    if (v.Node == other) v.Node = this;
+                }
+            }
+            if (averagePositions)
+            {
+                Position = (Position + other.Position) / 2;
             }
         }
 

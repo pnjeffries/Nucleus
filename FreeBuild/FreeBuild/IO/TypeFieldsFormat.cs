@@ -55,7 +55,6 @@ namespace FreeBuild.IO
             Fields = type.GetAllFields(true, FilterField);
         }
 
-
         #endregion
 
         #region Methods

@@ -273,9 +273,42 @@ namespace FreeBuild.Geometry
 
         #region Static Methods
 
+        /// <summary>
+        /// Create an angle from a value expressed in degrees
+        /// </summary>
+        /// <param name="degrees"></param>
+        /// <returns></returns>
         public static Angle FromDegrees(double degrees)
         {
             return new Angle(Math.PI * degrees / 180);
+        }
+
+        /// <summary>
+        /// Calculate the equivalent number of meters per degree of latitude at the
+        /// specified reference latitude, taking account of the elliptical nature of
+        /// the Earth.  Should be accurate to within 1m per degree anywhere on the Earth.  
+        /// Based on this article: 
+        /// https://knowledge.safe.com/articles/725/calculating-accurate-length-in-meters-for-lat-long.html
+        /// </summary>
+        /// <param name="rLatitude">The reference latitude at which the conversion is to take place</param>
+        /// <returns></returns>
+        public static double MetersPerDegreeLatitude(Angle rLatitude)
+        {
+            return 111132.92 - 559.82 * Math.Cos(2 * rLatitude) + 1.175 * Math.Cos(4 * rLatitude) - 0.0023*Math.Cos(6 * rLatitude);
+        }
+
+        /// <summary>
+        /// Calculate the equivalent number of meters per degree of longitude at the
+        /// specified reference latitude, taking account of the elliptical nature of
+        /// the Earth.  Should be accurate to within 1m per degree anywhere on the Earth.  
+        /// Based on this article: 
+        /// https://knowledge.safe.com/articles/725/calculating-accurate-length-in-meters-for-lat-long.html
+        /// </summary>
+        /// <param name="rLatitude">The reference latitude at which the conversion is to take place</param>
+        /// <returns></returns>
+        public static double MetersPerDegreeLongitude(Angle rLatitude)
+        {
+            return 111412.84 * Math.Cos(rLatitude) - 93.5 * Math.Cos(3 * rLatitude) + 0.118 * Math.Cos(5 * rLatitude);
         }
 
         #endregion

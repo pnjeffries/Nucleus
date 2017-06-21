@@ -58,6 +58,17 @@ namespace FreeBuild.Base
             }
         }
 
+        /// <summary>
+        /// Get a filepath representing the path of the user's Temp directory
+        /// </summary>
+        public static FilePath Temp
+        {
+            get
+            {
+                return new FilePath(System.IO.Path.GetTempPath());
+            }
+        }
+
         #endregion
 
         #region Properties
@@ -118,6 +129,19 @@ namespace FreeBuild.Base
         /// Get this filepath shortened to 50 characters or less
         /// </summary>
         public string Shortened { get { return Directory.TruncateMiddle(80 - FileName.Length) + "\\" + FileName; } }
+
+        /// <summary>
+        /// Get the fileInfo for the file represented by this path, if it exists
+        /// If the file does not exist, returns null.
+        /// </summary>
+        public FileInfo Info
+        {
+            get
+            {
+                if (Exists) return new FileInfo(Path);
+                else return null;
+            }
+        }
 
         #endregion
 

@@ -1,6 +1,8 @@
-﻿using FreeBuild.UI;
+﻿using FreeBuild.Extensions;
+using FreeBuild.UI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +30,11 @@ namespace FreeBuild.WPF
         /// </summary>
         public object ReturnValue { get; set; } = null;
 
+        /// <summary>
+        /// The value of the 'Do not show this message again' checkbox
+        /// </summary>
+        public bool DoNotShowAgain { get; set; } = false;
+
         #endregion
 
         #region Constructors
@@ -45,7 +52,29 @@ namespace FreeBuild.WPF
             TextBox.Document.Blocks.Clear();
             foreach (string message in messages)
             {
-                TextBox.Document.Blocks.Add(new Paragraph(new Run(message)));
+                AddParagraph(message);
+            }
+        }
+
+        /// <summary>
+        /// Initialise a new MessageDialog with the specified title displaying the specified messages
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="message"></param>
+        public MessageDialog(string title, bool showAgainCheckbox, params string[] messages)
+        {
+            InitializeComponent();
+
+            this.Title = title;
+            TextBox.Document.Blocks.Clear();
+            foreach (string message in messages)
+            {
+                AddParagraph(message);
+            }
+            if (showAgainCheckbox)
+            {
+                ShowAgainCB.DataContext = this;
+                ShowAgainCB.Visibility = Visibility.Visible;
             }
         }
 
@@ -61,7 +90,7 @@ namespace FreeBuild.WPF
 
             this.Title = title;
             TextBox.Document.Blocks.Clear();
-            TextBox.Document.Blocks.Add(new Paragraph(new Run(message)));
+            AddParagraph(message);
 
             if (options.Length > 0)
             {
@@ -105,6 +134,11 @@ namespace FreeBuild.WPF
 
         #region Methods
 
+        private void AddParagraph(string message)
+        {
+            TextBox.Document.Blocks.Add(message.ToParagraph());
+        }
+
         private void OK_Click(object sender, RoutedEventArgs e)
         {
             Close();
@@ -131,6 +165,20 @@ namespace FreeBuild.WPF
         {
             MessageDialog mD = new MessageDialog(title, messages);
             mD.ShowDialog();
+        }
+
+        /// <summary>
+        /// Show a new MessageDialog window including a 'Do Not Show This Message Again' checkbox
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="dontShowAgain">A boolean value that can be used to output 'true' when the
+        /// same message should not be shown again.</param>
+        /// <param name="message"></param>
+        public static void Show(string title, out bool dontShowAgain, params string[] messages)
+        {
+            MessageDialog mD = new MessageDialog(title, true, messages);
+            mD.ShowDialog();
+            dontShowAgain = mD.DoNotShowAgain;
         }
 
         /// <summary>

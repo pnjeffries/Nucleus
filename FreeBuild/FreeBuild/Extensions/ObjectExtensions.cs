@@ -115,13 +115,8 @@ namespace FreeBuild.Extensions
                 //Sub-items:
                 while (context.HasSubComponentsToWrite(obj))
                 {
-<<<<<<< HEAD
-                    CreateFormattedString(obj, format, openTag, closeTag, context, resultBuilder, pathBuilder);
+                    CreateFormattedString(obj, format, openTag, closeTag, ifTag, thenTag, context, resultBuilder, pathBuilder);
                     resultBuilder.AppendLine();
-=======
-                    CreateFormattedString(obj, format, openTag, closeTag,
-                        ifTag, thenTag, context, resultBuilder, pathBuilder);
->>>>>>> 4f5b4ea0a3d11ae820b163c6ad75a27a37b5ecca
                     context.SubComponentIndex++;
                 }
             }

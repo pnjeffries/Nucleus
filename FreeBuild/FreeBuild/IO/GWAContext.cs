@@ -133,7 +133,8 @@ namespace FreeBuild.IO
                 for (int i = 0; i < Math.Min(4, face.Count);i++)
                 {
                     if (i > 0) sb.Append("\t");
-                    sb.Append(GetID(face[i].Node));
+                    string id = GetID(face[i].Node);
+                    sb.Append(id);
                 }
             }
             return sb.ToString();
@@ -241,14 +242,14 @@ namespace FreeBuild.IO
         /// <returns></returns>
         public string GetID()
         {
-            return GetID(SourceObject);
+            return GetID(SourceObject, SubComponentIndex);
         }
 
         /// <summary>
         /// Get the GSA ID of the specified object
         /// </summary>
         /// <returns></returns>
-        public string GetID(object obj)
+        public string GetID(object obj, int subComponentIndex = 0)
         {
             if (obj != null && obj is ModelObject)
             {
@@ -256,7 +257,7 @@ namespace FreeBuild.IO
                 if (IDMap.ContainsKey(mObj.GUID))
                 {
                     IList<int> IDs = IDMap[mObj.GUID];
-                    if (IDs.Count > SubComponentIndex) return IDs[SubComponentIndex].ToString();
+                    if (IDs.Count > subComponentIndex) return IDs[subComponentIndex].ToString();
                     else
                     {
                         int ID = GetNextIDFor(obj);

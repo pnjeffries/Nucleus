@@ -39,7 +39,19 @@ namespace FreeBuild.Model
         /// Initialise a new Element data store belonging to the specified element
         /// </summary>
         /// <param name="owner"></param>
-        public ElementDataStore(Element owner) : base(owner) { }
+        public ElementDataStore(Element owner) : base(owner)
+        {
+        }
+
+        #endregion
+
+        #region Operators
+
+        public static ElementDataStore operator + (ElementDataStore store, IElementDataComponent component)
+        {
+            store.SetData(component);
+            return store;
+        }
 
         #endregion
     }

@@ -141,5 +141,14 @@ namespace FreeBuild.Geometry
         }
 
         #endregion
+
+        #region Methods
+
+        public override string ToString()
+        {
+            return "Label{" + Vertex.ToString() + "," + Text + "}";
+        }
+
+        #endregion
     }
 }

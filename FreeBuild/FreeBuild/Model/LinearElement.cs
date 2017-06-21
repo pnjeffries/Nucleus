@@ -78,6 +78,30 @@ namespace FreeBuild.Model
             }
         }
 
+        /// <summary>
+        /// Get a helper ElementVertex object that wraps the properties at the start of this
+        /// element to allow for easy access and manipulation.
+        /// </summary>
+        public ElementVertex Start
+        {
+            get
+            {
+                return new ElementVertex(this, Geometry?.Start);
+            }
+        }
+
+        /// <summary>
+        /// Get a helper ElementVertex object that wraps the properties at the end of this
+        /// element to allow for easy access and manipulation.
+        /// </summary>
+        public ElementVertex End
+        {
+            get
+            {
+                return new ElementVertex(this, Geometry?.End);
+            }
+        }
+
         #endregion
 
         #region Constructors

@@ -130,6 +130,39 @@ namespace FreeBuild.Model
         }
 
         /// <summary>
+        /// Create a new (or update an exisiting) node as a copy of another one
+        /// </summary>
+        /// <param name="node">The node to copy.</param>
+        /// <param name="exInfo">Optional.  The execution information of the current action.
+        /// If an object has been created previously with matching execution information then
+        /// instead of creating a new item this previous one will be updated and returned instead.
+        /// This enables this method to be used parametrically.</param>
+        /// <returns></returns>
+        public Node CopyOf(Node node, ExecutionInfo exInfo = null)
+        {
+            return CopyOf(node, Vector.Unset, exInfo);
+        }
+
+        /// <summary>
+        /// Create a new (or update an exisiting) node as a copy of another one
+        /// </summary>
+        /// <param name="node">The node to copy.</param>
+        /// <param name="newPosition">Optional.  The position of the new node.</param>
+        /// <param name="exInfo">Optional.  The execution information of the current action.
+        /// If an object has been created previously with matching execution information then
+        /// instead of creating a new item this previous one will be updated and returned instead.
+        /// This enables this method to be used parametrically.</param>
+        /// <returns></returns>
+        public Node CopyOf(Node node, Vector newPosition, ExecutionInfo exInfo = null)
+        {
+            Node result = node.Duplicate();
+            result = (Node)Model.History.Update(exInfo, result);
+            if (newPosition.IsValid()) result.Position = newPosition;
+            Model.Add(result);
+            return result;
+        }
+
+        /// <summary>
         /// Create a new (or update an existing) linear element as a copy of another one
         /// </summary>
         /// <param name="element">The element to copy.</param>

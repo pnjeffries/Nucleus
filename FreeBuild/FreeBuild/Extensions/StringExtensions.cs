@@ -288,6 +288,13 @@ namespace FreeBuild.Extensions
             else return input;
         }
 
+        /// <summary>
+        /// Shorten this string to within the set maximum number of characters
+        /// by compressing the non-capitalised parts of the string
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="maxChars"></param>
+        /// <returns></returns>
         public static string TruncatePascal(this string input, int maxChars)
         {
             if (input.Length > maxChars)
@@ -369,10 +376,52 @@ namespace FreeBuild.Extensions
             }
         }
 
-
+        /// <summary>
+        /// Split up a text string to different hyperlinks and the fragments of text
+        /// between them.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static IList<string> SplitHyperlinks(this string str)
+        {
+            var result = new List<string>();
+            int startIndex = 0;
+            int lastEndIndex = 0;
+            for (int i = 0; i <= str.Length; i++)
+            {
+                if (i == str.Length || char.IsWhiteSpace(str[i]) || str[i] == '(' || str[i] == ')')
+                {
+                    string word = str.Substring(startIndex, i - startIndex);
+                    if (word.IsURI())
+                    {
+                        result.Add(str.Substring(lastEndIndex, startIndex - lastEndIndex));
+                        result.Add(word);
+                        lastEndIndex = i;
+                    }
+                    else if (i == str.Length)
+                    {
+                        result.Add(str.Substring(lastEndIndex));
+                    }
+                    startIndex = i + 1;
+                }
+            }
+            return result;
+        }
 
         /// <summary>
-        /// 
+        /// Can this string be parsed as a valid URI?
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static bool IsURI(this string str)
+        {
+            Uri uri;
+            return Uri.TryCreate(str, UriKind.Absolute, out uri) && 
+                (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
+        }
+
+        /// <summary>
+        /// Find the index of the first capital letter at or after the specified start index
         /// </summary>
         /// <param name="str"></param>
         /// <param name="startIndex"></param>
@@ -406,5 +455,7 @@ namespace FreeBuild.Extensions
             }
             return false;
         }
+
+
     }
 }

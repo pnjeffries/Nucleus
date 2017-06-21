@@ -35,6 +35,10 @@ namespace FreeBuild.Model
     [Serializable]
     public class PanelElement : Element<Surface, BuildUpFamily>
     {
+        #region Properties
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
