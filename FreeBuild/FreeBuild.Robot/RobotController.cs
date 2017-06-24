@@ -450,6 +450,29 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
+        /// Update a Robot file from a FreeBuild model at the specified location
+        /// </summary>
+        /// <param name="filePath">The filePath of the Robot file to be written to</param>
+        /// <param name="model">The model to be written from</param>
+        /// <param name="idMap">The ID mapping table to be used.  If null, an empty table will automatically be initialised.
+        /// Mapping data between the Robot and FreeBuild model will be written into this map - store it for later if you wish
+        /// to synchronise the models in future.</param>
+        /// <param name="options">The conversion options.  If null, the default options will be used.</param>
+        /// <returns></returns>
+        public bool UpdateRobotFromModel(FilePath filePath, Model.Model model, ref RobotIDMappingTable idMap, RobotConversionOptions options = null)
+        {
+            if (Open(filePath) || New())
+            {
+                if (idMap == null) idMap = new RobotIDMappingTable();
+                if (options == null) options = new RobotConversionOptions();
+                var context = new RobotConversionContext(idMap, options);
+                UpdateRobotFromModel(model, context);
+                return Save(filePath);
+            }
+            else return false;
+        }
+
+        /// <summary>
         /// Update a robot file based on a FreeBuild model 
         /// </summary>
         /// <param name="model"></param>

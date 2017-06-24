@@ -80,7 +80,7 @@ namespace FreeBuild.Base
             else
             {
                 // As a (potentially dangerous) fallback:
-                clone = (T)FormatterServices.GetUninitializedObject(typeof(T));
+                clone = (T)FormatterServices.GetUninitializedObject(obj.GetType());
             }
 
             if (objectMap == null) objectMap = new Dictionary<object, object>();

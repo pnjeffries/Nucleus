@@ -48,7 +48,7 @@ namespace FreeBuild.Model
         /// <summary>
         /// Delete encoungered nodes that are no longer connected to elements?
         /// </summary>
-        public bool DeleteUnusedNodes { get; set; } = false;
+        public bool DeleteUnusedNodes { get; set; } = true;
 
         #endregion
 

@@ -103,7 +103,10 @@ namespace FreeBuild.Model
         /// <returns></returns>
         public override Material GetPrimaryMaterial()
         {
-            return Layers?.First()?.Material;
+            if (Layers != null && Layers.Count > 0)
+                return Layers.First()?.Material;
+            else
+                return null;
         }
 
         #endregion
