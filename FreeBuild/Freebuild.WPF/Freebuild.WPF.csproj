@@ -45,6 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoUIDataGrid.cs" />
+    <Compile Include="AutoUIDialog.xaml.cs">
+      <DependentUpon>AutoUIDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="AutoUIWrapPanel.cs" />
     <Compile Include="AutoUIUniformGrid.cs" />
     <Compile Include="BindingGrouplessDataGrid.cs" />
@@ -147,6 +150,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="AutoUIDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ErrorIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

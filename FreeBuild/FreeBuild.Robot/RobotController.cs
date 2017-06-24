@@ -164,12 +164,17 @@ namespace FreeBuild.Robot
         /// <returns></returns>
         public bool UpdateModelFromRobot(Model.Model model, RobotConversionContext context)
         {
+            RobotConversionOptions options = context.Options;
             RaiseMessage("Reading data from Robot...");
             IRobotCollection robotNodes = Robot.Project.Structure.Nodes.GetAll();
-            UpdateModelSectionsFromRobotFile(model, context);
-            UpdateModelNodesFromRobotFile(model, robotNodes, context);
-            UpdateModelLinearElementsFromRobotFile(model, robotNodes, context);
-            UpdateModelPanelElementsFromRobotFile(model, robotNodes, context);
+            if (options.Families)
+            {
+                UpdateModelSectionsFromRobotFile(model, context);
+                UpdateModelBuildUpsFromRobotFile(model, context);
+            }
+            if (options.Nodes) UpdateModelNodesFromRobotFile(model, robotNodes, context);
+            if (options.LinearElements) UpdateModelLinearElementsFromRobotFile(model, robotNodes, context);
+            if (options.PanelElements) UpdateModelPanelElementsFromRobotFile(model, robotNodes, context);
             RaiseMessage("Data reading completed.");
             return false;
         }
@@ -241,6 +246,36 @@ namespace FreeBuild.Robot
 
                     //Store mapping data:
                     context.IDMap.Add(section, label);
+                }
+            }
+        }
+
+        private void UpdateModelBuildUpsFromRobotFile(Model.Model model, RobotConversionContext context)
+        {
+            RaiseMessage("Reading Thicknesses...");
+            IRobotCollection thicknesses = Robot.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_PANEL_THICKNESS);
+            for (int i = 1; i <= thicknesses.Count; i++)
+            {
+                IRobotLabel label = thicknesses.Get(i);
+                if (label != null)
+                {
+                    BuildUpFamily buildUp = context.IDMap.GetMappedPanelFamily(label, model);
+                    if (buildUp == null)
+                        buildUp = model.Create.BuildUpFamily(context.ExInfo);
+
+                    //TODO: Copy over data
+                    RobotThicknessData data = label.Data;
+                    buildUp.Name = label.Name;
+                    Material material = null; //TODO
+                    if (data.ThicknessType == IRobotThicknessType.I_TT_HOMOGENEOUS)
+                    {
+                        IRobotThicknessHomoData homoData = (IRobotThicknessHomoData)data.Data;
+                        buildUp.Layers.Clear();
+                        buildUp.Layers.Add(new BuildUpLayer(homoData.ThickConst, material));
+                    }
+
+                    //Store mapping data:
+                    context.IDMap.Add(buildUp, label);
                 }
             }
         }
@@ -424,25 +459,37 @@ namespace FreeBuild.Robot
         {
             RaiseMessage("Writing data to Robot...");
 
-            NodeCollection nodes = model.Nodes;
-            if (context.Options.Update) nodes = nodes.Modified(context.Options.UpdateSince);
-            if (nodes.Count > 0) RaiseMessage("Writing Nodes...");
-            UpdateRobotNodesFromModel(model, nodes, context);
+            if (context.Options.Nodes)
+            {
+                NodeCollection nodes = model.Nodes;
+                if (context.Options.Update) nodes = nodes.Modified(context.Options.UpdateSince);
+                if (nodes.Count > 0) RaiseMessage("Writing Nodes...");
+                UpdateRobotNodesFromModel(model, nodes, context);
+            }
 
-            FamilyCollection properties = model.Families;
-            if (context.Options.Update) properties = properties.Modified(context.Options.UpdateSince);
-            if (properties.Count > 0) RaiseMessage("Writing Properties...");
-            UpdateRobotPropertiesFromModel(model, properties, context);
+            if (context.Options.Families)
+            {
+                FamilyCollection properties = model.Families;
+                if (context.Options.Update) properties = properties.Modified(context.Options.UpdateSince);
+                if (properties.Count > 0) RaiseMessage("Writing Properties...");
+                UpdateRobotPropertiesFromModel(model, properties, context);
+            }
 
-            LinearElementCollection linearElements = model.Elements.LinearElements;
-            if (context.Options.Update) linearElements = linearElements.Modified(context.Options.UpdateSince);
-            if (linearElements.Count > 0) RaiseMessage("Writing Bars...");
-            UpdateRobotBarsFromModel(model, linearElements, context);
+            if (context.Options.LinearElements)
+            {
+                LinearElementCollection linearElements = model.Elements.LinearElements;
+                if (context.Options.Update) linearElements = linearElements.Modified(context.Options.UpdateSince);
+                if (linearElements.Count > 0) RaiseMessage("Writing Bars...");
+                UpdateRobotBarsFromModel(model, linearElements, context);
+            }
 
-            PanelElementCollection panelElements = model.Elements.PanelElements;
-            if (context.Options.Update) panelElements = panelElements.Modified(context.Options.UpdateSince);
-            if (panelElements.Count > 0) RaiseMessage("Writing Panels...");
-            UpdateRobotPanelsFromModel(model, panelElements, context);
+            if (context.Options.PanelElements)
+            {
+                PanelElementCollection panelElements = model.Elements.PanelElements;
+                if (context.Options.Update) panelElements = panelElements.Modified(context.Options.UpdateSince);
+                if (panelElements.Count > 0) RaiseMessage("Writing Panels...");
+                UpdateRobotPanelsFromModel(model, panelElements, context);
+            }
 
             RaiseMessage("Data writing completed.");
             return true;

@@ -15,7 +15,7 @@ namespace FreeBuild.IO
     /// <summary>
     /// A custom serialisation class which maintains IUnique-implementing objects as unique objects which
     /// may be referenced by others and inlines everything else.  The data format is kept malleable and forwards-compatible
-    /// 
+    /// by being recorded within the file itself.
     /// </summary>
     public class UniqueFormatter
     {
@@ -109,6 +109,10 @@ namespace FreeBuild.IO
             if (value == null)
             {
 
+            }
+            else if (value is IntPtr[])
+            {
+                //Nope!
             }
             else if (value is IUnique)
             {
@@ -488,8 +492,14 @@ namespace FreeBuild.IO
                 Guid guid = new Guid(str);
                 return _Uniques[guid];
             }
-            //TODO: IntPtr?
-            else return Convert.ChangeType(str, type);
+            try
+            {
+                return Convert.ChangeType(str, type);
+            }
+            catch
+            {
+                return null; //TODO: default(type)
+            }
         }
 
         protected void PopulateFields(ref object target, TypeFieldsFormat format, ref int i, string line)
@@ -522,6 +532,7 @@ namespace FreeBuild.IO
                                 {
                                     if (items == null)
                                     {
+                                        items = new List<object>();
                                         //TODO!!! Create list of required type!
                                     }
                                     items.Add(value);
@@ -573,6 +584,7 @@ namespace FreeBuild.IO
                         {
                             if (items == null)
                             {
+                                items = new List<object>();
                                 //TODO: Create list of specified type
                             }
                             items.Add(value);

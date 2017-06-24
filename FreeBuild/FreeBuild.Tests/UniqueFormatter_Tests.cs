@@ -17,7 +17,7 @@ namespace FreeBuild.Tests
         public static TimeSpan SerializeToFormat()
         {
             var sw = new Stopwatch();
-            ModelDocument doc = Core.GenerateTestModel(1000);
+            ModelDocument doc = Core.GenerateTestModel(1);
 
             /*sw.Start();
             var formatter = new UniqueFormatter();
