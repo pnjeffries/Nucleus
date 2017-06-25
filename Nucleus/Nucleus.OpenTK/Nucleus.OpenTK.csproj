@@ -68,7 +68,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FreeBuild\Nucleus.csproj">
+    <ProjectReference Include="..\Nucleus\Nucleus.csproj">
       <Project>{7635522c-178f-4db5-9106-ff8dfd4b833b}</Project>
       <Name>Nucleus</Name>
     </ProjectReference>

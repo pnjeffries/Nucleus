@@ -62,7 +62,7 @@
       <Project>{96aacd57-169f-48ae-a568-f1ae0eef7626}</Project>
       <Name>Nucleus.Word</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FreeBuild\Nucleus.csproj">
+    <ProjectReference Include="..\Nucleus\Nucleus.csproj">
       <Project>{7635522c-178f-4db5-9106-ff8dfd4b833b}</Project>
       <Name>Nucleus</Name>
     </ProjectReference>
