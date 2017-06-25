@@ -9,6 +9,7 @@ namespace FreeBuild.Model
     /// <summary>
     /// A material with isotropic properties
     /// </summary>
+    [Serializable]
     public class IsoMaterial : Material
     {
         #region Constructors

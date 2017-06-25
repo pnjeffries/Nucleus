@@ -40,6 +40,7 @@ namespace FreeBuild.Model
         /// <summary>
         /// Private backing field for the Perimeter property
         /// </summary>
+        //[NonSerialized]
         private Curve _Perimeter = null;
 
         /// <summary>
