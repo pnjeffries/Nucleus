@@ -7,8 +7,8 @@
     <ProjectGuid>{E7D0D787-CF2F-4D97-8256-F7C0D9250683}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FreeBuild.Maps</RootNamespace>
-    <AssemblyName>FreeBuild.Maps</AssemblyName>
+    <RootNamespace>Nucleus.Maps</RootNamespace>
+    <AssemblyName>Nucleus.Maps</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

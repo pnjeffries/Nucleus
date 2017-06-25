@@ -7,8 +7,8 @@
     <ProjectGuid>{A86503CF-0FA6-434C-A546-93D12D1AD45C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FreeBuild.Excel</RootNamespace>
-    <AssemblyName>FreeBuild.Excel</AssemblyName>
+    <RootNamespace>Nucleus.Excel</RootNamespace>
+    <AssemblyName>Nucleus.Excel</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

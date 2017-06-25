@@ -7,8 +7,8 @@
     <ProjectGuid>{7635522C-178F-4DB5-9106-FF8DFD4B833B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FreeBuild</RootNamespace>
-    <AssemblyName>FreeBuild</AssemblyName>
+    <RootNamespace>Nucleus</RootNamespace>
+    <AssemblyName>Nucleus</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

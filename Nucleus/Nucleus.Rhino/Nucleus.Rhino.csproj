@@ -7,8 +7,8 @@
     <ProjectGuid>{2595E792-7880-484B-877D-9873AAC7D946}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FreeBuild.Rhino</RootNamespace>
-    <AssemblyName>FreeBuild.Rhino</AssemblyName>
+    <RootNamespace>Nucleus.Rhino</RootNamespace>
+    <AssemblyName>Nucleus.Rhino</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

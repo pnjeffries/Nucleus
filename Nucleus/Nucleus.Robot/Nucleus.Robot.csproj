@@ -7,8 +7,8 @@
     <ProjectGuid>{827A1CE7-6EDA-431E-BD5A-665AA7918439}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FreeBuild.Robot</RootNamespace>
-    <AssemblyName>FreeBuild.Robot</AssemblyName>
+    <RootNamespace>Nucleus.Robot</RootNamespace>
+    <AssemblyName>Nucleus.Robot</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

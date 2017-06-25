@@ -7,8 +7,8 @@
     <ProjectGuid>{E2D93282-51BD-4317-8D13-363347065F8B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FreeBuild.WPF</RootNamespace>
-    <AssemblyName>FreeBuild.WPF</AssemblyName>
+    <RootNamespace>Nucleus.WPF</RootNamespace>
+    <AssemblyName>Nucleus.WPF</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

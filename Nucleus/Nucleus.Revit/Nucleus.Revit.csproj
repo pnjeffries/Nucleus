@@ -7,8 +7,8 @@
     <ProjectGuid>{E4E2CE0F-C3CF-4EA2-A5C2-E06B49939604}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FreeBuild.Revit</RootNamespace>
-    <AssemblyName>FreeBuild.Revit</AssemblyName>
+    <RootNamespace>Nucleus.Revit</RootNamespace>
+    <AssemblyName>Nuleus.Revit</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

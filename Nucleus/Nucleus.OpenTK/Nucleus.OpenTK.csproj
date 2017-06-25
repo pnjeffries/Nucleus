@@ -7,8 +7,8 @@
     <ProjectGuid>{022305D8-4399-4B96-B8C1-C87E25F2E68E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FreeBuild.OpenTK</RootNamespace>
-    <AssemblyName>FreeBuild.OpenTK</AssemblyName>
+    <RootNamespace>Nucleus.OpenTK</RootNamespace>
+    <AssemblyName>Nucleus.OpenTK</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

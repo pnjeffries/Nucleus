@@ -7,8 +7,8 @@
     <ProjectGuid>{36955035-2ED9-4E01-A440-C95C1051B0BB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FreeBuild.DXF</RootNamespace>
-    <AssemblyName>FreeBuild.DXF</AssemblyName>
+    <RootNamespace>Nucleus.DXF</RootNamespace>
+    <AssemblyName>Nucleus.DXF</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

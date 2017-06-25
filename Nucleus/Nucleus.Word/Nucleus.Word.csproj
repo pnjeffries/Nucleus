@@ -7,8 +7,8 @@
     <ProjectGuid>{96AACD57-169F-48AE-A568-F1AE0EEF7626}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FreeBuild.Word</RootNamespace>
-    <AssemblyName>FreeBuild.Word</AssemblyName>
+    <RootNamespace>Nucleus.Word</RootNamespace>
+    <AssemblyName>Nucleus.Word</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

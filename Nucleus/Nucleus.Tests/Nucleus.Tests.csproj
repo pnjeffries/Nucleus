@@ -7,8 +7,8 @@
     <ProjectGuid>{20DE5F48-B713-4109-825F-A8D1BCEF7A35}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FreeBuild.Tests</RootNamespace>
-    <AssemblyName>FreeBuild.Tests</AssemblyName>
+    <RootNamespace>Nucleus.Tests</RootNamespace>
+    <AssemblyName>Nucleus.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
