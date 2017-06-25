@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.MIDAS
+namespace Nucleus.MIDAS
 {
     /// <summary>
     /// Conversion context class for MIDAS I/O

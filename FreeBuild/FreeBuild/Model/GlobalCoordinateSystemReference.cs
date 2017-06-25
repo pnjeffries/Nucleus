@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FreeBuild.Geometry;
+using Nucleus.Geometry;
 
-namespace FreeBuild.Model
+namespace Nucleus.Model
 {
     /// <summary>
     /// A coordinate system reference that is used to indicate that the global coordinate system

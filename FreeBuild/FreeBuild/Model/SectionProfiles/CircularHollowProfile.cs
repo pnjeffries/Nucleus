@@ -23,10 +23,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FreeBuild.Geometry;
-using FreeBuild.Extensions;
+using Nucleus.Geometry;
+using Nucleus.Extensions;
 
-namespace FreeBuild.Model
+namespace Nucleus.Model
 {
     /// <summary>
     /// A circular hollow section profile with a constant wall thickness

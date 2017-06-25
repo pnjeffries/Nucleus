@@ -1,11 +1,11 @@
-﻿using FreeBuild.Base;
+﻿using Nucleus.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Model
+namespace Nucleus.Model
 {
     /// <summary>
     /// Abstract, generic base class for cases which have been factored

@@ -1,28 +1,28 @@
 ﻿using Autodesk.Revit.DB;
-using FreeBuild.Geometry;
+using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FB = FreeBuild.Geometry;
+using FB = Nucleus.Geometry;
 using AD = Autodesk.Revit.DB;
 
-namespace FreeBuild.Revit
+namespace Nucleus.Revit
 {
     /// <summary>
-    /// Static conversion helper functions to convert Revit types into FreeBuild equivalents
+    /// Static conversion helper functions to convert Revit types into Nucleus equivalents
     /// </summary>
     public static class RevitToFB
     {
         /// <summary>
-        /// Get or set the scaling factor to be used when converting Revit entities to FreeBuild ones.
+        /// Get or set the scaling factor to be used when converting Revit entities to Nucleus ones.
         /// Default is ft to m.
         /// </summary>
         public static double ConversionScaling { get; set; } = 0.3048;
 
         /// <summary>
-        /// Convert a Revit XYZ to a FreeBuild vector
+        /// Convert a Revit XYZ to a Nucleus vector
         /// </summary>
         /// <param name="xyz">The XYZ to convert</param>
         /// <param name="scaling">Optional.  The scaling conversion factor to be used.
@@ -35,7 +35,7 @@ namespace FreeBuild.Revit
         }
 
         /// <summary>
-        /// Convert a list of Revit XYZs into an array of FreeBuild vectors
+        /// Convert a list of Revit XYZs into an array of Nucleus vectors
         /// </summary>
         /// <param name="xyzs">The list of XYZs to convert</param>
         /// <returns></returns>
@@ -50,7 +50,7 @@ namespace FreeBuild.Revit
         }
 
         /// <summary>
-        /// Convert a Revit line to a FreeBuild one
+        /// Convert a Revit line to a Nucleus one
         /// </summary>
         /// <param name="line">The line to convert</param>
         /// <returns></returns>
@@ -60,7 +60,7 @@ namespace FreeBuild.Revit
         }
 
         /// <summary>
-        /// Convert a Revit polyline to a FreeBuild one
+        /// Convert a Revit polyline to a Nucleus one
         /// </summary>
         /// <param name="polyLine">The polyline to convert</param>
         /// <returns></returns>
@@ -70,7 +70,7 @@ namespace FreeBuild.Revit
         }
 
         /// <summary>
-        /// Convert a Revit arc to a FreeBuild one
+        /// Convert a Revit arc to a Nucleus one
         /// </summary>
         /// <param name="arc">The arc to convert</param>
         /// <returns></returns>

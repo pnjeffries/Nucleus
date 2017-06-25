@@ -1,12 +1,12 @@
-﻿using FreeBuild.Conversion;
-using FreeBuild.Model;
+﻿using Nucleus.Conversion;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.IO
+namespace Nucleus.IO
 {
     /// <summary>
     /// Serialisation class that can write out a model document to text using a defined

@@ -18,14 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using FreeBuild.Base;
+using Nucleus.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Conversion
+namespace Nucleus.Conversion
 {
     /// <summary>
     /// A basic set of options used when converting between types.

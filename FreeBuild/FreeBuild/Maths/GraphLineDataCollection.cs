@@ -1,11 +1,11 @@
-﻿using FreeBuild.Base;
+﻿using Nucleus.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Maths
+namespace Nucleus.Maths
 {
     /// <summary>
     /// A collection of line graph data

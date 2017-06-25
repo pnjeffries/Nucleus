@@ -1,4 +1,4 @@
-﻿using FreeBuild.Rendering;
+﻿using Nucleus.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace FreeBuild.WPF.Converters
+namespace Nucleus.WPF.Converters
 {
     /// <summary>
-    /// A converter class to convert FreeBuild DisplayBrush objects to WPF form.
+    /// A converter class to convert Nucleus DisplayBrush objects to WPF form.
     /// The parameter represents a limiting alpha value.
     /// </summary>
     public class BrushConverter : IValueConverter

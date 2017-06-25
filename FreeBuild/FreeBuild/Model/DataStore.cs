@@ -20,15 +20,15 @@
 
 using System;
 using System.Collections.Generic;
-using FreeBuild.Extensions;
+using Nucleus.Extensions;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
-using FreeBuild.Base;
+using Nucleus.Base;
 using System.ComponentModel;
 
-namespace FreeBuild.Model
+namespace Nucleus.Model
 {
     /// <summary>
     /// Extensible storage mechanism for adding tagged data to model objects

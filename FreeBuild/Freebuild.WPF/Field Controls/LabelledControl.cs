@@ -1,4 +1,4 @@
-﻿using FreeBuild.UI;
+﻿using Nucleus.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace FreeBuild.WPF
+namespace Nucleus.WPF
 {
     /// <summary>
     /// Base class for user controls with a label dependency property

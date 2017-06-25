@@ -1,5 +1,5 @@
-﻿using FreeBuild.Geometry;
-using FreeBuild.Rendering;
+﻿using Nucleus.Geometry;
+using Nucleus.Rendering;
 using OpenTK;
 using OpenTK.Graphics;
 using System;
@@ -8,15 +8,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.OpenTK
+namespace Nucleus.OpenTK
 {
     /// <summary>
-    /// Static conversion functions to go between FreeBuild and OpenTK data types
+    /// Static conversion functions to go between Nucleus and OpenTK data types
     /// </summary>
     public static class FBtoOTK
     {
         /// <summary>
-        /// Convert a FreeBuild vector to a OpenTK Vector3
+        /// Convert a Nucleus vector to a OpenTK Vector3
         /// </summary>
         /// <param name="vector"></param>
         /// <returns></returns>
@@ -26,7 +26,7 @@ namespace FreeBuild.OpenTK
         }
 
         /// <summary>
-        /// Convert a FreeBuild colour to a OpenTK Color4
+        /// Convert a Nucleus colour to a OpenTK Color4
         /// </summary>
         /// <param name="colour"></param>
         /// <returns></returns>

@@ -1,11 +1,11 @@
-﻿using FreeBuild.Base;
+﻿using Nucleus.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Model
+namespace Nucleus.Model
 {
     /// <summary>
     /// Data component which stores the translational and rotational

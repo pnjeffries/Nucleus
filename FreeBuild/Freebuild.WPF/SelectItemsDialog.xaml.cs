@@ -1,4 +1,4 @@
-﻿using FreeBuild.Base;
+﻿using Nucleus.Base;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FreeBuild.WPF
+namespace Nucleus.WPF
 {
     /// <summary>
     /// Interaction logic for SelectItemsDialog.xaml

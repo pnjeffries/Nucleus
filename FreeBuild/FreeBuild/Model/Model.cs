@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using FreeBuild.Base;
-using FreeBuild.Events;
-using FreeBuild.Geometry;
+using Nucleus.Base;
+using Nucleus.Events;
+using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -30,7 +30,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Model
+namespace Nucleus.Model
 {
     /// <summary>
     /// A self-contained data structure that represents an entire

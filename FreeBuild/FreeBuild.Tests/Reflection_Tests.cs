@@ -1,4 +1,4 @@
-﻿using FreeBuild.Extensions;
+﻿using Nucleus.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Tests
+namespace Nucleus.Tests
 {
     public static class Reflection_Tests
     {

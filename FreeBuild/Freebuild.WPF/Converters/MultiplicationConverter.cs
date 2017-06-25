@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace FreeBuild.WPF.Converters
+namespace Nucleus.WPF.Converters
 {
     /// <summary>
     /// Multi converter to return the multiplication of all input values

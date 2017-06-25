@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace FreeBuild.WPF.Converters
+namespace Nucleus.WPF.Converters
 {
     /// <summary>
     /// Converter class that takes in a string and either returns the string itself or

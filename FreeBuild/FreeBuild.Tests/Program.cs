@@ -1,6 +1,6 @@
-﻿using FreeBuild.Extensions;
-using FreeBuild.Geometry;
-using FreeBuild.Model;
+﻿using Nucleus.Extensions;
+using Nucleus.Geometry;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Tests
+namespace Nucleus.Tests
 {
     class Program
     {

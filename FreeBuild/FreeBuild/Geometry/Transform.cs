@@ -18,14 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using FreeBuild.Maths;
+using Nucleus.Maths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Geometry
+namespace Nucleus.Geometry
 {
     /// <summary>
     /// A transform is an operation which can be applied to vertex geometry

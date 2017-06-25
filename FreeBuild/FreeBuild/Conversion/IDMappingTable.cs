@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using FreeBuild.Base;
+using Nucleus.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +26,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
 
-namespace FreeBuild.Conversion
+namespace Nucleus.Conversion
 {
     /// <summary>
     /// A table of identifiers mapping from one ID system to another

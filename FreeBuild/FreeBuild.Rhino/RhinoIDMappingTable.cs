@@ -1,14 +1,14 @@
-﻿using FreeBuild.Conversion;
+﻿using Nucleus.Conversion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Rhino
+namespace Nucleus.Rhino
 {
     /// <summary>
-    /// An ID mapping table from FreeBuild objects to Rhino objects
+    /// An ID mapping table from Nucleus objects to Rhino objects
     /// </summary>
     [Serializable]
     public class RhinoIDMappingTable : IDMappingTable<Guid,Guid>
@@ -28,7 +28,7 @@ namespace FreeBuild.Rhino
         /// Mapping Table Constructor
         /// </summary>
         /// <param name="mappedIDName">The name of the first ID set</param>
-        public RhinoIDMappingTable(string mappedIDName = "FreeBuild") : base(mappedIDName, "Rhino") { }
+        public RhinoIDMappingTable(string mappedIDName = "Nucleus") : base(mappedIDName, "Rhino") { }
 
         #endregion
     }

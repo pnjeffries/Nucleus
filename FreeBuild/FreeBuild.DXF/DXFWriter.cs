@@ -1,5 +1,5 @@
-﻿using FreeBuild.Base;
-using FreeBuild.Geometry;
+﻿using Nucleus.Base;
+using Nucleus.Geometry;
 using netDxf;
 using netDxf.Entities;
 using netDxf.Header;
@@ -10,10 +10,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.DXF
+namespace Nucleus.DXF
 {
     /// <summary>
-    /// Class to write FreeBuild geometry to DXF format via netDXF.
+    /// Class to write Nucleus geometry to DXF format via netDXF.
     /// </summary>
     public class DXFWriter
     {

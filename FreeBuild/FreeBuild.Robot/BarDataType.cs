@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Robot
+namespace Nucleus.Robot
 {
     /// <summary>
     /// The types of data that can be extracted for bars

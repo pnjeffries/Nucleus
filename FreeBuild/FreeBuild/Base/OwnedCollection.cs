@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Base
+namespace Nucleus.Base
 {
     /// <summary>
     /// A collection of unique objects which may be owned

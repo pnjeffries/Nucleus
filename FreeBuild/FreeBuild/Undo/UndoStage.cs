@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Undo
+namespace Nucleus.Undo
 {
     /// <summary>
     /// An undo stage.  A collection of recorded states resulting

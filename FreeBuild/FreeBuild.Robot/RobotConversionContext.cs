@@ -1,11 +1,11 @@
-﻿using FreeBuild.Conversion;
+﻿using Nucleus.Conversion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Robot
+namespace Nucleus.Robot
 {
     /// <summary>
     /// Class that contains data on the context of a conversion to or from a robot data type

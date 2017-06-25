@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Conversion
+namespace Nucleus.Conversion
 {
     /// <summary>
     /// Enum representing the possible directions of a data conversion

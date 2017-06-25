@@ -1,4 +1,4 @@
-﻿using FreeBuild.Geometry;
+﻿using Nucleus.Geometry;
 using RobotOM;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Robot
+namespace Nucleus.Robot
 {
     /// <summary>
     /// Extension methods for the IRobotNode interface

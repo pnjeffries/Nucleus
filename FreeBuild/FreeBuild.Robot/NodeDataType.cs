@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Robot
+namespace Nucleus.Robot
 { 
     /// <summary>
     /// Types of data related to nodes that can be extracted

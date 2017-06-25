@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Units
+namespace Nucleus.Units
 {
     /// <summary>
     /// Attribute to be applied to properties in order to specify the dimensions

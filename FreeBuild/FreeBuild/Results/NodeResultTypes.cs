@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Results
+namespace Nucleus.Results
 {
     /// <summary>
     /// Enum of node analysis result types

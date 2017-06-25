@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using FreeBuild.Base;
-using FreeBuild.Exceptions;
-using FreeBuild.Extensions;
+using Nucleus.Base;
+using Nucleus.Exceptions;
+using Nucleus.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +28,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Maths
+namespace Nucleus.Maths
 {
     /// <summary>
     /// Base class for matrices of doubles.

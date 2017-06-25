@@ -25,7 +25,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Extensions
+namespace Nucleus.Extensions
 {
     /// <summary>
     /// Extension methods for PropertyInfo objects

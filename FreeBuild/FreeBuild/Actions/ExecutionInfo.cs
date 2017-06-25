@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Actions
+namespace Nucleus.Actions
 {
     /// <summary>
     /// A class which contains information about the context in which an action has been executed.

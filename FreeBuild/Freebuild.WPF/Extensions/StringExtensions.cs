@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Documents;
 using System.Windows.Input;
 
-namespace FreeBuild.Extensions
+namespace Nucleus.Extensions
 {
     public static class StringExtensions
     {

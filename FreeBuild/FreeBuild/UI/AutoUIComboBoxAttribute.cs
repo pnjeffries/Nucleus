@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.UI
+namespace Nucleus.UI
 {
     /// <summary>
     /// Attribute for automatic UI generation.  Add this attribute to properties

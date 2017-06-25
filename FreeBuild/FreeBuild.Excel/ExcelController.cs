@@ -25,9 +25,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Office.Interop.Excel;
 using System.Runtime.InteropServices;
-using FreeBuild.Extensions;
+using Nucleus.Extensions;
 
-namespace FreeBuild.Excel
+namespace Nucleus.Excel
 {
     /// <summary>
     /// Manager for data exchange with Microsoft Excel.

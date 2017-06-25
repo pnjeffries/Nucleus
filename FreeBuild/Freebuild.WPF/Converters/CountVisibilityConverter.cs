@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace FreeBuild.WPF.Converters
+namespace Nucleus.WPF.Converters
 {
     /// <summary>
     /// Converter class to determine visibility based on whether a collection is empty (or null).

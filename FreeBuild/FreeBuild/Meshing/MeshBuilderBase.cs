@@ -18,18 +18,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using FreeBuild.Base;
-using FreeBuild.Exceptions;
-using FreeBuild.Extensions;
-using FreeBuild.Geometry;
-using FreeBuild.Model;
+using Nucleus.Base;
+using Nucleus.Exceptions;
+using Nucleus.Extensions;
+using Nucleus.Geometry;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Meshing
+namespace Nucleus.Meshing
 {
     /// <summary>
     /// An abstract base class used to generically construct meshes in an application-specific format
@@ -217,7 +217,7 @@ namespace FreeBuild.Meshing
         }
 
         /// <summary>
-        /// Add a FreeBuild mesh to the mesh.
+        /// Add a Nucleus mesh to the mesh.
         /// Copies of the input mesh vertices and faces will be appended
         /// to those already existing in the current mesh.
         /// </summary>

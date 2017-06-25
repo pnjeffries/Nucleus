@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Robot
+namespace Nucleus.Robot
 {
     /// <summary>
     /// A message filter for COM operations intended to prevent the annoying 'Server Busy' messages

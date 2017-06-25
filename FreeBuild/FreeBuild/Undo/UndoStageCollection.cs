@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Undo
+namespace Nucleus.Undo
 {
     /// <summary>
     /// A collection of undo states

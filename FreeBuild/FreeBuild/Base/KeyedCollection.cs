@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Collections.ObjectModel;
 
-namespace FreeBuild.Base
+namespace Nucleus.Base
 {
     /// <summary>
     /// A customised re-implementation of System.Collections.ObjectModel.KeyedCollection that

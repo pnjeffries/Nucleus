@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using FreeBuild.Rendering;
+using Nucleus.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +26,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace FreeBuild.Geometry
+namespace Nucleus.Geometry
 {
     /// <summary>
     /// An object which holds additional non-geometric attributes about how a

@@ -18,16 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using FreeBuild.Extensions;
-using FreeBuild.Geometry;
-using FreeBuild.Maths;
+using Nucleus.Extensions;
+using Nucleus.Geometry;
+using Nucleus.Maths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Meshing
+namespace Nucleus.Meshing
 {
     /// <summary>
     /// A special type of mesh face created via a Delaunay Triangulation meshing

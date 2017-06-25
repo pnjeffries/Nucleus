@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Maths
+namespace Nucleus.Maths
 {
     /// <summary>
     /// A linear data set that plots numeric intervals along a single axis

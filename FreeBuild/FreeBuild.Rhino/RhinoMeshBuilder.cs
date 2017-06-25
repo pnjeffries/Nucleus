@@ -1,13 +1,13 @@
-﻿using FreeBuild.Meshing;
+﻿using Nucleus.Meshing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RC = Rhino.Geometry;
-using FreeBuild.Geometry;
+using Nucleus.Geometry;
 
-namespace FreeBuild.Rhino
+namespace Nucleus.Rhino
 {
     public class RhinoMeshBuilder : MeshBuilderBase<RC.Mesh>
     {

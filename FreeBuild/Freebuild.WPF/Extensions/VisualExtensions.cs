@@ -1,4 +1,4 @@
-﻿using FreeBuild.Base;
+﻿using Nucleus.Base;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace FreeBuild.WPF
+namespace Nucleus.WPF
 {
     /// <summary>
     /// Extension methods for WPF Visual objects

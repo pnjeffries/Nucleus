@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FreeBuild.OpenTK
+namespace Nucleus.OpenTK
 {
     /// <summary>
     /// Interaction logic for RenderViewportControl.xaml

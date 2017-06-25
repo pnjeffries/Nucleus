@@ -1,6 +1,6 @@
-﻿using FreeBuild.Extensions;
-using FreeBuild.Maths;
-using FreeBuild.Rendering;
+﻿using Nucleus.Extensions;
+using Nucleus.Maths;
+using Nucleus.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,7 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace FreeBuild.WPF
+namespace Nucleus.WPF
 {
     /// <summary>
     /// A custom canvas that is used for drawing line graphs

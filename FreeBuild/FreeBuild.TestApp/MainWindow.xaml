@@ -1,10 +1,10 @@
-﻿<Window x:Class="FreeBuild.TestApp.MainWindow"
+﻿<Window x:Class="Nucleus.TestApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:FreeBuild.TestApp"
-        xmlns:fb="clr-namespace:FreeBuild.WPF;assembly=FreeBuild.WPF"
+        xmlns:local="clr-namespace:Nucleus.TestApp"
+        xmlns:fb="clr-namespace:Nucleus.WPF;assembly=Nucleus.WPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="480" Width="640">
     <Grid>

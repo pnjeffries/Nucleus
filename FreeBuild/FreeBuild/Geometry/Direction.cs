@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Geometry
+namespace Nucleus.Geometry
 {
     /// <summary>
     /// Six-axis dimensional direction, consisting of the standard three

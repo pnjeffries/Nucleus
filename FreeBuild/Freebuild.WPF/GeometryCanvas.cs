@@ -1,4 +1,4 @@
-﻿using FreeBuild.Geometry;
+﻿using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -10,10 +10,10 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using FB = FreeBuild.Geometry;
+using FB = Nucleus.Geometry;
 using WPFM = System.Windows.Media;
 
-namespace FreeBuild.WPF
+namespace Nucleus.WPF
 {
     public class GeometryCanvas : Canvas
     {
@@ -160,7 +160,7 @@ namespace FreeBuild.WPF
 
         /// <summary>
         /// Add geometric contents to the canvas, automatically converting from 
-        /// FreeBuild geometry to the WPF equivalent
+        /// Nucleus geometry to the WPF equivalent
         /// </summary>
         /// <param name="shape"></param>
         public void AddContents(VertexGeometry shape)

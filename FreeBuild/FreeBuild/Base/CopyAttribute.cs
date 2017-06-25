@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Base
+namespace Nucleus.Base
 {
     /// <summary>
     /// Attribute applied to types and fields to determine the correct procedure for dealing

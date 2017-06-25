@@ -1,12 +1,12 @@
-﻿using FreeBuild.Base;
-using FreeBuild.Conversion;
+﻿using Nucleus.Base;
+using Nucleus.Conversion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.IO
+namespace Nucleus.IO
 {
     /// <summary>
     /// Base class for text serialisers that write out documents

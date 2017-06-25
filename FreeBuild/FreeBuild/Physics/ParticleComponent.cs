@@ -1,12 +1,12 @@
-﻿using FreeBuild.Base;
-using FreeBuild.Model;
+﻿using Nucleus.Base;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Physics
+namespace Nucleus.Physics
 {
     /// <summary>
     /// A data component that stores information necessary to simulate a particle subject to physical

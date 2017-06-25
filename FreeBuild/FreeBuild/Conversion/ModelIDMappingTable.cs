@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Conversion
+namespace Nucleus.Conversion
 {
     /// <summary>
     /// Base class for ID mapping tables where the first ID set reference model objects

@@ -1,7 +1,7 @@
-﻿using FreeBuild.Base;
-using FreeBuild.Conversion;
-using FreeBuild.Extensions;
-using FreeBuild.Model;
+﻿using Nucleus.Base;
+using Nucleus.Conversion;
+using Nucleus.Extensions;
+using Nucleus.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.IO
+namespace Nucleus.IO
 {
     /// <summary>
     /// Class that converts objects to text strings in a customisable format

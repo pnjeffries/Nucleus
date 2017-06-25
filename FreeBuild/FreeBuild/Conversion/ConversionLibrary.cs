@@ -18,17 +18,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using FreeBuild.Base;
+using Nucleus.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using FreeBuild.Extensions;
-using FreeBuild.Exceptions;
+using Nucleus.Extensions;
+using Nucleus.Exceptions;
 
-namespace FreeBuild.Conversion
+namespace Nucleus.Conversion
 {
     /// <summary>
     /// A library of converter routines to take one type of data and convert

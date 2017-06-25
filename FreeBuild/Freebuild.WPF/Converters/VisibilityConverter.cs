@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace FreeBuild.WPF.Converters
+namespace Nucleus.WPF.Converters
 {
     /// <summary>
     /// A general-purpose converter for Visibility.

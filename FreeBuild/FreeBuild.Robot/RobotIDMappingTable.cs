@@ -1,5 +1,5 @@
-﻿using FreeBuild.Conversion;
-using FreeBuild.Model;
+﻿using Nucleus.Conversion;
+using Nucleus.Model;
 using RobotOM;
 using System;
 using System.Collections.Generic;
@@ -8,10 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
 
-namespace FreeBuild.Robot
+namespace Nucleus.Robot
 {
     /// <summary>
-    /// A mapping table from freebuild model objects to Robot objects
+    /// A mapping table from Nucleus model objects to Robot objects
     /// </summary>
     [Serializable]
     public class RobotIDMappingTable : IDMappingTable<Guid, string>
@@ -61,7 +61,7 @@ namespace FreeBuild.Robot
         /// Constructor
         /// </summary>
         /// <param name="mappedIDName">The name of the first ID set</param>
-        public RobotIDMappingTable(string mappedIDName = "FreeBuild") : base(mappedIDName, "Robot")
+        public RobotIDMappingTable(string mappedIDName = "Nucleus") : base(mappedIDName, "Robot")
         {
 
         }
@@ -75,7 +75,7 @@ namespace FreeBuild.Robot
         #region Methods
 
         /// <summary>
-        /// Get the FreeBuild node, if any, mapped to the specified robot node ID
+        /// Get the Nucleus node, if any, mapped to the specified robot node ID
         /// </summary>
         /// <param name="robotID"></param>
         /// <param name="model"></param>
@@ -87,7 +87,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Get the FreeBuild node, if any, mapped to the ID number of the specified robot node
+        /// Get the Nucleus node, if any, mapped to the ID number of the specified robot node
         /// </summary>
         /// <param name="robotID"></param>
         /// <param name="model"></param>
@@ -98,7 +98,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Get the FreeBuild element, if any, mapped to the specified robot bar ID
+        /// Get the Nucleus element, if any, mapped to the specified robot bar ID
         /// </summary>
         /// <param name="robotID"></param>
         /// <param name="model"></param>
@@ -112,7 +112,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Get the FreeBuild element, if any, mapped to the specified robot panel ID
+        /// Get the Nucleus element, if any, mapped to the specified robot panel ID
         /// </summary>
         /// <param name="robotID"></param>
         /// <param name="model"></param>
@@ -125,7 +125,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Get the FreeBuild element, if any, mapped to the ID of the specified robot bar
+        /// Get the Nucleus element, if any, mapped to the ID of the specified robot bar
         /// </summary>
         /// <param name="bar"></param>
         /// <param name="model"></param>
@@ -136,7 +136,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Get the FreeBuild element, if any, mapped to the ID of the specified robot object
+        /// Get the Nucleus element, if any, mapped to the ID of the specified robot object
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="model"></param>
@@ -147,7 +147,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Get the FreeBuild section family, if any, mapped to the specified robot section label ID
+        /// Get the Nucleus section family, if any, mapped to the specified robot section label ID
         /// </summary>
         /// <param name="robotID"></param>
         /// <param name="model"></param>
@@ -159,7 +159,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Get the FreeBuild section property, if any, mapped to the ID of the specified label
+        /// Get the Nucleus section property, if any, mapped to the ID of the specified label
         /// </summary>
         /// <param name="label"></param>
         /// <param name="model"></param>
@@ -170,7 +170,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Get the FreeBuild panel family, if any, mapped to the specified robot thickness label ID
+        /// Get the Nucleus panel family, if any, mapped to the specified robot thickness label ID
         /// </summary>
         /// <param name="robotID"></param>
         /// <param name="model"></param>
@@ -182,7 +182,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Get the FreeBuild panel family, if any, mapped to the specified robot thickness label
+        /// Get the Nucleus panel family, if any, mapped to the specified robot thickness label
         /// </summary>
         /// <param name="robotID"></param>
         /// <param name="model"></param>
@@ -193,7 +193,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Get the FreeBuild load case, if any, mapped to the specified robotID
+        /// Get the Nucleus load case, if any, mapped to the specified robotID
         /// </summary>
         /// <param name="robotID"></param>
         /// <param name="model"></param>
@@ -205,7 +205,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Get the FreeBuild load, if any, mapped to the specified robotID
+        /// Get the Nucleus load, if any, mapped to the specified robotID
         /// </summary>
         /// <param name="robotID"></param>
         /// <param name="model"></param>

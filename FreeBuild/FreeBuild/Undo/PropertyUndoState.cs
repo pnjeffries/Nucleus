@@ -1,5 +1,5 @@
-﻿using FreeBuild.Base;
-using FreeBuild.Events;
+﻿using Nucleus.Base;
+using Nucleus.Events;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Undo
+namespace Nucleus.Undo
 {
     /// <summary>
     /// An undo state which can be used to revert a property value change

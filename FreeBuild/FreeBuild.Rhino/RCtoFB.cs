@@ -1,5 +1,5 @@
-﻿using FreeBuild.Geometry;
-using FreeBuild.Rendering;
+﻿using Nucleus.Geometry;
+using Nucleus.Rendering;
 using Rhino;
 using Rhino.Display;
 using Rhino.DocObjects;
@@ -11,16 +11,16 @@ using System.Threading.Tasks;
 using RC = Rhino.Geometry;
 using R = Rhino;
 
-namespace FreeBuild.Rhino
+namespace Nucleus.Rhino
 {
     /// <summary>
-    /// Helper class to convert from RhinoCommon to FreeBuild format
+    /// Helper class to convert from RhinoCommon to Nucleus format
     /// </summary>
     public static class RCtoFB
     {
         /// <summary>
         /// Get the current length conversion factor from the current Rhino document units to 
-        /// SI units (m) in which FreeBuild objects are defined.
+        /// SI units (m) in which Nucleus objects are defined.
         /// </summary>
         public static double ConversionFactor
         {
@@ -31,7 +31,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a Rhino point to a FreeBuild vector.
+        /// Convert a Rhino point to a Nucleus vector.
         /// This will automatically be converted into the current Rhino units.
         /// </summary>
         /// <param name="point">The point to convert</param>
@@ -48,7 +48,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a Rhino vector to a FreeBuild one.
+        /// Convert a Rhino vector to a Nucleus one.
         /// This is assumed to be unitless and will *not* automatically be
         /// converted into the current Rhino units.
         /// </summary>
@@ -60,7 +60,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a Rhino plane to a FreeBuild one
+        /// Convert a Rhino plane to a Nucleus one
         /// </summary>
         /// <param name="plane"></param>
         /// <returns></returns>
@@ -71,7 +71,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a Rhino line to a FreeBuild one
+        /// Convert a Rhino line to a Nucleus one
         /// </summary>
         /// <param name="line">The line to be converted</param>
         /// <returns>A new line if the input is valid, else null</returns>
@@ -83,7 +83,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a Rhino point object to a FreeBuild one
+        /// Convert a Rhino point object to a Nucleus one
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
@@ -95,7 +95,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a Rhino line to a FreeBuild one
+        /// Convert a Rhino line to a Nucleus one
         /// </summary>
         /// <param name="line">The line to be converted</param>
         /// <returns>A new line if the input is valid, else null</returns>
@@ -107,7 +107,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a Rhino arc to a FreeBuild one
+        /// Convert a Rhino arc to a Nucleus one
         /// </summary>
         /// <param name="arc"></param>
         /// <returns></returns>
@@ -122,7 +122,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a Rhino circle to a FreeBuild one
+        /// Convert a Rhino circle to a Nucleus one
         /// </summary>
         /// <param name="circle"></param>
         /// <returns></returns>
@@ -132,7 +132,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a Rhino polyline to a FreeBuild one
+        /// Convert a Rhino polyline to a Nucleus one
         /// </summary>
         /// <param name="polyline"></param>
         /// <returns></returns>
@@ -151,7 +151,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a RhinoCommon PolyCurve to a FreeBuild one
+        /// Convert a RhinoCommon PolyCurve to a Nucleus one
         /// </summary>
         /// <param name="polyCurve"></param>
         /// <returns></returns>
@@ -172,7 +172,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a Rhino curve to a FreeBuild one
+        /// Convert a Rhino curve to a Nucleus one
         /// </summary>
         /// <param name="curve"></param>
         /// <returns></returns>
@@ -197,7 +197,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a Rhino mesh to a FreeBuild one
+        /// Convert a Rhino mesh to a Nucleus one
         /// </summary>
         /// <param name="mesh"></param>
         /// <returns></returns>
@@ -221,7 +221,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a planar Rhino surface to a FreeBuild planar region
+        /// Convert a planar Rhino surface to a Nucleus planar region
         /// </summary>
         /// <param name="brep"></param>
         /// <returns></returns>
@@ -283,7 +283,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a Rhino surface to a FreeBuild one
+        /// Convert a Rhino surface to a Nucleus one
         /// </summary>
         /// <param name="surface"></param>
         /// <returns></returns>
@@ -293,7 +293,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a Rhino BRep to a FreeBuild surface
+        /// Convert a Rhino BRep to a Nucleus surface
         /// </summary>
         /// <param name="brep"></param>
         /// <returns></returns>
@@ -309,7 +309,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert RhinoCommon geometry to FreeBuild geometry
+        /// Convert RhinoCommon geometry to Nucleus geometry
         /// </summary>
         /// <param name="geometry"></param>
         /// <returns></returns>
@@ -325,7 +325,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a Rhino object reference to FreeBuild geometry with attached
+        /// Convert a Rhino object reference to Nucleus geometry with attached
         /// attributes.
         /// </summary>
         /// <param name="objRef"></param>

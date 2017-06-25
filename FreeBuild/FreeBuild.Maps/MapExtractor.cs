@@ -1,5 +1,5 @@
-﻿using FreeBuild.Base;
-using FreeBuild.Geometry;
+﻿using Nucleus.Base;
+using Nucleus.Geometry;
 using GoogleMaps.LocationServices;
 using OsmSharp.Streams;
 using System;
@@ -9,7 +9,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Maps
+namespace Nucleus.Maps
 {
     /// <summary>
     /// Class to extract map geometry from OpenStreetMap

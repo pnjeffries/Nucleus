@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace FreeBuild.WPF
+namespace Nucleus.WPF
 {
     /// <summary>
     /// A datagrid that does not use binding groups - source changes will be made immediately rather than when the

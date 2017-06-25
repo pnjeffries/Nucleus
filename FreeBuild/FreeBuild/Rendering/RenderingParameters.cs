@@ -18,14 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using FreeBuild.Geometry;
+using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Rendering
+namespace Nucleus.Rendering
 {
     /// <summary>
     /// A set of parameters passed in to renderable objects to allow them to be drawn.

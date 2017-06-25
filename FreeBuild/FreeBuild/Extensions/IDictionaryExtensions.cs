@@ -1,11 +1,11 @@
-﻿using FreeBuild.Maths;
+﻿using Nucleus.Maths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Extensions
+namespace Nucleus.Extensions
 {
     /// <summary>
     /// Extension methods for the IDictionary interface

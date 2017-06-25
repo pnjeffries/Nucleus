@@ -1,5 +1,5 @@
-﻿using FreeBuild.Base;
-using FreeBuild.Extensions;
+﻿using Nucleus.Base;
+using Nucleus.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.IO
+namespace Nucleus.IO
 {
     /// <summary>
     /// Data about the format various types should be serialised to.

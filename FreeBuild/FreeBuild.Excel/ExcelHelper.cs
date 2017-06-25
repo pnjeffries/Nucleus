@@ -1,11 +1,11 @@
-﻿using FreeBuild.Extensions;
+﻿using Nucleus.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Excel
+namespace Nucleus.Excel
 {
     /// <summary>
     /// A collection of helper utility functions relevant to interaction with Excel

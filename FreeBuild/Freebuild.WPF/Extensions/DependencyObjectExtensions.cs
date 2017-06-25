@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-namespace FreeBuild.WPF
+namespace Nucleus.WPF
 {
     public static class DependencyObjectExtensions
     {

@@ -1,9 +1,9 @@
-﻿using FreeBuild.Base;
-using FreeBuild.Conversion;
-using FreeBuild.Extensions;
-using FreeBuild.Geometry;
-using FreeBuild.Maths;
-using FreeBuild.Model;
+﻿using Nucleus.Base;
+using Nucleus.Conversion;
+using Nucleus.Extensions;
+using Nucleus.Geometry;
+using Nucleus.Maths;
+using Nucleus.Model;
 using RobotOM;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Robot
+namespace Nucleus.Robot
 {
     /// <summary>
     /// A controller class to interact with Robot
@@ -124,14 +124,14 @@ namespace FreeBuild.Robot
             RaiseMessage("Robot file closed.");
         }
 
-        #region Robot to FreeBuild
+        #region Robot to Nucleus
 
         /// <summary>
-        /// Load a FreeBuild model from a Robot file
+        /// Load a Nucleus model from a Robot file
         /// </summary>
         /// <param name="filePath">The filepath of the Robot file to be opened</param>
         /// <param name="idMap">The ID mapping table to be used.  If null, an empty table will automatically be initialised.
-        /// Mapping data between the Robot and FreeBuild model will be written into this map - store it for later if you wish
+        /// Mapping data between the Robot and Nucleus model will be written into this map - store it for later if you wish
         /// to synchronise the models in future.</param>
         /// <param name="options">The conversion options.  If null, the default options will be used.</param>
         /// <returns></returns>
@@ -142,7 +142,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Load a FreeBuild model from the currently open Robot file.  A robot file must have been previously opened before
+        /// Load a Nucleus model from the currently open Robot file.  A robot file must have been previously opened before
         /// calling this function.
         /// </summary>
         /// <returns></returns>
@@ -157,7 +157,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Update a FreeBuild model by loading data from the currently open Robot file
+        /// Update a Nucleus model by loading data from the currently open Robot file
         /// </summary>
         /// <param name="model">The model to be updated</param>
         /// <param name="map">The ID mapping table that relates model objects to Robot ones</param>
@@ -180,7 +180,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Update nodes in a FreeBuild model by loading data from the currently open Robot file
+        /// Update nodes in a Nucleus model by loading data from the currently open Robot file
         /// </summary>
         /// <param name="model"></param>
         /// <param name="map"></param>
@@ -222,7 +222,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Update section properties in a FreeBuild model by loading data from the currently open Robot file
+        /// Update section properties in a Nucleus model by loading data from the currently open Robot file
         /// </summary>
         /// <param name="model"></param>
         /// <param name="context"></param>
@@ -281,7 +281,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Update linear elements in a FreeBuild model by loading data from the currently open Robot file
+        /// Update linear elements in a Nucleus model by loading data from the currently open Robot file
         /// </summary>
         /// <param name="model"></param>
         /// <param name="robotNodes"></param>
@@ -369,7 +369,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Update the load cases in a FreeBuild model to match those in a Robot file
+        /// Update the load cases in a Nucleus model to match those in a Robot file
         /// </summary>
         /// <param name="model"></param>
         /// <param name="context"></param>
@@ -424,15 +424,15 @@ namespace FreeBuild.Robot
 
         #endregion
 
-        #region FreeBuild to Robot
+        #region Nucleus to Robot
 
         /// <summary>
-        /// Save a FreeBuild model to a Robot file at the specified location
+        /// Save a Nucleus model to a Robot file at the specified location
         /// </summary>
         /// <param name="filePath">The filePath of the Robot file to be written to</param>
         /// <param name="model">The model to be written from</param>
         /// <param name="idMap">The ID mapping table to be used.  If null, an empty table will automatically be initialised.
-        /// Mapping data between the Robot and FreeBuild model will be written into this map - store it for later if you wish
+        /// Mapping data between the Robot and Nucleus model will be written into this map - store it for later if you wish
         /// to synchronise the models in future.</param>
         /// <param name="options">The conversion options.  If null, the default options will be used.</param>
         /// <returns></returns>
@@ -450,12 +450,12 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Update a Robot file from a FreeBuild model at the specified location
+        /// Update a Robot file from a Nucleus model at the specified location
         /// </summary>
         /// <param name="filePath">The filePath of the Robot file to be written to</param>
         /// <param name="model">The model to be written from</param>
         /// <param name="idMap">The ID mapping table to be used.  If null, an empty table will automatically be initialised.
-        /// Mapping data between the Robot and FreeBuild model will be written into this map - store it for later if you wish
+        /// Mapping data between the Robot and Nucleus model will be written into this map - store it for later if you wish
         /// to synchronise the models in future.</param>
         /// <param name="options">The conversion options.  If null, the default options will be used.</param>
         /// <returns></returns>
@@ -473,7 +473,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Update a robot file based on a FreeBuild model 
+        /// Update a robot file based on a Nucleus model 
         /// </summary>
         /// <param name="model"></param>
         /// <param name="context"></param>
@@ -519,7 +519,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Update the nodes in the open Robot model from those in a FreeBuild model
+        /// Update the nodes in the open Robot model from those in a Nucleus model
         /// </summary>
         /// <param name="model"></param>
         /// <param name="nodes"></param>
@@ -535,7 +535,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Update the section, face properties etc. in the open Robot model from those in a FreeBuild model
+        /// Update the section, face properties etc. in the open Robot model from those in a Nucleus model
         /// </summary>
         /// <param name="model"></param>
         /// <param name="properties"></param>
@@ -558,7 +558,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Update the bars in the open Robot model from those in a FreeBuild model
+        /// Update the bars in the open Robot model from those in a Nucleus model
         /// </summary>
         /// <param name="model"></param>
         /// <param name="linearElements"></param>
@@ -574,7 +574,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Update the panel elements in the open Robot model from those in a FreeBuild model
+        /// Update the panel elements in the open Robot model from those in a Nucleus model
         /// </summary>
         /// <param name="model"></param>
         /// <param name="panelElements"></param>
@@ -678,7 +678,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Update or create a robot node linked to the specified FreeBuild node
+        /// Update or create a robot node linked to the specified Nucleus node
         /// </summary>
         /// <param name="node"></param>
         /// <param name="context"></param>
@@ -725,7 +725,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Update or create a robot bar linked to the specified FreeBuild element
+        /// Update or create a robot bar linked to the specified Nucleus element
         /// </summary>
         /// <param name="element"></param>
         /// <param name="context"></param>
@@ -776,7 +776,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Update or create a Robot panel object linked to the specified FreeBuild element
+        /// Update or create a Robot panel object linked to the specified Nucleus element
         /// </summary>
         /// <param name="element"></param>
         /// <param name="context"></param>
@@ -837,7 +837,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Update or create a Robot section linked to a FreeBuild section property
+        /// Update or create a Robot section linked to a Nucleus section property
         /// </summary>
         /// <param name="section"></param>
         /// <param name="context"></param>
@@ -880,7 +880,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Update the values stored in a Robot section data to match those in a FreeBuild profile
+        /// Update the values stored in a Robot section data to match those in a Nucleus profile
         /// </summary>
         /// <param name="data"></param>
         /// <param name="profile"></param>
@@ -960,7 +960,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Create a FreeBuild section profile geometry from Robot section data
+        /// Create a Nucleus section profile geometry from Robot section data
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -1018,7 +1018,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Get the equivalent FreeBuild Profile subtype for the specified value of the Robot
+        /// Get the equivalent Nucleus Profile subtype for the specified value of the Robot
         /// IRobotBarSectionShapeType enum
         /// </summary>
         /// <param name="type"></param>
@@ -1046,7 +1046,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Update or create a Robot Thickness property linked to a FreeBuild panel family
+        /// Update or create a Robot Thickness property linked to a Nucleus panel family
         /// </summary>
         /// <param name="family"></param>
         /// <param name="context"></param>

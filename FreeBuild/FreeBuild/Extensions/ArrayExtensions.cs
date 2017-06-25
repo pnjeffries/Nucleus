@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Extensions
+namespace Nucleus.Extensions
 {
     /// <summary>
     /// Extension method for arrays

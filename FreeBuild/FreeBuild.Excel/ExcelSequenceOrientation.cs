@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Excel
+namespace Nucleus.Excel
 {
     /// <summary>
     /// Enum indicating a direction that a sequence of data is to follow

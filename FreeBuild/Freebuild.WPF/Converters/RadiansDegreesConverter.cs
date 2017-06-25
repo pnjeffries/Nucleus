@@ -1,4 +1,4 @@
-﻿using FreeBuild.Geometry;
+﻿using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace FreeBuild.WPF.Converters
+namespace Nucleus.WPF.Converters
 {
     public class RadiansDegreesConverter : IValueConverter
     {

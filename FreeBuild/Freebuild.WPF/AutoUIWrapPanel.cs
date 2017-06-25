@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace FreeBuild.WPF
+namespace Nucleus.WPF
 {
     public class AutoUIWrapPanel : WrapPanel
     {

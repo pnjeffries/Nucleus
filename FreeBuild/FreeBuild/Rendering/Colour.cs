@@ -25,7 +25,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Rendering
+namespace Nucleus.Rendering
 {
     /// <summary>
     /// An ARGB colour structure.

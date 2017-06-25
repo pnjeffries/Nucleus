@@ -1,4 +1,4 @@
-﻿using FreeBuild.Maths;
+﻿using Nucleus.Maths;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace FreeBuild.WPF.Converters
+namespace Nucleus.WPF.Converters
 {
     /// <summary>
     /// Convert a LinearIntervalGraph into a collection of points suitable for binding to a Polyline Points property.

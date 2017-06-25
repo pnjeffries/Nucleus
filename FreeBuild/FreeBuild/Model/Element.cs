@@ -18,18 +18,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using FreeBuild.Base;
-using FreeBuild.Events;
-using FreeBuild.Exceptions;
-using FreeBuild.Geometry;
-using FreeBuild.UI;
+using Nucleus.Base;
+using Nucleus.Events;
+using Nucleus.Exceptions;
+using Nucleus.Geometry;
+using Nucleus.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Model
+namespace Nucleus.Model
 {
     /// <summary>
     /// Abstract base class for Elements - objects which represent physical model

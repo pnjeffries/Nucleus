@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Exceptions
+namespace Nucleus.Exceptions
 {
     /// <summary>
     /// Represents errors that occur when a single geometry object is assigned to

@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Events
+namespace Nucleus.Events
 {
     /// <summary>
     /// A set of arguments passed on during an element update event

@@ -1,4 +1,4 @@
-﻿using FreeBuild.Geometry;
+﻿using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 using W = System.Windows;
 using Shapes = System.Windows.Shapes;
 using Media = System.Windows.Media;
-using FreeBuild.Rendering;
+using Nucleus.Rendering;
 using System.Windows.Controls;
 using System.Windows.Data;
-using FreeBuild.Base;
+using Nucleus.Base;
 
-namespace FreeBuild.WPF
+namespace Nucleus.WPF
 {
     /// <summary>
-    /// Helper class of static functions to convert FreeBuild objects to WPF shapes
+    /// Helper class of static functions to convert Nucleus objects to WPF shapes
     /// </summary>
     public static class FBtoWPF
     {
         /// <summary>
-        /// Convert a FreeBuild vector to a WPF point
+        /// Convert a Nucleus vector to a WPF point
         /// </summary>
         /// <param name="pt"></param>
         /// <returns></returns>
@@ -30,7 +30,7 @@ namespace FreeBuild.WPF
         }
 
         /// <summary>
-        /// Convert a FreeBuild colour to a WPF color
+        /// Convert a Nucleus colour to a WPF color
         /// </summary>
         /// <param name="col">The colour to be converterd</param>
         /// <param name="alphaLimit">Optional.  The maximum value to which to limit the alpha channel of the colour.
@@ -44,7 +44,7 @@ namespace FreeBuild.WPF
         }
 
         /// <summary>
-        /// Convert a FreeBuild ColourBrush to a WPF SolidColorBrush
+        /// Convert a Nucleus ColourBrush to a WPF SolidColorBrush
         /// </summary>
         /// <param name="brush">The brush to convert</param>
         /// <param name="alphaLimit">Optional.  The maximum value to which to limit the alpha channel of the colour.
@@ -57,7 +57,7 @@ namespace FreeBuild.WPF
         }
 
         /// <summary>
-        /// Convert a FreeBuild brush to a WPF one
+        /// Convert a Nucleus brush to a WPF one
         /// </summary>
         /// <param name="brush">The brush to convert</param>
         /// <param name="alphaLimit">Optional.  The maximum value to which to limit the alpha channel of the colour.
@@ -71,7 +71,7 @@ namespace FreeBuild.WPF
         }
 
         /// <summary>
-        /// Convert a FreeBuild binding to a WPF one
+        /// Convert a Nucleus binding to a WPF one
         /// </summary>
         /// <param name="binding"></param>
         /// <returns></returns>
@@ -83,7 +83,7 @@ namespace FreeBuild.WPF
         }
 
         /// <summary>
-        /// Convert a FreeBuild line to a WPF one
+        /// Convert a Nucleus line to a WPF one
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
@@ -99,7 +99,7 @@ namespace FreeBuild.WPF
         }
 
         /// <summary>
-        /// Convert a FreeBuild line to a WPF PathFigure
+        /// Convert a Nucleus line to a WPF PathFigure
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
@@ -112,7 +112,7 @@ namespace FreeBuild.WPF
         }
 
         /// <summary>
-        /// Convert a FreeBuild arc into a WPF PathFigure
+        /// Convert a Nucleus arc into a WPF PathFigure
         /// </summary>
         /// <param name="arc"></param>
         /// <returns></returns>
@@ -140,7 +140,7 @@ namespace FreeBuild.WPF
         }
 
         /// <summary>
-        /// Convert a FreeBuild PolyLine into a WPF PathFigure
+        /// Convert a Nucleus PolyLine into a WPF PathFigure
         /// </summary>
         /// <param name="polyLine"></param>
         /// <returns></returns>
@@ -159,7 +159,7 @@ namespace FreeBuild.WPF
         }
 
         /// <summary>
-        /// Convert a FreeBuild PolyCurve into a WPF PathFigure
+        /// Convert a Nucleus PolyCurve into a WPF PathFigure
         /// </summary>
         /// <param name="polyCurve"></param>
         /// <returns></returns>
@@ -207,7 +207,7 @@ namespace FreeBuild.WPF
         }
 
         /// <summary>
-        /// Convert a FreeBuild curve to a WPF PathFigure
+        /// Convert a Nucleus curve to a WPF PathFigure
         /// </summary>
         /// <param name="curve"></param>
         /// <returns></returns>

@@ -1,11 +1,11 @@
-﻿using FreeBuild.Geometry;
+﻿using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.DDTree
+namespace Nucleus.DDTree
 {
     /// <summary>
     /// A divided dimension tree to store geometry vertices

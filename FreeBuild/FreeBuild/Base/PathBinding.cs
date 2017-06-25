@@ -1,11 +1,11 @@
-﻿using FreeBuild.Extensions;
+﻿using Nucleus.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Base
+namespace Nucleus.Base
 {
     /// <summary>
     /// A binding that represents a connection to a particular member on an object.

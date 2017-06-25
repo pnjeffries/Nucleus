@@ -1,5 +1,5 @@
-﻿using FreeBuild.Maths;
-using FreeBuild.Model;
+﻿using Nucleus.Maths;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Results
+namespace Nucleus.Results
 {
     /// <summary>
     /// A table of results for objects under a particular analysis case.

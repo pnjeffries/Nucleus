@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace FreeBuild.TestApp.Properties
+namespace Nucleus.TestApp.Properties
 {
 
 

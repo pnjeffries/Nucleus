@@ -1,4 +1,4 @@
-﻿using FreeBuild.Maths;
+﻿using Nucleus.Maths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Results
+namespace Nucleus.Results
 {
     /// <summary>
     /// Results storage table for nodes, keyed by result type

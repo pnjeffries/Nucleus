@@ -1,5 +1,5 @@
-﻿using FreeBuild.Conversion;
-using FreeBuild.IO;
+﻿using Nucleus.Conversion;
+using Nucleus.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Extensions
+namespace Nucleus.Extensions
 {
     /// <summary>
     /// Static extension methods on any object type

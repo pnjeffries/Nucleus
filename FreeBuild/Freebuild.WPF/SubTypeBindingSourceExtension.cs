@@ -1,4 +1,4 @@
-﻿using FreeBuild.Extensions;
+﻿using Nucleus.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Markup;
 
-namespace FreeBuild.WPF
+namespace Nucleus.WPF
 {
     public class SubTypeBindingSourceExtension : MarkupExtension
     {

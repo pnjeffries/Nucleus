@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FreeBuild.Model;
-using FreeBuild.Geometry;
+using Nucleus.Model;
+using Nucleus.Geometry;
 
-namespace FreeBuild.Tests
+namespace Nucleus.Tests
 {
     public class Core
     {

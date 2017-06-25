@@ -1,12 +1,12 @@
-﻿using FreeBuild.Base;
-using FreeBuild.Model;
+﻿using Nucleus.Base;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Geometry
+namespace Nucleus.Geometry
 {
     /// <summary>
     /// A geometry object representing a text label

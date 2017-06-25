@@ -1,5 +1,5 @@
-﻿using FreeBuild.Geometry;
-using FreeBuild.WPF.Converters;
+﻿using Nucleus.Geometry;
+using Nucleus.WPF.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FreeBuild.WPF
+namespace Nucleus.WPF
 {
     /// <summary>
     /// Interaction logic for SliderFieldControl.xaml

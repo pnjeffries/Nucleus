@@ -1,4 +1,4 @@
-﻿using FreeBuild.Extensions;
+﻿using Nucleus.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Undo
+namespace Nucleus.Undo
 {
     /// <summary>
     /// An undo state which can be used to revert a collection change

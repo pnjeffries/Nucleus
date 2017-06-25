@@ -18,14 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using FreeBuild.Geometry;
+using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Model
+namespace Nucleus.Model
 {
     /// <summary>
     /// A linear element is one defined in terms of a set-out curve
@@ -44,7 +44,7 @@ namespace FreeBuild.Model
         /// The node (if any) that the start of this element is connected to.
         /// This is a shortcut property to get or set the node attached to the
         /// start of this element's geometry curve.
-        /// Note that FreeBuild element geometry is not dependent on nodes and
+        /// Note that Nucleus element geometry is not dependent on nodes and
         /// so this property may have a null value.
         /// </summary>
         public Node StartNode
@@ -63,7 +63,7 @@ namespace FreeBuild.Model
         /// The node (if any) that the end of this element is connected to.
         /// This is a shortcut property to get or set the node attached to the
         /// end of this element's geometry curve.
-        /// Note that FreeBuild element geometry is not dependent on nodes and
+        /// Note that Nucleus element geometry is not dependent on nodes and
         /// so this property may have a null value.
         /// </summary>
         public Node EndNode

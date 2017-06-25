@@ -1,7 +1,7 @@
-﻿using FreeBuild.Base;
-using FreeBuild.Rendering;
-using FreeBuild.UI;
-using FreeBuild.WPF.Extensions;
+﻿using Nucleus.Base;
+using Nucleus.Rendering;
+using Nucleus.UI;
+using Nucleus.WPF.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FreeBuild.WPF
+namespace Nucleus.WPF
 {
     /// <summary>
     /// Interaction logic for ComboFieldControl.xaml

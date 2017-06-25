@@ -1,11 +1,11 @@
-﻿using FreeBuild.Base;
+﻿using Nucleus.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Physics
+namespace Nucleus.Physics
 {
     /// <summary>
     /// A customisable physics engine that can be used to manage

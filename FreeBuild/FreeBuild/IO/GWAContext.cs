@@ -1,14 +1,14 @@
-﻿using FreeBuild.Conversion;
-using FreeBuild.Extensions;
-using FreeBuild.Geometry;
-using FreeBuild.Model;
+﻿using Nucleus.Conversion;
+using Nucleus.Extensions;
+using Nucleus.Geometry;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.IO
+namespace Nucleus.IO
 {
     /// <summary>
     /// Contextual operations involved with writing out a GWA-format file

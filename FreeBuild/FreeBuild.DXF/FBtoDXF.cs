@@ -1,5 +1,5 @@
-﻿using FreeBuild.Geometry;
-using FreeBuild.Rendering;
+﻿using Nucleus.Geometry;
+using Nucleus.Rendering;
 using netDxf;
 using netDxf.Tables;
 using System;
@@ -9,21 +9,21 @@ using System.Text;
 using System.Threading.Tasks;
 using nDE = netDxf.Entities;
 
-namespace FreeBuild.DXF
+namespace Nucleus.DXF
 {
     /// <summary>
-    /// A class of static helper functions to convert from FreeBuild datatypes
+    /// A class of static helper functions to convert from Nucleus datatypes
     /// to netDXF ones
     /// </summary>
     public static class FBtoDXF
     {
         /// <summary>
-        /// Get or set the scaling factor to be used when converting DXF entities to FreeBuild ones
+        /// Get or set the scaling factor to be used when converting DXF entities to Nucleus ones
         /// </summary>
         public static double ConversionScaling { get; set; } = 1.0;
 
         /// <summary>
-        /// Set the display and other attributes of a netDXF entity from those of an FreeBuild object
+        /// Set the display and other attributes of a netDXF entity from those of an Nucleus object
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="attributes"></param>
@@ -36,7 +36,7 @@ namespace FreeBuild.DXF
         }
 
         /// <summary>
-        /// Convert a FreeBuild colour to a netDXF one
+        /// Convert a Nucleus colour to a netDXF one
         /// </summary>
         /// <param name="colour"></param>
         /// <returns></returns>
@@ -46,7 +46,7 @@ namespace FreeBuild.DXF
         }
 
         /// <summary>
-        /// Convert a FreeBuild vector to a netDXF one
+        /// Convert a Nucleus vector to a netDXF one
         /// </summary>
         /// <param name="vector"></param>
         /// <param name="scaling"></param>
@@ -58,7 +58,7 @@ namespace FreeBuild.DXF
         }
 
         /// <summary>
-        /// Convert a set of FreeBuild vectors to a list of netDXF ones
+        /// Convert a set of Nucleus vectors to a list of netDXF ones
         /// </summary>
         /// <param name="vectors"></param>
         /// <param name="scaling"></param>
@@ -74,7 +74,7 @@ namespace FreeBuild.DXF
         }
 
         /// <summary>
-        /// Convert a FreeBuild vector to a netDXF Vector2
+        /// Convert a Nucleus vector to a netDXF Vector2
         /// </summary>
         /// <param name="vector"></param>
         /// <param name="scaling"></param>
@@ -86,7 +86,7 @@ namespace FreeBuild.DXF
         }
 
         /// <summary>
-        /// Convert a FreeBuild transformation matrix to a netDXF one
+        /// Convert a Nucleus transformation matrix to a netDXF one
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
@@ -99,7 +99,7 @@ namespace FreeBuild.DXF
         }
 
         /// <summary>
-        /// Convert a FreeBuild point object to a netDXF one
+        /// Convert a Nucleus point object to a netDXF one
         /// </summary>
         /// <param name="pt"></param>
         /// <returns></returns>
@@ -111,7 +111,7 @@ namespace FreeBuild.DXF
         }
 
         /// <summary>
-        /// Convert a FreeBuild point cloud to a set of netDXF points
+        /// Convert a Nucleus point cloud to a set of netDXF points
         /// </summary>
         /// <param name="cloud"></param>
         /// <param name="result"></param>
@@ -129,7 +129,7 @@ namespace FreeBuild.DXF
         }
 
         /// <summary>
-        /// Convert FreeBuild horizontal and vertical set out values to a netDXF text alignment
+        /// Convert Nucleus horizontal and vertical set out values to a netDXF text alignment
         /// </summary>
         /// <param name="horizontal"></param>
         /// <param name="vertical"></param>
@@ -157,7 +157,7 @@ namespace FreeBuild.DXF
         }
 
         /// <summary>
-        /// Convert a FreeBuild label to a netDXF text object
+        /// Convert a Nucleus label to a netDXF text object
         /// </summary>
         /// <param name="label"></param>
         /// <returns></returns>
@@ -170,7 +170,7 @@ namespace FreeBuild.DXF
         }
 
         /// <summary>
-        /// Convert a FreeBuild line to a netDXF one
+        /// Convert a Nucleus line to a netDXF one
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
@@ -195,7 +195,7 @@ namespace FreeBuild.DXF
         }
 
         /// <summary>
-        /// Convert a FreeBuild arc to a netDXF one
+        /// Convert a Nucleus arc to a netDXF one
         /// </summary>
         /// <param name="arc"></param>
         /// <returns></returns>
@@ -220,7 +220,7 @@ namespace FreeBuild.DXF
         }
 
         /// <summary>
-        /// Convert a FreeBuild polycurve to a list of netDXF objects
+        /// Convert a Nucleus polycurve to a list of netDXF objects
         /// </summary>
         /// <param name="curve"></param>
         /// <param name="result">Optional.  A list to be populated and returned as the output.</param>
@@ -236,7 +236,7 @@ namespace FreeBuild.DXF
         }
 
         /// <summary>
-        /// Convert a FreeBuild curve to a netDXF HatchBoundaryPath
+        /// Convert a Nucleus curve to a netDXF HatchBoundaryPath
         /// </summary>
         /// <param name="curve"></param>
         /// <returns></returns>
@@ -252,7 +252,7 @@ namespace FreeBuild.DXF
         }
 
         /// <summary>
-        /// Convert a FreeBuild planar region to a netDXF hatch
+        /// Convert a Nucleus planar region to a netDXF hatch
         /// </summary>
         /// <param name="region"></param>
         /// <returns></returns>
@@ -269,7 +269,7 @@ namespace FreeBuild.DXF
         }
 
         /// <summary>
-        /// Convert a FreeBuild layer to a netDXF one
+        /// Convert a Nucleus layer to a netDXF one
         /// </summary>
         /// <param name="layer"></param>
         /// <returns></returns>
@@ -283,7 +283,7 @@ namespace FreeBuild.DXF
         }
 
         /// <summary>
-        /// Convert a FreeBuild geometry object to a netDXF
+        /// Convert a Nucleus geometry object to a netDXF
         /// </summary>
         /// <param name="geo"></param>
         /// <returns></returns>

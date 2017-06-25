@@ -1,11 +1,11 @@
-﻿using FreeBuild.Geometry;
+﻿using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Undo
+namespace Nucleus.Undo
 {
     /// <summary>
     /// An undo state which will reverse a transformation performed on

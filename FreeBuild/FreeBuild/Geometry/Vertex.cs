@@ -18,10 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using FreeBuild.Base;
-using FreeBuild.Extensions;
-using FreeBuild.Model;
-using FreeBuild.Units;
+using Nucleus.Base;
+using Nucleus.Extensions;
+using Nucleus.Model;
+using Nucleus.Units;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -30,7 +30,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
 
-namespace FreeBuild.Geometry
+namespace Nucleus.Geometry
 {
     /// <summary>
     /// Base class for vertices - positions in space that

@@ -1,5 +1,5 @@
-﻿using FreeBuild.Geometry;
-using FreeBuild.Model;
+﻿using Nucleus.Geometry;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using W = System.Windows.Shapes;
 
-namespace FreeBuild.WPF
+namespace Nucleus.WPF
 {
     /// <summary>
     /// A canvas which is used to draw a preview of a section property

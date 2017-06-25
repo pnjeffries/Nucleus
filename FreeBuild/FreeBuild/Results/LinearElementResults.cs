@@ -1,11 +1,11 @@
-﻿using FreeBuild.Maths;
+﻿using Nucleus.Maths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Results
+namespace Nucleus.Results
 {
     /// <summary>
     /// Result storage table for elements, keyed by result type

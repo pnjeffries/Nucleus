@@ -1,4 +1,4 @@
-﻿using FreeBuild.Geometry;
+﻿using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +13,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using FB = FreeBuild.Geometry;
+using FB = Nucleus.Geometry;
 
-namespace FreeBuild.WPF
+namespace Nucleus.WPF
 {
     /// <summary>
     /// Interaction logic for LayeredGeometryCanvas.xaml
@@ -131,7 +131,7 @@ namespace FreeBuild.WPF
         /// <summary>
         /// The current cursor position on the canvas, in model coordinates
         /// </summary>
-        public FreeBuild.Geometry.Vector CursorPosition
+        public Nucleus.Geometry.Vector CursorPosition
         {
             get
             {

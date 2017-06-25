@@ -1,12 +1,12 @@
-﻿using FreeBuild.Geometry;
-using FreeBuild.UI;
+﻿using Nucleus.Geometry;
+using Nucleus.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Model
+namespace Nucleus.Model
 {
     /// <summary>
     /// Abstract base class for structural and physical load types that act in a particular

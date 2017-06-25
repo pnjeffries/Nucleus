@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using OpenTK;
 
-namespace FreeBuild.OpenTK
+namespace Nucleus.OpenTK
 {
     public partial class RenderControl : GLControl
     {

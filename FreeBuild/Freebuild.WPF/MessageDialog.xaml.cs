@@ -1,5 +1,5 @@
-﻿using FreeBuild.Extensions;
-using FreeBuild.UI;
+﻿using Nucleus.Extensions;
+using Nucleus.UI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FreeBuild.WPF
+namespace Nucleus.WPF
 {
     /// <summary>
     /// Interaction logic for MessageDialog.xaml

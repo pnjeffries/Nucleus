@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Events
+namespace Nucleus.Events
 {
     /// <summary>
     /// Extended version of PropertyChangedEventArgs that also includes the previous and new

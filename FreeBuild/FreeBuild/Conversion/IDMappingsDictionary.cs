@@ -1,5 +1,5 @@
-﻿using FreeBuild.Base;
-using FreeBuild.Extensions;
+﻿using Nucleus.Base;
+using Nucleus.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
 
-namespace FreeBuild.Conversion
+namespace Nucleus.Conversion
 {
     /// <summary>
     /// A dictionary of IDMappingTables keyed by the filepath they were last written to.

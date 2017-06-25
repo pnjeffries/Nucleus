@@ -1,8 +1,8 @@
-﻿using FreeBuild.Base;
-using FreeBuild.Extensions;
-using FreeBuild.Model;
-using FreeBuild.UI;
-using FreeBuild.WPF.Converters;
+﻿using Nucleus.Base;
+using Nucleus.Extensions;
+using Nucleus.Model;
+using Nucleus.UI;
+using Nucleus.WPF.Converters;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace FreeBuild.WPF
+namespace Nucleus.WPF
 {
     public class AutoUIDataGrid : DataGrid
     {

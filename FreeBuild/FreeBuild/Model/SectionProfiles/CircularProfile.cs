@@ -23,11 +23,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FreeBuild.Geometry;
-using FreeBuild.Units;
-using FreeBuild.Extensions;
+using Nucleus.Geometry;
+using Nucleus.Units;
+using Nucleus.Extensions;
 
-namespace FreeBuild.Model
+namespace Nucleus.Model
 {
     /// <summary>
     /// Parametric profile type to represent circular profiles and

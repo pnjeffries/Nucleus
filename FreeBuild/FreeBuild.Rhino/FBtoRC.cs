@@ -1,5 +1,5 @@
-﻿using FreeBuild.Geometry;
-using FreeBuild.Rendering;
+﻿using Nucleus.Geometry;
+using Nucleus.Rendering;
 using Rhino.Display;
 using System;
 using System.Collections.Generic;
@@ -9,15 +9,15 @@ using System.Threading.Tasks;
 using RC = Rhino.Geometry;
 using R = Rhino;
 
-namespace FreeBuild.Rhino
+namespace Nucleus.Rhino
 {
     /// <summary>
-    /// Conversion class to convert FreeBuild object to RhinoCommon ones
+    /// Conversion class to convert Nucleus object to RhinoCommon ones
     /// </summary>
     public static class FBtoRC
     {
         /// <summary>
-        /// Get the current length conversion factor from SI units (m) in which FreeBuild objects are defined
+        /// Get the current length conversion factor from SI units (m) in which Nucleus objects are defined
         /// to the current Rhino document units.
         /// </summary>
         public static double ConversionFactor
@@ -29,7 +29,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a FreeBuild vector representing a point to a RhinoCommon point.
+        /// Convert a Nucleus vector representing a point to a RhinoCommon point.
         /// This will be automatically scaled to the current Rhino unit system.
         /// </summary>
         /// <param name="point">The vector to convert to a point</param>
@@ -43,7 +43,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a FreeBuild vector representing a point to a RhinoCommon point.
+        /// Convert a Nucleus vector representing a point to a RhinoCommon point.
         /// This will be automatically scaled to the current Rhino unit system unless the
         /// optional unitless parameter is set to true.
         /// </summary>
@@ -59,7 +59,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a FreeBuild vector to a RhinoCommon vector
+        /// Convert a Nucleus vector to a RhinoCommon vector
         /// </summary>
         /// <param name="vector">The vector to convert</param>
         /// <returns></returns>
@@ -70,7 +70,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a FreeBuild bounding box to a RhinoCommon one
+        /// Convert a Nucleus bounding box to a RhinoCommon one
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
@@ -81,7 +81,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a FreeBuild plane to a RhinoCommon one
+        /// Convert a Nucleus plane to a RhinoCommon one
         /// </summary>
         /// <param name="plane"></param>
         /// <returns></returns>
@@ -91,7 +91,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a FreeBuild colour to a System.Drawing.Colour
+        /// Convert a Nucleus colour to a System.Drawing.Colour
         /// </summary>
         /// <param name="colour"></param>
         /// <returns></returns>
@@ -101,7 +101,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a FreeBuild DisplayBrush to a Rhino DisplayMaterial
+        /// Convert a Nucleus DisplayBrush to a Rhino DisplayMaterial
         /// </summary>
         /// <param name="brush"></param>
         /// <returns></returns>
@@ -114,7 +114,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a FreeBuild circle to a RhinoCommon one
+        /// Convert a Nucleus circle to a RhinoCommon one
         /// </summary>
         /// <param name="circle"></param>
         /// <returns></returns>
@@ -124,7 +124,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a FreeBuild line to a RhinoCommon one
+        /// Convert a Nucleus line to a RhinoCommon one
         /// </summary>
         /// <param name="line">The line to convert</param>
         /// <returns>If the input line is valid, a new RhinoCommon LineCurve,
@@ -136,7 +136,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a FreeBuild line to a RhinoCommon line struct
+        /// Convert a Nucleus line to a RhinoCommon line struct
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
@@ -147,7 +147,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a FreeBuild polyline into a RhinoCommon PolylineCurve
+        /// Convert a Nucleus polyline into a RhinoCommon PolylineCurve
         /// </summary>
         /// <param name="polyline">The polyline to convert</param>
         /// <returns></returns>
@@ -167,7 +167,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a FreeBuild Arc to a RhinoCommon ArcCurve
+        /// Convert a Nucleus Arc to a RhinoCommon ArcCurve
         /// </summary>
         /// <param name="arc">The arc to convert</param>
         /// <returns></returns>
@@ -182,7 +182,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a FreeBuild polyCurve into a RhinoCommon one
+        /// Convert a Nucleus polyCurve into a RhinoCommon one
         /// </summary>
         /// <param name="curve"></param>
         /// <returns></returns>
@@ -198,7 +198,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a FreeBuild curve into a RhinoCommon one
+        /// Convert a Nucleus curve into a RhinoCommon one
         /// </summary>
         /// <param name="curve">The curve to convert</param>
         /// <returns></returns>
@@ -214,7 +214,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a FreeBuild PlanarSurface into a Rhino BRep
+        /// Convert a Nucleus PlanarSurface into a Rhino BRep
         /// </summary>
         /// <param name="surface"></param>
         /// <returns></returns>
@@ -239,7 +239,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a FreeBuild Mesh to a RhinoCommon one
+        /// Convert a Nucleus Mesh to a RhinoCommon one
         /// </summary>
         /// <param name="mesh"></param>
         /// <returns></returns>
@@ -252,7 +252,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert a FreeBuild surface to Rhino geometry
+        /// Convert a Nucleus surface to Rhino geometry
         /// </summary>
         /// <param name="surface"></param>
         /// <returns></returns>
@@ -264,7 +264,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Convert FreeBuild geometry into RhinoCommon geometry
+        /// Convert Nucleus geometry into RhinoCommon geometry
         /// </summary>
         /// <param name="geometry"></param>
         /// <returns></returns>

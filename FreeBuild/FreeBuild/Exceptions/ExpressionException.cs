@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Exceptions
+namespace Nucleus.Exceptions
 {
     /// <summary>
     /// Exception that occurs during expression evaluation

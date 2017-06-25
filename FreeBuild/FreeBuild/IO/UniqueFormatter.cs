@@ -1,5 +1,5 @@
-﻿using FreeBuild.Base;
-using FreeBuild.Extensions;
+﻿using Nucleus.Base;
+using Nucleus.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.IO
+namespace Nucleus.IO
 {
     /// <summary>
     /// A custom serialisation class which maintains IUnique-implementing objects as unique objects which

@@ -1,4 +1,4 @@
-﻿namespace FreeBuild.OpenTK
+﻿namespace Nucleus.OpenTK
 {
     partial class RenderControl
     {

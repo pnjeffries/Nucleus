@@ -1,5 +1,5 @@
-﻿using FreeBuild.Base;
-using FreeBuild.Events;
+﻿using Nucleus.Base;
+using Nucleus.Events;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Undo
+namespace Nucleus.Undo
 {
     /// <summary>
     /// Class for general undo/redo management

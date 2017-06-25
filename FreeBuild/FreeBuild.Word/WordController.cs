@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Office.Interop.Word;
 using W = Microsoft.Office.Interop.Word;
-using FreeBuild.Base;
+using Nucleus.Base;
 using Microsoft.Office.Core;
-using FreeBuild.Rendering;
+using Nucleus.Rendering;
 
-namespace FreeBuild.Word
+namespace Nucleus.Word
 {
     /// <summary>
     /// Controller class that wraps the Word API to facilitate easier

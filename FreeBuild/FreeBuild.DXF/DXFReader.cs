@@ -1,5 +1,5 @@
-﻿using FreeBuild.Base;
-using FreeBuild.Geometry;
+﻿using Nucleus.Base;
+using Nucleus.Geometry;
 using netDxf;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.DXF
+namespace Nucleus.DXF
 {
     /// <summary>
     /// A reader class that can read geometry from .DXF format files

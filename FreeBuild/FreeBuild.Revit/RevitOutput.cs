@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AD = Autodesk.Revit.DB;
-using FB = FreeBuild.Geometry;
+using FB = Nucleus.Geometry;
 
-namespace FreeBuild.Revit
+namespace Nucleus.Revit
 {
     /// <summary>
     /// Static output Revit helper functions

@@ -23,12 +23,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FreeBuild.Geometry;
+using Nucleus.Geometry;
 
-namespace FreeBuild.Meshing
+namespace Nucleus.Meshing
 {
     /// <summary>
-    /// Builder object for FreeBuild meshes
+    /// Builder object for Nucleus meshes
     /// </summary>
     public class MeshBuilder : MeshBuilderBase<Mesh>
     {

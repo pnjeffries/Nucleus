@@ -96,17 +96,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FreeBuild.DXF\FreeBuild.DXF.csproj">
+    <ProjectReference Include="..\FreeBuild.DXF\Nucleus.DXF.csproj">
       <Project>{36955035-2ed9-4e01-a440-c95c1051b0bb}</Project>
-      <Name>FreeBuild.DXF</Name>
+      <Name>Nucleus.DXF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Freebuild.WPF\FreeBuild.WPF.csproj">
+    <ProjectReference Include="..\Freebuild.WPF\Nucleus.WPF.csproj">
       <Project>{e2d93282-51bd-4317-8d13-363347065f8b}</Project>
-      <Name>FreeBuild.WPF</Name>
+      <Name>Nucleus.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FreeBuild\FreeBuild.csproj">
+    <ProjectReference Include="..\FreeBuild\Nucleus.csproj">
       <Project>{7635522c-178f-4db5-9106-ff8dfd4b833b}</Project>
-      <Name>FreeBuild</Name>
+      <Name>Nucleus</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

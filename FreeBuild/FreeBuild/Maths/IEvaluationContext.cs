@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Maths
+namespace Nucleus.Maths
 {
     /// <summary>
     /// Interface for objects which provide an evaluation context for Expressions

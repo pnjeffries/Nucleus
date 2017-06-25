@@ -1,6 +1,6 @@
-﻿using FreeBuild.Geometry;
-using FreeBuild.Model;
-using FreeBuild.IO;
+﻿using Nucleus.Geometry;
+using Nucleus.Model;
+using Nucleus.IO;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Tests
+namespace Nucleus.Tests
 {
     public static class GWA_Tests
     {

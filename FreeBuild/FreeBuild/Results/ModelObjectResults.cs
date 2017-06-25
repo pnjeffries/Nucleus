@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Results
+namespace Nucleus.Results
 {
     /// <summary>
     /// Abstract generic base class for object results dictionaries

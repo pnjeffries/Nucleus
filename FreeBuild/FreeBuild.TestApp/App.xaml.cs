@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace FreeBuild.TestApp
+namespace Nucleus.TestApp
 {
     /// <summary>
     /// Interaction logic for App.xaml

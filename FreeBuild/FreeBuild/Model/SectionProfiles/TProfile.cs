@@ -23,11 +23,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FreeBuild.Geometry;
-using FreeBuild.Units;
-using FreeBuild.Extensions;
+using Nucleus.Geometry;
+using Nucleus.Units;
+using Nucleus.Extensions;
 
-namespace FreeBuild.Model
+namespace Nucleus.Model
 {
     /// <summary>
     /// Represents profiles shaped like a captial 'T' consisting of a top flange only

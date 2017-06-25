@@ -28,9 +28,9 @@ using System.Reflection;
 using System.Xml.Serialization;
 using System.Xml;
 using System.Xml.Schema;
-using FreeBuild.Extensions;
+using Nucleus.Extensions;
 
-namespace FreeBuild.Base
+namespace Nucleus.Base
 {
     /// <summary>
     /// A structure that represents a file path.

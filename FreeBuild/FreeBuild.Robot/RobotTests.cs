@@ -1,12 +1,12 @@
-﻿using FreeBuild.Base;
-using FreeBuild.Model;
+﻿using Nucleus.Base;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Robot
+namespace Nucleus.Robot
 {
     /// <summary>
     /// Static class for Robot reading/writing tests

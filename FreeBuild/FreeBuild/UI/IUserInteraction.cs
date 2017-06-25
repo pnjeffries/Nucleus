@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.UI
+namespace Nucleus.UI
 {
     /// <summary>
     /// Interface for objects which represent assignable user interactions

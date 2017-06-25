@@ -1,4 +1,4 @@
-﻿using FreeBuild.Maths;
+﻿using Nucleus.Maths;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Tests
+namespace Nucleus.Tests
 {
     /// <summary>
     /// Test functions for matrices

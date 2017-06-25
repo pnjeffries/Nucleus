@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Meshing
+namespace Nucleus.Meshing
 {
     /// <summary>
     /// An enum describing different ways of remapping points into

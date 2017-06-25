@@ -1,4 +1,4 @@
-﻿using FreeBuild.UI;
+﻿using Nucleus.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace FreeBuild.WPF.Extensions
+namespace Nucleus.WPF.Extensions
 {
     /// <summary>
     /// Extension methods for AutoUIComboBoxAttribute objects

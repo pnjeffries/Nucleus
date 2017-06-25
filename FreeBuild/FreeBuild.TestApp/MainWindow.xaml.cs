@@ -1,4 +1,4 @@
-﻿using FreeBuild.Geometry;
+﻿using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +13,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using FreeBuild.Extensions;
+using Nucleus.Extensions;
 using Microsoft.Win32;
-using FreeBuild.DXF;
+using Nucleus.DXF;
 
-namespace FreeBuild.TestApp
+namespace Nucleus.TestApp
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

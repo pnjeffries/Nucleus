@@ -1,4 +1,4 @@
-﻿using FreeBuild.Geometry;
+﻿using Nucleus.Geometry;
 using RobotOM;
 using System;
 using System.Collections.Generic;
@@ -6,15 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Robot
+namespace Nucleus.Robot
 {
     /// <summary>
-    /// Library of static conversion functions to convert from FreeBuild to Robot datatypes
+    /// Library of static conversion functions to convert from Nucleus to Robot datatypes
     /// </summary>
     public static class FBtoROB
     {
         /// <summary>
-        /// Convert a FreeBuild point to a RobotGeoPoint3D
+        /// Convert a Nucleus point to a RobotGeoPoint3D
         /// </summary>
         /// <param name="pt"></param>
         /// <returns></returns>
@@ -28,7 +28,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Convert an array of FreeBuild vectors to a RobotPointsArray
+        /// Convert an array of Nucleus vectors to a RobotPointsArray
         /// </summary>
         /// <param name="pts"></param>
         /// <returns></returns>
@@ -57,7 +57,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Convert a FreeBuild polyline to a RobotGeoPolyline
+        /// Convert a Nucleus polyline to a RobotGeoPolyline
         /// </summary>
         /// <param name="polyline"></param>
         /// <returns></returns>
@@ -113,7 +113,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Convert a FreeBuild polyCurve to a Robot Contour
+        /// Convert a Nucleus polyCurve to a Robot Contour
         /// </summary>
         /// <param name="polyCurve"></param>
         /// <returns></returns>
@@ -128,7 +128,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Convert a FreeBuild geometry object to a Robot one
+        /// Convert a Nucleus geometry object to a Robot one
         /// </summary>
         /// <param name="geometry"></param>
         /// <returns></returns>

@@ -1,15 +1,15 @@
-﻿using FreeBuild.Conversion;
-using FreeBuild.UI;
+﻿using Nucleus.Conversion;
+using Nucleus.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Robot
+namespace Nucleus.Robot
 {
     /// <summary>
-    /// A set of options to be used when writing from FreeBuild to Robot 
+    /// A set of options to be used when writing from Nucleus to Robot 
     /// </summary>
     public class RobotConversionOptions : ConversionOptions
     {

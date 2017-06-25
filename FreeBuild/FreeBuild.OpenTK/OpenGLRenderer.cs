@@ -1,4 +1,4 @@
-﻿using FreeBuild.Rendering;
+﻿using Nucleus.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
-using FreeBuild.Geometry;
+using Nucleus.Geometry;
 
-namespace FreeBuild.OpenTK
+namespace Nucleus.OpenTK
 {
     public class OpenGLRenderer : Renderer
     {

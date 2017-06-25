@@ -5,14 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Rhino;
 using Rhino.Geometry;
-using FreeBuild.Geometry;
-using FreeBuild.Rhino;
+using Nucleus.Geometry;
+using Nucleus.Rhino;
 using RC = Rhino.Geometry;
-using FB = FreeBuild.Geometry;
+using FB = Nucleus.Geometry;
 using Rhino.DocObjects;
-using FreeBuild.Rendering;
+using Nucleus.Rendering;
 
-namespace FreeBuild.Rhino
+namespace Nucleus.Rhino
 {
     public static class RhinoOutput
     {
@@ -243,7 +243,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Bake a piece of FreeBuild geometry in the active Rhino document
+        /// Bake a piece of Nucleus geometry in the active Rhino document
         /// </summary>
         /// <param name="geometry"></param>
         /// <returns></returns>
@@ -263,7 +263,7 @@ namespace FreeBuild.Rhino
         }
 
         /// <summary>
-        /// Bake a layered table of FreeBuild geometry to Rhino equivalent
+        /// Bake a layered table of Nucleus geometry to Rhino equivalent
         /// geometries and layers
         /// </summary>
         /// <param name="geometryTable"></param>

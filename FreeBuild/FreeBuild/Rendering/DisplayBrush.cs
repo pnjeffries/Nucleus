@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Rendering
+namespace Nucleus.Rendering
 {
     /// <summary>
     /// Abstract base class for objects which describe how an object should be drawn.

@@ -1,6 +1,6 @@
-﻿using FreeBuild.Extensions;
-using FreeBuild.Geometry;
-using FreeBuild.UI;
+﻿using Nucleus.Extensions;
+using Nucleus.Geometry;
+using Nucleus.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using FB = FreeBuild.Geometry;
+using FB = Nucleus.Geometry;
 
-namespace FreeBuild.WPF
+namespace Nucleus.WPF
 {
     /// <summary>
     /// A stack panel that automatically generates a UI interface for members of its

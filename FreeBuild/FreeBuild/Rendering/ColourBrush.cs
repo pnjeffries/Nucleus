@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Rendering
+namespace Nucleus.Rendering
 {
     /// <summary>
     /// A brush that uses a single solid colour

@@ -83,9 +83,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FreeBuild\FreeBuild.csproj">
+    <ProjectReference Include="..\FreeBuild\Nucleus.csproj">
       <Project>{7635522C-178F-4DB5-9106-FF8DFD4B833B}</Project>
-      <Name>FreeBuild</Name>
+      <Name>Nucleus</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

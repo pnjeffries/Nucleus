@@ -1,5 +1,5 @@
-﻿using FreeBuild.Geometry;
-using FreeBuild.Model;
+﻿using Nucleus.Geometry;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,10 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace FreeBuild.WPF.Converters
+namespace Nucleus.WPF.Converters
 {
     /// <summary>
-    /// Convert from FreeBuild objects to text strings and back again.
+    /// Convert from Nucleus objects to text strings and back again.
     /// </summary>
     public class TextConverter : IValueConverter
     {

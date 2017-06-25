@@ -1,7 +1,7 @@
-﻿using FreeBuild.Base;
-using FreeBuild.Geometry;
-using FreeBuild.IO;
-using FreeBuild.Model;
+﻿using Nucleus.Base;
+using Nucleus.Geometry;
+using Nucleus.IO;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Tests
+namespace Nucleus.Tests
 {
     public class UniqueFormatter_Tests
     {

@@ -4,18 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RobotOM;
-using FreeBuild.Geometry;
-using FreeBuild.Model;
+using Nucleus.Geometry;
+using Nucleus.Model;
 
-namespace FreeBuild.Robot
+namespace Nucleus.Robot
 {
     /// <summary>
-    /// Helper class to convert from Robot to FreeBuild types
+    /// Helper class to convert from Robot to Nucleus types
     /// </summary>
     public static class ROBtoFB
     {
         /// <summary>
-        /// Convert a Robot 3D point to a FreeBuild Vector
+        /// Convert a Robot 3D point to a Nucleus Vector
         /// </summary>
         /// <param name="pt"></param>
         /// <returns></returns>
@@ -25,7 +25,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Convert a collection of Robot 3D points to a FreeBuild Vector array
+        /// Convert a collection of Robot 3D points to a Nucleus Vector array
         /// </summary>
         /// <param name="pts"></param>
         /// <returns></returns>
@@ -40,7 +40,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Convert a Robot polyline geometry into a FreeBuild polyline
+        /// Convert a Robot polyline geometry into a Nucleus polyline
         /// </summary>
         /// <param name="polyline"></param>
         /// <returns></returns>
@@ -63,7 +63,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Convert a Robot contour geometry to a FreeBuild polycurve
+        /// Convert a Robot contour geometry to a Nucleus polycurve
         /// </summary>
         /// <param name="contour"></param>
         /// <returns></returns>
@@ -97,7 +97,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Convert a Robot geometry object into a FreeBuild curve
+        /// Convert a Robot geometry object into a Nucleus curve
         /// </summary>
         /// <param name="geometry"></param>
         /// <returns></returns>
@@ -116,7 +116,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Convert a Robot bar end offset into a FreeBuild Vector 
+        /// Convert a Robot bar end offset into a Nucleus Vector 
         /// </summary>
         /// <param name="offset"></param>
         /// <returns></returns>
@@ -126,7 +126,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Convert a Robot node to a FreeBuild one
+        /// Convert a Robot node to a Nucleus one
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
@@ -137,7 +137,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Extract the position of a Robot Node as a FreeBuild Vector
+        /// Extract the position of a Robot Node as a Nucleus Vector
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
@@ -147,7 +147,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Extract the position of a Robot bar end as a FreeBuild Vector,
+        /// Extract the position of a Robot bar end as a Nucleus Vector,
         /// assembled from the position of the end's node and offset vector.
         /// </summary>
         /// <param name="barEnd">The bar end to extract the position of</param>
@@ -160,7 +160,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Extract the straight-line geometry of a Robot bar as a FreeBuild line
+        /// Extract the straight-line geometry of a Robot bar as a Nucleus line
         /// </summary>
         /// <param name="bar">The bar to extract geometry for</param>
         /// <param name="structureNodes">The full collection of nodes within the structure that contains the bar</param>
@@ -171,7 +171,7 @@ namespace FreeBuild.Robot
         }
 
         /// <summary>
-        /// Convert RobotNodeSupportData to a FreeBuild node support
+        /// Convert RobotNodeSupportData to a Nucleus node support
         /// </summary>
         /// <param name="support"></param>
         /// <returns></returns>

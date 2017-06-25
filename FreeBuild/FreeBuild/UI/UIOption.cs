@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.UI
+namespace Nucleus.UI
 {
     /// <summary>
     /// Class representing an option to be displayed within a user interface

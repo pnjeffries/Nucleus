@@ -1,4 +1,4 @@
-﻿using FreeBuild.Geometry;
+﻿using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,15 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 using W = System.Windows;
 
-namespace FreeBuild.WPF
+namespace Nucleus.WPF
 {
     /// <summary>
-    /// Static conversion class to translate WPF objects into FreeBuild ones
+    /// Static conversion class to translate WPF objects into Nucleus ones
     /// </summary>
     public static class WPFtoFB
     {
         /// <summary>
-        /// Convert a WPF point to a FreeBuild Vector
+        /// Convert a WPF point to a Nucleus Vector
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
