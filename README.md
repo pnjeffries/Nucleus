@@ -1,6 +1,7 @@
-# FreeBuild
+# .NUCLEUS
+.NET Unifying Class Librray for Engineering Utility Software
 
-FreeBuild is an open-source .NET library developed by Paul Jeffries and supported by Ramboll Computational Design.  It is intended as a generalisable base framework for the development of custom BIM and structural engineering workflow tools.  It forms the core underlying class system of Salamander 3 and several internal Ramboll software projects.
+.Nucleus is an open-source .NET library developed by Paul Jeffries and supported by Ramboll Computational Design.  It is intended as a generalisable base framework for the development of custom BIM and structural engineering workflow tools.  It forms the core underlying class system of Salamander 3 and several internal Ramboll software projects.
 
 The library provides the following functionality:
 
@@ -10,4 +11,4 @@ The library provides the following functionality:
 - A libray of custom WPF-based UI components (*WPF* namespace).
 - Various sub-projects to allow the above to interact and be exchanged with different external packages.
 
-Note that the code is still in an early stage of development and the architecture may still change considerably.
+Note that the code is in an early stage of development and the architecture may still change considerably.
