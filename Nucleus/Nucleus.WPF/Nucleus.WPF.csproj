@@ -214,6 +214,7 @@
     <ProjectReference Include="..\Nucleus\Nucleus.csproj">
       <Project>{5169f74f-0bcc-42bf-829f-277f36ef7677}</Project>
       <Name>Nucleus</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
