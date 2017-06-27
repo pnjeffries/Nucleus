@@ -367,6 +367,26 @@ namespace Nucleus.Geometry
             return new Circle(Math.Abs(this.Radius * t[0, 0]), this);
         }
 
+        /// <summary>
+        /// Calculate the maximum distance this circle could be moved in the specified
+        /// direction while still keeping the specfied point within the circle.
+        /// Returned as a distance along the direction vector.
+        /// </summary>
+        /// <param name="point">A point.  Must lie within the circle.</param>
+        /// <param name="direction">A vector in the direction of movement.</param>
+        /// <returns></returns>
+        public double MaximumShiftWhileCovering(Vector point, Vector direction)
+        {
+            Vector d = direction.Project(L);
+            if (d.IsZero()) return double.PositiveInfinity; //Vector is normal!
+            else d = d.Unitize();
+            Vector AO = (Origin - point).Project(L);
+            if (AO.MagnitudeSquared() > Radius * Radius) return double.NaN; //Point is outside circle!
+            Vector p = d.Rotate(L, Angle.Right);
+            double m = Math.Sqrt(Radius.Squared() - (AO * p).Squared()) - AO * d;
+            return m;
+        }
+
         #endregion
     }
 }

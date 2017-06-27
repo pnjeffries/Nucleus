@@ -102,6 +102,7 @@
     </ProjectReference>
     <ProjectReference Include="..\Nucleus.WPF\Nucleus.WPF.csproj">
       <Project>{a882fc57-8608-48ff-8daf-164507608623}</Project>
+      <Project>{e2d93282-51bd-4317-8d13-363347065f8b}</Project>
       <Name>Nucleus.WPF</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nucleus\Nucleus.csproj">
