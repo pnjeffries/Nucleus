@@ -612,6 +612,16 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Project this vector onto a plane described by its normal.
+        /// </summary>
+        /// <param name="normal"></param>
+        /// <returns></returns>
+        public Vector Project(Vector normal)
+        {
+            return this - (this * normal) * normal;
+        }
+
+        /// <summary>
         /// Create a new copy of this vector, but with the specified X coordinate
         /// </summary>
         /// <param name="x">The new value of the X coordinate in the copied vector</param>
@@ -1032,6 +1042,15 @@ namespace Nucleus.Geometry
         /// <param name="s"></param>
         /// <returns></returns>
         public static Vector operator *(Vector v, double s)
+            => new Vector(v.X * s, v.Y * s, v.Z * s);
+
+        /// <summary>
+        /// * operator override.  Multiplies a vector by a scalar.
+        /// </summary>
+        /// <param name="v"></param>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static Vector operator *(double s, Vector v)
             => new Vector(v.X * s, v.Y * s, v.Z * s);
 
         /// <summary>

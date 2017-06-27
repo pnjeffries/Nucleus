@@ -359,6 +359,11 @@ namespace Nucleus.Robot
                             pEl.Geometry = region;
                             pEl.Undelete();
                         }
+                        if (rOO.HasLabel(IRobotLabelType.I_LT_PANEL_THICKNESS) != 0)
+                        {
+                            //Assign Build-up family
+                            pEl.Family = context.IDMap.GetMappedPanelFamily(rOO.GetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS), model);
+                        }
                         // TODO: Copy over more data
 
                         // Store mapping:
@@ -954,7 +959,7 @@ namespace Nucleus.Robot
                     RobotBarSectionNonstdData nsdata = data.CreateNonstd(0);
                     nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D, cProfile.Diameter);
                 }
-
+                //TODO: Offset?
                 
             }
         }

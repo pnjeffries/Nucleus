@@ -100,7 +100,7 @@
       <Project>{36955035-2ed9-4e01-a440-c95c1051b0bb}</Project>
       <Name>Nucleus.DXF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Freebuild.WPF\Nucleus.WPF.csproj">
+    <ProjectReference Include="..\Nucleus.WPF\Nucleus.WPF.csproj">
       <Project>{e2d93282-51bd-4317-8d13-363347065f8b}</Project>
       <Name>Nucleus.WPF</Name>
     </ProjectReference>

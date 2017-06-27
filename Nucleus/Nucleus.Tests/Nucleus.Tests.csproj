@@ -58,7 +58,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FreeBuild.Word\Nucleus.Word.csproj">
+    <ProjectReference Include="..\Nucleus.Word\Nucleus.Word.csproj">
       <Project>{96aacd57-169f-48ae-a568-f1ae0eef7626}</Project>
       <Name>Nucleus.Word</Name>
     </ProjectReference>
