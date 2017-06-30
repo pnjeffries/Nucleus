@@ -189,6 +189,20 @@ namespace Nucleus.IO
                         valueCount++;
                     }
                 }
+                else if (type.IsStandardDictionary())
+                {
+                    IDictionary dic = (IDictionary)source;
+                    foreach (DictionaryEntry item in dic)
+                    {
+                        if (valueCount > 0) sb.Append(SEPARATOR);
+
+                        WriteValue(item.Key, sb);
+                        sb.Append(KEY_SEPARATOR);
+                        WriteValue(item.Value, sb);
+
+                        valueCount++;
+                    }
+                }
 
                 sb.Append(CLOSE_DATABLOCK);
             }

@@ -70,6 +70,10 @@ namespace Nucleus.IO
             {
                 return false;
             }
+            if (typeof(Dictionary<,>).IsAssignableFrom(fI.DeclaringType))
+            {
+                return false;
+            }
             return true;
         }
 

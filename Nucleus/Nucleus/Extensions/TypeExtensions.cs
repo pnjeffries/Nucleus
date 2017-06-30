@@ -141,6 +141,27 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Is this a dictionary type?
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool IsDictionary(this Type type)
+        {
+            return typeof(IDictionary).IsAssignableFrom(type)
+                || typeof(IDictionary<,>).IsAssignableFrom(type);
+        }
+
+        /// <summary>
+        /// Is this the standard CLR Dictionary type or a subclass of it?
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool IsStandardDictionary(this Type type)
+        {
+            return typeof(Dictionary<,>).IsAssignableFrom(type);
+        }
+
+        /// <summary>
         /// Extract all members from this type that have been annotated with an AutoUIAttribute,
         /// sorted by their order.
         /// </summary>

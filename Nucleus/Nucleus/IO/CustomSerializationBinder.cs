@@ -13,14 +13,15 @@ namespace Nucleus.IO
     /// </summary>
     public class CustomSerializationBinder : SerializationBinder
     {
-        private readonly string _OldLibraryName = "Nucleus";
-        private readonly string _NewLibraryName = "GenOME";
+        private readonly string _OldLibraryName = "FreeBuild";
+        private readonly string _NewLibraryName = "Nucleus";
 
         public override Type BindToType(string assemblyName, string typeName)
         {
             if (assemblyName.StartsWith(_OldLibraryName))
             {
                 assemblyName = assemblyName.Replace(_OldLibraryName, _NewLibraryName);
+                typeName = typeName.Replace(_OldLibraryName, _NewLibraryName);
                 return Type.GetType(String.Format("{0}, {1}", typeName, assemblyName));
             }
             return null;

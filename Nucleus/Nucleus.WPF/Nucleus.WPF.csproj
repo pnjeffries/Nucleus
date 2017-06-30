@@ -135,6 +135,9 @@
     <Compile Include="Field Controls\VectorFieldControl.xaml.cs">
       <DependentUpon>VectorFieldControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SpiderDiagram.xaml.cs">
+      <DependentUpon>SpiderDiagram.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SubTypeBindingSourceExtension.cs" />
     <Compile Include="Extensions\UIElementCollectionExtensions.cs" />
     <Compile Include="ViewScroller.xaml.cs">
@@ -207,6 +210,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SelectItemsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SpiderDiagram.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
