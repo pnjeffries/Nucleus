@@ -46,6 +46,7 @@
     <Compile Include="Core.cs" />
     <Compile Include="DDTree_Tests.cs" />
     <Compile Include="GWA_Tests.cs" />
+    <Compile Include="Map_Tests.cs" />
     <Compile Include="Matrix_Tests.cs" />
     <Compile Include="Mesh_Tests.cs" />
     <Compile Include="Program.cs" />
@@ -58,6 +59,22 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nucleus.DXF\Nucleus.DXF.csproj">
+      <Project>{36955035-2ed9-4e01-a440-c95c1051b0bb}</Project>
+      <Name>Nucleus.DXF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nucleus.Excel\Nucleus.Excel.csproj">
+      <Project>{2ac145d8-6a21-475d-9594-9dcf81158c66}</Project>
+      <Name>Nucleus.Excel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nucleus.Maps\Nucleus.Maps.csproj">
+      <Project>{e7d0d787-cf2f-4d97-8256-f7c0d9250683}</Project>
+      <Name>Nucleus.Maps</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nucleus.Robot\Nucleus.Robot.csproj">
+      <Project>{eca5186f-d2ed-4820-b207-880b2c4e02ca}</Project>
+      <Name>Nucleus.Robot</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nucleus.Word\Nucleus.Word.csproj">
       <Project>{96aacd57-169f-48ae-a568-f1ae0eef7626}</Project>
       <Name>Nucleus.Word</Name>

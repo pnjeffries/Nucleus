@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using Nucleus.Extensions;
 using Microsoft.Win32;
 using Nucleus.DXF;
+using Nucleus.WPF;
 
 namespace Nucleus.TestApp
 {

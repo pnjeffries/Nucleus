@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A86503CF-0FA6-434C-A546-93D12D1AD45C}</ProjectGuid>
+    <ProjectGuid>{2AC145D8-6A21-475D-9594-9DCF81158C66}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nucleus.Excel</RootNamespace>
@@ -84,7 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nucleus\Nucleus.csproj">
-      <Project>{7635522C-178F-4DB5-9106-FF8DFD4B833B}</Project>
+      <Project>{5169f74f-0bcc-42bf-829f-277f36ef7677}</Project>
       <Name>Nucleus</Name>
     </ProjectReference>
   </ItemGroup>

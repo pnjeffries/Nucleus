@@ -1,14 +1,14 @@
-﻿using FreeBuild.Base;
-using FreeBuild.DXF;
-using FreeBuild.Geometry;
-using FreeBuild.Maps;
+﻿using Nucleus.Base;
+using Nucleus.DXF;
+using Nucleus.Geometry;
+using Nucleus.Maps;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.Tests
+namespace Nucleus.Tests
 {
     public static class Map_Tests
     {

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{827A1CE7-6EDA-431E-BD5A-665AA7918439}</ProjectGuid>
+    <ProjectGuid>{ECA5186F-D2ED-4820-B207-880B2C4E02CA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nucleus.Robot</RootNamespace>
@@ -72,9 +72,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nucleus\Nucleus.csproj">
-      <Project>{7635522c-178f-4db5-9106-ff8dfd4b833b}</Project>
+      <Project>{5169f74f-0bcc-42bf-829f-277f36ef7677}</Project>
       <Name>Nucleus</Name>
-      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

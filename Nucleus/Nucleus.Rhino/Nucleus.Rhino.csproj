@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2595E792-7880-484B-877D-9873AAC7D946}</ProjectGuid>
+    <ProjectGuid>{B35E7426-ABC5-45EA-B88F-055F970CE484}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nucleus.Rhino</RootNamespace>
@@ -54,7 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nucleus\Nucleus.csproj">
-      <Project>{7635522c-178f-4db5-9106-ff8dfd4b833b}</Project>
+      <Project>{5169f74f-0bcc-42bf-829f-277f36ef7677}</Project>
       <Name>Nucleus</Name>
     </ProjectReference>
   </ItemGroup>

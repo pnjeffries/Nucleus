@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E2D93282-51BD-4317-8D13-363347065F8B}</ProjectGuid>
+    <ProjectGuid>{A882FC57-8608-48FF-8DAF-164507608623}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nucleus.WPF</RootNamespace>
@@ -63,6 +63,7 @@
     <Compile Include="Converters\IsTypeConverter.cs" />
     <Compile Include="Converters\ModelTableConverter.cs" />
     <Compile Include="Converters\MultiplicationConverter.cs" />
+    <Compile Include="Converters\NaNToBlankConverter.cs" />
     <Compile Include="Converters\RadiansDegreesConverter.cs" />
     <Compile Include="Converters\TextConverter.cs" />
     <Compile Include="Converters\TreeViewLineConverter.cs" />
@@ -147,12 +148,6 @@
     <Compile Include="WPFtoFB.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nucleus\Nucleus.csproj">
-      <Project>{7635522c-178f-4db5-9106-ff8dfd4b833b}</Project>
-      <Name>Nucleus</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Page Include="AutoUIDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -222,7 +217,13 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Nucleus\Nucleus.csproj">
+      <Project>{5169f74f-0bcc-42bf-829f-277f36ef7677}</Project>
+      <Name>Nucleus</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
