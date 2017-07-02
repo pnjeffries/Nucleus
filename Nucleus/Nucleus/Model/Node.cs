@@ -253,8 +253,9 @@ namespace Nucleus.Model
             if (other.Vertices != null)
             {
                 // Replace vertex node references
-                foreach (Vertex v in other.Vertices)
+                for (int i = other.Vertices.Count - 1; i >= 0; i--)
                 {
+                    Vertex v = other.Vertices[i];
                     if (v.Node == other) v.Node = this;
                 }
             }

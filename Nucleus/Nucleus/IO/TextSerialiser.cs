@@ -125,7 +125,7 @@ namespace Nucleus.IO
         /// <returns>True if successfully written, false if not.</returns>
         public bool Write(object item)
         {
-            if (item == null) return false;
+            if (item == null || IsDeleted(item)) return false;
             string format = _Format.FormatFor(item);
             if (format != null)
             { 
@@ -153,6 +153,17 @@ namespace Nucleus.IO
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Check whether the specified object is marked as deleted
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        private bool IsDeleted(object obj)
+        {
+            if (obj is IDeletable) return ((IDeletable)obj).IsDeleted;
+            else return false;
         }
 
         /// <summary>

@@ -256,7 +256,7 @@ namespace Nucleus.Model
                 }
                 else
                 {
-                    if (_Geometry != null && _Geometry.Element == this)
+                    if (_Geometry != null && _Geometry.Element == this && _Geometry != value)
                     {
                         _Geometry.DettachNodes();
                         _Geometry.Element = null;
