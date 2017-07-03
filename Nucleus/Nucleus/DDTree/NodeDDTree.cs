@@ -149,6 +149,13 @@ namespace Nucleus.DDTree
             return nodes;
         }
 
+        /// <summary>
+        /// Find all nodes coincident to the specified set of nodes within this tree,
+        /// within the specified tolerance.
+        /// </summary>
+        /// <param name="nodes"></param>
+        /// <param name="tolerance"></param>
+        /// <returns></returns>
         public IList<IList<Node>> CoincidentNodes(NodeCollection nodes, double tolerance)
         {
             IList<IList<Node>> result = new List<IList<Node>>();
@@ -159,7 +166,7 @@ namespace Nucleus.DDTree
                 Node node = remainingNodes.Last();
                 IList<Node> close = CloseTo(node.Position, tolerance);
                 if (!close.Contains(node)) close.Add(node);
-                if (close.Count > 1) result.Add(close);
+                result.Add(close);
                 foreach (Node foundNode in close)
                 {
                     remainingNodes.Remove(foundNode);
