@@ -330,6 +330,20 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Set the position of this vertex by an offset vector from
+        /// its node.
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        public bool SetPositionByNodalOffset(Vector offset)
+        {
+            if (_Node == null || !_Node.Position.IsValid()) return false;
+
+            Position = _Node.Position + offset;
+            return true;
+        }
+
+        /// <summary>
         /// Check whether this object has any attached data components of the specified type
         /// </summary>
         /// <typeparam name="T"></typeparam>

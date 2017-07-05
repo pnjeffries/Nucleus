@@ -126,12 +126,25 @@ namespace Nucleus.Model
             {
                 var result = new List<ElementVertex>();
                 var vertices = GetGeometry().Vertices;
-                foreach (var v in vertices)
+                for (int i = 0; i < vertices.Count; i++)
                 {
-                    result.Add(new ElementVertex(this, v));
+                    Vertex v = vertices[i];
+                        result.Add(new ElementVertex(this, v, GetElementVertexDescription(i, vertices)));
                 }
                 return result;
             }
+        }
+
+        /// <summary>
+        /// Generate a text string to be used to describe the position of the element vertex
+        /// in the specified position  in the specified collection.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="vertices"></param>
+        /// <returns></returns>
+        protected virtual string GetElementVertexDescription(int index, VertexCollection vertices)
+        {
+            return index.ToString();
         }
 
         /// <summary>
@@ -143,7 +156,8 @@ namespace Nucleus.Model
         {
             get
             {
-                return new ElementVertex(this, GetGeometry()?.Vertices?[i]);
+                var vertices = GetGeometry()?.Vertices;
+                return new ElementVertex(this, vertices?[i], GetElementVertexDescription(i, vertices));
             }
         }
 

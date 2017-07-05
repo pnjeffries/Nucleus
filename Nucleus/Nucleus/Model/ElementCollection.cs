@@ -161,6 +161,30 @@ namespace Nucleus.Model
             }
         }
 
+        /// <summary>
+        /// Does this collection contain linear elements and only linear elements?
+        /// </summary>
+        public bool IsAllLinear
+        {
+            get
+            {
+                if (Count == 0) return false;
+                return this.ContainsOnlyType(typeof(LinearElement));
+            }
+        }
+
+        /// <summary>
+        /// Does this collection contain panel elements and only panel elements?
+        /// </summary>
+        public bool IsAllPanels
+        {
+            get
+            {
+                if (Count == 0) return false;
+                return this.ContainsOnlyType(typeof(PanelElement));
+            }
+        }
+
         #endregion
 
         #region Constructors

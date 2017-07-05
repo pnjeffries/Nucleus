@@ -80,7 +80,7 @@ namespace Nucleus.Robot
             try
             {
                 RaiseMessage("Creating new Robot project...");
-                Robot.Project.New(IRobotProjectType.I_PT_BUILDING);
+                Robot.Project.New(IRobotProjectType.I_PT_SHELL);
                 return true;
             }
             catch (COMException ex) { RaiseMessage(ex.Message); }
@@ -108,15 +108,16 @@ namespace Nucleus.Robot
         /// <summary>
         /// Release control over Robot
         /// </summary>
-        public void Release()
+        public void Release(bool quitRobot = true)
         {
+            if (_Robot != null && quitRobot) _Robot.Quit(IRobotQuitOption.I_QO_DISCARD_CHANGES); //?
             _Robot = null;
             COMMessageFilter.Revoke();
             RaiseMessage("Robot link released.");
         }
 
         /// <summary>
-        /// Close Robot
+        /// Close the current Robot file
         /// </summary>
         public void Close()
         {

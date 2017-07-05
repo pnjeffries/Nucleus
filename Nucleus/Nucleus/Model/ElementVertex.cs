@@ -42,6 +42,20 @@ namespace Nucleus.Model
         #region Properties
 
         /// <summary>
+        /// Private backing field for Description property
+        /// </summary>
+        private string _Description;
+
+        /// <summary>
+        /// The description of the position of this vertex relative to its parent element.
+        /// Typically a number, "Start" or "End"
+        /// </summary>
+        public string Description
+        {
+            get { return _Description; }
+        }
+
+        /// <summary>
         /// Private backing field for Element property
         /// </summary>
         private Element _Element;
@@ -130,10 +144,11 @@ namespace Nucleus.Model
         /// Constructor.  Initialises a new ElementVertex belonging to the specified element
         /// </summary>
         /// <param name="element"></param>
-        public ElementVertex(Element element, Vertex vertex)
+        public ElementVertex(Element element, Vertex vertex, string description)
         {
             _Element = element;
             _Vertex = vertex;
+            _Description = description;
         }
 
         #endregion

@@ -148,11 +148,7 @@ namespace Nucleus.IO
         {
             Type type = source.GetType();
 
-            if (type.IsPrimitive)
-            {
-                sb.Append(source.ToString());
-            }
-            else if (type.IsAssignableFrom(typeof(string)))
+            if (type.IsPrimitive || type.IsAssignableFrom(typeof(string)) || type == typeof(Guid))
             {
                 sb.Append(source.ToString());
             }
@@ -205,6 +201,11 @@ namespace Nucleus.IO
                 }
 
                 sb.Append(CLOSE_DATABLOCK);
+            }
+            else
+            {
+                //Type not serializable - throw warning:
+                RaiseError("Type '" + type.FullName + "' is not marked as serializable and could not be saved.");
             }
         }
 
@@ -506,6 +507,10 @@ namespace Nucleus.IO
                 Guid guid = new Guid(str);
                 return _Uniques[guid];
             }
+            if (type == typeof(Guid))
+            {
+                return new Guid(str);
+            }
             try
             {
                 return Convert.ChangeType(str, type);
@@ -521,10 +526,11 @@ namespace Nucleus.IO
             string chunk;
             int j = 0;
             IList items = null; //Items for array reinstantiation
+            object currentKey = null; //Current key object for Dictionaries
             while (i < line.Length)// && j < format.Fields.Count())
             {
                 char c;
-                chunk = line.NextChunk(out c, ref i, SEPARATOR, OPEN_DATABLOCK, CLOSE_DATABLOCK);
+                chunk = line.NextChunk(out c, ref i, SEPARATOR, OPEN_DATABLOCK, CLOSE_DATABLOCK, KEY_SEPARATOR);
                 if (c == SEPARATOR || c == CLOSE_DATABLOCK)
                 {
                     // Chunk is simple value
@@ -535,6 +541,19 @@ namespace Nucleus.IO
                             FieldInfo fI = format.Fields[j];
                             object value = String2Object(chunk, fI.FieldType);
                             fI.SetValue(target, value);
+                        }
+                        else if (target is IDictionary && currentKey != null) //Dictionary value
+                        {
+                            //Add to dictionary
+                            IDictionary dic = (IDictionary)target;
+                            Type[] arguments = dic.GetType().GetGenericArguments();
+                            if (arguments.Length > 1)
+                            {
+                                object value = String2Object(chunk, arguments[1]);
+                                //TODO: What if value is complex object?
+                                dic[currentKey] = value;
+                            }
+                            currentKey = null;
                         }
                         else if (target is IList)
                         {
@@ -559,6 +578,7 @@ namespace Nucleus.IO
                                 //TODO
                             }
                         }
+
                     }
                     j++;
 
@@ -603,6 +623,17 @@ namespace Nucleus.IO
                             }
                             items.Add(value);
                         }
+                        else if (target is IDictionary && currentKey != null) //Dictionary value
+                        {
+                            IDictionary dic = (IDictionary)target;
+                            dic[currentKey] = value;
+                            currentKey = null;
+                        }
+                        else if (target is IDictionary && line[i] == KEY_SEPARATOR) //Dictionary key
+                        {
+                            currentKey = value;
+                            i++; //Skip the key separator character
+                        }
                         else if (target is IList)
                         {
                             // Is an entry in the target collection
@@ -612,15 +643,16 @@ namespace Nucleus.IO
                         //j++;
                         //i++; //Skip the next separator?
                     }
-                    else if (c == KEY_SEPARATOR)
-                    {
-                        // Is a key-value pair in a dictionary
-                        // TODO
-                    }
                     else
                     {
                         RaiseError("Formatting data for type alias '" + chunk + "' not found.");
                     }
+                }
+                else if (c == KEY_SEPARATOR && target is IDictionary)
+                {
+                    // Is a key for a dictionary:
+                    Type[] genTypes = target.GetType().GetGenericArguments();
+                    currentKey = String2Object(chunk, genTypes[0]);
                 }
                 else
                 {

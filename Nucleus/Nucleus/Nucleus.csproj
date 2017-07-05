@@ -125,6 +125,7 @@
     <Compile Include="Model\LocalCoordinateSystemReference.cs" />
     <Compile Include="Model\CoordinateSystemReferenceCollection.cs" />
     <Compile Include="Model\ModelObjectSetTable.cs" />
+    <Compile Include="Model\MultiElementVertex.cs" />
     <Compile Include="Model\PointElement.cs" />
     <Compile Include="Model\SetFilterBase.cs" />
     <Compile Include="Model\UserCoordinateSystemReference.cs" />
