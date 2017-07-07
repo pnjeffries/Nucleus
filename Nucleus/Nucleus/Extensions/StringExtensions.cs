@@ -319,6 +319,21 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Overwrite the ending characters of this string with the specified new ending
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="newEnd"></param>
+        /// <returns></returns>
+        public static string OverwriteEnd(this string input, string newEnd)
+        {
+            if (input.Length > newEnd.Length)
+            {
+                return input.Substring(0, input.Length - newEnd.Length) + newEnd;
+            }
+            else return newEnd;
+        }
+
+        /// <summary>
         /// Count the number of upper-case characters in this string
         /// </summary>
         /// <param name="input"></param>

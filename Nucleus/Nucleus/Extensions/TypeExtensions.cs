@@ -25,6 +25,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -158,7 +159,7 @@ namespace Nucleus.Extensions
         /// <returns></returns>
         public static bool IsStandardDictionary(this Type type)
         {
-            return typeof(Dictionary<,>).IsAssignableFrom(type);
+            return (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>));
         }
 
         /// <summary>
@@ -263,6 +264,24 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Get the method (if any) on this object tagged with the OnDeserializedAttribute
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static MethodInfo GetOnDeserializedMethod(this Type type)
+        {
+            MethodInfo[] mInfos = type.GetMethods();
+            foreach (MethodInfo mInfo in mInfos)
+            {
+                if (mInfo.GetCustomAttribute<OnDeserializedAttribute>() != null)
+                {
+                    return mInfo;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Get a list of all the non-abstract types that derive from this type
         /// </summary>
         /// <param name="type"></param>
@@ -314,7 +333,7 @@ namespace Nucleus.Extensions
             {
                 // Ignore inherited fields.
                 if (field.DeclaringType == type && //Necessary?
-                    (!ignoreNonSerialised || field.GetCustomAttribute(typeof(NonSerializedAttribute)) == null)
+                    (!ignoreNonSerialised || !field.IsNotSerialized) //GetCustomAttribute(typeof(NonSerializedAttribute)) == null)
                     && (filter == null || filter(field)))
                 {
                     outFields.Add(field);
@@ -323,7 +342,7 @@ namespace Nucleus.Extensions
 
             var baseType = type.BaseType;
             if (baseType != null)
-                baseType.GetAllFields(outFields, flags);
+                baseType.GetAllFields(outFields, flags, ignoreNonSerialised, filter);
         }
 
         /// <summary>
@@ -394,7 +413,7 @@ namespace Nucleus.Extensions
         /// <returns></returns>
         public static bool HasParameterlessConstructor(this Type type)
         {
-            return type.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+            return type.GetConstructor(BindingFlags.Instance | BindingFlags.Public, //| BindingFlags.NonPublic,
                                         null, Type.EmptyTypes, null) != null;
         }
 
@@ -473,6 +492,19 @@ namespace Nucleus.Extensions
                     return FindIEnumerable(collectionType.BaseType);
             }
             return null;
+        }
+
+        /// <summary>
+        /// Create an instance of this type.
+        /// Will use Activator.CreateInstance if a parameterless constructor exists, else
+        /// will fall back to FormatterServices.GetUninitializedObject
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static object Instantiate(this Type type)
+        {
+            if (type.HasParameterlessConstructor()) return Activator.CreateInstance(type);
+            else return FormatterServices.GetUninitializedObject(type);
         }
 
     }

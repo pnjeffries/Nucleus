@@ -1,4 +1,5 @@
-﻿using Nucleus.Extensions;
+﻿using Nucleus.Base;
+using Nucleus.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,11 +67,15 @@ namespace Nucleus.IO
         /// <returns></returns>
         public bool FilterField(FieldInfo fI)
         {
-            if (fI.MemberType == MemberTypes.Event)
+            if (fI.MemberType == MemberTypes.Event || typeof(MulticastDelegate).IsAssignableFrom(fI.FieldType))
             {
                 return false;
             }
-            if (typeof(Dictionary<,>).IsAssignableFrom(fI.DeclaringType))
+            if (fI.DeclaringType.IsStandardDictionary())
+            {
+                return false;
+            }
+            if (fI.Name == "_GUID" && typeof(IUnique).IsAssignableFrom(fI.DeclaringType))
             {
                 return false;
             }

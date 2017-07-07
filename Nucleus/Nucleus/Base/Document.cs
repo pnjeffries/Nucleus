@@ -96,27 +96,31 @@ namespace Nucleus.Base
         {
             try
             {
-                Stream stream = new FileStream(filePath,
+                using (Stream stream = new FileStream(filePath,
                                          FileMode.Create,
-                                         FileAccess.Write, FileShare.None);
-                if (type == DocumentSaveFileType.Binary)
+                                         FileAccess.Write, FileShare.None))
                 {
-                    IFormatter formatter = new BinaryFormatter();
-                    formatter.Serialize(stream, this);
+                    if (type == DocumentSaveFileType.Binary)
+                    {
+                        IFormatter formatter = new BinaryFormatter();
+                        formatter.Serialize(stream, this);
+                    }
+                    else if (type == DocumentSaveFileType.ASS)
+                    {
+                        var formatter = new UniqueFormatter();
+                        formatter.Serialize(stream, this);
+                    }
+                    stream.Flush();
+                    stream.Close();
                 }
-                else if (type == DocumentSaveFileType.ASS)
-                {
-                    var formatter = new UniqueFormatter();
-                    formatter.Serialize(stream, this);
-                }
-                stream.Flush();
-                stream.Close();
+
                 FilePath = filePath; //Store filepath
                 LastSaved = DateTime.UtcNow;
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                //throw new SerializationException("An error was encountered while attempting to save the document.", ex);
                 //TODO: Notify user of error
             }
             return false;

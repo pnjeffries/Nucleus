@@ -123,11 +123,33 @@ namespace Nucleus.Model
             set { foreach (Vertex v in Vertices) v.SetPositionByNodalOffset(value); }
         }
 
+        /// <summary>
+        /// The X-coordinate of the offset vector
+        /// </summary>
         public double Offset_X
         {
             get { return Vertices.CombinedValue(i => i.NodalOffset().X, double.NaN, double.NaN); }
             set { foreach (Vertex v in Vertices) v.SetPositionByNodalOffset(v.NodalOffset().WithX(value)); }
         }
+
+        /// <summary>
+        /// The Y-coordinate of the offset vector
+        /// </summary>
+        public double Offset_Y
+        {
+            get { return Vertices.CombinedValue(i => i.NodalOffset().Y, double.NaN, double.NaN); }
+            set { foreach (Vertex v in Vertices) v.SetPositionByNodalOffset(v.NodalOffset().WithY(value)); }
+        }
+
+        /// <summary>
+        /// The Z-coordinate of the offset vector
+        /// </summary>
+        public double Offset_Z
+        {
+            get { return Vertices.CombinedValue(i => i.NodalOffset().Z, double.NaN, double.NaN); }
+            set { foreach (Vertex v in Vertices) v.SetPositionByNodalOffset(v.NodalOffset().WithZ(value)); }
+        }
+
         #endregion
 
         #region Constructors
