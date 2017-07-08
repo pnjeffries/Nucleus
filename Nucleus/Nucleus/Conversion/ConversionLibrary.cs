@@ -74,7 +74,7 @@ namespace Nucleus.Conversion
         /// <param name="converterAssembly"></param>
         public void LoadConverters(Assembly converterAssembly)
         {
-            IEnumerable<Type> types = converterAssembly.ExportedTypes;
+            IEnumerable<Type> types = converterAssembly.GetExportedTypes();
             foreach(Type type in types)
             {
                 LoadConverters(type);

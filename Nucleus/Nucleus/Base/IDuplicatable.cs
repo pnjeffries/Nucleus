@@ -125,8 +125,8 @@ namespace Nucleus.Base
                     PropertyInfo sourceProperty = sourceType.GetProperty(targetProperty.Name, flags);
                     if (sourceProperty != null && sourceProperty.CanRead && targetProperty.PropertyType.IsAssignableFrom(sourceProperty.PropertyType))
                     {
-                        object value = sourceProperty.GetValue(source);
-                        targetProperty.SetValue(target, value);
+                        object value = sourceProperty.GetValue(source, null);
+                        targetProperty.SetValue(target, value, null);
                     }
                 }
             }
@@ -171,9 +171,9 @@ namespace Nucleus.Base
                     //Have found a matching property - check for copy behaviour attributes:
                     //Currently this is done on the source field.  Might it also be safer to check the target
                     //field as well, for at least certain values?
-                    CopyAttribute copyAtt = sourceField.GetCustomAttribute(typeof(CopyAttribute)) as CopyAttribute;
+                    CopyAttribute copyAtt = sourceField.GetAttribute<CopyAttribute>();
                     //If copy attribute is not set on the field, we will try it on the type:
-                    if (copyAtt == null) copyAtt = sourceField.FieldType.GetCustomAttribute(typeof(CopyAttribute)) as CopyAttribute;
+                    if (copyAtt == null) copyAtt = sourceField.FieldType.GetCustomAttribute<CopyAttribute>();
 
                     CopyBehaviour behaviour = CopyBehaviour.COPY;
                     CopyBehaviour itemsBehaviour = CopyBehaviour.COPY;

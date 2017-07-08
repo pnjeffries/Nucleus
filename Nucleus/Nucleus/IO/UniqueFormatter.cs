@@ -526,7 +526,7 @@ namespace Nucleus.IO
                         {
                             if (format.Type.ContainsGenericParameters)
                             {
-                                Type type = format.Type.GenericTypeArguments[0];
+                                Type type = format.Type.GetGenericArguments()[0];
                                 object value = String2Object(chunk, type);
                                 if (target is Array)
                                 {
@@ -554,7 +554,7 @@ namespace Nucleus.IO
 
                         if (items != null)
                         {
-                            Type type = format.Type.GenericTypeArguments[0];
+                            Type type = format.Type.GetGenericArguments()[0];
                             Array targetArray = Array.CreateInstance(type, items.Count);
                             for (int k = 0; k < items.Count; k++)
                             {

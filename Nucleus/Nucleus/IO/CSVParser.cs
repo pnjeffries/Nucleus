@@ -177,7 +177,7 @@ namespace Nucleus.IO
                                     else if (pInfo.PropertyType.IsAssignableFrom(typeof(double))) value = double.Parse(token);
                                     else if (pInfo.PropertyType.IsAssignableFrom(typeof(bool))) value = bool.Parse(token);
 
-                                    pInfo.SetValue(result, value);
+                                    pInfo.SetValue(result, value, null);
                                 }
                                 catch (Exception ex)
                                 {

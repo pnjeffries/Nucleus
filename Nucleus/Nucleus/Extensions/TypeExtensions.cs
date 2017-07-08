@@ -293,7 +293,7 @@ namespace Nucleus.Extensions
             {
                 // Ignore inherited fields.
                 if (field.DeclaringType == type && //Necessary?
-                    (!ignoreNonSerialised || field.GetCustomAttribute(typeof(NonSerializedAttribute)) == null)
+                    (!ignoreNonSerialised || field.GetAttribute<NonSerializedAttribute>() == null)
                     && (filter == null || filter(field)))
                 {
                     outFields.Add(field);
@@ -404,7 +404,7 @@ namespace Nucleus.Extensions
                 if (type.BaseType != null) type.BaseType.GetDependencies(output, ignoreNonSerialised);
                 foreach (FieldInfo fI in type.GetAllFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                 {
-                    if (!ignoreNonSerialised || fI.GetCustomAttribute(typeof(NonSerializedAttribute)) == null)
+                    if (!ignoreNonSerialised || fI.GetAttribute<NonSerializedAttribute>() == null)
                     fI.FieldType.GetDependencies(output, ignoreNonSerialised);
                 }
             }
@@ -454,5 +454,16 @@ namespace Nucleus.Extensions
             return null;
         }
 
+        /// <summary>
+        /// Retrieves a custom attribute applied to this type
+        /// </summary>
+        /// <typeparam name="TAttribute"></typeparam>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static TAttribute GetCustomAttribute<TAttribute>(this Type type)
+            where TAttribute : Attribute
+        {
+            return Attribute.GetCustomAttribute(type, typeof(TAttribute)) as TAttribute;
+        }
     }
 }

@@ -54,6 +54,7 @@
     <Compile Include="Base\CollectionCopyAttribute.cs" />
     <Compile Include="Base\IUniqueWithModifiableGUID.cs" />
     <Compile Include="Base\KeyedCollection.cs" />
+    <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="Extensions\NotifyCollectionChangedEventArgsExtensions.cs" />
     <Compile Include="Geometry\Grid.cs" />
     <Compile Include="Geometry\GridLineCollection.cs" />

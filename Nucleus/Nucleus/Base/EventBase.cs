@@ -64,6 +64,7 @@ namespace Nucleus.Base
         /// <param name="handler">The event handler</param>
         /// <param name="args">The event args</param>
         protected void RaiseEvent<TArgs>(EventHandler<TArgs> handler, TArgs args)
+            where TArgs : System.EventArgs
         {
             handler?.Invoke(this, args);
         }
