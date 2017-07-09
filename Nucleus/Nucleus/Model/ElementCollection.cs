@@ -161,6 +161,30 @@ namespace Nucleus.Model
             }
         }
 
+        /// <summary>
+        /// Does this collection contain linear elements and only linear elements?
+        /// </summary>
+        public bool IsAllLinear
+        {
+            get
+            {
+                if (Count == 0) return false;
+                return this.ContainsOnlyType(typeof(LinearElement));
+            }
+        }
+
+        /// <summary>
+        /// Does this collection contain panel elements and only panel elements?
+        /// </summary>
+        public bool IsAllPanels
+        {
+            get
+            {
+                if (Count == 0) return false;
+                return this.ContainsOnlyType(typeof(PanelElement));
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -210,6 +234,25 @@ namespace Nucleus.Model
             where TData : class
         {
             return this.AllWithDataComponent<ElementCollection, Element, TData>();
+        }
+
+        /// <summary>
+        /// Get the merged element vertices for the elements in this collection
+        /// </summary>
+        /// <returns></returns>
+        public IList<MultiElementVertex> GetMergedElementVertices()
+        {
+            var dictionary = new Dictionary<string, MultiElementVertex>();
+            foreach (Element el in this)
+            {
+                var elVerts = el.ElementVertices;
+                foreach (ElementVertex elVert in elVerts)
+                {
+                    if (dictionary.ContainsKey(elVert.Description)) dictionary[elVert.Description].Merge(elVert);
+                    else dictionary.Add(elVert.Description, elVert.ToMultiElementVertex());
+                }
+            }
+            return dictionary.Values.ToList();
         }
 
         #endregion

@@ -17,7 +17,7 @@ namespace Nucleus.Tests
         public static TimeSpan SerializeToFormat()
         {
             var sw = new Stopwatch();
-            ModelDocument doc = Core.GenerateTestModel(1);
+            ModelDocument doc = Core.GenerateTestModel(100);
 
             /*sw.Start();
             var formatter = new UniqueFormatter();
@@ -58,6 +58,8 @@ namespace Nucleus.Tests
             ModelDocument mDoc = Document.Load<ModelDocument>(filePath, DocumentSaveFileType.ASS);
             sw.Stop();
             Core.Print("ASS: " + sw.Elapsed);
+
+            var everything = mDoc.Model.Everything;
 
             return sw.Elapsed;
         }

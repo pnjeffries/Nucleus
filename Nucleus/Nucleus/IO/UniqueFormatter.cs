@@ -22,22 +22,22 @@ namespace Nucleus.IO
         #region Constants
 
         /// <summary> Character used to denote the opening of a block of data </summary>
-        private const char OPEN_DATABLOCK = '\u0002';
+        private const char OPEN_DATABLOCK = '{';//'\u0002';
 
         /// <summary> Character used to denote the closing of a block of data </summary>
-        private const char CLOSE_DATABLOCK = '\u0003';
+        private const char CLOSE_DATABLOCK = '}';//'\u0003';
 
         /// <summary> Character used to separate fields and items in a block of data </summary>
-        private const char SEPARATOR = '\u001E';
+        private const char SEPARATOR = ';';//'\u001E';
 
         /// <summary> Character used to separate key-value pairs in a block of data </summary>
-        private const char KEY_SEPARATOR = '\u001F';
+        private const char KEY_SEPARATOR = '|';//'\u001F';
 
         /// <summary> String that denotes the start of format definition </summary>
-        private const string FORMAT = "FOR\u001D";
+        private const string FORMAT = "FORM|"; //"FOR\u001D";
 
         /// <summary> String that denotes the start of data records </summary>
-        private const string DATA = "DAT\u001D";
+        private const string DATA = "DATA|";//"DAT\u001D";
 
         #endregion
 
@@ -148,11 +148,7 @@ namespace Nucleus.IO
         {
             Type type = source.GetType();
 
-            if (type.IsPrimitive)
-            {
-                sb.Append(source.ToString());
-            }
-            else if (type.IsAssignableFrom(typeof(string)))
+            if (type.IsPrimitive || type.IsAssignableFrom(typeof(string)) || type == typeof(Guid))
             {
                 sb.Append(source.ToString());
             }
@@ -189,8 +185,27 @@ namespace Nucleus.IO
                         valueCount++;
                     }
                 }
+                else if (type.IsStandardDictionary())
+                {
+                    IDictionary dic = (IDictionary)source;
+                    foreach (DictionaryEntry item in dic)
+                    {
+                        if (valueCount > 0) sb.Append(SEPARATOR);
+
+                        WriteValue(item.Key, sb);
+                        sb.Append(KEY_SEPARATOR);
+                        WriteValue(item.Value, sb);
+
+                        valueCount++;
+                    }
+                }
 
                 sb.Append(CLOSE_DATABLOCK);
+            }
+            else
+            {
+                //Type not serializable - throw warning:
+                RaiseError("Type '" + type.FullName + "' is not marked as serializable and could not be saved.");
             }
         }
 
@@ -210,6 +225,7 @@ namespace Nucleus.IO
             {
                 //Generate alias:
                 string abbreviation = type.Name.TruncatePascal(6);
+                if (type.Name.EndsWith("[]")) abbreviation = abbreviation.OverwriteEnd("[]");
                 string alias = abbreviation;
                 int i = 2;
                 while (_Format.ContainsKey(alias))
@@ -355,15 +371,21 @@ namespace Nucleus.IO
                 while (i < line.Length)
                 {
                     string fieldName = line.NextChunk(ref i, SEPARATOR, CLOSE_DATABLOCK);
-                    FieldInfo field = type.GetBaseField(fieldName);
-                    //TODO: check for mapped fields if null
-                    fields.Add(field);
+                    if (!string.IsNullOrEmpty(fieldName))
+                    {
+                        FieldInfo field = type.GetBaseField(fieldName);
+                        //TODO: check for mapped fields if null
+                        if (field == null) RaiseError("Field '" + fieldName + "' cannot be found on type '" + type.Name + "'.");
+                        fields.Add(field);
+                    }
                 }
+
+                result = new TypeFieldsFormat(alias, type, fields);
+                if (_Format != null) _Format.Add(alias, result);
+                if (_Aliases != null) _Aliases.Add(type, alias);
+                return result;
             }
-            result = new TypeFieldsFormat(alias, type, fields);
-            if (_Format != null) _Format.Add(alias, result);
-            if (_Aliases != null) _Aliases.Add(type, alias);
-            return result;
+            else return null;
         }
 
         private Type GetType(string typeName)
@@ -433,7 +455,8 @@ namespace Nucleus.IO
                     if (_Format.ContainsKey(typeAlias))
                     {
                         TypeFieldsFormat format = _Format[typeAlias];
-                        IUnique unique = FormatterServices.GetUninitializedObject(format.Type) as IUnique;
+
+                        IUnique unique = format.Type.Instantiate() as IUnique;//FormatterServices.GetUninitializedObject(format.Type) as IUnique;
                         if (unique is IUniqueWithModifiableGUID)
                         {
                             var uniqueMG = (IUniqueWithModifiableGUID)unique;
@@ -492,6 +515,10 @@ namespace Nucleus.IO
                 Guid guid = new Guid(str);
                 return _Uniques[guid];
             }
+            if (type == typeof(Guid))
+            {
+                return new Guid(str);
+            }
             try
             {
                 return Convert.ChangeType(str, type);
@@ -507,10 +534,11 @@ namespace Nucleus.IO
             string chunk;
             int j = 0;
             IList items = null; //Items for array reinstantiation
+            object currentKey = null; //Current key object for Dictionaries
             while (i < line.Length)// && j < format.Fields.Count())
             {
                 char c;
-                chunk = line.NextChunk(out c, ref i, SEPARATOR, OPEN_DATABLOCK, CLOSE_DATABLOCK);
+                chunk = line.NextChunk(out c, ref i, SEPARATOR, OPEN_DATABLOCK, CLOSE_DATABLOCK, KEY_SEPARATOR);
                 if (c == SEPARATOR || c == CLOSE_DATABLOCK)
                 {
                     // Chunk is simple value
@@ -522,29 +550,46 @@ namespace Nucleus.IO
                             object value = String2Object(chunk, fI.FieldType);
                             fI.SetValue(target, value);
                         }
-                        else if (target is IList)
+                        else if (target is IDictionary && currentKey != null) //Dictionary value
                         {
+                            //Add to dictionary
+                            IDictionary dic = (IDictionary)target;
+                            Type[] arguments = dic.GetType().GetGenericArguments();
+                            if (arguments.Length > 1)
+                            {
+                                object value = String2Object(chunk, arguments[1]);
+                                //TODO: What if value is complex object?
+                                dic[currentKey] = value;
+                            }
+                            currentKey = null;
+                        }
+                        else if (format.Type.IsList())
+                        {
+                            Type type = format.Type.GetElementType();
                             if (format.Type.ContainsGenericParameters)
                             {
-                                Type type = format.Type.GetGenericArguments()[0];
-                                object value = String2Object(chunk, type);
-                                if (target is Array)
-                                {
-                                    if (items == null)
-                                    {
-                                        items = new List<object>();
-                                        //TODO!!! Create list of required type!
-                                    }
-                                    items.Add(value);
-                                }
-                                else
-                                {
-                                    IList list = (IList)target;
-                                    list.Add(value);
-                                }
-                                //TODO
+                                type = format.Type.GenericTypeArguments[0];
                             }
+                            object value = String2Object(chunk, type);
+                            if (format.Type.IsArray)
+                            {
+                                if (items == null)
+                                {
+                                    Type listType = typeof(List<>).MakeGenericType(type);
+                                    items = Activator.CreateInstance(listType) as IList;
+                                    //TODO!!! Create list of required type!
+                                }
+                                items.Add(value);
+                            }
+                            else
+                            {
+                                IList list = (IList)target;
+                                list.Add(value);
+                            }
+                            //TODO
+
                         }
+
                     }
                     j++;
 
@@ -554,7 +599,7 @@ namespace Nucleus.IO
 
                         if (items != null)
                         {
-                            Type type = format.Type.GetGenericArguments()[0];
+                            Type type = format.Type.GetElementType();
                             Array targetArray = Array.CreateInstance(type, items.Count);
                             for (int k = 0; k < items.Count; k++)
                             {
@@ -572,7 +617,15 @@ namespace Nucleus.IO
                     if (_Format.ContainsKey(chunk))
                     {
                         TypeFieldsFormat subFormat = _Format[chunk];
-                        object value = FormatterServices.GetUninitializedObject(subFormat.Type);
+                        object value = null;
+                        if (!subFormat.Type.IsArray)
+                        {
+                            value = subFormat.Type.Instantiate();
+                        }
+                        else
+                        {
+                            value = Activator.CreateInstance(subFormat.Type, new object[] { 0 });
+                        }
                         PopulateFields(ref value, subFormat, ref i, line);
                         if (j < format.Fields.Count)
                         {
@@ -589,6 +642,17 @@ namespace Nucleus.IO
                             }
                             items.Add(value);
                         }
+                        else if (target is IDictionary && currentKey != null) //Dictionary value
+                        {
+                            IDictionary dic = (IDictionary)target;
+                            dic[currentKey] = value;
+                            currentKey = null;
+                        }
+                        else if (target is IDictionary && line[i] == KEY_SEPARATOR) //Dictionary key
+                        {
+                            currentKey = value;
+                            i++; //Skip the key separator character
+                        }
                         else if (target is IList)
                         {
                             // Is an entry in the target collection
@@ -598,15 +662,16 @@ namespace Nucleus.IO
                         //j++;
                         //i++; //Skip the next separator?
                     }
-                    else if (c == KEY_SEPARATOR)
-                    {
-                        // Is a key-value pair in a dictionary
-                        // TODO
-                    }
                     else
                     {
                         RaiseError("Formatting data for type alias '" + chunk + "' not found.");
                     }
+                }
+                else if (c == KEY_SEPARATOR && target is IDictionary)
+                {
+                    // Is a key for a dictionary:
+                    Type[] genTypes = target.GetType().GetGenericArguments();
+                    currentKey = String2Object(chunk, genTypes[0]);
                 }
                 else
                 {

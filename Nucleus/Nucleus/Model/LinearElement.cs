@@ -86,7 +86,7 @@ namespace Nucleus.Model
         {
             get
             {
-                return new ElementVertex(this, Geometry?.Start);
+                return new ElementVertex(this, Geometry?.Start, "Start");
             }
         }
 
@@ -98,7 +98,7 @@ namespace Nucleus.Model
         {
             get
             {
-                return new ElementVertex(this, Geometry?.End);
+                return new ElementVertex(this, Geometry?.End, "End");
             }
         }
 
@@ -175,6 +175,13 @@ namespace Nucleus.Model
         #endregion
 
         #region Methods
+
+        protected override string GetElementVertexDescription(int index, VertexCollection vertices)
+        {
+            if (index == 0) return "Start";
+            else if (index == vertices.Count - 1) return "End";
+            else return base.GetElementVertexDescription(index, vertices);
+        }
 
         /// <summary>
         /// Orientate this element such that the local Z axis at the centre of the element

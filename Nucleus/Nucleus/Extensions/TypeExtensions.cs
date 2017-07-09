@@ -25,6 +25,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -141,6 +142,27 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Is this a dictionary type?
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool IsDictionary(this Type type)
+        {
+            return typeof(IDictionary).IsAssignableFrom(type)
+                || typeof(IDictionary<,>).IsAssignableFrom(type);
+        }
+
+        /// <summary>
+        /// Is this the standard CLR Dictionary type or a subclass of it?
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool IsStandardDictionary(this Type type)
+        {
+            return (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>));
+        }
+
+        /// <summary>
         /// Extract all members from this type that have been annotated with an AutoUIAttribute,
         /// sorted by their order.
         /// </summary>
@@ -242,6 +264,24 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Get the method (if any) on this object tagged with the OnDeserializedAttribute
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static MethodInfo GetOnDeserializedMethod(this Type type)
+        {
+            MethodInfo[] mInfos = type.GetMethods();
+            foreach (MethodInfo mInfo in mInfos)
+            {
+                if (mInfo.GetCustomAttribute<OnDeserializedAttribute>() != null)
+                {
+                    return mInfo;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Get a list of all the non-abstract types that derive from this type
         /// </summary>
         /// <param name="type"></param>
@@ -293,7 +333,7 @@ namespace Nucleus.Extensions
             {
                 // Ignore inherited fields.
                 if (field.DeclaringType == type && //Necessary?
-                    (!ignoreNonSerialised || field.GetAttribute<NonSerializedAttribute>() == null)
+                    (!ignoreNonSerialised || !field.IsNotSerialized) //GetCustomAttribute(typeof(NonSerializedAttribute)) == null)
                     && (filter == null || filter(field)))
                 {
                     outFields.Add(field);
@@ -302,7 +342,7 @@ namespace Nucleus.Extensions
 
             var baseType = type.BaseType;
             if (baseType != null)
-                baseType.GetAllFields(outFields, flags);
+                baseType.GetAllFields(outFields, flags, ignoreNonSerialised, filter);
         }
 
         /// <summary>
@@ -373,7 +413,7 @@ namespace Nucleus.Extensions
         /// <returns></returns>
         public static bool HasParameterlessConstructor(this Type type)
         {
-            return type.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+            return type.GetConstructor(BindingFlags.Instance | BindingFlags.Public, //| BindingFlags.NonPublic,
                                         null, Type.EmptyTypes, null) != null;
         }
 
@@ -404,6 +444,7 @@ namespace Nucleus.Extensions
                 if (type.BaseType != null) type.BaseType.GetDependencies(output, ignoreNonSerialised);
                 foreach (FieldInfo fI in type.GetAllFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                 {
+                    if (!ignoreNonSerialised || fI.GetCustomAttribute(typeof(NonSerializedAttribute)) == null)
                     if (!ignoreNonSerialised || fI.GetAttribute<NonSerializedAttribute>() == null)
                     fI.FieldType.GetDependencies(output, ignoreNonSerialised);
                 }
@@ -465,5 +506,17 @@ namespace Nucleus.Extensions
         {
             return Attribute.GetCustomAttribute(type, typeof(TAttribute)) as TAttribute;
         }
+        /// Create an instance of this type.
+        /// Will use Activator.CreateInstance if a parameterless constructor exists, else
+        /// will fall back to FormatterServices.GetUninitializedObject
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static object Instantiate(this Type type)
+        {
+            if (type.HasParameterlessConstructor()) return Activator.CreateInstance(type);
+            else return FormatterServices.GetUninitializedObject(type);
+        }
+
     }
 }
