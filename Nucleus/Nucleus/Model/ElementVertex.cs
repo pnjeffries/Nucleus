@@ -152,5 +152,32 @@ namespace Nucleus.Model
         }
 
         #endregion
+
+        #region Methods
+
+        public MultiElementVertex ToMultiElementVertex()
+        {
+            return new MultiElementVertex(this);
+        }
+
+        #endregion
+    }
+
+    public static class ElementVertexExtensions
+    {
+        /// <summary>
+        /// Convert this collection of ElementVertices into a collection of MultiElementVertices
+        /// </summary>
+        /// <param name="verts"></param>
+        /// <returns></returns>
+        public static IList<MultiElementVertex> ToMultiElementVertices(this IList<ElementVertex> verts)
+        {
+            var result = new List<MultiElementVertex>(verts.Count);
+            foreach (var eV in verts)
+            {
+                result.Add(eV.ToMultiElementVertex());
+            }
+            return result;
+        }
     }
 }

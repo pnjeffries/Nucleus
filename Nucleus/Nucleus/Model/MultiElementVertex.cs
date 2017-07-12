@@ -16,7 +16,7 @@ namespace Nucleus.Model
     /// This is a temporary object that is created when necessary and is not persisted
     /// beyond that.
     /// </summary>
-    public struct MultiElementVertex
+    public class MultiElementVertex
     {
         #region Properties
 
@@ -288,6 +288,33 @@ namespace Nucleus.Model
                 _Elements.Add(elVert.Element);
                 _Vertices.Add(elVert.Vertex);
             }
+        }
+
+        /// <summary>
+        /// Initialise a MultiElementVertex from a single elementvertex
+        /// </summary>
+        /// <param name="elementVertex"></param>
+        public MultiElementVertex(ElementVertex elementVertex)
+        {
+            _Description = elementVertex.Description;
+            _Elements = new ElementCollection();
+            _Vertices = new VertexCollection();
+            _Elements.Add(elementVertex.Element);
+            _Vertices.Add(elementVertex.Vertex);
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Merge an element vertex into this object
+        /// </summary>
+        /// <param name="elVert"></param>
+        public void Merge(ElementVertex elVert)
+        {
+            _Elements.Add(elVert.Element);
+            _Vertices.Add(elVert.Vertex);
         }
 
         #endregion

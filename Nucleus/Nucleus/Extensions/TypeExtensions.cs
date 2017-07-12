@@ -445,6 +445,7 @@ namespace Nucleus.Extensions
                 foreach (FieldInfo fI in type.GetAllFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                 {
                     if (!ignoreNonSerialised || fI.GetCustomAttribute(typeof(NonSerializedAttribute)) == null)
+                    if (!ignoreNonSerialised || fI.GetAttribute<NonSerializedAttribute>() == null)
                     fI.FieldType.GetDependencies(output, ignoreNonSerialised);
                 }
             }
@@ -495,6 +496,16 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Retrieves a custom attribute applied to this type
+        /// </summary>
+        /// <typeparam name="TAttribute"></typeparam>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static TAttribute GetCustomAttribute<TAttribute>(this Type type)
+            where TAttribute : Attribute
+        {
+            return Attribute.GetCustomAttribute(type, typeof(TAttribute)) as TAttribute;
+        }
         /// Create an instance of this type.
         /// Will use Activator.CreateInstance if a parameterless constructor exists, else
         /// will fall back to FormatterServices.GetUninitializedObject

@@ -42,5 +42,28 @@ namespace Nucleus.Extensions
         {
             return property.GetCustomAttribute(attributeType) != null;
         }
+
+        /// <summary>
+        /// Retrieves a custom attribute applied to this property
+        /// </summary>
+        /// <typeparam name="TAttribute">The type of attribute to retrieve</typeparam>
+        /// <param name="propertyInfo"></param>
+        /// <returns></returns>
+        public static TAttribute GetCustomAttribute<TAttribute>(this PropertyInfo propertyInfo)
+            where TAttribute : Attribute
+        {
+            return Attribute.GetCustomAttribute(propertyInfo, typeof(TAttribute)) as TAttribute;
+        }
+
+        /// <summary>
+        /// Retrieves a custom attribute applied to this property
+        /// </summary>
+        /// <typeparam name="TAttribute">The type of attribute to retrieve</typeparam>
+        /// <param name="propertyInfo"></param>
+        /// <returns></returns>
+        public static Attribute GetCustomAttribute(this PropertyInfo propertyInfo, Type attributeType)
+        {
+            return Attribute.GetCustomAttribute(propertyInfo, attributeType);
+        }
     }
 }

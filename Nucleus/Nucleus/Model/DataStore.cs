@@ -98,6 +98,13 @@ namespace Nucleus.Model
             return item.GetType();
         }
 
+        [OnDeserialized()]
+        public void OnDeserialized(StreamingContext context)
+        {
+            foreach (TData item in this)
+                RegisterPropertyChanged(item);
+        }
+
         protected void RegisterPropertyChanged(TData item)
         {
             if (Owner != null && item != null && item is INotifyPropertyChanged)

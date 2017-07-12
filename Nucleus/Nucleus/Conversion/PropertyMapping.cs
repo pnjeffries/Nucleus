@@ -163,9 +163,9 @@ namespace Nucleus.Conversion
             Type targetType = target.GetType();
             PropertyInfo sInfo = sourceType.GetProperty(sourceProp);
             PropertyInfo tInfo = targetType.GetProperty(targetProp);
-            object value = sInfo.GetValue(source);
+            object value = sInfo.GetValue(source, null);
             //TODO: Run through converter?
-            tInfo.SetValue(target, value);
+            tInfo.SetValue(target, value, null);
         }
 
 
@@ -184,7 +184,7 @@ namespace Nucleus.Conversion
             {
                 Type type = result.GetType();
                 PropertyInfo pInfo = type.GetProperty(pathTokens[i]);
-                if (pInfo != null) result = pInfo.GetValue(result);
+                if (pInfo != null) result = pInfo.GetValue(result, null);
                 else result = null; //Throw error?
             }
             return result;

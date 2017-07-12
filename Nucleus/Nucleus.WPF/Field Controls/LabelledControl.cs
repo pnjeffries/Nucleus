@@ -1,4 +1,5 @@
-﻿using Nucleus.UI;
+﻿using Nucleus.Extensions;
+using Nucleus.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
