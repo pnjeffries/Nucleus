@@ -20,6 +20,7 @@
 
 using Nucleus.Base;
 using Nucleus.Events;
+using Nucleus.Extensions;
 using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
@@ -509,9 +510,64 @@ namespace Nucleus.Model
         /// <returns></returns>
         public IEnumerable<ModelObject> GetTableFor(Type type)
         {
-            if (typeof(Family).IsAssignableFrom(type)) return Families;
-            //TODO;
+            if (typeof(Node).IsAssignableFrom(type)) return Nodes;
+            else if (typeof(Element).IsAssignableFrom(type)) return Elements;
+            else if (typeof(Family).IsAssignableFrom(type)) return Families;
+            else if (typeof(Material).IsAssignableFrom(type)) return Materials;
+            else if (typeof(Level).IsAssignableFrom(type)) return Levels;
+            else if (typeof(LoadCase).IsAssignableFrom(type)) return LoadCases;
+            else if (typeof(Load).IsAssignableFrom(type)) return Loads;
+            else if (typeof(CoordinateSystemReference).IsAssignableFrom(type)) return CoordinateSystems;
+            else if (typeof(ModelObjectSetBase).IsAssignableFrom(type)) return Sets;
+            //Add any other new types here
             else return null;
+        }
+
+        /// <summary>
+        /// Find and return an object in this model by it's type and numeric ID
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="numericID"></param>
+        /// <returns></returns>
+        public ModelObject GetByNumericID(Type type, long numericID)
+        {
+            var table = GetTableFor(type);
+            return table?.GetByNumericID(numericID);
+        }
+
+        /// <summary>
+        /// Find and return an object in this model of the specified type with the
+        /// specifed numeric ID
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="numericID"></param>
+        /// <returns></returns>
+        public T GetByNumericID<T>(long numericID)
+            where T : ModelObject
+        {
+            return GetByNumericID(typeof(T), numericID) as T;
+        }
+
+        /// <summary>
+        /// Find and return an object in this model of the specified type with a
+        /// compatible description.  Descriptions may be the object name, a string
+        /// containing the numeric ID or just the numeric ID itself.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="description"></param>
+        /// <returns></returns>
+        public ModelObject GetByDescription(Type type, string description)
+        {
+            var table = GetTableFor(type);
+            ModelObject result = table.FindByName(description);
+            if (result != null) return result;
+            string numericIDString = description.TrimNonNumeric();
+            if (!string.IsNullOrWhiteSpace(numericIDString))
+            {
+                long numericID = numericIDString.ToLong();
+                result = table.GetByNumericID(numericID);
+            }
+            return result;
         }
 
         /// <summary>

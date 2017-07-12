@@ -1,4 +1,5 @@
-﻿using Nucleus.Extensions;
+﻿using Nucleus.Base;
+using Nucleus.Extensions;
 using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
@@ -148,6 +149,111 @@ namespace Nucleus.Model
         {
             get { return Vertices.CombinedValue(i => i.NodalOffset().Z, double.NaN, double.NaN); }
             set { foreach (Vertex v in Vertices) v.SetPositionByNodalOffset(v.NodalOffset().WithZ(value)); }
+        }
+
+        /// <summary>
+        /// The releases of the vertex
+        /// </summary>
+        public Bool6D Releases
+        {
+            get { return Vertices.CombinedValue(i => (Bool6D)i.GetData<VertexReleases>()?.Releases, new Bool6D(false), new Bool6D(false)); }
+            set { foreach (var v in Vertices) v.GetData<VertexReleases>(true).Releases = value; }
+        }
+
+        /// <summary>
+        /// The translational release of this vertex in the x-axis
+        /// </summary>
+        public bool Release_X
+        {
+            get { return Vertices.CombinedValue(i => (bool)i.GetData<VertexReleases>()?.Releases.X, false, false); }
+            set
+            {
+                foreach (var v in Vertices)
+                {
+                    VertexReleases vR = v.GetData<VertexReleases>(true);
+                    vR.Releases = vR.Releases.WithX(value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// The translational release of this vertex in the y-axis
+        /// </summary>
+        public bool Release_Y
+        {
+            get { return Vertices.CombinedValue(i => (bool)i.GetData<VertexReleases>()?.Releases.Y, false, false); }
+            set
+            {
+                foreach (var v in Vertices)
+                {
+                    VertexReleases vR = v.GetData<VertexReleases>(true);
+                    vR.Releases = vR.Releases.WithY(value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// The translational release of this vertex in the z-axis
+        /// </summary>
+        public bool Release_Z
+        {
+            get { return Vertices.CombinedValue(i => (bool)i.GetData<VertexReleases>()?.Releases.Z, false, false); }
+            set
+            {
+                foreach (var v in Vertices)
+                {
+                    VertexReleases vR = v.GetData<VertexReleases>(true);
+                    vR.Releases = vR.Releases.WithZ(value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// The rotational release of this vertex about the x-axis
+        /// </summary>
+        public bool Release_XX
+        {
+            get { return Vertices.CombinedValue(i => (bool)i.GetData<VertexReleases>()?.Releases.XX, false, false); }
+            set
+            {
+                foreach (var v in Vertices)
+                {
+                    VertexReleases vR = v.GetData<VertexReleases>(true);
+                    vR.Releases = vR.Releases.WithXX(value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// The rotational release of this vertex about the y-axis
+        /// </summary>
+        public bool Release_YY
+        {
+            get { return Vertices.CombinedValue(i => (bool)i.GetData<VertexReleases>()?.Releases.YY, false, false); }
+            set
+            {
+                foreach (var v in Vertices)
+                {
+                    VertexReleases vR = v.GetData<VertexReleases>(true);
+                    vR.Releases = vR.Releases.WithYY(value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// The rotational release of this vertex about the z-axis
+        /// </summary>
+        public bool Release_ZZ
+        {
+            get { return Vertices.CombinedValue(i => (bool)i.GetData<VertexReleases>()?.Releases.ZZ, false, false); }
+            set
+            {
+                foreach (var v in Vertices)
+                {
+                    VertexReleases vR = v.GetData<VertexReleases>(true);
+                    vR.Releases = vR.Releases.WithZZ(value);
+                }
+            }
         }
 
         #endregion

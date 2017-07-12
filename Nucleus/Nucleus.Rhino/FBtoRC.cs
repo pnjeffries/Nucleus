@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RC = Rhino.Geometry;
 using R = Rhino;
+using Nucleus.Model;
 
 namespace Nucleus.Rhino
 {
@@ -214,6 +215,21 @@ namespace Nucleus.Rhino
         }
 
         /// <summary>
+        /// Convert a list of Nucleus curves to a list of Rhino common curves
+        /// </summary>
+        /// <param name="curves"></param>
+        /// <returns></returns>
+        public static IList<RC.Curve> Convert(IList<Curve> curves)
+        {
+            var result = new List<RC.Curve>();
+            foreach (Curve crv in curves)
+            {
+                result.Add(Convert(crv));
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Convert a Nucleus PlanarSurface into a Rhino BRep
         /// </summary>
         /// <param name="surface"></param>
@@ -235,6 +251,70 @@ namespace Nucleus.Rhino
                 RC.Brep[] result = RC.Brep.CreatePlanarBreps(rCrvs);
                 if (result.Length > 0) return result[0];
              }
+            return null;
+        }
+
+        /// <summary>
+        /// Convert a Nucleus Linear Element to a Rhino Extrusion, if possible
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public static RC.Extrusion ConvertToExtrusion(LinearElement element)
+        {
+            Curve perimeter = element?.Family?.Profile?.Perimeter;
+            CurveCollection voids = element?.Family?.Profile?.Voids;
+            if (perimeter != null && element.Geometry != null)
+            {
+                RC.Curve profile = Convert(perimeter);
+                var cSystem = element.Geometry.LocalCoordinateSystem(0, element.Orientation);
+                if (element.Geometry is Line)
+                {
+                    //If a line, create an extrusion:
+                    RC.Extrusion ext = new RC.Extrusion();
+                    ext.SetPathAndUp(
+                        Convert(element.Geometry.StartPoint), Convert(element.Geometry.EndPoint),
+                        ConvertVector(cSystem.Z));
+                    ext.SetOuterProfile(profile, true);
+                    if (voids != null)
+                    {
+                        var voidCrvs = Convert(voids);
+                        foreach (var rCrv in voidCrvs) ext.AddInnerProfile(rCrv);
+                    }
+                    //RC.Surface surface = RC.Extrusion.CreateExtrusion(profile, new RC.Vector3d(Convert(element.End.Position - element.Start.Position)));
+                    return ext;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Convert a LinearElement to a Rhino Brep
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public static RC.Brep ConvertToBrep(LinearElement element)
+        {
+            if (element.Geometry is Line)
+            {
+                return ConvertToExtrusion(element).ToBrep();
+            }
+            else
+            {
+                Curve perimeter = element?.Family?.Profile?.Perimeter;
+                CurveCollection voids = element?.Family?.Profile?.Voids;
+                if (perimeter != null && element.Geometry != null)
+                {
+                    //TODO: Deal with voids!
+
+                    RC.Curve profile = Convert(perimeter);
+                    var cSystem = element.Geometry.LocalCoordinateSystem(0, element.Orientation);
+
+                    RC.Plane startPlane = Convert(cSystem.YZPlane());
+                    profile.Transform(RC.Transform.PlaneToPlane(RC.Plane.WorldXY, startPlane));
+                    RC.Brep[] breps = RC.Brep.CreateFromSweep(Convert(element.Geometry), profile, false, 0.001); //TODO: Change tolerance
+                    if (breps.Length > 0) return breps[0];
+                }
+            }
             return null;
         }
 

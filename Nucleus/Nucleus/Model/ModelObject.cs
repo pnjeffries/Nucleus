@@ -252,5 +252,22 @@ namespace Nucleus.Model
 
             return result;
         }
+
+        /// <summary>
+        /// Find and return from this set of model objects the one with the specified numeric ID
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="enumerable"></param>
+        /// <param name="numericID"></param>
+        /// <returns></returns>
+        public static T GetByNumericID<T>(this IEnumerable<T> enumerable, long numericID)
+            where T : ModelObject
+        {
+            foreach (T mObj in enumerable)
+            {
+                if (mObj.NumericID == numericID) return mObj;
+            }
+            return null;
+        }
     }
 }

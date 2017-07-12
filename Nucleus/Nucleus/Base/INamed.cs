@@ -52,7 +52,7 @@ namespace Nucleus.Base
         /// <param name="collection"></param>
         /// <param name="name">The name of the item to find.  Not case sensitive.</param>
         /// <returns>The first encountered item in this collection with the given name.</returns>
-        public static TItem FindByName<TItem> (this ICollection<TItem> collection, string name) where TItem: class, INamed
+        public static TItem FindByName<TItem> (this IEnumerable<TItem> collection, string name) where TItem: class, INamed
         {
             foreach (TItem item in collection)
             {
@@ -69,7 +69,7 @@ namespace Nucleus.Base
         /// <param name="separator"></param>
         /// <param name="nullReplacement"></param>
         /// <returns></returns>
-        public static string ToNames<TItem>(this ICollection<TItem> collection, string separator = ", ", string nullReplacement = "")
+        public static string ToNames<TItem>(this IEnumerable<TItem> collection, string separator = ", ", string nullReplacement = "")
             where TItem: INamed
         {
             var sb = new StringBuilder();

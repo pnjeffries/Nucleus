@@ -110,7 +110,7 @@ namespace Nucleus.Extensions
 
         /// <summary>
         /// Convert this string to a double.  If the conversion cannot be made,
-        /// the specified fallback value (default: NaN) will be retured.
+        /// the specified fallback value (default: NaN) will be returned.
         /// </summary>
         /// <param name="str"></param>
         /// <param name="fallbackValue">The value to be returned in the case that this string
@@ -123,6 +123,36 @@ namespace Nucleus.Extensions
             {
                 return result;
             }
+            else return fallbackValue;
+        }
+
+        /// <summary>
+        /// Convert this string to an integer.  If the conversion cannot be made,
+        /// the specified fallback value (default: 0) will be returned.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="fallbackValue">The value to be returned in the case that this string
+        /// cannot be successfully parsed into an integer</param>
+        /// <returns></returns>
+        public static int ToInteger(this string str, int fallbackValue = 0)
+        {
+            int result;
+            if (int.TryParse(str, out result)) return result;
+            else return fallbackValue;
+        }
+
+        /// <summary>
+        /// Convert this string to a Long.  If the conversion cannot be made,
+        /// the specified fallback value (default: 0) will be returned.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="fallbackValue">The value to be returned in the case that this string
+        /// cannot be successfully parsed into a long</param>
+        /// <returns></returns>
+        public static long ToLong(this string str, long fallbackValue = 0)
+        {
+            long result;
+            if (long.TryParse(str, out result)) return result;
             else return fallbackValue;
         }
 

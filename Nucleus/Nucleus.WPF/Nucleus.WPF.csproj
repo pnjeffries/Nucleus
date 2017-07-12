@@ -64,6 +64,7 @@
     <Compile Include="Converters\ModelTableConverter.cs" />
     <Compile Include="Converters\MultiplicationConverter.cs" />
     <Compile Include="Converters\NaNToBlankConverter.cs" />
+    <Compile Include="Converters\NumericIDConverter.cs" />
     <Compile Include="Converters\RadiansDegreesConverter.cs" />
     <Compile Include="Converters\TextConverter.cs" />
     <Compile Include="Converters\TreeViewLineConverter.cs" />
