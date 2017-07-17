@@ -36,7 +36,23 @@ namespace Nucleus.Geometry
     [CollectionCopy(CopyBehaviour.DUPLICATE, CopyBehaviour.DUPLICATE)]
     public class VertexCollection : OwnedCollection<Vertex, VertexGeometry>
     {
-        
+        #region Properties
+
+        /// <summary>
+        /// Do any of the vertices in this collection have non-zero nodal offsets?
+        /// </summary>
+        public bool HasNodalOffsets
+        {
+            get
+            {
+                foreach (Vertex v in this)
+                    if (!v.NodalOffset().IsZero()) return true;
+                return false;
+            }
+        }
+
+        #endregion
+
         #region Constructors
 
         /// <summary>

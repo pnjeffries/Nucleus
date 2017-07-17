@@ -376,6 +376,30 @@ namespace Nucleus.Rhino
         }
 
         /// <summary>
+        /// Is the specified object currently visible?
+        /// </summary>
+        /// <param name="objID"></param>
+        /// <returns></returns>
+        public static bool ObjectVisible(Guid objID)
+        {
+            RhinoObject obj = GetObject(objID);
+            if (obj != null && !obj.IsHidden) return true;
+            else return false;
+        }
+
+        /// <summary>
+        /// Is the specified object currently selected?
+        /// </summary>
+        /// <param name="objID"></param>
+        /// <returns></returns>
+        public static bool ObjectSelected(Guid objID)
+        {
+            RhinoObject obj = GetObject(objID);
+            if (obj != null && obj.IsSelected(false) > 0) return true; //TODO: Check docs
+            else return false;
+        }
+
+        /// <summary>
         /// Delete an object from the Rhino document
         /// </summary>
         /// <param name="objID"></param>

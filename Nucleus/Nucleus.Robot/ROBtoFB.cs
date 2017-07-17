@@ -24,6 +24,17 @@ namespace Nucleus.Robot
             return new Vector(pt.X, pt.Y, pt.Z);
         }
 
+
+        /// <summary>
+        /// Convert a Robot bar end offset into a Nucleus Vector 
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        public static Vector Convert(RobotBarEndOffsetData offset)
+        {
+            return new Vector(offset.UX, offset.UY, offset.UZ);
+        }
+
         /// <summary>
         /// Convert a collection of Robot 3D points to a Nucleus Vector array
         /// </summary>
@@ -116,16 +127,6 @@ namespace Nucleus.Robot
         }
 
         /// <summary>
-        /// Convert a Robot bar end offset into a Nucleus Vector 
-        /// </summary>
-        /// <param name="offset"></param>
-        /// <returns></returns>
-        public static Vector Convert(IRobotBarEndOffsetData offset)
-        {
-            return new Vector(offset.UX, offset.UY, offset.UZ);
-        }
-
-        /// <summary>
         /// Convert a Robot node to a Nucleus one
         /// </summary>
         /// <param name="node"></param>
@@ -186,6 +187,5 @@ namespace Nucleus.Robot
             }
             return result;
         }
-        
     }
 }

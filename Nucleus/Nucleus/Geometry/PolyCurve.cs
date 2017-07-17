@@ -266,7 +266,8 @@ namespace Nucleus.Geometry
                     start = onPlane.GlobalToLocal(start);
                     end = onPlane.GlobalToLocal(end);
                 }
-                result += MathsHelper.AreaUnder(start.X, start.Y, end.X, end.Y, ref centroid);
+                double areaUnder = MathsHelper.AreaUnder(start.X, start.Y, end.X, end.Y, ref centroid);
+                result += areaUnder;
                 Vector subCentroid;
                 double subArea = subCrv.CalculateEnclosedArea(out subCentroid, onPlane);
                 result += subArea;

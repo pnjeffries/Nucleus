@@ -317,7 +317,7 @@ namespace Nucleus.Robot
                         string sectionID = bar.GetLabelName(IRobotLabelType.I_LT_BAR_SECTION);
                         element.Family = context.IDMap.GetMappedSectionFamily(sectionID, model);
                     }
-                    //TODO: Copy over data
+                    //TODO: Copy over more data
 
                     //Store mapping:
                     context.IDMap.Add(element, bar);
@@ -651,6 +651,33 @@ namespace Nucleus.Robot
             //return Robot.Project.Structure.Objects.Create(id);
         }
 
+        public IRobotLabel GetOffset(Vector start, Vector end)
+        {
+            if (start.IsZero() && end.IsZero()) return null;
+            else
+            {
+                int hash = start.GetHashCode() ^ end.GetHashCode();
+                RobotLabelServer labels = Robot.Project.Structure.Labels;
+                string name = hash.ToString();
+                if (labels.Exist(IRobotLabelType.I_LT_BAR_OFFSET, name) != 0)
+                {
+                    return labels.Get(IRobotLabelType.I_LT_BAR_OFFSET, name);
+                }
+                else
+                {
+                    IRobotLabel label = labels.Create(IRobotLabelType.I_LT_BAR_OFFSET, name);
+                    RobotBarOffsetData data = label.Data;
+                    data.Start.UX = start.X;
+                    data.Start.UY = start.Y;
+                    data.Start.UZ = start.Z;
+                    data.End.UX = end.X;
+                    data.End.UY = end.Y;
+                    data.End.UZ = end.Z;
+                    return label;
+                }
+            }
+        }
+
         /// <summary>
         /// Get (or create) the Robot support label that describes the given fixity conditions
         /// </summary>
@@ -772,6 +799,15 @@ namespace Nucleus.Robot
                 if (element.Family != null)
                 {
                     bar.SetLabel(IRobotLabelType.I_LT_BAR_SECTION, this.GetMappedSectionID(element.Family, context));
+                }
+                if (element.Geometry != null && element.Geometry.Vertices.HasNodalOffsets)
+                {
+                    IRobotLabel offsets = GetOffset(element.Start.Offset, element.End.Offset);
+                    bar.SetLabel(IRobotLabelType.I_LT_BAR_OFFSET, offsets.Name);
+                }
+                else
+                {
+                    bar.RemoveLabel(IRobotLabelType.I_LT_BAR_OFFSET);
                 }
                 //TODO: More data
 
