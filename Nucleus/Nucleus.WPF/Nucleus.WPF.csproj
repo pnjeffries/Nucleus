@@ -130,6 +130,7 @@
     <Compile Include="Field Controls\SliderFieldControl.xaml.cs">
       <DependentUpon>SliderFieldControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RotatableViewport3D.cs" />
     <Compile Include="SelectItemsDialog.xaml.cs">
       <DependentUpon>SelectItemsDialog.xaml</DependentUpon>
     </Compile>
