@@ -256,6 +256,7 @@ namespace Nucleus.WPF
                     indices.Add(face[i + 2].Number);
                 }
             }
+            result.TriangleIndices = indices;
             return result;
         }
 

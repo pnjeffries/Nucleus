@@ -12,7 +12,7 @@ namespace Nucleus.Maths
     /// A set of named data to be displayed in a spider diagram
     /// </summary>
     [Serializable]
-    public class DiagramData : Named
+    public class NamedDataSet : Named
     {
         #region Properties
 
@@ -51,7 +51,7 @@ namespace Nucleus.Maths
         /// <summary>
         /// Parameterless constructor
         /// </summary>
-        internal DiagramData()
+        public NamedDataSet()
         {
             _Data = new Dictionary<string, Interval>();
         }
@@ -61,7 +61,7 @@ namespace Nucleus.Maths
         /// </summary>
         /// <param name="name"></param>
         /// <param name="data"></param>
-        public DiagramData(string name, IDictionary<string, Interval> data) : base(name)
+        public NamedDataSet(string name, IDictionary<string, Interval> data) : base(name)
         {
             _Data = data;
         }
@@ -71,7 +71,7 @@ namespace Nucleus.Maths
         /// </summary>
         /// <param name="name"></param>
         /// <param name="data"></param>
-        public DiagramData(string name, IDictionary<string, Interval> data, Colour colour) : this(name, data)
+        public NamedDataSet(string name, IDictionary<string, Interval> data, Colour colour) : this(name, data)
         {
             _Colour = colour;
         }
@@ -83,7 +83,7 @@ namespace Nucleus.Maths
         /// </summary>
         /// <param name="name"></param>
         /// <param name="data"></param>
-        public DiagramData(string name, IDictionary<string, double> data) : base(name)
+        public NamedDataSet(string name, IDictionary<string, double> data) : base(name)
         {
             _Data = new Dictionary<string, Interval>();
             foreach (KeyValuePair<string, double> kvp in data)
@@ -99,7 +99,7 @@ namespace Nucleus.Maths
         /// </summary>
         /// <param name="name"></param>
         /// <param name="data"></param>
-        public DiagramData(string name, IDictionary<string, double> data, Colour colour) : this(name, data)
+        public NamedDataSet(string name, IDictionary<string, double> data, Colour colour) : this(name, data)
         {
             _Colour = Colour;
         }
@@ -108,7 +108,7 @@ namespace Nucleus.Maths
         /// Instantiate a new blank DiagramData with the specified name
         /// </summary>
         /// <param name="name"></param>
-        public DiagramData(string name) : base(name)
+        public NamedDataSet(string name) : base(name)
         {
             _Data = new Dictionary<string, Interval>();
         }
@@ -117,11 +117,12 @@ namespace Nucleus.Maths
         /// Instantiate a new blank DiagramData with the specified name
         /// </summary>
         /// <param name="name"></param>
-        public DiagramData(string name, Colour colour) : this(name)
+        public NamedDataSet(string name, Colour colour) : this(name)
         {
             _Colour = colour;
         }
 
         #endregion
     }
+
 }

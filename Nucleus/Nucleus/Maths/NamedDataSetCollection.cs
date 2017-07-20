@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 namespace Nucleus.Maths
 {
     /// <summary>
-    /// A collection of diagram data
+    /// A collection of named data sets
     /// </summary>
-    public class DiagramDataCollection : ObservableKeyedCollection<string, DiagramData>
+    public class NamedDataSetCollection<T> : ObservableKeyedCollection<string, T>, INamedDataSetCollection
+        where T : NamedDataSet
     {
-        protected override string GetKeyForItem(DiagramData item)
+        protected override string GetKeyForItem(T item)
         {
             return item.Name;
         }
@@ -36,4 +37,10 @@ namespace Nucleus.Maths
             return result.ToList();
         }
     }
+
+    /// <summary>
+    /// A collection of named data sets
+    /// </summary>
+    public class NamedDataSetCollection : NamedDataSetCollection<NamedDataSet>
+    { }
 }

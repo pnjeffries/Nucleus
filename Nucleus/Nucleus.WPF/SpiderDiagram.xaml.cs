@@ -1,5 +1,7 @@
-﻿using Nucleus.Maths;
+﻿using Nucleus.Base;
+using Nucleus.Maths;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -39,15 +41,15 @@ namespace Nucleus.WPF
         /// Data dependency property
         /// </summary>
         public static DependencyProperty SourceDataProperty =
-            DependencyProperty.Register("SourceData", typeof(DiagramDataCollection), typeof(SpiderDiagram),
+            DependencyProperty.Register("SourceData", typeof(INamedDataSetCollection), typeof(SpiderDiagram),
                 new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, null, new CoerceValueCallback(OnSourceDataChanged)));
 
         /// <summary>
-        /// The data to display
+        /// The data to display.  Should be a collection of NamedDataSets or derivative types
         /// </summary>
-        public DiagramDataCollection SourceData
+        public INamedDataSetCollection SourceData
         {
-            get { return (DiagramDataCollection)GetValue(SourceDataProperty); }
+            get { return (INamedDataSetCollection)GetValue(SourceDataProperty); }
             set { SetValue(SourceDataProperty, value); }
         }
 
@@ -116,7 +118,7 @@ namespace Nucleus.WPF
                     MainCanvas.Children.Add(tB);
                 }
 
-                foreach (var dataSet in SourceData)
+                foreach (NamedDataSet dataSet in SourceData)
                 {
                     Polygon pgon = new Polygon();
                     Color color = FBtoWPF.Convert(dataSet.Colour);
@@ -146,8 +148,6 @@ namespace Nucleus.WPF
 
                         Point point = new Point(Math.Sin(angle) * value, -Math.Cos(angle) * value);
                         outerPts.Add(point);
-
-                        
                     }
                     pgon.Points = outerPts;
 

@@ -64,8 +64,9 @@
     <Compile Include="IO\DocumentSaveFileType.cs" />
     <Compile Include="IO\TypeFieldsFormat.cs" />
     <Compile Include="IO\UniqueFormatter.cs" />
-    <Compile Include="Maths\DiagramData.cs" />
-    <Compile Include="Maths\DiagramDataCollection.cs" />
+    <Compile Include="Maths\INamedDataSetCollection.cs" />
+    <Compile Include="Maths\NamedDataSet.cs" />
+    <Compile Include="Maths\NamedDataSetCollection.cs" />
     <Compile Include="Maths\MathsHelper.cs" />
     <Compile Include="Model\BuildUpFamilyCollection.cs" />
     <Compile Include="Model\BuildUpLayer.cs" />

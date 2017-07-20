@@ -50,7 +50,8 @@ namespace Nucleus.WPF
         }
 
         private ScaleTransform3D _CameraZoom = new ScaleTransform3D();
-        private AxisAngleRotation3D _CameraRotation = new AxisAngleRotation3D();
+        private AxisAngleRotation3D _CameraRotation = new AxisAngleRotation3D(new Vector3D(1,0,0), 45);
+        private TranslateTransform3D _CameraPosition = new TranslateTransform3D();
         private Transform3DGroup _CameraTransform = null;
 
         /// <summary>
@@ -64,6 +65,7 @@ namespace Nucleus.WPF
                 if (_CameraTransform == null)
                 {
                     _CameraTransform = new Transform3DGroup();
+                    //_CameraTransform.Children.Add(_CameraPosition);
                     _CameraTransform.Children.Add(_CameraZoom);
                     _CameraTransform.Children.Add(new RotateTransform3D(_CameraRotation));
                 }
@@ -83,6 +85,7 @@ namespace Nucleus.WPF
                 oldValue.MouseDown -= _TrackPad_MouseDown;
                 oldValue.MouseUp -= _TrackPad_MouseUp;
                 oldValue.MouseMove -= _TrackPad_MouseMove;
+                oldValue.MouseWheel -= _TrackPad_MouseWheel;
             }
 
             if (newValue != null)
@@ -91,6 +94,7 @@ namespace Nucleus.WPF
                 newValue.MouseDown += _TrackPad_MouseDown;
                 newValue.MouseUp += _TrackPad_MouseUp;
                 newValue.MouseMove += _TrackPad_MouseMove;
+                newValue.MouseWheel += _TrackPad_MouseWheel;
             }
         }
 
@@ -127,8 +131,16 @@ namespace Nucleus.WPF
                 _CameraRotation.Axis = orientation.Axis;
                 _CameraRotation.Angle = orientation.Angle;
 
-                
             }
+        }
+
+        private void ZoomView(double dZ)
+        {
+            double scale = Math.Exp(dZ / 1000);
+
+            _CameraZoom.ScaleX *= scale;
+            _CameraZoom.ScaleY *= scale;
+            _CameraZoom.ScaleZ *= scale;
         }
 
         #endregion
@@ -142,8 +154,14 @@ namespace Nucleus.WPF
                 Point screenPosition = e.GetPosition(TrackPad);
                 Vector3D position3D = ScreenTo3D(screenPosition);
 
-
-                RotateView(position3D);
+                if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+                {
+                    ZoomView((screenPosition.Y - _StartScreenPosition.Y)*10);
+                }
+                else
+                {
+                    RotateView(position3D);
+                }
 
                 _StartScreenPosition = screenPosition;
                 _Start3DPosition = position3D;
@@ -163,6 +181,11 @@ namespace Nucleus.WPF
             // Store the starting position:
             _StartScreenPosition = e.GetPosition(TrackPad);
             _Start3DPosition = ScreenTo3D(_StartScreenPosition);
+        }
+
+        private void _TrackPad_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            ZoomView(-e.Delta);
         }
 
         #endregion

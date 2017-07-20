@@ -103,7 +103,7 @@
                     
                     <fb:RotatableViewport3D TrackPad="{Binding ElementName=TrackPad}">
                             <fb:RotatableViewport3D.Camera>
-                                <PerspectiveCamera Position="10,10,10" LookDirection="-10,-10,-10" UpDirection="0,0,1"
+                                <PerspectiveCamera Position="0,0,10"  LookDirection="0,0,-1"
                                            Transform="{Binding Path=CameraTransform, 
                             RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type fb:RotatableViewport3D}}}">
                                 </PerspectiveCamera>

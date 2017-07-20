@@ -64,6 +64,7 @@
     <Compile Include="Converters\GreaterThanConverter.cs" />
     <Compile Include="Converters\IntConverter.cs" />
     <Compile Include="Converters\IsTypeConverter.cs" />
+    <Compile Include="Converters\MeshConverter.cs" />
     <Compile Include="Converters\ModelTableConverter.cs" />
     <Compile Include="Converters\MultiplicationConverter.cs" />
     <Compile Include="Converters\NaNToBlankConverter.cs" />
