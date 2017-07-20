@@ -960,7 +960,7 @@ namespace Nucleus.Robot
                     data.SetValue(IRobotBarSectionDataValue.I_BSDV_TF, rProfile.FlangeThickness);
                     data.SetValue(IRobotBarSectionDataValue.I_BSDV_TW, rProfile.WebThickness);*/
                     RobotBarSectionNonstdData nsdata = data.CreateNonstd(0);
-                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_H, rProfile.Depth - rProfile.FlangeThickness*2);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_H, rProfile.Depth - rProfile.FlangeThickness * 2);
                     nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_B, rProfile.Width);
                     nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_TF, rProfile.FlangeThickness);
                     nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_TW, rProfile.WebThickness);
@@ -996,8 +996,25 @@ namespace Nucleus.Robot
                     RobotBarSectionNonstdData nsdata = data.CreateNonstd(0);
                     nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D, cProfile.Diameter);
                 }
+                else if (profile is AngleProfile) //I Section
+                {
+                    var rProfile = (SymmetricIProfile)profile;
+                    data.Type = IRobotBarSectionType.I_BST_NS_L;
+                    data.ShapeType = IRobotBarSectionShapeType.I_BSST_UUAP
+                    /*data.SetValue(IRobotBarSectionDataValue.I_BSDV_D, rProfile.Depth);
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_BF, rProfile.Width);
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_TF, rProfile.FlangeThickness);
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_TW, rProfile.WebThickness);
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_RA, rProfile.RootRadius); //???
+                    */
+                    RobotBarSectionNonstdData nsdata = data.CreateNonstd(0);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H, rProfile.Depth - rProfile.FlangeThickness * 2);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B, rProfile.Width);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF, rProfile.FlangeThickness);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW, rProfile.WebThickness);
+                }
                 //TODO: Offset?
-                
+
             }
         }
 
@@ -1049,6 +1066,17 @@ namespace Nucleus.Robot
                 var cProfile = new CircularProfile();
                 cProfile.Diameter = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
                 result = cProfile;
+            }
+            else if (equivalent == typeof(AngleProfile))
+            {
+                var angleProfile = new AngleProfile();
+                angleProfile.Depth = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
+                angleProfile.Width = data.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
+                angleProfile.FlangeThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TF);
+                angleProfile.WebThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TW);
+                //TODO: Fillet radius
+                angleProfile.RootRadius = data.GetValue(IRobotBarSectionDataValue.I_BSDV_RA); //????
+                result = angleProfile;
             }
 
             if (data.Type == IRobotBarSectionType.I_BST_STANDARD)

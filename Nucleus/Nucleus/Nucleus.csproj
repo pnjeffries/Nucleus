@@ -128,6 +128,7 @@
     <Compile Include="Model\ModelObjectSetTable.cs" />
     <Compile Include="Model\MultiElementVertex.cs" />
     <Compile Include="Model\PointElement.cs" />
+    <Compile Include="Model\SectionProfiles\ChannelProfile.cs" />
     <Compile Include="Model\SetFilterBase.cs" />
     <Compile Include="Model\UserCoordinateSystemReference.cs" />
     <Compile Include="Geometry\VertexRule.cs" />
