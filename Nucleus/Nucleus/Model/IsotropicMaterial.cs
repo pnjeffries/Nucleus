@@ -14,20 +14,6 @@ namespace Nucleus.Model
     {
         #region Properties
 
-        /// <summary>
-        /// Private backing field for Density property
-        /// </summary>
-        private double _Density = 0;
-
-        /// <summary>
-        /// The density, or mass per unit volume, of the material.
-        /// In kg/m^3
-        /// </summary>
-        public double Density
-        {
-            get { return _Density; }
-            set { ChangeProperty(ref _Density, value, "Density"); }
-        }
 
         #endregion
 

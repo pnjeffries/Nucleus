@@ -48,6 +48,16 @@ namespace Nucleus.Rhino
         }
 
         /// <summary>
+        /// Convert a system Color to a Nucleus Colour
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        public static Colour Convert(System.Drawing.Color color)
+        {
+            return new Colour(color.A, color.R, color.G, color.B);
+        }
+
+        /// <summary>
         /// Convert a Rhino vector to a Nucleus one.
         /// This is assumed to be unitless and will *not* automatically be
         /// converted into the current Rhino units.

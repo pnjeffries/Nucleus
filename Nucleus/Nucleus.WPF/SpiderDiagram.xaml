@@ -5,13 +5,23 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Nucleus.WPF"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             >
     <Grid Name="LayoutRoot">
-        <Canvas>
-            <Ellipse Width="200" Height="200" Stroke="Black" StrokeThickness="1" Opacity="0.6" Canvas.Top="-100" Canvas.Left="-100"/>
-            <Ellipse Width="150" Height="150" Stroke="Black" StrokeThickness="1" Opacity="0.3" Canvas.Top="-75" Canvas.Left="-75"/>
-            <Ellipse Width="100" Height="100" Stroke="Black" StrokeThickness="1" Opacity="0.3" Canvas.Top="-50" Canvas.Left="-50"/>
-            <Ellipse Width="50" Height="50" Stroke="Black" StrokeThickness="1" Opacity="0.3" Canvas.Top="-25" Canvas.Left="-25"/>
-        </Canvas>
+        <Viewbox>
+            <Grid Width="225" Height="225">
+                <!--Background-->
+                <Canvas Width="0" Height="0">
+                    <Ellipse Width="200" Height="200" Stroke="Black" StrokeThickness="1" Opacity="0.6" Canvas.Top="-100" Canvas.Left="-100"/>
+                    <Ellipse Width="150" Height="150" Stroke="Black" StrokeThickness="1" Opacity="0.3" Canvas.Top="-75" Canvas.Left="-75"/>
+                    <Ellipse Width="100" Height="100" Stroke="Black" StrokeThickness="1" Opacity="0.3" Canvas.Top="-50" Canvas.Left="-50"/>
+                    <Ellipse Width="50" Height="50" Stroke="Black" StrokeThickness="1" Opacity="0.3" Canvas.Top="-25" Canvas.Left="-25"/>
+                    <Ellipse Width="2" Height="2" Stroke="Black" StrokeThickness="2" Opacity="0.6" Canvas.Top="-1" Canvas.Left="-1"/>
+                </Canvas>
+                <!--Foreground-->
+                <Canvas Width="0" Height="0" Name="MainCanvas">
+                    
+                </Canvas>
+            </Grid>
+        </Viewbox>
     </Grid>
 </UserControl>

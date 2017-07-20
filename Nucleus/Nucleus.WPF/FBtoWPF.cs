@@ -30,6 +30,16 @@ namespace Nucleus.WPF
         }
 
         /// <summary>
+        /// Convert a Nucleus vertex to a WPF Point3D
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static Media.Media3D.Point3D Convert(Vertex v)
+        {
+            return new Media.Media3D.Point3D(v.X, v.Y, v.Z);
+        }
+
+        /// <summary>
         /// Convert a Nucleus colour to a WPF color
         /// </summary>
         /// <param name="col">The colour to be converterd</param>
@@ -218,6 +228,36 @@ namespace Nucleus.WPF
             else if (curve is Arc) return Convert((Arc)curve);
             else if (curve is PolyCurve) return Convert((PolyCurve)curve);
             else return null;
+        }
+
+        /// <summary>
+        /// Convert a Nucleus mesh to a WPF MeshGeometry3D
+        /// </summary>
+        /// <param name="mesh"></param>
+        /// <returns></returns>
+        public static Media.Media3D.MeshGeometry3D Convert(Mesh mesh)
+        {
+            var result = new Media.Media3D.MeshGeometry3D();
+            mesh.AssignVertexNumbers();
+            var positions = new System.Windows.Media.Media3D.Point3DCollection();
+            foreach (Vertex v in mesh.Vertices)
+            {
+                positions.Add(Convert(v));
+            }
+            result.Positions = positions;
+            var indices = new Media.Int32Collection();
+            foreach (MeshFace face in mesh.Faces)
+            {
+                // Triangulate face:
+                for (int i = 0; i < face.Count - 2; i++)
+                {
+                    indices.Add(face[0].Number);
+                    indices.Add(face[i + 1].Number);
+                    indices.Add(face[i + 2].Number);
+                }
+            }
+            result.TriangleIndices = indices;
+            return result;
         }
 
 

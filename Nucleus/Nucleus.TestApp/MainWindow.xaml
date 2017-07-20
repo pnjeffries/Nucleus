@@ -17,10 +17,10 @@
                     </Grid.RowDefinitions>
                     <Border BorderBrush="Black" BorderThickness="1" Background="White">
                         <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
-                    <Viewbox>
-                        <fb:GeometryCanvas Name="DelaunayCanvas" Width="10" Height="10"
+                            <Viewbox>
+                                <fb:GeometryCanvas Name="DelaunayCanvas" Width="10" Height="10"
                                            ></fb:GeometryCanvas>
-                    </Viewbox>
+                            </Viewbox>
                         </ScrollViewer>
                     </Border>
                     <Button Grid.Row="1" Click="DelaunayButton_Click">Generate Delaunay Triangulation</Button>
@@ -47,7 +47,7 @@
                         <TextBox Name="VoronoiSeedBox"></TextBox>
                         <Button Grid.Column="1" Click="VoronoiButton_Click">Generate Voronoi Diagram</Button>
                     </Grid>
-                    
+
                 </Grid>
             </TabItem>
             <TabItem Header="DXF Reader">
@@ -81,7 +81,56 @@
                     </ListBox>
                     <Button Grid.Row="1" Grid.ColumnSpan="3" Click="DXFLoadButton_Click">Load .DXF</Button>
                 </Grid>
-                
+
+            </TabItem>
+            <TabItem Header="Spider Diagram">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Border BorderBrush="Black" BorderThickness="1" Background="White">
+                        <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
+                            <fb:SpiderDiagram Name="SpiderDiagram"></fb:SpiderDiagram>
+                        </ScrollViewer>
+                    </Border>
+
+                    <Button Grid.Row="1" Click="GenerateSpiderButton_Click">Generate Spider Diagram</Button>
+                </Grid>
+            </TabItem>
+            <TabItem Header="3D">
+                <Grid>
+                    
+                    <fb:RotatableViewport3D TrackPad="{Binding ElementName=TrackPad}">
+                            <fb:RotatableViewport3D.Camera>
+                                <PerspectiveCamera Position="0,0,10"  LookDirection="0,0,-1"
+                                           Transform="{Binding Path=CameraTransform, 
+                            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type fb:RotatableViewport3D}}}">
+                                </PerspectiveCamera>
+                            </fb:RotatableViewport3D.Camera>
+                            <ModelVisual3D>
+                                <ModelVisual3D.Content>
+                                    <DirectionalLight Direction="-3,-5,-7"/>
+                                </ModelVisual3D.Content>
+                            </ModelVisual3D>
+                            <ModelVisual3D>
+                                <ModelVisual3D.Content>
+                                    <GeometryModel3D>
+                                        <GeometryModel3D.Geometry>
+                                            <MeshGeometry3D
+                                                Positions="-0.5 -0.5 -0.5  1 -0.5 -0.5  -0.5 1 -0.5  1 1 -0.5  -0.5 -0.5 1  1 -0.5 1  -0.5 1 1  1 1 1"
+                                TriangleIndices="2 3 1  2 1 0  7 1 3  7 5 1  6 5 7  6 4 5  6 2 0  2 0 4  2 7 3  2 6 7  0 1 5  0 5 4"/>
+                                        </GeometryModel3D.Geometry>
+                                        <GeometryModel3D.Material>
+                                            <DiffuseMaterial Brush="Red">
+                                            </DiffuseMaterial>
+                                        </GeometryModel3D.Material>
+                                    </GeometryModel3D>
+                                </ModelVisual3D.Content>
+                            </ModelVisual3D>
+                        </fb:RotatableViewport3D>
+                    <Border Name="TrackPad" Background="Transparent"/>
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>

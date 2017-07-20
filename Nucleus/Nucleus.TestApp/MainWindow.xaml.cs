@@ -17,6 +17,8 @@ using Nucleus.Extensions;
 using Microsoft.Win32;
 using Nucleus.DXF;
 using Nucleus.WPF;
+using Nucleus.Maths;
+using Nucleus.Rendering;
 
 namespace Nucleus.TestApp
 {
@@ -28,6 +30,8 @@ namespace Nucleus.TestApp
         public MainWindow()
         {
             InitializeComponent();
+
+            GenerateSpider();
         }
 
         private void DelaunayButton_Click(object sender, RoutedEventArgs e)
@@ -64,7 +68,7 @@ namespace Nucleus.TestApp
             MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(verts, null, box, false);
             Dictionary<Vertex, MeshFace> voronoi = Mesh.VoronoiFromDelaunay(verts, faces);
             MeshFaceCollection outFaces = new MeshFaceCollection(voronoi.Values);
-            PolyLine rect = PolyLine.Rectangle(0,-10,10, 0);
+            PolyLine rect = PolyLine.Rectangle(0, -10, 10, 0);
             outFaces = outFaces.TrimToPolygonXY(rect.Vertices);
             outFaces = outFaces.TrimToPolygonXY(rect.Vertices); //Test duplicate edges
             VertexGeometryCollection geometry = new VertexGeometryCollection(outFaces.ExtractFaceBoundaries());
@@ -88,6 +92,60 @@ namespace Nucleus.TestApp
                 DXFCanvas.Layers = layers;
                 LayerBox.ItemsSource = layers;
             }
+        }
+
+        private void GenerateSpider()
+        {
+            Random rng = new Random();
+            //Set-up spider diagram:
+            var data = new Dictionary<string, Interval>();
+            data.Add("Daylighting", new Interval(rng.NextDouble()));
+            data.Add("Overshadowing", new Interval(rng.NextDouble()));
+            data.Add("Travel Distance", new Interval(rng.NextDouble()));
+            data.Add("Base Loads", new Interval(rng.NextDouble()));
+            data.Add("Modularity", new Interval(rng.NextDouble()));
+            data.Add("Craneage", new Interval(rng.NextDouble()));
+            var diagramData = new DiagramData("DataSet 1", data, Colour.RambollCyan);
+
+            var data2 = new Dictionary<string, Interval>();
+            data2.Add("Daylighting", new Interval(rng.NextDouble()));
+            data2.Add("Overshadowing", new Interval(rng.NextDouble()));
+            data2.Add("Travel Distance", new Interval(rng.NextDouble()));
+            data2.Add("Base Loads", new Interval(rng.NextDouble()));
+            data2.Add("Modularity", new Interval(rng.NextDouble()));
+            data2.Add("Craneage", new Interval(rng.NextDouble()));
+            var diagramData2 = new DiagramData("DataSet 2", data2, Colour.RambollLimeGreen);
+
+            var data3 = new Dictionary<string, Interval>();
+            data3.Add("Daylighting", new Interval(rng.NextDouble()));
+            data3.Add("Overshadowing", new Interval(rng.NextDouble()));
+            data3.Add("Travel Distance", new Interval(rng.NextDouble()));
+            data3.Add("Base Loads", new Interval(rng.NextDouble()));
+            data3.Add("Modularity", new Interval(rng.NextDouble()));
+            data3.Add("Craneage", new Interval(rng.NextDouble()));
+            var diagramData3 = new DiagramData("DataSet 3", data3, Colour.RambollMagenta);
+
+            var data4 = new Dictionary<string, Interval>();
+            data4.Add("Daylighting", new Interval(rng.NextDouble()));
+            data4.Add("Overshadowing", new Interval(rng.NextDouble()));
+            data4.Add("Travel Distance", new Interval(rng.NextDouble()));
+            data4.Add("Base Loads", new Interval(rng.NextDouble()));
+            data4.Add("Modularity", new Interval(rng.NextDouble()));
+            data4.Add("Craneage", new Interval(rng.NextDouble()));
+            var diagramData4 = new DiagramData("DataSet 4", data4, Colour.RambollWarmRed);
+
+
+            var diagramDataCollection = new DiagramDataCollection();
+            diagramDataCollection.Add(diagramData);
+            diagramDataCollection.Add(diagramData2);
+            diagramDataCollection.Add(diagramData3);
+            diagramDataCollection.Add(diagramData4);
+            SpiderDiagram.SourceData = diagramDataCollection;
+        }
+
+        private void GenerateSpiderButton_Click(object sender, RoutedEventArgs e)
+        {
+            GenerateSpider();
         }
     }
 }

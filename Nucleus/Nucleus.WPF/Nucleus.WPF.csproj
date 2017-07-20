@@ -64,6 +64,7 @@
     <Compile Include="Converters\GreaterThanConverter.cs" />
     <Compile Include="Converters\IntConverter.cs" />
     <Compile Include="Converters\IsTypeConverter.cs" />
+    <Compile Include="Converters\MeshConverter.cs" />
     <Compile Include="Converters\ModelTableConverter.cs" />
     <Compile Include="Converters\MultiplicationConverter.cs" />
     <Compile Include="Converters\NaNToBlankConverter.cs" />
@@ -130,6 +131,7 @@
     <Compile Include="Field Controls\SliderFieldControl.xaml.cs">
       <DependentUpon>SliderFieldControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RotatableViewport3D.cs" />
     <Compile Include="SelectItemsDialog.xaml.cs">
       <DependentUpon>SelectItemsDialog.xaml</DependentUpon>
     </Compile>
