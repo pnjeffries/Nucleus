@@ -230,6 +230,17 @@ namespace Nucleus.IO
                         var profile = (TProfile)section.Profile;
                         return string.Format("STD T({0}) {1} {2} {3} {4}", "m", profile.Depth, profile.Width, profile.WebThickness, profile.FlangeThickness);
                     }
+                    else if (section.Profile is AngleProfile)
+                    {
+                        var profile = (AngleProfile)section.Profile;
+                        return string.Format("STD A({0}) {1} {2} {3} {4}", "m", profile.Depth, profile.Width, profile.WebThickness, profile.FlangeThickness);
+                    }
+                    else if (section.Profile is ChannelProfile)
+                    {
+                        var profile = (ChannelProfile)section.Profile;
+                        //?:
+                        return string.Format("STD CH({0}) {1} {2} {3} {4}", "m", profile.Depth, profile.Width, profile.WebThickness, profile.FlangeThickness);
+                    }
                     // TODO: Other types
                 }
             }

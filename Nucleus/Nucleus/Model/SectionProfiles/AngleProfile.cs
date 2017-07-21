@@ -10,6 +10,7 @@ namespace Nucleus.Model
     /// <summary>
     /// An 'L'-shaped angle profile consisting of one flange and one web
     /// </summary>
+    [Serializable]
     public class AngleProfile : LetterProfile
     {
         #region Constructors

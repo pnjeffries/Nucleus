@@ -64,6 +64,7 @@
     <Compile Include="IO\DocumentSaveFileType.cs" />
     <Compile Include="IO\TypeFieldsFormat.cs" />
     <Compile Include="IO\UniqueFormatter.cs" />
+    <Compile Include="Maths\SimpleBeamAnalysis.cs" />
     <Compile Include="Maths\INamedDataSetCollection.cs" />
     <Compile Include="Maths\NamedDataSet.cs" />
     <Compile Include="Maths\NamedDataSetCollection.cs" />

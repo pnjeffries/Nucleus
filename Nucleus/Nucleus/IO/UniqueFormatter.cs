@@ -497,7 +497,15 @@ namespace Nucleus.IO
                 }
             }
 
-            //TODO
+            //Finally: Call OnDeserialized function on each object
+            foreach (var unique in _Uniques)
+            {
+                MethodInfo mInfo = unique.GetType().GetOnDeserializedMethod();
+                if (mInfo != null)
+                    mInfo.Invoke(unique, new object[] { new StreamingContext() });
+                //TODO: Pass in populated streamingcontext arguments?
+            }
+
             return result;
         }
 

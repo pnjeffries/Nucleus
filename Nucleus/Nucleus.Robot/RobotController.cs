@@ -1000,18 +1000,23 @@ namespace Nucleus.Robot
                 {
                     var rProfile = (SymmetricIProfile)profile;
                     data.Type = IRobotBarSectionType.I_BST_NS_L;
-                    data.ShapeType = IRobotBarSectionShapeType.I_BSST_UUAP
-                    /*data.SetValue(IRobotBarSectionDataValue.I_BSDV_D, rProfile.Depth);
-                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_BF, rProfile.Width);
-                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_TF, rProfile.FlangeThickness);
-                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_TW, rProfile.WebThickness);
-                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_RA, rProfile.RootRadius); //???
-                    */
+                    data.ShapeType = IRobotBarSectionShapeType.I_BSST_UUAP;
                     RobotBarSectionNonstdData nsdata = data.CreateNonstd(0);
-                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H, rProfile.Depth - rProfile.FlangeThickness * 2);
-                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B, rProfile.Width);
-                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF, rProfile.FlangeThickness);
-                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW, rProfile.WebThickness);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_L_H, rProfile.Depth - rProfile.FlangeThickness);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_L_B, rProfile.Width);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_L_TF, rProfile.FlangeThickness);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_L_TW, rProfile.WebThickness);
+                }
+                else if (profile is ChannelProfile)
+                {
+                    var rProfile = (ChannelProfile)profile;
+                    data.Type = IRobotBarSectionType.I_BST_NS_C;
+                    data.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_C_SHAPE;
+                    RobotBarSectionNonstdData nsdata = data.CreateNonstd(0);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_C_H, rProfile.Depth - rProfile.FlangeThickness * 2);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_C_B, rProfile.Width);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_C_TF, rProfile.FlangeThickness);
+                    nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_C_TW, rProfile.WebThickness);
                 }
                 //TODO: Offset?
 

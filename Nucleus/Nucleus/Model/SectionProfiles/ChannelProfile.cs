@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using Nucleus.Geometry;
 using Nucleus.Extensions;
 
-namespace Nucleus.Model.SectionProfiles
+namespace Nucleus.Model
 {
     /// <summary>
     /// Represents profiles shaped like a 'C' (or '[') with two flanges
     /// and a web on the left-hand side.
     /// </summary>
+    [Serializable]
     public class ChannelProfile : LetterProfile
     {
         #region Constructors
