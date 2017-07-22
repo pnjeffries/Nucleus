@@ -400,6 +400,22 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Add a new arc segment to the end of this polycurve.
+        /// The arc will run from the end of the last subcurve in this polycurve
+        /// to the specified point, following the specified tangent at its start.
+        /// This polycurve must contain at least one subcurve already in order for the
+        /// start point to be determined.
+        /// </summary>
+        /// <param name="endX">The x-coordinate of the end point of the new arc segement</param>
+        /// <param name="endY">The y-coordinate of the end point of the new arc segement</param>
+        /// <param name="endZ">The z-coordinate of the end point of the new arc segement</param>
+        /// <returns></returns>
+        public Curve AddArcTangent(Vector startTangent, double endX, double endY, double endZ = 0)
+        {
+            return AddArcTangent(startTangent, new Vector(endX, endY, endZ));
+        }
+
+        /// <summary>
         /// Close this polycurve by adding an extra line segment between end and start,
         /// if it is not already closed
         /// </summary>

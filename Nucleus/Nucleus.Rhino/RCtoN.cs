@@ -16,7 +16,7 @@ namespace Nucleus.Rhino
     /// <summary>
     /// Helper class to convert from RhinoCommon to Nucleus format
     /// </summary>
-    public static class RCtoFB
+    public static class RCtoN
     {
         /// <summary>
         /// Get the current length conversion factor from the current Rhino document units to 
@@ -45,16 +45,6 @@ namespace Nucleus.Rhino
                 return new Vector(point.X * f, point.Y * f, point.Z * f);
             }
             else return Vector.Unset;
-        }
-
-        /// <summary>
-        /// Convert a system Color to a Nucleus Colour
-        /// </summary>
-        /// <param name="color"></param>
-        /// <returns></returns>
-        public static Colour Convert(System.Drawing.Color color)
-        {
-            return new Colour(color.A, color.R, color.G, color.B);
         }
 
         /// <summary>

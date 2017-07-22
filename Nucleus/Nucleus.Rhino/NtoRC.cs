@@ -272,7 +272,7 @@ namespace Nucleus.Rhino
                     //If a line, create an extrusion:
                     RC.Extrusion ext = new RC.Extrusion();
                     ext.SetPathAndUp(
-                        Convert(element.Geometry.StartPoint), Convert(element.Geometry.EndPoint),
+                        Convert(element.Geometry.EndPoint), Convert(element.Geometry.StartPoint),
                         ConvertVector(cSystem.Z));
                     ext.SetOuterProfile(profile, true);
                     if (voids != null)

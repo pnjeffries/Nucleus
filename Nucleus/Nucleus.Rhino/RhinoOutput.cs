@@ -500,7 +500,7 @@ namespace Nucleus.Rhino
         /// <param name="path"></param>
         /// <param name="isReference"></param>
         /// <returns></returns>
-        public static int GetLayerID(string path, bool isReference = false)
+        public static int GetLayerID(string path, bool isReference = false, bool create = true)
         {
             int result = RhinoDoc.ActiveDoc.Layers.FindByFullPath(path, true);
             if (result < 0)
@@ -508,12 +508,12 @@ namespace Nucleus.Rhino
                 string[] tokens = path.Split(LAYER_SEPARATOR, StringSplitOptions.RemoveEmptyEntries);
                 string compositePath = "";
                 Guid parentID = Guid.Empty;
-                foreach (String token in tokens)
+                foreach (string token in tokens)
                 {
-                    if (!String.IsNullOrEmpty(compositePath)) compositePath += "::";
+                    if (!string.IsNullOrEmpty(compositePath)) compositePath += "::";
                     compositePath += token;
                     result = RhinoDoc.ActiveDoc.Layers.FindByFullPath(compositePath, true);
-                    if (result < 0) //Layer not found
+                    if (result < 0 && create) //Layer not found
                     {
                         Layer newLayer = new Layer();
                         newLayer.Name = token;
@@ -563,10 +563,36 @@ namespace Nucleus.Rhino
         }
 
         /// <summary>
+        /// Set the name of the layer with the specified ID.
+        /// </summary>
+        /// <param name="layerID"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static bool ChangeLayerName(int layerID, string name)
+        {
+            var layer = RhinoDoc.ActiveDoc.Layers[layerID];
+            layer.Name = name;
+            return layer.CommitChanges();
+        }
+
+        /// <summary>
+        /// Change the name of the layer at the specified path
+        /// </summary>
+        /// <param name="oldPath"></param>
+        /// <param name="newName"></param>
+        /// <returns></returns>
+        public static bool ChangeLayerName(string oldPath, string newName)
+        {
+            int layerID = GetLayerID(oldPath, false, false);
+            if (layerID >= 0) return ChangeLayerName(layerID, newName);
+            return false;
+        }
+
+        /// <summary>
         /// Set the layer of the specified object
         /// </summary>
         /// <param name="objID"></param>
-        /// <param name="layerName"></param>
+        /// <param name="layerID"></param>
         /// <param name="commit"></param>
         /// <returns></returns>
         public static bool SetObjectLayer(Guid objID, int layerID, bool commit = true)
@@ -579,6 +605,20 @@ namespace Nucleus.Rhino
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Set the layer of the specified object
+        /// </summary>
+        /// <param name="objID"></param>
+        /// <param name="layerPath"></param>
+        /// <param name="commit"></param>
+        /// <returns></returns>
+        public static bool SetObjectLayer(Guid objID, string layerPath, bool commit = true)
+        {
+            int layerID = GetLayerID(layerPath);
+            if (layerID >= 0) return SetObjectLayer(objID, layerID, commit);
+            else return false;
         }
 
         /// <summary>

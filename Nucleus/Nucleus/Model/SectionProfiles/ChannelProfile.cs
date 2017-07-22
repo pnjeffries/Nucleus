@@ -68,7 +68,7 @@ namespace Nucleus.Model
             result.AddLine(-xR, -yW); // Bottom flange top ---
             if (fR > 0) result.AddArcTangent(-Vector.UnitX, -xW, -yR); // Bottom fillet
             result.AddLine(-xW, yR); // Web Left |
-            if (fR > 0) result.AddArcTangent(Vector.UnitY, -xW, yW); // Top fillet
+            if (fR > 0) result.AddArcTangent(Vector.UnitY, -xR, yW); // Top fillet
             result.AddLine(xF, yW); // Top flange bottom
             result.AddLine(xF, yF); // Top flange right
 
