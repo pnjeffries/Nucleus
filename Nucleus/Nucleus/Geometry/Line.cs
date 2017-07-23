@@ -206,13 +206,25 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Evaluate a point on this curve a specified distance from the start or end.
+        /// </summary>
+        /// <param name="length">The length along the line </param>
+        /// <param name="fromEnd"></param>
+        /// <returns></returns>
+        public Vector PointAtLength(double length, bool fromEnd = false)
+        {
+            if (!fromEnd) return StartPoint.Interpolate(EndPoint, length / Length);
+            else return EndPoint.Interpolate(StartPoint, length / Length);
+        }
+
+        /// <summary>
         /// Generate a set of evenly-spaced points along this line
         /// by dividing it into the specified number of segments.
         /// The resulting number of points will be divisions + 1
         /// </summary>
         /// <param name="divisions"></param>
         /// <returns></returns>
-        public Vector[] Divide(int divisions)
+        public override Vector[] Divide(int divisions)
         {
             Vector[] result = new Vector[divisions + 1];
             for (int i = 0; i <= divisions; i++)

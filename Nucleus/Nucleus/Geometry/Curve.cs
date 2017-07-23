@@ -171,18 +171,6 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Evaluate a point on this curve a specified distance from the start or end.
-        /// </summary>
-        /// <param name="length">The length along the line </param>
-        /// <param name="fromEnd"></param>
-        /// <returns></returns>
-        public Vector PointAtLength(double length, bool fromEnd = false)
-        {
-            if (!fromEnd) return StartPoint.Interpolate(EndPoint, length / Length);
-            else return EndPoint.Interpolate(StartPoint, length / Length);
-        }
-
-        /// <summary>
         /// Evaluate a point defined by a parameter within a specified span.
         /// </summary>
         /// <param name="span">The index of the span.  Valid range 0 to SegmentCount - 1</param>
@@ -402,6 +390,49 @@ namespace Nucleus.Geometry
         public IList<CartesianCoordinateSystem> FacetCSystems(Angle tolerance, Angle orientation)
         {
             return FacetCSystems(tolerance, orientation, Angle.FromDegrees(1));
+        }
+
+        /// <summary>
+        /// Divide up this curve into the specified number of equal-length
+        /// segments and return the positions between those segments.
+        /// </summary>
+        /// <param name="divisions"></param>
+        /// <returns></returns>
+        public virtual Vector[] Divide(int divisions)
+        {
+            int vCount = divisions;
+            if (!Closed) vCount += 1; //Open curve
+            Vector[] result = new Vector[vCount];
+
+            double[] lengths = new double[SegmentCount];
+            double length = 0;
+            for (int i = 0; i < SegmentCount; i++)
+            {
+                double segLength = CalculateSegmentLength(i);
+                lengths[i] = segLength;
+                length += segLength;
+            }
+            double divLength = length / divisions;
+
+            double x = 0;
+            double segStartX = 0;
+            int j = 0;
+
+            result[0] = StartPoint;
+            for (int n = 1; n < vCount; n++)
+            {
+                x += divLength;
+                while (segStartX + lengths[j] < x && j < SegmentCount - 1)
+                {
+                    //Move to next segment
+                    j++;
+                    segStartX += lengths[j];
+                }
+                double t = x - segStartX / lengths[j];
+                result[n] = PointAt(j, t);
+            }
+
+            return result;
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nucleus.Geometry;
+using Nucleus.Extensions;
 
 namespace Nucleus.Model
 {
@@ -43,8 +44,26 @@ namespace Nucleus.Model
 
         protected override Curve GeneratePerimeter()
         {
-            // TODO!
-            throw new NotImplementedException();
+            double xF = Width / 2;
+            double xW = xF - WebThickness;
+            double yF = Depth / 2;
+            double yW = yF - FlangeThickness;
+            double fR = RootRadius.Limit(0, Math.Min(Width - WebThickness, Depth - FlangeThickness));
+            double xR = xW - fR;
+            double yR = yW - fR;
+
+            PolyCurve result = new PolyCurve(new Line(-xW, yF, -xF, yF)); //Top ---
+            result.AddLine(-xF, -yF); // Left |
+            result.AddLine(xF, -yF); // Bottom ---
+            result.AddLine(xF, -yW); // Bottom flange right |
+            //TODO: Toe Radius?
+            result.AddLine(-xR, -yW); // Bottom flange top ---
+            if (fR > 0) result.AddArcTangent(-Vector.UnitX, -xW, -yR); // Bottom fillet
+            result.AddLine(-xW, yF); // Web Left |
+
+            //TODO: Toe radius
+
+            return result;
         }
 
         public override string GenerateDescription()

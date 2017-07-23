@@ -68,8 +68,9 @@ namespace Nucleus.Model
         /// <summary>
         /// Create a new (or update an existing) node in the model
         /// </summary>
-        /// <param name="position"></param>
-        /// <param name="reuseTolerance"></param>
+        /// <param name="position">The position of the node</param>
+        /// <param name="reuseTolerance">The distance within which nodes will be reused.
+        /// If <= 0 a new node will always be created.</param>
         /// <param name="exInfo">Optional.  The execution information of the current action.
         /// If an object has been created previously with matching execution information then
         /// instead of creating a new item this previous one will be updated and returned instead.
@@ -108,6 +109,62 @@ namespace Nucleus.Model
             result = (LinearElement)Model.History.Update(exInfo, result);
             result.ReplaceGeometry(geometry);
             Model.Add(result);
+            return result;
+        }
+
+        /// <summary>
+        /// Create a new (or update an existing) linear element in the model.
+        /// </summary>
+        /// <param name="startPoint">The start of the element set-out line</param>
+        /// <param name="endPoint">The end of the element set-out line</param>
+        /// <param name="exInfo">Optional.  The execution information of the current action.
+        /// If an object has been created previously with matching execution information then
+        /// instead of creating a new item this previous one will be updated and returned instead.
+        /// This enables this method to be used parametrically.</param>
+        /// <returns></returns>
+        public LinearElement LinearElement(Vector startPoint, Vector endPoint, ExecutionInfo exInfo = null)
+        {
+            return LinearElement(new Line(startPoint, endPoint), exInfo);
+        }
+
+        /// <summary>
+        /// Create a new (or update an existing) linear element in the model.
+        /// </summary>
+        /// <param name="startPoint">The start of the element set-out line</param>
+        /// <param name="endPoint">The end of the element set-out line</param>
+        /// <param name="family">The section of the element</param>
+        /// <param name="exInfo">Optional.  The execution information of the current action.
+        /// If an object has been created previously with matching execution information then
+        /// instead of creating a new item this previous one will be updated and returned instead.
+        /// This enables this method to be used parametrically.</param>
+        /// <returns></returns>
+        public LinearElement LinearElement(Vector startPoint, Vector endPoint, SectionFamily family, ExecutionInfo exInfo = null)
+        {
+            var result = LinearElement(new Line(startPoint, endPoint), exInfo);
+            if (result != null) result.Family = family;
+            return result;
+        }
+
+        /// <summary>
+        /// Create a new (or update an existing) linear element in the model.
+        /// </summary>
+        /// <param name="startPoint">The start of the element set-out line</param>
+        /// <param name="endPoint">The end of the element set-out line</param>
+        /// <param name="family">The section of the element</param>
+        /// <param name="exInfo">Optional.  The execution information of the current action.
+        /// If an object has been created previously with matching execution information then
+        /// instead of creating a new item this previous one will be updated and returned instead.
+        /// This enables this method to be used parametrically.</param>
+        /// <returns></returns>
+        public LinearElement LinearElement(Node startNode, Node endNode, SectionFamily family, ExecutionInfo exInfo = null)
+        {
+            var result = LinearElement(new Line(startNode, endNode), exInfo);
+            if (result != null)
+            {
+                result.StartNode = startNode;
+                result.EndNode = endNode;
+                result.Family = family;
+            }
             return result;
         }
 
