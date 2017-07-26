@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using Nucleus.Base;
+using Nucleus.Extensions;
 using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
@@ -188,6 +189,77 @@ namespace Nucleus.Model
         /// </summary>
         public abstract double OverallWidth { get; }
 
+        /// <summary>
+        /// Private backing field for the Area property
+        /// </summary>
+        private double _Area = double.NaN;
+
+        /// <summary>
+        /// The cross-sectional area of the profile, in m².
+        /// Will be calculated automatically where necessary if not
+        /// populated manually.
+        /// </summary>
+        public double Area
+        {
+            get
+            {
+                if (double.IsNaN(_Area)) _Area = CalculateArea();
+                return _Area;
+            }
+            protected set
+            {
+                ChangeProperty(ref _Area, value, "Area");
+            }
+        }
+
+        /// <summary>
+        /// Private backing field for the Ixx property.
+        /// </summary>
+        private double _Ixx = double.NaN;
+
+        /// <summary>
+        /// The second moment of area of the profile about the major 
+        /// (X-X) axis, in m^4.
+        /// Will be calculated automatically where necessary if not
+        /// populated manually.
+        /// </summary>
+        public double Ixx
+        {
+            get
+            {
+                if (double.IsNaN(_Ixx)) _Ixx = CalculateIxx();
+                return _Ixx;
+            }
+            protected set
+            {
+                ChangeProperty(ref _Ixx, value, "Ixx");
+            }
+        }
+
+        /// <summary>
+        /// Private backing field for the Iyy property.
+        /// </summary>
+        private double _Iyy = double.NaN;
+
+        /// <summary>
+        /// The second moment of area of the profile about the minor
+        /// (Y-Y) axis, in m^4.
+        /// Will be calculated automatically where necessary if not
+        /// populated manually.
+        /// </summary>
+        public double Iyy
+        {
+            get
+            {
+                if (double.IsNaN(_Iyy)) _Iyy = CalculateIyy();
+                return _Iyy;
+            }
+            protected set
+            {
+                ChangeProperty(ref _Iyy, value, "Iyy");
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -220,20 +292,53 @@ namespace Nucleus.Model
         /// </summary>
         public virtual void InvalidateCachedGeometry()
         {
-
+            Area = double.NaN;
         }
 
-        public void CalculateGeometricProperties()
+        /// <summary>
+        /// Calculate the cross-sectional area of this profile
+        /// </summary>
+        /// <returns></returns>
+        public virtual double CalculateArea()
         {
-            //TO BE REVIEWED!
-
-            //Calculate combined area:
             Curve perimeter = Perimeter;
             if (perimeter != null && perimeter.IsValid)
             {
                 Vector centroid;
-                double area = perimeter.CalculateEnclosedArea(out centroid);
+                return perimeter.CalculateEnclosedArea(out centroid, Voids).Abs();
             }
+            else
+                return double.NaN;
+        }
+
+        /// <summary>
+        /// Calculate the second moment of area of this profile about the X-X axis
+        /// </summary>
+        /// <returns></returns>
+        public virtual double CalculateIxx()
+        {
+            Curve perimeter = Perimeter;
+            if (perimeter != null && perimeter.IsValid)
+            {
+                return perimeter.CalculateEnclosedIxx(Voids).Abs();
+            }
+            else
+                return double.NaN;
+        }
+
+        /// <summary>
+        /// Calculate the second moment of area of this profile about the Y-Y axis
+        /// </summary>
+        /// <returns></returns>
+        public virtual double CalculateIyy()
+        {
+            Curve perimeter = Perimeter;
+            if (perimeter != null && perimeter.IsValid)
+            {
+                return perimeter.CalculateEnclosedIyy(Voids).Abs();
+            }
+            else
+                return double.NaN;
         }
 
         public override string ToString()

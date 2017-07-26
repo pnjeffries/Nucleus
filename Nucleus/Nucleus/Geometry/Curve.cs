@@ -590,7 +590,22 @@ namespace Nucleus.Geometry
             return result;
         }
 
-        
+        /// <summary>
+        /// Calculate the second moment of area enclosed by this curve on a the XY plane about the
+        /// Y-axis, were the start and end points joined by a straight line segment, excluding
+        /// the void regions specififed as boundaries.
+        /// </summary>
+        /// <param name="voids">Optional.  A collection of curves which represent the boundaries of void spaces
+        /// within the perimeter of this curve.  Voids must be co-planar with and wholly within the
+        /// bounds of this curve for the calculation to be accurate.  May be null.</param>
+        /// <returns>The signed second moment of area enclosed by this curve, as a
+        /// double.</returns>
+        public double CalculateEnclosedIyy(CurveCollection voids = null)
+        {
+            Plane onPlane = Geometry.Plane.GlobalYX;
+            return CalculateEnclosedIxx(voids, onPlane);
+        }
+       
 
         public override string ToString()
         {

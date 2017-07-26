@@ -404,7 +404,21 @@ namespace Nucleus.Geometry
                 double r = Circle.Radius;
                 Vector c;
                 double a = CalculateEnclosedArea(out c, onPlane).Abs();
-                //TODO
+
+                Plane oSys = new Plane(onPlane, o);
+                Vector oS = oSys.GlobalToLocal(StartPoint);
+                Vector oE = oSys.GlobalToLocal(EndPoint);
+                Vector oM = oSys.GlobalToLocal(Vertices[1].Position);
+                Vector oC = oSys.GlobalToLocal(c);
+
+                Angle toStart = oS.Angle;
+                Angle toEnd = oE.Angle;
+                Angle toMid = oM.Angle;
+                double IxxS = SectorIxx(toStart, r);
+                double IxxE = SectorIxx(toEnd, r);
+                
+                //double IxxTri = Math.Abs()
+                    //TODO: Finish
             }
             return 0;
         }

@@ -6,36 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Maths
+namespace Nucleus.Analysis
 {
     /// <summary>
     /// Class for performing simple structural engineering calculations on beams
     /// </summary>
-    public class SimpleBeamAnalysis
+    public class SimpleBeamAnalysis : BeamAnalysisBase
     {
-        #region Properties
-
-        /// <summary>
-        /// The overall length of the member (m)
-        /// </summary>
-        double Length { get; set; }
-
-        /// <summary>
-        /// The uniformly distributed load along the beam (N/m)
-        /// </summary>
-        double UDL { get; set; } = 0;
-
-        /// <summary>
-        /// The Young's Modulus of the beam in N/m²
-        /// </summary>
-        double E { get; set; } = double.NaN;
-
-        /// <summary>
-        /// The second moment of area of the beam in m^4
-        /// </summary>
-        double I { get; set; } = double.NaN;
-
-        #endregion
 
         #region Constructors
 
@@ -75,7 +52,11 @@ namespace Nucleus.Maths
             UDL = udl;
             //TODO: Populate E & I from element properties
         }
-        
+
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Calculate the maximum bending moment (about the major axis)
         /// </summary>

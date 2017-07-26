@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\ExecutionInfo.cs" />
+    <Compile Include="Analysis\BeamAnalysisBase.cs" />
     <Compile Include="Base\Bool6D.cs" />
     <Compile Include="Base\CollectionCopyAttribute.cs" />
     <Compile Include="Base\IUniqueWithModifiableGUID.cs" />
@@ -64,11 +65,12 @@
     <Compile Include="IO\DocumentSaveFileType.cs" />
     <Compile Include="IO\TypeFieldsFormat.cs" />
     <Compile Include="IO\UniqueFormatter.cs" />
-    <Compile Include="Maths\SimpleBeamAnalysis.cs" />
+    <Compile Include="Analysis\SimpleBeamAnalysis.cs" />
     <Compile Include="Maths\INamedDataSetCollection.cs" />
     <Compile Include="Maths\NamedDataSet.cs" />
     <Compile Include="Maths\NamedDataSetCollection.cs" />
     <Compile Include="Maths\MathsHelper.cs" />
+    <Compile Include="Analysis\SimpleTrussAnalysis.cs" />
     <Compile Include="Model\BuildUpFamilyCollection.cs" />
     <Compile Include="Model\BuildUpLayer.cs" />
     <Compile Include="Model\BuildUpLayerCollection.cs" />
@@ -326,6 +328,7 @@
     <Compile Include="Results\ModelResults.cs" />
     <Compile Include="Results\NodeResults.cs" />
     <Compile Include="Results\NodeResultTypes.cs" />
+    <Compile Include="Results\AnalysisResults.cs" />
     <Compile Include="Results\ResultsDictionary.cs" />
     <Compile Include="UI\AutoUIAttribute.cs" />
     <Compile Include="UI\AutoUIComboBoxAttribute.cs" />
@@ -346,6 +349,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AI\" />
+    <Folder Include="Deprecated\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
