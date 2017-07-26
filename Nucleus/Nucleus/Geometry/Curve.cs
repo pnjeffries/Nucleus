@@ -428,7 +428,7 @@ namespace Nucleus.Geometry
                     j++;
                     segStartX += lengths[j];
                 }
-                double t = x - segStartX / lengths[j];
+                double t = (x - segStartX) / lengths[j];
                 result[n] = PointAt(j, t);
             }
 
