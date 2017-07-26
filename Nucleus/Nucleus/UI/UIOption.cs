@@ -11,6 +11,20 @@ namespace Nucleus.UI
     /// </summary>
     public class UIOption
     {
+        #region Constants
+
+        /// <summary>
+        /// Default 'OK' option - returns true if selected
+        /// </summary>
+        public static UIOption OK { get { return new UIOption("OK", true); } }
+
+        /// <summary>
+        /// Default 'Cancel' option - returns false if selected
+        /// </summary>
+        public static UIOption Cancel { get { return new UIOption("Cancel", false); } }
+
+        #endregion
+
         #region Fields
 
         /// <summary>

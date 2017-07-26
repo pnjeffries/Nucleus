@@ -217,9 +217,9 @@ namespace Nucleus.Model
             if (SourceMap.ContainsKey(sourceRef))
             {
                 IList<IList<ModelObject>> iterations = SourceMap[sourceRef];
-                for (int i = iteration + 1; i < iterations.Count; i++)
-                {
-                    IList<ModelObject> uniques = iterations[i];
+                //for (int i = iteration + 1; i < iterations.Count; i++)
+                //{
+                    IList<ModelObject> uniques = iterations[iteration];
                     for (int j = historyItemCount; j < uniques.Count; j++)
                     {
                         ModelObject unique = uniques[j];
@@ -229,7 +229,7 @@ namespace Nucleus.Model
                             if (cleanNodes) CleanNodes(unique);
                         }
                     }
-                }
+                //}
             }
         }
 

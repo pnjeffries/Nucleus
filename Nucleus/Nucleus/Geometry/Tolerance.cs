@@ -34,6 +34,7 @@ namespace Nucleus.Geometry
         /// <summary>
         /// The current geometric tolerance used to determine coincidence
         /// </summary>
-        public static double Distance { get; set; } = 0.000001;
+        public static double Distance { get; set; } = 0.001;
+
     }
 }
