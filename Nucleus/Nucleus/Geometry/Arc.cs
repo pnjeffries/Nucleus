@@ -398,27 +398,54 @@ namespace Nucleus.Geometry
 
         public override double CalculateEnclosedIxx(Plane onPlane = null)
         {
+           
             if (Circle != null)
             {
-                Vector o = Circle.Origin;
-                double r = Circle.Radius;
-                Vector c;
-                double a = CalculateEnclosedArea(out c, onPlane).Abs();
+                if (Closed)
+                {
+                    Vector localO = onPlane.GlobalToLocal(Circle.Origin);
+                    double Io = (Math.PI / 4) * Circle.Radius.Power(4);
+                    Vector v;
+                    double area = CalculateEnclosedArea(out v, onPlane);
+                    double yCentre = localO.Y;
+                    return Io + area * yCentre.Squared();
+                }
+                else
+                {
+                    Vector origin = Circle.Origin;
+                    double radius = Circle.Radius;
+                    Vector centroid;
+                    double area = CalculateEnclosedArea(out centroid, onPlane).Abs();
 
-                Plane oSys = new Plane(onPlane, o);
-                Vector oS = oSys.GlobalToLocal(StartPoint);
-                Vector oE = oSys.GlobalToLocal(EndPoint);
-                Vector oM = oSys.GlobalToLocal(Vertices[1].Position);
-                Vector oC = oSys.GlobalToLocal(c);
+                    Plane oSys = new Plane(onPlane, origin);
+                    Vector localS = oSys.GlobalToLocal(StartPoint);
+                    Vector localE = oSys.GlobalToLocal(EndPoint);
+                    Vector localM = oSys.GlobalToLocal(Vertices[1].Position);
+                    Vector localC = oSys.GlobalToLocal(centroid);
 
-                Angle toStart = oS.Angle;
-                Angle toEnd = oE.Angle;
-                Angle toMid = oM.Angle;
-                double IxxS = SectorIxx(toStart, r);
-                double IxxE = SectorIxx(toEnd, r);
-                
-                //double IxxTri = 
-                    //TODO: Finish
+                    Angle toS = localS.Angle;
+                    Angle toE = localE.Angle;
+                    Angle toM = localM.Angle;
+                    double IxxS = SectorIxx(toS, radius);
+                    double IxxE = SectorIxx(toE, radius);
+
+                    double IxxTri = Math.Abs((localS.Y.Squared() + localS.Y * localE.Y + localE.Y.Squared()) * (localS.X * localE.Y - localE.X * localS.Y) / 12);
+
+                    double result;
+                    if (toM > Math.Min(toS, toE) && toM < Math.Max(toS, toE))
+                        result = Math.Max(IxxS, IxxE) - Math.Min(IxxS, IxxE);
+                    else
+                        result = (Math.PI / 4) * radius.Power(4) - Math.Max(IxxS, IxxE) + Math.Min(IxxS, IxxE);
+
+                    if (RadianMeasure.IsReflex) result += IxxTri;
+                    else result -= IxxTri;
+
+                    // Adjust for centroid offset:
+                    double yC = onPlane.GlobalToLocal(centroid).Y;
+                    result += area * (yC.Squared() - localC.Y.Squared());
+
+                    return result;
+                }
             }
             return 0;
         }
