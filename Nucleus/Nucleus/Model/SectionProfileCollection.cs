@@ -88,6 +88,25 @@ namespace Nucleus.Model
             AddRange(parser.Parse(csvString));
         }
 
+        /// <summary>
+        /// Find and return the section profile in this collection with the smallest
+        /// cross-sectional area that is greater than the specified value
+        /// </summary>
+        /// <param name="area"></param>
+        /// <returns></returns>
+        public SectionProfile GetByMinimumArea(double area)
+        {
+            SectionProfile result = null;
+            foreach (SectionProfile sP in this)
+            {
+                if (sP.Area > area && (result == null || sP.Area < result.Area))
+                {
+                    result = sP;
+                }
+            }
+            return result;
+        }
+
         #endregion
     }
 }
