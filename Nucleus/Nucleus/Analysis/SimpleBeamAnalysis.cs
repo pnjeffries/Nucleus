@@ -46,11 +46,8 @@ namespace Nucleus.Analysis
         /// </summary>
         /// <param name="element"></param>
         /// <param name="udl"></param>
-        public SimpleBeamAnalysis(LinearElement element, double udl)
+        public SimpleBeamAnalysis(LinearElement element, double udl = 0) : base(element, udl)
         {
-            Length = element.Geometry.Length;
-            UDL = udl;
-            //TODO: Populate E & I from element properties
         }
 
         #endregion

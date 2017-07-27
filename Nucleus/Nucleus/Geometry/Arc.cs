@@ -417,7 +417,7 @@ namespace Nucleus.Geometry
                 double IxxS = SectorIxx(toStart, r);
                 double IxxE = SectorIxx(toEnd, r);
                 
-                //double IxxTri = Math.Abs()
+                //double IxxTri = 
                     //TODO: Finish
             }
             return 0;

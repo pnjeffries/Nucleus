@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nucleus.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,6 +33,25 @@ namespace Nucleus.Analysis
         /// The second moment of area of the beam about the major axis in m^4
         /// </summary>
         public double I { get; set; } = double.NaN;
+
+        #endregion
+
+        #region Constructors
+
+        protected BeamAnalysisBase() { }
+
+        protected BeamAnalysisBase(LinearElement element, double udl)
+        {
+            Length = element.Geometry.Length;
+            UDL = udl;
+            Material material = element.Family?.GetPrimaryMaterial();
+            if (material != null && material is IsoMaterial)
+            {
+                //TODO!
+                E = ((IsoMaterial)material).E;
+            }
+            //TODO: Populate E & I from element properties
+        }
 
         #endregion
     }
