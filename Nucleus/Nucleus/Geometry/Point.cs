@@ -63,6 +63,11 @@ namespace Nucleus.Geometry
                 if (_Vertex != null) return _Vertex.Position;
                 else return Vector.Unset;
             }
+            set
+            {
+                if (_Vertex == null) _Vertex = new Vertex(value);
+                else _Vertex.Position = value;
+            }
         }
 
         #endregion
@@ -91,6 +96,7 @@ namespace Nucleus.Geometry
             _Vertex = vertex;
         }
 
+
         /// <summary>
         /// Position vector constructor.
         /// Creates a Point object at the specified position.
@@ -99,6 +105,16 @@ namespace Nucleus.Geometry
         public Point(Vector position, GeometryAttributes attributes = null) : this(attributes)
         {
             _Vertex = new Vertex(position);
+        }
+
+        /// <summary>
+        /// Coordinates constructor.
+        /// Creates a Point object at the specified coordinates.
+        /// </summary>
+        /// <param name="position"></param>
+        public Point(double x, double y, double z = 0, GeometryAttributes attributes = null) : this(new Vector(x, y, z), attributes)
+        {
+
         }
 
         #endregion

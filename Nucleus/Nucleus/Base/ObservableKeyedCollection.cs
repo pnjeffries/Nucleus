@@ -324,6 +324,21 @@ namespace Nucleus.Base
             return combinedValue;
         }
 
+
+        /// <summary>
+        /// Move the item with the specified key to the last position in the collection
+        /// </summary>
+        /// <param name="key"></param>
+        public void MoveToLast(TKey key)
+        {
+            if (Contains(key))
+            {
+                TItem item = this[key];
+                Remove(key);
+                Add(item);
+            }
+        }
+
         #endregion
     }
 }

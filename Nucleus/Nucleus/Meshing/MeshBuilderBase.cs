@@ -434,6 +434,25 @@ namespace Nucleus.Meshing
         }
 
         /// <summary>
+        /// Display a model geometry
+        /// </summary>
+        /// <param name="model"></param>
+        public void AddModel(Model.Model model)
+        {
+            AddSectionPreviews(model.Elements.LinearElements);
+            AddPanelPreviews(model.Elements.PanelElements);
+        }
+
+        /// <summary>
+        /// Add mesh vertices and faces representing the section profiles of the given set of linear elements
+        /// </summary>
+        /// <param name="elements"></param>
+        public void AddSectionPreviews(LinearElementCollection elements)
+        {
+            foreach (LinearElement element in elements) AddSectionPreview(element);
+        }
+
+        /// <summary>
         /// Add a set of vertices and faces to this mesh representing the given element complete with
         /// a 3D representation of the assigned section profile
         /// </summary>
@@ -505,6 +524,15 @@ namespace Nucleus.Meshing
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Add a set of vertices and faces to the mesh representing a collection of panels with thickness
+        /// </summary>
+        /// <param name="elements"></param>
+        public void AddPanelPreviews(PanelElementCollection elements)
+        {
+            foreach (PanelElement element in elements) AddPanelPreview(element);
         }
 
         /// <summary>

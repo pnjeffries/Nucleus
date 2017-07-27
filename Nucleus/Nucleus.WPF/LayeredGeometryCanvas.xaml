@@ -23,7 +23,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <local:GeometryCanvas
-                                          CurveThickness="{Binding Path=CurveThickness, RelativeSource={RelativeSource AncestorType=local:LayeredGeometryCanvas}}"
+                                          CurveThickness="{Binding Path=DataContext.CurveThickness, ElementName=LayoutRoot}"
                                           Geometry="{Binding}" 
                                           DefaultBrush="{Binding Path=Brush, Converter={StaticResource BrushConverter}}"
                                           Visibility="{Binding Path=Visible, Converter={StaticResource BooleanVisibilityConverter}}"
