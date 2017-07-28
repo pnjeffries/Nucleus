@@ -48,7 +48,7 @@ namespace Nucleus.Analysis
             if (material != null && material is IsoMaterial)
             {
                 //TODO!
-                E = ((IsoMaterial)material).E;
+                //E = ((IsoMaterial)material).E;
             }
             //TODO: Populate E & I from element properties
         }

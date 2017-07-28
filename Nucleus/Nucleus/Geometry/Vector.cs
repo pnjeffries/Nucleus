@@ -861,6 +861,20 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Return a copy of this vector limited to the specified maximum and minimum
+        /// coordinates in the XY plane.
+        /// </summary>
+        /// <param name="minX"></param>
+        /// <param name="maxX"></param>
+        /// <param name="minY"></param>
+        /// <param name="maxY"></param>
+        /// <returns></returns>
+        public Vector Limit(double minX, double maxX, double minY, double maxY)
+        {
+            return new Vector(X.Limit(minX, maxX), Y.Limit(minY, maxY), Z);
+        }
+
+        /// <summary>
         /// ToString override
         /// </summary>
         /// <returns></returns>

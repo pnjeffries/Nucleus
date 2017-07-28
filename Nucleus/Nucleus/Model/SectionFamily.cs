@@ -173,6 +173,28 @@ namespace Nucleus.Model
             return Profile?.Material;
         }
 
+        /// <summary>
+        /// Get the total cross-sectional area of a specified material within this section.
+        /// If no material is specified, will return the total cross-sectional area regardless
+        /// of material.
+        /// </summary>
+        /// <param name="material">The material to calculate the cross-sectional area of</param>
+        /// <returns></returns>
+        public double GetArea(Material material = null)
+        {
+            double result = 0;
+            SectionProfileCollection profiles = Profiles;
+
+            for (int i = 0; i < profiles.Count; i++)
+            {
+                SectionProfile profile = profiles[i];
+                if (material == null || profile.Material == material)
+                    result += profile.Area;
+                // TODO: Subtract area of embedded sections & reinforcement
+            }
+            return result;
+        }
+
         #endregion
     }
 }

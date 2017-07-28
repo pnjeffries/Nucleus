@@ -205,6 +205,18 @@ namespace Nucleus.Model
             OrientateTowards(point, Angle.Zero);
         }
 
+        /// <summary>
+        /// Calculate the total volume of the specified material contained within this element.
+        /// If no material is specified, the total solid volume of the element will be returned.
+        /// </summary>
+        /// <param name="material"></param>
+        public double CalculateVolume(Material material = null)
+        {
+            if (Family == null || Geometry == null) return 0;
+            else return Family.GetArea(material) * Geometry.Length;
+            //TODO: Adjust for cut-backs, penetrations etc?
+        }
+
         #endregion
 
     }
