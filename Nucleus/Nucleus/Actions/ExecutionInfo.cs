@@ -106,10 +106,11 @@ namespace Nucleus.Actions
         /// </summary>
         /// <param name="sourceReference"></param>
         /// <param name="interation"></param>
-        public ExecutionInfo(string sourceReference, int iteration)
+        public ExecutionInfo(string sourceReference, int iteration, int historyItemCount = 0)
         {
             SourceReference = sourceReference;
             Iteration = iteration;
+            HistoryItemCount = historyItemCount;
         }
     }
 }

@@ -47,10 +47,12 @@ namespace Nucleus.Analysis
             Material material = element.Family?.GetPrimaryMaterial();
             if (material != null && material is IsoMaterial)
             {
-                //TODO!
                 E = ((IsoMaterial)material).E;
             }
-            //TODO: Populate E & I from element properties
+            if (element.Family != null)
+            {
+                I = element.Family.EquivalentIxx();
+            }
         }
 
         #endregion

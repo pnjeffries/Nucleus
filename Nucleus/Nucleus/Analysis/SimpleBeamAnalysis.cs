@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 namespace Nucleus.Analysis
 {
     /// <summary>
-    /// Class for performing simple structural engineering calculations on beams
+    /// Class for performing basic structural engineering calculations on 
+    /// simply-supported beams under uniformly distributed loading
     /// </summary>
     public class SimpleBeamAnalysis : BeamAnalysisBase
     {
@@ -55,7 +56,8 @@ namespace Nucleus.Analysis
         #region Methods
 
         /// <summary>
-        /// Calculate the maximum bending moment (about the major axis)
+        /// Calculate the maximum bending moment (about the major axis).
+        /// Requires UDL and Length.
         /// </summary>
         /// <returns></returns>
         public double MaxMoment()
@@ -65,7 +67,8 @@ namespace Nucleus.Analysis
         }
 
         /// <summary>
-        /// Calculate the bending moment at a position along the beam
+        /// Calculate the bending moment at a position along the beam.
+        /// Requires UDL and Length.
         /// </summary>
         /// <param name="x">The position along the beam, as a distance from
         /// the start (in m).</param>
@@ -77,7 +80,8 @@ namespace Nucleus.Analysis
         }
 
         /// <summary>
-        /// Calculate the maximum shear force in the beam
+        /// Calculate the maximum shear force in the beam.
+        /// Requires UDL and Length.
         /// </summary>
         /// <returns></returns>
         public double MaxShear()
@@ -89,6 +93,7 @@ namespace Nucleus.Analysis
         /// <summary>
         /// Calculate the shear force in the beam at the specified distance
         /// along it.
+        /// Requires UDL and Length.
         /// </summary>
         /// <param name="x">The position along the beam, as a distance from
         /// the start (in m).</param>
@@ -100,7 +105,8 @@ namespace Nucleus.Analysis
         }
 
         /// <summary>
-        /// Calculate the maximum deflection of the beam
+        /// Calculate the maximum deflection of the beam.
+        /// Requires UDL, Length, E and I.
         /// </summary>
         /// <returns></returns>
         public double MaxDeflection()
@@ -110,13 +116,38 @@ namespace Nucleus.Analysis
         }
 
         /// <summary>
-        /// Calculate the total value of all loading applied to the beam
+        /// Calculate the total value of all loading applied to the beam.
+        /// Requires UDL and Length.
         /// </summary>
         /// <returns></returns>
         public double TotalLoad()
         {
             // W = wl
             return UDL * Length;
+        }
+
+        /// <summary>
+        /// Calculate (approximately) the first 5 natural frequencies of the beam.
+        /// NOT YET TESTED.
+        /// </summary>
+        /// <returns></returns>
+        public IList<double> NaturalFrequencies()
+        {
+            double[] result = new double[5];
+            // fn = (Kn/2π) * √(EIg/(w*l^4))
+            double g = 9.8; //acceleration due to gravity (m/s)
+            double fnBase = (1 / (2 * Math.PI)) * Math.Sqrt((E * I * g) / (UDL * Length.Power(4)));
+            // Mode 1: Kn = 9.87
+            result[0] = 9.87 * fnBase;
+            // Mode 2: Kn = 39.5
+            result[1] = 39.5 * fnBase;
+            // Mode 3: Kn = 88.8
+            result[2] = 88.8 * fnBase;
+            // Mode 4: Kn = 158
+            result[3] = 158 * fnBase;
+            // Mode 5: Kn = 247
+            result[4] = 246 * fnBase;
+            return result;
         }
 
         #endregion

@@ -47,6 +47,36 @@ namespace Nucleus.Model
         #region Methods
 
         /// <summary>
+        /// Search through the history to find the execution information (if any)
+        /// bound to this model object
+        /// </summary>
+        /// <param name="mObj"></param>
+        /// <returns>The reconstructed ExecutionInfo for the specified object's creation,
+        /// if recorded.  Else, null.</returns>
+        public ExecutionInfo ExecutionInfoFor(ModelObject mObj)
+        {
+            foreach (var kvp in SourceMap)
+            {
+                if (kvp.Value != null)
+                {
+                    for (int i = 0; i < kvp.Value.Count; i++)
+                    {
+                        var list = kvp.Value[i];
+                        if (list != null)
+                        {
+                            for (int j = 0; j < list.Count; j++)
+                            {
+                                if (list[j] == mObj)
+                                    return new ExecutionInfo(kvp.Key, i, j);
+                            }
+                        }
+                    }
+                }
+            }
+            return null; // Nothing found
+        }
+
+        /// <summary>
         /// Get a previously stored object
         /// </summary>
         /// <param name="exInfo"></param>

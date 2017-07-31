@@ -173,6 +173,36 @@ namespace Nucleus.Model
             return Profile?.Material;
         }
 
+        /// <summary>
+        /// Get the overall second moment of area about the X-X (major) axis
+        /// for this section.  If this section is composite, this will return the
+        /// equivalent Ixx value if the entire section is composed of its primary 
+        /// material - NOT IMPLEMENTED YET!
+        /// </summary>
+        /// <returns></returns>
+        public double EquivalentIxx()
+        {
+            //TODO: Implement for composite sections
+            if (Profile != null)
+                return Profile.Ixx;
+            else return 0;
+        }
+
+        /// <summary>
+        /// Get the overall second moment of area about the Y-Y (minor) axis
+        /// for this section.  If this section is composite, this will return the
+        /// equivalent Ixx value if the entire section is composed of its primary 
+        /// material - NOT IMPLEMENTED YET!
+        /// </summary>
+        /// <returns></returns>
+        public double EquivalentIyy()
+        {
+            //TODO: Implement for composite sections
+            if (Profile != null)
+                return Profile.Iyy;
+            else return 0;
+        }
+
         #endregion
     }
 }

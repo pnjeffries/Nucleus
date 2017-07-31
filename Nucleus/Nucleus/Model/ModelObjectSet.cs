@@ -258,6 +258,21 @@ namespace Nucleus.Model
         }
 
         /// <summary>
+        /// Does this set contain the specified item?
+        /// (or, would it, if they were part of the same model?)
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public bool Contains(TItem item)
+        {
+            if (All || BaseCollection.Contains(item.GUID))
+            {
+                return Filters.Pass(item);
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Get all items of the relevent type from the model that this set belongs to
         /// </summary>
         /// <returns></returns>
