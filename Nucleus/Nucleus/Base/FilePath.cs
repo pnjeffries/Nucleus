@@ -69,6 +69,17 @@ namespace Nucleus.Base
             }
         }
 
+        /// <summary>
+        /// Get a filepath pointing to the current working directory
+        /// </summary>
+        public static FilePath Current
+        {
+            get
+            {
+                return new FilePath(System.IO.Directory.GetCurrentDirectory());
+            }
+        }
+
         #endregion
 
         #region Properties

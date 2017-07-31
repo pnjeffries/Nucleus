@@ -89,6 +89,7 @@ namespace Nucleus.WPF
 
         public static void OnCurveThicknessChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            return;
         }
 
         /// <summary>
@@ -104,8 +105,14 @@ namespace Nucleus.WPF
         /// </summary>
         public double CurveThickness
         {
-            get { return (double)GetValue(CurveThicknessProperty); }
-            set { SetValue(CurveThicknessProperty, value); }
+            get
+            {
+                return (double)GetValue(CurveThicknessProperty);
+            }
+            set
+            {
+                SetValue(CurveThicknessProperty, value);
+            }
         }
 
         public static void OnViewBoundsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

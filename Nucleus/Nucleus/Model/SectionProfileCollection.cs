@@ -82,7 +82,7 @@ namespace Nucleus.Model
         /// Add profiles to this collection by loading them from a CSV string
         /// </summary>
         /// <param name="csvString"></param>
-        public void LoadFromCSV(string csvString)
+        public void LoadFromCSVString(string csvString)
         {
             var parser = new CSVParser<SectionProfile>();
             AddRange(parser.Parse(csvString));

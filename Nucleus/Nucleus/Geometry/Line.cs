@@ -85,6 +85,11 @@ namespace Nucleus.Geometry
         /// Get the mid-point of the line
         /// </summary>
         public Vector MidPoint { get { return StartPoint.Interpolate(EndPoint, 0.5); } }
+        
+        /// <summary>
+        /// Get a unit vector in the direction of the line from start to end
+        /// </summary>
+        public Vector Direction { get { return (EndPoint - StartPoint).Unitize(); } }
 
         #endregion
 

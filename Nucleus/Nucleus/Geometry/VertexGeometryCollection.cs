@@ -80,6 +80,19 @@ namespace Nucleus.Geometry
             }
         }
 
+        /// <summary>
+        /// Set the display 'Weight' attribute of all geometry in this collection
+        /// </summary>
+        /// <param name="weight"></param>
+        public void SetAllWeights(double weight)
+        {
+            foreach (TShape vG in this)
+            {
+                if (vG.Attributes == null) vG.Attributes = new GeometryAttributes();
+                vG.Attributes.Weight = weight;
+            }
+        }
+
         #endregion
     }
 

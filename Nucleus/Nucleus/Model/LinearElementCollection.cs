@@ -63,6 +63,22 @@ namespace Nucleus.Model
             return this.Modified<LinearElementCollection, LinearElement>(since);
         }
 
+        /// <summary>
+        /// Calculate the total volume of a material present within the elements within this collection.
+        /// If no material is specified, this will be the total volume of all elements in the collection
+        /// regardless of material.
+        /// </summary>
+        /// <param name="material"></param>
+        /// <returns></returns>
+        public double TotalVolume(Material material = null)
+        {
+            double result = 0;
+            foreach (var lEl in this)
+            {
+                result += lEl.CalculateVolume(material);
+            }
+            return result;
+        }
         #endregion
     }
 }

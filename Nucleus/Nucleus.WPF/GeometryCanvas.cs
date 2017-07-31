@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using FB = Nucleus.Geometry;
@@ -93,8 +94,14 @@ namespace Nucleus.WPF
         /// </summary>
         public double CurveThickness
         {
-            get { return (double)GetValue(CurveThicknessProperty); }
-            set { SetValue(CurveThicknessProperty, value); }
+            get
+            {
+                return (double)GetValue(CurveThicknessProperty);
+            }
+            set
+            {
+                SetValue(CurveThicknessProperty, value);
+            }
         }
 
         /// <summary>
@@ -186,6 +193,7 @@ namespace Nucleus.WPF
                 path.StrokeStartLineCap = PenLineCap.Round;
                 path.StrokeEndLineCap = PenLineCap.Round;
 
+                //path.StrokeThickness = CurveThickness;
                 //var thicknessBinding = new Binding("CurveThickness");
                 //thicknessBinding.Source = this;
 
@@ -323,6 +331,12 @@ namespace Nucleus.WPF
                     SetTop(ellipse, -v.Y - diameter / 2.0);
 
                     ellipse.Tag = shape;
+
+                    if (shape.Attributes != null && shape.Attributes.Interactive)
+                    {
+                        //TODO: CHANGE THIS!  TEMP ONLY!
+                        ellipse.Cursor = Cursors.Hand;
+                    }
 
                     Children.Add(ellipse);
                 }

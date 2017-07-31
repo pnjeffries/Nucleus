@@ -65,6 +65,20 @@ namespace Nucleus.Geometry
             get { return _SourceID; }
             set { _SourceID = value; }
         }
+
+        /// <summary>
+        /// Private backing field for Interactive property
+        /// </summary>
+        private bool _Interactive = false;
+
+        /// <summary>
+        /// Raise mouse interaction events with this geometry?
+        /// </summary>
+        public bool Interactive
+        {
+            get { return _Interactive; }
+            set { ChangeProperty(ref _Interactive, value, "Interactive"); }
+        }
         
         #endregion
 
