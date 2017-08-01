@@ -93,10 +93,27 @@ namespace Nucleus.IO
         /// <returns></returns>
         public IList<TBase> Parse(FilePath filePath)
         {
-            var reader = new StreamReader(filePath);
-            IList<TBase> result = Parse(reader);
-            reader.Close();
-            return result;
+            using (var reader = new StreamReader(filePath))
+            {
+                IList<TBase> result = Parse(reader);
+                reader.Close();
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Parse CSV-format data from a stream
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public IList<TBase> Parse(Stream stream)
+        {
+            using (var reader = new StreamReader(stream))
+            {
+                IList<TBase> result = Parse(reader);
+                reader.Close();
+                return result;
+            }
         }
 
         /// <summary>
@@ -106,7 +123,12 @@ namespace Nucleus.IO
         /// <returns></returns>
         public IList<TBase> Parse(string csvString)
         {
-            return Parse(new StringReader(csvString));
+            using (var reader = new StringReader(csvString))
+            {
+                IList<TBase> result = Parse(reader);
+                reader.Close();
+                return result;
+            }
         }
 
         /// <summary>

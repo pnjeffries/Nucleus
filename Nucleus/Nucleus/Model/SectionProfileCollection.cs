@@ -22,6 +22,7 @@ using Nucleus.Base;
 using Nucleus.IO;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -76,6 +77,17 @@ namespace Nucleus.Model
         {
             var parser = new CSVParser<SectionProfile>();
             AddRange(parser.Parse(filePath));
+        }
+
+        /// <summary>
+        /// Add profiles to this collection by loading them from a CSV library file
+        /// accessed via a stream
+        /// </summary>
+        /// <param name="filePath"></param>
+        public void LoadFromCSV(Stream stream)
+        {
+            var parser = new CSVParser<SectionProfile>();
+            AddRange(parser.Parse(stream));
         }
 
         /// <summary>
