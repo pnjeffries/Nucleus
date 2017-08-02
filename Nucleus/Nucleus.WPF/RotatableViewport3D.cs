@@ -36,9 +36,6 @@ namespace Nucleus.WPF
             DependencyProperty.Register("TrackPad", typeof(FrameworkElement), typeof(RotatableViewport3D),
                 new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, new PropertyChangedCallback(OnTrackPadChanged)));
 
-
-        //private FrameworkElement _TrackPad = null;
-
         /// <summary>
         /// The FrameworkElement the mouse events of which will be tracked and used to control
         /// the camera
@@ -49,10 +46,30 @@ namespace Nucleus.WPF
             set { SetValue(TrackPadProperty, value); }
         }
 
+        /*public static readonly DependencyProperty FocalPointProperty =
+            DependencyProperty.Register("FocalPoint", typeof(Vector3D), typeof(RotatableViewport3D),
+                new FrameworkPropertyMetadata(new Vector3D(), FrameworkPropertyMetadataOptions.None));*/
+
+        private TranslateTransform3D _CameraPosition = new TranslateTransform3D(0, 0, 0);
+
+        /// <summary>
+        /// The point on which the camera is focussed
+        /// </summary>
+        public Vector3D FocalPoint
+        {
+            get { return new Vector3D(_CameraPosition.OffsetX, _CameraPosition.OffsetY, _CameraPosition.OffsetZ); }
+            set
+            {
+                _CameraPosition.OffsetX = value.X;
+                _CameraPosition.OffsetY = value.Y;
+                _CameraPosition.OffsetZ = value.Z;
+            }
+        }
+
         private ScaleTransform3D _CameraZoom = new ScaleTransform3D(1.7,1.7,1.7);
-        private AxisAngleRotation3D _CameraElevation = new AxisAngleRotation3D(new Vector3D(1,0,0), 45);
+        private AxisAngleRotation3D _CameraElevation = new AxisAngleRotation3D(new Vector3D(1,0,0), 35);
         private AxisAngleRotation3D _CameraRotation = new AxisAngleRotation3D(new Vector3D(0, 0, 1), 0);
-        private TranslateTransform3D _CameraPosition = new TranslateTransform3D(50,40,0);
+
         private Transform3DGroup _CameraTransform = null;
 
         /// <summary>

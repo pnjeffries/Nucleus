@@ -861,6 +861,20 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Is this vector inside the bounding region specified by its limiting coordinate values
+        /// on the XY plane?
+        /// </summary>
+        /// <param name="minX"></param>
+        /// <param name="maxX"></param>
+        /// <param name="minY"></param>
+        /// <param name="maxY"></param>
+        /// <returns></returns>
+        public bool InRegion(double minX, double maxX, double minY, double maxY)
+        {
+            return X >= minX && X <= maxX && Y >= minY && Y <= maxY;
+        }
+
+        /// <summary>
         /// Return a copy of this vector limited to the specified maximum and minimum
         /// coordinates in the XY plane.
         /// </summary>

@@ -201,6 +201,8 @@ namespace Nucleus.Model
             if (Profile != null)
                 return Profile.Iyy;
             else return 0;
+        }
+
         /// Get the total cross-sectional area of a specified material within this section.
         /// If no material is specified, will return the total cross-sectional area regardless
         /// of material.
