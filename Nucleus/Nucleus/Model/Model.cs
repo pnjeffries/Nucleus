@@ -372,6 +372,36 @@ namespace Nucleus.Model
         #region Methods
 
         /// <summary>
+        /// Try to add a new modelobject to the model, if it is of a suitable type
+        /// and does not already exist within it.  The correct storage table will be
+        /// automatically selected based on the object's type.
+        /// </summary>
+        /// <param name="mObj"></param>
+        /// <returns></returns>
+        public bool Add(ModelObject mObj)
+        {
+            if (mObj is Element)
+                return Add((Element)mObj);
+            else if (mObj is Node)
+                return Add((Node)mObj);
+            else if (mObj is UserCoordinateSystemReference)
+                return Add((UserCoordinateSystemReference)mObj);
+            else if (mObj is Level)
+                return Add((Level)mObj);
+            else if (mObj is Family)
+                return Add((Family)mObj);
+            else if (mObj is Material)
+                return Add((Material)mObj);
+            else if (mObj is ModelObjectSetBase)
+                return Add((ModelObjectSetBase)mObj);
+            else if (mObj is LoadCase)
+                return Add((LoadCase)mObj);
+            else if (mObj is Load)
+                return Add((Load)mObj);
+            else return false;
+        }
+
+        /// <summary>
         /// Add a new element to this model, if it does not already exist within it.
         /// </summary>
         /// <param name="element">The element to be added</param>

@@ -239,6 +239,45 @@ namespace Nucleus.Model
         }
 
         /// <summary>
+        /// Create a copy of an element from another model inside this one.
+        /// </summary>
+        /// <param name="element">The element to copy</param>
+        /// <returns></returns>
+        public LinearElement CopyFromModel(LinearElement element)
+        {
+            Model oldModel = element.Model;
+            ExecutionInfo exInfo = oldModel?.History.ExecutionInfoFor(element);
+            LinearElement newElement = CopyOf(element, null, exInfo);
+            if (element.Family != null)
+            {
+                ExecutionInfo famExInfo = oldModel?.History.ExecutionInfoFor(element.Family);
+                newElement.Family = CopyOf(element.Family, famExInfo);
+                //TODO: New Family's material etc. will need to be redone...
+            }
+            //TODO: Copy other properties?
+            return newElement;
+        }
+
+        /// <summary>
+        /// Create a copy of an element from another model inside this one.
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public PanelElement CopyFromModel(PanelElement element)
+        {
+            Model oldModel = element.Model;
+            ExecutionInfo exInfo = oldModel.History.ExecutionInfoFor(element);
+            PanelElement newElement = CopyOf(element, null, exInfo);
+            if (element.Family != null)
+            {
+                ExecutionInfo famExInfo = oldModel.History.ExecutionInfoFor(element.Family);
+                newElement.Family = CopyOf(element.Family, famExInfo);
+            }
+            //TODO: Copy other properties?
+            return newElement;
+        }
+
+        /// <summary>
         /// Create a new (or update an existing) panel element as a copy of another one
         /// </summary>
         /// <param name="element">The element to copy.</param>
@@ -270,8 +309,25 @@ namespace Nucleus.Model
         /// <returns></returns>
         public Element CopyOf(Element element, VertexGeometry newGeometry = null, ExecutionInfo exInfo = null)
         {
-            if (element is LinearElement) return CopyOf(element, newGeometry as Curve, exInfo);
+            if (element is LinearElement) return CopyOf((LinearElement)element, newGeometry as Curve, exInfo);
+            else if (element is PanelElement) return CopyOf((PanelElement)element, newGeometry as Surface, exInfo);
             else return null;
+        }
+
+        /// <summary>
+        /// Create a new (or update an existing) model object as a copy of another one
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="mObject"></param>
+        /// <param name="exInfo"></param>
+        /// <returns></returns>
+        public T CopyOf<T>(T mObject, ExecutionInfo exInfo = null)
+            where T: ModelObject
+        {
+            T result = mObject.Duplicate();
+            result = (T)Model.History.Update(exInfo, result);
+            Model.Add(result);
+            return result;
         }
 
         /// <summary>

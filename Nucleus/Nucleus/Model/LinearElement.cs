@@ -33,7 +33,8 @@ namespace Nucleus.Model
     /// solid geometry.
     /// Used to represent objects where one dimension is greater than
     /// the others and the overall geometry can be represented as an
-    /// extrusion along a curve, such as Beams, Columns, Walls, etc.
+    /// extrusion along a curve, such as Beams, Columns, Walls, Pipes,
+    /// etc.
     /// </summary>
     [Serializable]
     public class LinearElement : Element<Curve, SectionFamily>
