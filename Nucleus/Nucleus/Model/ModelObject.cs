@@ -22,6 +22,7 @@ using Nucleus.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -217,6 +218,34 @@ namespace Nucleus.Model
         public override string ToString()
         {
             return Description;
+        }
+
+        /// <summary>
+        /// Delete from this object any references in its properties
+        /// pointing to objects from a different model
+        /// </summary>
+        public void ClearDataFromMismatchedModel()
+        {
+            Model model = Model;
+            if (model != null)
+            {
+                foreach (PropertyInfo pInfo in GetType().GetProperties())
+                {
+                    if (pInfo.CanRead && pInfo.CanWrite && 
+                        pInfo.PropertyType.IsAssignableFrom(typeof(ModelObject))
+                        || typeof(ModelObject).IsAssignableFrom(pInfo.PropertyType))
+                    {
+                        ModelObject mObj = pInfo.GetValue(this) as ModelObject;
+                        if (mObj?.Model != null && mObj.Model != model)
+                        {
+                            // Null the property if it belongs to
+                            // a different model:
+                            pInfo.SetValue(this, null); 
+                        }
+                    }
+
+                }
+            }
         }
 
         #endregion

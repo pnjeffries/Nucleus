@@ -243,7 +243,7 @@ namespace Nucleus.Model
         /// </summary>
         /// <param name="element">The element to copy</param>
         /// <returns></returns>
-        public LinearElement CopyFromModel(LinearElement element)
+        public LinearElement CopyFromAnotherModel(LinearElement element)
         {
             Model oldModel = element.Model;
             ExecutionInfo exInfo = oldModel?.History.ExecutionInfoFor(element);
@@ -263,7 +263,7 @@ namespace Nucleus.Model
         /// </summary>
         /// <param name="element"></param>
         /// <returns></returns>
-        public PanelElement CopyFromModel(PanelElement element)
+        public PanelElement CopyFromAnotherModel(PanelElement element)
         {
             Model oldModel = element.Model;
             ExecutionInfo exInfo = oldModel.History.ExecutionInfoFor(element);

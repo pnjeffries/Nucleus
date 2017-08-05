@@ -207,6 +207,17 @@ namespace Nucleus.Model
         }
 
         /// <summary>
+        /// Orientate this element such that the local Z axis at the centre of the element
+        /// will point as closely as possible towards the given vector.
+        /// </summary>
+        /// <param name="vector"></param>
+        public void OrientateToVector(Vector vector)
+        {
+            var coordSys = Geometry.LocalCoordinateSystem(0.5, Angle.Zero);
+            Orientation = coordSys.YZPlane().GlobalToLocal(vector, true).Angle;
+        }
+
+        /// <summary>
         /// Calculate the total volume of the specified material contained within this element.
         /// If no material is specified, the total solid volume of the element will be returned.
         /// </summary>
