@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using RobotOM;
 using Nucleus.Geometry;
 using Nucleus.Model;
+using Nucleus.Base;
 
 namespace Nucleus.Robot
 {
@@ -186,6 +187,25 @@ namespace Nucleus.Robot
                 // TODO
             }
             return result;
+        }
+
+        /// <summary>
+        /// Convert a RobotBarEndReleaseData to a Nucleus VertexReleases component
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static VertexReleases Convert(RobotBarEndReleaseData data)
+        {
+            //TODO: Make more sophisticated...?
+            return new VertexReleases(new Bool6D
+            (
+                data.UX != IRobotBarEndReleaseValue.I_BERV_NONE,
+                data.UY != IRobotBarEndReleaseValue.I_BERV_NONE,
+                data.UZ != IRobotBarEndReleaseValue.I_BERV_NONE,
+                data.RX != IRobotBarEndReleaseValue.I_BERV_NONE,
+                data.RY != IRobotBarEndReleaseValue.I_BERV_NONE,
+                data.RZ != IRobotBarEndReleaseValue.I_BERV_NONE
+            ));
         }
     }
 }

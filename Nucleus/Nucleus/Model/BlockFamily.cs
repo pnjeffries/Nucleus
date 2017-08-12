@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nucleus.Geometry;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,12 +13,25 @@ namespace Nucleus.Model
     /// </summary>
     public class BlockFamily : Family
     {
+        /// <summary>
+        /// Private backing field for Geometry property
+        /// </summary>
+        private VertexGeometry _Geometry;
+
+        /// <summary>
+        /// The block base geometry
+        /// </summary>
+        public VertexGeometry Geometry
+        {
+            get { return _Geometry; }
+            set { _Geometry = value; }
+        }
         //TODO!
 
         public override Material GetPrimaryMaterial()
         {
             //TODO!
-            throw new NotImplementedException();
+            return null;
         }
     }
 }

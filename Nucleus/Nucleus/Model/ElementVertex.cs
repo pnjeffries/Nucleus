@@ -160,6 +160,23 @@ namespace Nucleus.Model
             return new MultiElementVertex(this);
         }
 
+        /// <summary>
+        /// Set the releases data component on this vertex
+        /// </summary>
+        /// <param name="releases"></param>
+        public void SetReleases(VertexReleases releases)
+        {
+            Vertex.SetData(releases);
+        }
+
+        /// <summary>
+        /// Remove any released degrees of freedom from this element vertex
+        /// </summary>
+        public void ClearReleases()
+        {
+            Vertex.CleanData(typeof(VertexReleases));
+        }
+
         #endregion
     }
 

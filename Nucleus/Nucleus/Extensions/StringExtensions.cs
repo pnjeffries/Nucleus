@@ -24,6 +24,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Nucleus.Extensions
 {
@@ -501,6 +502,22 @@ namespace Nucleus.Extensions
             return false;
         }
 
+        /// <summary>
+        /// Get the portion of this string before the last instance of the specified 
+        /// character.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="c"></param>
+        /// <returns></returns>
+        public static string BeforeLast(this string str, char c)
+        {
+            int i = str.LastIndexOf(c);
+            if (i > 0)
+            {
+                return str.Substring(0, i);
+            }
+            else return str;
+        }
 
     }
 }

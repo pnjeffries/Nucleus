@@ -187,7 +187,7 @@ namespace Nucleus.Model
             RootRadius = rootRadius;
         }
 
-        // <summary>
+        /// <summary>
         /// Initialise a LetterProfile based on dimensions specified by a string.
         /// The string should consist of numeric values in mm separated by spaces,
         /// x's or the multiplication sign '×' and in the order Depth, Width,
