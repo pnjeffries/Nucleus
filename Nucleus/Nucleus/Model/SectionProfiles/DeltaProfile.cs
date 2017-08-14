@@ -8,7 +8,7 @@ using Nucleus.Geometry;
 
 namespace Nucleus.Model
 {
-    public class DeltaProfile : ParameterProfile
+    /*public class DeltaProfile : ParameterProfile
     {
         /// <summary>
         /// Private backing member variable for the Depth property
@@ -61,5 +61,5 @@ namespace Nucleus.Model
         {
             throw new NotImplementedException();
         }
-    }
+    }*/
 }
