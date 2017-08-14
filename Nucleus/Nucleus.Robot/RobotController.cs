@@ -881,6 +881,9 @@ namespace Nucleus.Robot
                     bar.EndNode = nodeID1;
                 }
 
+                // Orientation:
+                bar.Gamma = element.Orientation.Degrees;
+
                 // Section:
                 if (element.Family != null)
                 {
