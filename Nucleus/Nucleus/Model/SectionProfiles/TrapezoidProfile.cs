@@ -137,7 +137,7 @@ namespace Nucleus.Model
 
         protected override Curve GeneratePerimeter()
         {
-            return PolyLine.Trapezoid(Depth, TopWidth, BaseWidth);
+            return PolyCurve.Trapezoid(Depth, TopWidth, BaseWidth);
         }
 
         protected override CurveCollection GenerateVoids()

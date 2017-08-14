@@ -231,8 +231,9 @@ namespace Nucleus.Model
         /// <returns></returns>
         public LinearElement CopyOf(LinearElement element, Curve newGeometry = null, ExecutionInfo exInfo = null)
         {
-            LinearElement result = element.Duplicate();
+            LinearElement result = new LinearElement();
             result = (LinearElement)Model.History.Update(exInfo, result);
+            result.CopyPropertiesFrom(element);
             if (newGeometry != null) result.ReplaceGeometry(newGeometry);
             Model.Add(result);
             return result;

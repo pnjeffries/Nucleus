@@ -83,34 +83,36 @@ namespace Nucleus.WPF
                 foreach (SectionProfile sp in Profiles)
                 {
                     Curve perimeter = sp.Perimeter;
-                    CurveCollection voids = sp.Voids;
-                    bBox.Include(perimeter.BoundingBox);
-
-                    PathGeometry perimeterPath = new PathGeometry();
-                    perimeterPath.Figures.Add(FBtoWPF.Convert(perimeter));
-
-                    CombinedGeometry cg = new CombinedGeometry();
-                    cg.GeometryCombineMode = GeometryCombineMode.Exclude;
-                    cg.Geometry1 = perimeterPath;
-
-                    if (voids != null && voids.Count > 0)
+                    if (perimeter != null)
                     {
-                        PathGeometry inside = new PathGeometry();
-                        foreach (Curve vCrv in voids)
+                        CurveCollection voids = sp.Voids;
+                        bBox.Include(perimeter.BoundingBox);
+
+                        PathGeometry perimeterPath = new PathGeometry();
+                        perimeterPath.Figures.Add(FBtoWPF.Convert(perimeter));
+
+                        CombinedGeometry cg = new CombinedGeometry();
+                        cg.GeometryCombineMode = GeometryCombineMode.Exclude;
+                        cg.Geometry1 = perimeterPath;
+
+                        if (voids != null && voids.Count > 0)
                         {
-                            inside.Figures.Add(FBtoWPF.Convert(vCrv));
+                            PathGeometry inside = new PathGeometry();
+                            foreach (Curve vCrv in voids)
+                            {
+                                inside.Figures.Add(FBtoWPF.Convert(vCrv));
+                            }
+                            cg.Geometry2 = inside;
                         }
-                        cg.Geometry2 = inside;
+
+                        Path path = new Path();
+                        path.Fill = steelBrush;
+                        path.Stroke = Brushes.Black;
+                        path.StrokeThickness = 0.01;
+                        path.Data = cg;
+
+                        topLayer.Add(path);
                     }
-
-                    Path path = new Path();
-                    path.Fill = steelBrush;
-                    path.Stroke = Brushes.Black;
-                    path.StrokeThickness = 0.01;
-                    path.Data = cg;
-
-                    topLayer.Add(path);
-
                 }
 
                 bBox.Expand(Math.Max(bBox.SizeX, bBox.SizeY) * 0.1);

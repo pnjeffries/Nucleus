@@ -250,14 +250,17 @@ namespace Nucleus.Rhino
         public static Guid Bake(VertexGeometry geometry)
         {
             Guid result = Guid.Empty;
-            GeometryBase gB = FBtoRC.Convert(geometry);
-            if (gB != null)
+            if (geometry != null)
             {
-                Writing = true;
-                result = Bake(gB);
-                Writing = false;
+                GeometryBase gB = FBtoRC.Convert(geometry);
+                if (gB != null)
+                {
+                    Writing = true;
+                    result = Bake(gB);
+                    Writing = false;
+                }
+                else throw new NotImplementedException();
             }
-            else throw new NotImplementedException();
 
             return result;
         }
