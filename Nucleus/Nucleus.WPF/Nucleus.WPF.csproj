@@ -123,6 +123,7 @@
     <Compile Include="MessageDialog.xaml.cs">
       <DependentUpon>MessageDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MultiSelectListBox.cs" />
     <Compile Include="ProfileCanvas.cs" />
     <Compile Include="PropertiesExpander.xaml.cs">
       <DependentUpon>PropertiesExpander.xaml</DependentUpon>
