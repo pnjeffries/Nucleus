@@ -312,11 +312,30 @@ namespace Nucleus.Robot
                     }
                     element.StartNode = context.IDMap.GetMappedModelNode(bar.StartNode, model);
                     element.EndNode = context.IDMap.GetMappedModelNode(bar.EndNode, model);
+
+                    // Section
                     if (bar.HasLabel(IRobotLabelType.I_LT_BAR_SECTION) != 0)
                     {
                         string sectionID = bar.GetLabelName(IRobotLabelType.I_LT_BAR_SECTION);
                         element.Family = context.IDMap.GetMappedSectionFamily(sectionID, model);
                     }
+                    else element.Family = null; // Clear family
+
+                    // Releases
+                    if (bar.HasLabel(IRobotLabelType.I_LT_BAR_RELEASE) != 0)
+                    {
+                        IRobotLabel rlsLabel = bar.GetLabel(IRobotLabelType.I_LT_BAR_RELEASE);
+                        RobotBarReleaseData data = rlsLabel.Data;
+                        element.Start.SetReleases(ROBtoFB.Convert(data.StartNode));
+                        element.End.SetReleases(ROBtoFB.Convert(data.EndNode));
+                    }
+                    else
+                    {
+                        // No releases...
+                        element.Start.ClearReleases();
+                        element.End.ClearReleases();
+                    }
+
                     //TODO: Copy over more data
 
                     //Store mapping:
@@ -651,6 +670,14 @@ namespace Nucleus.Robot
             //return Robot.Project.Structure.Objects.Create(id);
         }
 
+        /// <summary>
+        /// Get an offset label for the start and end offsets of an element.
+        /// This will reuse any that already exist with the appropriate values
+        /// or create a new label if necessary.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
         public IRobotLabel GetOffset(Vector start, Vector end)
         {
             if (start.IsZero() && end.IsZero()) return null;
@@ -708,6 +735,64 @@ namespace Nucleus.Robot
                 labels.Store(result);
                 return result;
             }
+        }
+
+        /// <summary>
+        /// Retrieve or create a Robot release label for the specified element
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public IRobotLabel GetReleases(Element element)
+        {
+            if (element is LinearElement)
+            {
+                var lEl = (LinearElement)element;
+                ElementVertex start = lEl.Start;
+                ElementVertex end = lEl.End;
+                Bool6D sRls = start.Releases;
+                Bool6D eRls = end.Releases;
+                if (!sRls.AllFalse || !eRls.AllFalse)
+                {
+                    string name = start.Releases.ToRestraintDescription() + " - " + end.Releases.ToRestraintDescription();
+                    RobotLabelServer labels = Robot.Project.Structure.Labels;
+                    if (labels.Exist(IRobotLabelType.I_LT_BAR_RELEASE, name) != 0)
+                    {
+                        IRobotLabel label = labels.Get(IRobotLabelType.I_LT_BAR_RELEASE, name);
+                        return label;
+                    }
+                    else
+                    {
+                        IRobotLabel result = labels.Create(IRobotLabelType.I_LT_BAR_RELEASE, name);
+                        RobotBarReleaseData data = result.Data;
+                        if (sRls.X)
+                            data.StartNode.UX = IRobotBarEndReleaseValue.I_BERV_STD;
+                        if (sRls.Y)
+                            data.StartNode.UY = IRobotBarEndReleaseValue.I_BERV_STD;
+                        if (sRls.Z)
+                            data.StartNode.UZ = IRobotBarEndReleaseValue.I_BERV_STD;
+                        if (sRls.XX)
+                            data.StartNode.RX = IRobotBarEndReleaseValue.I_BERV_STD;
+                        if (sRls.YY)
+                            data.StartNode.RY = IRobotBarEndReleaseValue.I_BERV_STD;
+                        if (sRls.ZZ)
+                            data.StartNode.RZ = IRobotBarEndReleaseValue.I_BERV_STD;
+                        if (eRls.X)
+                            data.EndNode.UX = IRobotBarEndReleaseValue.I_BERV_STD;
+                        if (eRls.Y)
+                            data.EndNode.UY = IRobotBarEndReleaseValue.I_BERV_STD;
+                        if (eRls.Z)
+                            data.EndNode.UZ = IRobotBarEndReleaseValue.I_BERV_STD;
+                        if (eRls.XX)
+                            data.EndNode.RX = IRobotBarEndReleaseValue.I_BERV_STD;
+                        if (eRls.YY)
+                            data.EndNode.RY = IRobotBarEndReleaseValue.I_BERV_STD;
+                        if (eRls.ZZ)
+                            data.EndNode.RZ = IRobotBarEndReleaseValue.I_BERV_STD;
+                        //TODO: Check this is the correct way to do this!
+                    }
+                }
+            }
+            return null;
         }
 
         /// <summary>
@@ -796,10 +881,16 @@ namespace Nucleus.Robot
                     bar.EndNode = nodeID1;
                 }
 
+                // Orientation:
+                bar.Gamma = element.Orientation.Degrees;
+
+                // Section:
                 if (element.Family != null)
                 {
                     bar.SetLabel(IRobotLabelType.I_LT_BAR_SECTION, this.GetMappedSectionID(element.Family, context));
                 }
+
+                // Offsets:
                 if (element.Geometry != null && element.Geometry.Vertices.HasNodalOffsets)
                 {
                     IRobotLabel offsets = GetOffset(element.Start.Offset, element.End.Offset);
@@ -809,6 +900,12 @@ namespace Nucleus.Robot
                 {
                     bar.RemoveLabel(IRobotLabelType.I_LT_BAR_OFFSET);
                 }
+
+                // Releases:
+                IRobotLabel rlsLabel = GetReleases(element);
+                if (rlsLabel != null) bar.SetLabel(IRobotLabelType.I_LT_BAR_RELEASE, rlsLabel.Name);
+                else bar.RemoveLabel(IRobotLabelType.I_LT_BAR_RELEASE);
+
                 //TODO: More data
 
                 context.IDMap.Add(element, bar);
@@ -1031,62 +1128,65 @@ namespace Nucleus.Robot
         public SectionProfile CreateProfileFromRobotSectionData(RobotBarSectionData data)
         {
             SectionProfile result = null;
-            Type equivalent = EquivalentProfileType(data.ShapeType);
-            if (equivalent == typeof(SymmetricIProfile))
+            if (data != null)
             {
-                var iProfile = new SymmetricIProfile();
-                iProfile.Depth = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
-                iProfile.Width = data.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
-                iProfile.FlangeThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TF);
-                iProfile.WebThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TW);
-                //TODO: Fillet radius
-                iProfile.RootRadius = data.GetValue(IRobotBarSectionDataValue.I_BSDV_RA); //????
-                result = iProfile;
-            }
-            else if (equivalent == typeof(RectangularHollowProfile)) //Rectangular Hollow Profile
-            {
-                var rProfile = new RectangularHollowProfile();
-                rProfile.Depth = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
-                rProfile.Width = data.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
-                rProfile.FlangeThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TF);
-                rProfile.WebThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TW);
-                result = rProfile;
-            }
-            else if (equivalent == typeof(RectangularProfile)) //Filled Rectangular Profile
-            {
-                var rProfile = new RectangularProfile();
-                rProfile.Depth = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
-                rProfile.Width = data.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
-                result = rProfile;
-            }
-            else if (equivalent == typeof(CircularHollowProfile))
-            {
-                var cProfile = new CircularHollowProfile();
-                cProfile.Diameter = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
-                cProfile.WallThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TW); //?
-                result = cProfile;
-            }
-            else if (equivalent == typeof(CircularProfile))
-            {
-                var cProfile = new CircularProfile();
-                cProfile.Diameter = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
-                result = cProfile;
-            }
-            else if (equivalent == typeof(AngleProfile))
-            {
-                var angleProfile = new AngleProfile();
-                angleProfile.Depth = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
-                angleProfile.Width = data.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
-                angleProfile.FlangeThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TF);
-                angleProfile.WebThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TW);
-                //TODO: Fillet radius
-                angleProfile.RootRadius = data.GetValue(IRobotBarSectionDataValue.I_BSDV_RA); //????
-                result = angleProfile;
-            }
+                Type equivalent = EquivalentProfileType(data.ShapeType);
+                if (equivalent == typeof(SymmetricIProfile))
+                {
+                    var iProfile = new SymmetricIProfile();
+                    iProfile.Depth = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
+                    iProfile.Width = data.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
+                    iProfile.FlangeThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TF);
+                    iProfile.WebThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TW);
+                    //TODO: Fillet radius
+                    iProfile.RootRadius = data.GetValue(IRobotBarSectionDataValue.I_BSDV_RA); //????
+                    result = iProfile;
+                }
+                else if (equivalent == typeof(RectangularHollowProfile)) //Rectangular Hollow Profile
+                {
+                    var rProfile = new RectangularHollowProfile();
+                    rProfile.Depth = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
+                    rProfile.Width = data.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
+                    rProfile.FlangeThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TF);
+                    rProfile.WebThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TW);
+                    result = rProfile;
+                }
+                else if (equivalent == typeof(RectangularProfile)) //Filled Rectangular Profile
+                {
+                    var rProfile = new RectangularProfile();
+                    rProfile.Depth = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
+                    rProfile.Width = data.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
+                    result = rProfile;
+                }
+                else if (equivalent == typeof(CircularHollowProfile))
+                {
+                    var cProfile = new CircularHollowProfile();
+                    cProfile.Diameter = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
+                    cProfile.WallThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TW); //?
+                    result = cProfile;
+                }
+                else if (equivalent == typeof(CircularProfile))
+                {
+                    var cProfile = new CircularProfile();
+                    cProfile.Diameter = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
+                    result = cProfile;
+                }
+                else if (equivalent == typeof(AngleProfile))
+                {
+                    var angleProfile = new AngleProfile();
+                    angleProfile.Depth = data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
+                    angleProfile.Width = data.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
+                    angleProfile.FlangeThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TF);
+                    angleProfile.WebThickness = data.GetValue(IRobotBarSectionDataValue.I_BSDV_TW);
+                    //TODO: Fillet radius
+                    angleProfile.RootRadius = data.GetValue(IRobotBarSectionDataValue.I_BSDV_RA); //????
+                    result = angleProfile;
+                }
 
-            if (data.Type == IRobotBarSectionType.I_BST_STANDARD)
-            {
-                result.CatalogueName = data.Name;
+                if (data.Type == IRobotBarSectionType.I_BST_STANDARD)
+                {
+                    result.CatalogueName = data.Name;
+                }
             }
 
             return result; //Profile could not be created
@@ -1116,6 +1216,12 @@ namespace Nucleus.Robot
             else if (type == IRobotBarSectionShapeType.I_BSST_CIRC_FILLED
                 || type == IRobotBarSectionShapeType.I_BSST_USER_CIRC_FILLED)
                 return typeof(CircularProfile);
+            else if (type == IRobotBarSectionShapeType.I_BSST_USER_C_SHAPE
+                || type == IRobotBarSectionShapeType.I_BSST_CCL 
+                || type == IRobotBarSectionShapeType.I_BSST_URND
+                || type == IRobotBarSectionShapeType.I_BSST_COLD_C_PLUS
+                || type == IRobotBarSectionShapeType.I_BSST_CONCR_COL_C)
+                return typeof(ChannelProfile);
             else
                 return null;
         }

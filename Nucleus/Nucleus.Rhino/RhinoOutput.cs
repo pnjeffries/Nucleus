@@ -14,6 +14,9 @@ using Nucleus.Rendering;
 
 namespace Nucleus.Rhino
 {
+    /// <summary>
+    /// Static helper class to deal with Rhino object creation and manipulation
+    /// </summary>
     public static class RhinoOutput
     {
         /// <summary>
@@ -250,14 +253,17 @@ namespace Nucleus.Rhino
         public static Guid Bake(VertexGeometry geometry)
         {
             Guid result = Guid.Empty;
-            GeometryBase gB = FBtoRC.Convert(geometry);
-            if (gB != null)
+            if (geometry != null)
             {
-                Writing = true;
-                result = Bake(gB);
-                Writing = false;
+                GeometryBase gB = FBtoRC.Convert(geometry);
+                if (gB != null)
+                {
+                    Writing = true;
+                    result = Bake(gB);
+                    Writing = false;
+                }
+                else throw new NotImplementedException();
             }
-            else throw new NotImplementedException();
 
             return result;
         }
@@ -377,14 +383,29 @@ namespace Nucleus.Rhino
 
         /// <summary>
         /// Is the specified object currently visible?
+        /// (i.e. not hidden, and on a layer which is visible)
         /// </summary>
         /// <param name="objID"></param>
         /// <returns></returns>
         public static bool ObjectVisible(Guid objID)
         {
             RhinoObject obj = GetObject(objID);
-            if (obj != null && !obj.IsHidden) return true;
+            if (obj != null && !obj.IsHidden)
+            {
+                return LayerVisible(obj.Attributes.LayerIndex);
+            }
             else return false;
+        }
+
+        /// <summary>
+        /// Is the specified layer currently visible?
+        /// </summary>
+        /// <param name="layerID"></param>
+        /// <returns></returns>
+        public static bool LayerVisible(int layerID)
+        {
+            var layer = RhinoDoc.ActiveDoc.Layers[layerID];
+            return layer.IsVisible;
         }
 
         /// <summary>

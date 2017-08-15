@@ -322,10 +322,26 @@ namespace Nucleus.Excel
         /// If not specified, the currently active worksheet will be used.</param>
         /// <returns>A two-dimensional array of objects containing the values of the specified set of cells.
         /// Note that unlike the Excel data itself, this will be zero-indexed.</returns>
-        public object[,] GetCellValues(int startRow, int startColumn, int endRow, int endColumn, Worksheet sheet = null)
+        public object[,] GetCellValues(int startRow, int startColumn, int endRow, int endColumn)
+        {
+            return GetCellValues(startRow, startColumn, endRow, endColumn, null);
+        }
+
+        /// <summary>
+        /// Get values from an Excel worksheet within a specified range
+        /// </summary>
+        /// <param name="startRow">The number of the starting row</param>
+        /// <param name="startColumn">The number of the starting column</param>
+        /// <param name="endRow">The number of the ending row</param>
+        /// <param name="endColumn">The number of the ending column</param>
+        /// <param name="sheet">Optional.  The sheet from which values are to be extracted.
+        /// If not specified, the currently active worksheet will be used.</param>
+        /// <returns>A two-dimensional array of objects containing the values of the specified set of cells.
+        /// Note that unlike the Excel data itself, this will be zero-indexed.</returns>
+        public object[,] GetCellValues(int startRow, int startColumn, int endRow, int endColumn, Worksheet sheet)
         {
             if (sheet == null) sheet = ActiveSheet;
-            Range range = sheet.Cells[startRow, startColumn].Resize[endRow - startRow, endColumn - startColumn];
+            Range range = sheet.Cells[startRow, startColumn].Resize[endRow - startRow + 1, endColumn - startColumn + 1];
             if (range.Cells.Count == 0) return new object[0, 0];
             else if (range.Cells.Count == 1) return new object[1, 1] { { range.Value } };
             else return MakeZeroIndexed(range.Value);
@@ -357,13 +373,26 @@ namespace Nucleus.Excel
         /// <param name="column">The column number to place the values into.</param>
         /// <param name="values">The set of values to be written into the column of cells.</param>
         /// <param name="sheet">Optional.  Specify the sheet the values are to be placed into.</param>
-        public void SetColumnValues(int startRow, int column, IEnumerable<object> values, Worksheet sheet = null)
+        public void SetColumnValues(int startRow, int column, IEnumerable<object> values)
+        {
+            SetColumnValues(startRow, column, values, null);
+        }
+
+        /// <summary>
+        /// Set the values of a column of cells to the specifed set of values.
+        /// </summary>
+        /// <param name="startRow">The row number of the cell to begin from</param>
+        /// <param name="column">The column number to place the values into.</param>
+        /// <param name="values">The set of values to be written into the column of cells.</param>
+        /// <param name="sheet">Optional.  Specify the sheet the values are to be placed into.</param>
+        public void SetColumnValues(int startRow, int column, IEnumerable<object> values, Worksheet sheet)
         {
             if (sheet == null) sheet = ActiveSheet;
             int count = 0;
             foreach (string value in values)
             {
                 sheet.Cells[startRow + count, column] = value;
+                count++;
             }
         }
 
@@ -381,6 +410,7 @@ namespace Nucleus.Excel
             foreach (string value in values)
             {
                 sheet.Cells[row, startColumn + count] = value;
+                count++;
             }
         }
 

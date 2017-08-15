@@ -33,7 +33,8 @@ namespace Nucleus.Model
     /// solid geometry.
     /// Used to represent objects where one dimension is greater than
     /// the others and the overall geometry can be represented as an
-    /// extrusion along a curve, such as Beams, Columns, Walls, etc.
+    /// extrusion along a curve, such as Beams, Columns, Walls, Pipes,
+    /// etc.
     /// </summary>
     [Serializable]
     public class LinearElement : Element<Curve, SectionFamily>
@@ -203,6 +204,17 @@ namespace Nucleus.Model
         public void OrientateTowards(Vector point)
         {
             OrientateTowards(point, Angle.Zero);
+        }
+
+        /// <summary>
+        /// Orientate this element such that the local Z axis at the centre of the element
+        /// will point as closely as possible towards the given vector.
+        /// </summary>
+        /// <param name="vector"></param>
+        public void OrientateToVector(Vector vector)
+        {
+            var coordSys = Geometry.LocalCoordinateSystem(0.5, Angle.Zero);
+            Orientation = coordSys.YZPlane().GlobalToLocal(vector, true).Angle;
         }
 
         /// <summary>

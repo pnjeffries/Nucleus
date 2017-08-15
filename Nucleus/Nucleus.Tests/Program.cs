@@ -31,6 +31,7 @@ namespace Nucleus.Tests
             Console.WriteLine(" m) Map Reading");
             Console.WriteLine(" n) Address Finding");
             Console.WriteLine(" o) Hyperlink detection");
+            Console.WriteLine(" p) Excel Timesheet Unique Descriptions");
 
             char option = Console.ReadKey(true).KeyChar;
 
@@ -134,6 +135,11 @@ namespace Nucleus.Tests
                 {
                     Console.WriteLine("'" + str + "'");
                 }
+            }
+
+            if (option == 'p')
+            {
+                Excel_Tests.ProcessTimeSheet();
             }
 
             Console.Read();

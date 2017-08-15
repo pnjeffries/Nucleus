@@ -258,18 +258,19 @@ namespace Nucleus.Model
         /// setting this property.
         /// </summary>
         [AutoUI(410)]
+        [Copy(CopyBehaviour.DUPLICATE)]
         public TShape Geometry
         {
             get { return _Geometry; }
             set
             {
-                if (value.Element != null && value.Element != this)
+                /*if (value.Element != null && value.Element != this)
                 {
                     throw new NonExclusiveGeometryException(
                         "The set-out geometry of an element cannot be assigned because the geometry object already belongs to another element.");
                 }
                 else
-                {
+                {*/
                     if (_Geometry != null && _Geometry.Element == this && _Geometry != value)
                     {
                         _Geometry.DettachNodes();
@@ -278,7 +279,7 @@ namespace Nucleus.Model
                     _Geometry = value;
                     _Geometry.Element = this;
                     NotifyPropertyChanged("Geometry");
-                }
+                //}
             }
         }
 

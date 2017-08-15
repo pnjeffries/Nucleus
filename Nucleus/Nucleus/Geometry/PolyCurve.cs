@@ -499,6 +499,30 @@ namespace Nucleus.Geometry
             return result;
         }
 
+        /// <summary>
+        /// Generates a trapezoid polygon on the XY plane with the midpoint of each edge 
+        /// centred on the origin and with a different top and bottom width.
+        /// </summary>
+        /// <param name="depth">The depth of the trapezoid</param>
+        /// <param name="topWidth">The width of the top of the trapezoid</param>
+        /// <param name="baseWidth">The width of the base of the trapezoid</param>
+        /// <returns></returns>
+        public static PolyCurve Trapezoid(double depth, double topWidth, double baseWidth)
+        {
+            double xT = topWidth / 2;
+            double xB = baseWidth / 2;
+            double y = depth / 2;
+
+            PolyCurve result = new PolyCurve(new Line(xT, y, -xT, y));
+            result.AddLine(-xB, -y);
+            result.AddLine(xB, -y);
+            result.AddLine(xT, y);
+
+            return result;
+        }
+
         #endregion
     }
 }
+
+

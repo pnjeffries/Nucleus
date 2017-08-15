@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Core.cs" />
     <Compile Include="DDTree_Tests.cs" />
+    <Compile Include="Excel_Tests.cs" />
     <Compile Include="GWA_Tests.cs" />
     <Compile Include="Map_Tests.cs" />
     <Compile Include="Matrix_Tests.cs" />

@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Nucleus.WPF"
              mc:Ignorable="d" 
              Height="200" Width="350"
-        Topmost="True" WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner">
+        Topmost="True" WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterScreen">
     <Grid Background="WhiteSmoke">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

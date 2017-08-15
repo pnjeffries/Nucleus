@@ -15,6 +15,37 @@ namespace Nucleus.Extensions
     public static class ObjectExtensions
     {
         /// <summary>
+        /// Set the value of a property on this object at the specified path
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="path">The path, consisting of property names and sub-property names
+        /// separated by '.' characters.  For example: 'PropertyName.SubPropertyName.SubSubPropertyName' etc.
+        /// Parameterless methods may also be invoked by adding '()', i.e.:
+        /// 'PropertyName.SubMethodName().SubSubPropertyName'.
+        /// Methods and properties on the optional context object may also be invoked in the same way, via a
+        /// '[CONTEXT]' redirection.  For example: '[CONTEXT].MethodName()'.  When switching to the context
+        /// object the SetSourceObject method on it will be called and the current object or property value
+        /// passed in.  This allows for complex operations to be performed in order to return a value
+        /// provided that functionality is implemented in a suitable context object provided.</param>
+        /// <param name="value">The value to be assigned to the property</param>
+        /// <param name="context"></param>
+        public static void SetByPath(this object obj, string path, object value, IStringConversionContext context = null)
+        {
+            object setOn = obj;
+            int iLast = path.LastIndexOf('.');
+            if (iLast > 0)
+            {
+                string rootPath = path.Substring(0, iLast);
+                setOn = obj.GetFromPath(path, context);
+                path = path.Substring(iLast + 1);
+            }
+            if (setOn != null)
+            {
+                //TODO
+            }
+        }
+
+        /// <summary>
         /// Get the value of a property on this object at the specified path
         /// </summary>
         /// <param name="obj"></param>

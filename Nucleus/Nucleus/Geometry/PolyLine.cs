@@ -177,6 +177,31 @@ namespace Nucleus.Geometry
         #region Static Methods
 
         /// <summary>
+        /// Static factory method to create a polyline representing a trapezoid centred on the
+        /// origin of the XY plane.  If depth or both widths are 0 or lower, null will be returned instead.
+        /// </summary>
+        /// <param name="depth">The depth of the trapezoid</param>
+        /// <param name="topWidth">The width of the top of the trapezoid</param>
+        /// <param name="baseWidth">The width of the base of the trapezoid</param>
+        /// <returns></returns>
+        public static PolyLine Trapezoid(double depth, double topWidth, double baseWidth)
+        {
+            if (depth > 0 && (topWidth > 0 || baseWidth > 0))
+            {
+                topWidth = Math.Max(0, topWidth);
+                baseWidth = Math.Max(0, baseWidth);
+                return new PolyLine(new Vector[]
+                {
+                    new Vector(topWidth/2, depth/2),
+                    new Vector(-topWidth/2, depth/2),
+                    new Vector(-baseWidth/2, -depth/2),
+                    new Vector(baseWidth/2, -depth/2)
+                }, true);
+            }
+            else return null;
+        }
+
+        /// <summary>
         /// Static factory method to create a polyline representing a rectangle centred on the
         /// origin on the XY plane.  If the depth or width are 0 or lower null will be returned instead.
         /// </summary>
