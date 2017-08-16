@@ -18,7 +18,8 @@ namespace Nucleus.IO
             Add(typeof(LinearElement), 
                 "EL\t{" + CONTEXT + ".GetID()}\t{Name}\tNO_RGB\t{" + CONTEXT + ".ElementType()}\t{Family." + CONTEXT + ".GetID()}\t{" + CONTEXT + ".ElementGroup()}\t{StartNode." + CONTEXT + ".GetID()}\t{EndNode." + CONTEXT + ".GetID()}\t\t{Orientation.Degrees}");
             Add(typeof(PanelElement),
-                IF + " *.HasMeshRepresentation()" + THEN + "EL\t{" + CONTEXT + ".GetID()}\t{Name}\tNO_RGB\t{" + CONTEXT + ".ElementType()}\t{Family." + CONTEXT + ".GetID()}\t{" + CONTEXT + ".ElementGroup()}\t{" + CONTEXT + ".ElementTopo()}"); //TODO
+                IF + " *.HasMeshRepresentation()" + THEN + 
+                "EL\t{" + CONTEXT + ".GetID()}\t{Name}\tNO_RGB\t{" + CONTEXT + ".ElementType()}\t{Family." + CONTEXT + ".GetID()}\t{" + CONTEXT + ".ElementGroup()}\t{" + CONTEXT + ".ElementTopo()}"); //TODO
             Add(typeof(SectionFamily), 
                 "PROP_SEC\t{" + CONTEXT + ".GetID()}\t{Name}\tNO_RGB\t{" + CONTEXT + ".FamilyMaterial()}\t{" + CONTEXT + ".SectionDescription()}");
             Add(typeof(BuildUpFamily),

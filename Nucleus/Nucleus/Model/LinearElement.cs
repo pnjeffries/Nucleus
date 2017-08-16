@@ -211,7 +211,7 @@ namespace Nucleus.Model
         /// will point as closely as possible towards the given vector.
         /// </summary>
         /// <param name="vector"></param>
-        public void OrientateToVector(Vector vector)
+        public override void OrientateToVector(Vector vector)
         {
             var coordSys = Geometry.LocalCoordinateSystem(0.5, Angle.Zero);
             Orientation = coordSys.YZPlane().GlobalToLocal(vector, true).Angle;

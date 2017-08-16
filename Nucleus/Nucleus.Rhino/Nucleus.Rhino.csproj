@@ -51,6 +51,7 @@
     <Compile Include="NtoRC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RCtoN.cs" />
+    <Compile Include="RhinoCurve.cs" />
     <Compile Include="RhinoIDMappingTable.cs" />
     <Compile Include="RhinoMeshBuilder.cs" />
     <Compile Include="RhinoOutput.cs" />

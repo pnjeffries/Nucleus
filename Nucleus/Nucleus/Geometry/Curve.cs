@@ -254,7 +254,7 @@ namespace Nucleus.Geometry
         /// the x-axis lies within a certain angular limit of z, in which case the global X axis
         /// will be used instead.
         /// </summary>
-        /// <param name="tSpan">A normalised parameter defining a point along this curve.
+        /// <param name="t">A normalised parameter defining a point along this curve.
         /// Note that parameter-space is not necessarily uniform and does not equate to a normalised length.
         /// 0 = span start, 1 = span end.</param>
         /// <param name="orientation">The orientation angle.  The rotation of the Y and Z axes of the coordinate 

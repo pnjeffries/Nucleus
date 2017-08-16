@@ -56,6 +56,62 @@ namespace Nucleus.Geometry
             return "Surface";
         }
 
+        /// <summary>
+        /// Evaluate the local coordinate system of this surface.
+        /// By convention, the z-axis of the local coordinate system will point normal to the
+        /// surafce and the x-axis will be orientated as closely as possible to global X, unless
+        /// the x-axis lies within a certain angular limit of z, in which case the global Y axis
+        /// will be used instead.
+        /// </summary>
+        /// <param name="u">A normalised parameter defining the first coordinate of a point on this surface.
+        /// Note that parameter-space is not necessarily uniform and does not equate to a normalised length.
+        /// 0 = span start, 1 = span end.</param>
+        /// /// <param name="v">A normalised parameter defining the first coordinate of a point on this surface.
+        /// Note that parameter-space is not necessarily uniform and does not equate to a normalised length.
+        /// 0 = span start, 1 = span end.</param>
+        /// <param name="orientation">The orientation angle.  The rotation of the X and Y axes of the coordinate 
+        /// system around the Z axis, relative to default reference orientation.</param>
+        /// <param name="xLimit">The angular limit within which if the local Z and global X approach each other,
+        /// local X will be aligned towards global Y rather than global X.  By default, this is 1 degree.</param></param>
+        /// <returns></returns>
+        public abstract CartesianCoordinateSystem LocalCoordinateSystem(double u, double v, Angle orientation, Angle xLimit);
+
+        /// <summary>
+        /// Evaluate the local coordinate system of this surface.
+        /// By convention, the z-axis of the local coordinate system will point normal to the
+        /// surafce and the x-axis will be orientated as closely as possible to global X, unless
+        /// the x-axis lies within a certain angular limit of z, in which case the global Y axis
+        /// will be used instead.
+        /// </summary>
+        /// <param name="u">A normalised parameter defining the first coordinate of a point on this surface.
+        /// Note that parameter-space is not necessarily uniform and does not equate to a normalised length.
+        /// 0 = span start, 1 = span end.</param>
+        /// /// <param name="v">A normalised parameter defining the first coordinate of a point on this surface.
+        /// Note that parameter-space is not necessarily uniform and does not equate to a normalised length.
+        /// 0 = span start, 1 = span end.</param>
+        /// <param name="orientation">The orientation angle.  The rotation of the X and Y axes of the coordinate 
+        /// system around the Z axis, relative to default reference orientation.</param>
+        /// <returns></returns>
+        public CartesianCoordinateSystem LocalCoordinateSystem(double u, double v, Angle orientation)
+        {
+            return LocalCoordinateSystem(u, v, orientation, Angle.FromDegrees(1));
+        }
+
+        /// <summary>
+        /// Evaluate the local coordinate system of this surface.
+        /// By convention, the z-axis of the local coordinate system will point normal to the
+        /// surafce and the x-axis will be orientated as closely as possible to global X, unless
+        /// the x-axis lies within a certain angular limit of z, in which case the global Y axis
+        /// will be used instead.
+        /// </summary>
+        /// <param name="orientation">The orientation angle.  The rotation of the X and Y axes of the coordinate 
+        /// system around the Z axis, relative to default reference orientation.</param>
+        /// <returns></returns>
+        public CartesianCoordinateSystem LocalCoordinateSystem(Angle orientation)
+        {
+            return LocalCoordinateSystem(0.5, 0.5, orientation, Angle.FromDegrees(1));
+        }
+
         #endregion
     }
 }

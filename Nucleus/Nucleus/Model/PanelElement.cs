@@ -59,5 +59,20 @@ namespace Nucleus.Model
 
         #endregion
 
+        #region Methods
+
+        /// <summary>
+        /// Orientate this element such that the local X axis at the centre of the element
+        /// will point as closely as possible towards the given vector.
+        /// </summary>
+        /// <param name="vector"></param>
+        public override void OrientateToVector(Vector vector)
+        {
+            var coordSys = Geometry.LocalCoordinateSystem(0.5, 0.5, Angle.Zero);
+            Orientation = coordSys.GlobalToLocal(vector, true).Angle;
+        }
+
+        #endregion
+
     }
 }

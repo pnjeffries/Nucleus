@@ -216,6 +216,17 @@ namespace Nucleus.Geometry
             return "Planar Region";
         }
 
+        public override CartesianCoordinateSystem LocalCoordinateSystem(double u, double v, Angle orientation, Angle xLimit)
+        {
+            //TODO: Offset according to u, v coordinates?
+            Plane result = Perimeter.Plane();
+            Vector alignX = Vector.UnitX;
+            Angle angleBetween = result.Z.AngleBetween(alignX);
+            if (angleBetween <= xLimit || angleBetween >= Angle.Straight - xLimit) alignX = Vector.UnitY;
+            Angle toOrient = result.X.AngleBetween(alignX);
+            return result.Rotate(toOrient + orientation);
+        }
+
         #endregion
     }
 }

@@ -221,6 +221,14 @@ namespace Nucleus.Model
             return false;
         }
 
+        /// <summary>
+        /// Modify the orientation of this element so that the appropriate axis
+        /// of the local coordinate system (Z for linear elements, X for panels)
+        /// points as closely as possible towards the specified guide vector.
+        /// </summary>
+        /// <param name="vector"></param>
+        public abstract void OrientateToVector(Vector vector);
+
         #endregion
 
     }

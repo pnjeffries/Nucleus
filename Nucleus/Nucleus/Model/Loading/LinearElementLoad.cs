@@ -21,7 +21,7 @@ namespace Nucleus.Model.Loading
         /// stored as a multiplication factor for the base value mapped against a
         /// normalised length along the element.
         /// By default, this distribution contains a single value of 1.0, representing
-        /// a uniformly distributed load
+        /// a uniformly distributed load with a scaling factor of 1.
         /// </summary>
         /// <remarks>Currently not possible to have sudden stops... fix?</remarks>
         public LinearDoubleDataSet Distribution
