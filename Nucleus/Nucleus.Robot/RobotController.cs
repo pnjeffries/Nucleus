@@ -190,7 +190,7 @@ namespace Nucleus.Robot
         {
             RaiseMessage("Reading Nodes...");
             //Delete all mapped nodes:
-            if (context.Options.DeleteMissingObjects) context.IDMap.AllMappedNodes(model).DeleteAll();
+            if (context.Options.DeleteObjects) context.IDMap.AllMappedNodes(model).DeleteAll();
 
             for (int i = 1; i <= robotNodes.Count; i++)
             {
@@ -293,7 +293,7 @@ namespace Nucleus.Robot
             RaiseMessage("Reading Bars...");
 
             //Delete all previously mapped linear elements:
-            if (context.Options.DeleteMissingObjects) context.IDMap.AllMappedLinearElements(model).DeleteAll();
+            if (context.Options.DeleteObjects) context.IDMap.AllMappedLinearElements(model).DeleteAll();
 
             IRobotCollection bars = Robot.Project.Structure.Bars.GetAll();
             for (int i = 1; i <= bars.Count; i++)
@@ -349,7 +349,7 @@ namespace Nucleus.Robot
             RaiseMessage("Reading Slabs...");
 
             //Delete all previously mapped panel elements:
-            if (context.Options.DeleteMissingObjects) context.IDMap.AllMappedPanelElements(model).DeleteAll();
+            if (context.Options.DeleteObjects) context.IDMap.AllMappedPanelElements(model).DeleteAll();
 
             IRobotCollection objs = Robot.Project.Structure.Objects.GetAll();
             for (int i = 1; i <= objs.Count; i++)
@@ -656,6 +656,7 @@ namespace Nucleus.Robot
             return Robot.Project.Structure.Bars.Get(id) as IRobotBar;
         }
 
+
         /// <summary>
         /// Create a new panel object within the currently open Robot document
         /// </summary>
@@ -809,7 +810,7 @@ namespace Nucleus.Robot
             if (context.IDMap.HasSecondID(context.IDMap.NodeCategory, node.GUID))
             {
                 mappedID = int.Parse(context.IDMap.GetSecondID(context.IDMap.NodeCategory, node.GUID));
-                if (node.IsDeleted)
+                if (node.IsDeleted && context.Options.DeleteObjects)
                 {
                     Robot.Project.Structure.Nodes.Delete(mappedID);
                     context.IDMap.Remove(node);
@@ -856,7 +857,7 @@ namespace Nucleus.Robot
             if (context.IDMap.HasSecondID(context.IDMap.BarCategory, element.GUID))
             {
                 mappedID = int.Parse(context.IDMap.GetSecondID(context.IDMap.BarCategory, element.GUID));
-                if (element.IsDeleted)
+                if (element.IsDeleted && context.Options.DeleteObjects)
                 {
                     Robot.Project.Structure.Bars.Delete(mappedID);
                     context.IDMap.Remove(element);
@@ -965,12 +966,19 @@ namespace Nucleus.Robot
                     {
                         obj.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, GetMappedThicknessID(element.Family, context));
                     }
+
+                    Vector dir = new Vector(element.Orientation);
+                    obj.Main.Attribs.SetDirX(IRobotObjLocalXDirDefinitionType.I_OLXDDT_CARTESIAN, dir.X, dir.Y, dir.Z);
                     
                     obj.Initialize();
                     obj.Update();
 
                     context.IDMap.Add(element, obj);
                 }
+            }
+            else if (obj != null && context.Options.DeleteObjects)
+            {
+                Robot.Project.Structure.Objects.Delete(obj.Number);
             }
             return obj;
         }
@@ -1183,7 +1191,7 @@ namespace Nucleus.Robot
                     result = angleProfile;
                 }
 
-                if (data.Type == IRobotBarSectionType.I_BST_STANDARD)
+                if (result != null && data.Type == IRobotBarSectionType.I_BST_STANDARD)
                 {
                     result.CatalogueName = data.Name;
                 }

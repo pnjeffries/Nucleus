@@ -85,10 +85,11 @@ namespace Nucleus.Geometry
             {
                 if (Vertices.Count >= 3 && Circle != null)
                 {
+
                     Angle toStart = Circle.Azimuth(Vertices.First().Position);
                     Angle toEnd = Circle.Azimuth(Vertices.Last().Position).NormalizeTo2PI();
                     Angle toMid = Circle.Azimuth(Vertices[1].Position).NormalizeTo2PI();
-                    return toEnd > toMid;
+                    return (toEnd < toMid) ^ Circle.L.Z < 0;
                 }
                 return false;
             }

@@ -3,6 +3,7 @@ using Nucleus.Maths;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,6 +34,7 @@ namespace Nucleus.WPF
         /// <param name="e"></param>
         private static object OnSourceDataChanged(DependencyObject d, object baseValue)
         {
+            ((SpiderDiagram)d).WatchSource(baseValue);
             ((SpiderDiagram)d).Refresh();
             return baseValue;
         }
@@ -67,6 +69,26 @@ namespace Nucleus.WPF
         #endregion
 
         #region Methods
+
+        private void WatchSource(object newValue)
+        {
+            INamedDataSetCollection dColl = SourceData;
+            if (dColl != null && dColl is INotifyCollectionChanged)
+            {
+                INotifyCollectionChanged nColl = (INotifyCollectionChanged)dColl;
+                nColl.CollectionChanged -= SourceData_CollectionChanged;
+            }
+            if (newValue != null && newValue is INotifyCollectionChanged)
+            {
+                INotifyCollectionChanged nColl = (INotifyCollectionChanged)newValue;
+                nColl.CollectionChanged += SourceData_CollectionChanged;
+            }
+        }
+
+        private void SourceData_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            Refresh();
+        }
 
         /// <summary>
         /// Refresh and redraw the diagram

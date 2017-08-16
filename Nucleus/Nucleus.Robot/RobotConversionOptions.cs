@@ -107,8 +107,6 @@ namespace Nucleus.Robot
             set { ChangeProperty(ref _PanelElements, value, "PanelElements"); }
         }
 
-        
-
         #region Constructors
 
         /// <summary>

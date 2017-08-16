@@ -9,7 +9,7 @@ using Nucleus.Extensions;
 
 namespace Nucleus.Model.SectionProfiles
 {
-    public class TrapezoidHollowProfile : TrapezoidProfile
+    /*public class TrapezoidHollowProfile : TrapezoidProfile
     {
         #region Properties
 
@@ -94,15 +94,16 @@ namespace Nucleus.Model.SectionProfiles
         {
             var result = new CurveCollection();
             double a = (BaseWidth - TopWidth).Abs() / 2;
-            double tWx = Depth * WebThickness * Math.Sqrt(a.Squared() + Depth.Squared());
+            double tWx = WebThickness * Math.Sqrt(a.Squared() + Depth.Squared())/Depth;
+            double xF = a*(FlangeThickness - WebThickness * Math.Sqrt(a.Squared() + Depth.Squared())/a) / Depth;
               // \\
-             //   \\
-            //     \\
-            //TODO: Adjust webthickness for slope
-            result.Add(PolyLine.Trapezoid(Depth - 2 * FlangeThickness, TopWidth - 2 * tWx, BaseWidth - 2 * tWx));
+              //   \\
+              //     \\
+            var voidCrv = PolyCurve.Trapezoid(Depth - 2 * FlangeThickness, TopWidth - 2 * (tWx - xF), BaseWidth - 2 * (tWx + xF));
+            if (voidCrv != null) result.Add(voidCrv);
             return result;
         }
          
         #endregion
-    }
+    }*/
 }
