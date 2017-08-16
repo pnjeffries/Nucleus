@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using Nucleus.Base;
+using Nucleus.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,16 +38,20 @@ namespace Nucleus.Conversion
         /// <summary>
         /// Private backing field for DeleteMissingObjects property
         /// </summary>
-        private bool _DeleteMissingObjects = true;
+        private bool _DeleteObjects = true;
 
         /// <summary>
         /// Should objects missing from the source dataset during synchronisation be deleted from the
         /// target model?
         /// </summary>
-        public bool DeleteMissingObjects
+        /// <summary>
+        /// Read/Write Panel Elements?
+        /// </summary>
+        [AutoUI(100, ToolTip = "Delete objects missing or marked as deleted in the target model?")]
+        public bool DeleteObjects
         {
-            get { return _DeleteMissingObjects; }
-            set { _DeleteMissingObjects = value;  NotifyPropertyChanged("DeleteMissingObjects"); }
+            get { return _DeleteObjects; }
+            set { _DeleteObjects = value;  NotifyPropertyChanged("DeleteObjects"); }
         }
 
         #endregion
