@@ -21,7 +21,7 @@ namespace Nucleus.WPF.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return Angle.FromDegrees((double)value);
+            return Angle.FromDegrees(double.Parse(value.ToString()));
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Nucleus.WPF.Converters
         /// <returns></returns>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            double v = (double)value;
+            double v = double.Parse(value.ToString());
             return v / 1000;
         }
     }
