@@ -711,6 +711,19 @@ namespace Nucleus.Geometry
             return result;
         }
 
+        /// <summary>
+        /// Calculate and return the plane defined by the first three vertices of this
+        /// face.
+        /// </summary>
+        /// <returns></returns>
+        public Plane GetPlane()
+        {
+            //TODO: This could fail if the three points are co-linear.  Fix!
+            if (Count > 2)
+                return Plane.From3Points(this[0].Position, this[1].Position, this[2].Position);
+            else return null;
+        }
+
         #endregion
 
     }

@@ -372,6 +372,27 @@ namespace Nucleus.Model
         #region Methods
 
         /// <summary>
+        /// Try to add a collection of modelobjects to the model, if they are of a
+        /// suitable type and do not already exist within it.  The correct storage
+        /// table(s) will be automatically selected based on the object's type.
+        /// </summary>
+        /// <param name="objects">The collection of objects to add to the model</param>
+        /// <returns>True if any of the objects in the collection could be added,
+        /// else false.</returns>
+        public bool Add(ModelObjectCollection objects)
+        {
+            bool result = false;
+            if (objects != null)
+            {
+                foreach (var obj in objects)
+                {
+                    if (Add(obj)) result = true;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Try to add a new modelobject to the model, if it is of a suitable type
         /// and does not already exist within it.  The correct storage table will be
         /// automatically selected based on the object's type.

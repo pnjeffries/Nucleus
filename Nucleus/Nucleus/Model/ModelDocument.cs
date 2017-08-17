@@ -122,6 +122,17 @@ namespace Nucleus.Model
             return SaveAs(filePath, new ModelDocumentTextSerialiser(format));
         }
 
+        /// <summary>
+        /// Merge the contents of another ModelDocument into this one.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public virtual bool MergeIn(ModelDocument other)
+        {
+            return Model.Add(other?.Model?.Everything);
+            // TODO: Merge ID maps, etc?
+        }
+
         #endregion
 
         #region Static Methods

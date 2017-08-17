@@ -217,7 +217,12 @@ namespace Nucleus.Geometry
 
         public override CartesianCoordinateSystem LocalCoordinateSystem(double u, double v, Angle orientation, Angle xLimit)
         {
-            return null; //TODO
+            if (Faces != null && Faces.Count > 0)
+            {
+                MeshFace face = Faces[0];
+                return face.GetPlane();
+            }
+            return null;
         }
 
         #endregion

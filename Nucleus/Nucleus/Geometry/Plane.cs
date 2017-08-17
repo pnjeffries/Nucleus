@@ -183,5 +183,27 @@ namespace Nucleus.Geometry
 
         #endregion
 
+        #region Static Methods
+
+        /// <summary>
+        /// Construct a plane from three points in space.
+        /// The three points must be different, else this will fail and return null.
+        /// </summary>
+        /// <param name="origin">The point to be used as the origin of the plane</param>
+        /// <param name="ptX">A point lying on the X-axis</param>
+        /// <param name="ptXY">A point lying somewhere on the XY-plane, but not on the X-axis</param>
+        /// <returns></returns>
+        public static Plane From3Points(Vector origin, Vector ptX, Vector ptXY)
+        {
+            Vector xAxis = ptX - origin;
+            Vector xyVector = ptXY - origin;
+            if (!xAxis.IsZero() && !xyVector.IsZero())
+                return new Plane(origin, ptX - origin, ptXY - origin);
+            else
+                return null;
+        }
+
+        #endregion
+
     }
 }
