@@ -214,6 +214,12 @@ namespace Nucleus.Geometry
             return linkDictionary.Values.ToList();
         }
 
+
+        public override CartesianCoordinateSystem LocalCoordinateSystem(double u, double v, Angle orientation, Angle xLimit)
+        {
+            return null; //TODO
+        }
+
         #endregion
 
         #region Static Methods

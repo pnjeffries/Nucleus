@@ -14,5 +14,9 @@ namespace Nucleus.Model
     /// </summary>
     public class PointElement : Element<Point, BlockFamily>
     {
+        public override void OrientateToVector(Vector vector)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

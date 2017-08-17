@@ -551,7 +551,7 @@ namespace Nucleus.Meshing
         /// <param name="family"></param>
         public virtual void AddPanelPreview(Surface geometry, BuildUpFamily family)
         {
-            if (geometry.IsValid)
+            if (geometry.IsValid && family != null)
             {
                 if (geometry is PlanarRegion)
                 {
@@ -560,6 +560,17 @@ namespace Nucleus.Meshing
                     AddPlanarRegion(region, thickness, thickness * family.SetOut.FactorFromTop());
                 }
             }
+        }
+
+        /// <summary>
+        /// Add a set of vertices and faces to the mesh representing the specified element's
+        /// solid geometry.
+        /// </summary>
+        /// <param name="element"></param>
+        public void AddFamilyPreview(Element element)
+        {
+            if (element is LinearElement) AddSectionPreview((LinearElement)element);
+            else if (element is PanelElement) AddPanelPreview((PanelElement)element);
         }
 
         /// <summary>
