@@ -319,16 +319,20 @@
     <Compile Include="Rendering\IRenderable.cs" />
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Rendering\RenderingParameters.cs" />
+    <Compile Include="Deprecated\CaseResults.cs" />
     <Compile Include="Results\CaseResults.cs" />
+    <Compile Include="Results\ICaseResults.cs" />
     <Compile Include="Results\IModelObjectResult.cs" />
     <Compile Include="Results\IModelObjectResults.cs" />
-    <Compile Include="Results\LinearElementResults.cs" />
+    <Compile Include="Deprecated\LinearElementResults.cs" />
     <Compile Include="Results\LinearElementResultTypes.cs" />
+    <Compile Include="Deprecated\ModelObjectResults.cs" />
+    <Compile Include="Deprecated\ModelResults.cs" />
+    <Compile Include="Deprecated\NodeResults.cs" />
     <Compile Include="Results\ModelObjectResults.cs" />
     <Compile Include="Results\ModelResults.cs" />
-    <Compile Include="Results\NodeResults.cs" />
     <Compile Include="Results\NodeResultTypes.cs" />
-    <Compile Include="Results\AnalysisResults.cs" />
+    <Compile Include="Deprecated\AnalysisResults.cs" />
     <Compile Include="Results\ResultsDictionary.cs" />
     <Compile Include="UI\AutoUIAttribute.cs" />
     <Compile Include="UI\AutoUIComboBoxAttribute.cs" />
@@ -349,7 +353,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AI\" />
-    <Folder Include="Deprecated\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

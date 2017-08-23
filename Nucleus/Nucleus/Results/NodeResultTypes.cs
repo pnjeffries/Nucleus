@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Nucleus.Results
 {
     /// <summary>
-    /// Enum of node analysis result types
+    /// Enum of standard node analysis result types
     /// </summary>
     public enum NodeResultTypes
     {

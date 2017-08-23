@@ -8,6 +8,10 @@ using RC = Rhino.Geometry;
 
 namespace Nucleus.Rhino
 {
+    /// <summary>
+    /// A wrapper for Rhino curve geometry which allows it to be
+    /// interrogated as if it were a native Nucleus curve.  
+    /// </summary>
     public class RhinoCurve : Geometry.WrappedCurve
     {
         #region Properties
@@ -54,6 +58,22 @@ namespace Nucleus.Rhino
             }
         }
 
+        public override Vector StartPoint
+        {
+            get
+            {
+                return RCtoN.Convert(_Curve.PointAtStart);
+            }
+        }
+
+        public override Vector EndPoint
+        {
+            get
+            {
+                return RCtoN.Convert(_Curve.PointAtEnd);
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -82,6 +102,26 @@ namespace Nucleus.Rhino
             RC.Plane rcp = FBtoRC.Convert(onPlane);
             RC.AreaMassProperties.Compute(_Curve);
             return base.CalculateEnclosedArea(out centroid, onPlane);
+        }
+
+        public override Vector PointAt(double t)
+        {
+            return RCtoN.Convert(_Curve.PointAt(_Curve.Domain.ParameterAt(t)));
+        }
+
+        public override Vector PointAt(int span, double tSpan)
+        {
+            return PointAt(tSpan);
+        }
+
+        public override Vector TangentAt(double t)
+        {
+            return RCtoN.Convert(_Curve.TangentAt(_Curve.Domain.ParameterAt(t)));
+        }
+
+        public override Vector TangentAt(int span, double tSpan)
+        {
+            return TangentAt(tSpan);
         }
 
         #endregion

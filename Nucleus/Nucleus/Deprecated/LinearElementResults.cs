@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Results
+namespace Nucleus.Results.Deprecated
 {
     /// <summary>
     /// Result storage table for elements, keyed by result type

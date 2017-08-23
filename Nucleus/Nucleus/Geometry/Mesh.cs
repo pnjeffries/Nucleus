@@ -77,6 +77,17 @@ namespace Nucleus.Geometry
             }
         }
 
+        /// <summary>
+        /// Get the total number of faces in the mesh
+        /// </summary>
+        public override int FaceCount
+        {
+            get
+            {
+                return Faces.Count;
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -215,11 +226,11 @@ namespace Nucleus.Geometry
         }
 
 
-        public override CartesianCoordinateSystem LocalCoordinateSystem(double u, double v, Angle orientation, Angle xLimit)
+        public override CartesianCoordinateSystem LocalCoordinateSystem(int i, double u, double v, Angle orientation, Angle xLimit)
         {
-            if (Faces != null && Faces.Count > 0)
+            if (Faces != null && Faces.Count > i)
             {
-                MeshFace face = Faces[0];
+                MeshFace face = Faces[i];
                 return face.GetPlane();
             }
             return null;

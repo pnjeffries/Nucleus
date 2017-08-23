@@ -107,7 +107,7 @@ namespace Nucleus.Geometry
         /// Get the start point of this curve
         /// </summary>
         [Dimension(DimensionType.Distance)]
-        public Vector StartPoint
+        public virtual Vector StartPoint
         {
             get
             {
@@ -121,7 +121,7 @@ namespace Nucleus.Geometry
         /// Get the end point of this curve
         /// </summary>
         [Dimension(DimensionType.Distance)]
-        public Vector EndPoint
+        public virtual Vector EndPoint
         {
             get
             {

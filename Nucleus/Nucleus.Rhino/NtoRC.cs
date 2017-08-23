@@ -249,7 +249,12 @@ namespace Nucleus.Rhino
                     }
                 }
                 RC.Brep[] result = RC.Brep.CreatePlanarBreps(rCrvs);
-                if (result.Length > 0) return result[0];
+                if (result == null)
+                {
+                    result = new RC.Brep[] 
+                    { RC.Brep.CreatePatch(rCrvs, 1, 1, Tolerance.Distance) };
+                }
+                if (result != null && result.Length > 0) return result[0];
              }
             return null;
         }
