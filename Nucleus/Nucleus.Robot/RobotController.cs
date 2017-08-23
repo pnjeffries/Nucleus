@@ -98,8 +98,10 @@ namespace Nucleus.Robot
             {
                 RaiseMessage("Saving Robot file...");
                 Robot.Project.SaveAs(filePath);
-                RaiseMessage("Robot file saved to " + filePath);
-                return true;
+                if (filePath.Exists)
+                    RaiseMessage("Robot file saved to " + filePath);
+
+                return filePath.Exists;
             }
             catch (COMException ex) { RaiseMessage(ex.Message); }
             return false;
@@ -123,6 +125,14 @@ namespace Nucleus.Robot
         {
             Robot.Project.Close();
             RaiseMessage("Robot file closed.");
+        }
+
+        /// <summary>
+        /// Make the robot application visible
+        /// </summary>
+        public void Show()
+        {
+            Robot.Visible = 1;
         }
 
         #region Robot to Nucleus
@@ -754,7 +764,7 @@ namespace Nucleus.Robot
                 Bool6D eRls = end.Releases;
                 if (!sRls.AllFalse || !eRls.AllFalse)
                 {
-                    string name = start.Releases.ToRestraintDescription() + " - " + end.Releases.ToRestraintDescription();
+                    string name = sRls.ToRestraintDescription() + " - " + eRls.ToRestraintDescription();
                     RobotLabelServer labels = Robot.Project.Structure.Labels;
                     if (labels.Exist(IRobotLabelType.I_LT_BAR_RELEASE, name) != 0)
                     {
@@ -789,7 +799,8 @@ namespace Nucleus.Robot
                             data.EndNode.RY = IRobotBarEndReleaseValue.I_BERV_STD;
                         if (eRls.ZZ)
                             data.EndNode.RZ = IRobotBarEndReleaseValue.I_BERV_STD;
-                        //TODO: Check this is the correct way to do this!
+                        //TODO: Check this is the correct way to do this
+                        return result;
                     }
                 }
             }

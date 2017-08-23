@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 namespace Nucleus.Results
 {
     /// <summary>
-    /// An interface for objects which store a result for a single object
-    /// for a single result type.  This may be a single value (e.g for nodes)
+    /// Interface for results dictionaries which store the results for a particular
+    /// results case
     /// </summary>
-    public interface IModelObjectResult
+    public interface ICaseResults
     {
     }
 }

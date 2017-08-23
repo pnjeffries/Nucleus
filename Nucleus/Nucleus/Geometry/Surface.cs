@@ -32,6 +32,21 @@ namespace Nucleus.Geometry
     [Serializable]
     public abstract class Surface : VertexGeometry
     {
+        #region Properties
+
+        /// <summary>
+        /// Get the number of faces (or, subsurfaces) that this surface posesses
+        /// </summary>
+        public virtual int FaceCount
+        {
+            get
+            {
+                return 1;
+            }
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -63,6 +78,7 @@ namespace Nucleus.Geometry
         /// the x-axis lies within a certain angular limit of z, in which case the global Y axis
         /// will be used instead.
         /// </summary>
+        ///  /// <param name="i">The index of the face on which to evaluate the local coordinate system</param>
         /// <param name="u">A normalised parameter defining the first coordinate of a point on this surface.
         /// Note that parameter-space is not necessarily uniform and does not equate to a normalised length.
         /// 0 = span start, 1 = span end.</param>
@@ -74,7 +90,7 @@ namespace Nucleus.Geometry
         /// <param name="xLimit">The angular limit within which if the local Z and global X approach each other,
         /// local X will be aligned towards global Y rather than global X.  By default, this is 1 degree.</param></param>
         /// <returns></returns>
-        public abstract CartesianCoordinateSystem LocalCoordinateSystem(double u, double v, Angle orientation, Angle xLimit);
+        public abstract CartesianCoordinateSystem LocalCoordinateSystem(int i, double u, double v, Angle orientation, Angle xLimit);
 
         /// <summary>
         /// Evaluate the local coordinate system of this surface.
@@ -83,6 +99,7 @@ namespace Nucleus.Geometry
         /// the x-axis lies within a certain angular limit of z, in which case the global Y axis
         /// will be used instead.
         /// </summary>
+        /// <param name="i">The index of the face on which to evaluate the local coordinate system</param>
         /// <param name="u">A normalised parameter defining the first coordinate of a point on this surface.
         /// Note that parameter-space is not necessarily uniform and does not equate to a normalised length.
         /// 0 = span start, 1 = span end.</param>
@@ -92,9 +109,9 @@ namespace Nucleus.Geometry
         /// <param name="orientation">The orientation angle.  The rotation of the X and Y axes of the coordinate 
         /// system around the Z axis, relative to default reference orientation.</param>
         /// <returns></returns>
-        public CartesianCoordinateSystem LocalCoordinateSystem(double u, double v, Angle orientation)
+        public CartesianCoordinateSystem LocalCoordinateSystem(int i, double u, double v, Angle orientation)
         {
-            return LocalCoordinateSystem(u, v, orientation, Angle.FromDegrees(1));
+            return LocalCoordinateSystem(i, u, v, orientation, Angle.FromDegrees(1));
         }
 
         /// <summary>
@@ -109,7 +126,7 @@ namespace Nucleus.Geometry
         /// <returns></returns>
         public CartesianCoordinateSystem LocalCoordinateSystem(Angle orientation)
         {
-            return LocalCoordinateSystem(0.5, 0.5, orientation, Angle.FromDegrees(1));
+            return LocalCoordinateSystem(0, 0.5, 0.5, orientation, Angle.FromDegrees(1));
         }
 
         #endregion

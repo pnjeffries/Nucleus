@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Results
+namespace Nucleus.Results.Deprecated
 {
     /// <summary>
     /// Results storage table for nodes, keyed by result type

@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RC = Rhino.Geometry;
 using R = Rhino;
+using Nucleus.Model;
 
 namespace Nucleus.Rhino
 {
@@ -237,8 +238,8 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static PlanarRegion ConvertToPlanarRegion(RC.Brep brep, RC.BrepFace face)
         {
-            if (face.IsPlanar())
-            {
+            //if (face.IsPlanar())
+            //{
                 int[] iEdges = face.AdjacentEdges();
                 RC.Curve[] curves = new RC.Curve[iEdges.Length];
                 for (int i = 0; i < iEdges.Length; i++)
@@ -265,7 +266,7 @@ namespace Nucleus.Rhino
                         return result;
                     }
                 }
-            }
+            //}
             return null;
         }
 

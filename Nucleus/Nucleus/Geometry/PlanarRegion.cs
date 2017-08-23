@@ -216,7 +216,7 @@ namespace Nucleus.Geometry
             return "Planar Region";
         }
 
-        public override CartesianCoordinateSystem LocalCoordinateSystem(double u, double v, Angle orientation, Angle xLimit)
+        public override CartesianCoordinateSystem LocalCoordinateSystem(int i, double u, double v, Angle orientation, Angle xLimit)
         {
             //TODO: Offset according to u, v coordinates?
             Plane result = Perimeter.Plane();
