@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Nucleus.Base;
 using Nucleus.Extensions;
 using Nucleus.UI;
 using System;
@@ -518,5 +519,17 @@ namespace Nucleus.Extensions
             else return FormatterServices.GetUninitializedObject(type);
         }
 
+        /// <summary>
+        /// Get the default copying behaviour for this type during duplication,
+        /// as (possibly) specified by the CopyAttribute on the type itself.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static CopyBehaviour DefaultCopyBehaviour(this Type type)
+        {
+            var cAtt = type.GetCustomAttribute<CopyAttribute>();
+            if (cAtt != null) return cAtt.Behaviour;
+            else return CopyBehaviour.COPY;
+        }
     }
 }

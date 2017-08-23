@@ -14,5 +14,10 @@ namespace Nucleus.Model
     [Serializable]
     public class VertexDataStore : DataStore<IVertexDataComponent, Vertex>
     {
+
+        public VertexDataStore(Vertex owner) : base(owner) { }
+
+        public VertexDataStore() : base() { }
+
     }
 }

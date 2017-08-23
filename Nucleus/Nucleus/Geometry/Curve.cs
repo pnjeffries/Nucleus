@@ -211,7 +211,7 @@ namespace Nucleus.Geometry
             if (Closed) t = t % 1.0;
 
             //Calculate span
-            if (t == 1.0)
+            if (t >= 1.0)
             {
                 return TangentAt(SegmentCount - 1, 1.0);
             }
@@ -288,6 +288,11 @@ namespace Nucleus.Geometry
             double tSpan = t * SegmentCount;
             int span = (int)Math.Floor(tSpan);
             tSpan = tSpan % 1.0; //Position in span
+            if (span >= SegmentCount)
+            {
+                span = SegmentCount - 1;
+                tSpan = 1.0;
+            }
             return LocalCoordinateSystem(span, tSpan, orientation, zLimit);
         }
 

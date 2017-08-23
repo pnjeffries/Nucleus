@@ -123,7 +123,6 @@ namespace Nucleus.Model
                     voidCrv.Move(offset);
                 }
             }
-           
         }
 
         /// <summary>

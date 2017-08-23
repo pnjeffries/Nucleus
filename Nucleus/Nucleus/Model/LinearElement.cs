@@ -229,6 +229,17 @@ namespace Nucleus.Model
             //TODO: Adjust for cut-backs, penetrations etc?
         }
 
+        /// <summary>
+        /// Get the local coordinate system of this element
+        /// </summary>
+        /// <param name="t">The normalised parameter along the element at which to retrieve the
+        /// coordinate system.  By default this will be 0 (i.e. the start of the element)</param>
+        /// <returns></returns>
+        public CartesianCoordinateSystem LocalCoordinateSystem(double t = 0)
+        {
+            return Geometry?.LocalCoordinateSystem(t, Orientation);
+        }
+
         #endregion
 
     }

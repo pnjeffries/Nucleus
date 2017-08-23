@@ -86,6 +86,7 @@ namespace Nucleus.Base
             if (objectMap == null) objectMap = new Dictionary<object, object>();
             objectMap[obj] = clone; //Store the original-clone relationship in the map
             clone.CopyFieldsFrom(obj, ref objectMap);
+
             if (obj.GetType().IsCollection() && itemsBehaviour != CopyBehaviour.DO_NOT_COPY)
             {
                 ICollection source = (ICollection)obj;
@@ -93,7 +94,12 @@ namespace Nucleus.Base
                 foreach (object item in source)
                 {
                     CopyBehaviour behaviour = itemsBehaviour;
-                    object value = ValueToAssign(item, ref itemsBehaviour, itemsBehaviour, ref objectMap);
+                    if (item != null && item is IDuplicatable)
+                    {
+                        CopyAttribute cAtt = item.GetType().GetCustomAttribute<CopyAttribute>();
+                        if (cAtt != null) behaviour = cAtt.Behaviour;
+                    }
+                    object value = ValueToAssign(item, ref behaviour, itemsBehaviour, ref objectMap);
                     if (target is IList)
                     {
                         ((IList)target).Add(value);

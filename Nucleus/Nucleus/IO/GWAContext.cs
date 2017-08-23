@@ -1,4 +1,5 @@
-﻿using Nucleus.Conversion;
+﻿using Nucleus.Base;
+using Nucleus.Conversion;
 using Nucleus.Extensions;
 using Nucleus.Geometry;
 using Nucleus.Model;
@@ -139,6 +140,20 @@ namespace Nucleus.IO
             }
             return sb.ToString();
             //TODO : Multi-span linear elements?
+        }
+
+        /// <summary>
+        /// Convert a Bool6D to a GWA release description
+        /// </summary>
+        /// <returns></returns>
+        public string ToReleaseString()
+        {
+            if (SourceObject is Bool6D)
+            {
+                Bool6D b6D = (Bool6D)SourceObject;
+                return b6D.ToString("R", "F");
+            }
+            return "FFFFFF";
         }
 
         /// <summary>

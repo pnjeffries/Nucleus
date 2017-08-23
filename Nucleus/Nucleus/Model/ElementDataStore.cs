@@ -43,6 +43,8 @@ namespace Nucleus.Model
         {
         }
 
+        public ElementDataStore() : base() { }
+
         #endregion
 
         #region Operators

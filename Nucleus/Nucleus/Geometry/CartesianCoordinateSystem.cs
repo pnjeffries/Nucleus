@@ -282,6 +282,15 @@ namespace Nucleus.Geometry
             return new Plane(Origin, X, Z);
         }
 
+        /// <summary>
+        /// Invert the directions of the X and Y axes, keeping Z the same
+        /// </summary>
+        /// <returns></returns>
+        public CartesianCoordinateSystem ReverseXY()
+        {
+            return new CartesianCoordinateSystem(Origin, -X, -Y, Z);
+        }
+
         #endregion
     }
 }

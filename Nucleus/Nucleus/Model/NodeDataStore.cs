@@ -17,6 +17,8 @@ namespace Nucleus.Model
 
         public NodeDataStore(Node owner) : base(owner) { }
 
+        public NodeDataStore() : base() { }
+
         #endregion
 
         #region Methods

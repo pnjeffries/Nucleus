@@ -12,6 +12,7 @@ namespace Nucleus.Model
     /// restraint in a finite element analysis or physical simulation
     /// </summary>
     [Serializable]
+    [Copy(CopyBehaviour.DUPLICATE)]
     public sealed class NodeSupport : Unique, INodeDataComponent
     {
         #region Properties

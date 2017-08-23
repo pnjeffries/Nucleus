@@ -117,6 +117,16 @@ namespace Nucleus.Model
         }
 
         /// <summary>
+        /// TODO: Provide the combined offset to the centreline of the element's
+        /// section or build-up from this vertex.
+        /// NOT YET IMPLEMENTED PROPERLY!
+        /// </summary>
+        public Vector CombinedOffset
+        {
+            get { return Offset; }
+        }
+
+        /// <summary>
         /// The translational and rotational releases of the element vertex
         /// </summary>
         public Bool6D Releases
@@ -133,6 +143,84 @@ namespace Nucleus.Model
                     Vertex.GetData<VertexReleases>().Releases = value;
                 else
                     Vertex.Data.Add(new VertexReleases(value));
+            }
+        }
+
+        /// <summary>
+        /// The translational release in the X-axis direction
+        /// </summary>
+        public bool Release_X
+        {
+            get { return Releases.X; }
+            set { Releases = Releases.WithX(value); }
+        }
+
+        /// <summary>
+        /// The translational release in the Y-axis direction
+        /// </summary>
+        public bool Release_Y
+        {
+            get { return Releases.Y; }
+            set { Releases = Releases.WithY(value); }
+        }
+
+        /// <summary>
+        /// The translational release in the Z-axis direction
+        /// </summary>
+        public bool Release_Z
+        {
+            get { return Releases.Z; }
+            set { Releases = Releases.WithZ(value); }
+        }
+
+        /// <summary>
+        /// The rotational release about the X-axis
+        /// </summary>
+        public bool Release_XX
+        {
+            get { return Releases.XX; }
+            set { Releases = Releases.WithXX(value); }
+        }
+
+        /// <summary>
+        /// The rotational release about the Y-axis
+        /// </summary>
+        public bool Release_YY
+        {
+            get { return Releases.YY; }
+            set { Releases = Releases.WithYY(value); }
+        }
+
+        /// <summary>
+        /// The rotational release about the Z-axis
+        /// </summary>
+        public bool Release_ZZ
+        {
+            get { return Releases.ZZ; }
+            set { Releases = Releases.WithZZ(value); }
+        }
+
+        /// <summary>
+        /// Get the local coordinate system of the element at this vertex
+        /// </summary>
+        public CartesianCoordinateSystem LocalCoordinateSystem
+        {
+            get
+            {
+                if (Element is LinearElement)
+                {
+                    var lEl = (LinearElement)Element;
+                    if (Description == "End")
+                    {
+                        return lEl.LocalCoordinateSystem(1).ReverseXY();
+                    }
+                    else if (Description == "Start")
+                    {
+                        return lEl.LocalCoordinateSystem();
+                    }
+                }
+                //TODO: Panel elements
+                return null;
             }
         }
 

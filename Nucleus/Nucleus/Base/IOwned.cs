@@ -38,4 +38,21 @@ namespace Nucleus.Base
         /// </summary>
         TOwner Owner { get; }
     }
+
+    public static class IOwnedExtensions
+    {
+        /// <summary>
+        /// Remove all objects from this list that do not have an owner
+        /// </summary>
+        /// <param name="list"></param>
+        public static void RemoveUnowned<TItem, TOwner>(this IList<TItem> list)
+            where TItem : IOwned<TOwner>
+        {
+            for (int i = list.Count - 1; i >= 0; i--)
+            {
+                var item = list[i];
+                if (item.Owner == null) list.RemoveAt(i);
+            }
+        }
+    }
 }

@@ -39,6 +39,7 @@ namespace Nucleus.Base
         /// Event raised when a property of this object is changed
         /// </summary>
         [field: NonSerialized]
+        [Copy(CopyBehaviour.DO_NOT_COPY)]
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
