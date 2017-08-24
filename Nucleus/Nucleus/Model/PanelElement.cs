@@ -68,7 +68,7 @@ namespace Nucleus.Model
         /// <param name="vector"></param>
         public override void OrientateToVector(Vector vector)
         {
-            var coordSys = Geometry.LocalCoordinateSystem(0.5, 0.5, Angle.Zero);
+            var coordSys = Geometry.LocalCoordinateSystem(0, 0.5, 0.5, Angle.Zero);
             Orientation = coordSys.GlobalToLocal(vector, true).Angle;
         }
 
