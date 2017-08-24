@@ -13,11 +13,12 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Name="LayoutRoot">
-        <Expander  IsExpanded="True">
+        <Expander  IsExpanded="{Binding Path=IsExpanded, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
             <Expander.Header>
                 <DockPanel
                     HorizontalAlignment="{Binding HorizontalAlignment, 
-                            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWayToSource}">
+                            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWayToSource}"
+                    >
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>

@@ -67,9 +67,25 @@ namespace Nucleus.WPF
             set { SetValue(BodyContentProperty, value); }
         }
 
+        /// <summary>
+        /// IsExpanded dependency property
+        /// </summary>
+        public static readonly DependencyProperty IsExpandedProperty
+            = DependencyProperty.Register("IsExpanded", typeof(bool), typeof(PropertiesExpander));
+
+        /// <summary>
+        /// Is the Expander Expanded?
+        /// </summary>
+        public bool IsExpanded
+        {
+            get { return (bool)GetValue(IsExpandedProperty); }
+            set { SetValue(IsExpandedProperty, value); }
+        }
+
         public PropertiesExpander()
         {
             InitializeComponent();
+
             //LayoutRoot.DataContext = this;
         }
     }
