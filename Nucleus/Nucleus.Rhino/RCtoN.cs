@@ -354,5 +354,32 @@ namespace Nucleus.Rhino
             }
             return result;
         }
+
+        /// <summary>
+        /// Convert a collection of rhino geometry to a VertexGeometryCollection
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        public static VertexGeometryCollection Convert(IList<RC.GeometryBase> geometry)
+        {
+            var result = new VertexGeometryCollection();
+            foreach (var item in geometry)
+            {
+                var subRes = Convert(item);
+                result.Add(subRes);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Convert a single Rhino geometry object to a VertexGeometryCollection
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        public static VertexGeometryCollection ConvertToCollection(RC.GeometryBase geometry)
+        {
+            return new VertexGeometryCollection(Convert(geometry));
+        }
+
     }
 }

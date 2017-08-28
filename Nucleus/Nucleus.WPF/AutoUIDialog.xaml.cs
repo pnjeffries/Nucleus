@@ -20,6 +20,8 @@ namespace Nucleus.WPF
     /// </summary>
     public partial class AutoUIDialog : Window
     {
+        #region Constructors
+
         private AutoUIDialog(bool cancelable)
         {
             InitializeComponent();
@@ -35,6 +37,18 @@ namespace Nucleus.WPF
         {
             MainPanel.DataContext = context;
         }
+
+        /// <summary>
+        /// Initialise a new AutoUIDialog with the specfied context object and title
+        /// </summary>
+        /// <param name="context"></param>
+        public AutoUIDialog(string title, object context, bool cancelable = false)
+            : this(context, cancelable)
+        {
+            Title = title;
+        }
+
+        #endregion
 
         private void OK_Click(object sender, RoutedEventArgs e)
         {

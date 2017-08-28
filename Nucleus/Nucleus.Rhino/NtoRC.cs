@@ -370,5 +370,21 @@ namespace Nucleus.Rhino
             return null;
         }
 
+        /// <summary>
+        /// Convert a collection of Nucleus geometry into a collection of RhinoCommon geometry
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        public static IList<RC.GeometryBase> Convert(VertexGeometryCollection geometry)
+        {
+            var result = new List<RC.GeometryBase>();
+            foreach (var vG in geometry)
+            {
+                result.Add(Convert(vG));
+            }
+            return result;
+        }
+
+
     }
 }

@@ -125,24 +125,35 @@ namespace Nucleus.Conversion
             {
                 sourceType = LoadedConverters.Keys.ClosestAncestor(sourceType);
             }
-            if (sourceType != null)
+            while (sourceType != null)
             {
-                var targetDictionary = LoadedConverters[sourceType];
-                Type targetType = toType;
-                if (!targetDictionary.ContainsKey(targetType))
-                {
-                    targetType = targetDictionary.Keys.ClosestDescendent(targetType);
-                }
-                if (targetType != null)
-                {
-                    IList<ITypeConverter> tConverters = targetDictionary[targetType];
-                    ITypeConverter tConverter = tConverters.First(); //TODO: Try multiple converters if the first is not successful?
+                ITypeConverter tConverter = GetConverter(sourceType, toType);
+                if (tConverter != null)
                     return tConverter.Convert(sourceObject);
-                }
+                else
+                    sourceType = LoadedConverters.Keys.ClosestAncestor(sourceType);
             }
             if (sourceObject is IConvertible) return System.Convert.ChangeType(sourceObject, toType);
             return sourceObject; //TODO test if can convert first?
         }
+
+        private ITypeConverter GetConverter(Type sourceType, Type toType)
+        {
+            var targetDictionary = LoadedConverters[sourceType];
+            Type targetType = toType;
+            if (!targetDictionary.ContainsKey(targetType))
+            {
+                targetType = targetDictionary.Keys.ClosestDescendent(targetType);
+            }
+            if (targetType != null)
+            {
+                IList<ITypeConverter> tConverters = targetDictionary[targetType];
+                ITypeConverter tConverter = tConverters.First();
+                return tConverter;
+            }
+            return null;
+        }
+
 
         /// <summary>
         /// Find all loaded converters that could conceivably be applied to the given pair of types

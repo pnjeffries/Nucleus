@@ -75,7 +75,7 @@ namespace Nucleus.Extensions
             foreach (Type ancestorType in inTypes)
             {
                 int dist = forType.InheritanceLevelsTo(ancestorType);
-                if (dist >= 0 && (minDist < 0 || dist < minDist))
+                if (dist > 0 && (minDist < 0 || dist < minDist))
                 {
                     minDist = dist;
                     closest = ancestorType;

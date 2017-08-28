@@ -11,7 +11,7 @@ namespace Nucleus.Robot
     /// <summary>
     /// A set of options to be used when writing from Nucleus to Robot 
     /// </summary>
-    public class RobotConversionOptions : ConversionOptions
+    public class RobotConversionOptions : ConversionOptions, IAutoUIHostable
     {
         /// <summary>
         /// Private backing field for UpdateSince property
@@ -115,6 +115,15 @@ namespace Nucleus.Robot
         public RobotConversionOptions()
         {
 
+        }
+
+        /// <summary>
+        /// Initialise a new RobotConversionOptions, specifying whether or not to update
+        /// </summary>
+        /// <param name="update"></param>
+        public RobotConversionOptions(bool update)
+        {
+            _Update = update;
         }
 
         /// <summary>

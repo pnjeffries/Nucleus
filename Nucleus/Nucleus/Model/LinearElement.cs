@@ -214,7 +214,7 @@ namespace Nucleus.Model
         public override void OrientateToVector(Vector vector)
         {
             var coordSys = Geometry.LocalCoordinateSystem(0.5, Angle.Zero);
-            Orientation = coordSys.YZPlane().GlobalToLocal(vector, true).Angle;
+            Orientation = coordSys.YZPlane().GlobalToLocal(vector, true).Angle - Angle.Right;
         }
 
         /// <summary>

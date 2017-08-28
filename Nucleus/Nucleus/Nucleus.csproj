@@ -336,6 +336,7 @@
     <Compile Include="Results\ResultsDictionary.cs" />
     <Compile Include="UI\AutoUIAttribute.cs" />
     <Compile Include="UI\AutoUIComboBoxAttribute.cs" />
+    <Compile Include="UI\IAutoUIHostable.cs" />
     <Compile Include="UI\IUserInteraction.cs" />
     <Compile Include="UI\UIOption.cs" />
     <Compile Include="Undo\CollectionUndoState.cs" />

@@ -323,6 +323,9 @@ namespace Nucleus.Robot
                     element.StartNode = context.IDMap.GetMappedModelNode(bar.StartNode, model);
                     element.EndNode = context.IDMap.GetMappedModelNode(bar.EndNode, model);
 
+                    // Orientation
+                    element.Orientation = Angle.FromDegrees(bar.Gamma);
+
                     // Section
                     if (bar.HasLabel(IRobotLabelType.I_LT_BAR_SECTION) != 0)
                     {
@@ -394,6 +397,12 @@ namespace Nucleus.Robot
                             //Assign Build-up family
                             pEl.Family = context.IDMap.GetMappedPanelFamily(rOO.GetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS), model);
                         }
+
+                        // Orientation:
+                        double oX, oY, oZ;
+                        rOO.Main.Attribs.GetDirX(out oX, out oY, out oZ);
+                        pEl.OrientateToVector(new Vector(oX, oY, oZ));
+
                         // TODO: Copy over more data
 
                         // Store mapping:
@@ -979,8 +988,9 @@ namespace Nucleus.Robot
                         obj.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, GetMappedThicknessID(element.Family, context));
                     }
 
-                    Vector dir = new Vector(element.Orientation);
-                    obj.Main.Attribs.SetDirX(IRobotObjLocalXDirDefinitionType.I_OLXDDT_CARTESIAN, dir.X, dir.Y, dir.Z);
+                    Vector dir = element.LocalCoordinateSystem()?.X ?? Vector.Unset;
+                    if (dir.IsValid())
+                        obj.Main.Attribs.SetDirX(IRobotObjLocalXDirDefinitionType.I_OLXDDT_CARTESIAN, dir.X, dir.Y, dir.Z);
                     
                     obj.Initialize();
                     obj.Update();

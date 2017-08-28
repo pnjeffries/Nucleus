@@ -116,6 +116,11 @@ namespace Nucleus.Geometry
             foreach (VertexGeometry vG in collection) Add(vG);
         }
 
+        public VertexGeometryCollection(VertexGeometry geometry) : base()
+        {
+            Add(geometry);
+        }
+
         #endregion
 
         #region Methods
