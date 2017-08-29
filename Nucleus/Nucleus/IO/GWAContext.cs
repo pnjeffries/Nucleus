@@ -1,4 +1,5 @@
-﻿using Nucleus.Conversion;
+﻿using Nucleus.Base;
+using Nucleus.Conversion;
 using Nucleus.Extensions;
 using Nucleus.Geometry;
 using Nucleus.Model;
@@ -142,6 +143,20 @@ namespace Nucleus.IO
         }
 
         /// <summary>
+        /// Convert a Bool6D to a GWA release description
+        /// </summary>
+        /// <returns></returns>
+        public string ToReleaseString()
+        {
+            if (SourceObject is Bool6D)
+            {
+                Bool6D b6D = (Bool6D)SourceObject;
+                return b6D.ToString("R", "F");
+            }
+            return "FFFFFF";
+        }
+
+        /// <summary>
         /// Get the current sub-component mesh face of the current panel element
         /// source object
         /// </summary>
@@ -218,7 +233,7 @@ namespace Nucleus.IO
                     else if (section.Profile is CircularHollowProfile)
                     {
                         var chsSection = (CircularHollowProfile)section.Profile;
-                        string.Format("STD CHS({0}) {1} {2}", "m", chsSection.Diameter, chsSection.WallThickness);
+                        return string.Format("STD CHS({0}) {1} {2}", "m", chsSection.Diameter, chsSection.WallThickness);
                     }
                     else if (section.Profile is CircularProfile)
                     {

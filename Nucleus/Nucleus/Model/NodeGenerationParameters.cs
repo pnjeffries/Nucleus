@@ -43,7 +43,12 @@ namespace Nucleus.Model
         /// <summary>
         /// The distance tolerance for creating connections
         /// </summary>
-        public double ConnectionTolerance { get; set; } = 0;
+        public double ConnectionTolerance { get; set; } = 0.1;
+
+        /// <summary>
+        /// The distance tolerance for deleting a previous connection
+        /// </summary>
+        public double DisconnectionTolerance { get; set; } = 0.5;
 
         /// <summary>
         /// Delete encoungered nodes that are no longer connected to elements?

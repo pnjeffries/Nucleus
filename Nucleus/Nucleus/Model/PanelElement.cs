@@ -68,8 +68,19 @@ namespace Nucleus.Model
         /// <param name="vector"></param>
         public override void OrientateToVector(Vector vector)
         {
-            var coordSys = Geometry.LocalCoordinateSystem(0.5, 0.5, Angle.Zero);
+            var coordSys = Geometry.LocalCoordinateSystem(0, 0.5, 0.5, Angle.Zero);
             Orientation = coordSys.GlobalToLocal(vector, true).Angle;
+        }
+
+        /// <summary>
+        /// Get the local coordinate system of this element
+        /// </summary>
+        /// <param name="t">The normalised parameter along the element at which to retrieve the
+        /// coordinate system.  By default this will be 0 (i.e. the start of the element)</param>
+        /// <returns></returns>
+        public CartesianCoordinateSystem LocalCoordinateSystem()
+        {
+            return Geometry?.LocalCoordinateSystem(Orientation);
         }
 
         #endregion

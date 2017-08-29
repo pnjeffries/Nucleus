@@ -197,7 +197,7 @@ namespace Nucleus.Extensions
                     else
                     {
                         ifLevel = IF_CONDITION; //Open if
-                        tagLevel++; //Look to recieve a value
+                        //tagLevel++; //Look to recieve a value
                     }
                 }
                 else if (ifLevel == NO_IFS || ifLevel == IF_TRUE)
@@ -236,7 +236,7 @@ namespace Nucleus.Extensions
                             invert = true;
                             expression = expression.TrimStart('!');
                         }
-                        object condition = obj.GetFromPath(expression);
+                        object condition = obj.GetFromPath(expression, context);
                         
                         if ((condition == null || (condition is bool && !(bool)condition)) != invert)
                         {

@@ -12,6 +12,7 @@ namespace Nucleus.Model
     /// releases of a vertex which forms part of an element definition.
     /// </summary>
     [Serializable]
+    [Copy(CopyBehaviour.DUPLICATE)]
     public class VertexReleases : Unique, IVertexDataComponent
     {
         #region Properties

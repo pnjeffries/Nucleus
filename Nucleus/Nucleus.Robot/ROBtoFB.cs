@@ -155,9 +155,9 @@ namespace Nucleus.Robot
         /// <param name="barEnd">The bar end to extract the position of</param>
         /// <param name="structureNodes">The full collection of nodes within the structure that contains the bar</param>
         /// <returns></returns>
-        public static Vector PositionOf(IRobotBarEnd barEnd, IRobotCollection structureNodes)
+        public static Vector PositionOf(IRobotBarEnd barEnd, RobotNodeServer structureNodes)
         {
-            IRobotNode node = structureNodes.Get(barEnd.Node);
+            var node = (IRobotNode)structureNodes.Get(barEnd.Node);
             return PositionOf(node) + Convert(barEnd.GetOffsetValue());
         }
 
@@ -167,7 +167,7 @@ namespace Nucleus.Robot
         /// <param name="bar">The bar to extract geometry for</param>
         /// <param name="structureNodes">The full collection of nodes within the structure that contains the bar</param>
         /// <returns></returns>
-        public static Line GeometryOf(IRobotBar bar, IRobotCollection structureNodes)
+        public static Line GeometryOf(IRobotBar bar, RobotNodeServer structureNodes)
         {
             return new Line(PositionOf(bar.Start, structureNodes), PositionOf(bar.End, structureNodes));
         }

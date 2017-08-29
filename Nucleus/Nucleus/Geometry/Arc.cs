@@ -55,7 +55,6 @@ namespace Nucleus.Geometry
         /// <summary>
         /// Private backing member for Circle property
         /// </summary>
-        [NonSerialized]
         private Circle _Circle = null;
 
         /// <summary>

@@ -165,7 +165,7 @@ namespace Nucleus.Model
         /// </summary>
         public bool Release_X
         {
-            get { return Vertices.CombinedValue(i => (bool)i.GetData<VertexReleases>()?.Releases.X, false, false); }
+            get { return Vertices.CombinedValue(i => i.HasData<VertexReleases>() ? i.GetData<VertexReleases>().Releases.X : false, false, false); }
             set
             {
                 foreach (var v in Vertices)
@@ -181,7 +181,7 @@ namespace Nucleus.Model
         /// </summary>
         public bool Release_Y
         {
-            get { return Vertices.CombinedValue(i => (bool)i.GetData<VertexReleases>()?.Releases.Y, false, false); }
+            get { return Vertices.CombinedValue(i => i.HasData<VertexReleases>() ? i.GetData<VertexReleases>().Releases.Y : false, false, false); }
             set
             {
                 foreach (var v in Vertices)
@@ -197,7 +197,7 @@ namespace Nucleus.Model
         /// </summary>
         public bool Release_Z
         {
-            get { return Vertices.CombinedValue(i => (bool)i.GetData<VertexReleases>()?.Releases.Z, false, false); }
+            get { return Vertices.CombinedValue(i => i.HasData<VertexReleases>() ? i.GetData<VertexReleases>().Releases.Z : false, false, false); }
             set
             {
                 foreach (var v in Vertices)
@@ -213,7 +213,7 @@ namespace Nucleus.Model
         /// </summary>
         public bool Release_XX
         {
-            get { return Vertices.CombinedValue(i => (bool)i.GetData<VertexReleases>()?.Releases.XX, false, false); }
+            get { return Vertices.CombinedValue(i => i.HasData<VertexReleases>() ? i.GetData<VertexReleases>().Releases.XX : false, false, false); }
             set
             {
                 foreach (var v in Vertices)
@@ -229,7 +229,7 @@ namespace Nucleus.Model
         /// </summary>
         public bool Release_YY
         {
-            get { return Vertices.CombinedValue(i => (bool)i.GetData<VertexReleases>()?.Releases.YY, false, false); }
+            get { return Vertices.CombinedValue(i => i.HasData<VertexReleases>() ? i.GetData<VertexReleases>().Releases.YY : false, false, false); }
             set
             {
                 foreach (var v in Vertices)
@@ -245,7 +245,7 @@ namespace Nucleus.Model
         /// </summary>
         public bool Release_ZZ
         {
-            get { return Vertices.CombinedValue(i => (bool)i.GetData<VertexReleases>()?.Releases.ZZ, false, false); }
+            get { return Vertices.CombinedValue(i => i.HasData<VertexReleases>() ? i.GetData<VertexReleases>().Releases.ZZ : false, false, false); }
             set
             {
                 foreach (var v in Vertices)

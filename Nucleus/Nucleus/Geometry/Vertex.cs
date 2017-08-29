@@ -190,7 +190,7 @@ namespace Nucleus.Geometry
         {
             get
             {
-                if (_Data == null) _Data = new VertexDataStore();
+                if (_Data == null) _Data = new VertexDataStore(this);
                 return _Data;
             }
         }
@@ -291,11 +291,17 @@ namespace Nucleus.Geometry
         public virtual void NotifyComponentPropertyChanged(object component, string propertyName)
         {
             //TODO: Review
+            string pName = null;
             if (component == null)
             {
-                NotifyPropertyChanged(string.Format("Data[{0}]", propertyName));
+                pName = string.Format("Data[{0}]", propertyName);
             }
-            else NotifyPropertyChanged(string.Format("Data[{0}].{1}", component.GetType().Name, propertyName));
+            else
+            {
+                pName = string.Format("Data[{0}].{1}", component.GetType().Name, propertyName);
+            }
+            NotifyPropertyChanged(pName);
+            if (Element != null) Element.NotifyComponentPropertyChanged(component, propertyName);
         }
 
         /// <summary>
@@ -314,7 +320,7 @@ namespace Nucleus.Geometry
         public bool HasData(Type componentType)
         {
             if (typeof(IVertexDataComponent).IsAssignableFrom(componentType))
-                return _Data != null && Data.Contains(componentType);
+                return _Data != null && _Data.Contains(componentType);
             return false;
         }
 
@@ -476,7 +482,16 @@ namespace Nucleus.Geometry
             Node = other.Node;
             if (other.HasData())
             {
-                _Data = other.Data.Duplicate();
+                //_Data = other.Data.Duplicate();
+                //_Data.Owner = this;
+                foreach (var component in other.Data)
+                {
+                    if (component is IDuplicatable && component.GetType().DefaultCopyBehaviour() == CopyBehaviour.DUPLICATE)
+                    {
+                        Data.Add((IVertexDataComponent)((IDuplicatable)component).Duplicate());
+                    }
+                    else Data.Add(component);
+                }
             }
             //Additional data should be copied here
         }

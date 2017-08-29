@@ -672,6 +672,16 @@ namespace Nucleus.Rhino
         /// </summary>
         /// <param name="layer">The layer index to delete</param>
         /// <returns></returns>
+        public static bool DeleteEmptySubLayers(string path)
+        {
+            return DeleteEmptySubLayers(GetLayerID(path));
+        }
+
+        /// <summary>
+        /// Delete the specified layer and all children provided the child tree contains no objects
+        /// </summary>
+        /// <param name="layer">The layer index to delete</param>
+        /// <returns></returns>
         public static bool DeleteEmptySubLayers(int layerID)
         {
             if (layerID >= 0 && layerID < RhinoDoc.ActiveDoc.Layers.Count)

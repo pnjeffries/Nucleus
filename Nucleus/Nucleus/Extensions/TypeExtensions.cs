@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Nucleus.Base;
 using Nucleus.Extensions;
 using Nucleus.UI;
 using System;
@@ -64,17 +65,21 @@ namespace Nucleus.Extensions
         /// </summary>
         /// <param name="forType">The type to seach for</param>
         /// <param name="inTypes">The collection of types to look within</param>
+        /// <param name="includeSelf">If true (default) the type itself may be returned if found.
+        /// Otherwise it will be excluded from the search and only its ancestors may be returned.</param>
         /// <returns>The type in this collection that is closest in the inheritance
         /// hierarchy to the specified type.  Or, null if the type does not have an
         /// ancestor in the collection.</returns>
-        public static Type ClosestAncestor(this IEnumerable<Type> inTypes, Type forType)
+        public static Type ClosestAncestor(this IEnumerable<Type> inTypes, Type forType, bool includeSelf = true)
         {
             int minDist = -1;
             Type closest = null;
+            int distLimit = 0;
+            if (!includeSelf) distLimit = 1;
             foreach (Type ancestorType in inTypes)
             {
                 int dist = forType.InheritanceLevelsTo(ancestorType);
-                if (dist >= 0 && (minDist < 0 || dist < minDist))
+                if (dist >= distLimit && (minDist < 0 || dist < minDist))
                 {
                     minDist = dist;
                     closest = ancestorType;
@@ -518,5 +523,17 @@ namespace Nucleus.Extensions
             else return FormatterServices.GetUninitializedObject(type);
         }
 
+        /// <summary>
+        /// Get the default copying behaviour for this type during duplication,
+        /// as (possibly) specified by the CopyAttribute on the type itself.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static CopyBehaviour DefaultCopyBehaviour(this Type type)
+        {
+            var cAtt = type.GetCustomAttribute<CopyAttribute>();
+            if (cAtt != null) return cAtt.Behaviour;
+            else return CopyBehaviour.COPY;
+        }
     }
 }

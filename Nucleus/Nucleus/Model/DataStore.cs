@@ -51,7 +51,10 @@ namespace Nucleus.Model
         /// <summary>
         /// The object that this data store belongs to
         /// </summary>
-        public TOwner Owner { get { return _Owner; } }
+        public TOwner Owner
+        {
+            get { return _Owner; }
+        }
 
         /// <summary>
         /// Get a data component within this store by it's type name.

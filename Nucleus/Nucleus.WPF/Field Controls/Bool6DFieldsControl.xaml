@@ -5,31 +5,33 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Nucleus.WPF"
              mc:Ignorable="d" 
-             d:DesignHeight="22" d:DesignWidth="300">
+             d:DesignHeight="44" d:DesignWidth="300">
     <Grid Name="LayoutRoot">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="0.25*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <local:SnapBorder>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <local:SnapBorder Grid.RowSpan="2">
             <TextBlock Text="{Binding Path=Label}" VerticalAlignment="Center"></TextBlock>
         </local:SnapBorder>
-        <CheckBox Grid.Column="1" Margin="2" HorizontalAlignment="Center" VerticalContentAlignment="Center"
+        <CheckBox Grid.Column="2" Margin="2" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
                   IsChecked="{Binding Path=XValue}">X</CheckBox>
-        <CheckBox Grid.Column="2" Margin="2" HorizontalAlignment="Center" VerticalContentAlignment="Center"
+        <CheckBox Grid.Column="3" Margin="2" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
                   IsChecked="{Binding Path=YValue}">Y</CheckBox>
-        <CheckBox Grid.Column="3" Margin="2" HorizontalAlignment="Center" VerticalContentAlignment="Center"
+        <CheckBox Grid.Column="4" Margin="2" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
                   IsChecked="{Binding Path=ZValue}">Z</CheckBox>
-        <CheckBox Grid.Column="4" Margin="2" HorizontalAlignment="Center" VerticalContentAlignment="Center"
+        <CheckBox Grid.Column="2" Grid.Row="1" Margin="2" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
                   IsChecked="{Binding Path=XXValue}">XX</CheckBox>
-        <CheckBox Grid.Column="5" Margin="2" HorizontalAlignment="Center" VerticalContentAlignment="Center"
+        <CheckBox Grid.Column="3" Grid.Row="1" Margin="2" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
                   IsChecked="{Binding Path=YYValue}">YY</CheckBox>
-        <CheckBox Grid.Column="6" Margin="2" HorizontalAlignment="Center" VerticalContentAlignment="Center"
+        <CheckBox Grid.Column="4" Grid.Row="1" Margin="2" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
                   IsChecked="{Binding Path=ZZValue}">ZZ</CheckBox>
     </Grid>
 </local:LabelledControl>

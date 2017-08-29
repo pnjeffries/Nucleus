@@ -40,7 +40,7 @@ namespace Nucleus.Model
         /// <summary>
         /// Private backing field for the Perimeter property
         /// </summary>
-        //[NonSerialized]
+        [NonSerialized]
         private Curve _Perimeter = null;
 
         /// <summary>
@@ -123,7 +123,6 @@ namespace Nucleus.Model
                     voidCrv.Move(offset);
                 }
             }
-           
         }
 
         /// <summary>

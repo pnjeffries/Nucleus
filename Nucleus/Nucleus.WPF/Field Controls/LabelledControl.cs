@@ -81,7 +81,7 @@ namespace Nucleus.WPF
             if (autoAtt != null && !string.IsNullOrWhiteSpace(autoAtt.Label))
                 Label = autoAtt.Label;
             // Otherwise, use property name:
-            else Label = property.Name;
+            else Label = property.Name.AutoSpace();
 
             // Label binding:
             if (!string.IsNullOrWhiteSpace(autoAtt?.LabelBinding))

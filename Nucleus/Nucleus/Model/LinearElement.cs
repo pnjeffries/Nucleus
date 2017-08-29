@@ -214,7 +214,7 @@ namespace Nucleus.Model
         public override void OrientateToVector(Vector vector)
         {
             var coordSys = Geometry.LocalCoordinateSystem(0.5, Angle.Zero);
-            Orientation = coordSys.YZPlane().GlobalToLocal(vector, true).Angle;
+            Orientation = coordSys.YZPlane().GlobalToLocal(vector, true).Angle - Angle.Right;
         }
 
         /// <summary>
@@ -227,6 +227,17 @@ namespace Nucleus.Model
             if (Family == null || Geometry == null) return 0;
             else return Family.GetArea(material) * Geometry.Length;
             //TODO: Adjust for cut-backs, penetrations etc?
+        }
+
+        /// <summary>
+        /// Get the local coordinate system of this element
+        /// </summary>
+        /// <param name="t">The normalised parameter along the element at which to retrieve the
+        /// coordinate system.  By default this will be 0 (i.e. the start of the element)</param>
+        /// <returns></returns>
+        public CartesianCoordinateSystem LocalCoordinateSystem(double t = 0)
+        {
+            return Geometry?.LocalCoordinateSystem(t, Orientation);
         }
 
         #endregion

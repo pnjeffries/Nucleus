@@ -113,7 +113,7 @@ namespace Nucleus.Model
         /// Default constructor.
         /// For use in factory methods only.
         /// </summary>
-        internal Node()
+        public Node()
         {
 
         }

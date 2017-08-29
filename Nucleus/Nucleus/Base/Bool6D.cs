@@ -116,6 +116,34 @@ namespace Nucleus.Base
             }
         }
 
+        /// <summary>
+        /// Get the value at the specified index, where:
+        /// 0 = X,
+        /// 1 = Y,
+        /// 2 = Z,
+        /// 3 = XX,
+        /// 4 = YY,
+        /// 5 = ZZ
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public bool this[int index]
+        {
+            get
+            {
+                switch (index)
+                {
+                    case 0: return X;
+                    case 1: return Y;
+                    case 2: return Z;
+                    case 3: return ZZ;
+                    case 4: return YY;
+                    case 5: return ZZ;
+                }
+                return false;
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -340,6 +368,24 @@ namespace Nucleus.Base
             if (YY) sb.Append("YY", "-");
             if (ZZ) sb.Append("ZZ", "-");
             if (sb.Length == 0) sb.Append("-");
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Turn this Bool6D into a string representing the current values
+        /// via the specified symbols for true and false for each component
+        /// </summary>
+        /// <param name="trueString">The string or character used to represent true values</param>
+        /// <param name="falseString">The string or character used to represent false values</param>
+        /// <returns></returns>
+        public string ToString(string trueString, string falseString)
+        {
+            var sb = new StringBuilder();
+            for (int i = 0; i < 6; i++)
+            {
+                if (this[i] == true) sb.Append(trueString);
+                else sb.Append(falseString);
+            }
             return sb.ToString();
         }
 

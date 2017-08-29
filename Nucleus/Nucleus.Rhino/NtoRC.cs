@@ -28,6 +28,16 @@ namespace Nucleus.Rhino
                 return R.RhinoMath.UnitScale(R.UnitSystem.Meters, R.RhinoDoc.ActiveDoc.ModelUnitSystem);
             }
         }
+        
+        /// <summary>
+        /// Convert a length in SI units (m) to the current Rhino unit scale
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static double Convert(double length)
+        {
+            return length * ConversionFactor;
+        }
 
         /// <summary>
         /// Convert a Nucleus vector representing a point to a RhinoCommon point.
@@ -359,6 +369,22 @@ namespace Nucleus.Rhino
             else if (geometry is Surface) return Convert((Surface)geometry);
             return null;
         }
+
+        /// <summary>
+        /// Convert a collection of Nucleus geometry into a collection of RhinoCommon geometry
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        public static IList<RC.GeometryBase> Convert(VertexGeometryCollection geometry)
+        {
+            var result = new List<RC.GeometryBase>();
+            foreach (var vG in geometry)
+            {
+                result.Add(Convert(vG));
+            }
+            return result;
+        }
+
 
     }
 }
