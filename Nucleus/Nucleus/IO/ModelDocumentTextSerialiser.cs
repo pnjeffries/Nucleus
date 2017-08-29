@@ -35,7 +35,7 @@ namespace Nucleus.IO
         public override bool WriteAll(ModelDocument source)
         {
             if (CustomHeader != null) Write(CustomHeader);
-            Write(source); // Document header
+            //Write(source); // Document header
             WriteModel(source.Model); // Model data
             if (CustomFooter != null) Write(CustomFooter);
             return true;

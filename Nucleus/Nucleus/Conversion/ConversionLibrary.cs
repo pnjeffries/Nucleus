@@ -131,7 +131,7 @@ namespace Nucleus.Conversion
                 if (tConverter != null)
                     return tConverter.Convert(sourceObject);
                 else
-                    sourceType = LoadedConverters.Keys.ClosestAncestor(sourceType);
+                    sourceType = LoadedConverters.Keys.ClosestAncestor(sourceType, false);
             }
             if (sourceObject is IConvertible) return System.Convert.ChangeType(sourceObject, toType);
             return sourceObject; //TODO test if can convert first?

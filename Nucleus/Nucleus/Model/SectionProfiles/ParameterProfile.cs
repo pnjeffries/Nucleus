@@ -40,7 +40,7 @@ namespace Nucleus.Model
         /// <summary>
         /// Private backing field for the Perimeter property
         /// </summary>
-        //[NonSerialized]
+        [NonSerialized]
         private Curve _Perimeter = null;
 
         /// <summary>

@@ -233,7 +233,7 @@ namespace Nucleus.IO
                     else if (section.Profile is CircularHollowProfile)
                     {
                         var chsSection = (CircularHollowProfile)section.Profile;
-                        string.Format("STD CHS({0}) {1} {2}", "m", chsSection.Diameter, chsSection.WallThickness);
+                        return string.Format("STD CHS({0}) {1} {2}", "m", chsSection.Diameter, chsSection.WallThickness);
                     }
                     else if (section.Profile is CircularProfile)
                     {
