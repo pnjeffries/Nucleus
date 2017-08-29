@@ -11,9 +11,13 @@ namespace Nucleus.Results
     /// An abstract base class for dictionaries of results for an individual model object,
     /// keyed by results case and then by type
     /// </summary>
-    public abstract class ModelObjectResults<TResults> 
+    public abstract class ModelObjectResults<TResults>
         : ResultsDictionary<ResultsCase, TResults>, IModelObjectResults
         where TResults : ICaseResults
     {
+        ICaseResults IModelObjectResults.Get(ResultsCase rCase)
+        {
+            return this[rCase];
+        }
     }
 }

@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 namespace Nucleus.Results
 {
     /// <summary>
-    /// Enum of standard linear element analysis result types
+    /// Results dictionary for a specific node, keyed by case and then by type
     /// </summary>
     [Serializable]
-    public enum LinearElementResultTypes
+    public class NodeResults : ModelObjectResults<CaseNodeResults>, IModelObjectResults
     {
-        
     }
 }

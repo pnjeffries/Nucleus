@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nucleus.Maths;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,11 +8,10 @@ using System.Threading.Tasks;
 namespace Nucleus.Results
 {
     /// <summary>
-    /// Enum of standard linear element analysis result types
+    /// Node results for a specific results case, keyed by type
     /// </summary>
     [Serializable]
-    public enum LinearElementResultTypes
+    public class CaseNodeResults : CaseResults<NodeResultTypes, Interval>
     {
-        
     }
 }

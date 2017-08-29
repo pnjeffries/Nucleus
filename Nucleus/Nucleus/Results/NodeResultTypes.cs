@@ -9,6 +9,7 @@ namespace Nucleus.Results
     /// <summary>
     /// Enum of standard node analysis result types
     /// </summary>
+    [Serializable]
     public enum NodeResultTypes
     {
         /// <summary>

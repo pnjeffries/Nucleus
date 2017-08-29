@@ -27,6 +27,7 @@ namespace Nucleus.Model
         }
 
         #endregion
+
         /// <summary>
         /// Does the specified item pass through this filter?
         /// </summary>
