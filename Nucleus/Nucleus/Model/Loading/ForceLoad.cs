@@ -56,6 +56,16 @@ namespace Nucleus.Model
         #region Methods
 
         /// <summary>
+        /// Set the force exerted by this load by specifying the force vector.
+        /// The direction and axis system will be derived from this information.
+        /// </summary>
+        /// <param name="forceVector"></param>
+        public void SetForce(Vector forceVector)
+        {
+            SetForce(forceVector, forceVector.Magnitude());
+        }
+
+        /// <summary>
         /// Set the force exerted by this load by specifying a direction vector and
         /// a value.  The direction and axis system will be derived from this information.
         /// </summary>
