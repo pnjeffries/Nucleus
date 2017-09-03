@@ -19,7 +19,7 @@ namespace Nucleus.Rhino
 
         public override int AddVertex(Vector pt)
         {
-            return _Mesh.Vertices.Add(FBtoRC.Convert(pt));
+            return _Mesh.Vertices.Add(NtoRC.Convert(pt));
         }
 
         public override int AddVertex(Vertex v)
