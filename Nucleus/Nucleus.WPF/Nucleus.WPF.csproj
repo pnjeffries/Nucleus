@@ -73,6 +73,7 @@
     <Compile Include="Converters\NumericIDConverter.cs" />
     <Compile Include="Converters\RadiansDegreesConverter.cs" />
     <Compile Include="Converters\ScaleConverter.cs" />
+    <Compile Include="Converters\SliderConverter.cs" />
     <Compile Include="Converters\TextConverter.cs" />
     <Compile Include="Converters\TreeViewLineConverter.cs" />
     <Compile Include="Converters\UndeletedCountConverter.cs" />

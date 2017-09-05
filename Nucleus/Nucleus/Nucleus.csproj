@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5169F74F-0BCC-42BF-829F-277F36EF7677}</ProjectGuid>
+    <ProjectGuid>{7635522C-178F-4DB5-9106-FF8DFD4B833B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nucleus</RootNamespace>
@@ -343,13 +343,13 @@
     <Compile Include="UI\IAutoUIHostable.cs" />
     <Compile Include="UI\IUserInteraction.cs" />
     <Compile Include="UI\UIOption.cs" />
-    <Compile Include="Undo\CollectionUndoState.cs" />
-    <Compile Include="Undo\PropertyUndoState.cs" />
-    <Compile Include="Undo\TransformUndoState.cs" />
-    <Compile Include="Undo\UndoManager.cs" />
-    <Compile Include="Undo\UndoStage.cs" />
-    <Compile Include="Undo\UndoState.cs" />
-    <Compile Include="Undo\UndoStageCollection.cs" />
+    <Compile Include="Units\Undo\CollectionUndoState.cs" />
+    <Compile Include="Units\Undo\PropertyUndoState.cs" />
+    <Compile Include="Units\Undo\TransformUndoState.cs" />
+    <Compile Include="Units\Undo\UndoManager.cs" />
+    <Compile Include="Units\Undo\UndoStage.cs" />
+    <Compile Include="Units\Undo\UndoState.cs" />
+    <Compile Include="Units\Undo\UndoStageCollection.cs" />
     <Compile Include="Units\DimensionAttribute.cs" />
     <Compile Include="Units\DimensionType.cs" />
   </ItemGroup>
