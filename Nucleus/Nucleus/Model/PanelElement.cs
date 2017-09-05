@@ -83,6 +83,18 @@ namespace Nucleus.Model
             return Geometry?.LocalCoordinateSystem(Orientation);
         }
 
+        /// <summary>
+        /// Get a point in space which nominally describes the position of this element,
+        /// to be used for display attachments and the like.
+        /// </summary>
+        /// <returns></returns>
+        public override Vector GetNominalPosition()
+        {
+            if (Geometry != null)
+                return Geometry.Vertices.AveragePoint();
+            else return Vector.Unset;
+        }
+
         #endregion
 
     }

@@ -115,6 +115,7 @@
     <Compile Include="Model\BlockFamily.cs" />
     <Compile Include="Model\ElementSet.cs" />
     <Compile Include="Model\GlobalCoordinateSystemReference.cs" />
+    <Compile Include="Model\IModelObjectTable.cs" />
     <Compile Include="Model\IsoMaterial.cs" />
     <Compile Include="Model\IDataOwner.cs" />
     <Compile Include="Model\IVertexDataComponent.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="Model\CoordinateSystemReferenceCollection.cs" />
     <Compile Include="Model\ModelObjectSetTable.cs" />
     <Compile Include="Model\MultiElementVertex.cs" />
+    <Compile Include="Model\PanelElementSet.cs" />
     <Compile Include="Model\PointElement.cs" />
     <Compile Include="Model\PropertyMatchFilter.cs" />
     <Compile Include="Model\SectionProfiles\ChannelProfile.cs" />

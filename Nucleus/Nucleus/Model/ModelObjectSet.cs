@@ -1,4 +1,5 @@
 ﻿using Nucleus.Base;
+using Nucleus.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,6 @@ namespace Nucleus.Model
     [Serializable]
     public abstract class ModelObjectSetBase : ModelObject
     {
-
         /// <summary>
         /// Private backing field for All property
         /// </summary>
@@ -273,6 +273,13 @@ namespace Nucleus.Model
         }
 
         /// <summary>
+        /// This function is used in some sub-types in order to provide built-in automatic filters.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        protected virtual bool PassInternalFilter(TItem item) { return true; }
+
+        /// <summary>
         /// Get all items of the relevent type from the model that this set belongs to
         /// </summary>
         /// <returns></returns>
@@ -291,14 +298,16 @@ namespace Nucleus.Model
                 // All items in model:
                 TCollection modelItems = GetItemsInModel();
                 foreach (TItem item in modelItems)
-                    unfiltered.Add(item);
+                    if (PassInternalFilter(item))
+                        unfiltered.Add(item);
             }
 
             if (BaseCollection != null)
             {
                 // Items in base collection:
                 foreach (TItem item in BaseCollection)
-                    unfiltered.TryAdd(item);
+                    if (PassInternalFilter(item))
+                        unfiltered.TryAdd(item);
             }
 
             if (SubSets != null)
@@ -309,7 +318,8 @@ namespace Nucleus.Model
                     // Expand each subset:
                     TCollection setItems = set.Items;
                     foreach (TItem item in setItems)
-                        unfiltered.TryAdd(item);
+                        if (PassInternalFilter(item))
+                            unfiltered.TryAdd(item);
                 }
             }
 
@@ -329,6 +339,25 @@ namespace Nucleus.Model
                 }
                 return result;
             }
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            if (All) sb.Append("All");
+            else if (BaseCollection != null && BaseCollection.Count > 0)
+            {
+                var ids = new List<long>();
+                foreach (TItem item in BaseCollection)
+                {
+                    ids.Add(item.NumericID);
+                }
+                sb.Append(ids.ToCompressedString());
+            }
+
+            //TODO: Add filters
+
+            return sb.ToString();
         }
 
         #endregion

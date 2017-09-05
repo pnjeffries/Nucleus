@@ -12,13 +12,8 @@ namespace Nucleus.Model
     /// Allows linear element collections to be defined via a base collection and a set of logical 
     /// filters which act upon that collection.
     /// </summary>
-    public class LinearElementSet : ModelObjectSet<LinearElement, LinearElementCollection,
-        ISetFilter<LinearElement>, SetFilterCollection<ISetFilter<LinearElement>, LinearElement>,
-        LinearElementSet, ModelObjectSetCollection<LinearElementSet>>
+    public class LinearElementSet : ElementSet<LinearElement>
     {
-        protected override LinearElementCollection GetItemsInModel()
-        {
-            return Model?.Elements?.LinearElements;
-        }
+
     }
 }

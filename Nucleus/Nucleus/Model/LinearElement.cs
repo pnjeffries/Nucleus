@@ -240,6 +240,18 @@ namespace Nucleus.Model
             return Geometry?.LocalCoordinateSystem(t, Orientation);
         }
 
+        /// <summary>
+        /// Get a point in space which nominally describes the position of this element,
+        /// to be used for display attachments and the like.
+        /// On Linear Elements, this is the mid-parameter-space point of the curve.
+        /// </summary>
+        /// <returns></returns>
+        public override Vector GetNominalPosition()
+        {
+            if (Geometry != null) return Geometry.PointAt(0.5);
+            else return Vector.Unset;
+        }
+
         #endregion
 
     }

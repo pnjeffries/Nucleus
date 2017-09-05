@@ -37,4 +37,21 @@ namespace Nucleus.Geometry
         Right,
         Origin
     }
+
+    /// <summary>
+    /// Extension methods for the HorizontalSetOut enum
+    /// </summary>
+    public static class HorizontalSetOutExtensions
+    {
+        /// <summary>
+        /// Is this set out relative to either the left or right edge?
+        /// </summary>
+        /// <param name="hSO"></param>
+        /// <returns></returns>
+        public static bool IsEdge(this HorizontalSetOut hSO)
+        {
+            if (hSO == HorizontalSetOut.Left || hSO == HorizontalSetOut.Right) return true;
+            else return false;
+        }
+    }
 }

@@ -33,7 +33,7 @@ namespace Nucleus.Model
     /// data structures in order to provide additional fast lookup capabilities
     /// </summary>
     [Serializable]
-    public class NodeTable : NodeCollection
+    public class NodeTable : NodeCollection, IModelObjectTable
     {
 
         #region Properties

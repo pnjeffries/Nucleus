@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using Nucleus.Model;
 
 namespace Nucleus.Results.Deprecated
 {
@@ -28,6 +29,20 @@ namespace Nucleus.Results.Deprecated
         /// Initialises a new empty ResultsDictionary
         /// </summary>
         public ModelObjectResults() : base() { }
+
+        #endregion
+
+        #region Methods
+
+        public ICaseResults Get(ResultsCase rCase)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Remove(ResultsCase rCase)
+        {
+            throw new NotImplementedException();
+        }
 
         #endregion
     }
