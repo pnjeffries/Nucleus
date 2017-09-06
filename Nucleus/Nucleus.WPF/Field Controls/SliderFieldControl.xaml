@@ -13,6 +13,7 @@
                 <!--<ResourceDictionary Source="pack://application:,,,/Salamander_UI;component/Resources.xaml"></ResourceDictionary>-->
             </ResourceDictionary.MergedDictionaries>
             <converters:NullOrEmptyVisibilityConverter x:Key="NullOrEmptyVisibilityConverter"/>
+            <converters:SliderConverter x:Key="SliderConverter"/>
         </ResourceDictionary>
     </local:FieldControl.Resources>
     <Grid Name="LayoutRoot">
@@ -30,15 +31,19 @@
                 <TextBlock Text="{Binding Path=Label}" VerticalAlignment="Center"
                            Visibility="{Binding Path=Label, Converter={StaticResource NullOrEmptyVisibilityConverter}}"/>
             </local:SnapBorder>
-            <TextBox Grid.Column="1" Text="{Binding Path=Value, StringFormat={}{0:0.#######}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
+            <TextBox Grid.Column="1" Text="{Binding Path=Value, StringFormat={}{0:0.#######}, Mode=TwoWay, UpdateSourceTrigger=LostFocus,
+                Converter={StaticResource SliderConverter}}" 
                  VerticalAlignment="Center"></TextBox>
             <local:SnapBorder Grid.Column="2">
                 <TextBlock Text="{Binding Path=Units}" VerticalAlignment="Center" Margin="1"
                            Visibility="{Binding Path=Units, Converter={StaticResource NullOrEmptyVisibilityConverter}}"/>
             </local:SnapBorder>
         </Grid>
-        <Slider Name="Slider" Grid.Column="1" Value="{Binding Path=Value, Mode=TwoWay}" Minimum="{Binding Path=Minimum}"
-                Maximum="{Binding Path=Maximum}" IsSnapToTickEnabled="{Binding Path=IsSnapToTickEnabled}"
+        <Slider Name="Slider" Grid.Column="1" 
+                Value="{Binding Path=Value, Mode=TwoWay, Converter={StaticResource SliderConverter}}" 
+                Minimum="{Binding Path=Minimum}"
+                Maximum="{Binding Path=Maximum}" 
+                IsSnapToTickEnabled="{Binding Path=IsSnapToTickEnabled}"
                 TickFrequency="{Binding Path=TickFrequency}" VerticalAlignment="Center" 
                 TickPlacement="{Binding Path=TickPlacement}"></Slider>
     </Grid>

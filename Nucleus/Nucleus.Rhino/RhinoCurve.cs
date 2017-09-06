@@ -99,7 +99,7 @@ namespace Nucleus.Rhino
 
         public override double CalculateEnclosedArea(out Vector centroid, Plane onPlane = null)
         {
-            RC.Plane rcp = FBtoRC.Convert(onPlane);
+            RC.Plane rcp = NtoRC.Convert(onPlane);
             RC.AreaMassProperties.Compute(_Curve);
             return base.CalculateEnclosedArea(out centroid, onPlane);
         }

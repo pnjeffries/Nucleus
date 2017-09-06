@@ -339,6 +339,23 @@ namespace Nucleus.Base
             }
         }
 
+        /// <summary>
+        /// Replace the object in this collection with the same key, at the position of the original.
+        /// If no object with the same key exists, the specified value will be added to the end of the list.
+        /// </summary>
+        /// <param name="item"></param>
+        public void Replace(TItem item)
+        {
+            TKey key = GetKeyForItem(item);
+            if (Contains(key))
+            {
+                int index = IndexOf(this[key]);
+                SetItem(index, item);
+            }
+            else
+                Add(item);
+        }
+
         #endregion
     }
 }

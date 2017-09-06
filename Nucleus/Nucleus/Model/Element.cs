@@ -192,6 +192,13 @@ namespace Nucleus.Model
         public abstract Family GetFamily();
 
         /// <summary>
+        /// Get a point in space which nominally describes the position of this element,
+        /// to be used for display attachments and the like.
+        /// </summary>
+        /// <returns></returns>
+        public abstract Vector GetNominalPosition();
+
+        /// <summary>
         /// Generate nodes for this element's vertices, if they do not already posess them
         /// them.
         /// </summary>

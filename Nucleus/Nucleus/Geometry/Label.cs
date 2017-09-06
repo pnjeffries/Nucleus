@@ -80,7 +80,7 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Privat backing field for VerticalSetOut property
+        /// Private backing field for VerticalSetOut property
         /// </summary>
         private VerticalSetOut _VerticalSetOut = VerticalSetOut.Top;
 

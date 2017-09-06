@@ -150,8 +150,10 @@ namespace Nucleus.WPF
                     Color outColor = color;
                     Color inColor = color;
                     outColor.A = 100;
-                    inColor.A = 50;
-                        pgon.Fill = new RadialGradientBrush(inColor, outColor);
+                    inColor.A = 10;
+                    var fill = new RadialGradientBrush(inColor, outColor);
+                    fill.Opacity = 0.5;
+                    pgon.Fill = fill;
                     pgon.Opacity = 0.75;
                     pgon.ToolTip = dataSet.Name;
                     PointCollection outerPts = new PointCollection();

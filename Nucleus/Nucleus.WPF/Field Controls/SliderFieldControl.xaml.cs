@@ -115,6 +115,28 @@ namespace Nucleus.WPF
             LayoutRoot.DataContext = this;
         }
 
+        /// <summary>
+        /// Minimum, maximum constructor
+        /// </summary>
+        /// <param name="minimum"></param>
+        /// <param name="maximum"></param>
+        public SliderFieldControl(double minimum, double maximum) : this()
+        {
+            Minimum = minimum;
+            Maximum = maximum;
+        }
+
+        /// <summary>
+        /// Minimum, maximum, tick frequency constructor
+        /// </summary>
+        /// <param name="minimum"></param>
+        /// <param name="maximum"></param>
+        /// <param name="tickFrequency"></param>
+        public SliderFieldControl(double minimum, double maximum, double tickFrequency) : this(minimum, maximum)
+        {
+            TickFrequency = tickFrequency;
+        }
+
         #endregion
 
         #region Methods
