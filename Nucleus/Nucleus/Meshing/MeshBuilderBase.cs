@@ -772,6 +772,29 @@ namespace Nucleus.Meshing
             }
         }
 
+        /// <summary>
+        /// Add faces and vertices to the mesh to represent a flat arrow with a head and a tail.
+        /// </summary>
+        /// <param name="tip">The position of the tip of the arrow</param>
+        /// <param name="direction">The direction that the arrow is pointing</param>
+        /// <param name="sideways">A vector perpendicular to the direction vector in
+        /// the plane of the arrow</param>
+        /// <param name="length">A scaling factor applied to the direction of the arrow</param>
+        /// <param name="width">A scaling factor to be applied to the sideways vector.
+        /// The </param>
+        public void AddArrow(Vector tip, Vector direction, Vector sideways, double length, double width)
+        {
+            double headLength = Math.Min(length, 2 * width);
+            Vector headEnd = tip - direction * headLength;
+            Vector end = tip - direction * length;
+            AddFace(tip, headEnd + sideways * width, headEnd - sideways * width);
+            AddFace(
+                headEnd + sideways * width / 2, 
+                end + sideways * width / 2, 
+                end - sideways * width / 2, 
+                headEnd - sideways * width / 2);
+        }
+
         #endregion
     }
 

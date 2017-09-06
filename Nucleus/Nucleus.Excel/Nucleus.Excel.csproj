@@ -32,6 +32,12 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>NucleusKey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -81,6 +87,7 @@
     <None Include="..\FreeBuild\FreeBuild.licenseheader">
       <Link>FreeBuild.licenseheader</Link>
     </None>
+    <None Include="NucleusKey.snk" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nucleus\Nucleus.csproj">

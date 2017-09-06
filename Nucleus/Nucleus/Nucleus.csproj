@@ -32,6 +32,12 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>NucleusKey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -357,6 +363,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="FreeBuild.licenseheader" />
+    <None Include="NucleusKey.snk" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AI\" />
