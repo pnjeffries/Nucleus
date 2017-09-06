@@ -258,6 +258,15 @@ namespace Nucleus.Geometry
             }
         }
 
+        /// <summary>
+        /// Stretch a bounding box to fit around this geometry.
+        /// </summary>
+        /// <param name="box"></param>
+        public virtual void StretchBoxAround(BoundingBox box)
+        {
+            box.Include(Vertices);
+        }
+
         #endregion
 
 

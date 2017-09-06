@@ -56,8 +56,9 @@ namespace Nucleus.Model
         }
 
         /// <summary>
-        /// Private 
+        /// Private backing field for Voids property
         /// </summary>
+        [NonSerialized]
         private CurveCollection _Voids = null;
 
         /// <summary>
@@ -70,6 +71,45 @@ namespace Nucleus.Model
             {
                 if (_Voids == null) GenerateGeometry();
                 return _Voids;
+            }
+        }
+
+        /// <summary>
+        /// Private backing field for MidPointOffset
+        /// </summary>
+        [NonSerialized]
+        private Vector _OriginOffset;
+        
+        /// <summary>
+        /// Get the offset of the origin (/mid-point) of the section profile
+        /// from the set-out location
+        /// </summary>
+        public Vector OriginOffset
+        {
+            get
+            {
+                if (_Perimeter == null) GenerateGeometry();
+                return _OriginOffset;
+            }
+        }
+
+        /// <summary>
+        /// Private backing field for CentroidOffset property
+        /// </summary>
+        [NonSerialized]
+        private Vector _CentroidOffset;
+
+        /// <summary>
+        /// Get the offset of the area centroid of the section profile from
+        /// the origin.  The total offset of the centroid from the set-out
+        /// point will be OriginOffset + CentroidOffset.
+        /// </summary>
+        public Vector CentroidOffset
+        {
+            get
+            {
+                if (_Perimeter == null) GenerateGeometry();
+                return _CentroidOffset;
             }
         }
 
@@ -90,6 +130,51 @@ namespace Nucleus.Model
         protected abstract CurveCollection GenerateVoids();
 
         /// <summary>
+        /// Calculate the total offset of the mid-point of this profile
+        /// from the set-out point of the section with the specified horizontal
+        /// and vertical set-out
+        /// </summary>
+        /// <param name="centroid">The centroid of the section profile</param>
+        /// <returns></returns>
+        protected Vector CalculateOriginOffset(Vector centroid)
+        {
+            return CalculateOriginOffset(centroid, HorizontalSetOut, VerticalSetOut);
+        }
+
+        /// <summary>
+        /// Calculate the total offset of the mid-point of this profile
+        /// from the set-out point of the section with the specified horizontal
+        /// and vertical set-out
+        /// </summary>
+        /// <param name="centroid">The centroid of the section profile</param>
+        /// <returns></returns>
+        protected Vector CalculateOriginOffset(Vector centroid, HorizontalSetOut horizontalSetOut, VerticalSetOut verticalSetOut)
+        {
+            Vector result = Offset;
+
+            if (verticalSetOut == VerticalSetOut.Centroid)
+                result = result.AddY(-centroid.Y);
+            else if (verticalSetOut == VerticalSetOut.Bottom)
+                result = result.AddY(OverallDepth / 2);
+            else if (verticalSetOut == VerticalSetOut.Top)
+                result = result.AddY(-OverallDepth / 2);
+
+            if (horizontalSetOut == HorizontalSetOut.Centroid)
+                result = result.AddX(-centroid.X);
+            else if (horizontalSetOut == HorizontalSetOut.Left)
+                result = result.AddX(OverallWidth / 2);
+            else if (horizontalSetOut == HorizontalSetOut.Right)
+                result = result.AddX(-OverallWidth / 2);
+
+            return result;
+        }
+
+        public override Vector GetTotalOffset(HorizontalSetOut toHorizontal = HorizontalSetOut.Centroid, VerticalSetOut toVertical = VerticalSetOut.Centroid)
+        {
+            return CalculateOriginOffset(_CentroidOffset, toHorizontal, toVertical) - _OriginOffset;
+        }
+
+        /// <summary>
         /// Update the stored geometry properties of this profile
         /// </summary>
         public void GenerateGeometry()
@@ -99,28 +184,13 @@ namespace Nucleus.Model
             _Voids = GenerateVoids();
             if (_Perimeter != null)
             {
-                Vector centroid;
-                _Perimeter.CalculateEnclosedArea(out centroid, _Voids);
-                Vector offset = Offset;
+                _Perimeter.CalculateEnclosedArea(out _CentroidOffset, _Voids);
+                _OriginOffset = CalculateOriginOffset(_CentroidOffset);
 
-                if (VerticalSetOut == VerticalSetOut.Centroid)
-                    offset = offset.AddY(-centroid.Y);
-                else if (VerticalSetOut == VerticalSetOut.Bottom)
-                    offset = offset.AddY(OverallDepth / 2);
-                else if (VerticalSetOut == VerticalSetOut.Top)
-                    offset = offset.AddY(-OverallDepth / 2);
-
-                if (HorizontalSetOut == HorizontalSetOut.Centroid)
-                    offset = offset.AddX(-centroid.X);
-                else if (HorizontalSetOut == HorizontalSetOut.Left)
-                    offset = offset.AddX(OverallWidth / 2);
-                else if (HorizontalSetOut == HorizontalSetOut.Right)
-                    offset = offset.AddX(-OverallWidth / 2);
-
-                _Perimeter.Move(offset);
+                _Perimeter.Move(_OriginOffset);
                 foreach (Curve voidCrv in _Voids)
                 {
-                    voidCrv.Move(offset);
+                    voidCrv.Move(_OriginOffset);
                 }
             }
         }

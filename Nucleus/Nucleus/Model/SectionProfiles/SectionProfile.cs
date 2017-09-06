@@ -341,6 +341,13 @@ namespace Nucleus.Model
                 return double.NaN;
         }
 
+        /// <summary>
+        /// Calculate the total combined offset of the centroid of the profile to the specified set-out location
+        /// </summary>
+        /// <returns></returns>
+        public abstract Vector GetTotalOffset(HorizontalSetOut toHorizontal = HorizontalSetOut.Centroid,
+            VerticalSetOut toVertical = VerticalSetOut.Centroid);
+
         public override string ToString()
         {
             if (CatalogueName != null) return CatalogueName;

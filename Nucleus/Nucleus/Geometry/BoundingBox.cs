@@ -314,6 +314,20 @@ namespace Nucleus.Geometry
         #region Methods
 
         /// <summary>
+        /// Fit this bounding box around a single point
+        /// </summary>
+        /// <param name="point"></param>
+        protected void Fit(Vector point)
+        {
+            MinX = point.X;
+            MaxX = point.X;
+            MinY = point.Y;
+            MaxY = point.Y;
+            MinZ = point.Z;
+            MaxZ = point.Z;
+        }
+
+        /// <summary>
         /// Fit this bounding box around a collection of positional
         /// objects
         /// </summary>
@@ -427,7 +441,11 @@ namespace Nucleus.Geometry
         /// <param name="shape"></param>
         public void Fit(VertexGeometry shape)
         {
-            if (shape != null) Fit(shape.Vertices);
+            if (shape?.Vertices != null && shape.Vertices.Count > 0)
+            {
+                Fit(shape.Vertices[0].Position);
+                shape.StretchBoxAround(this);
+            }
         }
 
         /// <summary>

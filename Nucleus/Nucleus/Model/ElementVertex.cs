@@ -123,7 +123,21 @@ namespace Nucleus.Model
         /// </summary>
         public Vector CombinedOffset
         {
-            get { return Offset; }
+            get
+            {
+                Vector result = Offset;
+                if (Element is LinearElement)
+                {
+                    var lEl = (LinearElement)Element;
+                    if (lEl.Family?.Profile != null)
+                    {
+                        Vector profileOffset = lEl.Family.Profile.GetTotalOffset();
+                        var cSystem = GetLocalCoordinateSystem(false);
+                        result -= cSystem.LocalToGlobal(profileOffset, true);
+                    }
+                }
+                return result;
+            }
         }
 
         /// <summary>
@@ -207,20 +221,7 @@ namespace Nucleus.Model
         {
             get
             {
-                if (Element is LinearElement)
-                {
-                    var lEl = (LinearElement)Element;
-                    if (Description == "End")
-                    {
-                        return lEl.LocalCoordinateSystem(1).ReverseXY();
-                    }
-                    else if (Description == "Start")
-                    {
-                        return lEl.LocalCoordinateSystem();
-                    }
-                }
-                //TODO: Panel elements
-                return null;
+                return GetLocalCoordinateSystem();
             }
         }
 
@@ -263,6 +264,40 @@ namespace Nucleus.Model
         public void ClearReleases()
         {
             Vertex.CleanData(typeof(VertexReleases));
+        }
+
+        /// <summary>
+        /// Get the local coordinate system of the element at this vertex
+        /// </summary>
+        /// <param name="allowFlip">If true, the coordinate system may be aligned
+        /// to point towards the centre of the element.  Otherwise, it will be the
+        /// 'real' coordinate system</param>
+        /// <returns></returns>
+        public CartesianCoordinateSystem GetLocalCoordinateSystem(bool allowFlip = true)
+        {
+            if (Element is LinearElement)
+            {
+                var lEl = (LinearElement)Element;
+                if (Description == "End")
+                {
+                    var result = lEl.LocalCoordinateSystem(1);
+                    if (allowFlip) result = result.ReverseXY();
+                    return result;
+                }
+                else if (Description == "Start")
+                {
+                    return lEl.LocalCoordinateSystem();
+                }
+            }
+            else if (Element is PanelElement)
+            {
+                var pEl = (PanelElement)Element;
+                var result = pEl.LocalCoordinateSystem();
+                result = new CartesianCoordinateSystem(result, Position);
+                //TODO: Align panel element vertices?
+                return result;
+            }
+            return null;
         }
 
         #endregion

@@ -214,7 +214,7 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="vector">A vector in the local coordinate system.</param>
         /// <param name="direction">If true, this vector represents a direction rather than a point
-        /// and will not be scaled.</param>
+        /// and will not be offset by the origin.</param>
         /// <returns>A vector in global coordinates</returns>
         public Vector LocalToGlobal(Vector vector, bool direction = false)
         {
