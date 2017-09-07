@@ -83,7 +83,8 @@ namespace Nucleus.WPF
             SetBinding(ValueProperty, property.Name);
         }
 
-
         #endregion
     }
+
+
 }
