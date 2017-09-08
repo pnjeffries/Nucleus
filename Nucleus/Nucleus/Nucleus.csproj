@@ -67,6 +67,7 @@
     <Compile Include="Geometry\MeshEdgeLink.cs" />
     <Compile Include="IO\CustomSerializationBinder.cs" />
     <Compile Include="IO\DocumentSaveFileType.cs" />
+    <Compile Include="IO\IApplicationClient.cs" />
     <Compile Include="IO\TypeFieldsFormat.cs" />
     <Compile Include="IO\UniqueFormatter.cs" />
     <Compile Include="Analysis\SimpleBeamAnalysis.cs" />

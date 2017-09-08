@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus", "Nucleus\Nucleus.csproj", "{7635522C-178F-4DB5-9106-FF8DFD4B833B}"
 EndProject
@@ -28,6 +28,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.Word", "Nucleus.Word\Nucleus.Word.csproj", "{96AACD57-169F-48AE-A568-F1AE0EEF7626}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.WPF", "Nucleus.WPF\Nucleus.WPF.csproj", "{A882FC57-8608-48FF-8DAF-164507608623}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.GSA", "Nucleus.GSA\Nucleus.GSA.csproj", "{7F1681B4-B4DB-4B62-88C2-FBFB0CF756CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +89,10 @@ Global
 		{A882FC57-8608-48FF-8DAF-164507608623}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A882FC57-8608-48FF-8DAF-164507608623}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A882FC57-8608-48FF-8DAF-164507608623}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F1681B4-B4DB-4B62-88C2-FBFB0CF756CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F1681B4-B4DB-4B62-88C2-FBFB0CF756CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F1681B4-B4DB-4B62-88C2-FBFB0CF756CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F1681B4-B4DB-4B62-88C2-FBFB0CF756CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
