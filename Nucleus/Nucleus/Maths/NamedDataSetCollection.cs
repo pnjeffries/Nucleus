@@ -10,6 +10,7 @@ namespace Nucleus.Maths
     /// <summary>
     /// A collection of named data sets
     /// </summary>
+    [Serializable]
     public class NamedDataSetCollection<T> : ObservableKeyedCollection<string, T>, INamedDataSetCollection
         where T : NamedDataSet
     {
