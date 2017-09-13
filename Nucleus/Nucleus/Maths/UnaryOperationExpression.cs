@@ -10,6 +10,7 @@ namespace Nucleus.Maths
     /// <summary>
     /// An expression operation acting on a single operance
     /// </summary>
+    [Serializable]
     public class UnaryOperationExpression : Expression
     {
         #region Properties

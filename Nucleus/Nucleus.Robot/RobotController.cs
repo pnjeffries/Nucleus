@@ -2,6 +2,7 @@
 using Nucleus.Conversion;
 using Nucleus.Extensions;
 using Nucleus.Geometry;
+using Nucleus.IO;
 using Nucleus.Maths;
 using Nucleus.Model;
 using RobotOM;
@@ -17,7 +18,7 @@ namespace Nucleus.Robot
     /// <summary>
     /// A controller class to interact with Robot
     /// </summary>
-    public class RobotController : MessageRaiser
+    public class RobotController : MessageRaiser, IApplicationClient
     {
         #region Properties
 

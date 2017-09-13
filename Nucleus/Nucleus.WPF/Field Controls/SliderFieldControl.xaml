@@ -32,15 +32,16 @@
                            Visibility="{Binding Path=Label, Converter={StaticResource NullOrEmptyVisibilityConverter}}"/>
             </local:SnapBorder>
             <TextBox Grid.Column="1" Text="{Binding Path=Value, StringFormat={}{0:0.#######}, Mode=TwoWay, UpdateSourceTrigger=LostFocus,
-                Converter={StaticResource SliderConverter}}" 
+                Converter={StaticResource SliderConverter}, ConverterParameter={x:Reference UnitTB}}" 
                  VerticalAlignment="Center"></TextBox>
             <local:SnapBorder Grid.Column="2">
                 <TextBlock Text="{Binding Path=Units}" VerticalAlignment="Center" Margin="1"
-                           Visibility="{Binding Path=Units, Converter={StaticResource NullOrEmptyVisibilityConverter}}"/>
+                           Visibility="{Binding Path=Units, Converter={StaticResource NullOrEmptyVisibilityConverter}}"
+                           Name="UnitTB"/>
             </local:SnapBorder>
         </Grid>
         <Slider Name="Slider" Grid.Column="1" 
-                Value="{Binding Path=Value, Mode=TwoWay, Converter={StaticResource SliderConverter}}" 
+                Value="{Binding Path=Value, Mode=TwoWay, Converter={StaticResource SliderConverter}, ConverterParameter={x:Reference UnitTB}}" 
                 Minimum="{Binding Path=Minimum}"
                 Maximum="{Binding Path=Maximum}" 
                 IsSnapToTickEnabled="{Binding Path=IsSnapToTickEnabled}"

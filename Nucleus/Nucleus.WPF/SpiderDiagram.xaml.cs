@@ -154,7 +154,7 @@ namespace Nucleus.WPF
                     var fill = new RadialGradientBrush(inColor, outColor);
                     fill.Opacity = 0.5;
                     pgon.Fill = fill;
-                    pgon.Opacity = 0.75;
+                    pgon.Opacity = 0.95;
                     pgon.ToolTip = dataSet.Name;
                     PointCollection outerPts = new PointCollection();
 

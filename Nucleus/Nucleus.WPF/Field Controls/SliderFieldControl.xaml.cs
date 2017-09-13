@@ -101,6 +101,14 @@ namespace Nucleus.WPF
             set { SetValue(TickPlacementProperty, value); }
         }
 
+        /// <summary>
+        /// The type of the control's value
+        /// </summary>
+        public virtual Type ValueType
+        {
+            get { return typeof(double); }
+        }
+
         #endregion
 
         #region Constructor

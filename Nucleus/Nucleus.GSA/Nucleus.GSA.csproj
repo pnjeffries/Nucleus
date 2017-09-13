@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{ECA5186F-D2ED-4820-B207-880B2C4E02CA}</ProjectGuid>
+    <ProjectGuid>{7F1681B4-B4DB-4B62-88C2-FBFB0CF756CA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nucleus.Robot</RootNamespace>
-    <AssemblyName>Nucleus.Robot</AssemblyName>
+    <RootNamespace>Nucleus.GSA</RootNamespace>
+    <AssemblyName>Nucleus.GSA</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,7 +20,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,15 +28,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>NucleusKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Interop.Gsa_8_7">
+      <HintPath>..\References\Interop.Gsa_8_7.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -49,44 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BarDataType.cs" />
-    <Compile Include="COMMessageFilter.cs" />
-    <Compile Include="Extensions\IRobotNodeExtensions.cs" />
-    <Compile Include="FBtoROB.cs" />
-    <Compile Include="NodeDataType.cs" />
+    <Compile Include="GSAClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RobotController.cs" />
-    <Compile Include="RobotConversionContext.cs" />
-    <Compile Include="RobotConversionOptions.cs" />
-    <Compile Include="RobotIDMappingTable.cs" />
-    <Compile Include="RobotModelImporter.cs" />
-    <Compile Include="RobotTests.cs" />
-    <Compile Include="ROBtoFB.cs" />
-    <Compile Include="SectionDataType.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="RobotOM">
-      <Guid>{F3A37BD0-AA2D-11D2-9844-0080C86BE4DF}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nucleus\Nucleus.csproj">
-      <Project>{5169f74f-0bcc-42bf-829f-277f36ef7677}</Project>
+      <Project>{7635522c-178f-4db5-9106-ff8dfd4b833b}</Project>
       <Name>Nucleus</Name>
-      <Private>False</Private>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="NucleusKey.snk" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
