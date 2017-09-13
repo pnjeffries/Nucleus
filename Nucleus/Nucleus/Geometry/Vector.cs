@@ -975,6 +975,15 @@ namespace Nucleus.Geometry
                 (latitude - originLatitude) * factorY);
         }
 
+        public static Vector FromTokensList(IList<string> tokens, int startIndex = 0)
+        {
+            double x = 0;
+            double y = 0;
+            double z = 0;
+            if (tokens.Count() > startIndex) x = double.Parse(tokens[startIndex]);
+            if (tokens.Count() > startIndex + 1) y = double.Parse(tokens[startIndex + 1]);
+        }
+
         #endregion
 
         #region Operators

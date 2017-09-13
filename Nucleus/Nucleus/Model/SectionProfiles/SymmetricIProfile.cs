@@ -104,6 +104,11 @@ namespace Nucleus.Model
                 Depth * 1000, Width * 1000, FlangeThickness * 1000, WebThickness * 1000);
         }
 
+        protected override Vector CalculateCentroidOffset(Curve perimeter, CurveCollection voids)
+        {
+            return new Vector();
+        }
+
         #endregion
     }
 }

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2595E792-7880-484B-877D-9873AAC7D946}</ProjectGuid>
+    <ProjectGuid>{B35E7426-ABC5-45EA-B88F-055F970CE484}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nucleus.Rhino</RootNamespace>

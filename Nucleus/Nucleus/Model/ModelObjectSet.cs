@@ -1,6 +1,7 @@
 ﻿using Nucleus.Base;
 using Nucleus.Extensions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,8 @@ namespace Nucleus.Model
     [Serializable]
     public abstract class ModelObjectSetBase : ModelObject
     {
+        #region Properties
+
         /// <summary>
         /// Private backing field for All property
         /// </summary>
@@ -30,6 +33,20 @@ namespace Nucleus.Model
             get { return _All; }
             set { _All = value; NotifyPropertyChanged("All"); }
         }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Get the final set of items contained within this set, consisting of all items in the base collection
+        /// and any subsets (or all items in the model if 'All' is true) that pass all filters specified via the
+        /// Filters property.
+        /// </summary>
+        public abstract IList GetItems();
+
+        #endregion
+
     }
 
     /// <summary>
@@ -193,6 +210,16 @@ namespace Nucleus.Model
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Get the final set of items contained within this set, consisting of all items in the base collection
+        /// and any subsets (or all items in the model if 'All' is true) that pass all filters specified via the
+        /// Filters property.
+        /// </summary>
+        public override IList GetItems()
+        {
+            return Items;
+        }
 
         /// <summary>
         /// Add a new item to the base collection of this set, to be considered for inclusion.
