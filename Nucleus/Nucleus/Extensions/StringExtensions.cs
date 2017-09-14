@@ -185,7 +185,7 @@ namespace Nucleus.Extensions
         /// <summary>
         /// Converts the string into a set of integer ID numbers.
         /// The string must consist only of numbers separated by spaces and the 'to' keyword,
-        /// used to indicate continuous incementing ranges of 
+        /// used to indicate continuous incementing ranges of ID numbers.
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>

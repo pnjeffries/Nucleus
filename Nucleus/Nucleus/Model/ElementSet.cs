@@ -61,6 +61,33 @@ namespace Nucleus.Model
     public abstract class ElementSet<TSubType> : ElementSet
         where TSubType : Element
     {
+        #region Constructors
+
+        /// <summary>
+        /// Create a new blank element set
+        /// </summary>
+        public ElementSet() : base() { }
+
+        /// <summary>
+        /// Create a new 'all elements' set
+        /// </summary>
+        /// <param name="all"></param>
+        public ElementSet(bool all) : base(all) { }
+
+        /// <summary>
+        /// Initialise this set to contain a single item
+        /// </summary>
+        /// <param name="item"></param>
+        public ElementSet(Element item) : base(item) { }
+
+        /// <summary>
+        /// Initialise this set to contain the specified base collection of items
+        /// </summary>
+        /// <param name="collection"></param>
+        public ElementSet(ElementCollection collection) : base(collection) { }
+
+        #endregion
+
         #region Methods
 
         protected override bool PassInternalFilter(Element item)

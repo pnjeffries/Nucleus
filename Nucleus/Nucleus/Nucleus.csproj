@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5169F74F-0BCC-42BF-829F-277F36EF7677}</ProjectGuid>
+    <ProjectGuid>{7635522C-178F-4DB5-9106-FF8DFD4B833B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nucleus</RootNamespace>
@@ -65,9 +65,11 @@
     <Compile Include="Geometry\GridLineCollection.cs" />
     <Compile Include="Geometry\GridLineGenerator.cs" />
     <Compile Include="Geometry\MeshEdgeLink.cs" />
+    <Compile Include="Geometry\SixVector.cs" />
     <Compile Include="IO\CustomSerializationBinder.cs" />
     <Compile Include="IO\DocumentSaveFileType.cs" />
     <Compile Include="IO\IApplicationClient.cs" />
+    <Compile Include="IO\TokenReader.cs" />
     <Compile Include="IO\TypeFieldsFormat.cs" />
     <Compile Include="IO\UniqueFormatter.cs" />
     <Compile Include="Analysis\SimpleBeamAnalysis.cs" />
@@ -122,6 +124,7 @@
     <Compile Include="Model\BlockFamily.cs" />
     <Compile Include="Model\ElementSet.cs" />
     <Compile Include="Model\GlobalCoordinateSystemReference.cs" />
+    <Compile Include="Model\IModelObjectSet.cs" />
     <Compile Include="Model\IModelObjectTable.cs" />
     <Compile Include="Model\IsoMaterial.cs" />
     <Compile Include="Model\IDataOwner.cs" />

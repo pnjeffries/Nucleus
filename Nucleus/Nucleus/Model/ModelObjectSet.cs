@@ -1,4 +1,5 @@
 ﻿using Nucleus.Base;
+using Nucleus.Conversion;
 using Nucleus.Extensions;
 using System;
 using System.Collections;
@@ -15,7 +16,7 @@ namespace Nucleus.Model
     /// filters which act upon that collection.
     /// </summary>
     [Serializable]
-    public abstract class ModelObjectSetBase : ModelObject
+    public abstract class ModelObjectSetBase : ModelObject, IModelObjectSet
     {
         #region Properties
 
@@ -43,7 +44,61 @@ namespace Nucleus.Model
         /// and any subsets (or all items in the model if 'All' is true) that pass all filters specified via the
         /// Filters property.
         /// </summary>
-        public abstract IList GetItems();
+        protected abstract IList GetItems();
+
+        IList IModelObjectSet.GetItems()
+        {
+            return this.GetItems();
+        }
+
+        /// <summary>
+        /// Get a list of IDs of the final set of items contained within this set, consisting of all items in the base collection
+        /// and any subsets (or all items in the model if 'All' is true) that pass all filters specified via the
+        /// Filters property.
+        /// </summary>
+        public List<T> GetItemIDs<T>(IDMappingTable<Guid, T> idMap)
+        {
+            IList items = GetItems();
+            var result = new List<T>(items.Count);
+            foreach (ModelObject mObj in items)
+            {
+                T id = idMap.GetSecondID(mObj.GUID);
+                result.Add(id);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Get a list of IDs of the final set of items contained within this set, consisting of all items in the base collection
+        /// and any subsets (or all items in the model if 'All' is true) that pass all filters specified via the
+        /// Filters property.
+        /// </summary>
+        public List<T> GetItemIDs<T>(IDMappingTable<Guid, IList<T>> idMap)
+        {
+            IList items = GetItems();
+            var result = new List<T>(items.Count);
+            foreach (ModelObject mObj in items)
+            {
+                IList<T> ids = idMap.GetSecondID(mObj.GUID);
+                foreach (T id in ids)
+                    result.Add(id);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Add an item to the base collection of this set.
+        /// If the specified item is not a valid type for this set, adding it will
+        /// fail and this function will return false.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        protected abstract bool Add(ModelObject item);
+
+        bool IModelObjectSet.Add(ModelObject item)
+        {
+            return this.Add(item);
+        }
 
         #endregion
 
@@ -216,9 +271,19 @@ namespace Nucleus.Model
         /// and any subsets (or all items in the model if 'All' is true) that pass all filters specified via the
         /// Filters property.
         /// </summary>
-        public override IList GetItems()
+        protected override IList GetItems()
         {
             return Items;
+        }
+
+        protected override bool Add(ModelObject item)
+        {
+            if (item is TItem)
+            {
+                Add((TItem)item);
+                return true;
+            }
+            else return false;
         }
 
         /// <summary>

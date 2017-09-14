@@ -469,14 +469,50 @@ namespace Nucleus.Robot
             }
         }
 
-        /*private void UpdateModelSetsFromRobotFile(Model.Model model, RobotConversionContext context)
+        private void UpdateModelSetsFromRobotFile(Model.Model model, RobotConversionContext context)
         {
             RaiseMessage("Reading Groups...");
 
             // Delete all previously mapped sets ?
             RobotGroupServer groups = Robot.Project.Structure.Groups;
-            for (int i = 1; i <= groups.GetCount())
-        }*/
+            foreach (var groupType in new IRobotObjectType[] { IRobotObjectType.I_OT_BAR, IRobotObjectType.I_OT_NODE })
+            {
+                for (int i = 1; i <= groups.GetCount(groupType); i++)
+                {
+                    RobotGroup group = groups.Get(groupType, i);
+                    if (group != null)
+                    {
+                        IModelObjectSet set = null;
+                        if (groupType == IRobotObjectType.I_OT_BAR)
+                            set = new LinearElementSet();
+                        else if (groupType == IRobotObjectType.I_OT_NODE)
+                            set = new NodeSet();
+                        else if (groupType == IRobotObjectType.I_OT_PANEL)
+                            set = new PanelElementSet();
+
+                        if (set != null)
+                        {
+                            try
+                            {
+                                set.Name = group.Name;
+                                var ids = group.SelList.ToIDSet();
+                                foreach (int id in ids)
+                                {
+                                    ModelObject item = context.IDMap.GetMapped(groupType, id.ToString(), model);
+                                    if (item != null) set.Add(item);
+                                }
+                                model.Sets.Add(set);
+                                context.IDMap.Add(set, i);
+                            }
+                            catch (Exception ex)
+                            {
+                                RaiseMessage("Parsing group failed: " + ex.Message);
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         #endregion
 

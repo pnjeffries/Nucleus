@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Interop.gsa_8_7;
 using Nucleus.IO;
+using Nucleus.Model;
+using Nucleus.Geometry;
 
 namespace Nucleus.GSA
 {
@@ -157,6 +159,48 @@ namespace Nucleus.GSA
                     //TODO (?)
                 }
             }
+        }
+
+        /// <summary>
+        /// Update the properties of a Nucleus node from a GWA string
+        /// in NODE.2 version syntax
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="gwa"></param>
+        public void UpdateModelNodeFromGSA(Node node, string gwa)
+        {
+            // NODE.2 | num | name | colour | x | y | z |
+            // is_grid { | grid_plane | datum | grid_line_a | grid_line_b } | axis |
+            // is_rest { | rx | ry | rz | rxx | ryy | rzz } |
+            // is_stiff { | Kx | Ky | Kz | Kxx | Kyy | Kzz } |
+            // is_mesh { | edge_length | radius | tie_to_mesh | column_rigidity | column_prop | column_node | column_angle | column_factor | column_slab_factor }
+
+            var tr = new TokenReader(gwa);
+            tr.Next(); // NODE
+            int gsaID = tr.NextInt(); // num
+            node.Name = tr.Next(); // name
+            tr.Next(); // colour
+            node.Position = tr.Next3AsVector(); // x | y | z
+            if (tr.NextIs("GRID")) tr.Skip(4); // is_grid { | grid_plane | datum | grid_line_a | grid_line_b }
+            tr.Next(); // axis !!!TODO!!!
+            Bool6D fixity = new Bool6D();
+            if (tr.NextIs("REST")) // is_rest
+            {
+                fixity = tr.Next6AsBool6D();
+            }
+            SixVector stiffness = null;
+            if (tr.NextIs("STIFF")) // is_stiff
+            {
+                stiffness = tr.Next6AsSixVector();
+            }
+            if (!fixity.AllFalse || (stiffness != null && !stiffness.IsZero()))
+            {
+                var nodeSupport = new NodeSupport(fixity);
+                if (stiffness != null) nodeSupport.Stiffness = stiffness;
+                //TODO: Axis
+                node.SetData(nodeSupport);
+            }
+            else node.Data.RemoveData<NodeSupport>(); //Clear restraints on existing nodes
         }
 
         #endregion

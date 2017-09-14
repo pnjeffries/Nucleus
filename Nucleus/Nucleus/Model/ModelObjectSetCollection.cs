@@ -12,7 +12,7 @@ namespace Nucleus.Model
     /// <typeparam name="TSet"></typeparam>
     [Serializable]
     public class ModelObjectSetCollection<TSet> : ModelObjectCollection<TSet>
-        where TSet : ModelObjectSetBase
+        where TSet : ModelObjectSetBase, IModelObjectSet
     {
         #region Constructors
 
@@ -28,6 +28,26 @@ namespace Nucleus.Model
         protected ModelObjectSetCollection(Model model) : base(model) { }
 
         #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Add a set to this collection, if it is of a compatible type
+        /// </summary>
+        /// <param name="set"></param>
+        /// <returns></returns>
+        public bool Add(IModelObjectSet set)
+        {
+            if (set is TSet)
+            {
+                Add((TSet)set);
+                return true;
+            }
+            else return false;
+        }
+
+        #endregion
+
     }
 
     /// <summary>

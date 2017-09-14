@@ -93,6 +93,18 @@ namespace Nucleus.Robot
         }
 
         /// <summary>
+        /// Get the Nucleus node, if any, mapped to the specified robot node ID
+        /// </summary>
+        /// <param name="robotID"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public Node GetMappedModelNode(string robotID, Model.Model model)
+        {
+            if (HasFirstID(NodeCategory, robotID)) return model.Nodes.TryGet(GetFirstID(NodeCategory, robotID));
+            return null;
+        }
+
+        /// <summary>
         /// Get the Nucleus node, if any, mapped to the ID number of the specified robot node
         /// </summary>
         /// <param name="robotID"></param>
@@ -118,6 +130,20 @@ namespace Nucleus.Robot
         }
 
         /// <summary>
+        /// Get the Nucleus element, if any, mapped to the specified robot bar ID
+        /// </summary>
+        /// <param name="robotID"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public LinearElement GetMappedLinearElement(string robotID, Model.Model model)
+        {
+            //TODO: Get for sub-elements (when introduced)
+            if (HasFirstID(BarCategory, robotID))
+                return model.Elements.TryGet(GetFirstID(BarCategory, robotID)) as LinearElement;
+            else return null;
+        }
+
+        /// <summary>
         /// Get the Nucleus element, if any, mapped to the specified robot panel ID
         /// </summary>
         /// <param name="robotID"></param>
@@ -127,6 +153,19 @@ namespace Nucleus.Robot
         {
             if (HasFirstID(PanelCategory, robotID.ToString()))
                 return model.Elements.TryGet(GetFirstID(PanelCategory, robotID.ToString())) as PanelElement;
+            else return null;
+        }
+
+        /// <summary>
+        /// Get the Nucleus element, if any, mapped to the specified robot panel ID
+        /// </summary>
+        /// <param name="robotID"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public PanelElement GetMappedPanelElement(string robotID, Model.Model model)
+        {
+            if (HasFirstID(PanelCategory, robotID))
+                return model.Elements.TryGet(GetFirstID(PanelCategory, robotID)) as PanelElement;
             else return null;
         }
 
@@ -234,6 +273,14 @@ namespace Nucleus.Robot
             return null;
         }
 
+        public ModelObject GetMapped(IRobotObjectType type, string robotID, Model.Model model)
+        {
+            if (type == IRobotObjectType.I_OT_NODE) return GetMappedModelNode(robotID, model);
+            else if (type == IRobotObjectType.I_OT_PANEL) return GetMappedPanelElement(robotID, model);
+            else return GetMappedLinearElement(robotID, model);
+            //TODO: Other types
+        }
+
         /// <summary>
         /// Add a new Node entry to this mapping table
         /// </summary>
@@ -309,7 +356,7 @@ namespace Nucleus.Robot
         /// </summary>
         /// <param name="set"></param>
         /// <param name="rGroup"></param>
-        public void Add(ModelObjectSetBase set, int groupID)
+        public void Add(IModelObjectSet set, int groupID)
         {
             Add(SetsCategory, set.GUID, groupID.ToString());
         }
@@ -455,7 +502,7 @@ namespace Nucleus.Robot
         /// </summary>
         /// <param name="set"></param>
         /// <returns></returns>
-        public string ToIDString(ModelObjectSetBase set)
+        public string ToIDString(IModelObjectSet set)
         {
             var sb = new StringBuilder();
             foreach (var obj in set.GetItems())
