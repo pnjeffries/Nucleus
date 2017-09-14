@@ -154,9 +154,11 @@ namespace Nucleus.IO
         /// to Next___() will return each token in sequence.
         /// </summary>
         /// <returns></returns>
-        public Bool6D Next6AsBool6D()
+        public Bool6D Next6AsBool6D(string trueString = "TRUE")
         {
-            //TODO!
+            var result = Bool6D.FromTokensList(_Tokens, _Index, trueString);
+            Index += 6;
+            return result;
         }
 
         /// <summary>
