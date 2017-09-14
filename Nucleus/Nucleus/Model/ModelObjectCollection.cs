@@ -101,6 +101,23 @@ namespace Nucleus.Model
         }
 
         /// <summary>
+        /// Find the first item in this collection of the specified subtype and 
+        /// which has the specified name (if any)
+        /// </summary>
+        /// <param name="name">The name to search for.</param>
+        /// <param name="ignore">Optional.  If specified this object will be ignore during the search.</param>
+        /// <returns></returns>
+        public virtual TSubType FindByName<TSubType>(string name, TSubType ignore = null)
+            where TSubType : TItem
+        {
+            foreach (TItem mO in this)
+            {
+                if (mO is TSubType && mO.Name == name && mO != ignore) return (TSubType)mO;
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Return the next version of this name with an attached numerical postfix that
         /// will be a unique name in this collection.
         /// </summary>
@@ -151,6 +168,36 @@ namespace Nucleus.Model
         public override string ToString()
         {
             return ToNumericIDs().ToCompressedString();
+        }
+
+        /// <summary>
+        /// Clear any attached data components of the specified type
+        /// from the objects in this collection
+        /// </summary>
+        /// <param name="ofType"></param>
+        public void ClearAttachedData(Type ofType)
+        {
+            foreach (ModelObject mO in this)
+                if (mO is DataOwner)
+                {
+                    DataOwner dO = (DataOwner)mO;
+                    dO.ClearData(ofType);
+                }
+        }
+
+        /// <summary>
+        /// Clear any attached data components (of any type)
+        /// from the objects in this collection
+        /// </summary>
+        /// <param name="ofType"></param>
+        public void ClearAttachedData()
+        {
+            foreach (ModelObject mO in this)
+                if (mO is DataOwner)
+                {
+                    DataOwner dO = (DataOwner)mO;
+                    dO.ClearData();
+                }
         }
 
         #endregion

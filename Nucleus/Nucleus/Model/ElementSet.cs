@@ -12,6 +12,7 @@ namespace Nucleus.Model
     /// Allows element collections to be defined via a base collection and a set of logical 
     /// filters which act upon that collection.
     /// </summary>
+    [Serializable]
     public class ElementSet : ModelObjectSet<Element, ElementCollection,
         ISetFilter<Element>, SetFilterCollection<ISetFilter<Element>, Element>,
         ElementSet, ModelObjectSetCollection<ElementSet>>
@@ -22,6 +23,12 @@ namespace Nucleus.Model
         /// Create a new blank element set
         /// </summary>
         public ElementSet() : base() { }
+
+        /// <summary>
+        /// Create a new blank element set with the specified name
+        /// </summary>
+        /// <param name="name"></param>
+        public ElementSet(string name) : base(name) { }
 
         /// <summary>
         /// Create a new 'all elements' set

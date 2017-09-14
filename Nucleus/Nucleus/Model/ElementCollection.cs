@@ -116,6 +116,20 @@ namespace Nucleus.Model
             }
         }
 
+        /// <summary>
+        /// Get all of the nodes which belong to elements in this collection.
+        /// </summary>
+        /// <returns></returns>
+        public NodeCollection GetNodes()
+        {
+            var result = new NodeCollection();
+            foreach (Element element in this)
+            {
+                result.TryAddRange(element.Nodes);
+            }
+            return result;
+        }
+
         #endregion
     }
 

@@ -54,8 +54,7 @@ namespace Nucleus.Base
 
             set
             {
-                _Name = value;
-                NotifyPropertyChanged("Name");
+                ChangeProperty(ref _Name, value, "Name");
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using Nucleus.Base;
 using Nucleus.Extensions;
+using Nucleus.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,6 +65,15 @@ namespace Nucleus.Model
                 return _BaseCollection;
             }
             set { _BaseCollection = value; NotifyPropertyChanged("BaseCollection"); }
+        }
+
+        [AutoUI(Order = 500, Label = "Type")]
+        public string ItemTypeName
+        {
+            get
+            {
+                return typeof(TItem).Name;
+            }
         }
 
         #endregion
@@ -144,6 +154,16 @@ namespace Nucleus.Model
             get { return ContainsReferenceTo((TSubSet)this); }
         }
 
+        /// <summary>
+        /// A textual definition of the items contained within this set
+        /// </summary>
+        [AutoUI(800)]
+        public string Definition
+        {
+            get { return this.ToString(); }
+            // TODO: Set
+        }
+
         #endregion
 
         #region Constructor
@@ -152,6 +172,15 @@ namespace Nucleus.Model
         /// Base default constructor
         /// </summary>
         public ModelObjectSet() { }
+
+        /// <summary>
+        /// Initialises a set with the specified name
+        /// </summary>
+        /// <param name="name"></param>
+        public ModelObjectSet(string name)
+        {
+            Name = name;
+        }
 
         /// <summary>
         /// Initialises an 'all objects' set
@@ -226,6 +255,27 @@ namespace Nucleus.Model
         {
             if (_SubSets == null) _SubSets = new TSubSetCollection();
             _SubSets.TryAdd(set);
+        }
+
+        /// <summary>
+        /// Set this set to contain only the specified items.
+        /// All existing items, filters etc. in this set will be removed.
+        /// </summary>
+        /// <param name="items"></param>
+        public void Set(TCollection items)
+        {
+            Clear();
+            Add(items);
+        }
+
+        /// <summary>
+        /// Clear this set, removing all items and filters
+        /// </summary>
+        public void Clear()
+        {
+            BaseCollection.Clear();
+            _Filters = null;
+            All = false;
         }
 
         /// <summary>
@@ -352,6 +402,7 @@ namespace Nucleus.Model
                 {
                     ids.Add(item.NumericID);
                 }
+                ids.Sort();
                 sb.Append(ids.ToCompressedString());
             }
 

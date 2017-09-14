@@ -28,6 +28,30 @@ namespace Nucleus.Model
         protected ModelObjectSetCollection(Model model) : base(model) { }
 
         #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Find a set in this collection of the specified type and with the specified name
+        /// or if a match does not exist create a new one
+        /// </summary>
+        /// <typeparam name="TSetType">The type of set to search for</typeparam>
+        /// <param name="name">The name to search for</param>
+        /// <returns></returns>
+        public TSetType FindOrCreate<TSetType>(string name)
+            where TSetType : TSet, new()
+        {
+            TSetType set = FindByName<TSetType>(name);
+            if (set == null)
+            {
+                set = new TSetType();
+                set.Name = name;
+                Add(set);
+            }
+            return set;
+        }
+
+#endregion
     }
 
     /// <summary>
