@@ -129,6 +129,22 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Get the component of this vector in the specified direction.
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public double this[Direction direction]
+        {
+            get
+            {
+                if (direction == Direction.X || direction == Direction.XX) return X;
+                else if (direction == Direction.Y || direction == Direction.YY) return Y;
+                else if (direction == Direction.Z || direction == Direction.ZZ) return Z;
+                else return 0;
+            }
+        }
+
+        /// <summary>
         /// Get the angle of this vector on the XY plane.
         /// </summary>
         public Angle Angle
@@ -973,6 +989,24 @@ namespace Nucleus.Geometry
             return new Vector(
                 (longitude - originLongitude) * factorX,
                 (latitude - originLatitude) * factorY);
+        }
+
+        /// <summary>
+        /// Create a vector from a sequential set of values in a list,
+        /// starting at the specified index.  Out-of-bounds errors are automatically checked for.
+        /// </summary>
+        /// <param name="tokens"></param>
+        /// <param name="startIndex"></param>
+        /// <returns></returns>
+        public static Vector FromTokensList(IList<string> tokens, int startIndex = 0)
+        {
+            double x = 0;
+            double y = 0;
+            double z = 0;
+            if (tokens.Count() > startIndex) x = double.Parse(tokens[startIndex]);
+            if (tokens.Count() > startIndex + 1) y = double.Parse(tokens[startIndex + 1]);
+            if (tokens.Count() > startIndex + 2) z = double.Parse(tokens[startIndex + 2]);
+            return new Vector(x, y, z);
         }
 
         #endregion

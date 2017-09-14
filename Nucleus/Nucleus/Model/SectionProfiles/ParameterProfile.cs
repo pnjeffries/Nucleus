@@ -184,7 +184,7 @@ namespace Nucleus.Model
             _Voids = GenerateVoids();
             if (_Perimeter != null)
             {
-                _Perimeter.CalculateEnclosedArea(out _CentroidOffset, _Voids);
+                _CentroidOffset = CalculateCentroidOffset(_Perimeter, _Voids);
                 _OriginOffset = CalculateOriginOffset(_CentroidOffset);
 
                 _Perimeter.Move(_OriginOffset);
@@ -193,6 +193,24 @@ namespace Nucleus.Model
                     voidCrv.Move(_OriginOffset);
                 }
             }
+        }
+
+        /// <summary>
+        /// Calculate the offset of the profile centroid from the origin (mid) point
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>This basic version calculates the centroid from the perimeter & voids.
+        /// This can be overridden for the sake of efficiency in derived classes to save having
+        /// to calculate the centroid for symmetrical types where the offset is always 0,0</remarks>
+        protected virtual Vector CalculateCentroidOffset(Curve perimeter, CurveCollection voids)
+        {
+            Vector centroid;
+            if (perimeter != null)
+            {
+                perimeter.CalculateEnclosedArea(out centroid, voids);
+            }
+            else centroid = new Vector();
+            return centroid;
         }
 
         /// <summary>

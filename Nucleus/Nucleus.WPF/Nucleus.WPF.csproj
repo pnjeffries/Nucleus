@@ -115,6 +115,7 @@
     <Compile Include="Converters\UntitledConverter.cs" />
     <Compile Include="Converters\VisibleWhenEqualConverter.cs" />
     <Compile Include="Field Controls\FieldControl.cs" />
+    <Compile Include="Field Controls\IntSliderFieldControl.cs" />
     <Compile Include="Field Controls\LabelledControl.cs" />
     <Compile Include="AutoUIStackPanel.cs" />
     <Compile Include="Converters\IsEqualConverter.cs" />

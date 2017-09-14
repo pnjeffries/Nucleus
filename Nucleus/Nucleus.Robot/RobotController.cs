@@ -2,6 +2,7 @@
 using Nucleus.Conversion;
 using Nucleus.Extensions;
 using Nucleus.Geometry;
+using Nucleus.IO;
 using Nucleus.Maths;
 using Nucleus.Model;
 using RobotOM;
@@ -17,7 +18,7 @@ namespace Nucleus.Robot
     /// <summary>
     /// A controller class to interact with Robot
     /// </summary>
-    public class RobotController : MessageRaiser
+    public class RobotController : MessageRaiser, IApplicationClient
     {
         #region Properties
 
@@ -359,7 +360,7 @@ namespace Nucleus.Robot
 
         private void UpdateModelPanelElementsFromRobotFile(Model.Model model, IRobotCollection robotNodes, RobotConversionContext context)
         {
-            RaiseMessage("Reading Slabs...");
+            RaiseMessage("Reading Panels...");
 
             //Delete all previously mapped panel elements:
             if (context.Options.DeleteObjects) context.IDMap.AllMappedPanelElements(model).DeleteAll();
@@ -412,6 +413,8 @@ namespace Nucleus.Robot
             }
         }
 
+
+
         /// <summary>
         /// Update the load cases in a Nucleus model to match those in a Robot file
         /// </summary>
@@ -463,6 +466,51 @@ namespace Nucleus.Robot
 
                 // Store mapping:
                 context.IDMap.Add(lCase, rCase);
+            }
+        }
+
+        private void UpdateModelSetsFromRobotFile(Model.Model model, RobotConversionContext context)
+        {
+            RaiseMessage("Reading Groups...");
+
+            // Delete all previously mapped sets ?
+            RobotGroupServer groups = Robot.Project.Structure.Groups;
+            foreach (var groupType in new IRobotObjectType[] { IRobotObjectType.I_OT_BAR, IRobotObjectType.I_OT_NODE })
+            {
+                for (int i = 1; i <= groups.GetCount(groupType); i++)
+                {
+                    RobotGroup group = groups.Get(groupType, i);
+                    if (group != null)
+                    {
+                        IModelObjectSet set = null;
+                        if (groupType == IRobotObjectType.I_OT_BAR)
+                            set = new LinearElementSet();
+                        else if (groupType == IRobotObjectType.I_OT_NODE)
+                            set = new NodeSet();
+                        else if (groupType == IRobotObjectType.I_OT_PANEL)
+                            set = new PanelElementSet();
+
+                        if (set != null)
+                        {
+                            try
+                            {
+                                set.Name = group.Name;
+                                var ids = group.SelList.ToIDSet();
+                                foreach (int id in ids)
+                                {
+                                    ModelObject item = context.IDMap.GetMapped(groupType, id.ToString(), model);
+                                    if (item != null) set.Add(item);
+                                }
+                                model.Sets.TryAdd(set);
+                                context.IDMap.Add(set, i);
+                            }
+                            catch (Exception ex)
+                            {
+                                RaiseMessage("Parsing group failed: " + ex.Message);
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -558,6 +606,14 @@ namespace Nucleus.Robot
                 UpdateRobotPanelsFromModel(model, panelElements, context);
             }
 
+            if (context.Options.Sets)
+            {
+                ModelObjectSetCollection sets = model.Sets;
+                //if (context.Options.Update) sets = //TODO?
+                if (sets.Count > 0) RaiseMessage("Writing Groups...");
+                UpdateRobotGroupsFromModel(model, sets, context);
+            }
+
             RaiseMessage("Data writing completed.");
             return true;
         }
@@ -633,6 +689,22 @@ namespace Nucleus.Robot
             return true;
         }
 
+        /// <summary>
+        /// Update the groups in the open Robot model from a collection of sets
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="sets"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        private bool UpdateRobotGroupsFromModel(Model.Model model, ModelObjectSetCollection sets, RobotConversionContext context)
+        {
+            foreach (var set in sets)
+            {
+                UpdateRobotGroup(set, context);
+            }
+            return true;
+        }
+
         private bool UpdateRobotLoadCasesFromModel(Model.Model model, LoadCaseCollection loadCases, RobotConversionContext context)
         {
             //TODO
@@ -698,9 +770,12 @@ namespace Nucleus.Robot
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public IRobotLabel GetOffset(Vector start, Vector end)
+        public IRobotLabel GetOffset(Vector start, Vector end, SectionFamily section)
         {
-            if (start.IsZero() && end.IsZero()) return null;
+            if (start.IsZero() && end.IsZero() && 
+                (section?.Profile == null ||
+                (!section.Profile.HorizontalSetOut.IsEdge()
+                && !section.Profile.VerticalSetOut.IsEdge()))) return null;
             else
             {
                 int hash = start.GetHashCode() ^ end.GetHashCode();
@@ -720,6 +795,10 @@ namespace Nucleus.Robot
                     data.End.UX = end.X;
                     data.End.UY = end.Y;
                     data.End.UZ = end.Z;
+                    if (section?.Profile != null)
+                    {
+                        data.Position = FBtoROB.Convert(section.Profile.HorizontalSetOut, section.Profile.VerticalSetOut);
+                    }
                     return label;
                 }
             }
@@ -915,7 +994,7 @@ namespace Nucleus.Robot
                 // Offsets:
                 if (element.Geometry != null && element.Geometry.Vertices.HasNodalOffsets)
                 {
-                    IRobotLabel offsets = GetOffset(element.Start.Offset, element.End.Offset);
+                    IRobotLabel offsets = GetOffset(element.Start.Offset, element.End.Offset, element.Family);
                     bar.SetLabel(IRobotLabelType.I_LT_BAR_OFFSET, offsets.Name);
                 }
                 else
@@ -1362,7 +1441,7 @@ namespace Nucleus.Robot
             {
                 if (label == null)
                 {
-                    if (family.Name == null) family.Name = "Test"; //TEMP!
+                    if (family.Name == null) family.Name = "[Unnamed]"; //TEMP!
                     label = Robot.Project.Structure.Labels.Create(IRobotLabelType.I_LT_PANEL_THICKNESS, family.Name); //TODO: Enforce name uniqueness?
                 }
             }
@@ -1378,6 +1457,53 @@ namespace Nucleus.Robot
             Robot.Project.Structure.Labels.Store(label);
 
             return label;
+        }
+
+        /// <summary>
+        /// Get the type (in Robot terms) that the specified set contains
+        /// </summary>
+        /// <param name="set"></param>
+        /// <returns></returns>
+        public IRobotObjectType GroupTypeOf(ModelObjectSetBase set)
+        {
+            if (set is LinearElementSet) return IRobotObjectType.I_OT_BAR;
+            else if (set is PanelElementSet) return IRobotObjectType.I_OT_OBJECT;
+            else if (set is ElementSet) return IRobotObjectType.I_OT_UNDEFINED; //?
+            else if (set is NodeSet) return IRobotObjectType.I_OT_NODE;
+            else return IRobotObjectType.I_OT_UNDEFINED;
+        }
+
+        /// <summary>
+        /// Update or create a Robot Group by a Nucleus Set
+        /// </summary>
+        /// <param name="set"></param>
+        /// <param name="context"></param>
+        public void UpdateRobotGroup(ModelObjectSetBase set, RobotConversionContext context)
+        {
+            string mappedID;
+            RobotGroup group = null;
+            RobotGroupServer groups = Robot.Project.Structure.Groups;
+            IRobotObjectType groupType = GroupTypeOf(set);
+            int intID = -1;
+            if (context.IDMap.HasSecondID(context.IDMap.SetsCategory, set.GUID))
+            {
+                mappedID = context.IDMap.GetSecondID(context.IDMap.SetsCategory, set.GUID);
+                intID = int.Parse(mappedID);
+                if (set.IsDeleted)
+                {
+                    groups.Delete(groupType, intID);
+                }
+                else group = groups.Get(groupType, intID);
+            }
+            if (!set.IsDeleted)
+            {
+                if (group == null)
+                    intID = groups.Create(groupType, set.Name, context.IDMap.ToIDString(set));
+                else
+                    group.SelList = context.IDMap.ToIDString(set);
+            }
+
+            context.IDMap.Add(set, intID);
         }
 
         /// <summary>

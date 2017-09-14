@@ -27,9 +27,9 @@ namespace Nucleus.IO
 
         #region Properties
 
-        private Dictionary<Guid, IList<int>> _IDMap = new Dictionary<Guid, IList<int>>();
+        private IDMappingTable<Guid, IList<int>> _IDMap = new IDMappingTable<Guid, IList<int>>("Nucleus", "GSA");
 
-        public Dictionary<Guid, IList<int>> IDMap
+        public IDMappingTable<Guid, IList<int>> IDMap
         {
             get { return _IDMap; }
         }
@@ -43,6 +43,7 @@ namespace Nucleus.IO
             _NextID.Add(typeof(Element), 1);
             _NextID.Add(typeof(SectionFamily), 1);
             _NextID.Add(typeof(BuildUpFamily), 1);
+            _NextID.Add(typeof(ModelObjectSetBase), 1);
         }
 
         /// <summary>
@@ -202,6 +203,22 @@ namespace Nucleus.IO
         }
 
         /// <summary>
+        /// Convert a set to a GWA list definition
+        /// </summary>
+        /// <returns></returns>
+        public string ListDefinition()
+        {
+            if (SourceObject is ModelObjectSetBase)
+            {
+                var set = (ModelObjectSetBase)SourceObject;
+                List<int> ids = set.GetItemIDs<int>(IDMap);
+                ids.Sort();
+                return ids.ToCompressedString();
+            }
+            return "";
+        }
+
+        /// <summary>
         /// Get a GSA section description of the current object
         /// </summary>
         /// <returns></returns>
@@ -280,9 +297,9 @@ namespace Nucleus.IO
             if (obj != null && obj is ModelObject)
             {
                 ModelObject mObj = (ModelObject)obj;
-                if (IDMap.ContainsKey(mObj.GUID))
+                if (IDMap.HasSecondID(mObj.GUID))
                 {
-                    IList<int> IDs = IDMap[mObj.GUID];
+                    IList<int> IDs = IDMap.GetSecondID(mObj.GUID);
                     if (IDs.Count > subComponentIndex) return IDs[subComponentIndex].ToString();
                     else
                     {

@@ -107,6 +107,21 @@ namespace Nucleus.Robot
             set { ChangeProperty(ref _PanelElements, value, "PanelElements"); }
         }
 
+        /// <summary>
+        /// Private backing field for Sets property
+        /// </summary>
+        private bool _Sets = true;
+
+        /// <summary>
+        /// Read/Write Sets?
+        /// </summary>
+        [AutoUI(14, ToolTip = "Read/Write Saved Selection Sets?")]
+        public bool Sets
+        {
+            get { return _Sets; }
+            set { ChangeProperty(ref _Sets, value, "Sets"); }
+        }
+
         #region Constructors
 
         /// <summary>

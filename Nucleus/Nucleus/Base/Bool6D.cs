@@ -509,6 +509,34 @@ namespace Nucleus.Base
 
         #endregion
 
+        #region Static Methods
+
+        /// <summary>
+        /// Create a vector from a sequential set of values in a list,
+        /// starting at the specified index.  Out-of-bounds errors are automatically checked for.
+        /// </summary>
+        /// <param name="tokens"></param>
+        /// <param name="startIndex"></param>
+        /// <returns></returns>
+        public static Bool6D FromTokensList(IList<string> tokens, int startIndex = 0, string trueString = "TRUE")
+        {
+            bool x = false;
+            bool y = false;
+            bool z = false;
+            bool xx = false;
+            bool yy = false;
+            bool zz = false;
+            if (tokens.Count() > startIndex) x = tokens[startIndex].EqualsIgnoreCase(trueString);
+            if (tokens.Count() > startIndex + 1) y = tokens[startIndex + 1].EqualsIgnoreCase(trueString);
+            if (tokens.Count() > startIndex + 2) z = tokens[startIndex + 2].EqualsIgnoreCase(trueString);
+            if (tokens.Count() > startIndex + 3) xx = tokens[startIndex + 3].EqualsIgnoreCase(trueString);
+            if (tokens.Count() > startIndex + 4) yy = tokens[startIndex + 4].EqualsIgnoreCase(trueString);
+            if (tokens.Count() > startIndex + 5) zz = tokens[startIndex + 5].EqualsIgnoreCase(trueString);
+            return new Bool6D(x, y, z, xx, yy, zz);
+        }
+
+        #endregion
+
         #region Operators
 
         public static Bool6D operator |(Bool6D a, Bool6D b)

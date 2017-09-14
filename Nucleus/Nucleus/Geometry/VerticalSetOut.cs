@@ -55,5 +55,15 @@ namespace Nucleus.Geometry
             else if (value == VerticalSetOut.Bottom) return 1;
             else return 0.5;
         }
+
+        /// <summary>
+        /// Is this set out relative to either the top or bottom edge?
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool IsEdge(this VerticalSetOut value)
+        {
+            return value == VerticalSetOut.Top || value == VerticalSetOut.Bottom;
+        }
     }
 }

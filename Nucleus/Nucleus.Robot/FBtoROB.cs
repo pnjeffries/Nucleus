@@ -139,5 +139,33 @@ namespace Nucleus.Robot
             // TODO!
             else return null;
         }
+
+        /// <summary>
+        /// Convert Nucleus horizontal and vertical set-out enumerations into a Robot IRobotBarOffsetAutoPosition
+        /// </summary>
+        /// <param name="horizontal"></param>
+        /// <param name="vertical"></param>
+        /// <returns></returns>
+        public static IRobotBarOffsetAutoPosition Convert(HorizontalSetOut horizontal, VerticalSetOut vertical)
+        {
+            if (horizontal == HorizontalSetOut.Left)
+            {
+                if (vertical == VerticalSetOut.Top) return IRobotBarOffsetAutoPosition.I_BOAP_VY_VPZ;
+                else if (vertical == VerticalSetOut.Bottom) return IRobotBarOffsetAutoPosition.I_BOAP_VY_VZ;
+                else return IRobotBarOffsetAutoPosition.I_BOAP_VY_0;
+            }
+            else if (horizontal == HorizontalSetOut.Right)
+            {
+                if (vertical == VerticalSetOut.Top) return IRobotBarOffsetAutoPosition.I_BOAP_VPY_VPZ;
+                else if (vertical == VerticalSetOut.Bottom) return IRobotBarOffsetAutoPosition.I_BOAP_VPY_VZ;
+                else return IRobotBarOffsetAutoPosition.I_BOAP_VPY_0;
+            }
+            else
+            {
+                if (vertical == VerticalSetOut.Top) return IRobotBarOffsetAutoPosition.I_BOAP_0_VPZ;
+                else if (vertical == VerticalSetOut.Bottom) return IRobotBarOffsetAutoPosition.I_BOAP_0_VZ;
+                else return IRobotBarOffsetAutoPosition.I_BOAP_0_0;
+            }
+        }
     }
 }

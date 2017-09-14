@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using Nucleus.Base;
+using Nucleus.Geometry;
 using Nucleus.UI;
 using System;
 using System.Collections.Generic;
@@ -222,6 +223,19 @@ namespace Nucleus.Model
                 // TODO: Subtract area of embedded sections & reinforcement
             }
             return result;
+        }
+
+        /// <summary>
+        /// Calculate the total combined offset of the centroid of the section to the specified set-out location
+        /// </summary>
+        /// <returns></returns>
+        public Vector GetTotalOffset(HorizontalSetOut toHorizontal = HorizontalSetOut.Centroid,
+            VerticalSetOut toVertical = VerticalSetOut.Centroid)
+        {
+            if (Profile != null) return Profile.GetTotalOffset(toHorizontal, toVertical);
+            else return new Vector();
+            //TODO: Account for multiple profiles which do not all lie within one another
+            // Iterate through and return largest?
         }
 
         #endregion

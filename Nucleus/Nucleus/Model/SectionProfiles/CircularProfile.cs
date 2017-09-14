@@ -129,6 +129,11 @@ namespace Nucleus.Model
                 Diameter * 1000);
         }
 
+        protected override Vector CalculateCentroidOffset(Curve perimeter, CurveCollection voids)
+        {
+            return new Vector();
+        }
+
         #endregion
     }
 }

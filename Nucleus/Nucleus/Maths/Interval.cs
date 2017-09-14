@@ -441,6 +441,12 @@ namespace Nucleus.Maths
             return Start + (value - Start) % Size;
         }
 
+        public override string ToString()
+        {
+            if (IsSingularity) return this.End.ToString();
+            else return Start.ToString() + ":" + End.ToString();
+        }
+
         #endregion
 
         #region Operators

@@ -1,4 +1,5 @@
 ﻿using Nucleus.Base;
+using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 namespace Nucleus.Model
 {
     /// <summary>
-    /// Support conditions that can be attached to a node to represent
+    /// A data component that represents support conditions that can be attached to a node to represent
     /// restraint in a finite element analysis or physical simulation
     /// </summary>
     [Serializable]
@@ -49,6 +50,25 @@ namespace Nucleus.Model
             set { ChangeProperty(ref _Axes, value, "Axes"); }
         }
 
+        /// <summary>
+        /// Private backing field for Stiffness property
+        /// </summary>
+        private SixVector _Stiffness = new SixVector();
+
+        /// <summary>
+        /// The stiffnesses in the translational and rotational degrees of freedom
+        /// of this support.  By default this stiffness is 0 in all directions.
+        /// This property is only considered when the fixity in the relevent direction
+        /// is set to false - otherwise the node is taken to be fully restrained in that
+        /// axis and the stiffness is effectively infinite.
+        /// Expressed in N/m.
+        /// </summary>
+        public SixVector Stiffness
+        {
+            get { return _Stiffness; }
+            set { ChangeProperty(ref _Stiffness, value, "Stiffness"); }
+        }
+
         #endregion
 
         #region Constructors
@@ -66,7 +86,17 @@ namespace Nucleus.Model
         /// <param name="fixity"></param>
         public NodeSupport(Bool6D fixity) : base()
         {
-            Fixity = fixity;
+            _Fixity = fixity;
+        }
+
+        /// <summary>
+        /// Initialise a new node support with the fixed dimensions specified
+        /// and the given stiffnesses in the other directions
+        /// </summary>
+        /// <param name="fixity"></param>
+        public NodeSupport(Bool6D fixity, SixVector stiffness) : this(fixity)
+        {
+            _Stiffness = stiffness;
         }
 
         /// <summary>
@@ -90,6 +120,7 @@ namespace Nucleus.Model
             {
                 NodeSupport otherS = (NodeSupport)other;
                 Fixity = Fixity.Or(otherS.Fixity);
+                Stiffness = Stiffness.MergeMax(otherS.Stiffness);
                 //TODO: Axis merging
             }
         }

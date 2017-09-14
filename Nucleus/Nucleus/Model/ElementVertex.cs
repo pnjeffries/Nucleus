@@ -131,7 +131,7 @@ namespace Nucleus.Model
                     var lEl = (LinearElement)Element;
                     if (lEl.Family?.Profile != null)
                     {
-                        Vector profileOffset = lEl.Family.Profile.GetTotalOffset();
+                        Vector profileOffset = lEl.Family.GetTotalOffset();
                         var cSystem = GetLocalCoordinateSystem(false);
                         result -= cSystem.LocalToGlobal(profileOffset, true);
                     }
