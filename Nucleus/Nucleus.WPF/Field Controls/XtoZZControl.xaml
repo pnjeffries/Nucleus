@@ -1,11 +1,11 @@
-﻿<local:LabelledControl x:Class="Nucleus.WPF.XYZControl"
+﻿<local:LabelledControl x:Class="Nucleus.WPF.XtoZZControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Nucleus.WPF"
              mc:Ignorable="d" 
-             d:DesignHeight="22" d:DesignWidth="300">
+             d:DesignHeight="44" d:DesignWidth="300">
     <Grid Name="LayoutRoot">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -13,7 +13,11 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <local:SnapBorder>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <local:SnapBorder Grid.RowSpan="2">
             <TextBlock Grid.Column="0" 
                        Text="{Binding Path=Label}"
                        VerticalAlignment="Center"/>
@@ -21,10 +25,9 @@
         <TextBox Grid.Column="1" Text="{Binding Path=XValue, StringFormat={}{0:0.####}}" TextWrapping="Wrap" ToolTip="X"></TextBox>
         <TextBox Grid.Column="2" Text="{Binding Path=YValue, StringFormat={}{0:0.####}}" TextWrapping="Wrap" ToolTip="Y"></TextBox>
         <TextBox Grid.Column="3" Text="{Binding Path=ZValue, StringFormat={}{0:0.####}}" TextWrapping="Wrap" ToolTip="Z"></TextBox>
-        <!--<DataGrid HeadersVisibility="None" Grid.Column="1">
-            <DataGridTextColumn Binding="{Binding Path=XValue}"/>
-            <DataGridTextColumn Binding="{Binding Path=YValue}"/>
-            <DataGridTextColumn Binding="{Binding Path=ZValue}"/>
-        </DataGrid>-->
+        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Path=XXValue, StringFormat={}{0:0.####}}" TextWrapping="Wrap" ToolTip="XX"></TextBox>
+        <TextBox Grid.Column="2" Grid.Row="1" Text="{Binding Path=YYValue, StringFormat={}{0:0.####}}" TextWrapping="Wrap" ToolTip="YY"></TextBox>
+        <TextBox Grid.Column="3" Grid.Row="1" Text="{Binding Path=ZZValue, StringFormat={}{0:0.####}}" TextWrapping="Wrap" ToolTip="ZZ"></TextBox>
     </Grid>
 </local:LabelledControl>
+

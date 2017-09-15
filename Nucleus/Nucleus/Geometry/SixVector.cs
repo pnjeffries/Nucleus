@@ -213,6 +213,73 @@ namespace Nucleus.Geometry
             else return false;
         }
 
+
+        /// <summary>
+        /// Create a new SixVector copying all values from this one
+        /// bar the new specified value of X.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public SixVector WithX(double x)
+        {
+            return new SixVector(x, Y, Z, XX, YY, ZZ);
+        }
+
+        /// <summary>
+        /// Create a new SixVector copying all values from this one
+        /// bar the new specified value of Y.
+        /// </summary>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public SixVector WithY(double y)
+        {
+            return new SixVector(X, y, Z, XX, YY, ZZ);
+        }
+
+        /// <summary>
+        /// Create a new SixVector copying all values from this one
+        /// bar the new specified value of Z.
+        /// </summary>
+        /// <param name="z"></param>
+        /// <returns></returns>
+        public SixVector WithZ(double z)
+        {
+            return new SixVector(X, Y, z, XX, YY, ZZ);
+        }
+
+        /// <summary>
+        /// Create a new SixVector copying all values from this one
+        /// bar the new specified value of XX.
+        /// </summary>
+        /// <param name="xx"></param>
+        /// <returns></returns>
+        public SixVector WithXX(double xx)
+        {
+            return new SixVector(X, Y, Z, xx, YY, ZZ);
+        }
+
+        /// <summary>
+        /// Create a new SixVector copying all values from this one
+        /// bar the new specified value of YY.
+        /// </summary>
+        /// <param name="yy"></param>
+        /// <returns></returns>
+        public SixVector WithYY(double yy)
+        {
+            return new SixVector(X, Y, Z, XX, yy, ZZ);
+        }
+
+        /// <summary>
+        /// Create a new SixVector copying all values from this one
+        /// bar the new specified value of ZZ.
+        /// </summary>
+        /// <param name="zz"></param>
+        /// <returns></returns>
+        public SixVector WithZZ(double zz)
+        {
+            return new SixVector(X, Y, Z, XX, YY, zz);
+        }
+
         #endregion
 
         #region Static Methods
