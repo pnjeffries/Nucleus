@@ -44,6 +44,23 @@ namespace Nucleus.IO
             set { _Index = value; }
         }
 
+        /// <summary>
+        /// Get the token at the specified position in the
+        /// tokenised string.  Accessing this will not modify the
+        /// current position of the reader.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public string this[int index]
+        {
+            get
+            {
+                if (_Tokens.Length > index)
+                    return _Tokens[index];
+                else return null;
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -62,6 +79,21 @@ namespace Nucleus.IO
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Get the next token, without advancing the position of the
+        /// reader.
+        /// </summary>
+        /// <returns></returns>
+        public string PeekNext()
+        {
+            if (_Index < _Tokens.Length)
+            {
+                var result = _Tokens[_Index];
+                return result;
+            }
+            else return null;
+        }
 
         /// <summary>
         /// Get the next token.  The position of the reader will

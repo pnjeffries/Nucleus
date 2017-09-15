@@ -143,7 +143,7 @@ namespace Nucleus.GSA
                     //TODO (?)
                 }
             }
-            
+
         }
 
         public void ReadElements()
@@ -158,6 +158,50 @@ namespace Nucleus.GSA
                 {
                     //TODO (?)
                 }
+            }
+        }
+
+        /// <summary>
+        /// Get the number of nodes that are needed to represent
+        /// the specified element type
+        /// </summary>
+        /// <param name="elementType">The element type in GWA format</param>
+        /// <returns></returns>
+        public int NodeCountOf(string elementType)
+        {
+            if (elementType == null) return 0;
+            switch (elementType.ToUpper())
+            {
+                case "TRI3": return 3;
+                case "TRI6": return 6;
+                case "QUAD4": return 4;
+                case "QUAD8": return 8;
+                default: return 2;
+            }
+        }
+
+        /// <summary>
+        /// Update the properties of a Nucleus node from a GWA string
+        /// in EL.2 version syntax
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="gwa"></param>
+        public void UpdateModelElementFromGSA(string gwa)
+        {
+            // EL.2 | num | name | colour | type | prop | group | topo() | orient_node | orient_angle |
+            // is_rls { | rls { | k } }
+            // is_offset { | ox | oy | oz } | dummy
+
+            Element element;
+
+            var tr = new TokenReader(gwa);
+            tr.Next(); // EL
+            int gsaID = tr.NextInt();
+            int nodeCount = NodeCountOf(tr[4]);
+            if (nodeCount == 0) return; //Not valid!
+            else if (nodeCount == 2)
+            {
+                //element 
             }
         }
 

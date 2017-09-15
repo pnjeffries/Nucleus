@@ -187,6 +187,7 @@ namespace Nucleus.Robot
             if (options.Nodes) UpdateModelNodesFromRobotFile(model, robotNodes, context);
             if (options.LinearElements) UpdateModelLinearElementsFromRobotFile(model, robotNodes, context);
             if (options.PanelElements) UpdateModelPanelElementsFromRobotFile(model, robotNodes, context);
+            if (options.Sets) UpdateModelSetsFromRobotFile(model, context);
             RaiseMessage("Data reading completed.");
             return false;
         }
@@ -1467,8 +1468,15 @@ namespace Nucleus.Robot
         public IRobotObjectType GroupTypeOf(ModelObjectSetBase set)
         {
             if (set is LinearElementSet) return IRobotObjectType.I_OT_BAR;
-            else if (set is PanelElementSet) return IRobotObjectType.I_OT_OBJECT;
-            else if (set is ElementSet) return IRobotObjectType.I_OT_UNDEFINED; //?
+            else if (set is PanelElementSet) return IRobotObjectType.I_OT_PANEL;
+            else if (set is ElementSet)
+            {
+                var elSet = (ElementSet)set;
+                if (elSet.Items.IsAllPanels)
+                    return IRobotObjectType.I_OT_PANEL;
+                else
+                    return IRobotObjectType.I_OT_BAR;
+            }
             else if (set is NodeSet) return IRobotObjectType.I_OT_NODE;
             else return IRobotObjectType.I_OT_UNDEFINED;
         }
