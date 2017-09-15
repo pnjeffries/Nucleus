@@ -301,7 +301,7 @@ namespace Nucleus.Model
                         if (unique != null && !unique.IsDeleted && unique is DataOwner)
                         {
                             DataOwner dO = (DataOwner)unique;
-                            dO.CleanData(componentType);
+                            dO.ClearData(componentType);
                         }
                     }
                 }

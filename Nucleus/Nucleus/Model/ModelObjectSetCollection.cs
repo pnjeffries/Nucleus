@@ -32,11 +32,30 @@ namespace Nucleus.Model
         #region Methods
 
         /// <summary>
+        /// Find a set in this collection of the specified type and with the specified name
+        /// or if a match does not exist create a new one
+        /// </summary>
+        /// <typeparam name="TSetType">The type of set to search for</typeparam>
+        /// <param name="name">The name to search for</param>
+        /// <returns></returns>
+        public TSetType FindOrCreate<TSetType>(string name)
+            where TSetType : TSet, new()
+        {
+            TSetType set = FindByName<TSetType>(name);
+            if (set == null)
+            {
+                set = new TSetType();
+                set.Name = name;
+                TryAdd(set);
+            }
+            return set;
+        }
+
         /// Add a set to this collection, if it is of a compatible type
         /// </summary>
         /// <param name="set"></param>
         /// <returns></returns>
-        public bool Add(IModelObjectSet set)
+        public bool TryAdd(IModelObjectSet set)
         {
             if (set is TSet)
             {
@@ -47,7 +66,6 @@ namespace Nucleus.Model
         }
 
         #endregion
-
     }
 
     /// <summary>

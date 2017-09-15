@@ -372,6 +372,23 @@ namespace Nucleus.Rhino
         }
 
         /// <summary>
+        /// Select the object with the specified GUID in Rhino
+        /// </summary>
+        /// <param name="objID"></param>
+        public static void SelectObject(Guid objID)
+        {
+            GetObject(objID)?.Select(true);
+        }
+
+        /// <summary>
+        /// Unselect all objects in Rhino
+        /// </summary>
+        public static void UnselectAllObjects()
+        {
+            RhinoDoc.ActiveDoc.Objects.UnselectAll();
+        }
+
+        /// <summary>
         /// Does an object with the specified ID exist within the current document?
         /// </summary>
         /// <param name="objID"></param>

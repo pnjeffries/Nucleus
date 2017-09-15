@@ -501,7 +501,7 @@ namespace Nucleus.Robot
                                     ModelObject item = context.IDMap.GetMapped(groupType, id.ToString(), model);
                                     if (item != null) set.Add(item);
                                 }
-                                model.Sets.Add(set);
+                                model.Sets.TryAdd(set);
                                 context.IDMap.Add(set, i);
                             }
                             catch (Exception ex)

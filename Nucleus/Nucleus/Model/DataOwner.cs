@@ -69,7 +69,13 @@ namespace Nucleus.Model
         /// Remove any attached data components of the specified type
         /// </summary>
         /// <param name="ofType"></param>
-        public abstract bool CleanData(Type componentType);
+        public abstract bool ClearData(Type componentType);
+
+        /// <summary>
+        /// Remove all attached data components
+        /// </summary>
+        /// <returns></returns>
+        public abstract void ClearData();
 
         /// <summary>
         /// Notify this owner that a property of a data component has been changed.
@@ -233,9 +239,18 @@ namespace Nucleus.Model
         /// Remove any attached data components of the specified type
         /// </summary>
         /// <param name="ofType"></param>
-        public override bool CleanData(Type ofType)
+        public override bool ClearData(Type ofType)
         {
             return Data.Remove(ofType);
+        }
+
+        /// <summary>
+        /// Remove all attached data components
+        /// </summary>
+        /// <returns></returns>
+        public override void ClearData()
+        {
+            _Data = null;
         }
 
         /// <summary>

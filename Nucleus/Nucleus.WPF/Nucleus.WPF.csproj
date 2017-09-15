@@ -73,6 +73,7 @@
     <Compile Include="Converters\GreaterThanConverter.cs" />
     <Compile Include="Converters\IntConverter.cs" />
     <Compile Include="Converters\IsTypeConverter.cs" />
+    <Compile Include="Converters\IsZeroConverter.cs" />
     <Compile Include="Converters\MeshConverter.cs" />
     <Compile Include="Converters\MillimetersConverter.cs" />
     <Compile Include="Converters\ModelTableConverter.cs" />

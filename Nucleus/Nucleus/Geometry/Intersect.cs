@@ -137,6 +137,30 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find the intersection between an infinite line and an infinite plane.
+        /// Expressed as a parameter t, the multiple of the rayDirection away from the rayOrigin
+        /// at which the intersection takes place.
+        /// </summary>
+        /// <param name="lineOrigin">A point on the line</param>
+        /// <param name="lineDirection">A direction vector for the line</param>
+        /// <param name="planeOrigin">A point on the plane</param>
+        /// <param name="planeNormal">A direction vector perpendicular to the plane</param>
+        /// <returns></returns>
+        public static double LinePlane(Vector lineOrigin, Vector lineDirection, Vector planeOrigin, Vector planeNormal)
+        {
+            double directionProj = lineDirection.Dot(planeNormal);
+
+            if (directionProj != 0)
+            {
+                double startProj = lineOrigin.Dot(planeNormal);
+                double pointProj = planeOrigin.Dot(planeNormal);
+                double t = (pointProj - startProj) / directionProj;
+                return t;
+            }
+            return double.NaN;
+        }
+
+        /// <summary>
         /// Find the intersection point between a ray half-line and a line segment on the XY plane, if one exists
         /// </summary>
         /// <param name="rayStart">The ray start point</param>
