@@ -78,9 +78,9 @@ namespace Nucleus.ETABS
             return ETABS.SapModel.File.Save(filePath) == 0;
         }
 
-        public bool WriteModelToEtabs(FilePath filePath, Model.Model model, ref IDMappingTable idMap, ETABSConversionOptions options)
+        public bool WriteModelToEtabs(FilePath filePath, Model.Model model, ref ETABSIDMappingTable idMap, ETABSConversionOptions options)
         {
-
+            return false;
         }
 
 
