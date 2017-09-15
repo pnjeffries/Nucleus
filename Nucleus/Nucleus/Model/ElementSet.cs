@@ -65,6 +65,7 @@ namespace Nucleus.Model
     /// out items that are not of the specified subtype
     /// </summary>
     /// <typeparam name="TSubType"></typeparam>
+    [Serializable]
     public abstract class ElementSet<TSubType> : ElementSet
         where TSubType : Element
     {

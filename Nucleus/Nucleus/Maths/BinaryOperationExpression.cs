@@ -10,6 +10,7 @@ namespace Nucleus.Maths
     /// <summary>
     /// Represents an expression preforming an operation 
     /// </summary>
+    [Serializable]
     public class BinaryOperationExpression : Expression
     {
         #region Properties

@@ -11,6 +11,7 @@ namespace Nucleus.Model
     /// A family which describes a 3D block of geometry which is
     /// positioned according to a point in 3D space
     /// </summary>
+    [Serializable]
     public class BlockFamily : Family
     {
         /// <summary>

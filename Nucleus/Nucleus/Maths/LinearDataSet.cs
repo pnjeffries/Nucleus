@@ -9,6 +9,7 @@ namespace Nucleus.Maths
     /// <summary>
     /// An interpolatable data set of values along a single axis.
     /// </summary>
+    [Serializable]
     public abstract class LinearDataSet<TValue> : SortedList<double, TValue>
     {
         #region Properties

@@ -13,6 +13,7 @@ namespace Nucleus.Model
     /// A profile in the shape of a solid trapezoid, with a different width
     /// at the top to the bottom
     /// </summary>
+    [Serializable]
     public class TrapezoidProfile : ParameterProfile
     {
         #region Properties

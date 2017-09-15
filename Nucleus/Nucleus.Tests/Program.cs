@@ -82,7 +82,7 @@ namespace Nucleus.Tests
 
             if (option == 'a' || option == 'f')
             {
-                Reflection_Tests.PrintUnserializableTypes(typeof(ModelDocument));
+                Reflection_Tests.PrintUnserializableTypes(typeof(ModelDocument).Assembly);
             }
 
             if (option == 'a' || option == 'g')

@@ -187,6 +187,7 @@ namespace Nucleus.Robot
             if (options.Nodes) UpdateModelNodesFromRobotFile(model, robotNodes, context);
             if (options.LinearElements) UpdateModelLinearElementsFromRobotFile(model, robotNodes, context);
             if (options.PanelElements) UpdateModelPanelElementsFromRobotFile(model, robotNodes, context);
+            if (options.Sets) UpdateModelSetsFromRobotFile(model, context);
             RaiseMessage("Data reading completed.");
             return false;
         }

@@ -13,6 +13,7 @@ namespace Nucleus.Model
     /// </summary>
     /// <typeparam name="TElement"></typeparam>
     /// <typeparam name="TFamily"></typeparam>
+    [Serializable]
     public abstract class FamilyFilter<TElement, TFamily> : SetFilterBase<TElement>
         where TElement : Element
         where TFamily : Family
@@ -54,6 +55,7 @@ namespace Nucleus.Model
     /// Filter for elements which will pass if the element is assigned
     /// a specific family
     /// </summary>
+    [Serializable]
     public class FamilyFilter : FamilyFilter<Element, Family>
     {
         #region Constructors

@@ -9,6 +9,7 @@ namespace Nucleus.Maths
     /// <summary>
     /// A linear data set that plots numeric intervals along a single axis
     /// </summary>
+    [Serializable]
     public class LinearIntervalDataSet : LinearDataSet<Interval>
     {
         #region Properties
