@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Maths
 {
+    [Serializable]
     public class LinearDoubleDataSet : LinearDataSet<double>
     {
 

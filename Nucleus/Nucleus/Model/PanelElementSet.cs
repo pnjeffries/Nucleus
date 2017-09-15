@@ -9,6 +9,7 @@ namespace Nucleus.Model
     /// <summary>
     /// A set of panel elements
     /// </summary>
+    [Serializable]
     public class PanelElementSet : ElementSet<PanelElement>
     {
     }

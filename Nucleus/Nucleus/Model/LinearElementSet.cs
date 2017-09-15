@@ -12,6 +12,7 @@ namespace Nucleus.Model
     /// Allows linear element collections to be defined via a base collection and a set of logical 
     /// filters which act upon that collection.
     /// </summary>
+    [Serializable]
     public class LinearElementSet : ElementSet<LinearElement>
     {
         /// <summary>

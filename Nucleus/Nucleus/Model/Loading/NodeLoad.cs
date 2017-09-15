@@ -9,6 +9,7 @@ namespace Nucleus.Model.Loading
     /// <summary>
     /// A force load applied directly to a set of nodes
     /// </summary>
+    [Serializable]
     public class NodeLoad : ForceLoad<NodeSet>
     {
         

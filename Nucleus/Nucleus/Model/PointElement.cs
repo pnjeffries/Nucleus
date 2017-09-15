@@ -12,6 +12,7 @@ namespace Nucleus.Model
     /// solid 3D geometry is produced by positioning a block geometry
     /// at that point.
     /// </summary>
+    [Serializable]
     public class PointElement : Element<Point, BlockFamily>
     {
         /// <summary>

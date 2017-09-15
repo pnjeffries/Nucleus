@@ -10,6 +10,7 @@ namespace Nucleus.Rendering
     /// <summary>
     /// A collection of colours
     /// </summary>
+    [Serializable]
     public class ColourCollection : ObservableKeyedCollection<int, Colour>
     {
         #region Methods

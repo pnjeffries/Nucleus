@@ -13,6 +13,7 @@ namespace Nucleus.Model
     /// direction
     /// </summary>
     /// <typeparam name="TAppliedTo"></typeparam>
+    [Serializable]
     public abstract class ForceLoad<TAppliedTo> : Load<TAppliedTo>
         where TAppliedTo : ModelObjectSetBase, new()
     {

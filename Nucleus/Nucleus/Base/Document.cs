@@ -120,7 +120,7 @@ namespace Nucleus.Base
             }
             catch (Exception ex)
             {
-                //throw new SerializationException("An error was encountered while attempting to save the document.", ex);
+                throw new SerializationException("An error was encountered while attempting to save the document.", ex);
                 //TODO: Notify user of error
             }
             return false;
@@ -143,8 +143,8 @@ namespace Nucleus.Base
                                          FileMode.Create,
                                          FileAccess.Write, FileShare.None);
                 textSerialiser.Serialize(stream, this as T);
-                //stream.Flush();
-                //stream.Close();
+                stream.Flush();
+                stream.Close();
                 FilePath = filePath; //Store filepath
                 LastSaved = DateTime.UtcNow;
                 return true;

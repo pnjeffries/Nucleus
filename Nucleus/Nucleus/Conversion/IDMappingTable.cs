@@ -149,13 +149,17 @@ namespace Nucleus.Conversion
 
         /// <summary>
         /// Determines whether this mapping table contains an entry within the second set stored
-        /// under the default catagory and associated with the given ID from the first set.
+        /// under any catagory and associated with the given ID from the first set.
         /// </summary>
         /// <param name="firstID">The ID from the first set</param>
         /// <returns></returns>
         public bool HasSecondID(TFirstID firstID)
         {
-            return HasSecondID(DefaultCategory, firstID);
+            foreach (var kvp in this)
+            {
+                if (kvp.Value.ContainsFirst(firstID)) return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -171,14 +175,18 @@ namespace Nucleus.Conversion
         }
 
         /// <summary>
-        /// Get the ID from the second set within the default category and associated with the ID from
+        /// Get the ID from the second set within any category and associated with the ID from
         /// the first set specified.
         /// </summary>
         /// <param name="firstID">The ID from the first set</param>
         /// <returns></returns>
         public TSecondID GetSecondID(TFirstID firstID)
         {
-            return GetSecondID(DefaultCategory, firstID);
+            foreach (var kvp in this)
+            {
+                if (kvp.Value.ContainsFirst(firstID)) return kvp.Value.GetSecond(firstID);
+            }
+            return default(TSecondID);
         }
 
         /// <summary>

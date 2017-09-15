@@ -10,6 +10,7 @@ namespace Nucleus.Model
     /// <summary>
     /// Abstract generic base class for set filters
     /// </summary>
+    [Serializable]
     public abstract class SetFilterBase<TItem> : Unique, ISetFilter<TItem>
     {
         #region Properties
