@@ -80,6 +80,15 @@ namespace Nucleus.ETABS
             return ETABS.SapModel.File.Save(filePath) == 0;
         }
 
+        /// <summary>
+        /// Release the ETABS link
+        /// </summary>
+        public void Release()
+        {
+            _ETABS = null;
+            RaiseMessage("ETABS link released.");
+        }
+
         public bool WriteModelToEtabs(FilePath filePath, Model.Model model, ref ETABSIDMappingTable idMap, ETABSConversionOptions options)
         {
             if (New())
@@ -101,7 +110,7 @@ namespace Nucleus.ETABS
             {
                 NodeCollection nodes = model.Nodes;
                 if (context.Options.Update) nodes = nodes.Modified(context.Options.UpdateSince);
-                if (nodes.Count > 0) RaiseMessage("Writing Nodes...");
+                if (nodes.Count > 0) RaiseMessage("Writing nodes...");
                 WriteNodes(nodes, context);
             }
 
@@ -109,7 +118,7 @@ namespace Nucleus.ETABS
             {
                 FamilyCollection families = model.Families;
                 if (context.Options.Update) families = families.Modified(context.Options.UpdateSince);
-                if (families.Count > 0) RaiseMessage("Writing Properties...");
+                if (families.Count > 0) RaiseMessage("Writing properties...");
                 WriteFamilies(families, context);
             }
 
@@ -142,7 +151,7 @@ namespace Nucleus.ETABS
 
         private void WriteNodes(NodeCollection nodes, ETABSConversionContext context)
         {
-            // Possible?
+            // TODO: Only write restrained nodes?
             foreach (Node node in nodes)
             {
                 string id = "";
@@ -234,7 +243,6 @@ namespace Nucleus.ETABS
                 Vector e = element.End.Position;
                 string id = "";
                 ETABS.SapModel.FrameObj.AddByCoord(s.X, s.Y, s.Z, e.X, e.Y, e.Z, ref id, element.Family?.Name, element.Name);
-                
             }
         }
 
