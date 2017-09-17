@@ -81,5 +81,20 @@ namespace Nucleus.Base
             }
             return sb.ToString();
         }
+
+        /// <summary>
+        /// Get a list of all of the names of the objects in this enumerable
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        public static IList<string> GetNamesList<TItem>(this IEnumerable<TItem> collection)
+            where TItem: INamed
+        {
+            var result = new List<string>();
+            foreach (TItem item in collection)
+                result.Add(item.Name);
+            return result;
+        }
     }
 }

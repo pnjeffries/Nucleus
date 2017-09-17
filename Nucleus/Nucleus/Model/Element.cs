@@ -343,9 +343,10 @@ namespace Nucleus.Model
         private TFamily _Family;
 
         /// <summary>
-        /// The volumetric property that describes how the editable set-out 
+        /// The element family to which this element belongs.  The element family
+        /// is a volumetric property that describes how the editable set-out 
         /// geometry of this element should be interpreted to produce a 
-        /// full 3D solid object
+        /// full 3D solid object and which may be shared by multiple elements.
         /// </summary>
         [AutoUIComboBox(Order = 420)]
         public TFamily Family

@@ -11,7 +11,7 @@ namespace Nucleus.ETABS
     /// <summary>
     /// A set of options to be used when writing from Nucleus to Robot
     /// </summary>
-    public class ETABSConversionOptions : ConversionOptions, IAutoUIHostable
+    public class ETABSConversionOptions : ModelConversionOptions, IAutoUIHostable
     {
 
     }

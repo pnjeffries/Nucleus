@@ -390,6 +390,16 @@ namespace Nucleus.Base
         }
 
         /// <summary>
+        /// Convert this Bool6D to an array of six booleans,
+        /// in order X,Y,Z,XX,YY,ZZ
+        /// </summary>
+        /// <returns></returns>
+        public bool[] ToArray()
+        {
+            return new bool[] { X, Y, Z, XX, YY, ZZ };
+        }
+
+        /// <summary>
         /// Turn this Bool6D to a string describing it as a restraint condition.
         /// Gives the same result as ToString(), but with the additional special cases
         /// of 'Pin' and 'Fixed' for translational and full restraint respectively.

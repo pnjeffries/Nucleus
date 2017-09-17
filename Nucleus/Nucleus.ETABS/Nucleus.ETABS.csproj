@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ETABSClient.cs" />
+    <Compile Include="ETABSConversionContext.cs" />
     <Compile Include="ETABSConversionOptions.cs" />
     <Compile Include="ETABSIDMappingTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

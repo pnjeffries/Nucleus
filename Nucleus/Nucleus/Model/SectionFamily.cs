@@ -30,6 +30,7 @@ using System.Threading.Tasks;
 namespace Nucleus.Model
 {
     /// <summary>
+    /// An element section family -
     /// A family which describes a section which should be
     /// swept along the set-out curve of a linear element in
     /// order to produce a 3D solid geometry.

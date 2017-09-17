@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nucleus.Extensions;
 
 namespace Nucleus.Model
 {
@@ -14,6 +15,7 @@ namespace Nucleus.Model
     public class ModelObjectSetCollection<TSet> : ModelObjectCollection<TSet>
         where TSet : ModelObjectSetBase, IModelObjectSet
     {
+
         #region Constructors
 
         /// <summary>
@@ -74,6 +76,35 @@ namespace Nucleus.Model
     [Serializable]
     public class ModelObjectSetCollection : ModelObjectSetCollection<ModelObjectSetBase>
     {
+        #region Properties
+
+        /// <summary>
+        /// Get a collection of all the sets of elements within this collection
+        /// </summary>
+        public ModelObjectSetCollection<ElementSet> ElementSets
+        {
+            get
+            {
+                var result = new ModelObjectSetCollection<ElementSet>();
+                this.ExtractAllOfType(result);
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Get a collection of all the sets of nodes within this collection
+        /// </summary>
+        public ModelObjectSetCollection<NodeSet> NodeSets
+        {
+            get {
+                var result = new ModelObjectSetCollection<NodeSet>();
+                this.ExtractAllOfType(result);
+                return result;
+            }
+        }
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -88,5 +119,6 @@ namespace Nucleus.Model
         protected ModelObjectSetCollection(Model model) : base(model) { }
 
         #endregion
+
     }
 }

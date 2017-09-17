@@ -28,7 +28,8 @@ using System.Threading.Tasks;
 namespace Nucleus.Model
 {
     /// <summary>
-    /// A shared property that describes how to resolve
+    /// Base class for element families, which are
+    /// a shared property that describes how to resolve
     /// an element's editable set-out geometry into a full
     /// 3D solid object.
     /// </summary>
