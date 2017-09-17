@@ -19,9 +19,9 @@ namespace Nucleus.WPF.Converters
         {
             if (values.Length > 0)
             {
-                foreach (int factor in values)
+                foreach (object factor in values)
                 {
-                    if (factor > 0) return Visibility.Collapsed;
+                    if (factor is int && (int)factor > 0) return Visibility.Collapsed;
                 }
             }
             return Visibility.Visible;
