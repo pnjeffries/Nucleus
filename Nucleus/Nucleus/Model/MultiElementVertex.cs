@@ -163,15 +163,15 @@ namespace Nucleus.Model
         /// <summary>
         /// The translational release of this vertex in the x-axis
         /// </summary>
-        public bool Release_X
+        public bool? Release_X
         {
-            get { return Vertices.CombinedValue(i => i.HasData<VertexReleases>() ? i.GetData<VertexReleases>().Releases.X : false, false, false); }
+            get { return Vertices.CombinedValue(i => i.HasData<VertexReleases>() ? (bool?) i.GetData<VertexReleases>().Releases.X : false, null, false); }
             set
             {
                 foreach (var v in Vertices)
                 {
                     VertexReleases vR = v.GetData<VertexReleases>(true);
-                    vR.Releases = vR.Releases.WithX(value);
+                    vR.Releases = vR.Releases.WithX(value.ToBool());
                 }
             }
         }
@@ -179,15 +179,15 @@ namespace Nucleus.Model
         /// <summary>
         /// The translational release of this vertex in the y-axis
         /// </summary>
-        public bool Release_Y
+        public bool? Release_Y
         {
-            get { return Vertices.CombinedValue(i => i.HasData<VertexReleases>() ? i.GetData<VertexReleases>().Releases.Y : false, false, false); }
+            get { return Vertices.CombinedValue(i => i.HasData<VertexReleases>() ? (bool?)i.GetData<VertexReleases>().Releases.Y : false, null, false); }
             set
             {
                 foreach (var v in Vertices)
                 {
                     VertexReleases vR = v.GetData<VertexReleases>(true);
-                    vR.Releases = vR.Releases.WithY(value);
+                    vR.Releases = vR.Releases.WithY(value.ToBool());
                 }
             }
         }
@@ -195,15 +195,15 @@ namespace Nucleus.Model
         /// <summary>
         /// The translational release of this vertex in the z-axis
         /// </summary>
-        public bool Release_Z
+        public bool? Release_Z
         {
-            get { return Vertices.CombinedValue(i => i.HasData<VertexReleases>() ? i.GetData<VertexReleases>().Releases.Z : false, false, false); }
+            get { return Vertices.CombinedValue(i => i.HasData<VertexReleases>() ? (bool?)i.GetData<VertexReleases>().Releases.Z : false, null, false); }
             set
             {
                 foreach (var v in Vertices)
                 {
                     VertexReleases vR = v.GetData<VertexReleases>(true);
-                    vR.Releases = vR.Releases.WithZ(value);
+                    vR.Releases = vR.Releases.WithZ(value.ToBool());
                 }
             }
         }
@@ -211,15 +211,15 @@ namespace Nucleus.Model
         /// <summary>
         /// The rotational release of this vertex about the x-axis
         /// </summary>
-        public bool Release_XX
+        public bool? Release_XX
         {
-            get { return Vertices.CombinedValue(i => i.HasData<VertexReleases>() ? i.GetData<VertexReleases>().Releases.XX : false, false, false); }
+            get { return Vertices.CombinedValue(i => i.HasData<VertexReleases>() ? (bool?)i.GetData<VertexReleases>().Releases.XX : false, null, false); }
             set
             {
                 foreach (var v in Vertices)
                 {
                     VertexReleases vR = v.GetData<VertexReleases>(true);
-                    vR.Releases = vR.Releases.WithXX(value);
+                    vR.Releases = vR.Releases.WithXX(value.ToBool());
                 }
             }
         }
@@ -227,15 +227,15 @@ namespace Nucleus.Model
         /// <summary>
         /// The rotational release of this vertex about the y-axis
         /// </summary>
-        public bool Release_YY
+        public bool? Release_YY
         {
-            get { return Vertices.CombinedValue(i => i.HasData<VertexReleases>() ? i.GetData<VertexReleases>().Releases.YY : false, false, false); }
+            get { return Vertices.CombinedValue(i => i.HasData<VertexReleases>() ? (bool?)i.GetData<VertexReleases>().Releases.YY : false, null, false); }
             set
             {
                 foreach (var v in Vertices)
                 {
                     VertexReleases vR = v.GetData<VertexReleases>(true);
-                    vR.Releases = vR.Releases.WithYY(value);
+                    vR.Releases = vR.Releases.WithYY(value.ToBool());
                 }
             }
         }
@@ -243,15 +243,15 @@ namespace Nucleus.Model
         /// <summary>
         /// The rotational release of this vertex about the z-axis
         /// </summary>
-        public bool Release_ZZ
+        public bool? Release_ZZ
         {
-            get { return Vertices.CombinedValue(i => i.HasData<VertexReleases>() ? i.GetData<VertexReleases>().Releases.ZZ : false, false, false); }
+            get { return Vertices.CombinedValue(i => i.HasData<VertexReleases>() ? (bool?)i.GetData<VertexReleases>().Releases.ZZ : false, null, false); }
             set
             {
                 foreach (var v in Vertices)
                 {
                     VertexReleases vR = v.GetData<VertexReleases>(true);
-                    vR.Releases = vR.Releases.WithZZ(value);
+                    vR.Releases = vR.Releases.WithZZ(value.ToBool());
                 }
             }
         }
