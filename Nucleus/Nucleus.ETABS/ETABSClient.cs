@@ -33,9 +33,26 @@ namespace Nucleus.ETABS
                     RaiseMessage("Establishing ETABS link...");
                     cHelper helper = new Helper();
                     _ETABS = helper.CreateObjectProgID("CSI.ETABS.API.ETABSObject");
+                    RaiseMessage("Starting application...");
+                    _ETABS.ApplicationStart();
                     RaiseMessage("ETABS link established.");
                 }
                 return _ETABS;
+            }
+        }
+
+        private cSapModel _SapModel = null;
+
+        public cSapModel SapModel
+        {
+            get
+            {
+                if (_SapModel == null)
+                {
+                    _SapModel = default(cSapModel);
+                    _SapModel = ETABS.SapModel;
+                }
+                return _SapModel;
             }
         }
 
@@ -57,7 +74,7 @@ namespace Nucleus.ETABS
         /// <returns></returns>
         public bool New()
         {
-            return ETABS.SapModel.InitializeNewModel(eUnits.N_m_C) == 0;
+            return SapModel.InitializeNewModel(eUnits.N_m_C) == 0;
         }
 
         /// <summary>
@@ -67,7 +84,7 @@ namespace Nucleus.ETABS
         /// <returns></returns>
         public bool Open(FilePath filePath)
         {
-            return ETABS.SapModel.File.OpenFile(filePath) == 0;
+            return SapModel.File.OpenFile(filePath) == 0;
         }
 
         /// <summary>
@@ -77,7 +94,8 @@ namespace Nucleus.ETABS
         /// <returns></returns>
         public bool Save(FilePath filePath)
         {
-            return ETABS.SapModel.File.Save(filePath) == 0;
+            RaiseMessage("Writing file to '" + filePath + "'...");
+            return SapModel.File.Save(filePath) == 0;
         }
 
         /// <summary>
@@ -86,10 +104,11 @@ namespace Nucleus.ETABS
         public void Release()
         {
             _ETABS = null;
+            _SapModel = null;
             RaiseMessage("ETABS link released.");
         }
 
-        public bool WriteModelToEtabs(FilePath filePath, Model.Model model, ref ETABSIDMappingTable idMap, ETABSConversionOptions options)
+        public bool WriteModelToEtabs(FilePath filePath, Model.Model model, ref ETABSIDMappingTable idMap, ETABSConversionOptions options = null)
         {
             if (New())
             {
@@ -105,6 +124,9 @@ namespace Nucleus.ETABS
         private bool WriteToETABS(Model.Model model, ETABSConversionContext context)
         {
             RaiseMessage("Writing data to ETABS...");
+
+            SapModel.File.NewBlank(); //TODO: check if updating
+            //SapModel.File.NewSteelDeck(0, 12, 12, 0, 0, 24, 24);
 
             if (context.Options.Nodes)
             {
@@ -151,17 +173,21 @@ namespace Nucleus.ETABS
 
         private void WriteNodes(NodeCollection nodes, ETABSConversionContext context)
         {
-            // TODO: Only write restrained nodes?
+            // Only writes restrained nodes...
             foreach (Node node in nodes)
             {
                 string id = "";
-                ETABS.SapModel.PointObj.AddCartesian(node.Position.X, node.Position.Y, node.Position.Z, ref id);
                 if (node.HasData<NodeSupport>())
                 {
                     var ns = node.GetData<NodeSupport>();
-                    bool[] value = ns.Fixity.ToArray();
-                    ETABS.SapModel.PointObj.SetRestraint(id, ref value);
+                    if (!ns.IsFree)
+                    {
+                        SapModel.PointObj.AddCartesian(node.Position.X, node.Position.Y, node.Position.Z, ref id);
+                        bool[] value = ns.Fixity.ToArray();
+                        SapModel.PointObj.SetRestraint(id, ref value);
+                    }
                 }
+                //TODO: Update previously restrained nodes when unrestrained...
             }
         }
 
@@ -179,58 +205,58 @@ namespace Nucleus.ETABS
         private void WriteSection(SectionFamily section, ETABSConversionContext context)
         {
             string name = section.Name;
-            string matProp = "";
+            string matProp = "A992Fy50";
             if (section.Profile == null)
             {
                 var profile = section.Profile;
-                ETABS.SapModel.PropFrame.SetGeneral(name, matProp, 0, 0, 0,
+                SapModel.PropFrame.SetGeneral(name, matProp, 0, 0, 0,
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
                 //TODO: ?
             }
             else if (section.Profile is SymmetricIProfile)
             {
                 var profile = (SymmetricIProfile)section.Profile;
-                ETABS.SapModel.PropFrame.SetISection(name, matProp, profile.Depth, profile.Width, profile.FlangeThickness, profile.WebThickness, profile.Width, profile.FlangeThickness);
+                SapModel.PropFrame.SetISection(name, matProp, profile.Depth, profile.Width, profile.FlangeThickness, profile.WebThickness, profile.Width, profile.FlangeThickness);
             }
             else if (section.Profile is RectangularHollowProfile)
             {
                 var profile = (RectangularHollowProfile)section.Profile;
-                ETABS.SapModel.PropFrame.SetTube(name, matProp, profile.Depth, profile.Width, profile.FlangeThickness, profile.WebThickness);
+                SapModel.PropFrame.SetTube(name, matProp, profile.Depth, profile.Width, profile.FlangeThickness, profile.WebThickness);
             }
             else if (section.Profile is RectangularProfile)
             {
                 var profile = (RectangularProfile)section.Profile;
-                ETABS.SapModel.PropFrame.SetRectangle(name, matProp, profile.Depth, profile.Width);
+                SapModel.PropFrame.SetRectangle(name, matProp, profile.Depth, profile.Width);
             }
             else if (section.Profile is CircularHollowProfile)
             {
                 var profile = (CircularHollowProfile)section.Profile;
-                ETABS.SapModel.PropFrame.SetPipe(name, matProp, profile.Diameter, profile.WallThickness);
+                SapModel.PropFrame.SetPipe(name, matProp, profile.Diameter, profile.WallThickness);
             }
             else if (section.Profile is CircularProfile)
             {
                 var profile = (CircularProfile)section.Profile;
-                ETABS.SapModel.PropFrame.SetCircle(name, matProp, profile.Diameter);
+                SapModel.PropFrame.SetCircle(name, matProp, profile.Diameter);
             }
             else if (section.Profile is AngleProfile)
             {
                 var profile = (AngleProfile)section.Profile;
-                ETABS.SapModel.PropFrame.SetAngle(name, matProp, profile.Depth, profile.Width, profile.FlangeThickness, profile.WebThickness);
+                SapModel.PropFrame.SetAngle(name, matProp, profile.Depth, profile.Width, profile.FlangeThickness, profile.WebThickness);
             }
             else if (section.Profile is ChannelProfile)
             {
                 var profile = (ChannelProfile)section.Profile;
-                ETABS.SapModel.PropFrame.SetChannel(name, matProp, profile.Depth, profile.Width, profile.FlangeThickness, profile.WebThickness);
+                SapModel.PropFrame.SetChannel(name, matProp, profile.Depth, profile.Width, profile.FlangeThickness, profile.WebThickness);
             }
             else if (section.Profile is TProfile)
             {
                 var profile = (TProfile)section.Profile;
-                ETABS.SapModel.PropFrame.SetTee(name, matProp, profile.Depth, profile.Width, profile.FlangeThickness, profile.WebThickness);
+                SapModel.PropFrame.SetTee(name, matProp, profile.Depth, profile.Width, profile.FlangeThickness, profile.WebThickness);
             }
             else
             {
                 var profile = section.Profile;
-                ETABS.SapModel.PropFrame.SetGeneral(name, matProp, profile.OverallDepth, profile.OverallWidth, profile.Area,
+                SapModel.PropFrame.SetGeneral(name, matProp, profile.OverallDepth, profile.OverallWidth, profile.Area,
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); //TODO: Replace with calculated properties
             }
         }
@@ -242,7 +268,14 @@ namespace Nucleus.ETABS
                 Vector s = element.Start.Position;
                 Vector e = element.End.Position;
                 string id = "";
-                ETABS.SapModel.FrameObj.AddByCoord(s.X, s.Y, s.Z, e.X, e.Y, e.Z, ref id, element.Family?.Name, element.Name);
+                SapModel.FrameObj.AddByCoord(s.X, s.Y, s.Z, e.X, e.Y, e.Z, ref id, element.Family?.Name, element.Name);
+                //Releases:
+                bool[] sRls = element.Start.Releases.ToArray();
+                bool[] eRls = element.End.Releases.ToArray();
+                double[] sStf = new double[6]; //Temp
+                double[] eStf = new double[6]; //Temp
+                SapModel.FrameObj.SetReleases(id, ref sRls, ref eRls, ref sStf, ref eStf);
+                SapModel.FrameObj.SetLocalAxes(id, element.Orientation.Degrees); // May need adjustment for columns!
             }
         }
 

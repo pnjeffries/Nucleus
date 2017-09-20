@@ -69,6 +69,18 @@ namespace Nucleus.Model
             set { ChangeProperty(ref _Stiffness, value, "Stiffness"); }
         }
 
+        /// <summary>
+        /// Does this support not actually restrain the node in any way?
+        /// i.e. are all fixity directions false and all stiffness components zero?
+        /// </summary>
+        public bool IsFree
+        {
+            get
+            {
+                return Fixity.AllFalse && Stiffness.IsZero();
+            }
+        }
+
         #endregion
 
         #region Constructors

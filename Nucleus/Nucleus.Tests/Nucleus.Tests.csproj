@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Core.cs" />
     <Compile Include="DDTree_Tests.cs" />
+    <Compile Include="ETABS_Tests.cs" />
     <Compile Include="Excel_Tests.cs" />
     <Compile Include="GWA_Tests.cs" />
     <Compile Include="Map_Tests.cs" />
@@ -64,6 +65,10 @@
     <ProjectReference Include="..\Nucleus.DXF\Nucleus.DXF.csproj">
       <Project>{36955035-2ed9-4e01-a440-c95c1051b0bb}</Project>
       <Name>Nucleus.DXF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nucleus.ETABS\Nucleus.ETABS.csproj">
+      <Project>{7368bb9d-4d72-4e3a-aa9e-91f7cb7933ff}</Project>
+      <Name>Nucleus.ETABS</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nucleus.Excel\Nucleus.Excel.csproj">
       <Project>{2ac145d8-6a21-475d-9594-9dcf81158c66}</Project>
