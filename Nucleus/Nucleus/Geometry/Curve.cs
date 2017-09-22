@@ -384,6 +384,26 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Calculate the shortest distance squared from this curve to the specified point
+        /// </summary>
+        /// <param name="point">The test point to find the distance to</param>
+        /// <returns></returns>
+        public double DistanceToSquared(Vector point)
+        {
+            return ClosestPoint(point).DistanceToSquared(point);
+        }
+
+        /// <summary>
+        /// Calculate the shortest distance from this curve to the specified point
+        /// </summary>
+        /// <param name="point">The test point to find the distance to</param>
+        /// <returns></returns>
+        public double DistanceTo(Vector point)
+        {
+            return ClosestPoint(point).DistanceTo(point);
+        }
+
+        /// <summary>
         /// Get the vertex (if any) which defines the start of the specified segment.
         /// </summary>
         /// <param name="index">The segment index.  Valid range 0 to SegmentCount - 1</param>
