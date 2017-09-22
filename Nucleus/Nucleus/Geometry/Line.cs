@@ -244,6 +244,27 @@ namespace Nucleus.Geometry
             return "Line{" + Start.ToString() + " to " + End.ToString() + "}";
         }
 
+        /// <summary>
+        /// Find the closest point on this line to a test point, expressed as
+        /// a parameter from 0-1 (Start-End)
+        /// </summary>
+        /// <param name="toPoint">The test point</param>
+        /// <returns></returns>
+        public override double ClosestParameter(Vector toPoint)
+        {
+            return ClosestParameter(StartPoint, EndPoint, toPoint);
+        }
+
+        /// <summary>
+        /// Find the closest point on this line to a test point
+        /// </summary>
+        /// <param name="toPoint">The test point</param>
+        /// <returns></returns>
+        public override Vector ClosestPoint(Vector toPoint)
+        {
+            return ClosestPoint(StartPoint, EndPoint, toPoint);
+        }
+
         #endregion
 
         #region Static Methods
@@ -263,6 +284,23 @@ namespace Nucleus.Geometry
             if (t < 0) return startPt;
             else if (t > 1.0) return endPt;
             else return startPt + direction * t;
+        }
+
+        /// <summary>
+        /// Find the closest point on a line segment specified by start and end points to
+        /// a test point.
+        /// </summary>
+        /// <param name="startPt">The start point of the line</param>
+        /// <param name="endPt">The end point of the line</param>
+        /// <param name="testPt">The point from which the distance is to be checked</param>
+        /// <returns></returns>
+        public static double ClosestParameter(Vector startPt, Vector endPt, Vector testPt)
+        {
+            Vector direction = endPt - startPt;
+            double t = Axis.ClosestParameter(startPt, direction, testPt);
+            if (t < 0) return 0;
+            else if (t > 1.0) return 1;
+            else return t;
         }
 
         #endregion

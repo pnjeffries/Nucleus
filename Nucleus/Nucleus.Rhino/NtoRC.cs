@@ -311,7 +311,7 @@ namespace Nucleus.Rhino
         {
             if (element.Geometry is Line)
             {
-                return ConvertToExtrusion(element).ToBrep();
+                return ConvertToExtrusion(element)?.ToBrep();
             }
             else
             {

@@ -343,6 +343,47 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find the closest point on this curve to a test point, expressed as a
+        /// parameter value from 0-1.  This may be a position on the curve or it may
+        /// be the start (0) or end (1) of the arc depending on the relative location
+        /// of the test point.
+        /// </summary>
+        /// <param name="toPoint">The test point to find the closest point to</param>
+        /// <returns></returns>
+        public virtual double ClosestParameter(Vector toPoint)
+        {
+            double result = double.NaN;
+            double minDistSqd = 0;
+            for (int i = 0; i < SegmentCount; i++)
+            {
+                Vector start = SegmentStart(i).Position;
+                Vector end = SegmentEnd(i).Position;
+                double t = Line.ClosestParameter(start, end, toPoint);
+                Vector v = start.Interpolate(end, t);
+                double distSqd = v.DistanceToSquared(toPoint);
+                if (double.IsNaN(result) || distSqd < minDistSqd)
+                {
+                    minDistSqd = distSqd;
+                    result = ((double)i) / SegmentCount + t * 1.0 / SegmentCount;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Find the closest point on this curve to a test point, expressed as a
+        /// vector in 3d space.  This may be a position on the curve or it may
+        /// be the start or end of the curve depending on the relative location
+        /// of the test point.
+        /// </summary>
+        /// <param name="toPoint">The test point to find the closest point to</param>
+        /// <returns></returns>
+        public virtual Vector ClosestPoint(Vector toPoint)
+        {
+            return PointAt(ClosestParameter(toPoint));
+        }
+
+        /// <summary>
         /// Get the vertex (if any) which defines the start of the specified segment.
         /// </summary>
         /// <param name="index">The segment index.  Valid range 0 to SegmentCount - 1</param>

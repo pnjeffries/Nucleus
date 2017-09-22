@@ -109,7 +109,7 @@ namespace Nucleus.Geometry
                     Angle toEnd = Circle.Azimuth(Vertices.Last().Position) - toStart;
                     Angle toMid = Circle.Azimuth(Vertices[1].Position) - toStart;
                     
-                    if (toMid > toEnd) return toEnd.Explement();
+                    if (toMid > toEnd) return -toEnd.Explement();
                     else return toEnd;
                 }
                 return Angle.Zero;
@@ -484,6 +484,52 @@ namespace Nucleus.Geometry
         public override string ToString()
         {
             return "Arc";
+        }
+
+        /// <summary>
+        /// Find the closest point on this arc to a test point, expressed as a
+        /// parameter value from 0-1.  This may be a position on the arc or it may
+        /// be the start (0) or end (1) of the arc depending on the relative location
+        /// of the test point.
+        /// </summary>
+        /// <param name="toPoint"></param>
+        /// <returns></returns>
+        public override double ClosestParameter(Vector toPoint)
+        {
+            Angle theta = Circle.Azimuth(toPoint);
+            return ClosestArcParameter(theta);
+        }
+
+        /// <summary>
+        /// Find the closest point on this arc to a test point, expressed as a
+        /// vector in 3d space.  This may be a position on the arc or it may
+        /// be the start or end of the arc depending on the relative location
+        /// of the test point.
+        /// </summary>
+        /// <param name="toPoint"></param>
+        /// <returns></returns>
+        public override Vector ClosestPoint(Vector toPoint)
+        {
+            return PointAt(ClosestParameter(toPoint));
+        }
+
+        /// <summary>
+        /// Get the point on the arc closest to the specified angle, described
+        /// as a parameter value from 0-1.  This may be a point on the arc (if the
+        /// angle lies within the necessary range) or it may be the start or end
+        /// of the arc if the angle lies outside that range.
+        /// </summary>
+        /// <param name="angle">The angle on the arc's circle</param>
+        /// <returns></returns>
+        public double ClosestArcParameter(Angle angle)
+        {
+            Angle toStart = Circle.Azimuth(Vertices.First().Position);
+            Angle radMeasure = RadianMeasure;
+            Angle toPointFromStart = (angle - toStart).ToSign(radMeasure.Sign());
+            if (toPointFromStart.Abs() <= radMeasure.Abs()) return toPointFromStart / radMeasure;
+            else if (toPointFromStart.Abs() < radMeasure.Abs() + radMeasure.Explement().Abs() / 2)
+                return 1; // Closest to end
+            else return 0; // Closest to start
         }
 
         #endregion
