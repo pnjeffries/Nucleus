@@ -106,6 +106,7 @@ namespace Nucleus.WPF
                     var cellTemplate = new DataTemplate();
                     var tbFactory = new FrameworkElementFactory(typeof(TextBlock));
                     tbFactory.SetBinding(TextBlock.TextProperty, binding);
+                    //tbFactory.SetValue(TextBlock.PaddingProperty, new Thickness(2.0,2.0,2.0,2.0));
                     cellTemplate.VisualTree = tbFactory;
                     comboColumn.CellTemplate = cellTemplate;
 
@@ -113,7 +114,7 @@ namespace Nucleus.WPF
                     var cbFactory = new FrameworkElementFactory(typeof(ComboBox));
                     cbFactory.SetValue(ComboBox.IsTextSearchEnabledProperty, true);
                     cbFactory.SetValue(ComboBox.IsEditableProperty, true);
-                    cbFactory.SetValue(ComboBox.PaddingProperty, new Thickness(2.0,0.0, 2.0, 0.0));
+                    cbFactory.SetValue(ComboBox.PaddingProperty, new Thickness(2.0, 0.0, 2.0, 0.0));
                     cbFactory.SetBinding(ComboBox.TextProperty, binding);
 
                     // Set ItemsSource binding:
@@ -145,6 +146,8 @@ namespace Nucleus.WPF
                 }
                 if (aUI?.Label != null) column.Header = aUI.Label;
                 else column.Header = property.Name.AutoSpace();
+
+                column.MinWidth = 100;
 
                 Columns.Add(column);
             }

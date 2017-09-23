@@ -233,7 +233,7 @@ namespace Nucleus.Model
         public string Definition
         {
             get { return this.ToString(); }
-            // TODO: Set
+            set { Set(value); }
         }
 
         #endregion
@@ -358,6 +358,57 @@ namespace Nucleus.Model
         {
             Clear();
             Add(items);
+        }
+
+        /// <summary>
+        /// Set this set from a text definition.
+        /// The Model property must be set before calling this function
+        /// to allow items to be retrieved by ID.
+        /// </summary>
+        /// <param name="definition"></param>
+        public bool Set(string definition)
+        {
+            if (definition.EqualsIgnoreCase("All"))
+            {
+                Clear();
+                All = true;
+                return true;
+            }
+            if (Model != null)
+            {
+                var table = Model.GetTableFor(typeof(TItem));
+                if (table != null)
+                {
+                    Clear();
+                    var ids = definition.TokeniseResolvingIDSequences();
+
+                    foreach (string token in ids)
+                    {
+                        if (token.IsInteger()) // Integer ID
+                        {
+                            TItem item = (TItem)table.GetByNumericID(long.Parse(token));
+                            if (item != null && !BaseCollection.Contains(item))
+                                BaseCollection.Add(item);
+                        }
+                        else // String
+                        {
+                            // Keywords:
+                            if (token.EqualsIgnoreCase("all")) All = true;
+                            // TODO: Incorporate filters
+                            else
+                            {
+                                // Subset name?
+                                string name = token.Trim('"');
+                                TSubSet subSet = Model.Sets.FindByName<TSubSet>(name);
+                                if (subSet != null && !SubSets.Contains(subSet))
+                                    SubSets.Add(subSet);
+                            }
+                        }
+                    }
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -487,15 +538,30 @@ namespace Nucleus.Model
         {
             var sb = new StringBuilder();
             if (All) sb.Append("All");
-            else if (BaseCollection != null && BaseCollection.Count > 0)
+            else
             {
-                var ids = new List<long>();
-                foreach (TItem item in BaseCollection)
+                if (SubSets != null && SubSets.Count > 0)
                 {
-                    ids.Add(item.NumericID);
+                    foreach (var subSet in SubSets)
+                    {
+                        if (sb.Length > 0) sb.Append(" ");
+                        sb.Append("\"").Append(subSet.Name).Append("\"");
+                    }
                 }
-                ids.Sort();
-                sb.Append(ids.ToCompressedString());
+                if (BaseCollection != null && BaseCollection.Count > 0)
+                {
+                    var ids = new List<long>();
+                    foreach (TItem item in BaseCollection)
+                    {
+                        ids.Add(item.NumericID);
+                    }
+                    ids.Sort();
+                    if (ids.Count > 0)
+                    {
+                        if (sb.Length > 0) sb.Append(" ");
+                        sb.Append(ids.ToCompressedString());
+                    }
+                }
             }
 
             //TODO: Add filters
