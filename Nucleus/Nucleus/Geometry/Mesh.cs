@@ -20,6 +20,7 @@
 
 using Nucleus.Extensions;
 using Nucleus.Meshing;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -109,6 +110,25 @@ namespace Nucleus.Geometry
             foreach (Vector pt in points)
             {
                 Vertices.Add(new Vertex(pt));
+            }
+        }
+
+        /// <summary>
+        /// Initialise a mesh with the specified set of nodes.
+        /// </summary>
+        /// <param name="nodes">The collection of nodes.  Vertices will
+        /// be created at the node locations and bound to the nodes.</param>
+        /// <param name="addFace">If true, a face will be added to the mesh joining all of the
+        /// vertices.</param>
+        public Mesh(IList<Node> nodes, bool addFace = false) : this()
+        {
+            foreach (Node n in nodes)
+            {
+                Vertices.Add(new Vertex(n));
+            }
+            if (addFace)
+            {
+                Faces.Add(new MeshFace(Vertices));
             }
         }
 

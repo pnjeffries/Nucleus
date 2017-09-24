@@ -519,5 +519,21 @@ namespace Nucleus.Extensions
             else return str;
         }
 
+        /// <summary>
+        /// Explode this string to a list of strings where each entry is a separate character
+        /// from the original string
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static IList<string> ToCharSubstrings(this string str)
+        {
+            var result = new List<string>(str.Length);
+            foreach (var c in str)
+            {
+                result.Add(new string(new char[] { c }));
+            }
+            return result;
+        }
+
     }
 }

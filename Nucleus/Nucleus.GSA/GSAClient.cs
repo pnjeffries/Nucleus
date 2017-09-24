@@ -8,6 +8,7 @@ using Interop.gsa_8_7;
 using Nucleus.IO;
 using Nucleus.Model;
 using Nucleus.Geometry;
+using Nucleus.Extensions;
 
 namespace Nucleus.GSA
 {
@@ -186,7 +187,7 @@ namespace Nucleus.GSA
         /// </summary>
         /// <param name="element"></param>
         /// <param name="gwa"></param>
-        public void UpdateModelElementFromGSA(string gwa)
+        public void UpdateModelElementFromGSA(string gwa, Model.Model model, GSAConversionContext context)
         {
             // EL.2 | num | name | colour | type | prop | group | topo() | orient_node | orient_angle |
             // is_rls { | rls { | k } }
@@ -196,13 +197,89 @@ namespace Nucleus.GSA
 
             var tr = new TokenReader(gwa);
             tr.Next(); // EL
-            int gsaID = tr.NextInt();
-            int nodeCount = NodeCountOf(tr[4]);
+            string gsaID = tr.Next(); // num
+            string name = tr.Next(); // name
+            tr.Next(); // colour
+            int nodeCount = NodeCountOf(tr.Next()); // type
+            string propID = tr.Next(); // prop
+            tr.NextInt(); // group
             if (nodeCount == 0) return; //Not valid!
             else if (nodeCount == 2)
             {
-                //element 
+                // Linear element
+                var linEl = context.IDMap.GetModelObject<LinearElement>(model, gsaID.ToString());
+                if (linEl == null) linEl = model.Create.LinearElement(null);
+                element = linEl;
+                linEl.Family = context.IDMap.GetModelObject<SectionFamily>(model, propID);
+                Node n0 = context.IDMap.GetModelObject<Node>(model, tr.Next()); // Start node
+                Node n1 = context.IDMap.GetModelObject<Node>(model, tr.Next()); // End node
+                linEl.Geometry = new Line(n0, n1);
             }
+            else
+            {
+                //Panel element
+                var panEl = context.IDMap.GetModelObject<PanelElement>(model, gsaID.ToString());
+                if (panEl == null) panEl = model.Create.PanelElement(null);
+                element = panEl;
+                panEl.Family = context.IDMap.GetModelObject<BuildUpFamily>(model, propID);
+                var nodes = new NodeCollection();
+                for (int i = 0; i < nodeCount; i++)
+                {
+                    var node = context.IDMap.GetModelObject<Node>(model, tr.Next());
+                    if (node != null && !nodes.Contains(node.GUID))
+                        nodes.Add(node);
+                }
+                panEl.Geometry = new Mesh(nodes, true);
+            }
+            tr.Next(); // orient_node   TODO: Make orientation relative to this
+            element.Orientation = Angle.FromDegrees(tr.NextDouble());
+            var verts = element.ElementVertices;
+            string is_rls = tr.Next(); // is_rls
+            if (is_rls.EqualsIgnoreCase("RLS") || is_rls.EqualsIgnoreCase("STIFF"))
+            {
+                for (int i = 0; i < nodeCount; i++)
+                {
+                    string rls = tr.Next(); // rls
+                    if (i < verts.Count)
+                    {
+                        Bool6D fixity = Bool6D.FromTokensList(rls.ToCharArray(), 0, 'R');
+                        ElementVertex v = verts[i];
+                        v.Releases = fixity;
+
+                        if (is_rls.EqualsIgnoreCase("STIFF"))
+                        {
+                            for (int j = 0; j < rls.Length; j++)
+                            {
+                                char c = rls[j];
+                                if (c.EqualsIgnoreCase('K'))
+                                {
+                                    v.Stiffness = v.Stiffness.With(j, tr.NextDouble()); // k
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (tr.NextIs("OFFSET")) // is_offset
+            {
+                for (int i = 0; i < nodeCount; i++)
+                {
+                    if (verts.Count > i)
+                    {
+                        var vert = verts[i];
+                        vert.Offset = vert.Offset.WithX(tr.NextDouble()); // ox
+                        vert.Offset = vert.Offset.WithY(tr.NextDouble()); // oy
+                        vert.Offset = vert.Offset.WithZ(tr.NextDouble()); // oz
+                    }
+                    else
+                    {
+                        tr.Skip(3);
+                    }
+                }
+                //TODO: Local offsets
+            }
+            // TODO: Dummy?
+            context.IDMap.Add()
         }
 
         /// <summary>

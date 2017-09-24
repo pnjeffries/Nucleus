@@ -668,6 +668,37 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Create a new copy of this vector, but replacing the specified
+        /// direction component with the given value
+        /// </summary>
+        /// <param name="direction">The direction of the axis to be modified.
+        /// XX, YY and ZZ directions are taken as referring to the X, Y and Z
+        /// axes respectively.</param>
+        /// <param name="value">The new value of the component</param>
+        /// <returns></returns>
+        public Vector With(Direction direction, double value)
+        {
+            if (direction == Direction.X || direction == Direction.XX) return WithX(value);
+            else if (direction == Direction.Y || direction == Direction.YY) return WithY(value);
+            else return WithZ(value);
+        }
+
+        /// <summary>
+        /// Create a new copy of this vector, but replacing the specified
+        /// direction component with the given value
+        /// </summary>
+        /// <param name="index">The index of the axis to be modified.
+        /// From 0-2, indicating 0 = X, 1 = Y, 2 = Z</param>
+        /// <param name="value">The new value of the component</param>
+        /// <returns></returns>
+        public Vector With(int index, double value)
+        {
+            if (index == 0) return WithX(value);
+            else if (index == 1) return WithY(value);
+            else return WithZ(value);
+        }
+
+        /// <summary>
         /// Add a value to the X component of this vector and return the result
         /// </summary>
         /// <param name="value">The value to be added to the X component</param>

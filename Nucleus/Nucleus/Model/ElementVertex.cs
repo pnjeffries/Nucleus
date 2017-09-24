@@ -215,6 +215,26 @@ namespace Nucleus.Model
         }
 
         /// <summary>
+        /// Get or set the release stiffness at this position of the element
+        /// </summary>
+        public SixVector Stiffness
+        {
+            get
+            {
+                if (Vertex.HasData<VertexReleases>())
+                    return Vertex.GetData<VertexReleases>().Stiffness;
+                else return new SixVector();
+            }
+            set
+            {
+                if (Vertex.HasData<VertexReleases>())
+                    Vertex.GetData<VertexReleases>().Stiffness = value;
+                else
+                    Vertex.Data.Add(new VertexReleases(new Bool6D(), value));
+            }
+        }
+
+        /// <summary>
         /// Get the local coordinate system of the element at this vertex
         /// </summary>
         public CartesianCoordinateSystem LocalCoordinateSystem

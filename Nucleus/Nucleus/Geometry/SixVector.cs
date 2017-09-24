@@ -280,6 +280,42 @@ namespace Nucleus.Geometry
             return new SixVector(X, Y, Z, XX, YY, zz);
         }
 
+        /// <summary>
+        /// Create a new copy of this vector, but replacing the specified
+        /// direction component with the given value
+        /// </summary>
+        /// <param name="direction">The direction of the axis to be modified.</param>
+        /// <param name="value">The new value of the component</param>
+        /// <returns></returns>
+        public SixVector With(Direction direction, double value)
+        {
+            if (direction == Direction.X) return WithX(value);
+            else if (direction == Direction.Y) return WithY(value);
+            else if (direction == Direction.Z) return WithZ(value);
+            else if (direction == Direction.XX) return WithXX(value);
+            else if (direction == Direction.YY) return WithYY(value);
+            else return WithZZ(value);
+        }
+
+        /// <summary>
+        /// Create a new copy of this vector, but replacing the specified
+        /// direction component with the given value
+        /// </summary>
+        /// <param name="index">The index of the axis to be modified.
+        /// From 0-5, indicating 0 = X, 1 = Y, 2 = Z, 3 = XX, 4 = YY
+        /// and 5 = ZZ</param>
+        /// <param name="value">The new value of the component</param>
+        /// <returns></returns>
+        public SixVector With(int index, double value)
+        {
+            if (index == 0) return WithX(value);
+            else if (index == 1) return WithY(value);
+            else if (index == 2) return WithZ(value);
+            else if (index == 3) return WithXX(value);
+            else if (index == 4) return WithYY(value);
+            else return WithZZ(value);
+        }
+
         #endregion
 
         #region Static Methods

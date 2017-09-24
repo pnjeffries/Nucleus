@@ -25,6 +25,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
+using Nucleus.Extensions;
+using Nucleus.Model;
 
 namespace Nucleus.Conversion
 {
@@ -98,6 +100,19 @@ namespace Nucleus.Conversion
         /// The name of the category used to store objects when no other category is specified.
         /// </summary>
         public virtual string DefaultCategory { get { return ""; } }
+
+        /// <summary>
+        /// Private backing field for TypeCategories property
+        /// </summary>
+        private Dictionary<Type, string> _TypeCategories = null;
+
+        /// <summary>
+        /// Map of types to the name of the category under which they are stored
+        /// </summary>
+        public Dictionary<Type,string> TypeCategories
+        {
+            get { return _TypeCategories; }
+        }
 
         #endregion
 
@@ -237,6 +252,43 @@ namespace Nucleus.Conversion
         }
 
         /// <summary>
+        /// Get the model object (if any) with the first ID linked to the
+        /// specifed second ID
+        /// </summary>
+        /// <typeparam name="TModelObject"></typeparam>
+        /// <param name="model"></param>
+        /// <param name="secondID"></param>
+        /// <returns></returns>
+        public TModelObject GetModelObject<TModelObject>(Model.Model model, TSecondID secondID)
+            where TModelObject : ModelObject
+        {
+            string category = GetCategoryForType(typeof(TModelObject));
+            TFirstID firstID = GetFirstID(category, secondID);
+            return model.GetObject(new Guid(firstID.ToString())) as TModelObject;
+        }
+
+        public void Add(Unique mObject, TSecondID secondID)
+        {
+            string category = GetCategoryForType(mObject.GetType());
+
+        }
+
+        /// <summary>
+        /// Extract from the specified object the ID to be used as the first ID
+        /// in this table
+        /// </summary>
+        /// <param name="unique"></param>
+        /// <returns></returns>
+        protected virtual TFirstID ExtractFirstID(Unique unique)
+        {
+            if (typeof(TFirstID) == typeof(Guid))
+                return (TFirstID)(object)unique.GUID;
+            else if (typeof(TFirstID).IsAssignableFrom(typeof(string)))
+                return (TFirstID)(object)unique.GUID.ToString();
+            else return 
+        }
+
+        /// <summary>
         /// Add a new entry to this mapping table
         /// </summary>
         /// <param name="category">The mapping category</param>
@@ -267,6 +319,21 @@ namespace Nucleus.Conversion
         {
             if (ContainsKey(category) && this[category].ContainsKey(firstID))
                 this[category].Remove(firstID);
+        }
+
+        /// <summary>
+        /// Get the name of the category for the speicified type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public string GetCategoryForType(Type type)
+        {
+            if (_TypeCategories != null)
+            {
+                Type ancestor = _TypeCategories.Keys.ClosestAncestor(type);
+                return _TypeCategories[ancestor];
+            }
+            return DefaultCategory;
         }
 
         #endregion
