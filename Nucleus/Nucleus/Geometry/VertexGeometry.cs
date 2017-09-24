@@ -223,13 +223,17 @@ namespace Nucleus.Geometry
         /// from another shape to this one.
         /// </summary>
         /// <param name="other"></param>
-        public void CopyAttachedDataFrom(VertexGeometry other)
+        /// <param name="copyOnlyIfCoincident">If true, data will only be copied between
+        /// vertices if the old and new vertex are within tolerance of one another.
+        /// If false (default) data will be copied regardless.</param>
+        public void CopyAttachedDataFrom(VertexGeometry other, bool copyOnlyIfCoincident = false)
         {
             for (int i = 0; i < Math.Min(Vertices.Count, other.Vertices.Count); i++)
             {
                 Vertex vA = Vertices[i];
                 Vertex vB = other.Vertices[i];
-                vA.CopyAttachedDataFrom(vB);
+                if (!copyOnlyIfCoincident || vA.DistanceToSquared(vB) < Tolerance.Distance)
+                    vA.CopyAttachedDataFrom(vB);
             }
             Attributes = other.Attributes;
             //Add any other attached data to be copied here

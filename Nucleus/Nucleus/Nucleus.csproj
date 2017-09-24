@@ -61,6 +61,7 @@
     <Compile Include="Base\SetFilterCollection.cs" />
     <Compile Include="Conversion\ModelConversionOptions.cs" />
     <Compile Include="Extensions\CharExtensions.cs" />
+    <Compile Include="Extensions\BoolExtensions.cs" />
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="Extensions\NotifyCollectionChangedEventArgsExtensions.cs" />
     <Compile Include="Geometry\MeshEdgeLink.cs" />

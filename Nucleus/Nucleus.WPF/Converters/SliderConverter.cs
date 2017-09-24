@@ -15,7 +15,16 @@ namespace Nucleus.WPF.Converters
         {
             if (value == null) return null;
             if (targetType.IsAssignableFrom(typeof(string))) return value.ToString();
-            return System.Convert.ToDouble(value);
+            try
+            {
+                double result = System.Convert.ToDouble(value);
+                return result;
+            }
+            catch
+            {
+
+            }
+            return value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

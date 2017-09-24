@@ -304,12 +304,15 @@ namespace Nucleus.Model
         /// the old geometry to prevent memory leaks.
         /// </summary>
         /// <param name="newGeometry"></param>
-        public void ReplaceGeometry(TShape newGeometry)
+        /// <param name="copyOnlyIfCoincident">If true, data will only be copied between
+        /// vertices if the old and new vertex are within tolerance of one another.
+        /// If false (default) data will be copied regardless.</param>
+        public void ReplaceGeometry(TShape newGeometry, bool copyOnlyIfCoincident = false)
         {
             TShape oldGeometry = Geometry;
             if (oldGeometry != null)
             {
-                newGeometry.CopyAttachedDataFrom(oldGeometry);
+                newGeometry.CopyAttachedDataFrom(oldGeometry, copyOnlyIfCoincident);
             }
             Geometry = newGeometry;
         }

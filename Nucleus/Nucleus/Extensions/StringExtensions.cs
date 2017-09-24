@@ -183,6 +183,156 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Split this string using the separator characters ' ' and ','.
+        /// String literals enclosed by '"' will be kept intact.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static IList<string> TokeniseIgnoringLiterals(this string str)
+        {
+            var result = new List<string>();
+
+            int iStart = 0;
+            bool literal = false;
+            for (int i = 0; i < str.Length; i++)
+            {
+                char c = str[i];
+                if (literal)
+                {
+                    if (c == '"')
+                    {
+                        // End string literal
+                        ExtractToken(str, ref iStart, i, i + 1, result);
+                        literal = false;
+                    }
+                }
+                else
+                {
+                    if (c == '"')
+                    {
+                        // Start string literal
+                        ExtractToken(str, ref iStart, i - 1, i, result);
+                        literal = true;
+                    }
+                    else if (c == ' ' || c == ',') // Separator
+                        ExtractToken(str, ref iStart, i - 1, i + 1, result);
+                }
+            }
+            ExtractToken(str, ref iStart, str.Length - 1, 0, result); // Capture last token
+            return result;
+
+            // TODO: Brackets?
+        }
+
+        /// <summary>
+        /// Extract a token from a string and add it to an output list
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="iStart"></param>
+        /// <param name="i"></param>
+        /// <param name="nexti"></param>
+        /// <param name="output"></param>
+        private static void ExtractToken(string str, ref int iStart, int i, int nexti, IList<string> output)
+        {
+            i++;
+            if (i > iStart)
+            {
+                var subStr = str.Substring(iStart, i - iStart).Trim();
+                if (subStr.Length > 0)
+                    output.Add(subStr);
+            }
+            iStart = nexti;
+        }
+
+        /// <summary>
+        /// Converts the string into a set of string IDs and names.
+        /// Numerical entries separated by the keyword 'to' will be resolved
+        /// to intermediate sequential numbers.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static IList<string> TokeniseResolvingIDSequences(this string str)
+        {
+            var result = new List<string>();
+            HashSet<long> intHash = new HashSet<long>();
+            var tokens = str.TokeniseIgnoringLiterals();
+            long lastID = long.MaxValue;
+            bool waitingForTo = false;
+            foreach (string token in tokens)
+            {
+                string trimmed = token.Trim().Trim(new char[] { ',' });
+                if (!string.IsNullOrEmpty(trimmed))
+                {
+                    if (trimmed.IsInteger())
+                    {
+                        long parsed = long.Parse(trimmed);
+                        if (waitingForTo)
+                        {
+                            for (long i = Math.Min(lastID, parsed); i < Math.Max(parsed, lastID); i++)
+                            {
+                                if (!intHash.Contains(i))
+                                {
+                                    intHash.Add(i);
+                                    result.Add(i.ToString());
+                                }
+                            }
+
+                        }
+                        if (!intHash.Contains(parsed))
+                        {
+                            intHash.Add(parsed);
+                            result.Add(token);
+                        }
+                        lastID = parsed;
+                        waitingForTo = false;
+                    }
+                    else
+                    {
+                        int iTo = trimmed.IndexOf("to", StringComparison.CurrentCultureIgnoreCase);
+                        if (iTo > 0)
+                        {
+                            //There is something before the 'to' - possibly the starting number?
+                            string beforeTo = trimmed.Substring(0, iTo);
+                            if (beforeTo.IsInteger()) lastID = int.Parse(beforeTo);
+                            else
+                                result.Add(token);
+                                //throw new ArgumentException("The ID description was invalid.  Only integer ID numbers and the keyword 'to' are allowed.");
+                        }
+                        if (iTo >= 0)
+                        {
+                            //A 'to' exists somewhere in the token
+                            if (trimmed.Length > iTo + 2)
+                            {
+                                //There is something after the 'to' - possibly the ending number
+                                string afterTo = trimmed.Substring(iTo + 2);
+                                if (afterTo.IsInteger())
+                                {
+                                    long endID = long.Parse(afterTo);
+                                    for (long i = lastID; i <= endID; i++)
+                                    {
+                                        if (!intHash.Contains(i))
+                                        {
+                                            intHash.Add(i);
+                                            result.Add(i.ToString());
+                                        }
+                                    }
+                                }
+                                else
+                                    result.Add(token);
+                                    //throw new ArgumentException("The ID description was invalid.  Only integer ID numbers and the keyword 'to' are allowed.");
+                            }
+                            else waitingForTo = true;
+                        }
+                        else
+                            result.Add(token);
+                            //throw new ArgumentException("The ID description was invalid.  Only integer ID numbers and the keyword 'to' are allowed.");
+                    }
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Converts the string into a set of integer ID numbers.
         /// The string must consist only of numbers separated by spaces and the 'to' keyword,
         /// used to indicate continuous incementing ranges of ID numbers.

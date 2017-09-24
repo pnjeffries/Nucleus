@@ -69,17 +69,6 @@
     <Compile Include="SectionDataType.cs" />
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="RobotOM">
-      <Guid>{F3A37BD0-AA2D-11D2-9844-0080C86BE4DF}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Nucleus\Nucleus.csproj">
       <Project>{5169f74f-0bcc-42bf-829f-277f36ef7677}</Project>
       <Name>Nucleus</Name>

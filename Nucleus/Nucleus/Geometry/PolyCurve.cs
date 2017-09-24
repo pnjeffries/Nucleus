@@ -215,6 +215,33 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find the closest position along this polycurve to a test point,
+        /// expressed as a parameter value from 0-1 (start-end)
+        /// </summary>
+        /// <param name="toPoint">The test point</param>
+        /// <returns></returns>
+        public override double ClosestParameter(Vector toPoint)
+        {
+            double result = double.NaN;
+            double minDistSqd = 0;
+            int segs = 0;
+            int segCount = SegmentCount;
+            foreach (Curve subCrv in SubCurves)
+            {
+                double t = subCrv.ClosestParameter(toPoint);
+                Vector v = subCrv.PointAt(t);
+                double distSqd = v.DistanceToSquared(toPoint);
+                if (double.IsNaN(result) || distSqd < minDistSqd)
+                {
+                    result = (segs + (t * subCrv.SegmentCount)) / segCount;
+                    minDistSqd = distSqd;
+                }
+                segs += subCrv.SegmentCount;
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Evaluate a point defined by a parameter within a specified span.
         /// </summary>
         /// <param name="span">The index of the span.  Valid range 0 to SegmentCount - 1</param>

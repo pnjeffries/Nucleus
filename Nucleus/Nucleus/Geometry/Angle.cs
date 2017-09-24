@@ -235,14 +235,38 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Return the absolute (i.e. unsigned) value of this angle
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public Angle Abs()
+        {
+            return new Angle(Math.Abs(this));
+        }
+
+        /// <summary>
         /// Gets the sign of the angle, expressed as +1 for positive numbers
         /// and -1 for negative ones.  Zero is treated as being positive in this
         /// instance.
         /// </summary>
         /// <returns></returns>
-        public double Sign()
+        public int Sign()
         {
             return Radians.Sign();
+        }
+
+        /// <summary>
+        /// Get this angle mapped to the specified sign.  If the input sign matches
+        /// the sign of this angle, the same angle will be returned.  If a mismatch,
+        /// the negative explement will be returned instead.  Input numbers >= 0 are
+        /// taken as positive, < 0 as negative.
+        /// </summary>
+        /// <param name="sign"></param>
+        /// <returns></returns>
+        public Angle ToSign(int sign)
+        {
+            if (sign * Sign() < 0) return -Explement();
+            else return this;
         }
 
         public override bool Equals(object obj)
