@@ -13,11 +13,16 @@ namespace Nucleus.GSA
     /// </summary>
     public class GSAIDMappingTable : IDMappingTable<string, string>
     {
+        /// <summary>
+        /// Initialise a new empty GSA ID Mapping Table
+        /// </summary>
         public GSAIDMappingTable() : base("Nucleus", "GSA")
         {
-            TypeCategories.Add(typeof(Element), "ELEMENT");
-            TypeCategories.Add(typeof(SectionFamily), "SECTION");
-            TypeCategories.Add(typeof(BuildUpFamily), "BUILDUP");
+            // Specify type category aliases
+            TypeCategories.Add(typeof(Node), "NODE");
+            TypeCategories.Add(typeof(Element), "EL");
+            TypeCategories.Add(typeof(SectionFamily), "PROP_SEC");
+            TypeCategories.Add(typeof(BuildUpFamily), "PROP_2D");
         }
     }
 }

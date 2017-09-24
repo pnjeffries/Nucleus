@@ -131,7 +131,8 @@ namespace Nucleus.GSA
             return GSA.GwaCommand(command);
         }
 
-        public void ReadNodes()
+        // Abortive attempt to use the new struct types:
+        /*public void ReadNodes()
         {
             int[] ids;
             GSA.EntitiesInList("all", GsaEntity.NODE, out ids);
@@ -160,7 +161,7 @@ namespace Nucleus.GSA
                     //TODO (?)
                 }
             }
-        }
+        }*/
 
         /// <summary>
         /// Get the number of nodes that are needed to represent
@@ -182,12 +183,73 @@ namespace Nucleus.GSA
         }
 
         /// <summary>
+        /// Update or create a Nucleus build-up family from a GWA string
+        /// </summary>
+        /// <param name="gwa"></param>
+        /// <param name="model"></param>
+        /// <param name="context"></param>
+        public void ReadBuildUp(string gwa, Model.Model model, GSAConversionContext context)
+        {
+            // PROP_2D.2 | num | name | colour | axis | mat | type | thick | mass | bending | inplane | weight
+            // PROP_2D.2 | num | name | colour | axis | mat | LOAD | support | edge
+
+            var tr = new TokenReader(gwa);
+            tr.Next(); // PROP_2D
+            string gsaID = tr.Next(); // num
+
+            var buildup = context.IDMap.GetModelObject<BuildUpFamily>(model, gsaID);
+            if (buildup == null) buildup = model.Create.BuildUpFamily();
+
+            buildup.Name = tr.Next(); // name
+            tr.Next(); // colour
+            tr.Next(); // axis
+
+            string matID = tr.Next(); // mat
+            var material = context.IDMap.GetModelObject<Material>(model, matID);
+
+            tr.Next(); // type
+            buildup.Layers.Clear();
+            buildup.Layers.Add(new BuildUpLayer(tr.NextDouble(), material)); // thick
+
+            context.IDMap.Add(buildup, gsaID);
+        }
+
+        /// <summary>
+        /// Update or create the properties of a Nucleus section family from a GWA string
+        /// </summary>
+        /// <param name="gwa"></param>
+        /// <param name="model"></param>
+        /// <param name="context"></param>
+        public void ReadSection(string gwa, Model.Model model, GSAConversionContext context)
+        {
+            // PROP_SEC | num | name | colour | mat | desc | principal | type | cost |
+            // is_prop { | area | I11 | I22 | J | K1 | K2 } |
+            // is_mod { | area_to_by | area_m | I11_to_by | I11_m | I22_to_by | I22_m | J_to_by | J_m | K1_to_by | K1_m | K2_to_by | K2_m | mass | stress } |
+            // plate_type | calc_J
+
+            var tr = new TokenReader(gwa);
+            tr.Next(); // PROP_SEC
+            string gsaID = tr.Next(); // num
+
+            var sec = context.IDMap.GetModelObject<SectionFamily>(model, gsaID);
+            if (sec == null) sec = model.Create.SectionFamily();
+
+            sec.Name = tr.Next(); // name
+            tr.Next(); // colour
+            string matID = tr.Next(); // mat
+            var material = context.IDMap.GetModelObject<Material>(model, matID);
+            //TODO: profile description
+
+            context.IDMap.Add(sec, gsaID);
+        }
+
+        /// <summary>
         /// Update the properties of a Nucleus node from a GWA string
         /// in EL.2 version syntax
         /// </summary>
         /// <param name="element"></param>
         /// <param name="gwa"></param>
-        public void UpdateModelElementFromGSA(string gwa, Model.Model model, GSAConversionContext context)
+        public void ReadElement(string gwa, Model.Model model, GSAConversionContext context)
         {
             // EL.2 | num | name | colour | type | prop | group | topo() | orient_node | orient_angle |
             // is_rls { | rls { | k } }
@@ -279,7 +341,7 @@ namespace Nucleus.GSA
                 //TODO: Local offsets
             }
             // TODO: Dummy?
-            context.IDMap.Add()
+            context.IDMap.Add(element, gsaID);
         }
 
         /// <summary>
@@ -288,7 +350,7 @@ namespace Nucleus.GSA
         /// </summary>
         /// <param name="node"></param>
         /// <param name="gwa"></param>
-        public void UpdateModelNodeFromGSA(Node node, string gwa)
+        public void ReadNode(string gwa, Model.Model model, GSAConversionContext context)
         {
             // NODE.2 | num | name | colour | x | y | z |
             // is_grid { | grid_plane | datum | grid_line_a | grid_line_b } | axis |
@@ -298,10 +360,18 @@ namespace Nucleus.GSA
 
             var tr = new TokenReader(gwa);
             tr.Next(); // NODE
-            int gsaID = tr.NextInt(); // num
-            node.Name = tr.Next(); // name
+            string gsaID = tr.Next(); // num
+
+            string name = tr.Next(); // name
             tr.Next(); // colour
-            node.Position = tr.Next3AsVector(); // x | y | z
+            Vector position = tr.Next3AsVector(); // x | y | z
+
+            var node = context.IDMap.GetModelObject<Node>(model, gsaID);
+            if (node == null) node = model.Create.Node(position);
+            else node.Position = position;
+
+            node.Name = name;
+
             if (tr.NextIs("GRID")) tr.Skip(4); // is_grid { | grid_plane | datum | grid_line_a | grid_line_b }
             tr.Next(); // axis !!!TODO!!!
             Bool6D fixity = new Bool6D();
@@ -322,6 +392,8 @@ namespace Nucleus.GSA
                 node.SetData(nodeSupport);
             }
             else node.Data.RemoveData<NodeSupport>(); //Clear restraints on existing nodes
+
+            context.IDMap.Add(node, gsaID);
         }
 
         #endregion

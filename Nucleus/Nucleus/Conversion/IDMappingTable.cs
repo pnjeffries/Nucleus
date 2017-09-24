@@ -267,15 +267,23 @@ namespace Nucleus.Conversion
             return model.GetObject(new Guid(firstID.ToString())) as TModelObject;
         }
 
+        /// <summary>
+        /// Add a model object's ID as a first ID, mapped to a specified
+        /// second.  The category to store it under will be automatically determined
+        /// by the ModelObject's type.
+        /// </summary>
+        /// <param name="mObject"></param>
+        /// <param name="secondID"></param>
         public void Add(Unique mObject, TSecondID secondID)
         {
             string category = GetCategoryForType(mObject.GetType());
-
+            TFirstID firstID = ExtractFirstID(mObject);
+            Add(category, firstID, secondID);
         }
 
         /// <summary>
         /// Extract from the specified object the ID to be used as the first ID
-        /// in this table
+        /// in this table.
         /// </summary>
         /// <param name="unique"></param>
         /// <returns></returns>
@@ -283,9 +291,8 @@ namespace Nucleus.Conversion
         {
             if (typeof(TFirstID) == typeof(Guid))
                 return (TFirstID)(object)unique.GUID;
-            else if (typeof(TFirstID).IsAssignableFrom(typeof(string)))
+            else
                 return (TFirstID)(object)unique.GUID.ToString();
-            else return 
         }
 
         /// <summary>

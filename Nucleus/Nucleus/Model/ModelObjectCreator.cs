@@ -21,6 +21,7 @@
 using Nucleus.Actions;
 using Nucleus.Base;
 using Nucleus.Geometry;
+using Nucleus.Model.Loading;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -460,6 +461,44 @@ namespace Nucleus.Model
             result = (LoadCase)Model.History.Update(exInfo, result);
             if (name != null) result.Name = name;
             if (result.Name == null) result.Name = Model.LoadCases.NextAvailableName("Load Case", result, true);
+            Model.Add(result);
+            return result;
+        }
+
+        /// <summary>
+        /// Create a new (or update an existing) nodal load in the model
+        /// </summary>
+        /// <param name="lCase">The case of which the new load is to be part</param>
+        /// <param name="exInfo">Optional.  The execution information of the current action.
+        /// If an object has been created previously with matching execution information then
+        /// instead of creating a new item this previous one will be updated and returned instead.
+        /// This enables this method to be used parametrically.</param>
+        /// <returns>The created or updated load case.</param>
+        /// <returns></returns>
+        public NodeLoad NodeLoad(LoadCase lCase, ExecutionInfo exInfo = null)
+        {
+            NodeLoad result = new NodeLoad();
+            result = (NodeLoad)Model.History.Update(exInfo, result);
+            result.Case = lCase;
+            Model.Add(result);
+            return result;
+        }
+
+        /// <summary>
+        /// Create a new (or update an existing) linear element load in the model
+        /// </summary>
+        /// <param name="lCase">The case of which the new load is to be part</param>
+        /// <param name="exInfo">Optional.  The execution information of the current action.
+        /// If an object has been created previously with matching execution information then
+        /// instead of creating a new item this previous one will be updated and returned instead.
+        /// This enables this method to be used parametrically.</param>
+        /// <returns>The created or updated load case.</param>
+        /// <returns></returns>
+        public LinearElementLoad LinearElementLoad(LoadCase lCase, ExecutionInfo exInfo = null)
+        {
+            LinearElementLoad result = new LinearElementLoad();
+            result = (LinearElementLoad)Model.History.Update(exInfo, result);
+            result.Case = lCase;
             Model.Add(result);
             return result;
         }

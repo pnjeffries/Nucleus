@@ -29,6 +29,57 @@ namespace Nucleus.Model
             set { ChangeProperty(ref _E, value, "E"); }
         }
 
+        /// <summary>
+        /// Private backing field for PoissonsRatio property
+        /// </summary>
+        private double _PoissonsRatio = 0.3;
+
+        /// <summary>
+        /// The Poisson's Ratio of this material.
+        /// Unitless.
+        /// </summary>
+        public double PoissonsRatio
+        {
+            get { return _PoissonsRatio; }
+            set { ChangeProperty(ref _PoissonsRatio, value, "PoissonsRatio"); }
+        }
+
+        /// <summary>
+        /// Private backing field for G property
+        /// </summary>
+        private double _G = -1;
+
+        /// <summary>
+        /// The Shear Modulus of this material.  In N/m².
+        /// If this is set lower or equal to zero, the
+        /// return value will be automatically calculated from
+        /// the Elastic Modulus and Poisson's Ratio via the formula
+        /// E / (2v + 2).
+        /// </summary>
+        public double G
+        {
+            get
+            {
+                if (_G <= 0) return E / (2 * PoissonsRatio + 2);
+                else return _G;
+            }
+        }
+
+        /// <summary>
+        /// Private backing field for Alpha property
+        /// </summary>
+        private double _Alpha = 12.0;
+
+        /// <summary>
+        /// The coefficient of thermal expansion of this material,
+        /// in /°C
+        /// </summary>
+        public double Alpha
+        {
+            get { return _Alpha; }
+            set { ChangeProperty(ref _Alpha, value, "Alpha"); }
+        }
+
         #endregion
 
         #region Constructors

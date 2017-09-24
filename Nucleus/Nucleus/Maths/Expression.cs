@@ -442,6 +442,15 @@ namespace Nucleus.Maths
             return new ValueExpression(v);
         }
 
+        /// <summary>
+        /// Convert a string value into an expression
+        /// </summary>
+        /// <param name="s"></param>
+        public static implicit operator Expression(string s)
+        {
+            return Expression.Parse(s);
+        }
+
         #endregion
     }
 }

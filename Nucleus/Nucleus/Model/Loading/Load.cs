@@ -83,7 +83,6 @@ namespace Nucleus.Model
             }
         }
 
-
         /// <summary>
         /// Private backing field for Value property
         /// </summary>
