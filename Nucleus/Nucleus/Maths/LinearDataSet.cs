@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nucleus.Extensions;
 
 namespace Nucleus.Maths
 {
@@ -73,6 +74,20 @@ namespace Nucleus.Maths
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Add a sudden jump between two values.
+        /// As two values cannot share the same key this is implemented by adding
+        /// value0 at t, and value1 at the next greatest valid double parameter.
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="value0"></param>
+        /// <param name="value1"></param>
+        public void AddJump(double t, TValue value0, TValue value1)
+        {
+            Add(t, value0);
+            Add(t.NextValidValue(), value1);
+        }
 
         /// <summary>
         /// Get (or interpolate) the value at the specified parameter

@@ -11,6 +11,30 @@ namespace Nucleus.Maths
     [Serializable]
     public class LinearDoubleDataSet : LinearDataSet<double>
     {
+        #region Properties
+
+        /// <summary>
+        /// Is this data-set flat?  i.e. do all datapoints along
+        /// the x-axis have the same y-value?
+        /// </summary>
+        public bool IsFlat
+        {
+            get
+            {
+                if (Count > 0)
+                {
+                    double value = Values[0];
+                    for (int i = 1; i < Count; i++)
+                    {
+                        double kv = Values[i];
+                        if (kv != value) return false; //TODO: Use tolerance?
+                    }
+                }
+                return true;
+            }
+        }
+
+        #endregion
 
         #region Constructors
 

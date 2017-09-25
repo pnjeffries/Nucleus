@@ -177,6 +177,21 @@ namespace Nucleus.Conversion
             return false;
         }
 
+
+        /// <summary>
+        /// Get the ID from the second set mapped to the ID of the specified object.
+        /// The category and the first ID values will be automatically determined.
+        /// </summary>
+        /// <param name="mObj"></param>
+        /// <returns></returns>
+        public TSecondID GetSecondID(ModelObject mObj)
+        {
+            string category = GetCategoryForType(mObj.GetType());
+            TFirstID firstID = ExtractFirstID(mObj);
+            if (category != null) return GetSecondID(category, firstID);
+            else return GetSecondID(firstID);
+        }
+
         /// <summary>
         /// Get the ID from the second set within the category and associated with the ID from
         /// the first set specified.

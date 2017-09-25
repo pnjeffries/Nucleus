@@ -1293,6 +1293,45 @@ namespace Nucleus.Geometry
             }
             else return false;
         }
+
+        /// <summary>
+        /// Extract all of the X coordinates from a set of vectors
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static double[] XCoordinates(this IList<Vector> v)
+        {
+            double[] result = new double[v.Count];
+            for (int i = 0; i < v.Count; i++)
+                result[i] = v[i].X;
+            return result;
+        }
+
+        /// <summary>
+        /// Extract all of the Y coordinates from a set of vectors
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static double[] YCoordinates(this IList<Vector> v)
+        {
+            double[] result = new double[v.Count];
+            for (int i = 0; i < v.Count; i++)
+                result[i] = v[i].Y;
+            return result;
+        }
+
+        /// <summary>
+        /// Extract all of the Z coordinates from a set of vectors
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static double[] ZCoordinates(this IList<Vector> v)
+        {
+            double[] result = new double[v.Count];
+            for (int i = 0; i < v.Count; i++)
+                result[i] = v[i].Z;
+            return result;
+        }
     }
 }
 

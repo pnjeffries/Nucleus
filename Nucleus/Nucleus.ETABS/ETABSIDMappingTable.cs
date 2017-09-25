@@ -13,6 +13,8 @@ namespace Nucleus.ETABS
     [Serializable]
     public class ETABSIDMappingTable : IDMappingTable<string, string>
     {
-        public ETABSIDMappingTable() : base("Nucleus", "ETABS") { }
+        public ETABSIDMappingTable() : base("Nucleus", "ETABS")
+        {
+        }
     }
 }

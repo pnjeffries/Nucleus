@@ -26,7 +26,11 @@ namespace Nucleus.Model
         public double E
         {
             get { return _E; }
-            set { ChangeProperty(ref _E, value, "E"); }
+            set
+            {
+                ChangeProperty(ref _E, value, "E");
+                if (_G <= 0) NotifyPropertyChanged("G");
+            }
         }
 
         /// <summary>
@@ -41,7 +45,11 @@ namespace Nucleus.Model
         public double PoissonsRatio
         {
             get { return _PoissonsRatio; }
-            set { ChangeProperty(ref _PoissonsRatio, value, "PoissonsRatio"); }
+            set
+            {
+                ChangeProperty(ref _PoissonsRatio, value, "PoissonsRatio");
+                if (_G <= 0) NotifyPropertyChanged("G");
+            }
         }
 
         /// <summary>
@@ -63,6 +71,7 @@ namespace Nucleus.Model
                 if (_G <= 0) return E / (2 * PoissonsRatio + 2);
                 else return _G;
             }
+            set { ChangeProperty(ref _G, value, "G"); }
         }
 
         /// <summary>

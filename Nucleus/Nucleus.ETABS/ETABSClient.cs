@@ -152,15 +152,15 @@ namespace Nucleus.ETABS
                 WriteLinearElements(linearElements, context);
             }
 
-            /*if (context.Options.PanelElements)
+            if (context.Options.PanelElements)
             {
                 PanelElementCollection panelElements = model.Elements.PanelElements;
                 if (context.Options.Update) panelElements = panelElements.Modified(context.Options.UpdateSince);
                 if (panelElements.Count > 0) RaiseMessage("Writing Panels...");
-                UpdateRobotPanelsFromModel(model, panelElements, context);
+                WritePanelElements(panelElements, context);
             }
 
-            if (context.Options.Sets)
+            /*if (context.Options.Sets)
             {
                 ModelObjectSetCollection sets = model.Sets;
                 //if (context.Options.Update) sets = //TODO?
@@ -205,7 +205,8 @@ namespace Nucleus.ETABS
         private void WriteSection(SectionFamily section, ETABSConversionContext context)
         {
             string name = section.Name;
-            string matProp = "A992Fy50";
+            string matProp = "A992Fy50"; // TEMP
+
             if (section.Profile == null)
             {
                 var profile = section.Profile;
@@ -265,17 +266,43 @@ namespace Nucleus.ETABS
         {
             foreach (LinearElement element in elements)
             {
-                Vector s = element.Start.Position;
-                Vector e = element.End.Position;
-                string id = "";
-                SapModel.FrameObj.AddByCoord(s.X, s.Y, s.Z, e.X, e.Y, e.Z, ref id, element.Family?.Name, element.Name);
-                //Releases:
-                bool[] sRls = element.Start.Releases.ToArray();
-                bool[] eRls = element.End.Releases.ToArray();
-                double[] sStf = new double[6]; //Temp
-                double[] eStf = new double[6]; //Temp
-                SapModel.FrameObj.SetReleases(id, ref sRls, ref eRls, ref sStf, ref eStf);
-                SapModel.FrameObj.SetLocalAxes(id, element.Orientation.Degrees); // May need adjustment for columns!
+                if (!element.IsDeleted)
+                {
+                    Vector s = element.Start.Position;
+                    Vector e = element.End.Position;
+                    string id = context.IDMap.GetSecondID(element) ?? "";
+                    SapModel.FrameObj.AddByCoord(s.X, s.Y, s.Z, e.X, e.Y, e.Z, ref id, element.Family?.Name, element.Name);
+                    //Releases:
+                    bool[] sRls = element.Start.Releases.ToArray();
+                    bool[] eRls = element.End.Releases.ToArray();
+                    double[] sStf = new double[6]; //Temp
+                    double[] eStf = new double[6]; //Temp
+                    SapModel.FrameObj.SetReleases(id, ref sRls, ref eRls, ref sStf, ref eStf);
+                    SapModel.FrameObj.SetLocalAxes(id, element.Orientation.Degrees); // May need adjustment for columns!
+                    context.IDMap.Add(element, id);
+                }
+            }
+        }
+
+        public void WritePanelElements(PanelElementCollection elements, ETABSConversionContext context)
+        {
+            foreach (PanelElement element in elements)
+            {
+                if (!element.IsDeleted && element.Geometry != null)
+                {
+                    string id = context.IDMap.GetSecondID(element) ?? "";
+                    if (element.Geometry is PlanarRegion)
+                    {
+                        var region = (PlanarRegion)element.Geometry;
+                        Vector[] pts = region.Perimeter.Facet(Angle.FromDegrees(5));
+                        var x = pts.XCoordinates();
+                        var y = pts.YCoordinates();
+                        var z = pts.ZCoordinates();
+                        SapModel.AreaObj.AddByCoord(pts.Length, ref x, ref y, ref z, ref id);
+                        // TODO: Build-Up
+                        context.IDMap.Add(element, id);
+                    }
+                }
             }
         }
 
