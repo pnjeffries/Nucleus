@@ -573,6 +573,64 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Get the first substring between matching open and close brackets in this string.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="startFrom"></param>
+        /// <param name="openBracket"></param>
+        /// <param name="closeBracket"></param>
+        /// <returns></returns>
+        public static string NextBracketed(this string str, char openBracket = '(', char closeBracket = ')')
+        {
+            int startFrom = 0;
+            return NextBracketed(str, ref startFrom, openBracket, closeBracket);
+        }
+
+        /// <summary>
+        /// Get the first substring between matching open and close brackets in this string
+        /// after the specified position.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="startFrom"></param>
+        /// <param name="openBracket"></param>
+        /// <param name="closeBracket"></param>
+        /// <returns></returns>
+        public static string NextBracketed(this string str, ref int startFrom, char openBracket = '(', char closeBracket = ')')
+        {
+            int s0 = str.IndexOf(openBracket, startFrom);
+            if (s0 >= 0)
+            {
+                int bCount = 1;
+                for (int i = s0 + 1; i < str.Length; i++)
+                {
+                    char c = str[i];
+                    if (c == openBracket) bCount++;
+                    if (c == closeBracket) bCount++;
+                    if (c == 0) //Back to opening bracket level
+                    {
+                        return str.Substring(s0 + 1, i - s0 - 1);
+                    }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Return the portion of this string before the first instance
+        /// of the specified character.  If the character is not present
+        /// in the string then the entire original string will be returned.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="character"></param>
+        /// <returns></returns>
+        public static string Before(this string str, char character)
+        {
+            int index = str.IndexOf(character);
+            if (index >= 0) return str.Substring(0, index - 1);
+            else return str;
+        }
+
+        /// <summary>
         /// Split up a text string to different hyperlinks and the fragments of text
         /// between them.
         /// </summary>

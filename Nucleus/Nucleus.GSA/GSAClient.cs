@@ -9,6 +9,7 @@ using Nucleus.IO;
 using Nucleus.Model;
 using Nucleus.Geometry;
 using Nucleus.Extensions;
+using System.IO;
 
 namespace Nucleus.GSA
 {
@@ -149,7 +150,7 @@ namespace Nucleus.GSA
         }
 
         /// <summary>
-        /// Issue a 'GET' GWA command to gsa.
+        /// Issue a 'GET' GWA command to GSA.
         /// </summary>
         /// <param name="keyword"></param>
         /// <param name="id"></param>
@@ -159,17 +160,96 @@ namespace Nucleus.GSA
             return GWACommand("GET", keyword, id);
         }
 
+        /// <summary>
+        /// Issue a 'GET_ALL' GWA command to GSA
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        public string GWAGetAll(string keyword)
+        {
+            return GWACommand("GET_ALL", keyword);
+        }
+
+        /// <summary>
+        /// Read the currently open GSA model to populate a Nucleus model
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public bool ReadModel(Model.Model model, GSAConversionContext context)
         {
             RaiseMessage("Reading data from GSA...");
-            if (context.Options.Nodes)
-
-                return true;
+            if (context.Options.Families)
+            {
+                ReadSections(model, context);
+                ReadBuildUps(model, context);
+            }
+            if (context.Options.Nodes) ReadNodes(model, context);
+            if (context.Options.LinearElements || context.Options.PanelElements) ReadElements(model, context);
+            return true;
         }
 
+        /// <summary>
+        /// Read all sections from the currently open GSA file
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="context"></param>
+        public void ReadSections(Model.Model model, GSAConversionContext context)
+        {
+            RaiseMessage("Reading sections...");
+            ParseGWALines(GWAGetAll(Keywords.Section), model, context);
+        }
+
+        /// <summary>
+        /// Read all 2d element properties from the currently open GSA file
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="context"></param>
+        public void ReadBuildUps(Model.Model model, GSAConversionContext context)
+        {
+            RaiseMessage("Reading build-ups...");
+            ParseGWALines(GWAGetAll(Keywords.BuildUp), model, context);
+        }
+
+        /// <summary>
+        /// Read all nodes from the currently open GSA file
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="context"></param>
         public void ReadNodes(Model.Model model, GSAConversionContext context)
         {
             RaiseMessage("Reading nodes...");
+            ParseGWALines(GWAGetAll(Keywords.Node), model, context);
+        }
+
+        /// <summary>
+        /// Read all elements from the currently open GSA file
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="context"></param>
+        public void ReadElements(Model.Model model, GSAConversionContext context)
+        {
+            RaiseMessage("Reading elements...");
+            ParseGWALines(GWAGetAll(Keywords.Element), model, context);
+        }
+
+        private void ParseGWALines(string gwa, Model.Model model, GSAConversionContext context)
+        {
+            GWAParser parser = new GWAParser();
+            using (TextReader reader = new StringReader(gwa))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (context.Options.PrintAll) RaiseMessage(line);
+                    parser.ParseGWALine(line, model, context);
+                }
+            }
+        }
+
+        public void ReadSets(Model.Model model, GSAConversionContext context)
+        {
+            RaiseMessage("Reading sets...");
 
         }
 

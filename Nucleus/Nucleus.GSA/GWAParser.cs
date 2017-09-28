@@ -170,8 +170,97 @@ namespace Nucleus.GSA
             string matID = tr.Next(); // mat
             var material = context.IDMap.GetModelObject<Material>(model, matID);
             //TODO: profile description
+            SectionProfile profile = ReadProfile(tr.Next(), context); //desc
+            if (profile != null)
+            {
+                profile.Material = material;
+                sec.Profile = profile;
+            }
 
             context.IDMap.Add(sec, gsaID);
+        }
+
+        /// <summary>
+        /// Parse a Nucleus section profile from a GSA section description
+        /// </summary>
+        /// <param name="description"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public SectionProfile ReadProfile(string description, GSAConversionContext context)
+        {
+            var tr = new TokenReader(description, ' ', '.');
+            string type = tr.Next();
+            if (type.EqualsIgnoreCase("CAT")) // Catalogue section
+            {
+                // CAT <Type ID> <Sec name> <Date>
+                // TODO: Try to find equivalent section in catalogue
+            }
+            else if (type.EqualsIgnoreCase("STD")) // Standard section
+            {
+                // STD <Shape(unit)> <Dimension> <Dimension>…
+                double scale = 0.001; //Default mm
+                string units = description.NextBracketed();
+                if (units != null)
+                {
+                    if (units.EqualsIgnoreCase("m")) scale = 1;
+                    else if (units.EqualsIgnoreCase("cm")) scale = 0.01;
+                    else if (units.EqualsIgnoreCase("in")) scale = 0.0254;
+                    //TODO: Others?
+                }
+
+                string sType = tr.Next()?.Before('('); // <Shape(unit)>
+
+                if (sType.EqualsIgnoreCase("R")) // Rectangle R d, b
+                    return new RectangularProfile(tr.NextDouble() * scale, tr.NextDouble() * scale);
+                else if (sType.EqualsIgnoreCase("RHS")) // RHS d, b, tw, tf
+                    return new RectangularHollowProfile()
+                    {
+                        Depth = tr.NextDouble() * scale,
+                        Width = tr.NextDouble() * scale,
+                        WebThickness = tr.NextDouble() * scale,
+                        FlangeThickness = tr.NextDouble() * scale
+                    };
+                else if (sType.EqualsIgnoreCase("C")) // C d
+                    return new CircularProfile(tr.NextDouble() * scale);
+                else if (sType.EqualsIgnoreCase("CHS")) // CHS d, t
+                    return new CircularHollowProfile(tr.NextDouble() * scale, tr.NextDouble() * scale);
+                else if (sType.EqualsIgnoreCase("I")) // I d, b, tw, tf
+                    return new SymmetricIProfile()
+                    {
+                        Depth = tr.NextDouble() * scale,
+                        Width = tr.NextDouble() * scale,
+                        WebThickness = tr.NextDouble() * scale,
+                        FlangeThickness = tr.NextDouble() * scale
+                    };
+                else if (sType.EqualsIgnoreCase("T")) // T d, b, tw, tf
+                    return new TProfile()
+                    {
+                        Depth = tr.NextDouble() * scale,
+                        Width = tr.NextDouble() * scale,
+                        WebThickness = tr.NextDouble() * scale,
+                        FlangeThickness = tr.NextDouble() * scale
+                    };
+                else if (sType.EqualsIgnoreCase("CH")) // CH d, b, tw, tf
+                    return new ChannelProfile()
+                    {
+                        Depth = tr.NextDouble() * scale,
+                        Width = tr.NextDouble() * scale,
+                        WebThickness = tr.NextDouble() * scale,
+                        FlangeThickness = tr.NextDouble() * scale
+                    };
+                else if (sType.EqualsIgnoreCase("A")) // A d, b, tw, tf
+                    return new AngleProfile()
+                    {
+                        Depth = tr.NextDouble() * scale,
+                        Width = tr.NextDouble() * scale,
+                        WebThickness = tr.NextDouble() * scale,
+                        FlangeThickness = tr.NextDouble() * scale
+                    };
+                else if (sType.EqualsIgnoreCase("TR")) // TR d, bt, bb
+                    return new TrapezoidProfile(tr.NextDouble() * scale, tr.NextDouble() * scale, tr.NextDouble() * scale);
+                //TODO: Other types go here
+            }
+            return null;
         }
 
         /// <summary>

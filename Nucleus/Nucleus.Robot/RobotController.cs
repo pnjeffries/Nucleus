@@ -5,6 +5,7 @@ using Nucleus.Geometry;
 using Nucleus.IO;
 using Nucleus.Maths;
 using Nucleus.Model;
+using Nucleus.Model.Loading;
 using RobotOM;
 using System;
 using System.Collections.Generic;
@@ -446,9 +447,14 @@ namespace Nucleus.Robot
                     {
                         RobotLoadRecord record = (RobotLoadRecord)records.Get(i);
                         Load load = context.IDMap.GetMappedLoad(record.UniqueId.ToString(), model);
-                        if (record.Type == IRobotLoadRecordType.I_LRT_NODE_FORCE)
+                        if (record.Type == IRobotLoadRecordType.I_LRT_NODE_FORCE) // Node load
                         {
-                            //TODO: Create node load
+                            NodeLoad nLoad = load as NodeLoad;
+                            if (nLoad == null)
+                                load = model.Create.NodeLoad(lCase);
+                            else
+                                nLoad.Case = lCase;
+                            //TODO: Populate node load
                         }
                         else if (record.Type == IRobotLoadRecordType.I_LRT_BAR_UNIFORM)
                         {
