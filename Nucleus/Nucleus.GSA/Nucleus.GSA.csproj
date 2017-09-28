@@ -48,6 +48,7 @@
     <Compile Include="GSAConversionContext.cs" />
     <Compile Include="GSAConversionOptions.cs" />
     <Compile Include="GSAIDMappingTable.cs" />
+    <Compile Include="GWAParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

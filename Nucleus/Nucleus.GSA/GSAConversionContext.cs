@@ -14,6 +14,16 @@ namespace Nucleus.GSA
         /// </summary>
         public GSAIDMappingTable IDMap { get; set; }
 
-        public GSA
+        /// <summary>
+        /// The set of mapping options
+        /// </summary>
+        public GSAConversionOptions Options { get; set; }
+
+        public GSAConversionContext(GSAIDMappingTable idMap, GSAConversionOptions options)
+        {
+            IDMap = idMap;
+            Options = options;
+        }
+        
     }
 }
