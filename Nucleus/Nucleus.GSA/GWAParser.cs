@@ -188,7 +188,7 @@ namespace Nucleus.GSA
         /// <returns></returns>
         public SectionProfile ReadProfile(string description, GSAConversionContext context)
         {
-            var tr = new TokenReader(description, ' ', '.');
+            var tr = new TokenReader(description, ' ', ',');
             string type = tr.Next();
             if (type.EqualsIgnoreCase("CAT")) // Catalogue section
             {
@@ -397,7 +397,7 @@ namespace Nucleus.GSA
             Bool6D fixity = new Bool6D();
             if (tr.NextIs("REST")) // is_rest
             {
-                fixity = tr.Next6AsBool6D();
+                fixity = tr.Next6AsBool6D("1");
             }
             SixVector stiffness = null;
             if (tr.NextIs("STIFF")) // is_stiff

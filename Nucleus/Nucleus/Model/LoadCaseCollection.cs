@@ -25,6 +25,15 @@ namespace Nucleus.Model
         /// <param name="model"></param>
         protected LoadCaseCollection(Model model) : base(model) { }
 
+        /// <summary>
+        /// Initialise a new load case collection containing the specified cases
+        /// </summary>
+        /// <param name="cases"></param>
+        public LoadCaseCollection(IEnumerable<LoadCase> cases) : base()
+        {
+            foreach (var lc in cases) Add(lc);
+        }
+
         #endregion
 
         #region Methods
