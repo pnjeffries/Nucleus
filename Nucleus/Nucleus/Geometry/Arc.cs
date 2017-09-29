@@ -146,7 +146,7 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Gets or sets the position of the mid-vertex on the arc between start and end points.
+        /// Gets or sets the position of the third mid-vertex on the arc between start and end points.
         /// </summary>
         public Vector PointOnArc
         {
@@ -479,6 +479,47 @@ namespace Nucleus.Geometry
             }
             else //0 to PI/2
                 return ((theta * 2) - Math.Sin(theta * 2)) * (radius.Power(4)) / 16;
+        }
+
+        /// <summary>
+        /// Offset this curve on the XY plane.
+        /// </summary>
+        /// <param name="distances">The offset distance.
+        /// Positive numbers will result in the offset curve being to the right-hand 
+        /// side, looking along the curve.  Negative numbers to the left.</param>
+        /// <returns></returns>
+        public override Curve Offset(double distance)
+        {
+            if (!IsClockwise) distance *= -1;
+            double factor = 1 + distance / Circle.Radius;
+            if (factor < 0) return null;
+            if (Closed)
+            {
+                return new Arc(new Circle(factor * Circle.Radius, Circle));
+            }
+            else
+            {
+                Vector o = Circle.Origin;
+                return new Arc(
+                    o + (StartPoint - o) * factor,
+                    o + (PointOnArc - o) * factor,
+                    o + (EndPoint - o) * factor);
+            }
+        }
+
+        /// <summary>
+        /// Offset this curve on the XY plane by varying distances for
+        /// each span.
+        /// </summary>
+        /// <param name="distances">The offset distance.
+        /// Positive numbers will result in the offset curve being to the right-hand 
+        /// side, looking along the curve.  Negative numbers to the left.</param>
+        /// <returns></returns>
+        public override Curve Offset(IList<double> distances)
+        {
+            if (distances != null && distances.Count > 0)
+                return Offset(distances[0]);
+            else return Offset(0);
         }
 
         public override string ToString()

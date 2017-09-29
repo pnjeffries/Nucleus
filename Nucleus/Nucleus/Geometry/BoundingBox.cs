@@ -455,10 +455,11 @@ namespace Nucleus.Geometry
         /// <param name="points"></param>
         public void Include(IEnumerable<IPosition> points)
         {
-            foreach (IPosition point in points)
-            {
-                Include(point.Position);
-            }
+            if (points != null)
+                foreach (IPosition point in points)
+                {
+                    Include(point.Position);
+                }
         }
 
         /// <summary>

@@ -142,6 +142,66 @@ namespace Nucleus.Geometry
             return result;
         }
 
+        public override Curve Offset(IList<double> distances)
+        {
+            Vector[] pts = new Vector[Vertices.Count];
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                Vector p0 = Vector.Unset; // Last point
+                Vector p1 = Vertices[i].Position; // This point
+                Vector p2 = Vector.Unset; // Next point
+
+                if (i > 0) p0 = Vertices[i - 1].Position;
+                else if (Closed) p0 = Vertices.Last().Position;
+
+                if (i < Vertices.Count - 1) p2 = Vertices[i + 1].Position;
+                else if (Closed) p2 = Vertices.First().Position;
+
+                Vector v1 = Vector.Unset;
+                Vector v2 = Vector.Unset;
+
+                if (p0.IsValid()) v1 = p1 - p0;
+                if (p2.IsValid()) v2 = p2 - p1;
+
+                double d1 = distances.GetWrapped(i - 1);
+                double d2 = distances.GetBounded(i);
+
+                if (v1.IsValid() && !v1.IsZero() && v2.IsValid() && !v2.IsZero())
+                {
+                    // Calculate intersection of offset lines:
+                    Vector o1 = v1.PerpendicularXY().Unitize() * d1;
+                    Vector o2 = v2.PerpendicularXY().Unitize() * d2;
+                    Vector pOff = Intersect.LineLineXY(p0, v1, p2, v2);
+                    pts[i] = pOff;
+                }
+                else
+                {
+                    // Can't intersect, so translate instead
+                    // Figure out which span to use:
+                    Vector sV;
+                    double d;
+                    if (v1.IsValidNonZero())
+                    {
+                        sV = v1;
+                        d = d1;
+                    }
+                    else
+                    {
+                        sV = v2;
+                        d = d2;
+                    }
+
+                    if (sV.IsValid() && !sV.IsZero())
+                    {
+                        Vector pOff = p1 + sV.PerpendicularXY().Unitize() * d;
+                        pts[i] = pOff;
+                    }
+                    else pts[i] = p1; // Can't offset!
+                }
+            }
+            return new PolyLine(pts);
+        }
+
         /// <summary>
         /// Convert this polycurve into an equivalent list
         /// of Line objects

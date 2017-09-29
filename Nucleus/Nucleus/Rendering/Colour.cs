@@ -307,8 +307,10 @@ namespace Nucleus.Rendering
             // Normalise values
             s /= 255;
             v /= 255;
-            while (h < 0) h += 360;
-            while (h > 360) h -= 360;
+
+            h = h % 360; // Clamp to 0-360 range
+            //while (h < 0) h += 360;
+            //while (h > 360) h -= 360;
 
             // Set up intermediate values
             double c = v * s;
