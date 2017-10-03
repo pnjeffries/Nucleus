@@ -265,6 +265,35 @@ namespace Nucleus.Geometry
             return ClosestPoint(StartPoint, EndPoint, toPoint);
         }
 
+        /// <summary>
+        /// Offset this curve on the XY plane
+        /// </summary>
+        /// <param name="distances">The offset distance.
+        /// Positive numbers will result in the offset curve being to the right-hand 
+        /// side, looking along the curve.  Negative numbers to the left.</param>
+        /// <returns></returns>
+        public override Curve Offset(double distance)
+        {
+            Vector dir = Direction;
+            dir = dir.PerpendicularXY();
+            return new Line(StartPoint + dir, EndPoint + dir);
+        }
+
+        /// <summary>
+        /// Offset this curve on the XY plane by varying distances for
+        /// each span.
+        /// </summary>
+        /// <param name="distances">The offset distance.
+        /// Positive numbers will result in the offset curve being to the right-hand 
+        /// side, looking along the curve.  Negative numbers to the left.</param>
+        /// <returns></returns>
+        public override Curve Offset(IList<double> distances)
+        {
+            if (distances != null && distances.Count > 0)
+                return Offset(distances[0]);
+            else return Offset(0);
+        }
+
         #endregion
 
         #region Static Methods

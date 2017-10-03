@@ -192,8 +192,12 @@ namespace Nucleus.Conversion
         {
             string category = GetCategoryForType(mObj.GetType());
             TFirstID firstID = ExtractFirstID(mObj);
-            if (category != null) return GetSecondID(category, firstID);
-            else return GetSecondID(firstID);
+            if (category != null && HasSecondID(category, firstID))
+                return GetSecondID(category, firstID);
+            else if (HasSecondID(firstID))
+                return GetSecondID(firstID);
+            else
+                return default(TSecondID);
         }
 
         /// <summary>

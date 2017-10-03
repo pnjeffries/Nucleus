@@ -144,6 +144,7 @@
     <Compile Include="Model\PropertyMatchFilter.cs" />
     <Compile Include="Model\SectionProfiles\ChannelProfile.cs" />
     <Compile Include="Model\SectionProfiles\DeltaProfile.cs" />
+    <Compile Include="Model\SectionProfiles\GeometricProfile.cs" />
     <Compile Include="Model\SectionProfiles\TrapezoidHollowProfile.cs" />
     <Compile Include="Model\SectionProfiles\TrapezoidProfile.cs" />
     <Compile Include="Model\SetFilterBase.cs" />
@@ -317,7 +318,7 @@
     <Compile Include="Model\VertexDataStore.cs" />
     <Compile Include="Model\VertexReleases.cs" />
     <Compile Include="Physics\IPhysicsEngineComponent.cs" />
-    <Compile Include="Physics\ParticleComponent.cs" />
+    <Compile Include="Physics\Particle.cs" />
     <Compile Include="Physics\PhysicsEngine.cs" />
     <Compile Include="Physics\PhysicsEngineComponentCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

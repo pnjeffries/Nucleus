@@ -702,7 +702,28 @@ namespace Nucleus.Geometry
             Plane onPlane = Geometry.Plane.GlobalYX;
             return CalculateEnclosedIxx(voids, onPlane);
         }
-       
+
+        /// <summary>
+        /// Offset this curve on the XY plane.
+        /// </summary>
+        /// <param name="distances">The offset distance.
+        /// Positive numbers will result in the offset curve being to the right-hand 
+        /// side, looking along the curve.  Negative numbers to the left.</param>
+        /// <returns></returns>
+        public virtual Curve Offset(double distance)
+        {
+            return Offset(new double[] { distance });
+        }
+
+        /// <summary>
+        /// Offset this curve on the XY plane by varying distances for
+        /// each span.
+        /// </summary>
+        /// <param name="distances">The offset distance.
+        /// Positive numbers will result in the offset curve being to the right-hand 
+        /// side, looking along the curve.  Negative numbers to the left.</param>
+        /// <returns></returns>
+        public abstract Curve Offset(IList<double> distances);
 
         public override string ToString()
         {
