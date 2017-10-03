@@ -18,6 +18,11 @@ namespace Nucleus.Physics
         #region Properties
 
         /// <summary>
+        /// The node to which this particle is attached
+        /// </summary>
+        public Node Node { get; set; }
+
+        /// <summary>
         /// The current, displaced, position of the node
         /// </summary>
         public Vector Position { get; set; }
@@ -26,7 +31,11 @@ namespace Nucleus.Physics
         /// The current velocity of the node
         /// </summary>
         public Vector Velocity { get; set; }
-        //TODO
+
+        /// <summary>
+        /// The mass of the node
+        /// </summary>
+        public double Mass { get; set; } = 0;
 
         #endregion
 
@@ -39,6 +48,7 @@ namespace Nucleus.Physics
         /// <param name="node"></param>
         public ParticleComponent(Node node)
         {
+            Node = node;
             Position = node.Position;
         }
 
