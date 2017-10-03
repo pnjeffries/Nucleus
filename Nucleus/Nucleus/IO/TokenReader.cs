@@ -67,6 +67,13 @@ namespace Nucleus.IO
 
         /// <summary>
         /// Initialise a new TokenReader set up to tokenise and read the
+        /// specified string, using the default of a tab character as a delimiter
+        /// </summary>
+        /// <param name="str"></param>
+        public TokenReader(string str) : this(str, '\t') { }
+
+        /// <summary>
+        /// Initialise a new TokenReader set up to tokenise and read the
         /// specified string
         /// </summary>
         /// <param name="str"></param>

@@ -455,6 +455,21 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Offset this curve on the XY plane by varying distances for
+        /// each span.
+        /// </summary>
+        /// <param name="distances">The offset distance.
+        /// Positive numbers will result in the offset curve being to the right-hand 
+        /// side, looking along the curve.  Negative numbers to the left.</param>
+        /// <returns></returns>
+        public override Curve Offset(IList<double> distances)
+        {
+            var result = new PolyCurve();
+            //TODO!
+            return null;
+        }
+
+        /// <summary>
         /// Could this PolyCurve be accurately represented using a polyline?
         /// </summary>
         /// <returns></returns>

@@ -268,6 +268,15 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Is this vector valid and non-zero?
+        /// </summary>
+        /// <returns></returns>
+        public bool IsValidNonZero()
+        {
+            return IsValid() && !IsZero();
+        }
+
+        /// <summary>
         /// IEquatable implementation.
         /// Checks whether this vector is equal to another.
         /// </summary>

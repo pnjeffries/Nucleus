@@ -83,6 +83,14 @@ namespace Nucleus.Geometry
         public abstract VertexCollection Vertices { get; }
 
         /// <summary>
+        /// Get the total number of vertices that define this geometry
+        /// </summary>
+        public virtual int VertexCount
+        {
+            get { return Vertices.Count; }
+        }
+
+        /// <summary>
         /// Is the definition of this shape valid?
         /// i.e. does it have the correct number of vertices, are all parameters within
         /// acceptable limits, etc.
@@ -235,7 +243,7 @@ namespace Nucleus.Geometry
                 if (!copyOnlyIfCoincident || vA.DistanceToSquared(vB) < Tolerance.Distance)
                     vA.CopyAttachedDataFrom(vB);
             }
-            Attributes = other.Attributes;
+            Attributes = other.Attributes; //TODO: Duplicate instead?
             //Add any other attached data to be copied here
         }
 

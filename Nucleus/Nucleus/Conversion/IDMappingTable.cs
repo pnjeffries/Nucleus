@@ -111,7 +111,11 @@ namespace Nucleus.Conversion
         /// </summary>
         public Dictionary<Type,string> TypeCategories
         {
-            get { return _TypeCategories; }
+            get
+            {
+                if (_TypeCategories == null) _TypeCategories = new Dictionary<Type, string>();
+                return _TypeCategories;
+            }
         }
 
         #endregion
@@ -188,8 +192,12 @@ namespace Nucleus.Conversion
         {
             string category = GetCategoryForType(mObj.GetType());
             TFirstID firstID = ExtractFirstID(mObj);
-            if (category != null) return GetSecondID(category, firstID);
-            else return GetSecondID(firstID);
+            if (category != null && HasSecondID(category, firstID))
+                return GetSecondID(category, firstID);
+            else if (HasSecondID(firstID))
+                return GetSecondID(firstID);
+            else
+                return default(TSecondID);
         }
 
         /// <summary>
@@ -278,8 +286,12 @@ namespace Nucleus.Conversion
             where TModelObject : ModelObject
         {
             string category = GetCategoryForType(typeof(TModelObject));
-            TFirstID firstID = GetFirstID(category, secondID);
-            return model.GetObject(new Guid(firstID.ToString())) as TModelObject;
+            if (HasFirstID(category, secondID))
+            {
+                TFirstID firstID = GetFirstID(category, secondID);
+                return model.GetObject(new Guid(firstID.ToString())) as TModelObject;
+            }
+            else return null;
         }
 
         /// <summary>
@@ -353,7 +365,8 @@ namespace Nucleus.Conversion
             if (_TypeCategories != null)
             {
                 Type ancestor = _TypeCategories.Keys.ClosestAncestor(type);
-                return _TypeCategories[ancestor];
+                if (ancestor != null)
+                    return _TypeCategories[ancestor];
             }
             return DefaultCategory;
         }

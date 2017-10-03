@@ -605,8 +605,8 @@ namespace Nucleus.Extensions
                 {
                     char c = str[i];
                     if (c == openBracket) bCount++;
-                    if (c == closeBracket) bCount++;
-                    if (c == 0) //Back to opening bracket level
+                    if (c == closeBracket) bCount--;
+                    if (bCount == 0) //Back to opening bracket level
                     {
                         return str.Substring(s0 + 1, i - s0 - 1);
                     }
@@ -626,7 +626,7 @@ namespace Nucleus.Extensions
         public static string Before(this string str, char character)
         {
             int index = str.IndexOf(character);
-            if (index >= 0) return str.Substring(0, index - 1);
+            if (index >= 0) return str.Substring(0, index);
             else return str;
         }
 

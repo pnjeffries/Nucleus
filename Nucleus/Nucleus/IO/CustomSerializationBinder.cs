@@ -18,13 +18,14 @@ namespace Nucleus.IO
 
         public override Type BindToType(string assemblyName, string typeName)
         {
-            if (assemblyName.StartsWith(_OldLibraryName))
-            {
+            //if (assemblyName.Contains(_OldLibraryName))
+            //{
                 assemblyName = assemblyName.Replace(_OldLibraryName, _NewLibraryName);
                 typeName = typeName.Replace(_OldLibraryName, _NewLibraryName);
-                return Type.GetType(String.Format("{0}, {1}", typeName, assemblyName));
-            }
-            return null;
+                Type type = Type.GetType(String.Format("{0}, {1}", typeName, assemblyName));
+            return type;
+            //}
+            //return null;
         }
     }
 }

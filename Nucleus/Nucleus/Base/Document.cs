@@ -194,6 +194,7 @@ namespace Nucleus.Base
             if (type == DocumentSaveFileType.Binary)
             {
                 IFormatter formatter = new BinaryFormatter();
+                formatter.Binder = new CustomSerializationBinder();
                 result = formatter.Deserialize(stream) as T;
             }
             else if (type == DocumentSaveFileType.ASS)

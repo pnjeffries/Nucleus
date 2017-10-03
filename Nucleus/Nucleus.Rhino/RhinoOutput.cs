@@ -660,6 +660,21 @@ namespace Nucleus.Rhino
         }
 
         /// <summary>
+        /// Clear a layer by deleting all geometry that is currently on it
+        /// </summary>
+        /// <param name="layerID"></param>
+        /// <returns></returns>
+        public static bool ClearLayer(int layerID)
+        {
+            if (layerID < 0) return false;
+            Layer layer = RhinoDoc.ActiveDoc.Layers[layerID];
+            var objs = RhinoDoc.ActiveDoc.Objects.FindByLayer(layer);
+            if (objs != null)
+                foreach (var obj in objs) DeleteObject(obj.Id);
+            return true;
+        }
+
+        /// <summary>
         /// Delete the layer specified by the given ID
         /// </summary>
         /// <param name="layerID">The index of the layer to delete</param>

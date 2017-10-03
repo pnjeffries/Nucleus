@@ -292,7 +292,7 @@ namespace Nucleus.Model
                         _Geometry.Element = null;
                     }
                     _Geometry = value;
-                    _Geometry.Element = this;
+                    if (_Geometry != null) _Geometry.Element = this;
                     NotifyPropertyChanged("Geometry");
                 //}
             }

@@ -11,6 +11,7 @@ namespace Nucleus.GSA
     /// <summary>
     /// ID mapping table for conversion to and from GSA
     /// </summary>
+    [Serializable]
     public class GSAIDMappingTable : IDMappingTable<string, string>
     {
         /// <summary>
