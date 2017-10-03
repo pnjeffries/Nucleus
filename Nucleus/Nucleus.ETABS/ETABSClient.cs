@@ -12,6 +12,9 @@ using Nucleus.Geometry;
 
 namespace Nucleus.ETABS
 {
+    /// <summary>
+    /// Class responsible for reading and writing data from/to ETABS
+    /// </summary>
     public class ETABSClient : MessageRaiser, IApplicationClient
     {
         #region Properties
@@ -41,8 +44,14 @@ namespace Nucleus.ETABS
             }
         }
 
+        /// <summary>
+        /// Private backing cache for SapModel property
+        /// </summary>
         private cSapModel _SapModel = null;
 
+        /// <summary>
+        /// The current model in ETABS
+        /// </summary>
         public cSapModel SapModel
         {
             get
@@ -108,6 +117,14 @@ namespace Nucleus.ETABS
             RaiseMessage("ETABS link released.");
         }
 
+        /// <summary>
+        /// Write a Nucleus model to an ETABS file
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="model"></param>
+        /// <param name="idMap"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
         public bool WriteModelToEtabs(FilePath filePath, Model.Model model, ref ETABSIDMappingTable idMap, ETABSConversionOptions options = null)
         {
             if (New())
@@ -121,6 +138,12 @@ namespace Nucleus.ETABS
             else return false;
         }
 
+        /// <summary>
+        /// Write a Nucleus model to the currently open ETABS model
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
         private bool WriteToETABS(Model.Model model, ETABSConversionContext context)
         {
             RaiseMessage("Writing data to ETABS...");
@@ -171,6 +194,11 @@ namespace Nucleus.ETABS
             return true;
         }
 
+        /// <summary>
+        /// Write/update ETABS nodes from a collection of Nucleus nodes
+        /// </summary>
+        /// <param name="nodes"></param>
+        /// <param name="context"></param>
         private void WriteNodes(NodeCollection nodes, ETABSConversionContext context)
         {
             // Only writes restrained nodes...
@@ -198,6 +226,10 @@ namespace Nucleus.ETABS
                 if (family is SectionFamily)
                 {
                     WriteSection((SectionFamily)family, context);
+                }
+                else if (family is BuildUpFamily)
+                {
+                    WriteBuildUp((BuildUpFamily)family, context);
                 }
             }
         }
@@ -262,6 +294,14 @@ namespace Nucleus.ETABS
             }
         }
 
+        public void WriteBuildUp(BuildUpFamily buildUp, ETABSConversionContext context)
+        {
+            string name = buildUp.Name;
+            string matProp = "";
+
+            SapModel.PropArea.SetDeck(name, eDeckType.SolidSlab, eShellType.ShellThin, matProp, buildUp.Layers.TotalThickness);
+        }
+
         public void WriteLinearElements(LinearElementCollection elements, ETABSConversionContext context)
         {
             foreach (LinearElement element in elements)
@@ -298,7 +338,8 @@ namespace Nucleus.ETABS
                         var x = pts.XCoordinates();
                         var y = pts.YCoordinates();
                         var z = pts.ZCoordinates();
-                        SapModel.AreaObj.AddByCoord(pts.Length, ref x, ref y, ref z, ref id);
+                        string propName = element.Family?.Name ?? "";
+                        SapModel.AreaObj.AddByCoord(pts.Length, ref x, ref y, ref z, ref id, propName, element.Name);
                         // TODO: Build-Up
                         context.IDMap.Add(element, id);
                     }

@@ -714,6 +714,17 @@ namespace Nucleus.Meshing
             FillStartToEndReverse(topPoints, 0); // Cap top
         }
 
+        // TODO
+        /*public void AddIcoSphere(Vector centre, double radius, int subDivs = 0)
+        {
+            //Create 12 vertices of an isohedron:
+
+            double t = 1.6180339887498948482045868343656; // 1 + Sqrt(5)/2
+            var pts = new List<Vector>();
+            pts.Add(new Vector(-1, t, 0).;
+
+        }*/
+
         /// <summary>
         /// Add a set of vertices and faces to this mesh representing a nodal support
         /// </summary>
@@ -793,6 +804,57 @@ namespace Nucleus.Meshing
                 end + sideways * width / 2, 
                 end - sideways * width / 2, 
                 headEnd - sideways * width / 2);
+        }
+
+        /// <summary>
+        /// Add faces and vertices to the mesh to represent a line load via a planar mesh with a serrated
+        /// leading edge:
+        /// ______
+        /// |    |
+        /// VVVVVV
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="direction"></param>
+        /// <param name="startLength"></param>
+        /// <param name="endLength"></param>
+        /// <param name="zigZagLength"></param>
+        public void AddLineLoad(Vector start, Vector end, Vector direction, double startLength, double endLength, double zigZagLength = 1.0)
+        {
+            Vector line = end - start;
+            double length = line.Magnitude();
+            int zigZags = (int)Math.Ceiling(length / zigZagLength);
+            double zigZagN = 1.0 / zigZags;
+
+            int p0i = -1;
+            int e0i = -1;
+            for (int i = 0; i < zigZags - 1; i++)
+            {
+                if (i == 0) //Initialise starting vertices
+                {
+                    Vector p0 = start.Interpolate(end, i * zigZagN);
+                    Vector e0 = p0 + direction * startLength.Interpolate(endLength, i * zigZagN);
+                    p0i = AddVertex(p0);
+                    e0i = AddVertex(e0);
+                }
+
+                // Determine points               
+                Vector p1 = start.Interpolate(end, (i + 0.5) * zigZagN);
+                Vector p2 = start.Interpolate(end, (i + 1.0) * zigZagN);                
+                Vector e1 = p1 + direction * startLength.Interpolate(endLength, (i + 0.5) * zigZagN);
+                Vector e2 = p2 + direction * startLength.Interpolate(endLength, (i + 1.0) * zigZagN);
+
+                int p1i = AddVertex(p1);
+                int p2i = AddVertex(p2);     
+                int e1i = AddVertex(e1);
+                int e2i = AddVertex(e2);
+
+                AddFace(p0i, p1i, e1i, e0i);
+                AddFace(p1i, p2i, e2i, e1i);
+
+                p0i = p2i;
+                e0i = e2i;
+            }
         }
 
         #endregion

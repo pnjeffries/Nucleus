@@ -11,9 +11,9 @@ namespace Nucleus.Physics
 {
     /// <summary>
     /// A data component that stores information necessary to simulate a particle subject to physical
-    /// conditions
+    /// conditions.  May be attached to a node.
     /// </summary>
-    public class ParticleComponent : INodeDataComponent
+    public class Particle : INodeDataComponent
     {
         #region Properties
 
@@ -37,7 +37,7 @@ namespace Nucleus.Physics
         /// the specified node
         /// </summary>
         /// <param name="node"></param>
-        public ParticleComponent(Node node)
+        public Particle(Node node)
         {
             Position = node.Position;
         }
