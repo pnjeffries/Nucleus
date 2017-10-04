@@ -22,6 +22,7 @@ using Nucleus.Base;
 using Nucleus.Events;
 using Nucleus.Extensions;
 using Nucleus.Geometry;
+using Nucleus.Model.Loading;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;

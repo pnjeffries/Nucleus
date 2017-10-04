@@ -11,7 +11,7 @@ namespace Nucleus.Model.Loading
     /// A force load that is applied along linear elements
     /// </summary>
     [Serializable]
-    public class LinearElementLoad : ForceLoad<LinearElementSet>
+    public class LinearElementLoad : ForceLoad<LinearElementSet, LinearElement>
     {
         #region Properties
 

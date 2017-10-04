@@ -70,6 +70,11 @@ namespace Nucleus.Model
             return CoordinateSystem;
         }
 
+        public override ICoordinateSystem GetCoordinateSystem(ModelObject onObject)
+        {
+            return CoordinateSystem;
+        }
+
         public Vector GlobalToLocal(Vector vector, bool direction = false)
         {
             return _CoordinateSystem.GlobalToLocal(vector, direction);

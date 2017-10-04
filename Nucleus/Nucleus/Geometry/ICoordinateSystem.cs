@@ -63,4 +63,21 @@ namespace Nucleus.Geometry
         /// <returns>A vector representing a position in the global cartesian coordinate system.</returns>
         Vector LocalToGlobal(double c0, double c1, double c2 = 0, bool direction = false);
     }
+
+    /// <summary>
+    /// Extension methods for objects which implement the ICoordinateSystem interface
+    /// </summary>
+    public static class ICoordinateSystemExtensions
+    {
+        /// <summary>
+        /// Get the global direction vector of the specified local direction
+        /// </summary>
+        /// <param name="cSys"></param>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public static Vector DirectionVector(this ICoordinateSystem cSys, Direction direction)
+        {
+            return cSys.LocalToGlobal(new Vector(direction), true);
+        }
+    }
 }

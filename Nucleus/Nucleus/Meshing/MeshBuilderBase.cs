@@ -22,7 +22,9 @@ using Nucleus.Base;
 using Nucleus.Exceptions;
 using Nucleus.Extensions;
 using Nucleus.Geometry;
+using Nucleus.Maths;
 using Nucleus.Model;
+using Nucleus.Model.Loading;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -781,6 +783,26 @@ namespace Nucleus.Meshing
                 //var circle = new Circle(scale, new CylindricalCoordinateSystem(tip - direction, direction, new Angle(Math.PI/4))); //new Vector(new Angle(Math.PI / 4)), Vector.UnitY));
                 //AddFacetCone(tip, circle, 4);
             }
+        }
+
+
+        public void AddLoad(Load load, double factor = 0.001, double scale = 1.0, IEvaluationContext context = null)
+        {
+            if (load is NodeLoad)
+            {
+                NodeLoad nLoad = (NodeLoad)load;
+                foreach (Node node in nLoad.AppliedTo.Items)
+                {
+                    var cSys = nLoad.Axes.GetCoordinateSystem(node);
+                    Vector dir = cSys.DirectionVector(nLoad.Direction);
+                    Vector sideways = cSys.DirectionVector(nLoad.Direction.FirstPerpendicular());
+                    Vector sideways2 = cSys.DirectionVector(nLoad.Direction.SecondPerpendicular());
+                    double value = (double)nLoad.Value.Evaluate(context);
+                    AddArrow(node.Position, dir, sideways,  value * factor, scale * 0.2);
+                    AddArrow(node.Position, dir, sideways2, value * factor, scale * 0.2);
+                }
+            }
+
         }
 
         /// <summary>

@@ -10,7 +10,7 @@ namespace Nucleus.Model.Loading
     /// A force load applied directly to a set of nodes
     /// </summary>
     [Serializable]
-    public class NodeLoad : ForceLoad<NodeSet>
+    public class NodeLoad : ForceLoad<NodeSet, Node>
     {
         
     }

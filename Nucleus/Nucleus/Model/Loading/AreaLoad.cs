@@ -12,7 +12,7 @@ namespace Nucleus.Model.Loading
     /// A force load applied over a particular planar region
     /// </summary>
     [Serializable]
-    public class AreaLoad : ForceLoad<ElementSet>
+    public class AreaLoad : ForceLoad<ElementSet, Element>
     {
         #region Properties
 

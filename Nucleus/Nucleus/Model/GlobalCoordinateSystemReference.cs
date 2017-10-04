@@ -54,6 +54,16 @@ namespace Nucleus.Model
         #region Methods
 
         /// <summary>
+        /// Get the coordinate system defined by this object as applicable to the specified object
+        /// </summary>
+        /// <param name="onObject">The object to which the coordinate system should relate.</param>
+        /// <returns></returns>
+        public override ICoordinateSystem GetCoordinateSystem(ModelObject onObject)
+        {
+            return CartesianCoordinateSystem.Global;
+        }
+
+        /// <summary>
         /// Get the coordinate system defined by this object for the specified position along a linear element
         /// </summary>
         /// <param name="element">The linear element the coordinate system relates to</param>

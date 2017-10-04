@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Model
+namespace Nucleus.Model.Loading
 {
     /// <summary>
     /// Abstract base class for structural and physical load types that act in a particular
@@ -14,8 +14,9 @@ namespace Nucleus.Model
     /// </summary>
     /// <typeparam name="TAppliedTo"></typeparam>
     [Serializable]
-    public abstract class ForceLoad<TAppliedTo> : Load<TAppliedTo>
+    public abstract class ForceLoad<TAppliedTo, TItem> : Load<TAppliedTo>
         where TAppliedTo : ModelObjectSetBase, new()
+        where TItem : ModelObject
     {
         #region Properties
 
@@ -33,6 +34,15 @@ namespace Nucleus.Model
         {
             get { return _Direction; }
             set { ChangeProperty(ref _Direction, value, "Direction"); }
+        }
+
+        /// <summary>
+        /// Is this force applied as a moment?
+        /// (i.e. is the Direction a rotational one)
+        /// </summary>
+        public bool IsMoment
+        {
+            get { return Direction.IsRotation(); }
         }
 
         /// <summary>
@@ -100,6 +110,17 @@ namespace Nucleus.Model
                 Direction = Direction.Z;
                 Value = value;
             }
+        }
+
+        /// <summary>
+        /// Get the direction vector which describes the axis about or around which this force is
+        /// applied.
+        /// </summary>
+        /// <param name="forObject"></param>
+        /// <returns></returns>
+        public Vector GetDirectionVector(TItem forObject)
+        {
+              return Axes.GetCoordinateSystem(forObject).DirectionVector(Direction);
         }
 
         #endregion

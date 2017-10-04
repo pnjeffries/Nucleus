@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using Nucleus.Base;
+using Nucleus.Model.Loading;
 
 namespace Nucleus.Robot
 {

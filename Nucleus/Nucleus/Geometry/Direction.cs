@@ -45,5 +45,46 @@ namespace Nucleus.Geometry
         {
             return (value >= Direction.XX);
         }
+
+        /// <summary>
+        /// The vector which describes the axis along
+        /// or about which the direction applies.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static Vector Vector(this Direction value)
+        {
+            return new Vector(value);
+        }
+
+        /// <summary>
+        /// Get the direction of the first direction perpendicular to this one
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static Direction FirstPerpendicular (this Direction value)
+        {
+            if (value == Direction.Z) return Direction.X;
+            else if (value == Direction.X) return Direction.Y;
+            else if (value == Direction.Y) return Direction.Z;
+            else if (value == Direction.ZZ) return Direction.XX;
+            else if (value == Direction.XX) return Direction.YY;
+            else return Direction.ZZ;
+        }
+
+        /// <summary>
+        /// Get the direction of the second direction perpendicular to this one
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static Direction SecondPerpendicular(this Direction value)
+        {
+            if (value == Direction.Z) return Direction.Y;
+            else if (value == Direction.X) return Direction.Z;
+            else if (value == Direction.Y) return Direction.X;
+            else if (value == Direction.ZZ) return Direction.YY;
+            else if (value == Direction.XX) return Direction.ZZ;
+            else return Direction.XX;
+        }
     }
 }

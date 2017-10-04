@@ -26,7 +26,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Model
+namespace Nucleus.Model.Loading
 {
     /// <summary>
     /// Abstract base class for objects which represent a load of some kind applied to the model to
