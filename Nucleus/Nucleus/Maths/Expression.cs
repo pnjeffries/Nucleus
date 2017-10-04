@@ -14,6 +14,17 @@ namespace Nucleus.Maths
     [Serializable]
     public abstract class Expression
     {
+        #region Static Properties
+
+        /// <summary>
+        /// The default global context which will be used when evaluating expressions
+        /// in cases where a context is not specified.  By default this is null
+        /// and is not used - it must be set specifically to a non-null value in order
+        /// to come into use.
+        /// </summary>
+        public static IEvaluationContext DefaultContext { get; set; } = null;
+
+        #endregion
 
         #region Properties
 
@@ -46,6 +57,18 @@ namespace Nucleus.Maths
         /// <param name="context"></param>
         /// <returns></returns>
         public abstract object Evaluate(IEvaluationContext context = null);
+
+        /// <summary>
+        /// Evaluate the expression and return the calculated value
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public T Evaluate<T>(IEvaluationContext context = null)
+        {
+            object obj = Evaluate(context);
+            if (obj is T) return (T)obj;
+            else return default(T);
+        }
 
         /// <summary>
         /// Does this expression contain a reference to the specified variable?
@@ -443,12 +466,30 @@ namespace Nucleus.Maths
         }
 
         /// <summary>
+        /// Convert an expression to a double value
+        /// </summary>
+        /// <param name="v"></param>
+        public static implicit operator double(Expression v)
+        {
+            return Convert.ToDouble(v.Evaluate());
+        }
+
+        /// <summary>
         /// Convert a string value into an expression
         /// </summary>
         /// <param name="s"></param>
         public static implicit operator Expression(string s)
         {
             return Expression.Parse(s);
+        }
+
+        /// <summary>
+        /// Convert an expression to a string
+        /// </summary>
+        /// <param name="v"></param>
+        public static implicit operator string(Expression v)
+        {
+            return v.ToString();
         }
 
         #endregion

@@ -121,6 +121,7 @@ namespace Nucleus.Rhino
             DisplayMaterial result = new DisplayMaterial();
             result.Diffuse = Convert(brush.BaseColour);
             result.Emission = Convert(brush.BaseColour);
+            result.Transparency = 1.0 - brush.BaseColour.A / 255.0;
             return result;
         }
 

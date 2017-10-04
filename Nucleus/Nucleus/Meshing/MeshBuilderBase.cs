@@ -798,8 +798,8 @@ namespace Nucleus.Meshing
                     Vector sideways = cSys.DirectionVector(nLoad.Direction.FirstPerpendicular());
                     Vector sideways2 = cSys.DirectionVector(nLoad.Direction.SecondPerpendicular());
                     double value = (double)nLoad.Value.Evaluate(context);
-                    AddArrow(node.Position, dir, sideways,  value * factor, scale * 0.2);
-                    AddArrow(node.Position, dir, sideways2, value * factor, scale * 0.2);
+                    AddArrow(node.Position, dir, sideways,  value * factor, scale * 0.4);
+                    AddArrow(node.Position, dir, sideways2, value * factor, scale * 0.4);
                 }
             }
 
@@ -817,10 +817,10 @@ namespace Nucleus.Meshing
         /// The </param>
         public void AddArrow(Vector tip, Vector direction, Vector sideways, double length, double width)
         {
-            double headLength = Math.Min(length, 2 * width);
+            double headLength = Math.Min(length.Abs()/2, 4 * width) * length.Sign();
             Vector headEnd = tip - direction * headLength;
             Vector end = tip - direction * length;
-            AddFace(tip, headEnd + sideways * width, headEnd - sideways * width);
+            AddFace(tip, headEnd + sideways * width * 1.5, headEnd - sideways * width * 1.5);
             AddFace(
                 headEnd + sideways * width / 2, 
                 end + sideways * width / 2, 

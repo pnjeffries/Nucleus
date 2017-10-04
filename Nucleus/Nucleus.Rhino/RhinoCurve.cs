@@ -124,6 +124,11 @@ namespace Nucleus.Rhino
             return TangentAt(tSpan);
         }
 
+        public override Curve Offset(IList<double> distances)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

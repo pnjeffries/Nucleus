@@ -78,7 +78,7 @@ namespace Nucleus.Maths
 
         public override object Evaluate(IEvaluationContext context = null)
         {
-            double x;
+            if (context == null) context = Expression.DefaultContext;
            
             if (_Operator == "=") //Assignment
             {

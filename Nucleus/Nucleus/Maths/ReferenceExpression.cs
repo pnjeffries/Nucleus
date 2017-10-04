@@ -27,6 +27,7 @@ namespace Nucleus.Maths
 
         public override object Evaluate(IEvaluationContext context = null)
         {
+            if (context == null) context = DefaultContext;
             return context.GetVariable(_Description);
             //TODO: Fallback behaviour with no context?
         }
