@@ -635,7 +635,19 @@ namespace Nucleus.Model
             {
                 foreach (Node node in Nodes)
                 {
-                    if (!node.IsDeleted && node.GetConnectedElements().UndeletedCount() == 0) node.Delete();
+                    if (!node.IsDeleted && node.GetConnectedElements().UndeletedCount() == 0)
+                    {
+                        if (node.Model != null)
+                        {
+                            Node mNode = node.Model.Nodes.ClosestNodeTo(node.Position,
+                            options.ConnectionTolerance, node);
+                            if (mNode != null)
+                            {
+                                mNode.Merge(node);
+                            }
+                        }
+                        node.Delete();
+                    }
                 }
             }
         }
