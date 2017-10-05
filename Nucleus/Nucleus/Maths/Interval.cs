@@ -294,7 +294,7 @@ namespace Nucleus.Maths
         }
 
         /// <summary>
-        /// Evaluate the normalised parameter (where 0 is Min and 1 is Max) of
+        /// Evaluate the normalised parameter (where 0 is Start and 1 is End) of
         /// the specified value's position related to this interval
         /// </summary>
         /// <param name="value"></param>
@@ -380,7 +380,7 @@ namespace Nucleus.Maths
         /// <param name="towards">The interval to interpolate towards</param>
         /// <param name="factor">The interpolation factor.  0 = this interval, 1 = the 'towards' interval</param>
         /// <returns></returns>
-        public Interval Interoplate(Interval towards, double factor)
+        public Interval Interpolate(Interval towards, double factor)
         {
             return new Interval(
                 Start.Interpolate(towards.Start, factor),
