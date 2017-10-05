@@ -55,6 +55,19 @@ namespace Nucleus.WPF
             set { SetValue(SourceDataProperty, value); }
         }
 
+        public static DependencyProperty AxisRangesProperty =
+            DependencyProperty.Register("AxisRanges", typeof(NamedDataSet), typeof(SpiderDiagram),
+                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, null));
+
+        /// <summary>
+        /// The range of values on each axis.  Determines scaling of the plot polygon.
+        /// </summary>
+        public NamedDataSet AxisRanges
+        {
+            get { return (NamedDataSet)GetValue(AxisRangesProperty); }
+            set { SetValue(AxisRangesProperty, value); }
+        }
+
         #endregion
 
         #region Constructors
@@ -99,15 +112,24 @@ namespace Nucleus.WPF
 
             if (SourceData != null)
             {
+                // Size of the diagram (in canvas units):
+                double radius = 100;
+
+                NamedDataSet axisRanges = AxisRanges;
+                if (axisRanges == null)
+                {
+                    axisRanges = SourceData.GetValueRanges();
+                }
+
                 //Draw axes:
                 IList<string> axes = SourceData.GetAllKeys();
-                for(int i = 0; i < axes.Count; i++)
+                for (int i = 0; i < axes.Count; i++)
                 {
                     string axisName = axes[i];
                     double angle = ((double)i) * (Math.PI * 2 / axes.Count);
                     Line axis = new Line();
-                    axis.X2 = Math.Sin(angle) * 100.0;
-                    axis.Y2 = -Math.Cos(angle) * 100.0;
+                    axis.X2 = Math.Sin(angle) * radius;
+                    axis.Y2 = -Math.Cos(angle) * radius;
                     axis.Stroke = Brushes.Black;
                     axis.StrokeThickness = 1;
                     axis.Opacity = 0.6;
@@ -116,7 +138,7 @@ namespace Nucleus.WPF
 
                     TextBlock tB = new TextBlock();
                     tB.Text = axisName;
-                    tB.Width = 97;
+                    tB.Width = radius - 3;
                     tB.FontSize = 6;
                     if (angle <= Math.PI)
                     {
@@ -131,7 +153,7 @@ namespace Nucleus.WPF
                         Canvas.SetRight(tB, 0);
                         tB.TextAlignment = TextAlignment.Left;
                         var rTrans = new RotateTransform(angle * 180 / Math.PI + 90);
-                        rTrans.CenterX = 97;
+                        rTrans.CenterX = radius - 3;
                         rTrans.CenterY = 0;
                         tB.RenderTransform = rTrans;
                     }
@@ -139,6 +161,8 @@ namespace Nucleus.WPF
 
                     MainCanvas.Children.Add(tB);
                 }
+
+                // Draw map:
 
                 foreach (NamedDataSet dataSet in SourceData)
                 {
@@ -157,6 +181,8 @@ namespace Nucleus.WPF
                     pgon.Opacity = 0.95;
                     pgon.ToolTip = dataSet.Name;
                     PointCollection outerPts = new PointCollection();
+                    PointCollection innerPts = new PointCollection();
+                    bool hollow = false;
 
                     for (int i = 0; i < axes.Count; i++)
                     {
@@ -164,16 +190,28 @@ namespace Nucleus.WPF
                         double angle = ((double)i) * (Math.PI * 2 / axes.Count);
 
                         double value = 0;
+                        double value2 = 0;
 
                         if (dataSet.Data.ContainsKey(axisName))
                         {
-                            value = dataSet.Data[axisName].End * 100;
+                            Interval range;
+                            if (axisRanges.Data.ContainsKey(axisName)) range = axisRanges.Data[axisName];
+                            else range = new Interval(0, 1.0);
+                            if (range.IsSingularity) range = new Interval(range.Start - 0.1, range.End);
+
+                            Interval data = dataSet.Data[axisName];
+                            value = range.ParameterOf(data.End) * radius;
+                            value2 = range.ParameterOf(data.Start) * radius;
+                            if (value2 > 0.001) hollow = true;
                         }
 
                         Point point = new Point(Math.Sin(angle) * value, -Math.Cos(angle) * value);
                         outerPts.Add(point);
+                        Point point2 = new Point(Math.Sin(angle) * value2, -Math.Cos(angle) * value2);
+                        innerPts.Add(point2);
                     }
                     pgon.Points = outerPts;
+                    //TODO: Include 'hollow' polygons that have minimum values
 
                     MainCanvas.Children.Add(pgon);
                 }

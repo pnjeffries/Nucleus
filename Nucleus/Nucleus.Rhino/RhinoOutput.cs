@@ -426,6 +426,18 @@ namespace Nucleus.Rhino
         }
 
         /// <summary>
+        /// Set the visibility of the specified layer
+        /// </summary>
+        /// <param name="layerID"></param>
+        /// <param name="visibility"></param>
+        public static void SetLayerVisible(int layerID, bool visibility)
+        {
+            var layer = RhinoDoc.ActiveDoc.Layers[layerID];
+            layer.IsVisible = visibility;
+            layer.CommitChanges();
+        }
+
+        /// <summary>
         /// Is the specified object currently selected?
         /// </summary>
         /// <param name="objID"></param>

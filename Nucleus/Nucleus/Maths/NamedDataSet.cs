@@ -123,6 +123,23 @@ namespace Nucleus.Maths
         }
 
         #endregion
+
+        #region Methdods
+
+        /// <summary>
+        /// Expand all data intervals within this data set to include the
+        /// specified interval
+        /// </summary>
+        /// <param name="value"></param>
+        public void UnionAll(Interval value)
+        {
+            foreach (var key in Data.Keys.ToList())
+            {
+                Data[key] = Data[key].Union(value);
+            }
+        }
+
+        #endregion
     }
 
 }

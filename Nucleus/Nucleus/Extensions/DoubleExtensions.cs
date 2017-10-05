@@ -267,5 +267,38 @@ namespace Nucleus.Extensions
             return scale * Math.Round(value / scale, digits);
         }
 
+        /// <summary>
+        /// Calculate the arithmetic mean of the values in this list
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public static double Mean(this IList<double> values)
+        {
+            double total = 0;
+            foreach (double v in values)
+            {
+                total += v;
+            }
+            return total / values.Count;
+        }
+
+        /// <summary>
+        /// Calculate the standard deviation - the root of the average
+        /// squared distance from the mean of the values in this list.
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public static double StandardDeviation(this IList<double> values)
+        {
+            double mean = values.Mean();
+            double totalD = 0;
+            foreach (double v in values)
+            {
+                totalD += (v - mean).Squared();
+            }
+            totalD /= values.Count;
+            return totalD.Root();
+        }
+
     }
 }
