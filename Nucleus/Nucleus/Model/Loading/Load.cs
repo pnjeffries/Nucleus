@@ -53,6 +53,17 @@ namespace Nucleus.Model.Loading
         }
 
         #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Is this load applied to the specified model object?
+        /// </summary>
+        /// <param name="mObj"></param>
+        /// <returns></returns>
+        public abstract bool IsAppliedTo(ModelObject mObj);
+
+        #endregion
     }
 
     /// <summary>
@@ -61,8 +72,9 @@ namespace Nucleus.Model.Loading
     /// </summary>
     /// <typeparam name="TAppliedTo">The type of the set of objects to which this load can be applied</typeparam>
     [Serializable]
-    public abstract class Load<TAppliedTo> : Load
+    public abstract class Load<TAppliedTo, TItem> : Load
         where TAppliedTo : ModelObjectSetBase, new()
+        where TItem : ModelObject
     {
         /// <summary>
         /// Private backing field for AppliedTo property
@@ -96,6 +108,16 @@ namespace Nucleus.Model.Loading
         {
             get { return _Value; }
             set { ChangeProperty(ref _Value, value, "Value"); }
+        }
+
+        /// <summary>
+        /// Is this load applied to the specified model object?
+        /// </summary>
+        /// <param name="mObj"></param>
+        /// <returns></returns>
+        public override bool IsAppliedTo(ModelObject mObj)
+        {
+            return ((IModelObjectSet)AppliedTo).Contains(mObj);
         }
     }
 }

@@ -124,6 +124,7 @@
     <Compile Include="Model\BlockFamily.cs" />
     <Compile Include="Model\ElementSet.cs" />
     <Compile Include="Model\GlobalCoordinateSystemReference.cs" />
+    <Compile Include="Model\IMaterialProperties.cs" />
     <Compile Include="Model\IModelObjectSet.cs" />
     <Compile Include="Model\IModelObjectTable.cs" />
     <Compile Include="Model\IsoMaterial.cs" />
@@ -319,8 +320,10 @@
     <Compile Include="Model\VertexReleases.cs" />
     <Compile Include="Physics\IPhysicsEngineComponent.cs" />
     <Compile Include="Physics\Particle.cs" />
+    <Compile Include="Physics\ParticleMotionComponent.cs" />
     <Compile Include="Physics\PhysicsEngine.cs" />
     <Compile Include="Physics\PhysicsEngineComponentCollection.cs" />
+    <Compile Include="Physics\Spring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Geometry\Vector.cs" />
     <Compile Include="Rendering\Colour.cs" />

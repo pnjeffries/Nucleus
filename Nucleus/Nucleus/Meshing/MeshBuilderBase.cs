@@ -785,7 +785,15 @@ namespace Nucleus.Meshing
             }
         }
 
-
+        /// <summary>
+        /// Add vertices and faces to this mesh to represent the specified load.
+        /// </summary>
+        /// <param name="load">The load to be represented</param>
+        /// <param name="factor">The scaling factor by which the load's value will be multiplied by in order
+        /// to determine the length of the tail of load representations.</param>
+        /// <param name="scale">The overall scaling factor to be applied to the parts of the geometry
+        /// not dependent on the magnitude of the load (i.e. arrow head width, etc.)</param>
+        /// <param name="context"></param>
         public void AddLoad(Load load, double factor = 0.001, double scale = 1.0, IEvaluationContext context = null)
         {
             if (load is NodeLoad)
@@ -800,6 +808,14 @@ namespace Nucleus.Meshing
                     double value = (double)nLoad.Value.Evaluate(context);
                     AddArrow(node.Position, dir, sideways,  value * factor, scale * 0.4);
                     AddArrow(node.Position, dir, sideways2, value * factor, scale * 0.4);
+                }
+            }
+            else if (load is LinearElementLoad)
+            {
+                LinearElementLoad eLoad = (LinearElementLoad)load;
+                foreach (LinearElement element in eLoad.AppliedTo.Items)
+                {
+                    //TODO
                 }
             }
 

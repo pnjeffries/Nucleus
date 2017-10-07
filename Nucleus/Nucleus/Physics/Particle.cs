@@ -49,16 +49,35 @@ namespace Nucleus.Physics
         public Particle(Node node)
         {
             Node = node;
-            Position = node.Position;
+            Reset();
         }
 
         #endregion
 
         #region Methods
 
+        /// <summary>
+        /// Reset this particle to its initial position
+        /// </summary>
+        public void Reset()
+        {
+            if (Node != null)
+                Position = Node.Position;
+        }
+
         public void Merge(INodeDataComponent other)
         {
             //TODO?
+        }
+
+        /// <summary>
+        /// Move this particle according to its current velocity for the
+        /// specified time-step
+        /// </summary>
+        /// <param name="dt"></param>
+        public void Move(double dt)
+        {
+            Position += Velocity * dt;
         }
 
         #endregion

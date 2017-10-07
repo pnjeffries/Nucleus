@@ -14,7 +14,7 @@ namespace Nucleus.Model.Loading
     /// </summary>
     /// <typeparam name="TAppliedTo"></typeparam>
     [Serializable]
-    public abstract class ForceLoad<TAppliedTo, TItem> : Load<TAppliedTo>
+    public abstract class ForceLoad<TAppliedTo, TItem> : Load<TAppliedTo, TItem>
         where TAppliedTo : ModelObjectSetBase, new()
         where TItem : ModelObject
     {

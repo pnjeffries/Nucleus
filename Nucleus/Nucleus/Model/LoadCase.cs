@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Nucleus.Model.Loading;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace Nucleus.Model
     {
         #region Properties
 
-
+        
 
         #endregion
 
@@ -50,6 +51,27 @@ namespace Nucleus.Model
         /// </summary>
         /// <param name="name">The load case name</param>
         public LoadCase(string name) : base(name) { }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Get the collection of loads which belong to this load case.
+        /// This collection is automatically generated when called by
+        /// searching through the load table of the model this case
+        /// is part of.  This case thus needs to have been added to a
+        /// model before calling this function and adding/removing items
+        /// from the returned collection will not affect case assignments.
+        /// </summary>
+        public LoadCollection Loads()
+        {
+            if (Model != null)
+            {
+                return Model.Loads.AllInCase(this);
+            }
+            return new LoadCollection();
+        }
 
         #endregion
     }

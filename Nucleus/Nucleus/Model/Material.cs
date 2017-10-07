@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using Nucleus.Base;
+using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -111,6 +112,16 @@ namespace Nucleus.Model
         /// </summary>
         /// <param name="name"></param>
         public Material(string name) : base(name) { }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Get the Elastic (or, Young's) Modulus of this material
+        /// in the specified direction, in N/m²
+        /// </summary>
+        public abstract double GetE(Direction direction);
 
         #endregion
     }

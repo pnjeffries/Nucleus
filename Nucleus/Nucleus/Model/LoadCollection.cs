@@ -74,7 +74,7 @@ namespace Nucleus.Model
         }
 
         /// <summary>
-        /// Get all loads in this table that belong to the specified load case
+        /// Get all loads in this collection that belong to the specified load case
         /// </summary>
         /// <param name="loadCase"></param>
         /// <returns></returns>
@@ -84,6 +84,24 @@ namespace Nucleus.Model
             foreach (Load load in this)
             {
                 if (load.Case == loadCase) result.Add(load);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Get all loads in this collection which are applied to the specified
+        /// model object.
+        /// </summary>
+        /// <typeparam name="TObj"></typeparam>
+        /// <param name="mObj"></param>
+        /// <returns></returns>
+        public LoadCollection AllAppliedTo<TObj>(TObj mObj)
+            where TObj : ModelObject
+        {
+            var result = new LoadCollection();
+            foreach (Load load in this)
+            {
+                if (load.IsAppliedTo(mObj)) result.Add(load);
             }
             return result;
         }

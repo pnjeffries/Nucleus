@@ -205,6 +205,23 @@ namespace Nucleus.Model
             else return 0;
         }
 
+        /// <summary>
+        /// Calculate the combined axial stiffness of this section, in N/m
+        /// </summary>
+        /// <returns></returns>
+        public double GetAxialStiffness()
+        {
+            double result = 0;
+            foreach (SectionProfile profile in Profiles)
+            {
+                if (profile.Material != null)
+                {
+                    result += profile.Material.GetE(Direction.X) * profile.Area;
+                }
+            }
+            return result;
+        }
+
         /// Get the total cross-sectional area of a specified material within this section.
         /// If no material is specified, will return the total cross-sectional area regardless
         /// of material.

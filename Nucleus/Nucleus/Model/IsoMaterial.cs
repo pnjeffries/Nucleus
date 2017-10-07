@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nucleus.Geometry;
 
 namespace Nucleus.Model
 {
@@ -103,6 +104,19 @@ namespace Nucleus.Model
         /// </summary>
         /// <param name="name"></param>
         public IsoMaterial(string name) : base(name) { }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Get the Elastic (or, Young's) Modulus of this material
+        /// in the specified direction, in N/m²
+        /// </summary>
+        public override double GetE(Direction direction)
+        {
+            return E;
+        }
 
         #endregion
     }

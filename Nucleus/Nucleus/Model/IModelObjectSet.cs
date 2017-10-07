@@ -28,5 +28,13 @@ namespace Nucleus.Model
         /// <param name="item"></param>
         /// <returns></returns>
         bool Add(ModelObject item);
+
+        /// <summary>
+        /// Does this set contain the specified item?
+        /// (or, would it, if they were part of the same model?)
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        bool Contains(ModelObject item);
     }
 }

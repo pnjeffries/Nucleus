@@ -96,9 +96,35 @@ namespace Nucleus.Model
         /// <returns></returns>
         protected abstract bool Add(ModelObject item);
 
+        /// <summary>
+        /// Add an item to the base collection of this set.
+        /// If the specified item is not a valid type for this set, adding it will
+        /// fail and this function will return false.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         bool IModelObjectSet.Add(ModelObject item)
         {
             return this.Add(item);
+        }
+
+        /// <summary>
+        /// Does this set contain the specified item?
+        /// (or, would it, if they were part of the same model?)
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        protected abstract bool Contains(ModelObject item);
+
+        /// <summary>
+        /// Does this set contain the specified item?
+        /// (or, would it, if they were part of the same model?)
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        bool IModelObjectSet.Contains(ModelObject item)
+        {
+            return this.Contains(item);
         }
 
         #endregion
@@ -448,6 +474,18 @@ namespace Nucleus.Model
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Does this set contain the specified item?
+        /// (or, would it, if they were part of the same model?)
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        protected override bool Contains(ModelObject item)
+        {
+            if (item is TItem) return Contains((TItem)item);
+            else return false;
         }
 
         /// <summary>
