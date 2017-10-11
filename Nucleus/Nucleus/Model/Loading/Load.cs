@@ -119,5 +119,14 @@ namespace Nucleus.Model.Loading
         {
             return ((IModelObjectSet)AppliedTo).Contains(mObj);
         }
+
+        /// <summary>
+        /// Get a string which descibes the units in which this load's
+        /// value is expressed
+        /// </summary>
+        public virtual string GetValueUnits()
+        {
+            return "";
+        }
     }
 }

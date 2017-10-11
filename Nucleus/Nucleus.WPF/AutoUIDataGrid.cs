@@ -124,7 +124,11 @@ namespace Nucleus.WPF
                     else
                     {
                         sourceBinding = new Binding();
-                        if (typeof(Family).IsAssignableFrom(property.PropertyType))
+                        if (property.PropertyType.IsEnum)
+                        {
+                            sourceBinding.Source = Enum.GetValues(property.PropertyType);
+                        }
+                        else if (typeof(Family).IsAssignableFrom(property.PropertyType))
                         {
                             sourceBinding.Path = new PropertyPath("Model.Families");
                         }

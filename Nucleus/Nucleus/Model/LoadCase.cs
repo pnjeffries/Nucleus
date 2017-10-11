@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using Nucleus.Model.Loading;
+using Nucleus.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,20 @@ namespace Nucleus.Model
     {
         #region Properties
 
-        
+        /// <summary>
+        /// Private backing field for CaseType
+        /// </summary>
+        private LoadCaseType _CaseType = LoadCaseType.Undefined;
+
+        /// <summary>
+        /// The type of loading that this case represents
+        /// </summary>
+        [AutoUIComboBox(Order = 500)]
+        public LoadCaseType CaseType
+        {
+            get { return _CaseType; }
+            set { ChangeProperty(ref _CaseType, value, "Type"); }
+        }
 
         #endregion
 
@@ -51,6 +65,28 @@ namespace Nucleus.Model
         /// </summary>
         /// <param name="name">The load case name</param>
         public LoadCase(string name) : base(name) { }
+
+        /// <summary>
+        /// Type constructor.  Initialises a new load case of the specified type.
+        /// The name will be automatically set to the string value of the caseType.
+        /// </summary>
+        /// <param name="caseType"></param>
+        public LoadCase(LoadCaseType caseType) : base()
+        {
+            CaseType = caseType;
+            Name = caseType.ToString();
+        }
+
+        /// <summary>
+        /// Name and type constructor.  Initialises a new load case with the
+        /// specified properties.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="caseType"></param>
+        public LoadCase(string name, LoadCaseType caseType) : base(name)
+        {
+            CaseType = caseType;
+        }
 
         #endregion
 

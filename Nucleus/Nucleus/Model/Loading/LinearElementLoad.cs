@@ -36,5 +36,15 @@ namespace Nucleus.Model.Loading
         }
 
         #endregion
+
+        #region Methods
+
+        public override string GetValueUnits()
+        {
+            return base.GetValueUnits() + "/m";
+        }
+
+        #endregion
+
     }
 }
