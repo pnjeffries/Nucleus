@@ -45,7 +45,7 @@ namespace Nucleus.Model.Loading
         /// <summary>
         /// The load case to which this load belongs
         /// </summary>
-        [AutoUIComboBox(Order=300)]
+        [AutoUIComboBox(Order=300, ItemsSource ="Model.LoadCases")]
         public LoadCase Case
         {
             get { return _Case; }

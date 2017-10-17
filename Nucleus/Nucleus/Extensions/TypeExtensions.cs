@@ -535,5 +535,19 @@ namespace Nucleus.Extensions
             if (cAtt != null) return cAtt.Behaviour;
             else return CopyBehaviour.COPY;
         }
+
+        /// <summary>
+        /// Get the default equivalent type into which the specified type
+        /// will be converted via the 'Convert' method on this converter type.
+        /// </summary>
+        /// <param name="converter"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static Type DefaultConversionType(this Type converter, Type type)
+        {
+            MethodInfo mInfo = converter.GetMethod("Convert", new Type[] { type });
+            if (mInfo != null) return mInfo.ReturnType;
+            else return null;
+        }
     }
 }

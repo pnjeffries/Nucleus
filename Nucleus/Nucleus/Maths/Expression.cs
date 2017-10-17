@@ -1,9 +1,11 @@
 ﻿using Nucleus.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace Nucleus.Maths
 {
@@ -12,6 +14,7 @@ namespace Nucleus.Maths
     /// parsed and evaluated to return a number
     /// </summary>
     [Serializable]
+    [TypeConverter(typeof(ExpressionTypeConverter))]
     public abstract class Expression
     {
         #region Static Properties
@@ -123,6 +126,11 @@ namespace Nucleus.Maths
                     return new ReferenceExpression(trimmed);
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            return Description;
         }
 
         /// <summary>
@@ -244,6 +252,7 @@ namespace Nucleus.Maths
                         endWord = true;
                         break;
                     case '/':
+                    case '÷':
                         score = 6 * multiplier;
                         endWord = true;
                         break;
@@ -480,7 +489,7 @@ namespace Nucleus.Maths
         /// <param name="s"></param>
         public static implicit operator Expression(string s)
         {
-            return Expression.Parse(s);
+            return Parse(s);
         }
 
         /// <summary>
@@ -493,5 +502,25 @@ namespace Nucleus.Maths
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// Type converter for the expression class
+    /// </summary>
+    public class ExpressionTypeConverter : TypeConverter
+    {
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        {
+            if (sourceType == typeof(string)) return true;
+            else if (sourceType.IsAssignableFrom(typeof(double))) return true;
+            else return base.CanConvertFrom(context, sourceType);
+        }
+
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        {
+            if (value is string) return Expression.Parse((string)value);
+            return base.ConvertFrom(context, culture, value);
+        }
+
     }
 }
