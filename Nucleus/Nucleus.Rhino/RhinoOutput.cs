@@ -242,7 +242,9 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static Guid Bake(RC.GeometryBase geometry)
         {
-            return RhinoDoc.ActiveDoc.Objects.Add(geometry);
+            if (geometry != null)
+                return RhinoDoc.ActiveDoc.Objects.Add(geometry);
+            return Guid.Empty;
         }
 
         /// <summary>

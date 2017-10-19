@@ -195,6 +195,33 @@ namespace Nucleus.Geometry
             }
         }
 
+
+        /// <summary>
+        /// Get the curve parameter at the specified vertex
+        /// </summary>
+        /// <param name="vertex">The vertex.  Must be a defining vertex of this curve.</param>
+        /// <returns>A curve parameter</returns>
+        public virtual double ParameterAt(Vertex vertex)
+        {
+            var verts = Vertices;
+            if (verts.Count > 0 && verts.Contains(vertex.GUID))
+                return verts.IndexOf(vertex) / (double)(verts.Count - 1);
+            else return 0;
+        }
+
+        /// <summary>
+        /// Evaluate the tangent unit vector at the specified vertex of this
+        /// curve.
+        /// </summary>
+        /// <param name="vertex">The vertex.  
+        /// Must be a defining vertex of this curve.</param>
+        /// <returns></returns>
+        public Vector TangentAt(Vertex vertex)
+        {
+            double t = ParameterAt(vertex);
+            return TangentAt(t);
+        }
+
         /// <summary>
         /// Evaluate the tangent unit vector of a point on this curve defined by a parameter t
         /// </summary>
@@ -369,6 +396,7 @@ namespace Nucleus.Geometry
             }
             return result;
         }
+
 
         /// <summary>
         /// Find the closest point on this curve to a test point, expressed as a
@@ -728,6 +756,150 @@ namespace Nucleus.Geometry
         public override string ToString()
         {
             return "Curve";
+        }
+
+        #endregion
+
+        #region Static Methods
+
+        /// <summary>
+        /// Match the end positions of two curves by repositioning vertices
+        /// to either extend or trim the curve ends to a common intersection
+        /// point, if possible.
+        /// The input vertices must be the first or last vertices of curves, else
+        /// the matching will fail.
+        /// </summary>
+        /// <param name="crvEnd0">The end vertex of the first curve to be modified.</param>
+        /// <param name="crvEnd1">The end vertex of the second curve to be modified.</param>
+        /// <returns>True if the curve ends could be successfully matched, else false.</returns>
+        public static bool MatchEnds(Vertex crvEnd0, Vertex crvEnd1)
+        {
+            Curve crv0 = crvEnd0.Owner as Curve;
+            Curve crv1 = crvEnd1.Owner as Curve;
+            if (crv0 != null && crv1 != null)
+            {
+                if (crv0 is Arc)
+                {
+                    if (crv1 is Arc)
+                    {
+
+                    }
+                    else
+                    {
+                        return MatchEnds(crvEnd1, crv1.TangentAt(crvEnd1), crvEnd0, (Arc)crv0);
+                    }
+                }
+                else
+                {
+                    if (crv1 is Arc)
+                    {
+                        return MatchEnds(crvEnd0, crv0.TangentAt(crvEnd0), crvEnd1, (Arc)crv1);
+                    }
+                    else
+                    {
+                        return MatchEnds(crvEnd0, crv0.TangentAt(crvEnd0), crvEnd1, crv1.TangentAt(crvEnd1));
+                    }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Match curve ends by intersecting a straight line from the specified end vertices
+        /// with the specified tangents
+        /// </summary>
+        /// <param name="crvEnd0">The curve end vertex of the first curve</param>
+        /// <param name="tan0">The end tangency of the first curve</param>
+        /// <param name="crvEnd1">The curve end vertex of the second curve</param>
+        /// <param name="tan1">The end tangency of the second curve</param>
+        /// <returns></returns>
+        private static bool MatchEnds(Vertex crvEnd0, Vector tan0, Vertex crvEnd1, Vector tan1)
+        {
+            if (tan0.Z.IsTiny() && tan1.Z.IsTiny()) // 2D intersection:
+            {
+                Vector intPt = Intersect.LineLineXY(crvEnd0.Position, tan0, crvEnd1.Position, tan1);
+                if (intPt.IsValid())
+                {
+                    crvEnd0.Position = crvEnd0.Position.WithXY(intPt.X, intPt.Y);
+                    crvEnd1.Position = crvEnd1.Position.WithXY(intPt.X, intPt.Y);
+                    return true;
+                }
+            }
+            else
+            {
+                // 3D intersection: 
+                Vector intPt0 = Axis.ClosestPoint(crvEnd0.Position, tan0, crvEnd1.Position, tan1);
+                if (intPt0.IsValid())
+                {
+                    Vector intPt1 = Axis.ClosestPoint(crvEnd1.Position, tan1, intPt0);
+                    crvEnd0.Position = intPt0;
+                    crvEnd1.Position = intPt1;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Match curve ends by intersecting a straight line and an arc as closely as possible
+        /// </summary>
+        /// <param name="crvEnd0"></param>
+        /// <param name="tan0"></param>
+        /// <param name="crvEnd1"></param>
+        /// <param name="arc1"></param>
+        /// <returns></returns>
+        private static bool MatchEnds(Vertex crvEnd0, Vector tan0, Vertex crvEnd1, Arc arc1)
+        {
+            // Solve intersection on plane of arc:
+            Plane plane = arc1.Plane();
+            Vector linePt = plane.GlobalToLocal(crvEnd0.Position).WithZ(0);
+            Vector lineDir = plane.GlobalToLocal(tan0, true).WithZ(0);
+            // TODO: Deal with special case where line is perpendicular to plane? (i.e. lineDir is (0,0,0))
+            double[] intersects = Intersect.LineCircleXY(linePt, lineDir, plane.GlobalToLocal(arc1.Circle.Origin), arc1.Circle.Radius);
+            // Translate to intersection points in global space:
+            Vector[] intPts = new Vector[intersects.Length];
+            for (int i = 0; i < intersects.Length; i++)
+                intPts[i] = plane.LocalToGlobal(linePt + lineDir * intersects[i]);
+            // Select point closest to current arc end:
+            Vector intPt = intPts.FindClosest(crvEnd1.Position);
+            if (intPt.IsValid())
+            {
+                crvEnd1.Position = intPt;
+                crvEnd0.Position = Axis.ClosestPoint(crvEnd0.Position, tan0, intPt);
+                return true;
+            }
+            else
+                return false;
+        }
+
+        /// <summary>
+        /// Match curve ends by intersecting two arcs as closely as possible.
+        /// The arcs must be coplanar for this to function correctly.
+        /// </summary>
+        /// <param name="crvEnd0"></param>
+        /// <param name="arc0"></param>
+        /// <param name="crvEnd1"></param>
+        /// <param name="arc1"></param>
+        /// <returns></returns>
+        public static bool MatchEnds(Vertex crvEnd0, Arc arc0, Vertex crvEnd1, Arc arc1)
+        {
+            // Find intersections on the plane of arc0:
+            Plane plane = arc0.Plane();
+            Vector pt0 = plane.GlobalToLocal(arc0.Circle.Origin);
+            Vector pt1 = plane.GlobalToLocal(arc1.Circle.Origin);
+            Vector[] intPts = Intersect.CircleCircleXY(pt0, arc0.Circle.Radius, pt1, arc1.Circle.Radius);
+            intPts = intPts.LocalToGlobal(plane);
+
+            // Determine most appropriate intersection point based on proximity:
+            // TODO: Instead check which requires minimum change in arc length?
+            Vector intPt = intPts.FindClosest(new Vector[] { crvEnd0.Position, crvEnd1.Position });
+            if (intPt.IsValid())
+            {
+                crvEnd0.Position = intPt;
+                crvEnd1.Position = arc1.Plane().Project(intPt);
+                return true;
+            }
+            return false;
         }
 
         #endregion

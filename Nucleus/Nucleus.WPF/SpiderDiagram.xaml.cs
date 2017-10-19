@@ -68,6 +68,34 @@ namespace Nucleus.WPF
             set { SetValue(AxisRangesProperty, value); }
         }
 
+        public static DependencyProperty FillOpacityProperty =
+            DependencyProperty.Register("FillOpacity", typeof(double), typeof(SpiderDiagram));
+
+        /// <summary>
+        /// The opacity of the spider diagram fill gradient
+        /// </summary>
+        public double FillOpacity
+        {
+            get { return (double)GetValue(FillOpacityProperty); }
+            set { SetValue(FillOpacityProperty, value); }
+        }
+
+        public static DependencyProperty ColourBrightnessCapProperty =
+            DependencyProperty.Register("ColourBrightnessCap", typeof(double), typeof(SpiderDiagram),
+                new FrameworkPropertyMetadata(1.0));
+
+        /// <summary>
+        /// The maximum permissible brightness value for line colours.
+        /// Dataset display colours which exceed this brightness will be
+        /// automatically adjusted to help them to stand out against the
+        /// white background.
+        /// </summary>
+        public double ColourBrightnessCap
+        {
+            get { return (double)GetValue(ColourBrightnessCapProperty); }
+            set { SetValue(ColourBrightnessCapProperty, value); }
+        }
+
         #endregion
 
         #region Constructors
@@ -122,7 +150,9 @@ namespace Nucleus.WPF
                 }
 
                 //Draw axes:
-                IList<string> axes = SourceData.GetAllKeys();
+                List<string> axes = SourceData.GetAllKeys().ToList();
+                axes.Sort();
+
                 for (int i = 0; i < axes.Count; i++)
                 {
                     string axisName = axes[i];
@@ -167,16 +197,16 @@ namespace Nucleus.WPF
                 foreach (NamedDataSet dataSet in SourceData)
                 {
                     Polygon pgon = new Polygon();
-                    Color color = FBtoWPF.Convert(dataSet.Colour);
+                    Color color = FBtoWPF.Convert(dataSet.Colour.CapBrightness(ColourBrightnessCap));
                     pgon.Stroke = new SolidColorBrush(color);
-                    pgon.StrokeThickness = 1;
+                    pgon.StrokeThickness = 2;
                     pgon.StrokeLineJoin = PenLineJoin.Bevel;
                     Color outColor = color;
                     Color inColor = color;
                     outColor.A = 100;
-                    inColor.A = 10;
+                    inColor.A = 100;
                     var fill = new RadialGradientBrush(inColor, outColor);
-                    fill.Opacity = 0.5;
+                    fill.Opacity = FillOpacity;
                     pgon.Fill = fill;
                     pgon.Opacity = 0.95;
                     pgon.ToolTip = dataSet.Name;

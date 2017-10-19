@@ -37,5 +37,12 @@ namespace Nucleus.Model
         /// </summary>
         /// <param name="collection"></param>
         public LinearElementSet(ElementCollection collection) : base(collection) { }
+
+        /// <summary>
+        /// Initialise a set to contain all elements in the model to which it
+        /// belongs which are assigned the specified section.
+        /// </summary>
+        /// <param name="section"></param>
+        public LinearElementSet(SectionFamily section) : base(section) { }
     }
 }

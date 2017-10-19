@@ -131,6 +131,19 @@ namespace Nucleus.Rendering
         /// </summary>
         public byte B { get; }
 
+        /// <summary>
+        /// Obtain a measure of the apparent brightness of the colour,
+        /// ranging between 0-1.
+        /// The colour components are weighted differently when calculating
+        /// 'brightness' in this way; Red is weighted by 0.3, green by 0.59 
+        /// and blue by 0.11 - the brightness is the unitized combination of
+        /// all three values.
+        /// </summary>
+        public double Brightness
+        {
+            get { return (R / 255.0) * 0.3 + (G / 255.0) * 0.59 + (B / 255.0) * 0.11; }
+        }
+
         #endregion
 
         #region Constructors
@@ -204,6 +217,51 @@ namespace Nucleus.Rendering
         #region Methods
 
         /// <summary>
+        /// If the brightness of the colour currently exceeds the specified
+        /// value, reduce it to that value.
+        /// </summary>
+        /// <param name="brightness">The maximum brightness value,
+        /// expressed as a value between 0-1.</param>
+        /// <returns></returns>
+        public Colour CapBrightness(double brightness)
+        {
+            double factor = 1;
+            double currentBrightness = Brightness;
+            if (currentBrightness > brightness)
+            {
+                factor = brightness / currentBrightness;
+            }
+            return new Colour(
+                A,
+                (byte)(R*factor), 
+                (byte)(G*factor),
+                (byte)(B*factor));
+        }
+
+        /// <summary>
+        /// Adjust the components of this colour to the specified brightness
+        /// </summary>
+        /// <param name="brightness"></param>
+        /// <returns></returns>
+        public Colour SetBrightness(double brightness)
+        {
+            double currentBrightness = Brightness;
+            if (currentBrightness == 0)
+            {
+                return new Colour(A,
+                    (byte)brightness * 255,
+                    (byte)brightness * 255,
+                    (byte)brightness * 255);
+            }
+            double factor = brightness / currentBrightness;
+            return new Colour(
+                A,
+                (byte)(R * factor),
+                (byte)(G * factor),
+                (byte)(B * factor));
+        }
+
+        /// <summary>
         /// Get the hash code for this colour
         /// </summary>
         /// <returns></returns>
@@ -269,7 +327,7 @@ namespace Nucleus.Rendering
         /// <returns></returns>
         public Colour Invert(Colour other)
         {
-            return new Rendering.Colour(A, 255 - R, 255 - G, 255 - B);
+            return new Colour(A, 255 - R, 255 - G, 255 - B);
         }
 
         /// <summary>

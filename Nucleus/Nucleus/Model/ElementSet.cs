@@ -94,6 +94,16 @@ namespace Nucleus.Model
         /// <param name="collection"></param>
         public ElementSet(ElementCollection collection) : base(collection) { }
 
+        /// <summary>
+        /// Initialise this set to contain all elements in the model to which
+        /// it belongs which are part of the specified element family
+        /// </summary>
+        /// <param name="family"></param>
+        public ElementSet(Family family) : base(true)
+        {
+            Filters.Add(new FamilyFilter(family));
+        }
+
         #endregion
 
         #region Methods

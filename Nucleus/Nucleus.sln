@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.GSA", "Nucleus.GSA\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.ETABS", "Nucleus.ETABS\Nucleus.ETABS.csproj", "{7368BB9D-4D72-4E3A-AA9E-91F7CB7933FF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.MSF", "Nucleus.MSF\Nucleus.MSF.csproj", "{123C827A-924E-44CF-B84D-62984FD00525}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,10 @@ Global
 		{7368BB9D-4D72-4E3A-AA9E-91F7CB7933FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7368BB9D-4D72-4E3A-AA9E-91F7CB7933FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7368BB9D-4D72-4E3A-AA9E-91F7CB7933FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{123C827A-924E-44CF-B84D-62984FD00525}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{123C827A-924E-44CF-B84D-62984FD00525}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{123C827A-924E-44CF-B84D-62984FD00525}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{123C827A-924E-44CF-B84D-62984FD00525}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

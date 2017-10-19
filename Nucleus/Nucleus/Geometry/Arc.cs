@@ -573,6 +573,34 @@ namespace Nucleus.Geometry
             else return 0; // Closest to start
         }
 
+        /// <summary>
+        /// Is the specified point within the angle range of this arc's sector?
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public bool IsInAngleRange(Vector point)
+        {
+            Angle angle = Circle.Azimuth(point);
+            Angle toStart = Circle.Azimuth(Vertices.First().Position);
+            Angle radMeasure = RadianMeasure;
+            Angle toPointFromStart = (angle - toStart).ToSign(radMeasure.Sign());
+            if (toPointFromStart.Abs() <= radMeasure.Abs()) return true;
+            else return false;
+        }
+
+        /// <summary>
+        /// Get the curve parameter at the specified vertex
+        /// </summary>
+        /// <param name="vertex">The vertex.  Must be a defining vertex of this curve.</param>
+        /// <returns>A curve parameter</returns>
+        public override double ParameterAt(Vertex vertex)
+        {
+            int index = Vertices.IndexOf(vertex);
+            if (index == 0) return 0;
+            else if (index == 1) return 1;
+            else return ClosestParameter(vertex.Position);
+        }
+
         #endregion
 
         #region Static Methods

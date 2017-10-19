@@ -157,5 +157,23 @@ namespace Nucleus.Extensions
             if (list.Count > 0) list.RemoveAt(0);
         }
 
+        /// <summary>
+        /// Get the sublist containing the item at the specified index and
+        /// every subsequent item
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public static IList<T> SubListFrom<T>(this IList<T> list, int index)
+        {
+            var result = new List<T>(list.Count - index);
+            for (int i = index; i < list.Count; i++)
+            {
+                result.Add(list[i]);
+            }
+            return result;
+        }
+
     }
 }
