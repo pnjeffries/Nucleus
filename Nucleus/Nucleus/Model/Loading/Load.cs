@@ -45,7 +45,7 @@ namespace Nucleus.Model.Loading
         /// <summary>
         /// The load case to which this load belongs
         /// </summary>
-        [AutoUIComboBox(Order=300)]
+        [AutoUIComboBox(Order=300, ItemsSource ="Model.LoadCases")]
         public LoadCase Case
         {
             get { return _Case; }
@@ -118,6 +118,15 @@ namespace Nucleus.Model.Loading
         public override bool IsAppliedTo(ModelObject mObj)
         {
             return ((IModelObjectSet)AppliedTo).Contains(mObj);
+        }
+
+        /// <summary>
+        /// Get a string which descibes the units in which this load's
+        /// value is expressed
+        /// </summary>
+        public virtual string GetValueUnits()
+        {
+            return "";
         }
     }
 }
