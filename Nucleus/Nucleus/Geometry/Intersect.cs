@@ -137,6 +137,227 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find the intersection point, if one exists, for two lines on the XY plane.
+        /// By default, the lines will be treated as extending to infinity, but may optionally
+        /// be bounded to not return intersections outside the extents of the lines themselves.
+        /// </summary>
+        /// <param name="lineA">The first line</param>
+        /// <param name="lineB">The second line</param>
+        /// <param name="bounded">If true, intersections outside the bounds of the line segments specified will be ignored.</param>
+        /// <returns></returns>
+        public static Vector LineLineXY(Line lineA, Line lineB, bool bounded = false)
+        {
+            Vector pt0 = lineA.StartPoint;
+            Vector v0 = lineA.EndPoint - pt0;
+            Vector pt1 = lineB.StartPoint;
+            Vector v1 = lineB.EndPoint - pt1;
+            double t0 = 0;
+            double t1 = 0;
+            Vector result = LineLineXY(pt0, v0, pt1, v1, ref t0, ref t1);
+            if (!bounded || (result.IsValid() && t0 >= 0 && t0 <= 1 && t1 >= 0 && t1 <= 1)) return result;
+            else return Vector.Unset;
+        }
+
+        /// <summary>
+        /// Find the intersection points, if any exist, for an infinite line and a circle on the XY plane,
+        /// given as an array of doubles representing multiplication factors which should be applied to the
+        /// line direction vector.  There may be one, two or zero intersection points.
+        /// </summary>
+        /// <param name="lineOrigin">The origin point of the line</param>
+        /// <param name="lineDir">The direction vector of the line</param>
+        /// <param name="circleCentre">The centre point of the circle</param>
+        /// <param name="radius">The radius of the circle</param>
+        /// <returns>An array of doubles representing the line parameters of the intersection points</returns>
+        public static double[] LineCircleXY(Vector lineOrigin, Vector lineDir, Vector circleCentre, double radius)
+        {
+            if (lineDir.X.IsTiny())
+            {
+                //TODO: Deal with case where Y is also tiny?
+
+                // Treat line as aligned with Y axis
+                double dY = circleCentre.Y - lineOrigin.Y;
+                double dX = (circleCentre.X - lineOrigin.X).Abs();
+                double r = radius.Abs();
+                if (dX > r) // Line misses circle
+                    return new double[] { };
+                else if (dX == r) // Line just hits circle at one point
+                    return new double[] { dY / lineDir.Y };
+                else
+                {
+                    double offsetY = Math.Sqrt(r * r - dX * dX);
+                    return new double[]
+                    {
+                        (dY - offsetY)/lineDir.Y,
+                        (dY + offsetY)/lineDir.Y
+                    };
+                }  
+            }
+            else
+            {
+                // Solve using quadratic formula:
+                double m = lineDir.Y / lineDir.X;
+                double y0 = lineOrigin.Y - m * lineOrigin.X;
+                double a = m.Squared() + 1;
+                double b = 2 * (m * y0 - m * circleCentre.Y - circleCentre.X);
+                double c = circleCentre.Y.Squared() - radius.Squared() + circleCentre.X.Squared() 
+                    - 2 * y0 * circleCentre.Y + y0.Squared();
+                double discriminant = b * b - 4 * a * c;
+
+                if (discriminant < 0) return new double[] { }; // No intersection!
+                else
+                {
+                    double t0 = (((-b - discriminant.Root()) / (2 * a)) - lineOrigin.X)/lineDir.X;
+                    if (discriminant == 0) return new double[] { t0 }; // One solution
+                    else 
+                    {
+                        double t1 = (((-b + discriminant.Root()) / (2 * a)) - lineOrigin.X) / lineDir.X;
+                        return new double[] { t0, t1 }; // Two solutions
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Find the intersection points, if any exist, for a line and a circle on the
+        /// XY plane.  Note that for the purposes of calculation both are assumed to lie
+        /// on the XY plane even if they do not.
+        /// By default, the line is assumed to be infinite, however the calculation may optionally
+        /// be bounded to exclude intersections outside of the bounds of the specified line segment
+        /// </summary>
+        /// <param name="line">The line.</param>
+        /// <param name="circle">The circle.  This should lie on the XY plane for the calculation to be accurate.</param>
+        /// <returns></returns>
+        public static Vector[] LineCircleXY(Line line, Circle circle, bool bounded = false)
+        {
+            Vector pt0 = line.StartPoint;
+            Vector v0 = line.EndPoint - pt0;
+            double[] ts = LineCircleXY(pt0, v0, circle.Origin, circle.Radius);
+
+            // Sort out which intersections exist and (optionally) are within bounds
+            bool t0Valid = ts.Length > 0 && (!bounded || (ts[0] >= 0 && ts[0] <= 1));
+            bool t1Valid = ts.Length > 1 && (!bounded || (ts[1] >= 0 && ts[1] <= 1));
+            if (t0Valid)
+            {
+                if (t1Valid) return new Vector[] { line.PointAt(ts[0]), line.PointAt(ts[1]) };
+                else return new Vector[] { line.PointAt(ts[0]) };
+            }
+            else if (t1Valid)
+                return new Vector[] { line.PointAt(ts[1]) };
+            else return new Vector[] { };
+        }
+
+        /// <summary>
+        /// Find the intersection points, if any exist, for a line and an arc on the XY plane.
+        /// By default, the line is assumed to be infinite, however the calculation may optionally 
+        /// be bounded to exclude intersections beyond the ends of the specified line segment
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="arc"></param>
+        /// <param name="lineBounded"></param>
+        /// <returns></returns>
+        public static Vector[] LineArcXY(Vector lineOrigin, Vector lineDir, Arc arc, bool lineBounded = false)
+        {
+            double[] ts = LineCircleXY(lineOrigin, lineDir, arc.Circle.Origin, arc.Circle.Radius);
+            
+            // Sort out which intersections exist and (optionally) are within bounds:
+            bool t0Valid = ts.Length > 0 && (!lineBounded || (ts[0] >= 0 && ts[0] <= 1));
+            bool t1Valid = ts.Length > 1 && (!lineBounded || (ts[1] >= 0 && ts[1] <= 1));
+            Vector pt0 = Vector.Unset;
+            Vector pt1 = Vector.Unset;
+            if (t0Valid)
+            {
+                pt0 = lineOrigin + lineDir * ts[0];
+                if (!arc.IsInAngleRange(pt0)) t0Valid = false;
+            }
+            if (t1Valid)
+            {
+                pt1 = lineOrigin + lineDir * ts[1];
+                if (!arc.IsInAngleRange(pt1)) t1Valid = false;
+            }
+
+            if (t0Valid)
+            {
+                if (t1Valid) return new Vector[] { pt0, pt1 };
+                else return new Vector[] { pt0 };
+            }
+            else if (t1Valid)
+                return new Vector[] { pt1 };
+            else return new Vector[] { };
+        }
+
+        /// <summary>
+        /// Find the intersection(s) between two circles on the XY plane.
+        /// </summary>
+        /// <param name="pt0">The centre point of the first circle</param>
+        /// <param name="r0">The radius of the first circle</param>
+        /// <param name="pt1">The centre point of the second circle</param>
+        /// <param name="r1">The radius of the second circle</param>
+        /// <returns>An array of intersection points, which may contain 0, 1 or 2 points.</returns>
+        public static Vector[] CircleCircleXY(Vector pt0, double r0, Vector pt1, double r1)
+        {
+            double dX = pt1.X - pt0.X;
+            double dY = pt1.Y - pt0.Y;
+            double distSqd = dX * dX + dY * dY;
+            double rsSqd = (r0 + r1).Squared();
+            if (distSqd > rsSqd && distSqd <= (r0 - r1).Squared()) // No intersections
+                return new Vector[] { };
+            else if (distSqd == rsSqd) // One intersection
+                return new Vector[] { pt0.Interpolate(pt1, 0.5) };
+            else // Two intersections
+            {
+                Vector midPt = pt0.Interpolate(pt1, 0.5);
+                double dist = distSqd.Root();
+                double a = (r0.Squared() - r1.Squared() + distSqd) / (2 * dist);
+                double b = (r0 * r0 - a * a).Root();
+                return new Vector[]
+                {
+                    new Vector(midPt.X + b * dY/dist, midPt.Y - b * dX/dist),
+                    new Vector(midPt.X - b * dY/dist, midPt.Y + b * dX/dist)
+                };
+            }
+        }
+
+        /// <summary>
+        /// Find the intersections between two circles on the XY plane.
+        /// The provided circles will be assumed to lie on the XY plane even if
+        /// they do not.
+        /// </summary>
+        /// <param name="c0">The first circle on the XY plane</param>
+        /// <param name="c1">The second circle on the XY plane</param>
+        /// <returns></returns>
+        public static Vector[] CircleCircleXY(Circle c0, Circle c1)
+        {
+            return CircleCircleXY(c0.Origin, c0.Radius, c1.Origin, c1.Radius);
+        }
+
+        /// <summary>
+        /// Find the intersections between two arcs on the XY plane.
+        /// The provided arcs will be assumed to lie on the XY plane even if
+        /// they do not.
+        /// </summary>
+        /// <param name="arc0">The first arc on the XY plane</param>
+        /// <param name="arc1">The second arc on the XY plane</param>
+        /// <returns></returns>
+        public static Vector[] ArcArcXY(Arc arc0, Arc arc1)
+        {
+            Vector[] v = CircleCircleXY(arc0.Circle, arc1.Circle);
+
+            // Check that the points found lie on both of the arcs:
+
+            bool v0Valid = (v.Length > 0 && arc0.IsInAngleRange(v[0]) && arc1.IsInAngleRange(v[0]));
+            bool v1Valid = (v.Length > 1 && arc0.IsInAngleRange(v[1]) && arc1.IsInAngleRange(v[1]));
+
+            if (v0Valid)
+            {
+                if (v1Valid) return new Vector[] { v[0], v[1] };
+                else return new Vector[] { v[0] };
+            }
+            else if (v1Valid)
+                return new Vector[] { v[1] };
+            else return new Vector[] { };
+        }
+
+        /// <summary>
         /// Find the intersection between an infinite line and an infinite plane.
         /// Expressed as a parameter t, the multiple of the rayDirection away from the rayOrigin
         /// at which the intersection takes place.

@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Nucleus.Extensions;
 using Nucleus.Maths;
 using System;
 using System.Collections.Generic;
@@ -242,6 +243,27 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Get the curve parameter at the specified vertex
+        /// </summary>
+        /// <param name="vertex">The vertex.  Must be a defining vertex of this curve.</param>
+        /// <returns>A curve parameter</returns>
+        public override double ParameterAt(Vertex vertex)
+        {
+            int segs = 0;
+            int segCount = SegmentCount;
+            foreach (Curve subCrv in SubCurves)
+            {
+                if (subCrv.Vertices.Contains(vertex.GUID))
+                {
+                    double t = subCrv.ParameterAt(vertex);
+                    return (segs + (t * subCrv.SegmentCount)) / segCount;
+                }
+                segs += subCrv.SegmentCount;
+            }
+            return double.NaN;
+        }
+
+        /// <summary>
         /// Evaluate a point defined by a parameter within a specified span.
         /// </summary>
         /// <param name="span">The index of the span.  Valid range 0 to SegmentCount - 1</param>
@@ -385,7 +407,7 @@ namespace Nucleus.Geometry
             }
             else return null;
         }
-
+        
         /// <summary>
         /// Add a new arc segment to the end of this polycurve.
         /// The arc will run from the end of the last subcurve in this polycurve
@@ -454,6 +476,8 @@ namespace Nucleus.Geometry
             }
         }
 
+
+
         /// <summary>
         /// Offset this curve on the XY plane by varying distances for
         /// each span.
@@ -465,7 +489,32 @@ namespace Nucleus.Geometry
         public override Curve Offset(IList<double> distances)
         {
             var result = new PolyCurve();
-            //TODO!
+            int distIndex = 0;
+
+            // Offset sub curves:
+            foreach (Curve crv in SubCurves)
+            {
+                Curve offsetCrv = crv.Offset(distances.SubListFrom(distIndex));
+                distIndex += crv.SegmentCount;
+                if (distIndex > distances.Count - 1) distIndex = distances.Count - 1;
+
+                if (offsetCrv != null)
+                {
+                    if (result.SubCurves.Count > 0)
+                    {
+                        // Adjust offset curve ends to node out
+                        Curve prevCrv = result.SubCurves.Last();
+                        MatchEnds(prevCrv.End, offsetCrv.Start);
+                    }
+                    result.Add(offsetCrv);
+                    // TODO: Remove flipped/zero-length segments
+                }
+            }
+
+            // Match end to start
+            if (Closed && result.SubCurves.Count > 1)
+                MatchEnds(result.SubCurves.Last().End, result.SubCurves.First().Start);
+
             return null;
         }
 

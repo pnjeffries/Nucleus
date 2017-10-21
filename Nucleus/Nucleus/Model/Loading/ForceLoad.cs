@@ -10,7 +10,7 @@ namespace Nucleus.Model.Loading
 {
     /// <summary>
     /// Abstract base class for structural and physical load types that act in a particular
-    /// direction
+    /// direction.
     /// </summary>
     /// <typeparam name="TAppliedTo"></typeparam>
     [Serializable]
@@ -68,7 +68,7 @@ namespace Nucleus.Model.Loading
 
         /// <summary>
         /// Set the force exerted by this load by specifying the force vector.
-        /// The direction and axis system will be derived from this information.
+        /// The direction, axis system and value will be derived from this information.
         /// </summary>
         /// <param name="forceVector"></param>
         public void SetForce(Vector forceVector)
@@ -121,6 +121,12 @@ namespace Nucleus.Model.Loading
         public Vector GetDirectionVector(TItem forObject)
         {
               return Axes.GetCoordinateSystem(forObject).DirectionVector(Direction);
+        }
+
+        public override string GetValueUnits()
+        {
+            if (IsMoment) return "Nm";
+            else return "N";
         }
 
         #endregion

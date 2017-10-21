@@ -69,6 +69,7 @@
     <Compile Include="IO\CustomSerializationBinder.cs" />
     <Compile Include="IO\DocumentSaveFileType.cs" />
     <Compile Include="IO\IApplicationClient.cs" />
+    <Compile Include="IO\Log.cs" />
     <Compile Include="IO\TokenReader.cs" />
     <Compile Include="IO\TypeFieldsFormat.cs" />
     <Compile Include="IO\UniqueFormatter.cs" />
@@ -130,10 +131,13 @@
     <Compile Include="Model\IDataOwner.cs" />
     <Compile Include="Model\IVertexDataComponent.cs" />
     <Compile Include="Model\LoadCaseTable.cs" />
+    <Compile Include="Model\LoadCaseType.cs" />
     <Compile Include="Model\Loading\AreaLoad.cs" />
+    <Compile Include="Model\Loading\GravityLoad.cs" />
     <Compile Include="Model\Loading\LinearElementLoad.cs" />
     <Compile Include="Model\Loading\ForceLoad.cs" />
     <Compile Include="Model\Loading\NodeLoad.cs" />
+    <Compile Include="Model\Loading\ThermalLoad.cs" />
     <Compile Include="Model\LoadTable.cs" />
     <Compile Include="Model\LocalCoordinateSystemReference.cs" />
     <Compile Include="Model\CoordinateSystemReferenceCollection.cs" />

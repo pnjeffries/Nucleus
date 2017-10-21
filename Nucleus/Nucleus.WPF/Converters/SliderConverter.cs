@@ -47,6 +47,7 @@ namespace Nucleus.WPF.Converters
             }
             else if (value is string)
             {
+                if (string.IsNullOrWhiteSpace((string)value)) return 0;
                 return double.Parse((string)value);
             }
             else return System.Convert.ToDouble(value); ;

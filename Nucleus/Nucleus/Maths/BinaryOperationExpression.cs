@@ -113,6 +113,9 @@ namespace Nucleus.Maths
                     case "*":
                     case ".":
                         return valueA * valueB; //TODO: Set units
+                    case "/":
+                    case "÷":
+                        return valueA / valueB;
                     case "==":
                     case "↔":
                     case "≡":

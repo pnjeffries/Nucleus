@@ -708,6 +708,18 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Create a new vector with the specified X and Y components but
+        /// using the Z component of this vector.
+        /// </summary>
+        /// <param name="x">The new X coordinate</param>
+        /// <param name="y">The new Y coordinate</param>
+        /// <returns></returns>
+        public Vector WithXY(double x, double y)
+        {
+            return new Vector(x, y, Z);
+        }
+
+        /// <summary>
         /// Add a value to the X component of this vector and return the result
         /// </summary>
         /// <param name="value">The value to be added to the X component</param>
@@ -1339,6 +1351,52 @@ namespace Nucleus.Geometry
             double[] result = new double[v.Count];
             for (int i = 0; i < v.Count; i++)
                 result[i] = v[i].Z;
+            return result;
+        }
+
+        /// <summary>
+        /// Find the closest point in this set of position vectors to the target point.
+        /// </summary>
+        /// <param name="v"></param>
+        /// <param name="toPoint">The test point</param>
+        /// <returns></returns>
+        public static Vector FindClosest(this IList<Vector> v, Vector toPoint)
+        {
+            Vector result = Vector.Unset;
+            double minDist = double.PositiveInfinity;
+            foreach (Vector pt in v)
+            {
+                double distSqd = pt.DistanceToSquared(toPoint);
+                if (!result.IsValid() || distSqd < minDist)
+                {
+                    result = pt;
+                    minDist = distSqd;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Find the point in this set of position vectors which has the smalled combined
+        /// sum of square distances to all of the points in another set.
+        /// </summary>
+        /// <param name="v"></param>
+        /// <param name="toPoints"></param>
+        /// <returns></returns>
+        public static Vector FindClosest(this IList<Vector> v, IList<Vector> toPoints)
+        {
+            Vector result = Vector.Unset;
+            double minDist = double.PositiveInfinity;
+            foreach (Vector pt in v)
+            {
+                double distSqd = 0;
+                foreach (var toPoint in toPoints) distSqd += pt.DistanceToSquared(toPoint);
+                if (!result.IsValid() || distSqd < minDist)
+                {
+                    result = pt;
+                    minDist = distSqd;
+                }
+            }
             return result;
         }
     }

@@ -14,7 +14,6 @@ namespace Nucleus.Analysis
     /// </summary>
     public class SimpleBeamAnalysis : BeamAnalysisBase
     {
-
         #region Constructors
 
         /// <summary>
