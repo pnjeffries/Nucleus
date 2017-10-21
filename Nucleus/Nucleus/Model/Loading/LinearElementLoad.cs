@@ -36,5 +36,18 @@ namespace Nucleus.Model.Loading
         }
 
         #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Set this load to have a uniform distribution along the element
+        /// </summary>
+        /// <param name="scalingFactor"></param>
+        public void SetUniform(double scalingFactor = 1.0)
+        {
+            Distribution = new Maths.LinearDoubleDataSet(0, scalingFactor);
+        }
+
+        #endregion
     }
 }
