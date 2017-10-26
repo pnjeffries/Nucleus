@@ -13,6 +13,7 @@ namespace Nucleus.Physics
     /// A data component that stores information necessary to simulate a particle subject to physical
     /// conditions.  May be attached to a node.
     /// </summary>
+    [Serializable]
     public class Particle : INodeDataComponent
     {
         #region Properties
@@ -78,6 +79,30 @@ namespace Nucleus.Physics
         public void Move(double dt)
         {
             Position += Velocity * dt;
+        }
+
+        /// <summary>
+        /// Reduce the velocity of this particle
+        /// </summary>
+        /// <param name="vFactor">The proportional velocity factor.
+        /// Between 0-1.  The current velocity will be multiplied by
+        /// this factor.</param>
+        public void Damp(double vFactor)
+        {
+            Velocity *= vFactor;
+        }
+
+        /// <summary>
+        /// Apply a force to this particle.
+        /// This will apply an accelleration.
+        /// </summary>
+        /// <param name="force"></param>
+        public void ApplyForce(Vector force)
+        {
+            if (Mass > 0)
+                Velocity += force / Mass;
+            else
+                Velocity += force; //TODO: Review?
         }
 
         #endregion

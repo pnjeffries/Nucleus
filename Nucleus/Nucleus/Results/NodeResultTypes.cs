@@ -92,4 +92,12 @@ namespace Nucleus.Results
         /// </summary>
         Moments_ZZ = 213,
     }
+
+    /// <summary>
+    /// Extension methods for the NodeResultTypes enum
+    /// </summary>
+    public static class NodeResultTypesExtensions
+    {
+        
+    }
 }

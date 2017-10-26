@@ -39,12 +39,15 @@ namespace Nucleus.Model.Loading
 
         #region Methods
 
-        public override string GetValueUnits()
+        /// <summary>
+        /// Set this load to have a uniform distribution along the element
+        /// </summary>
+        /// <param name="scalingFactor"></param>
+        public void SetUniform(double scalingFactor = 1.0)
         {
-            return base.GetValueUnits() + "/m";
+            Distribution = new Maths.LinearDoubleDataSet(0, scalingFactor);
         }
 
         #endregion
-
     }
 }

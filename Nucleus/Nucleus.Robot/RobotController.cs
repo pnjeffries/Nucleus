@@ -451,14 +451,57 @@ namespace Nucleus.Robot
                         {
                             NodeLoad nLoad = load as NodeLoad;
                             if (nLoad == null)
-                                load = model.Create.NodeLoad(lCase);
+                                nLoad = model.Create.NodeLoad(lCase);
                             else
                                 nLoad.Case = lCase;
-                            //TODO: Populate node load
+
+                            // Load value, direction, axis:
+                            Vector force = new Vector
+                                (
+                                record.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_FX),
+                                record.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_FY),
+                                record.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_FZ));
+                            nLoad.SetForce(force);
+
+                            // Nodes applied to:
+                            RobotSelection appliedTo = record.Objects;
+                            nLoad.AppliedTo.Clear();
+                            for (int k = 1; k <= appliedTo.Count; k++)
+                            {
+                                Node node = context.IDMap.GetMappedModelNode(appliedTo.Get(k), model);
+                                if (node != null) nLoad.AppliedTo.Add(node);
+                            }
+
+                            context.IDMap.Add(nLoad, record);
                         }
                         else if (record.Type == IRobotLoadRecordType.I_LRT_BAR_UNIFORM)
                         {
-                            //TODO: Create UDL
+                            // Create UDL
+                            LinearElementLoad eLoad = load as LinearElementLoad;
+                            if (eLoad == null)
+                                eLoad = model.Create.LinearElementLoad(lCase);
+                            else
+                                eLoad.Case = lCase;
+
+                            // Load value:
+                            Vector force = new Vector(
+                            record.GetValue((short)IRobotUniformRecordValues.I_URV_PX),
+                             record.GetValue((short)IRobotUniformRecordValues.I_URV_PY),
+                              record.GetValue((short)IRobotUniformRecordValues.I_URV_PZ));
+                            eLoad.SetForce(force);
+                            eLoad.SetUniform();
+
+                            // Elements applied to:
+                            RobotSelection appliedTo = record.Objects;
+                            eLoad.AppliedTo.Clear();
+                            for (int k = 1; k <= appliedTo.Count; k++)
+                            {
+                                LinearElement element = context.IDMap.GetMappedLinearElement(appliedTo.Get(k), model);
+                                if (element != null) eLoad.AppliedTo.Add(element);
+                            }
+
+                            context.IDMap.Add(eLoad, record);
+
                         }
                         else if (record.Type == IRobotLoadRecordType.I_LRT_UNIFORM)
                         {
