@@ -227,6 +227,21 @@ namespace Nucleus.Geometry
             return new PolyCurve(ToLines(), Attributes);
         }
 
+        /// <summary>
+        /// 'Explode' this curve into a collection of its constituent
+        /// segments as individual curves.
+        /// </summary>
+        /// <param name="recursive">If true (default), any sub-curves of
+        /// this curve which themselves have sub-curves will also be exploded
+        /// and added to the collection.</param>
+        /// <returns></returns>
+        public override CurveCollection Explode(bool recursive = true)
+        {
+            var result = new CurveCollection();
+            result.AddRange(ToLines());
+            return result;
+        }
+
         public override string ToString()
         {
             return "Polyline";

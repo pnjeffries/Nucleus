@@ -223,6 +223,18 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Get the curve parameter at the specified length along this curve.
+        /// If the returned parameter falls outside the range 0-1, the specified
+        /// length does not fall within the domain of the curve.
+        /// </summary>
+        /// <param name="length">The distance along the curve from the start of the curve to the point in question</param>
+        /// <returns>A curve parameter</returns>
+        public override double ParameterAt(double length)
+        {
+            return length / Length;
+        }
+
+        /// <summary>
         /// Generate a set of evenly-spaced points along this line
         /// by dividing it into the specified number of segments.
         /// The resulting number of points will be divisions + 1

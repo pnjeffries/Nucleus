@@ -647,7 +647,6 @@ namespace Nucleus.Meshing
                     }
                 }
             }
-
         }
 
         /// <summary>
