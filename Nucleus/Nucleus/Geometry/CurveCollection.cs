@@ -64,6 +64,26 @@ namespace Nucleus.Geometry
             return result;
         }
 
+        /// <summary>
+        /// Get the curve in this collection with the greatest length
+        /// </summary>
+        /// <returns></returns>
+        public Curve GetLongest()
+        {
+            double maxLength = 0;
+            Curve longest = null;
+            foreach (Curve curve in this)
+            {
+                double length = curve.Length;
+                if (length > maxLength)
+                {
+                    maxLength = length;
+                    longest = curve;
+                }
+            }
+            return longest;
+        }
+
         #endregion
 
     }

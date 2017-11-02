@@ -325,6 +325,7 @@
     <Compile Include="Model\VertexReleases.cs" />
     <Compile Include="Physics\IPhysicsEngineComponent.cs" />
     <Compile Include="Physics\Particle.cs" />
+    <Compile Include="Physics\ParticleGravityComponent.cs" />
     <Compile Include="Physics\ParticleMotionComponent.cs" />
     <Compile Include="Physics\PhysicsEngine.cs" />
     <Compile Include="Physics\PhysicsEngineComponentCollection.cs" />

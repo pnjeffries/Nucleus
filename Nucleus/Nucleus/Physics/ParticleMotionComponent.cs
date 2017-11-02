@@ -1,4 +1,5 @@
 ﻿using Nucleus.Base;
+using Nucleus.Extensions;
 using Nucleus.Model;
 using System;
 using System.Collections.Generic;
@@ -44,6 +45,17 @@ namespace Nucleus.Physics
             set { _Damping = value; }
         }
 
+        private double _SpeedLimit = 0.1;
+
+        /// <summary>
+        /// The maximum velocity of a particle
+        /// </summary>
+        public double SpeedLimit
+        {
+            get { return _SpeedLimit; }
+            set { _SpeedLimit = value; }
+        }
+
         #endregion
 
         #region Constructors
@@ -71,6 +83,23 @@ namespace Nucleus.Physics
 
         public bool Cycle(double dt, PhysicsEngine engine)
         {
+            double speed = 0;
+            foreach (var particle in Particles)
+            {
+                double vMag = particle.Velocity.MagnitudeSquared();
+                if (vMag > speed)
+                    speed = vMag;
+            }
+            if (speed > SpeedLimit.Squared())
+            {
+                speed = speed.Root();
+                double factor = SpeedLimit/speed;
+                foreach (var particle in Particles)
+                {
+                    particle.Velocity *= factor;
+                }
+            }
+
             double vFactor = 1.0 - Damping;
             foreach (var particle in Particles)
             {

@@ -42,11 +42,14 @@ namespace Nucleus.Physics
         {
             foreach (var element in elements)
             {
-                if (!element.HasData<Spring>())
+                if (!element.IsDeleted)
                 {
-                    element.Data.Add(new Spring(element));
+                    if (!element.HasData<Spring>())
+                    {
+                        element.Data.Add(new Spring(element));
+                    }
+                    Springs.Add(element.GetData<Spring>());
                 }
-                Springs.Add(element.GetData<Spring>());
             }
         }
 

@@ -53,6 +53,19 @@ namespace Nucleus.Dynamo
             return new Line(Convert(line.StartPoint), Convert(line.EndPoint));
         }
 
+        /// <summary>
+        /// Convert a DesignScript arc to a Nucleus one
+        /// </summary>
+        /// <param name="arc"></param>
+        /// <returns></returns>
+        public static Arc Convert(DS.Arc arc)
+        {
+            if (arc.IsClosed)
+            {
+                return new Arc(new Circle(arc.Radius, Convert(arc.CenterPoint), Convert(arc.Normal)));
+            }
+            return new Arc(Convert(arc.StartPoint), Convert(arc.PointAtParameter(0.5)), Convert(arc.EndPoint));
+        }
 
     }
 }
