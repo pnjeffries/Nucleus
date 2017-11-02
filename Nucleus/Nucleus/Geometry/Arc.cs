@@ -279,6 +279,18 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Get the curve parameter at the specified length along this curve.
+        /// If the returned parameter falls outside the range 0-1, the specified
+        /// length does not fall within the domain of the curve.
+        /// </summary>
+        /// <param name="length">The distance along the curve from the start of the curve to the point in question</param>
+        /// <returns>A curve parameter</returns>
+        public override double ParameterAt(double length)
+        {
+            return length / Length;
+        }
+
+        /// <summary>
         /// Evaluate the tangent unit vector of a point on this curve defined by a parameter t
         /// </summary>
         /// <param name="t">A normalised parameter defining a point along this curve.
@@ -320,6 +332,15 @@ namespace Nucleus.Geometry
                 return toEnd > toMid;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Is this curve clockwise in the XY plane?
+        /// </summary>
+        /// <returns></returns>
+        public override bool IsClockwiseXY()
+        {
+            return IsClockwiseIn(CylindricalCoordinateSystem.Default);
         }
 
         protected override void InvalidateCachedGeometry()

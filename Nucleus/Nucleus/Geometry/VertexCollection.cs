@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using Nucleus.Base;
+using Nucleus.Extensions;
 using Nucleus.Model;
 using System;
 using System.Collections.Generic;
@@ -263,6 +264,28 @@ namespace Nucleus.Geometry
             {
                 v.Position = cSystem.LocalToGlobal(v.Position);
             }
+        }
+
+        /// <summary>
+        /// Returns a sum value of (x1 - x0)(y1 + y0) for each vector between
+        /// vertices in this collection, which can be used to test whether the
+        /// vertices are overall stored in a clockwise or anti-clockwise direction.
+        /// If the result is greater than 0, the collection is clockwise.
+        /// If the result is less than 0, the collection is anticlockwise.
+        /// If the result is 0, it is indeterminate.
+        /// The final vector from the last vertex to the first one will also be included.
+        /// </summary>
+        /// <returns></returns>
+        public double ClockwiseTestSum()
+        {
+            double result = 0;
+            for (int i = 0; i < Count; i++)
+            {
+                Vector v0 = this[i].Position;
+                Vector v1 = this.GetWrapped(i + 1).Position;
+                result += (v1.X - v0.X) * (v1.Y + v0.Y); 
+            }
+            return result;
         }
 
         #endregion

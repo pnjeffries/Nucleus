@@ -50,6 +50,9 @@ namespace Nucleus.Geometry
         /// <summary>
         /// A constant value representing an unset, invalid vector.
         /// All components are set to NaN.
+        /// Note that as NaN values never evaluate equal, do
+        /// not attempt comparison of this vector with others - use the
+        /// IsValid() method to determine when a vector is null instead.
         /// </summary>
         public static readonly Vector Unset = new Vector(false);
 

@@ -210,6 +210,86 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Get the curve parameter at the specified length along this curve.
+        /// If the returned parameter falls outside the range 0-1, the specified
+        /// length does not fall within the domain of the curve.
+        /// </summary>
+        /// <param name="length">The distance along the curve from the start of the curve to the point in question</param>
+        /// <returns>A curve parameter</returns>
+        public virtual double ParameterAt(double length)
+        {
+            double l0 = 0;
+            for (int i = 0; i < SegmentCount; i++)
+            {
+                double lS = CalculateSegmentLength(i);
+                double l1 = l0 + lS;
+                if (l1 > length) return ((double)i) / SegmentCount + ((length - l0) / lS) / SegmentCount;
+                l0 = l1;
+            }
+            return length/l0;
+        }
+
+        /// <summary>
+        /// Calculate the length along the curve of the specified parameter
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public virtual double LengthAt(double t)
+        {
+            double result = 0;
+            if (Closed && (t < 0.0 || t > 1.0))
+            {
+                double nt = t % 1.0;
+                double length = Length;
+                result += length * (t - nt);
+                t = nt;
+            }
+            double tS = 1.0 / SegmentCount; //Parameter-size per segment
+            for (int i = 0; i < SegmentCount; i++)
+            {
+                double lS = CalculateSegmentLength(i);
+                if ((i + 1.0) * tS > t)
+                {
+                    // Parameter is inside segment
+                    result += ((t - (i * tS)) / tS) * lS;
+                    return result;
+                }
+                else // Keep going...
+                    result += lS;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Calculate the length of a section of this curve defined
+        /// by a parameter interval
+        /// </summary>
+        /// <param name="t">The curve parameter interval the length of which is to be measured.</param>
+        /// <returns></returns>
+        public double LengthOf(Interval t)
+        {
+            return LengthAt(t.End) - LengthAt(t.Start);
+        }
+
+        /// <summary>
+        /// Get a curve parameter subdomain specified by the mid-point parameter
+        /// of the subdomain and the length of the subdomain along the curve.
+        /// </summary>
+        /// <param name="tMid">The curve parameter at the mid-point of the specified subdomain</param>
+        /// <param name="length">The length of the subdomain (i.e. the domain will start and end
+        /// half of this distance from tMid) </param>
+        /// <returns></returns>
+        public Interval SubdomainByCentre(double tMid, double length)
+        {
+            double midLength = LengthAt(tMid);
+            double startLength = midLength - length / 2.0;
+            double endLength = midLength + length / 2.0;
+            var result = new Interval(ParameterAt(startLength), ParameterAt(endLength));
+            if (!Closed) return result.Overlap(new Interval(0, 1));
+            else return result;
+        }
+
+        /// <summary>
         /// Evaluate the tangent unit vector at the specified vertex of this
         /// curve.
         /// </summary>
@@ -372,7 +452,7 @@ namespace Nucleus.Geometry
         /// <summary>
         /// Find the closest point on this curve to a test point, expressed as a
         /// parameter value from 0-1.  This may be a position on the curve or it may
-        /// be the start (0) or end (1) of the arc depending on the relative location
+        /// be the start (0) or end (1) of the curve depending on the relative location
         /// of the test point.
         /// </summary>
         /// <param name="toPoint">The test point to find the closest point to</param>
@@ -752,6 +832,30 @@ namespace Nucleus.Geometry
         /// side, looking along the curve.  Negative numbers to the left.</param>
         /// <returns></returns>
         public abstract Curve Offset(IList<double> distances);
+
+        /// <summary>
+        /// Is this curve clockwise in the XY plane?
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool IsClockwiseXY()
+        {
+            return Vertices.ClockwiseTestSum() > 0;
+        }
+
+        /// <summary>
+        /// 'Explode' this curve into a collection of its constituent
+        /// segments as individual curves.
+        /// </summary>
+        /// <param name="recursive">If true (default), any sub-curves of
+        /// this curve which themselves have sub-curves will also be exploded
+        /// and added to the collection.</param>
+        /// <returns></returns>
+        public virtual CurveCollection Explode(bool recursive = true)
+        {
+            var result = new CurveCollection();
+            result.Add(this);
+            return result;
+        }
 
         public override string ToString()
         {
