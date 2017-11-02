@@ -53,7 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\ExecutionInfo.cs" />
+    <Compile Include="Analysis\AnalysisLog.cs" />
     <Compile Include="Analysis\BeamAnalysisBase.cs" />
+    <Compile Include="Analysis\ICalculationLog.cs" />
     <Compile Include="Base\Bool6D.cs" />
     <Compile Include="Base\CollectionCopyAttribute.cs" />
     <Compile Include="Base\IUniqueWithModifiableGUID.cs" />

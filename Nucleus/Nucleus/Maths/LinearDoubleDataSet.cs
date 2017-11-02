@@ -13,6 +13,7 @@ namespace Nucleus.Maths
     {
         #region Properties
 
+        /*
         /// <summary>
         /// Is this data-set flat?  i.e. do all datapoints along
         /// the x-axis have the same y-value?
@@ -32,7 +33,7 @@ namespace Nucleus.Maths
                 }
                 return true;
             }
-        }
+        }*/
 
         #endregion
 

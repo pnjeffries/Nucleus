@@ -816,6 +816,23 @@ namespace Nucleus.Meshing
                 foreach (LinearElement element in eLoad.AppliedTo.Items)
                 {
                     //TODO
+                    double value = eLoad.Value;
+                    var distri = eLoad.Distribution;
+                    KeyValuePair<double, double> last = new KeyValuePair<double, double>(double.NaN, double.NaN);
+                    CartesianCoordinateSystem lastSys = null;
+                    foreach (var kvp in distri)
+                    {
+                        CartesianCoordinateSystem cSys = 
+                            eLoad.Axes.GetCoordinateSystem(element, kvp.Key) as CartesianCoordinateSystem; // TODO: Adjust to unitized length instead of parameter
+                        Vector dir = cSys.GetAxisVector(eLoad.Direction);
+                        if (lastSys != null)
+                        {
+                            AddLineLoad(lastSys.Origin, cSys.Origin, dir, last.Value * value * factor, kvp.Value * value * factor, scale);
+                        }
+                        last = kvp;
+                        lastSys = cSys;
+                    }
+                    // TODO: Deal with curved/kinked elements?
                 }
             }
 
@@ -851,12 +868,12 @@ namespace Nucleus.Meshing
         /// |    |
         /// VVVVVV
         /// </summary>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <param name="direction"></param>
-        /// <param name="startLength"></param>
-        /// <param name="endLength"></param>
-        /// <param name="zigZagLength"></param>
+        /// <param name="start">The start point of application of the line load</param>
+        /// <param name="end">The end point of application of the line load</param>
+        /// <param name="direction">The direction of application of the line load</param>
+        /// <param name="startLength">The length of the arrow tail at the start of the line</param>
+        /// <param name="endLength">The length of the arrow tail and the end of the line</param>
+        /// <param name="zigZagLength">The width of the zig-zag 'arrow heads'</param>
         public void AddLineLoad(Vector start, Vector end, Vector direction, double startLength, double endLength, double zigZagLength = 1.0)
         {
             Vector line = end - start;

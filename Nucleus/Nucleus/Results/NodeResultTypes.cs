@@ -7,8 +7,12 @@ using System.Threading.Tasks;
 namespace Nucleus.Results
 {
     /// <summary>
-    /// Enum of standard node analysis result types
+    /// Enum of standard node analysis result types.
     /// </summary>
+    /// <remarks>The enumerated values follow a specific convention
+    /// for result types composed of several different components.
+    /// The overall magnitude value is given a value divisible by
+    /// 10, with the components then following.</remarks>
     [Serializable]
     public enum NodeResultTypes
     {
