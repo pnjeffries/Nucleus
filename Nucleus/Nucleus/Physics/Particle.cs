@@ -1,4 +1,5 @@
 ﻿using Nucleus.Base;
+using Nucleus.Extensions;
 using Nucleus.Geometry;
 using Nucleus.Model;
 using System;
@@ -34,9 +35,24 @@ namespace Nucleus.Physics
         public Vector Velocity { get; set; }
 
         /// <summary>
+        /// The residual force in the particle
+        /// </summary>
+        public Vector Residual { get; set; }
+
+        /// <summary>
         /// The mass of the node
         /// </summary>
-        public double Mass { get; set; } = 0;
+        public double Mass { get; set; } = 1.0;
+
+        /// <summary>
+        /// The adjusted mass of the node for stability purposes
+        /// </summary>
+        public double EffectiveMass { get; set; } = 1.0;
+
+        /// <summary>
+        /// The fixity of the node
+        /// </summary>
+        public Bool6D Fixity { get; set; } = Bool6D.False;
 
         #endregion
 
@@ -63,7 +79,11 @@ namespace Nucleus.Physics
         public void Reset()
         {
             if (Node != null)
+            {
                 Position = Node.Position;
+                Velocity = Vector.Zero;
+                if (Node.HasData<NodeSupport>()) Fixity = Node.GetData<NodeSupport>().Fixity;
+            }
         }
 
         public void Merge(INodeDataComponent other)
@@ -78,6 +98,7 @@ namespace Nucleus.Physics
         /// <param name="dt"></param>
         public void Move(double dt)
         {
+            Velocity = Velocity.With(Fixity, 0.0);
             Position += Velocity * dt;
         }
 
@@ -94,15 +115,30 @@ namespace Nucleus.Physics
 
         /// <summary>
         /// Apply a force to this particle.
-        /// This will apply an accelleration.
         /// </summary>
         /// <param name="force"></param>
         public void ApplyForce(Vector force)
         {
-            if (Mass > 0)
-                Velocity += force / Mass;
-            else
-                Velocity += force; //TODO: Review?
+            Residual += force;
+        }
+
+        /// <summary>
+        /// Return the current residual force to it's initial state
+        /// </summary>
+        public void ClearResidual()
+        {
+            Residual = new Vector();
+            //TODO: Apply external loads here
+        }
+
+        /// <summary>
+        /// Calculate the kinetic energy of the particle, 
+        /// in Joules
+        /// </summary>
+        /// <returns></returns>
+        public double KineticEnergy()
+        {
+            return 0.5 * Mass * Velocity.MagnitudeSquared();
         }
 
         #endregion

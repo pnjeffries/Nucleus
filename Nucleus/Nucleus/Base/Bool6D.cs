@@ -42,6 +42,22 @@ namespace Nucleus.Base
     [DebuggerDisplay("{ToString()}")]
     public struct Bool6D : IEquatable<Bool6D>
     {
+        #region Constants
+
+        /// <summary>
+        /// A constant value representing a Bool6D with all components set
+        /// to false.
+        /// </summary>
+        public static readonly Bool6D False = new Bool6D(false);
+
+        /// <summary>
+        /// A constant value representing a Bool6D with all components set
+        /// to true.
+        /// </summary>
+        public static readonly Bool6D True = new Bool6D(true);
+
+        #endregion
+
         #region Fields
 
         /// <summary>

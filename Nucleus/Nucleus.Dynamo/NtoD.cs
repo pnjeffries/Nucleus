@@ -64,6 +64,20 @@ namespace Nucleus.Dynamo
             return DS.Arc.ByCenterPointStartPointEndPoint(Convert(arc.Circle.Origin), Convert(arc.StartPoint), Convert(arc.EndPoint));
         }
 
+        /// <summary>
+        /// Convert a Nucleus circle to a DesignScript one
+        /// </summary>
+        /// <param name="circle"></param>
+        /// <returns></returns>
+        public static DS.Circle Convert(Circle circle)
+        {
+            return DS.Circle.ByCenterPointRadius(Convert(circle.Origin), circle.Radius);
+            // TODO: Pass on X-axis orientation somehow?
+        }
 
+        public static DS.PolyCurve Convert(PolyCurve pCurve)
+        {
+            //TODO
+        }
     }
 }

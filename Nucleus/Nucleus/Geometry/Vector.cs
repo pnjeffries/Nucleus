@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Nucleus.Base;
 using Nucleus.Extensions;
 using System;
 using System.Collections.Generic;
@@ -705,6 +706,23 @@ namespace Nucleus.Geometry
             if (index == 0) return WithX(value);
             else if (index == 1) return WithY(value);
             else return WithZ(value);
+        }
+
+        /// <summary>
+        /// Return a vector with the components specified set to the
+        /// given value.  The components set to false will have their
+        /// original value while those set to true will use the value
+        /// specified.
+        /// </summary>
+        /// <param name="components">The components to replace</param>
+        /// <param name="value">The value to set the specified components to</param>
+        /// <returns></returns>
+        public Vector With(Bool6D components, double value)
+        {
+            return new Vector(
+                components.X ? value : X,
+                components.Y ? value : Y,
+                components.Z ? value : Z);
         }
 
         /// <summary>
