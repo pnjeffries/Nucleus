@@ -30,9 +30,14 @@ namespace Nucleus.Physics
         public Vector Position { get; set; }
 
         /// <summary>
-        /// The current velocity of the node
+        /// The current velocity of the particle
         /// </summary>
         public Vector Velocity { get; set; }
+
+        /// <summary>
+        /// The velocity of the particle during the previous cycle
+        /// </summary>
+        public Vector PastVelocity { get; set; }
 
         /// <summary>
         /// The residual force in the particle
@@ -40,14 +45,14 @@ namespace Nucleus.Physics
         public Vector Residual { get; set; }
 
         /// <summary>
+        /// The stiffness 'lumped' at this node
+        /// </summary>
+        public Vector LumpedK { get; set; }
+
+        /// <summary>
         /// The mass of the node
         /// </summary>
         public double Mass { get; set; } = 1.0;
-
-        /// <summary>
-        /// The adjusted mass of the node for stability purposes
-        /// </summary>
-        public double EffectiveMass { get; set; } = 1.0;
 
         /// <summary>
         /// The fixity of the node
@@ -123,12 +128,14 @@ namespace Nucleus.Physics
         }
 
         /// <summary>
-        /// Return the current residual force to it's initial state
+        /// Reset transitory variables before the next cycle
         /// </summary>
-        public void ClearResidual()
+        public void EndCycle()
         {
-            Residual = new Vector();
-            //TODO: Apply external loads here
+            PastVelocity = Velocity;
+            Velocity = Vector.Zero;
+            Residual = Vector.Zero;
+            LumpedK = Vector.Zero;
         }
 
         /// <summary>

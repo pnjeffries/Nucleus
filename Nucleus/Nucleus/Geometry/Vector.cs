@@ -583,6 +583,37 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Multiply the components of this vector by the equivalent components of
+        /// another.  (Note that this is not the same as multiplying two vectors together!)
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public Vector MultiplyComponents(Vector other)
+        {
+            return new Vector(X * other.X, Y * other.Y, Z * other.Z);
+        }
+
+        /// <summary>
+        /// Divide the components of this vector by the equivalent components of another.
+        /// Note that this is not the same as dividing one vector by another (which is undefined!)
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public Vector DivideComponents(Vector other)
+        {
+            return new Vector(X / other.X, Y / other.Y, Z / other.Z);
+        }
+
+        /// <summary>
+        /// Get a vector containing the absolute values of the components in this vector
+        /// </summary>
+        /// <returns></returns>
+        public Vector Abs()
+        {
+            return new Vector(X.Abs(), Y.Abs(), Z.Abs());
+        }
+
+        /// <summary>
         /// Calculate the (smallest, non-directional) angle between this vector and another.
         /// In the range -PI/2 to PI/2.
         /// </summary>

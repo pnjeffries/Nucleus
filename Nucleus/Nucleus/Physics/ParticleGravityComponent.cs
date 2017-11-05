@@ -69,7 +69,7 @@ namespace Nucleus.Physics
         {
             foreach (var particle in Particles)
             {
-                particle.ClearResidual();
+                particle.EndCycle();
                 //TODO: Apply other forces
                 particle.ApplyForce(Gravity * particle.Mass);
             }
