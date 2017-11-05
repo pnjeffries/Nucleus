@@ -15,10 +15,10 @@ namespace Nucleus.Results
     public class CaseNodeResults : CaseResults<NodeResultTypes, Interval>
     {
         /// <summary>
-        /// Get the maximum displacement vector from this set of results
+        /// Get the maximum nodal displacement vector from this set of results
         /// </summary>
         /// <returns></returns>
-        public Vector GetMaxDisplacement()
+        public Vector GetMaxDisplacementVector()
         {
             return new Vector
                 (

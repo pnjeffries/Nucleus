@@ -120,5 +120,19 @@ namespace Nucleus.Conversion
             get { return _Sets; }
             set { ChangeProperty(ref _Sets, value, "Sets"); }
         }
+
+        /// <summary>
+        /// Private backing field for Loading property
+        /// </summary>
+        private bool _Loading = true;
+
+        /// <summary>
+        /// Read/Write Loading Data?
+        /// </summary>
+        public bool Loading
+        {
+            get { return _Loading; }
+            set { ChangeProperty(ref _Loading, value, "Loading"); }
+        }
     }
 }

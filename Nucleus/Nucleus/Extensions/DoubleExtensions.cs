@@ -183,6 +183,17 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Is this Not A Number?
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <remarks>Same as double.IsNaN(double) but less typing!</remarks>
+        public static bool IsNaN(this double value)
+        {
+            return double.IsNaN(value);
+        }
+
+        /// <summary>
         /// Utility function to add one double to another in a thread-safe way.
         /// Equivalent to toBeModified += value, and similar to the Interlocked.Add()
         /// function for integers.

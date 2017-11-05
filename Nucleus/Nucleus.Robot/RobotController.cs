@@ -415,7 +415,10 @@ namespace Nucleus.Robot
             }
         }
 
-
+        private void UpdateModelLoadCasesFromRobotFile(Model.Model model, RobotConversionContext context)
+        {
+            //TODO
+        }
 
         /// <summary>
         /// Update the load cases in a Nucleus model to match those in a Robot file
@@ -661,7 +664,15 @@ namespace Nucleus.Robot
                 ModelObjectSetCollection sets = model.Sets;
                 //if (context.Options.Update) sets = //TODO?
                 if (sets.Count > 0) RaiseMessage("Writing Groups...");
-                UpdateRobotGroupsFromModel(model, sets, context);
+                UpdateRobotGroupsFromModel(sets, context);
+            }
+
+            if (context.Options.Loading)
+            {
+                var loadCases = model.LoadCases;
+                //if (context.Options.Update) loadCases = //TODO?
+                if (loadCases.Count > 0) RaiseMessage("Writing Load Cases...");
+                UpdateRobotLoadCasesFromModel(model, loadCases, context);
             }
 
             RaiseMessage("Data writing completed.");
@@ -746,7 +757,7 @@ namespace Nucleus.Robot
         /// <param name="sets"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        private bool UpdateRobotGroupsFromModel(Model.Model model, ModelObjectSetCollection sets, RobotConversionContext context)
+        private bool UpdateRobotGroupsFromModel(ModelObjectSetCollection sets, RobotConversionContext context)
         {
             foreach (var set in sets)
             {
@@ -757,6 +768,10 @@ namespace Nucleus.Robot
 
         private bool UpdateRobotLoadCasesFromModel(Model.Model model, LoadCaseCollection loadCases, RobotConversionContext context)
         {
+            foreach (var lc in loadCases)
+            {
+
+            }
             //TODO
             return false;
         }

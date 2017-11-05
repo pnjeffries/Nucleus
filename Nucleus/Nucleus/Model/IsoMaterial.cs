@@ -105,6 +105,14 @@ namespace Nucleus.Model
         /// <param name="name"></param>
         public IsoMaterial(string name) : base(name) { }
 
+        public IsoMaterial(string name, double e, double poissonsRatio = 0.3, double alpha = 12.0)
+            :this(name)
+        {
+            E = e;
+            PoissonsRatio = poissonsRatio;
+            Alpha = alpha;
+        }
+
         #endregion
 
         #region Methods

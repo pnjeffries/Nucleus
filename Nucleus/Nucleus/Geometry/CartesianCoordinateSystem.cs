@@ -226,6 +226,18 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Get the axis vector relevant to the specified local axis
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public Vector GetAxisVector(Direction direction)
+        {
+            if (direction == Direction.X || direction == Direction.XX) return X;
+            if (direction == Direction.Y || direction == Direction.YY) return Y;
+            else return Z;
+        }
+
+        /// <summary>
         /// Convert a set of coordinates defined in the local coordinate system
         /// into one defined in global coordinates
         /// </summary>
