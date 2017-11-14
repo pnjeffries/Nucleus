@@ -1,4 +1,5 @@
-﻿using Nucleus.Geometry;
+﻿using Nucleus.Extensions;
+using Nucleus.Geometry;
 using Nucleus.Model;
 using System;
 using System.Collections.Generic;
@@ -105,9 +106,19 @@ namespace Nucleus.Physics
                 if ((Compression && extension < 0) 
                     || (Tension && extension > 0))
                 {
-                    Vector force = dir * (extension * Stiffness);
+                    // Apply force:
+                    double T = extension * Stiffness;
+                    Vector force = dir * T;
                     StartParticle.ApplyForce(force);
                     EndParticle.ApplyForce(-force);
+                    // Apply stiffness:
+                    double Ke = Stiffness / RestLength;
+                    double Kg = T.Abs() / length;
+                    double K = 0.5 * (Ke + Kg);
+                    Vector Kv = dir.Abs() * K;
+                    // Hmmm... do we need to worry about signs?
+                    StartParticle.LumpedK += Kv;
+                    EndParticle.LumpedK += Kv;
                 }
             }
         }

@@ -12,22 +12,9 @@ namespace Nucleus.Physics
     /// <summary>
     /// A Physics Engine component that deals with resolving the motion of particles
     /// </summary>
-    public class ParticleMotionComponent : Unique, IPhysicsEngineComponent
+    public class ParticleMotionComponent : ParticleBaseComponent, IPhysicsEngineComponent
     {
         #region Properties
-
-        /// <summary>
-        /// Private backing field for Particles property
-        /// </summary>
-        private IList<Particle> _Particles = new List<Particle>();
-
-        /// <summary>
-        /// The set of particles 
-        /// </summary>
-        public IList<Particle> Particles
-        {
-            get { return _Particles; }
-        }
 
         /// <summary>
         /// Private backing field for Damping property
@@ -65,17 +52,7 @@ namespace Nucleus.Physics
         /// specified nodes.
         /// </summary>
         /// <param name="nodes"></param>
-        public ParticleMotionComponent(NodeCollection nodes)
-        {
-            foreach (Node node in nodes)
-            {
-                if (!node.HasData<Particle>())
-                {
-                    node.Data.Add(new Particle(node));
-                }
-                Particles.Add(node.GetData<Particle>());
-            }
-        }
+        public ParticleMotionComponent(NodeCollection nodes) : base(nodes) { }
 
         #endregion
 
