@@ -195,6 +195,17 @@ namespace Nucleus.ETABS
         }
 
         /// <summary>
+        /// Get the name of the equivalent ETABS material
+        /// </summary>
+        /// <param name="material"></param>
+        /// <returns></returns>
+        private string GetEquivalentMaterial(Material material)
+        {
+            if (material.Name.StartsWith("Concrete")) return "4000Psi";
+            return "A992Fy50";
+        }
+
+        /// <summary>
         /// Write/update ETABS nodes from a collection of Nucleus nodes
         /// </summary>
         /// <param name="nodes"></param>
@@ -237,7 +248,7 @@ namespace Nucleus.ETABS
         private void WriteSection(SectionFamily section, ETABSConversionContext context)
         {
             string name = section.Name;
-            string matProp = "A992Fy50"; // TEMP
+            string matProp = GetEquivalentMaterial(section.GetPrimaryMaterial());
 
             if (section.Profile == null)
             {
@@ -297,9 +308,11 @@ namespace Nucleus.ETABS
         public void WriteBuildUp(BuildUpFamily buildUp, ETABSConversionContext context)
         {
             string name = buildUp.Name;
-            string matProp = "";
+            string matProp = GetEquivalentMaterial(buildUp.GetPrimaryMaterial());
 
-            SapModel.PropArea.SetDeck(name, eDeckType.SolidSlab, eShellType.ShellThin, matProp, buildUp.Layers.TotalThickness);
+            //SapModel.PropArea.SetDeck(name, eDeckType.SolidSlab, eShellType.ShellThin, matProp, buildUp.Layers.TotalThickness);
+            SapModel.PropArea.SetSlab(name, eSlabType.Slab, eShellType.ShellThin, matProp, buildUp.Layers.TotalThickness);
+            // TODO: Check if working
         }
 
         public void WriteLinearElements(LinearElementCollection elements, ETABSConversionContext context)

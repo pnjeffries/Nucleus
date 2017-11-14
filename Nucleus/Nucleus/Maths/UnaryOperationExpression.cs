@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Nucleus.Maths
 {
     /// <summary>
-    /// An expression operation acting on a single operance
+    /// An expression operation acting on a single operand
     /// </summary>
     [Serializable]
     public class UnaryOperationExpression : Expression
@@ -16,7 +16,7 @@ namespace Nucleus.Maths
         #region Properties
 
         /// <summary>
-        /// Private backing field for OperandA property
+        /// Private backing field for Operand property
         /// </summary>
         private Expression _Operand;
 

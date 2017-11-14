@@ -795,6 +795,8 @@ namespace Nucleus.Meshing
         /// <param name="context"></param>
         public void AddLoad(Load load, double factor = 0.001, double scale = 1.0, IEvaluationContext context = null)
         {
+            if (context == null) context = load?.Model?.Variables;
+
             if (load is NodeLoad)
             {
                 NodeLoad nLoad = (NodeLoad)load;
@@ -804,7 +806,7 @@ namespace Nucleus.Meshing
                     Vector dir = cSys.DirectionVector(nLoad.Direction);
                     Vector sideways = cSys.DirectionVector(nLoad.Direction.FirstPerpendicular());
                     Vector sideways2 = cSys.DirectionVector(nLoad.Direction.SecondPerpendicular());
-                    double value = (double)nLoad.Value.Evaluate(context);
+                    double value = nLoad.Value.Evaluate<double>(context);
                     AddArrow(node.Position, dir, sideways,  value * factor, scale * 0.4);
                     AddArrow(node.Position, dir, sideways2, value * factor, scale * 0.4);
                 }
@@ -815,7 +817,7 @@ namespace Nucleus.Meshing
                 foreach (LinearElement element in eLoad.AppliedTo.Items)
                 {
                     //TODO
-                    double value = eLoad.Value;
+                    double value = eLoad.Value.Evaluate<double>(context);
                     var distri = eLoad.Distribution;
                     KeyValuePair<double, double> last = new KeyValuePair<double, double>(double.NaN, double.NaN);
                     CartesianCoordinateSystem lastSys = null;

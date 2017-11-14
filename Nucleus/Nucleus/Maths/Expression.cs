@@ -62,7 +62,9 @@ namespace Nucleus.Maths
         public abstract object Evaluate(IEvaluationContext context = null);
 
         /// <summary>
-        /// Evaluate the expression and return the calculated value
+        /// Evaluate the expression and return the calculated value of the
+        /// specified type.  If the result is not already of the specified
+        /// type then the default of that type will be returned.
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>

@@ -22,6 +22,7 @@ using Nucleus.Base;
 using Nucleus.Events;
 using Nucleus.Extensions;
 using Nucleus.Geometry;
+using Nucleus.Maths;
 using Nucleus.Model.Loading;
 using System;
 using System.Collections.Generic;
@@ -281,6 +282,24 @@ namespace Nucleus.Model
             {
                 return new IEnumerable<ModelObject>[]
                     {_CoordinateSystems, _Materials, _Families, _Levels, _Nodes, _Elements, _Sets, _LoadCases, _Loads};
+            }
+        }
+
+        /// <summary>
+        /// Private backing field for UserVariables property
+        /// </summary>
+        private IEvaluationContext _Variables;
+
+        /// <summary>
+        /// The set of stored user variables to be used as an evaluation context
+        /// for parametric expressions on objects within this model
+        /// </summary>
+        public IEvaluationContext Variables
+        {
+            get
+            {
+                if (_Variables == null) _Variables = new EvaluationContext();
+                return _Variables;
             }
         }
 
