@@ -12,6 +12,6 @@ namespace Nucleus.Model.Loading
     [Serializable]
     public class NodeLoad : ForceLoad<NodeSet, Node>
     {
-        
+
     }
 }

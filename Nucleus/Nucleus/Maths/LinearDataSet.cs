@@ -80,9 +80,9 @@ namespace Nucleus.Maths
         /// As two values cannot share the same key this is implemented by adding
         /// value0 at t, and value1 at the next greatest valid double parameter.
         /// </summary>
-        /// <param name="t"></param>
-        /// <param name="value0"></param>
-        /// <param name="value1"></param>
+        /// <param name="t">The parameter at which to add the value jump</param>
+        /// <param name="value0">The value before the jump</param>
+        /// <param name="value1">The value after the jump</param>
         public void AddJump(double t, TValue value0, TValue value1)
         {
             Add(t, value0);

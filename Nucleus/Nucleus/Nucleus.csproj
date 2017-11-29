@@ -53,7 +53,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\ExecutionInfo.cs" />
-    <Compile Include="Analysis\AnalysisLog.cs" />
     <Compile Include="Analysis\BeamAnalysisBase.cs" />
     <Compile Include="Analysis\ICalculationLog.cs" />
     <Compile Include="Base\Bool6D.cs" />
@@ -367,13 +366,13 @@
     <Compile Include="UI\IAutoUIHostable.cs" />
     <Compile Include="UI\IUserInteraction.cs" />
     <Compile Include="UI\UIOption.cs" />
-    <Compile Include="Units\Undo\CollectionUndoState.cs" />
-    <Compile Include="Units\Undo\PropertyUndoState.cs" />
-    <Compile Include="Units\Undo\TransformUndoState.cs" />
-    <Compile Include="Units\Undo\UndoManager.cs" />
-    <Compile Include="Units\Undo\UndoStage.cs" />
-    <Compile Include="Units\Undo\UndoState.cs" />
-    <Compile Include="Units\Undo\UndoStageCollection.cs" />
+    <Compile Include="Undo\CollectionUndoState.cs" />
+    <Compile Include="Undo\PropertyUndoState.cs" />
+    <Compile Include="Undo\TransformUndoState.cs" />
+    <Compile Include="Undo\UndoManager.cs" />
+    <Compile Include="Undo\UndoStage.cs" />
+    <Compile Include="Undo\UndoState.cs" />
+    <Compile Include="Undo\UndoStageCollection.cs" />
     <Compile Include="Units\DimensionAttribute.cs" />
     <Compile Include="Units\DimensionType.cs" />
   </ItemGroup>

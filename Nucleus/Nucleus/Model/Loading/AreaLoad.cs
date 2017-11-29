@@ -22,7 +22,10 @@ namespace Nucleus.Model.Loading
         private PlanarRegion _AppliedOver;
 
         /// <summary>
-        /// The region over which the load is applied
+        /// The region over which the load is applied.
+        /// If this is not specified, the load is assumed to apply
+        /// directly over the entire surface of any specified panel
+        /// elements, but not at all to linear elements.
         /// </summary>
         public PlanarRegion AppliedOver
         {

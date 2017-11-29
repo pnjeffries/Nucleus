@@ -182,13 +182,14 @@ namespace Nucleus.Robot
             IRobotCollection robotNodes = Robot.Project.Structure.Nodes.GetAll();
             if (options.Families)
             {
-                UpdateModelSectionsFromRobotFile(model, context);
-                UpdateModelBuildUpsFromRobotFile(model, context);
+                ReadSections(model, context);
+                ReadBuildUps(model, context);
             }
-            if (options.Nodes) UpdateModelNodesFromRobotFile(model, robotNodes, context);
+            if (options.Nodes) ReadNodes(model, robotNodes, context);
             if (options.LinearElements) UpdateModelLinearElementsFromRobotFile(model, robotNodes, context);
             if (options.PanelElements) UpdateModelPanelElementsFromRobotFile(model, robotNodes, context);
             if (options.Sets) UpdateModelSetsFromRobotFile(model, context);
+            if (options.Loading) ReadLoads(model, context);
             RaiseMessage("Data reading completed.");
             return false;
         }
@@ -199,7 +200,7 @@ namespace Nucleus.Robot
         /// <param name="model"></param>
         /// <param name="map"></param>
         /// <param name="context"></param>
-        private void UpdateModelNodesFromRobotFile(Model.Model model, IRobotCollection robotNodes, RobotConversionContext context)
+        private void ReadNodes(Model.Model model, IRobotCollection robotNodes, RobotConversionContext context)
         {
             RaiseMessage("Reading Nodes...");
             //Delete all mapped nodes:
@@ -240,7 +241,7 @@ namespace Nucleus.Robot
         /// </summary>
         /// <param name="model"></param>
         /// <param name="context"></param>
-        private void UpdateModelSectionsFromRobotFile(Model.Model model, RobotConversionContext context)
+        private void ReadSections(Model.Model model, RobotConversionContext context)
         {
             RaiseMessage("Reading Sections...");
             IRobotCollection sections = Robot.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_BAR_SECTION);
@@ -264,7 +265,7 @@ namespace Nucleus.Robot
             }
         }
 
-        private void UpdateModelBuildUpsFromRobotFile(Model.Model model, RobotConversionContext context)
+        private void ReadBuildUps(Model.Model model, RobotConversionContext context)
         {
             RaiseMessage("Reading Thicknesses...");
             IRobotCollection thicknesses = Robot.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_PANEL_THICKNESS);
@@ -415,17 +416,12 @@ namespace Nucleus.Robot
             }
         }
 
-        private void UpdateModelLoadCasesFromRobotFile(Model.Model model, RobotConversionContext context)
-        {
-            //TODO
-        }
-
         /// <summary>
         /// Update the load cases in a Nucleus model to match those in a Robot file
         /// </summary>
         /// <param name="model"></param>
         /// <param name="context"></param>
-        private void UpdateModelLoadsFromRobotFile(Model.Model model, RobotConversionContext context)
+        private void ReadLoads(Model.Model model, RobotConversionContext context)
         {
             RaiseMessage("Reading Loads...");
 
@@ -664,15 +660,15 @@ namespace Nucleus.Robot
                 ModelObjectSetCollection sets = model.Sets;
                 //if (context.Options.Update) sets = //TODO?
                 if (sets.Count > 0) RaiseMessage("Writing Groups...");
-                UpdateRobotGroupsFromModel(sets, context);
+                WriteGroups(sets, context);
             }
 
             if (context.Options.Loading)
             {
                 var loadCases = model.LoadCases;
                 //if (context.Options.Update) loadCases = //TODO?
-                if (loadCases.Count > 0) RaiseMessage("Writing Load Cases...");
-                UpdateRobotLoadCasesFromModel(model, loadCases, context);
+                if (loadCases.Count > 0) RaiseMessage("Writing Loads...");
+                WriteLoads(model, loadCases, context);
             }
 
             RaiseMessage("Data writing completed.");
@@ -757,23 +753,29 @@ namespace Nucleus.Robot
         /// <param name="sets"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        private bool UpdateRobotGroupsFromModel(ModelObjectSetCollection sets, RobotConversionContext context)
+        private bool WriteGroups(ModelObjectSetCollection sets, RobotConversionContext context)
         {
             foreach (var set in sets)
             {
-                UpdateRobotGroup(set, context);
+                WriteGroup(set, context);
             }
             return true;
         }
 
-        private bool UpdateRobotLoadCasesFromModel(Model.Model model, LoadCaseCollection loadCases, RobotConversionContext context)
+        /// <summary>
+        /// Update the load cases in the open Robot model from a collection of load cases
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="loadCases"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        private bool WriteLoads(Model.Model model, LoadCaseCollection loadCases, RobotConversionContext context)
         {
             foreach (var lc in loadCases)
             {
-
+                WriteLoadCase(lc, context);
             }
-            //TODO
-            return false;
+            return true;
         }
 
         #endregion
@@ -1550,7 +1552,7 @@ namespace Nucleus.Robot
         /// </summary>
         /// <param name="set"></param>
         /// <param name="context"></param>
-        public void UpdateRobotGroup(ModelObjectSetBase set, RobotConversionContext context)
+        public void WriteGroup(ModelObjectSetBase set, RobotConversionContext context)
         {
             string mappedID;
             RobotGroup group = null;
@@ -1563,7 +1565,7 @@ namespace Nucleus.Robot
                 intID = int.Parse(mappedID);
                 if (set.IsDeleted)
                 {
-                    groups.Delete(groupType, intID);
+                    if (context.Options.DeleteObjects) groups.Delete(groupType, intID);
                 }
                 else group = groups.Get(groupType, intID);
             }
@@ -1576,6 +1578,124 @@ namespace Nucleus.Robot
             }
 
             context.IDMap.Add(set, intID);
+        }
+
+        /// <summary>
+        /// Write a load case to Robot
+        /// </summary>
+        /// <param name="lCase"></param>
+        /// <param name="context"></param>
+        public void WriteLoadCase(LoadCase lCase, RobotConversionContext context)
+        {
+            string mappedID;
+            IRobotCase rCase = null;
+            int intID = -1;
+            if (context.IDMap.HasSecondID(context.IDMap.CaseCategory, lCase.GUID))
+            {
+                mappedID = context.IDMap.GetSecondID(context.IDMap.CaseCategory, lCase.GUID);
+                intID = int.Parse(mappedID);
+                if (lCase.IsDeleted)
+                {
+                    if (context.Options.DeleteObjects)
+                        Robot.Project.Structure.Cases.Delete(intID);
+                }
+                else rCase = Robot.Project.Structure.Cases.Get(intID);
+            }
+            if (!lCase.IsDeleted)
+            {
+                if (rCase == null)
+                    rCase = Robot.Project.Structure.Cases.CreateSimple(
+                        intID, lCase.Name, IRobotCaseNature.I_CN_PERMANENT, 
+                        IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR);
+                //TODO: Populate nature + type better
+                else
+                {
+                    rCase.Name = lCase.Name;
+                }
+            }
+            context.IDMap.Add(lCase, rCase);
+
+            if (rCase != null && rCase is RobotSimpleCase)
+            {
+                LoadCollection loads = lCase.Loads();
+                foreach (var load in loads)
+                {
+                    WriteLoad(load, (RobotSimpleCase)rCase, context);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Write a Nucleus load to Robot
+        /// </summary>
+        /// <param name="load"></param>
+        /// <param name="rCase"></param>
+        /// <param name="context"></param>
+        public void WriteLoad(Load load, RobotSimpleCase rCase, RobotConversionContext context)
+        {
+            
+            string mappedID;
+            RobotLoadRecord lRecord = null;
+            int intID = -1;
+            if (context.IDMap.HasSecondID(context.IDMap.LoadCategory, load.GUID))
+            {
+                mappedID = context.IDMap.GetSecondID(context.IDMap.LoadCategory, load.GUID);
+                intID = int.Parse(mappedID);
+                if (load.IsDeleted)
+                {
+                    if (context.Options.DeleteObjects)
+                        rCase.Records.Delete(intID);
+                }
+                else lRecord = rCase.Records.Get(intID) as RobotLoadRecord; //TODO: Get by uniqueID instead!
+            }
+            if (!load.IsDeleted)
+            {
+                IRobotLoadRecordType type;
+                if (load is NodeLoad) // Node point load
+                {
+                    NodeLoad nLoad = (NodeLoad)load;
+                    type = IRobotLoadRecordType.I_LRT_NODE_FORCE;
+                    if (lRecord == null || lRecord.Type != type)
+                        lRecord = rCase.Records.Create(type) as RobotLoadRecord;
+
+                    lRecord.Objects.FromText(context.IDMap.ToIDString(nLoad.AppliedTo));
+                    //TODO: Axis
+                    Vector force = nLoad.Direction.Vector() * nLoad.Value; //TODO: Provide evaluation context?
+                    if (nLoad.IsMoment)
+                    {
+                        lRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_CX, force.X);
+                        lRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_CY, force.Y);
+                        lRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_CZ, force.Z);
+                    }
+                    else
+                    {
+                        lRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_FX, force.X);
+                        lRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_FY, force.Y);
+                        lRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_FZ, force.Z);
+                    }
+                }
+                else if (load is LinearElementLoad)
+                {
+                    LinearElementLoad lELoad = (LinearElementLoad)load;
+                    type = IRobotLoadRecordType.I_LRT_BAR_UNIFORM; //TODO: Variable loads
+                    if (lRecord == null || lRecord.Type != type)
+                        lRecord = rCase.Records.Create(type) as RobotLoadRecord;
+
+                    lRecord.Objects.FromText(context.IDMap.ToIDString(lELoad.AppliedTo));
+                    //TODO: Axis
+                    Vector force = lELoad.Direction.Vector() * lELoad.Value; //TODO: Provide evaluation context?
+                    if (!lELoad.IsMoment)
+                    {
+                        lRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PX, force.X);
+                        lRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PY, force.Y);
+                        lRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PZ, force.Z);
+                    }
+                }
+
+                context.IDMap.Add(load, lRecord);
+
+                
+            }
         }
 
         /// <summary>
