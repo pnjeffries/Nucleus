@@ -125,6 +125,18 @@ namespace Nucleus.Maths
         }
 
         /// <summary>
+        /// Get the minimum value encompassed by this interval
+        /// (This will be the lesser of the Start and End fields)
+        /// </summary>
+        public double Min { get { return Math.Min(Start, End); } }
+
+        /// <summary>
+        /// Get the maximum value encompassed by this interval
+        /// (This will be the greater of the Start and End fields)
+        /// </summary>
+        public double Max { get { return Math.Max(Start, End); } }
+
+        /// <summary>
         /// Get the signed value of the greatest absolute value in this interval.
         /// This will return whichever of Max and Min has the largest (unsigned) magnitude.
         /// </summary>
@@ -150,12 +162,12 @@ namespace Nucleus.Maths
         /// The minimum value should be lower than or equal to the maximum, or else
         /// this interval will not be valid.
         /// </summary>
-        /// <param name="min"></param>
-        /// <param name="max"></param>
-        public Interval(double min, double max)
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        public Interval(double start, double end)
         {
-            Start = min;
-            End = max;
+            Start = start;
+            End = end;
         }
 
         /// <summary>
@@ -439,6 +451,28 @@ namespace Nucleus.Maths
         public double Wrap(double value)
         {
             return Start + (value - Start) % Size;
+        }
+
+        /// <summary>
+        /// Create a new interval with the same end value as this one
+        /// but with the new specified start value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public Interval WithStart(double value)
+        {
+            return new Interval(value, End);
+        }
+
+        /// <summary>
+        /// Create a new interval with the same start value as this one
+        /// but with the new specified end value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public Interval WithEnd(double value)
+        {
+            return new Interval(Start, value);
         }
 
         public override string ToString()

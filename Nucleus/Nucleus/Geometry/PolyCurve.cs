@@ -476,8 +476,6 @@ namespace Nucleus.Geometry
             }
         }
 
-
-
         /// <summary>
         /// Offset this curve on the XY plane by varying distances for
         /// each span.
@@ -517,6 +515,25 @@ namespace Nucleus.Geometry
 
             return null;
         }
+
+        /*
+        /// <summary>
+        /// Extract a portion of this curve as a new curve
+        /// </summary>
+        /// <param name="subDomain">The subdomain of this curve to
+        /// be extracted as a new curve</param>
+        /// <returns></returns>
+        public override Curve Extract(Interval subDomain)
+        {
+            var result = new PolyCurve();
+            int segCount = SegmentCount;
+            foreach (Curve subCrv in SubCurves)
+            {
+                int subSC = subCrv.SegmentCount;
+                //TODO
+            }
+        }
+        */
 
         /// <summary>
         /// Could this PolyCurve be accurately represented using a polyline?

@@ -36,6 +36,7 @@ namespace Nucleus.ETABS
                     RaiseMessage("Establishing ETABS link...");
                     cHelper helper = new Helper();
                     _ETABS = helper.CreateObjectProgID("CSI.ETABS.API.ETABSObject");
+                    //TODO: Deal with failure to initialise object
                     RaiseMessage("Starting application...");
                     _ETABS.ApplicationStart();
                     RaiseMessage("ETABS link established.");
