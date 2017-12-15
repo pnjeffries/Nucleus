@@ -54,6 +54,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\CurveExtensions.cs" />
+    <Compile Include="Extensions\Point3dExtensions.cs" />
+    <Compile Include="Extensions\Vector3dExtensions.cs" />
     <Compile Include="NtoRC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RCtoN.cs" />
