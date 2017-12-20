@@ -857,6 +857,20 @@ namespace Nucleus.Geometry
             return result;
         }
 
+        // TODO: Reinstate
+        // Temporarily removed as the need to deal with looping &
+        // reversing made extraction a lot more complicated than first thought!
+
+        /*
+        /// <summary>
+        /// Extract a portion of this curve as a new curve
+        /// </summary>
+        /// <param name="subDomain">The subdomain of this curve to
+        /// be extracted as a new curve</param>
+        /// <returns></returns>
+        public abstract Curve Extract(Interval subDomain);
+        */
+
         public override string ToString()
         {
             return "Curve";

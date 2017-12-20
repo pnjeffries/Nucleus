@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nucleus.Maths;
 
 namespace Nucleus.Geometry
 {
@@ -324,6 +325,18 @@ namespace Nucleus.Geometry
             }
             else return false;
         }
+        /*
+        /// <summary>
+        /// Extract a portion of this curve as a new curve
+        /// </summary>
+        /// <param name="subDomain">The subdomain of this curve to
+        /// be extracted as a new curve</param>
+        /// <returns></returns>
+        public override Curve Extract(Interval subDomain)
+        {
+            return new Line(PointAt(subDomain.Start), PointAt(subDomain.End), Attributes);
+        }
+        */
 
         #endregion
 

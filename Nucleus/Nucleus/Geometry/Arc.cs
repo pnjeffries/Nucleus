@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nucleus.Maths;
 
 namespace Nucleus.Geometry
 {
@@ -621,6 +622,29 @@ namespace Nucleus.Geometry
             else if (index == 1) return 1;
             else return ClosestParameter(vertex.Position);
         }
+
+        /*
+        /// <summary>
+        /// Extract a portion of this curve as a new curve
+        /// </summary>
+        /// <param name="subDomain">The subdomain of this curve to
+        /// be extracted as a new curve</param>
+        /// <returns></returns>
+        public override Curve Extract(Interval subDomain)
+        {
+            if (subDomain.Start <= 0 && subDomain.End >= 1.0 && Closed)
+            {
+                // Subdomain still represents a complete circle!
+                return new Arc(Circle);
+            }
+            else
+                return new Arc(
+                    PointAt(subDomain.Start),
+                    PointAt(subDomain.Mid),
+                    PointAt(subDomain.End),
+                    Attributes);
+        }
+        */
 
         #endregion
 

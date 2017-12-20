@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nucleus.Maths;
 
 namespace Nucleus.Geometry
 {
@@ -241,6 +242,27 @@ namespace Nucleus.Geometry
             result.AddRange(ToLines());
             return result;
         }
+
+        /*
+        /// <summary>
+        /// Extract a portion of this curve as a new curve
+        /// </summary>
+        /// <param name="subDomain">The subdomain of this curve to
+        /// be extracted as a new curve</param>
+        /// <returns></returns>
+        public override Curve Extract(Interval subDomain)
+        {
+            var pts = new List<Vector>();
+            pts.Add(PointAt(subDomain.Start));
+            for (int i = 0; i < VertexCount; i++)
+            {
+                if (((double)i) / VertexCount > subDomain.Start)
+                    pts.Add(Vertices[i].Position);
+            }
+            pts.Add(PointAt(subDomain.End));
+            return new PolyLine(pts, Attributes);
+        }
+        */
 
         public override string ToString()
         {

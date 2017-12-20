@@ -24,5 +24,26 @@ namespace Nucleus.Analysis
         /// <param name="text"></param>
         /// <returns></returns>
         ICalculationLog WriteLine(string text = "");
+
+        /// <summary>
+        /// Write text to the log as a superscript
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        ICalculationLog Superscript(string text);
+
+        /// <summary>
+        /// Write a symbol to the log
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        ICalculationLog Symbol(string name);
+
+        /// <summary>
+        /// Add a diagram image to the log
+        /// </summary>
+        /// <param name="resourceURI"></param>
+        /// <returns></returns>
+        ICalculationLog Diagram(string resourceURI);
     }
 }

@@ -34,6 +34,7 @@
                   StaysOpenOnEdit="{Binding Path=IsEditable}"
                   Text="{Binding Path=Text}"
                   TextSearch.TextPath="{Binding Path=TextSearchPath}"
+                  Name="ComboBox"
                   />
         <ContentPresenter Grid.Column="2" Content="{Binding Path=ExtraContent}"/>
     </Grid>
