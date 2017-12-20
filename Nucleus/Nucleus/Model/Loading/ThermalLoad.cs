@@ -11,6 +11,9 @@ namespace Nucleus.Model.Loading
     /// </summary>
     public class ThermalLoad : Load<ElementSet, Element>
     {
-      //TODO: Units   
+        public override string GetValueUnits()
+        {
+            return "°C";
+        }
     }
 }

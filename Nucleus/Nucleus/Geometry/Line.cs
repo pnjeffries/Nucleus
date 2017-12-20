@@ -306,6 +306,25 @@ namespace Nucleus.Geometry
             else return Offset(0);
         }
 
+        /// <summary>
+        /// Extend this line to meet (as closely as possible) another.
+        /// The start or end vertex of this line will be moved to meet the other
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool ExtendToLine(Line other)
+        {
+            Vector pt = Axis.ClosestPoint(StartPoint, Direction, other.StartPoint, other.Direction);
+            if (pt.IsValid())
+            {
+                double t = ClosestParameter(pt);
+                if (t < 0.5) Start.Position = pt;
+                else End.Position = pt;
+                return true;
+            }
+            else return false;
+        }
+
         #endregion
 
         #region Static Methods
