@@ -29,7 +29,7 @@ namespace Nucleus.Model.Loading
         {
             get
             {
-                if (_Distribution == null) _Distribution = new LinearDoubleDataSet(0, 1.0);
+                if (_Distribution == null) _Distribution = new LinearDoubleDataSet(1.0);
                 return _Distribution;
             }
             set { ChangeProperty(ref _Distribution, value, "Distribution"); }

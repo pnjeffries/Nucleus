@@ -44,5 +44,31 @@ namespace Nucleus.Model
         /// </summary>
         /// <param name="section"></param>
         public LinearElementSet(SectionFamily section) : base(section) { }
+
+        #region Methods
+
+        /// <summary>
+        /// Set this set to contain only the specified items.
+        /// All existing items, filters etc. in this set will be removed.
+        /// </summary>
+        /// <param name="items"></param>
+        public void Set(LinearElementCollection items)
+        {
+            Clear();
+            Add(items);
+        }
+
+        // <summary>
+        /// Add a collection of items to the base collection of this set, to be considered for
+        /// inclusion.  Note that adding an item to this set does not guarantee its inclusion 
+        /// should said item fail to pass any of the specified set filters.
+        /// </summary>
+        /// <param name="items"></param>
+        public void Add(LinearElementCollection items)
+        {
+            BaseCollection.TryAddRange(items);
+        }
+
+        #endregion
     }
 }

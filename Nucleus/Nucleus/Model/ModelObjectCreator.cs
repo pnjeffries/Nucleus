@@ -503,6 +503,25 @@ namespace Nucleus.Model
             return result;
         }
 
+        /// <summary>
+        /// Create a new (or update an existing) area load in the model
+        /// </summary>
+        /// <param name="lCase">The case of which the new load is to be part</param>
+        /// <param name="exInfo">Optional.  The execution information of the current action.
+        /// If an object has been created previously with matching execution information then
+        /// instead of creating a new item this previous one will be updated and returned instead.
+        /// This enables this method to be used parametrically.</param>
+        /// <returns>The created or updated load case.</param>
+        /// <returns></returns>
+        public AreaLoad AreaLoad(LoadCase lCase, ExecutionInfo exInfo = null)
+        {
+            AreaLoad result = new AreaLoad();
+            result = (AreaLoad)Model.History.Update(exInfo, result);
+            result.Case = lCase;
+            Model.Add(result);
+            return result;
+        }
+
         #endregion
     }
 }

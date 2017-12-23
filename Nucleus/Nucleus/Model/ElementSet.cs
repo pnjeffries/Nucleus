@@ -48,6 +48,44 @@ namespace Nucleus.Model
         /// <param name="collection"></param>
         public ElementSet(ElementCollection collection) : base(collection) { }
 
+        /// <summary>
+        /// Initialise this set to contain the specified base collection of items
+        /// </summary>
+        /// <param name="collection"></param>
+        public ElementSet(LinearElementCollection collection) 
+            : this(collection.ToElementCollection()) { }
+
+        /// <summary>
+        /// Initialise this set to contain the specified base collection of items
+        /// </summary>
+        /// <param name="collection"></param>
+        public ElementSet(PanelElementCollection collection) 
+            : this(collection.ToElementCollection()) { }
+
+        /// <summary>
+        /// Initialise a set to contain the items and filters from another set
+        /// </summary>
+        /// <param name="other"></param>
+        public ElementSet(ElementSet other) : base()
+        {
+            All = other.All;
+            Add(other.BaseCollection);
+            Add(other.SubSets);
+            Add(other.Filters);
+        }
+
+        /// <summary>
+        /// Initialise a set to contain the items and filters from another set
+        /// </summary>
+        /// <param name="other"></param>
+        public ElementSet(LinearElementSet other) : this((ElementSet)other) { }
+
+        /// <summary>
+        /// Initialise a set to contain the items and filters from another set
+        /// </summary>
+        /// <param name="other"></param>
+        public ElementSet(PanelElementSet other) : this((ElementSet)other) { }
+
         #endregion
 
         #region Methods

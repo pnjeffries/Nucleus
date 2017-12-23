@@ -376,6 +376,17 @@ namespace Nucleus.Model
         }
 
         /// <summary>
+        /// Add a collection of sub-sets to the base collection of this set, to be considered for inclusion.
+        /// Note that adding these items to this set does not guarantee their inclusion should said items
+        /// fail to pass any of the specified set filters.
+        /// </summary>
+        /// <param name="set"></param>
+        public void Add(TSubSetCollection sets)
+        {
+            foreach (TSubSet set in sets) Add(set);
+        }
+
+        /// <summary>
         /// Set this set to contain only the specified items.
         /// All existing items, filters etc. in this set will be removed.
         /// </summary>
@@ -455,6 +466,15 @@ namespace Nucleus.Model
         {
             if (_Filters == null) _Filters = new TFilterCollection();
             _Filters.TryAdd(filter);
+        }
+
+        /// <summary>
+        /// Add a collection of logical filters to this set
+        /// </summary>
+        /// <param name="filters"></param>
+        public void Add(TFilterCollection filters)
+        {
+            foreach (TFilter filter in filters) Add(filter);
         }
 
         /// <summary>

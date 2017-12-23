@@ -52,7 +52,7 @@ namespace Nucleus.Physics
         /// <summary>
         /// The mass of the node
         /// </summary>
-        public double Mass { get; set; } = 1.0;
+        public double Mass { get; set; } = 0;
 
         /// <summary>
         /// The fixity of the node
@@ -88,6 +88,8 @@ namespace Nucleus.Physics
                 Position = Node.Position;
                 Velocity = Vector.Zero;
                 if (Node.HasData<NodeSupport>()) Fixity = Node.GetData<NodeSupport>().Fixity;
+                LumpedK = Vector.Zero;
+                Mass = 0;
             }
         }
 
@@ -133,9 +135,9 @@ namespace Nucleus.Physics
         public void EndCycle()
         {
             PastVelocity = Velocity;
-            Velocity = Vector.Zero;
+            //Velocity = Vector.Zero;
             Residual = Vector.Zero;
-            LumpedK = Vector.Zero;
+            //LumpedK = Vector.Zero;
         }
 
         /// <summary>

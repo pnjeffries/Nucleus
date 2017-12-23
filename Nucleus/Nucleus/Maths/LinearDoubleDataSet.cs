@@ -63,6 +63,13 @@ namespace Nucleus.Maths
         }
 
         /// <summary>
+        /// Initialise a new data set containing the specified constant value between
+        /// 0 and 1.0.
+        /// </summary>
+        /// <param name="constantValue"></param>
+        public LinearDoubleDataSet(double constantValue) : this(0, constantValue, 1, constantValue) { }
+
+        /// <summary>
         /// Initialise a new data set containing the two specified initial pairings
         /// </summary>
         /// <param name="firstKey"></param>

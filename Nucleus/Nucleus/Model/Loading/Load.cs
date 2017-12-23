@@ -52,6 +52,21 @@ namespace Nucleus.Model.Loading
             set { ChangeProperty(ref _Case, value, "Case"); }
         }
 
+        /// <summary>
+        /// Private backing field for Value property
+        /// </summary>
+        private Expression _Value;
+
+        /// <summary>
+        /// The value of the load
+        /// </summary>
+        [AutoUI(600)]
+        public Expression Value
+        {
+            get { return _Value; }
+            set { ChangeProperty(ref _Value, value, "Value"); }
+        }
+
         #endregion
 
         #region Methods
@@ -62,6 +77,13 @@ namespace Nucleus.Model.Loading
         /// <param name="mObj"></param>
         /// <returns></returns>
         public abstract bool IsAppliedTo(ModelObject mObj);
+
+        /// <summary>
+        /// Test whether this load can be applied to an object of the
+        /// specified type.
+        /// </summary>
+        /// <returns></returns>
+        public abstract bool CanApplyToType(Type type);
 
         #endregion
     }
@@ -96,21 +118,6 @@ namespace Nucleus.Model.Loading
         }
 
         /// <summary>
-        /// Private backing field for Value property
-        /// </summary>
-        private Expression _Value;
-
-        /// <summary>
-        /// The value of the load
-        /// </summary>
-        [AutoUI(600)]
-        public Expression Value
-        {
-            get { return _Value; }
-            set { ChangeProperty(ref _Value, value, "Value"); }
-        }
-
-        /// <summary>
         /// Is this load applied to the specified model object?
         /// </summary>
         /// <param name="mObj"></param>
@@ -121,6 +128,16 @@ namespace Nucleus.Model.Loading
         }
 
         /// <summary>
+        /// Test whether this load can be applied to an object of the
+        /// specified type.
+        /// </summary>
+        /// <returns></returns>
+        public override bool CanApplyToType(Type type)
+        {
+            return typeof(TItem).IsAssignableFrom(type);
+        }
+
+        /// <summary>
         /// Get a string which descibes the units in which this load's
         /// value is expressed
         /// </summary>
@@ -128,5 +145,6 @@ namespace Nucleus.Model.Loading
         {
             return "";
         }
+
     }
 }

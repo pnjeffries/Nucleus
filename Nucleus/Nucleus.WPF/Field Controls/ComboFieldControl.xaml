@@ -13,6 +13,223 @@
                 
             </ResourceDictionary.MergedDictionaries>
             <converters:NullOrEmptyVisibilityConverter x:Key="NullOrEmptyVisibilityConverter"/>
+
+            <!-- Arrowless expander template for Group headers based on: 
+            https://stackoverflow.com/questions/1070685/hiding-the-arrows-for-the-wpf-expander-control -->
+            <Style x:Key="ExpanderHeaderFocusVisual">
+                <Setter Property="Control.Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Border>
+                                <Rectangle SnapsToDevicePixels="true"
+                           Margin="0"
+                           Stroke="Black"
+                           StrokeDashArray="1 2"
+                           StrokeThickness="1" />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="ExpanderDownHeaderStyle"
+       TargetType="{x:Type ToggleButton}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                            <Border Padding="{TemplateBinding Padding}">
+                                <Grid SnapsToDevicePixels="False"
+                          Background="Transparent">
+                                    <ContentPresenter SnapsToDevicePixels="True"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Center"
+                                          RecognizesAccessKey="True" />
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="ExpanderRightHeaderStyle"
+       TargetType="{x:Type ToggleButton}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                            <Border Padding="{TemplateBinding Padding}">
+                                <Grid SnapsToDevicePixels="False"
+                          Background="Transparent">
+                                    <ContentPresenter SnapsToDevicePixels="True"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Top"
+                                          RecognizesAccessKey="True" />
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="ExpanderUpHeaderStyle"
+       TargetType="{x:Type ToggleButton}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                            <Border Padding="{TemplateBinding Padding}">
+                                <Grid SnapsToDevicePixels="False"
+                          Background="Transparent">
+                                    <ContentPresenter SnapsToDevicePixels="True"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Center"
+                                          RecognizesAccessKey="True" />
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="ExpanderLeftHeaderStyle"
+       TargetType="{x:Type ToggleButton}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                            <Border Padding="{TemplateBinding Padding}">
+                                <Grid SnapsToDevicePixels="False"
+                          Background="Transparent">
+                                    <ContentPresenter SnapsToDevicePixels="True"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Top"
+                                          RecognizesAccessKey="True" />
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="ArrowlessExpanderTemplate"
+       TargetType="{x:Type Expander}">
+                <Setter Property="Foreground"
+            Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+                <Setter Property="Background"
+            Value="Transparent" />
+                <Setter Property="HorizontalContentAlignment"
+            Value="Stretch" />
+                <Setter Property="VerticalContentAlignment"
+            Value="Stretch" />
+                <Setter Property="BorderBrush"
+            Value="Transparent" />
+                <Setter Property="BorderThickness"
+            Value="1" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Expander}">
+                            <Border SnapsToDevicePixels="true"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="3">
+                                <DockPanel>
+                                    <ToggleButton FontFamily="{TemplateBinding FontFamily}"
+                                      FontSize="{TemplateBinding FontSize}"
+                                      FontStretch="{TemplateBinding FontStretch}"
+                                      FontStyle="{TemplateBinding FontStyle}"
+                                      FontWeight="{TemplateBinding FontWeight}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      Padding="{TemplateBinding Padding}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      FocusVisualStyle="{StaticResource ExpanderHeaderFocusVisual}"
+                                      Margin="1"
+                                      MinHeight="0"
+                                      MinWidth="0"
+                                      x:Name="HeaderSite"
+                                      Style="{StaticResource ExpanderDownHeaderStyle}"
+                                      Content="{TemplateBinding Header}"
+                                      ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                      ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"
+                                      DockPanel.Dock="Top"
+                                      IsChecked="{Binding Path=IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" />
+                                    <ContentPresenter Focusable="false"
+                                          Visibility="Collapsed"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          Margin="{TemplateBinding Padding}"
+                                          x:Name="ExpandSite"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          DockPanel.Dock="Bottom" />
+                                </DockPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsExpanded"
+                             Value="true">
+                                    <Setter Property="Visibility"
+                                TargetName="ExpandSite"
+                                Value="Visible" />
+                                </Trigger>
+                                <Trigger Property="ExpandDirection"
+                             Value="Right">
+                                    <Setter Property="DockPanel.Dock"
+                                TargetName="ExpandSite"
+                                Value="Right" />
+                                    <Setter Property="DockPanel.Dock"
+                                TargetName="HeaderSite"
+                                Value="Left" />
+                                    <Setter Property="Style"
+                                TargetName="HeaderSite"
+                                Value="{StaticResource ExpanderRightHeaderStyle}" />
+                                </Trigger>
+                                <Trigger Property="ExpandDirection"
+                             Value="Up">
+                                    <Setter Property="DockPanel.Dock"
+                                TargetName="ExpandSite"
+                                Value="Top" />
+                                    <Setter Property="DockPanel.Dock"
+                                TargetName="HeaderSite"
+                                Value="Bottom" />
+                                    <Setter Property="Style"
+                                TargetName="HeaderSite"
+                                Value="{StaticResource ExpanderUpHeaderStyle}" />
+                                </Trigger>
+                                <Trigger Property="ExpandDirection"
+                             Value="Left">
+                                    <Setter Property="DockPanel.Dock"
+                                TargetName="ExpandSite"
+                                Value="Left" />
+                                    <Setter Property="DockPanel.Dock"
+                                TargetName="HeaderSite"
+                                Value="Right" />
+                                    <Setter Property="Style"
+                                TargetName="HeaderSite"
+                                Value="{StaticResource ExpanderLeftHeaderStyle}" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled"
+                             Value="false">
+                                    <Setter Property="Foreground"
+                                Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="GroupItem" TargetType="{x:Type GroupItem}">
+                <Setter Property="Margin" Value="0,0,0,0"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type GroupItem}">
+                            <Expander IsExpanded="True" BorderThickness="0" Style="{StaticResource ArrowlessExpanderTemplate}">
+                                <Expander.Header>
+                                    <DockPanel>
+                                        <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                                    </DockPanel>
+                                </Expander.Header>
+                                <Expander.Content>
+                                    <Border Margin="5,0,0,0">
+                                        <ItemsPresenter />
+                                    </Border>
+                                </Expander.Content>
+                            </Expander>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </ResourceDictionary>
     </local:FieldControl.Resources>
     <Grid Name="LayoutRoot">
@@ -34,7 +251,19 @@
                   StaysOpenOnEdit="{Binding Path=IsEditable}"
                   Text="{Binding Path=Text}"
                   TextSearch.TextPath="{Binding Path=TextSearchPath}"
-                  />
+                  >
+            <ComboBox.GroupStyle>
+                <GroupStyle ContainerStyle="{StaticResource GroupItem}"/>
+                <!--<GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>-->
+            </ComboBox.GroupStyle>
+                
+        </ComboBox>
         <ContentPresenter Grid.Column="2" Content="{Binding Path=ExtraContent}"/>
     </Grid>
 </local:FieldControl>

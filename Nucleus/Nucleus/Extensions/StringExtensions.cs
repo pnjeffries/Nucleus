@@ -183,6 +183,22 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Get the set of contiguous letter characters from the start of this string up
+        /// to the first space or non-letter character
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string StartingLetters(this string str)
+        {
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (!char.IsLetter(str[i]))
+                    return str.Substring(0, i);
+            }
+            return str;
+        }
+
+        /// <summary>
         /// Split this string using the separator characters ' ' and ','.
         /// String literals enclosed by '"' will be kept intact.
         /// </summary>

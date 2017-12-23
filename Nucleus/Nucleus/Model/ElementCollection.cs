@@ -217,6 +217,14 @@ namespace Nucleus.Model
             Add(element);
         }
 
+        /// <summary>
+        /// Initialise a new collection containing the same elements as another
+        /// </summary>
+        /// <param name="elements"></param>
+        public ElementCollection(IEnumerable<Element> elements) : base()
+        {
+            AddRange(elements);
+        }
 
         /// <summary>
         /// Owner constructor.  Initialises an empty ElementCollection with the specified owner

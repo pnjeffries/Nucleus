@@ -43,6 +43,15 @@ namespace Nucleus.Model
             return this.Modified<PanelElementCollection, PanelElement>(since);
         }
 
+        /// <summary>
+        /// Convert this LinearElementCollection to an ElementCollection containing the same elements
+        /// </summary>
+        /// <returns></returns>
+        public ElementCollection ToElementCollection()
+        {
+            return new ElementCollection(this);
+        }
+
         #endregion
     }
 }

@@ -884,21 +884,23 @@ namespace Nucleus.Meshing
 
             int p0i = -1;
             int e0i = -1;
-            for (int i = 0; i < zigZags - 1; i++)
+            for (int i = 0; i < zigZags; i++)
             {
                 if (i == 0) //Initialise starting vertices
                 {
                     Vector p0 = start.Interpolate(end, i * zigZagN);
-                    Vector e0 = p0 + direction * startLength.Interpolate(endLength, i * zigZagN);
+                    Vector e0 = p0 - direction * startLength;
                     p0i = AddVertex(p0);
                     e0i = AddVertex(e0);
                 }
 
                 // Determine points               
                 Vector p1 = start.Interpolate(end, (i + 0.5) * zigZagN);
-                Vector p2 = start.Interpolate(end, (i + 1.0) * zigZagN);                
-                Vector e1 = p1 + direction * startLength.Interpolate(endLength, (i + 0.5) * zigZagN);
-                Vector e2 = p2 + direction * startLength.Interpolate(endLength, (i + 1.0) * zigZagN);
+                Vector p2 = start.Interpolate(end, (i + 1.0) * zigZagN);
+                double l1 = startLength.Interpolate(endLength, (i + 0.5) * zigZagN);
+                Vector e1 = p1 - direction * l1;
+                Vector e2 = p2 - direction * startLength.Interpolate(endLength, (i + 1.0) * zigZagN);
+                p1 -= direction * (Math.Min(zigZagLength, l1.Abs()/2) * l1.Sign());
 
                 int p1i = AddVertex(p1);
                 int p2i = AddVertex(p2);     
