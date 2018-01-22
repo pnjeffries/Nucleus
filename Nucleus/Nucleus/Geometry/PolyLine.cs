@@ -161,18 +161,18 @@ namespace Nucleus.Geometry
                 Vector v1 = Vector.Unset;
                 Vector v2 = Vector.Unset;
 
-                if (p0.IsValid()) v1 = p1 - p0;
-                if (p2.IsValid()) v2 = p2 - p1;
+                if (p0.IsValid()) v1 = (p1 - p0).Unitize();
+                if (p2.IsValid()) v2 = (p2 - p1).Unitize();
 
                 double d1 = distances.GetWrapped(i - 1);
                 double d2 = distances.GetBounded(i);
 
-                if (v1.IsValid() && !v1.IsZero() && v2.IsValid() && !v2.IsZero())
+                if (v1.IsValid() && !v1.IsZero() && v2.IsValid() && !v2.IsZero() && !v1.IsParallelTo(v2))
                 {
                     // Calculate intersection of offset lines:
-                    Vector o1 = v1.PerpendicularXY().Unitize() * d1;
-                    Vector o2 = v2.PerpendicularXY().Unitize() * d2;
-                    Vector pOff = Intersect.LineLineXY(p0, v1, p2, v2);
+                    Vector o1 = v1.PerpendicularXY() * d1;
+                    Vector o2 = v2.PerpendicularXY() * d2;
+                    Vector pOff = Intersect.LineLineXY(p0 + o1, v1, p2 + o2, v2);
                     pts[i] = pOff;
                 }
                 else
@@ -194,13 +194,13 @@ namespace Nucleus.Geometry
 
                     if (sV.IsValid() && !sV.IsZero())
                     {
-                        Vector pOff = p1 + sV.PerpendicularXY().Unitize() * d;
+                        Vector pOff = p1 + sV.PerpendicularXY() * d;
                         pts[i] = pOff;
                     }
                     else pts[i] = p1; // Can't offset!
                 }
             }
-            return new PolyLine(pts);
+            return new PolyLine(pts, Closed);
         }
 
         /// <summary>

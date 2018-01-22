@@ -271,6 +271,21 @@ namespace Nucleus.Rhino
         }
 
         /// <summary>
+        /// Convert a list of Nucleus planar regions to a list of Rhino common BReps
+        /// </summary>
+        /// <param name="surfaces"></param>
+        /// <returns></returns>
+        public static IList<RC.Brep> Convert(IList<PlanarRegion> surfaces)
+        {
+            var result = new List<RC.Brep>();
+            foreach (PlanarRegion srf in surfaces)
+            {
+                result.Add(Convert(srf));
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Convert a Nucleus Linear Element to a Rhino Extrusion, if possible
         /// </summary>
         /// <param name="element"></param>

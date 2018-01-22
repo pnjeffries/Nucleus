@@ -1604,9 +1604,12 @@ namespace Nucleus.Robot
             if (!lCase.IsDeleted)
             {
                 if (rCase == null)
+                {
+                    intID = Robot.Project.Structure.Cases.FreeNumber;
                     rCase = Robot.Project.Structure.Cases.CreateSimple(
-                        intID, lCase.Name, IRobotCaseNature.I_CN_PERMANENT, 
+                        intID, lCase.Name, IRobotCaseNature.I_CN_PERMANENT,
                         IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR);
+                }
                 //TODO: Populate nature + type better
                 else
                 {

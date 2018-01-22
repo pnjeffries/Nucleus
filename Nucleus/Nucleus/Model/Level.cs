@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Nucleus.Geometry;
 using Nucleus.UI;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace Nucleus.Model
     /// Object that represents a level in a model
     /// </summary>
     [Serializable]
-    public class Level : ModelObject
+    public class Level : ModelObject, IComparable<Level>
     {
         #region Properties
 
@@ -132,6 +133,31 @@ namespace Nucleus.Model
         public bool IsCoincident(Level other)
         {
             return Z == other.Z; //TODO: Tolerance?
+        }
+
+        /// <summary>
+        /// IComparable implementation
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public int CompareTo(Level other)
+        {
+            return Z.CompareTo(other.Z);
+        }
+
+        /// <summary>
+        /// Project the specified set of point vectors onto this level
+        /// </summary>
+        /// <param name="points">The initial set of points</param>
+        /// <returns>A projected set of points on this level</returns>
+        public Vector[] ProjectPoints(IList<Vector> points)
+        {
+            var result = new Vector[points.Count];
+            for (int i = 0; i < points.Count; i++)
+            {
+                result[i] = points[i].WithZ(Z);
+            }
+            return result;
         }
 
         #endregion

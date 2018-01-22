@@ -161,9 +161,25 @@ namespace Nucleus.Model
 
             foreach (Vertex v in Vertices)
             {
-                if (v.Element != null &&
+                if (v.Element != null && !result.Contains(v.Element.GUID) &&
                     (!undeletedOnly || !v.Element.IsDeleted))
                     result.Add(v.Element);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get a collection of the geometric objects whose vertices are connected to this node
+        /// </summary>
+        /// <returns></returns>
+        public VertexGeometryCollection GetConnectedGeometry()
+        {
+            var result = new VertexGeometryCollection();
+            foreach (Vertex v in Vertices)
+            {
+                if (v.Owner != null)
+                    result.Add(v.Owner);
             }
 
             return result;

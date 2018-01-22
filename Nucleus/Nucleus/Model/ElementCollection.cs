@@ -130,6 +130,52 @@ namespace Nucleus.Model
             return result;
         }
 
+        /// <summary>
+        /// Extract from this collection subcollections of elements which
+        /// are connected together.
+        /// </summary>
+        /// <returns></returns>
+        public IList<TSelf> ExtractConnectedSubstructures()
+        {
+            var result = new List<TSelf>();
+
+            // Build pool of all elements to gradually eliminate
+            var pool = new TSelf();
+            foreach (var element in this) pool.Add(element);
+
+            while (pool.Count > 0)
+            {
+                var current = new TSelf();
+                ConnectedSubstructureSearch(pool.First(), pool, current);
+                if (current.Count > 0)
+                    result.Add(current);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Recursive search for connected elements
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="pool"></param>
+        /// <param name="current"></param>
+        private void ConnectedSubstructureSearch(TElement element, TSelf pool, TSelf current)
+        {
+            if (pool.Contains(element.GUID))
+            {
+                pool.Remove(element.GUID);
+                current.Add(element);
+                foreach (Node node in element.Nodes)
+                {
+                    foreach (Element connected in node.GetConnectedElements())
+                    {
+                        if (connected is TElement)
+                            ConnectedSubstructureSearch((TElement)connected, pool, current);
+                    }
+                }
+            }
+        }
+
         #endregion
     }
 

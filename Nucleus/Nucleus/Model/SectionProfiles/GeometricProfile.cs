@@ -33,13 +33,13 @@ namespace Nucleus.Model.SectionProfiles
             }
         }
 
-        //TODO: Bounding box
-
         public override double OverallDepth
         {
             get
             {
-                throw new NotImplementedException();
+                if (_Geometry != null)
+                    return _Geometry.BoundingBox.SizeY;
+                else return 0;
             }
         }
 
@@ -47,7 +47,9 @@ namespace Nucleus.Model.SectionProfiles
         {
             get
             {
-                throw new NotImplementedException();
+                if (_Geometry != null)
+                    return _Geometry.BoundingBox.SizeX;
+                else return 0;
             }
         }
 

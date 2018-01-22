@@ -512,7 +512,7 @@ namespace Nucleus.Geometry
         /// <returns></returns>
         public override Curve Offset(double distance)
         {
-            if (!IsClockwise) distance *= -1;
+            if (IsClockwise) distance *= -1;
             double factor = 1 + distance / Circle.Radius;
             if (factor < 0) return null;
             if (Closed)

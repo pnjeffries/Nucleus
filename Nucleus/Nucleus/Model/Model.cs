@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Nucleus.Actions;
 using Nucleus.Base;
 using Nucleus.Events;
 using Nucleus.Extensions;
@@ -666,6 +667,34 @@ namespace Nucleus.Model
                             }
                         }
                         node.Delete();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Automatically generate or update levels within this model to match the
+        /// positions of horizontal elements
+        /// </summary>
+        /// <param name="minStoreyHeight">The minimum height above an existing level before a new one will be created</param>
+        /// <param name="forElements"></param>
+        public void GenerateLevels(double minStoreyHeight = 2.0, ElementCollection forElements = null, ExecutionInfo exInfo = null)
+        {
+            foreach (Element element in forElements)
+            {
+                if (element is LinearElement)
+                {
+                    BoundingBox bBox = element.GetGeometry().BoundingBox;
+                    if (bBox.SizeZ < Tolerance.Distance) // Is flat
+                    {
+                        Level level = Levels.LevelOf(bBox.MidZ, Tolerance.Layer);
+                        if (level.Z < bBox.MidZ - minStoreyHeight)
+                        {
+                            // Create a new level for the element to sit on
+                            Create.Level(bBox.MidZ, exInfo);
+
+                            // Hmmm... this could probably be improved a lot!
+                        }
                     }
                 }
             }

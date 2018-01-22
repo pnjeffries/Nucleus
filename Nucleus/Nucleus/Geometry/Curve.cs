@@ -857,6 +857,18 @@ namespace Nucleus.Geometry
             return result;
         }
 
+        /// <summary>
+        /// On entering either the start or end vertex of this curve,
+        /// the other will be returned.
+        /// </summary>
+        /// <param name="curveEnd"></param>
+        /// <returns></returns>
+        public Vertex GetOtherEnd(Vertex curveEnd)
+        {
+            if (curveEnd == Start) return End;
+            return Start;
+        }
+
         // TODO: Reinstate
         // Temporarily removed as the need to deal with looping &
         // reversing made extraction a lot more complicated than first thought!
@@ -876,9 +888,107 @@ namespace Nucleus.Geometry
             return "Curve";
         }
 
+        /// <summary>
+        /// Reverse the direction of this curve
+        /// </summary>
+        public virtual void Reverse()
+        {
+            Vertices.Reverse();
+        }
+
         #endregion
 
         #region Static Methods
+
+        /// <summary>
+        /// Join two curves to create a polycurve.  The start of the endCurve should be coincident
+        /// with the end of the startCurve.
+        /// If one or other (or both) of the curves is already a polycurve, the other curve(s) will
+        /// be added to that PolyCurve rather than creating a new one.
+        /// </summary>
+        /// <param name="startCurve"></param>
+        /// <param name="endCurve"></param>
+        /// <returns></returns>
+        public static Curve Join(Curve startCurve, Curve endCurve)
+        {
+            if (startCurve == null) return endCurve;
+            else if (endCurve == null) return startCurve;
+            else if (startCurve is PolyCurve)
+            {
+                var pCrv = (PolyCurve)startCurve;
+                if (endCurve is PolyCurve)
+                {
+                    foreach (var subCrv in ((PolyCurve)endCurve).SubCurves)
+                        pCrv.Add(subCrv);
+                }
+                else pCrv.Add(endCurve);
+                return pCrv;
+            }
+            else if (endCurve is PolyCurve)
+            {
+                var pCrv = (PolyCurve)endCurve;
+                pCrv.SubCurves.Insert(0, startCurve);
+                return pCrv;
+            }
+            else
+            {
+                return new PolyCurve(new Curve[] { startCurve, endCurve }, startCurve.Attributes);
+            }
+        }
+
+        /// <summary>
+        /// Connect the specified curve end vertex to the specified point with a straight line
+        /// segment to be joined with the original curve.
+        /// </summary>
+        /// <param name="curveEnd"></param>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public static Curve Connect(Vertex curveEnd, Vector point)
+        {
+            if (curveEnd.Owner != null && curveEnd.Owner is Curve)
+            {
+                if (curveEnd.IsStart)
+                {
+                    return Join(new Line(point, curveEnd.Position), (Curve)curveEnd.Owner);
+                }
+                else if (curveEnd.IsEnd)
+                {
+                    return Join((Curve)curveEnd.Owner, new Line(curveEnd.Position, point));
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Extend (or trim) the end of a curve to lie at the intersection between the current
+        /// curve and a line on the XY plane.
+        /// </summary>
+        /// <param name="curveEnd">The curve end to modify</param>
+        /// <param name="lineOrigin">A point which lies on the line</param>
+        /// <param name="lineDir">The direction vector of the line</param>
+        /// <returns></returns>
+        public static bool ExtendToLineXY(Vertex curveEnd, Vector lineOrigin, Vector lineDir)
+        {
+            Curve curve = curveEnd.Owner as Curve;
+            if (curve != null)
+            {
+                if (curve is Arc)
+                {
+                    //TODO
+                }
+                else
+                {
+                    Vector tan = curve.TangentAt(curveEnd);
+                    Vector intPt = Intersect.LineLineXY(curveEnd.Position, tan, lineOrigin, lineDir);
+                    if (intPt.IsValid())
+                    {
+                        curveEnd.Position = curveEnd.Position.WithXY(intPt.X, intPt.Y);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
 
         /// <summary>
         /// Match the end positions of two curves by repositioning vertices
@@ -889,8 +999,11 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="crvEnd0">The end vertex of the first curve to be modified.</param>
         /// <param name="crvEnd1">The end vertex of the second curve to be modified.</param>
+        /// <param name="detectMismatches">Optional.  If true, additional checking will be
+        /// performed and only matches where both ends are extended or both ends are trimmed
+        /// will be permitted.</param>
         /// <returns>True if the curve ends could be successfully matched, else false.</returns>
-        public static bool MatchEnds(Vertex crvEnd0, Vertex crvEnd1)
+        public static bool MatchEnds(Vertex crvEnd0, Vertex crvEnd1, bool detectMismatches = false)
         {
             Curve crv0 = crvEnd0.Owner as Curve;
             Curve crv1 = crvEnd1.Owner as Curve;
@@ -900,7 +1013,7 @@ namespace Nucleus.Geometry
                 {
                     if (crv1 is Arc)
                     {
-
+                        //  TODO!
                     }
                     else
                     {
@@ -915,7 +1028,7 @@ namespace Nucleus.Geometry
                     }
                     else
                     {
-                        return MatchEnds(crvEnd0, crv0.TangentAt(crvEnd0), crvEnd1, crv1.TangentAt(crvEnd1));
+                        return MatchEnds(crvEnd0, crv0.TangentAt(crvEnd0), crvEnd1, crv1.TangentAt(crvEnd1), detectMismatches);
                     }
                 }
             }
@@ -931,13 +1044,25 @@ namespace Nucleus.Geometry
         /// <param name="crvEnd1">The curve end vertex of the second curve</param>
         /// <param name="tan1">The end tangency of the second curve</param>
         /// <returns></returns>
-        private static bool MatchEnds(Vertex crvEnd0, Vector tan0, Vertex crvEnd1, Vector tan1)
+        private static bool MatchEnds(Vertex crvEnd0, Vector tan0, Vertex crvEnd1, Vector tan1, bool detectMismatches = false)
         {
             if (tan0.Z.IsTiny() && tan1.Z.IsTiny()) // 2D intersection:
             {
-                Vector intPt = Intersect.LineLineXY(crvEnd0.Position, tan0, crvEnd1.Position, tan1);
+                double t0 = 0;
+                double t1 = 0;
+                Vector intPt = Intersect.LineLineXY(crvEnd0.Position, tan0, crvEnd1.Position, tan1, ref t0, ref t1);
                 if (intPt.IsValid())
                 {
+                    if (detectMismatches && IsExtension(t0, crvEnd0) != IsExtension(t1, crvEnd1))
+                    {
+                        // May be a mis-match!
+                        Curve crv0 = crvEnd0.Owner as Curve;
+                        Curve crv1 = crvEnd1.Owner as Curve;
+                        if (crv0 == null || crv1 == null || 
+                            crv0.GetOtherEnd(crvEnd0).Position.IsCloser(intPt, crvEnd0.Position) ||
+                            crv1.GetOtherEnd(crvEnd1).Position.IsCloser(intPt, crvEnd1.Position))
+                            return false;
+                    }
                     crvEnd0.Position = crvEnd0.Position.WithXY(intPt.X, intPt.Y);
                     crvEnd1.Position = crvEnd1.Position.WithXY(intPt.X, intPt.Y);
                     return true;
@@ -1020,6 +1145,19 @@ namespace Nucleus.Geometry
             return false;
         }
 
+        /// <summary>
+        /// Is the specified parameter change at the specified end vertex an extension
+        /// or a contraction of the curve?
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        private static bool IsExtension(double deltaT, Vertex v)
+        {
+            return (v.IsEnd && deltaT > 0) || (v.IsStart && deltaT < 0);
+        }
+
         #endregion
     }
+
 }

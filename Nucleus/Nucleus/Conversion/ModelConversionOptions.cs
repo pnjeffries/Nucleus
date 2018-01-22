@@ -45,6 +45,22 @@ namespace Nucleus.Conversion
         }
 
         /// <summary>
+        /// Private backing field for Levels property
+        /// </summary>
+        private bool _Levels = true;
+
+        /// <summary>
+        /// Read/Write Levels?
+        /// </summary>
+        [AutoUI(10,
+            ToolTip = "Read/Write Level data?")]
+        public bool Levels
+        {
+            get { return _Levels; }
+            set { ChangeProperty(ref _Levels, value, "Levels"); }
+        }
+
+        /// <summary>
         /// Private backing field for Nodes property
         /// </summary>
         private bool _Nodes = true;
@@ -84,7 +100,7 @@ namespace Nucleus.Conversion
         /// <summary>
         /// Read/Write Linear Elements?
         /// </summary>
-        [AutoUI(12, ToolTip = "Read/Write Linear Element data?")]
+        [AutoUI(13, ToolTip = "Read/Write Linear Element data?")]
         public bool LinearElements
         {
             get { return _LinearElements; }
@@ -99,7 +115,7 @@ namespace Nucleus.Conversion
         /// <summary>
         /// Read/Write Panel Elements?
         /// </summary>
-        [AutoUI(13, ToolTip = "Read/Write Panel Element data?")]
+        [AutoUI(14, ToolTip = "Read/Write Panel Element data?")]
         public bool PanelElements
         {
             get { return _PanelElements; }
@@ -114,7 +130,7 @@ namespace Nucleus.Conversion
         /// <summary>
         /// Read/Write Sets?
         /// </summary>
-        [AutoUI(14, ToolTip = "Read/Write Saved Selection Sets?")]
+        [AutoUI(15, ToolTip = "Read/Write Saved Selection Sets?")]
         public bool Sets
         {
             get { return _Sets; }
@@ -129,6 +145,7 @@ namespace Nucleus.Conversion
         /// <summary>
         /// Read/Write Loading Data?
         /// </summary>
+        [AutoUI(20, ToolTip = "Read/Write Loading Data?")]
         public bool Loading
         {
             get { return _Loading; }

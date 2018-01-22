@@ -288,7 +288,7 @@ namespace Nucleus.Geometry
         public override Curve Offset(double distance)
         {
             Vector dir = Direction;
-            dir = dir.PerpendicularXY();
+            dir = dir.PerpendicularXY() * distance;
             return new Line(StartPoint + dir, EndPoint + dir);
         }
 
@@ -357,6 +357,7 @@ namespace Nucleus.Geometry
             else if (t > 1.0) return 1;
             else return t;
         }
+
 
         #endregion
     }

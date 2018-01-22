@@ -152,6 +152,11 @@ namespace Nucleus.Geometry
         /// <summary>
         /// Default constructor
         /// </summary>
+        public PolyCurve() { }
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public PolyCurve(GeometryAttributes attributes = null)
         {
             Attributes = attributes;
@@ -513,7 +518,7 @@ namespace Nucleus.Geometry
             if (Closed && result.SubCurves.Count > 1)
                 MatchEnds(result.SubCurves.Last().End, result.SubCurves.First().Start);
 
-            return null;
+            return result;
         }
 
         /*
@@ -597,6 +602,18 @@ namespace Nucleus.Geometry
         public override string ToString()
         {
             return "PolyCurve";
+        }
+
+        /// <summary>
+        /// Reverse the direction of this curve
+        /// </summary>
+        public override void Reverse()
+        {
+            foreach (var subCrv in SubCurves)
+            {
+                subCrv.Reverse();
+            }
+            SubCurves.Reverse();
         }
 
         #endregion

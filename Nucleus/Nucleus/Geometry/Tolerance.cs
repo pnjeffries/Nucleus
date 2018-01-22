@@ -36,5 +36,15 @@ namespace Nucleus.Geometry
         /// </summary>
         public static double Distance { get; set; } = 0.001;
 
+        /// <summary>
+        /// The angle tolerance used for facetting arcs
+        /// </summary>
+        public static Angle Angle { get; set; } = Angle.FromDegrees(10);
+
+        /// <summary>
+        /// The current tolerance value used to determine level inclusivity
+        /// </summary>
+        public static double Layer { get; set; } = 0.5;
+
     }
 }

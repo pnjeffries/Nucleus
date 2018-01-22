@@ -65,8 +65,13 @@
     <Compile Include="Extensions\BoolExtensions.cs" />
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="Extensions\NotifyCollectionChangedEventArgsExtensions.cs" />
+    <Compile Include="Geometry\ICellMap.cs" />
+    <Compile Include="Geometry\IWidePath.cs" />
     <Compile Include="Geometry\MeshEdgeLink.cs" />
+    <Compile Include="Geometry\RegularCellMap.cs" />
     <Compile Include="Geometry\SixVector.cs" />
+    <Compile Include="Geometry\SquareCellMap.cs" />
+    <Compile Include="Geometry\WidePathBasic.cs" />
     <Compile Include="IO\CustomSerializationBinder.cs" />
     <Compile Include="IO\DocumentSaveFileType.cs" />
     <Compile Include="IO\IApplicationClient.cs" />

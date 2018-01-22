@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using Nucleus.Extensions;
+using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,8 +74,8 @@ namespace Nucleus.Model
         }
 
         /// <summary>
-        /// Search through this collection and find the next lowest level after
-        /// the one specified.
+        /// Search through this collection and find the next level below the
+        /// height value specified
         /// </summary>
         /// <param name="level"></param>
         /// <returns></returns>
@@ -92,6 +93,30 @@ namespace Nucleus.Model
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Find the level which the specified point lies on (within tolerance) or above
+        /// </summary>
+        /// <param name="z">The z coordinate to test</param>
+        /// <param name="tolerance">The distance below which the position is assumed to
+        /// lie 'on' the layer.</param>
+        /// <returns></returns>
+        public Level LevelOf(double z, double tolerance)
+        {
+            return NextLevelBelow(z + tolerance);
+        }
+
+        /// <summary>
+        /// Find the level which the specified point lies on (within tolerance) or above
+        /// </summary>
+        /// <param name="position">The position to test</param>
+        /// <param name="tolerance">The distance below which the position is assumed to
+        /// lie 'on' the layer.</param>
+        /// <returns></returns>
+        public Level LevelOf(Vector position, double tolerance)
+        {
+            return LevelOf(position.Z, tolerance);
         }
 
         /// <summary>

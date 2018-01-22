@@ -80,6 +80,17 @@ namespace Nucleus.Base
             }
         }
 
+        /// <summary>
+        /// Get a filepath pointing to the local application data folder for the current user
+        /// </summary>
+        public static FilePath LocalAppData
+        {
+            get
+            {
+                return new FilePath(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
+            }
+        }
+
         #endregion
 
         #region Properties

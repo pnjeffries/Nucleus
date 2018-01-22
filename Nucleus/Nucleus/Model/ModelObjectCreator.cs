@@ -87,7 +87,7 @@ namespace Nucleus.Model
             if (result == null)
             {
                 result = new Node(position);
-                result = (Node)Model.History.Update(exInfo, result);
+                result = Model.History.Update(exInfo, result);
                 result.Position = position;
             }
             else result.Undelete();
@@ -107,7 +107,7 @@ namespace Nucleus.Model
         public LinearElement LinearElement(Curve geometry, ExecutionInfo exInfo = null)
         {
             LinearElement result = new LinearElement();
-            result = (LinearElement)Model.History.Update(exInfo, result);
+            result = Model.History.Update(exInfo, result);
             result.ReplaceGeometry(geometry);
             Model.Add(result);
             return result;
@@ -181,7 +181,7 @@ namespace Nucleus.Model
         public PanelElement PanelElement(Surface geometry, ExecutionInfo exInfo = null)
         {
             PanelElement result = new PanelElement();
-            result = (PanelElement)Model.History.Update(exInfo, result);
+            result = Model.History.Update(exInfo, result);
             result.ReplaceGeometry(geometry);
             Model.Add(result);
             return result;
@@ -214,7 +214,7 @@ namespace Nucleus.Model
         public Node CopyOf(Node node, Vector newPosition, ExecutionInfo exInfo = null)
         {
             Node result = node.Duplicate();
-            result = (Node)Model.History.Update(exInfo, result);
+            result = Model.History.Update(exInfo, result);
             if (newPosition.IsValid()) result.Position = newPosition;
             Model.Add(result);
             return result;
@@ -233,7 +233,7 @@ namespace Nucleus.Model
         public LinearElement CopyOf(LinearElement element, Curve newGeometry = null, ExecutionInfo exInfo = null)
         {
             LinearElement result = new LinearElement();
-            result = (LinearElement)Model.History.Update(exInfo, result);
+            result = Model.History.Update(exInfo, result);
             result.CopyPropertiesFrom(element);
             if (newGeometry != null) result.ReplaceGeometry(newGeometry);
             Model.Add(result);
@@ -327,7 +327,7 @@ namespace Nucleus.Model
             where T: ModelObject
         {
             T result = mObject.Duplicate();
-            result = (T)Model.History.Update(exInfo, result);
+            result = Model.History.Update(exInfo, result);
             Model.Add(result);
             return result;
         }
@@ -343,7 +343,7 @@ namespace Nucleus.Model
         public SectionFamily SectionFamily(ExecutionInfo exInfo = null)
         {
             SectionFamily result = new SectionFamily();
-            result = (SectionFamily)Model.History.Update(exInfo, result);
+            result = Model.History.Update(exInfo, result);
             if (result.Name == null) result.Name = Model.Families.NextAvailableName("Section", result, true);
             Model.Add(result);
             return result;
@@ -363,7 +363,7 @@ namespace Nucleus.Model
         public SectionFamily SectionFamily(string name, ExecutionInfo exInfo = null)
         {
             SectionFamily result = new SectionFamily();
-            result = (SectionFamily)Model.History.Update(exInfo, result);
+            result = Model.History.Update(exInfo, result);
             result.Name = Model.Families.NextAvailableName(name, result);
             Model.Add(result);
             return result;
@@ -381,7 +381,7 @@ namespace Nucleus.Model
         public SectionFamily SectionFamily(SectionProfile profile, ExecutionInfo exInfo = null)
         {
             SectionFamily result = new SectionFamily();
-            result = (SectionFamily)Model.History.Update(exInfo, result);
+            result = Model.History.Update(exInfo, result);
             result.Profile = profile;
             if (result.Name == null) result.Name = Model.Families.NextAvailableName("Section", result, true);
             Model.Add(result);
@@ -399,7 +399,7 @@ namespace Nucleus.Model
         public BuildUpFamily BuildUpFamily(ExecutionInfo exInfo = null)
         {
             BuildUpFamily result = new BuildUpFamily();
-            result = (BuildUpFamily)Model.History.Update(exInfo, result);
+            result = Model.History.Update(exInfo, result);
             if (result.Name == null) result.Name = Model.Families.NextAvailableName("Build-Up", result, true);
             Model.Add(result);
             return result;
@@ -419,7 +419,7 @@ namespace Nucleus.Model
         public BuildUpFamily BuildUpFamily(string name, ExecutionInfo exInfo = null)
         {
             BuildUpFamily result = new BuildUpFamily();
-            result = (BuildUpFamily)Model.History.Update(exInfo, result);
+            result = Model.History.Update(exInfo, result);
             result.Name = Model.Families.NextAvailableName(name, result);
             Model.Add(result);
             return result;
@@ -439,7 +439,7 @@ namespace Nucleus.Model
         public UserCoordinateSystemReference UserCoordinateSystemReference(ICoordinateSystem cSystem, string name = null, ExecutionInfo exInfo = null)
         {
             UserCoordinateSystemReference result = new UserCoordinateSystemReference();
-            result = (UserCoordinateSystemReference)Model.History.Update(exInfo, result);
+            result = Model.History.Update(exInfo, result);
             if (name != null) result.Name = name;
             if (result.Name == null) result.Name = Model.CoordinateSystems.NextAvailableName("Coordinate System", result, true);
             Model.Add(result);
@@ -458,7 +458,7 @@ namespace Nucleus.Model
         public LoadCase LoadCase(string name, ExecutionInfo exInfo = null)
         {
             LoadCase result = new LoadCase();
-            result = (LoadCase)Model.History.Update(exInfo, result);
+            result = Model.History.Update(exInfo, result);
             if (name != null) result.Name = name;
             if (result.Name == null) result.Name = Model.LoadCases.NextAvailableName("Load Case", result, true);
             Model.Add(result);
@@ -478,7 +478,7 @@ namespace Nucleus.Model
         public NodeLoad NodeLoad(LoadCase lCase, ExecutionInfo exInfo = null)
         {
             NodeLoad result = new NodeLoad();
-            result = (NodeLoad)Model.History.Update(exInfo, result);
+            result = Model.History.Update(exInfo, result);
             result.Case = lCase;
             Model.Add(result);
             return result;
@@ -497,8 +497,29 @@ namespace Nucleus.Model
         public LinearElementLoad LinearElementLoad(LoadCase lCase, ExecutionInfo exInfo = null)
         {
             LinearElementLoad result = new LinearElementLoad();
-            result = (LinearElementLoad)Model.History.Update(exInfo, result);
+            result = Model.History.Update(exInfo, result);
             result.Case = lCase;
+            Model.Add(result);
+            return result;
+        }
+
+        /// <summary>
+        /// Create a new (or update an existing) level in the model
+        /// </summary>
+        /// <param name="z">The z-level of the new layer</param>
+        /// <param name="exInfo">Optional.  The execution information of the current action.
+        /// If an object has been created previously with matching execution information then
+        /// instead of creating a new item this previous one will be updated and returned instead.
+        /// This enables this method to be used parametrically.</param>
+        /// <returns>The created or updated load case.</param>
+        /// <returns></returns>
+        public Level Level(double z, ExecutionInfo exInfo = null)
+        {
+            //TODO: Limit to unique z-levels?
+            Level result = new Level();
+            result = Model.History.Update(exInfo, result);
+            result.Z = z;
+            if (result.Name == null) result.Name = "Level @ " + z.ToString("0.##") + "m";
             Model.Add(result);
             return result;
         }

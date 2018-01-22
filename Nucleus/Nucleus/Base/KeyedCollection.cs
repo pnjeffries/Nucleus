@@ -316,6 +316,24 @@ namespace Nucleus.Base
             }
         }
 
+        /// <summary>
+        /// Reverse the order of the items in this collection
+        /// </summary>
+        public void Reverse()
+        {
+            for (int i = 0; i < (Count - 1)/2.0; i++)
+            {
+                TItem itemA = this[i];
+                TItem itemB = this[Count - 1 - i];
+                // Swap positions:
+                RemoveAt(Count - 1 - i);
+                RemoveAt(i);
+                Insert(i, itemB);
+                Insert(Count - i, itemA);
+                // TODO: Freeze dictionary modification during this?
+            }
+        }
+
         #endregion
     }
 }

@@ -150,21 +150,22 @@ namespace Nucleus.Model
         /// If a stored object exists and is of the same type as the new one, it will be updated to match the new values
         /// otherwise the record will be replaced with the new object.
         /// </summary>
-        /// <param name="exInfo"></param>
-        /// <param name="unique"></param>
+        /// <param name="exInfo">The execution information for the current operation</param>
+        /// <param name="unique">The potential new item</param>
         /// <returns>The current object - either the orginal stored value if it was updated, or the new object
         /// if it was replaced</returns>
-        public ModelObject Update(ExecutionInfo exInfo, ModelObject unique)
+        public TModelObject Update<TModelObject>(ExecutionInfo exInfo, TModelObject unique)
+            where TModelObject : ModelObject
         {
             if (exInfo != null)
             {
                 ModelObject original = Get(exInfo);
-                if (original != null && unique != null && original.GetType() == unique.GetType())
+                if (original != null && unique != null && original is TModelObject)
                 {
                     //original.CopyFieldsFrom(unique);
                     original.Undelete();
                     exInfo.HistoryItemCount++;
-                    return original;
+                    return (TModelObject)original;
                 }
                 else
                 {

@@ -372,6 +372,18 @@ namespace Nucleus.Rhino
         }
 
         /// <summary>
+        /// Convert a collection of Rhino curves to a CurveCollection
+        /// </summary>
+        /// <param name="curves"></param>
+        /// <returns></returns>
+        public static CurveCollection Convert(IList<RC.Curve> curves)
+        {
+            var result = new CurveCollection();
+            foreach (var crv in curves) result.Add(Convert(crv));
+            return result;
+        }
+
+        /// <summary>
         /// Convert a single Rhino geometry object to a VertexGeometryCollection
         /// </summary>
         /// <param name="geometry"></param>

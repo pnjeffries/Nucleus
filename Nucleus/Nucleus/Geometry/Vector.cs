@@ -281,6 +281,31 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Are the X and Y components of this vector equal to those of another?
+        /// </summary>
+        /// <param name="other">The vector to test against</param>
+        /// <returns>True if the vectors are equal to
+        /// one another on the XY plane.  Else false.</returns>
+        public bool XYEquals(Vector other)
+        {
+            return (X == other.X && Y == other.Y);
+        }
+
+        /// <summary>
+        /// Are the X and Y components of this vector equal to those of another
+        /// within the specified tolerance?
+        /// </summary>
+        /// <param name="other">The vector to test against</param>
+        /// <param name="tolerance">A per-component tolerance value</param>
+        /// <returns>True if the vectors are within tolerance of
+        /// one another on the XY plane.  Else false.</returns>
+        public bool XYEquals(Vector other, double tolerance)
+        {
+            return (X > other.X - tolerance && X < other.X + tolerance
+                && Y > other.Y - tolerance && Y < other.Y + tolerance);
+        }
+
+        /// <summary>
         /// IEquatable implementation.
         /// Checks whether this vector is equal to another.
         /// </summary>
@@ -404,6 +429,17 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Is this point closer to a target point than another point is?
+        /// </summary>
+        /// <param name="toThis"></param>
+        /// <param name="thanThisIs"></param>
+        /// <returns></returns>
+        public bool IsCloser(Vector toThis, Vector thanThisIs)
+        {
+            return DistanceToSquared(toThis) < thanThisIs.DistanceToSquared(toThis);
+        }
+
+        /// <summary>
         /// Find the angle on the XY plane from this position vector to another
         /// </summary>
         /// <param name="other">The position vector to measure the angle to</param>
@@ -506,13 +542,15 @@ namespace Nucleus.Geometry
 
         /// <summary>
         /// Create a unitized version of this vector
-        /// (i.e. a vector in the same direction but with a magnitude of 1)
+        /// (i.e. a vector in the same direction but with a magnitude of 1).
+        /// In the case that the vector is zero-length, it will remain zero length
+        /// and will not be unitized.
         /// </summary>
         /// <returns></returns>
         public Vector Unitize()
         {
             double magnitude = MagnitudeSquared();
-            if (magnitude == 1) return this;
+            if (magnitude == 1 || magnitude == 0) return this;
             magnitude = Math.Sqrt(magnitude);
             return new Vector(X / magnitude, Y / magnitude, Z / magnitude);
         }
@@ -1450,6 +1488,24 @@ namespace Nucleus.Geometry
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Check whether these vectors are equal to another set on the XY plane
+        /// </summary>
+        /// <param name="v"></param>
+        /// <param name="other"></param>
+        /// <param name="tolerance"></param>
+        /// <returns></returns>
+        public static bool XYEquals(this IList<Vector> v, IList<Vector> other, double tolerance = 0.000001)
+        {
+            if (v.Count != other.Count) return false;
+
+            for (int i = 0; i < v.Count; i++)
+            {
+                if (!v[i].XYEquals(other[i])) return false;
+            }
+            return true;
         }
     }
 }

@@ -152,6 +152,18 @@ namespace Nucleus.ETABS
             SapModel.File.NewBlank(); //TODO: check if updating
             //SapModel.File.NewSteelDeck(0, 12, 12, 0, 0, 24, 24);
 
+            if (context.Options.Levels)
+            {
+                LevelCollection levels = model.Levels;
+                // Seemingly can only write whole table at once - updating individuals may not be wise...
+                if (levels.Count > 0)
+                {
+                    RaiseMessage("Writing levels...");
+                    WriteStoreys(levels, context);
+                }
+
+            }
+
             if (context.Options.Nodes)
             {
                 NodeCollection nodes = model.Nodes;
@@ -202,7 +214,7 @@ namespace Nucleus.ETABS
         /// <returns></returns>
         private string GetEquivalentMaterial(Material material)
         {
-            if (material.Name.StartsWith("Concrete")) return "4000Psi";
+            if (material != null && material.Name.StartsWith("Concrete")) return "4000Psi";
             return "A992Fy50";
         }
 
@@ -316,6 +328,21 @@ namespace Nucleus.ETABS
             // TODO: Check if working
         }
 
+        public void WriteStoreys(LevelCollection levels, ETABSConversionContext context)
+        {
+            string[] storeyNames = new string[levels.Count];
+            double[] storeyElevations = new double[levels.Count];
+            bool[] isMasterStorey = new bool[levels.Count];
+            for (int i = 0; i < levels.Count; i++)
+            {
+                Level lvl = levels[i];
+                storeyNames[i] = lvl.Name;
+                storeyElevations[i] = lvl.Z;
+                isMasterStorey[i] = true; //?
+            }
+            SapModel.Story.SetStories(storeyNames, storeyElevations, null, isMasterStorey, null, null, null); // Are nulls OK?
+        }
+
         public void WriteLinearElements(LinearElementCollection elements, ETABSConversionContext context)
         {
             foreach (LinearElement element in elements)
@@ -359,6 +386,35 @@ namespace Nucleus.ETABS
                     }
                 }
             }
+        }
+
+        public void WriteSets(ModelObjectSetCollection sets, ETABSConversionContext context)
+        {
+            foreach (var set in sets)
+            {
+                SapModel.GroupDef.SetGroup(set.Name);
+                // No way in API to set contained elements?
+            }
+        }
+
+        /// <summary>
+        /// Write all load cases to the ETABS file
+        /// </summary>
+        /// <param name="cases"></param>
+        /// <param name="context"></param>
+        public void WriteLoadCases(LoadCaseCollection cases, ETABSConversionContext context)
+        {
+            foreach (var lc in cases)
+            {
+                int id = SapModel.LoadCases.StaticLinear.SetCase(lc.Name);
+                context.IDMap.Add(lc, id.ToString());
+            }
+        }
+
+        public void WriteLoads(LoadCollection loads, ETABSConversionContext context)
+        {
+            // ?
+            // SapModel.LoadCases.StaticNonlinear.SetLoads()
         }
 
         #endregion

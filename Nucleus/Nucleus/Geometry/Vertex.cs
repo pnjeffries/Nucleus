@@ -29,6 +29,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
+using Nucleus.DDTree;
 
 namespace Nucleus.Geometry
 {
@@ -192,6 +193,36 @@ namespace Nucleus.Geometry
             {
                 if (_Data == null) _Data = new VertexDataStore(this);
                 return _Data;
+            }
+        }
+
+        /// <summary>
+        /// Is this vertex the start of a curve?
+        /// </summary>
+        public bool IsStart
+        {
+            get
+            {
+                if (Owner != null && Owner is Curve)
+                {
+                    return ((Curve)Owner).Start == this;
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Is this vertex the end of a curve?
+        /// </summary>
+        public bool IsEnd
+        {
+            get
+            {
+                if (Owner != null && Owner is Curve)
+                {
+                    return ((Curve)Owner).End == this;
+                }
+                return false;
             }
         }
 
@@ -418,6 +449,24 @@ namespace Nucleus.Geometry
             return Data;
         }
 
+        /// <summary>
+        /// Generate a node at this vertex, if it does not already posess one.
+        /// This override can be used to generate nodes independent of a full model/element system.
+        /// </summary>
+        /// <param name="options"></param>
+        public void GenerateNode(NodeGenerationParameters options, NodeCollection nodes, NodeDDTree nodeTree)
+        {
+            if (Node == null)
+            {
+                Node = nodeTree.NearestTo(Position, options.ConnectionTolerance);
+                if (Node == null) Node = new Node(Position);
+            }
+            if (!nodes.Contains(Node.GUID))
+            {
+                nodes.Add(Node);
+                nodeTree.Add(Node);
+            }
+        }
 
         /// <summary>
         /// Generate a node at this vertex, if it does not already posess one.
@@ -427,7 +476,7 @@ namespace Nucleus.Geometry
         /// <param name="options"></param>
         public void GenerateNode(NodeGenerationParameters options)
         {
-            if (Owner != null && Owner.Element != null)
+            if (Owner?.Element?.Model != null)
             {
                 Model.Model model = Owner.Element.Model;
                 if (Node == null)
