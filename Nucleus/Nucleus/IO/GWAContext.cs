@@ -44,6 +44,7 @@ namespace Nucleus.IO
             _NextID.Add(typeof(SectionFamily), 1);
             _NextID.Add(typeof(BuildUpFamily), 1);
             _NextID.Add(typeof(ModelObjectSetBase), 1);
+            _NextID.Add(typeof(LoadCase), 1);
         }
 
         /// <summary>
@@ -296,6 +297,9 @@ namespace Nucleus.IO
         {
             if (obj != null && obj is ModelObject)
             {
+                if (obj is GlobalCoordinateSystemReference) return "GLOBAL";
+                else if (obj is LocalCoordinateSystemReference) return "LOCAL";
+
                 ModelObject mObj = (ModelObject)obj;
                 if (IDMap.HasSecondID(mObj.GUID))
                 {

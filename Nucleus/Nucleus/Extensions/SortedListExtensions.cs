@@ -43,7 +43,8 @@ namespace Nucleus.Extensions
         /// <param name="wrap">If true, the list is treated as wrapping - i.e. if no item with a key greater
         /// than that specified can be found the first item will be returned instead.</param>
         /// <returns></returns>
-        public static TValue NextAfter<TKey, TValue>(this SortedList<TKey,TValue> list, TKey key, bool wrap = false)
+        public static TValue NextAfter<TKey, TValue>(this SortedList<TKey,TValue> list, 
+            TKey key, bool wrap = false)
             where TKey : IComparable
             where TValue : class
         {
@@ -53,6 +54,23 @@ namespace Nucleus.Extensions
             }
             if (wrap && list.Count > 0) return list.First().Value;
             return null;
+        }
+
+        /// <summary>
+        /// Adds an element with the specified key and value into the SortedList,
+        /// automatically dealing with the case where the specified key already exists
+        /// within the list by incrementing the key to the next valid value.
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public static void AddSafe<TValue>(this SortedList<double, TValue> list, 
+            double key, TValue value)
+        {
+            while (list.ContainsKey(key))
+                key = key.NextValidValue();
+            list.Add(key, value);
         }
     }
 }

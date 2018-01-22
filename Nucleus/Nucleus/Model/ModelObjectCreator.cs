@@ -455,12 +455,48 @@ namespace Nucleus.Model
         /// instead of creating a new item this previous one will be updated and returned instead.
         /// This enables this method to be used parametrically.</param>
         /// <returns>The created or updated load case.</returns>
-        public LoadCase LoadCase(string name, ExecutionInfo exInfo = null)
+        public LoadCase LoadCase(string name, LoadCaseType type, ExecutionInfo exInfo = null)
         {
             LoadCase result = new LoadCase();
             result = (LoadCase)Model.History.Update(exInfo, result);
             if (name != null) result.Name = name;
             if (result.Name == null) result.Name = Model.LoadCases.NextAvailableName("Load Case", result, true);
+            result.CaseType = type;
+            Model.Add(result);
+            return result;
+        }
+
+        /// <summary>
+        /// Create a new (or update an existing) load case in the model
+        /// </summary>
+        /// <param name="name">The name of the load case</param>
+        /// <param name="exInfo">Optional.  The execution information of the current action.
+        /// If an object has been created previously with matching execution information then
+        /// instead of creating a new item this previous one will be updated and returned instead.
+        /// This enables this method to be used parametrically.</param>
+        /// <returns>The created or updated load case.</returns>
+        public LoadCase LoadCase(string name, ExecutionInfo exInfo = null)
+        {
+            return LoadCase(name, LoadCaseType.Undefined, exInfo);
+        }
+
+        /// <summary>
+        /// Create a new (or update an existing) load in the model
+        /// </summary>
+        /// <typeparam name="TLoad">The type of load to be created</typeparam>
+        /// <param name="lCase">The case of which the new load is to be part</param>
+        /// <param name="exInfo">Optional.  The execution information of the current action.
+        /// If an object has been created previously with matching execution information then
+        /// instead of creating a new item this previous one will be updated and returned instead.
+        /// This enables this method to be used parametrically.</param>
+        /// <returns>The created or updated load case.</param>
+        /// <returns></returns>
+        public TLoad Load<TLoad>(LoadCase lCase, ExecutionInfo exInfo = null)
+        where TLoad : Load, new()
+        {
+            TLoad result = new TLoad();
+            result = (TLoad)Model.History.Update(exInfo, result);
+            result.Case = lCase;
             Model.Add(result);
             return result;
         }
@@ -477,11 +513,37 @@ namespace Nucleus.Model
         /// <returns></returns>
         public NodeLoad NodeLoad(LoadCase lCase, ExecutionInfo exInfo = null)
         {
-            NodeLoad result = new NodeLoad();
-            result = (NodeLoad)Model.History.Update(exInfo, result);
-            result.Case = lCase;
-            Model.Add(result);
-            return result;
+            return Load<NodeLoad>(lCase, exInfo);
+        }
+
+        /// <summary>
+        /// Create a new (or update an existing) gravity load in the model
+        /// </summary>
+        /// <param name="lCase">The case of which the new load is to be part</param>
+        /// <param name="exInfo">Optional.  The execution information of the current action.
+        /// If an object has been created previously with matching execution information then
+        /// instead of creating a new item this previous one will be updated and returned instead.
+        /// This enables this method to be used parametrically.</param>
+        /// <returns>The created or updated load case.</param>
+        /// <returns></returns>
+        public GravityLoad GravityLoad(LoadCase lCase, ExecutionInfo exInfo = null)
+        {
+            return Load<GravityLoad>(lCase, exInfo);
+        }
+
+        /// <summary>
+        /// Create a new (or update an existing) thermal load in the model
+        /// </summary>
+        /// <param name="lCase">The case of which the new load is to be part</param>
+        /// <param name="exInfo">Optional.  The execution information of the current action.
+        /// If an object has been created previously with matching execution information then
+        /// instead of creating a new item this previous one will be updated and returned instead.
+        /// This enables this method to be used parametrically.</param>
+        /// <returns>The created or updated load case.</param>
+        /// <returns></returns>
+        public ThermalLoad ThermalLoad(LoadCase lCase, ExecutionInfo exInfo = null)
+        {
+            return Load<ThermalLoad>(lCase, exInfo);
         }
 
         /// <summary>
@@ -496,15 +558,11 @@ namespace Nucleus.Model
         /// <returns></returns>
         public LinearElementLoad LinearElementLoad(LoadCase lCase, ExecutionInfo exInfo = null)
         {
-            LinearElementLoad result = new LinearElementLoad();
-            result = (LinearElementLoad)Model.History.Update(exInfo, result);
-            result.Case = lCase;
-            Model.Add(result);
-            return result;
+            return Load<LinearElementLoad>(lCase, exInfo);
         }
 
         /// <summary>
-        /// Create a new (or update an existing) area load in the model
+        /// Create a new (or update an existing) panel load in the model
         /// </summary>
         /// <param name="lCase">The case of which the new load is to be part</param>
         /// <param name="exInfo">Optional.  The execution information of the current action.
@@ -513,13 +571,9 @@ namespace Nucleus.Model
         /// This enables this method to be used parametrically.</param>
         /// <returns>The created or updated load case.</param>
         /// <returns></returns>
-        public AreaLoad AreaLoad(LoadCase lCase, ExecutionInfo exInfo = null)
+        public PanelLoad PanelLoad(LoadCase lCase, ExecutionInfo exInfo = null)
         {
-            AreaLoad result = new AreaLoad();
-            result = (AreaLoad)Model.History.Update(exInfo, result);
-            result.Case = lCase;
-            Model.Add(result);
-            return result;
+            return Load<PanelLoad>(lCase, exInfo);
         }
 
         #endregion

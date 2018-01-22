@@ -473,6 +473,33 @@ namespace Nucleus.Robot
 
                             context.IDMap.Add(nLoad, record);
                         }
+                        else if (record.Type == IRobotLoadRecordType.I_LRT_DEAD)//?
+                        {
+                            GravityLoad gLoad = load as GravityLoad;
+                            if (gLoad == null)
+                                gLoad = model.Create.GravityLoad(lCase);
+                            else
+                                gLoad.Case = lCase;
+
+                            // Load value:
+                            Vector force = new Vector(
+                            record.GetValue((short)IRobotDeadRecordValues.I_DRV_X),
+                             record.GetValue((short)IRobotDeadRecordValues.I_DRV_Y),
+                              record.GetValue((short)IRobotDeadRecordValues.I_DRV_Z));
+                            gLoad.SetForce(force);
+
+                            //TODO: Entire model option
+                            // Elements applied to:
+                            RobotSelection appliedTo = record.Objects;
+                            gLoad.AppliedTo.Clear();
+                            for (int k = 1; k <= appliedTo.Count; k++)
+                            {
+                                LinearElement element = context.IDMap.GetMappedLinearElement(appliedTo.Get(k), model);
+                                if (element != null) gLoad.AppliedTo.Add(element);
+                            }
+
+                            context.IDMap.Add(gLoad, record);
+                        }
                         else if (record.Type == IRobotLoadRecordType.I_LRT_BAR_UNIFORM)
                         {
                             // Create UDL
@@ -509,6 +536,48 @@ namespace Nucleus.Robot
                         else if (record.Type == IRobotLoadRecordType.I_LRT_IN_CONTOUR)
                         {
                             //TODO: Area load?
+                            // Create area load
+                            /*AreaLoad aLoad = load as AreaLoad;
+                            if (aLoad == null) aLoad = model.Create.AreaLoad(lCase);
+                            else aLoad.Case = lCase;
+
+                            double pressure = record.GetValue((short)IRobotInContourRecordValues.I_ICRV_PX1); //?
+
+                            aLoad.Value = pressure;
+
+                            // Elements applied to:
+                            RobotSelection appliedTo = record.Objects;
+                            aLoad.AppliedTo.Clear();
+                            for (int k = 1; k <= appliedTo.Count; k++)
+                            {
+                                PanelElement element = context.IDMap.GetMappedPanelElement(appliedTo.Get(k), model);
+                                if (element != null) aLoad.AppliedTo.Add(element);
+                            }
+
+                            context.IDMap.Add(aLoad, record);*/
+                        }
+                        else if (record.Type == IRobotLoadRecordType.I_LRT_PRESSURE)
+                        {
+                            // Area load?
+                            // Create area load
+                            PanelLoad aLoad = load as PanelLoad;
+                            if (aLoad == null) aLoad = model.Create.PanelLoad(lCase);
+                            else aLoad.Case = lCase;
+
+                            double pressure = record.GetValue((short)IRobotPressureRecordValues.I_PRV_P);
+
+                            aLoad.Value = pressure;
+
+                            // Elements applied to:
+                            RobotSelection appliedTo = record.Objects;
+                            aLoad.AppliedTo.Clear();
+                            for (int k = 1; k <= appliedTo.Count; k++)
+                            {
+                                PanelElement element = context.IDMap.GetMappedPanelElement(appliedTo.Get(k), model);
+                                if (element != null) aLoad.AppliedTo.Add(element);
+                            }
+
+                            context.IDMap.Add(aLoad, record);
                         }
                     }
                 }
@@ -1674,6 +1743,23 @@ namespace Nucleus.Robot
                         lRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_FZ, force.Z);
                     }
                 }
+                else if (load is GravityLoad)
+                {
+                    GravityLoad lELoad = (GravityLoad)load;
+                    type = IRobotLoadRecordType.I_LRT_DEAD; //TODO: Variable loads
+                    if (lRecord == null || lRecord.Type != type)
+                        lRecord = rCase.Records.Create(type) as RobotLoadRecord;
+
+                    lRecord.Objects.FromText(context.IDMap.ToIDString(lELoad.AppliedTo));
+                    //TODO: Axis
+                    Vector gravVector = lELoad.Direction.Vector() * lELoad.Value; //TODO: Provide evaluation context?
+                    if (!lELoad.IsMoment)
+                    {
+                        lRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_X, gravVector.X);
+                        lRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_Y, gravVector.Y);
+                        lRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_Z, gravVector.Z);
+                    }
+                }
                 else if (load is LinearElementLoad)
                 {
                     LinearElementLoad lELoad = (LinearElementLoad)load;
@@ -1690,6 +1776,17 @@ namespace Nucleus.Robot
                         lRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PY, force.Y);
                         lRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PZ, force.Z);
                     }
+                }
+                else if (load is PanelLoad)
+                {
+                    PanelLoad aLoad = (PanelLoad)load;
+                    type = IRobotLoadRecordType.I_LRT_PRESSURE; //?
+                    if (lRecord == null || lRecord.Type != type)
+                        lRecord = rCase.Records.Create(type) as RobotLoadRecord;
+
+                    lRecord.Objects.FromText(context.IDMap.ToIDString(aLoad.AppliedTo));
+                    lRecord.SetValue((short)IRobotPressureRecordValues.I_PRV_P, aLoad.Value);
+                    //TODO
                 }
 
                 context.IDMap.Add(load, lRecord);

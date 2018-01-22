@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nucleus.Model.Loading;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,5 +28,16 @@ namespace Nucleus.Model
         protected ResultsCase(string name) : base(name) { }
 
         #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Does this case contain the specified load?
+        /// </summary>
+        /// <param name="load"></param>
+        /// <returns></returns>
+        public abstract bool Contains(Load load);
+
+#endregion
     }
 }

@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using Nucleus.Base;
+using Nucleus.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -157,6 +158,18 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Remove from this collection any faces whose circumcentre falls outside the specified boundary on the XY plane
+        /// </summary>
+        /// <param name="boundary"></param>
+        public void CullOutsideXY(Curve boundary)
+        {
+            for (int i = Count - 1; i >= 0; i--)
+            {
+                if (!boundary.EnclosesXY(this[i].AveragePoint())) RemoveAt(i);
+            }
+        }
+
+        /// <summary>
         /// Remove from this collection any faces whose circumcentre falls inside the specified boundary on the XY plane
         /// </summary>
         /// <param name="boundary"></param>
@@ -189,6 +202,40 @@ namespace Nucleus.Geometry
         /// </summary>
         public void Quadrangulate()
         {
+            var sortedPairs = new SortedList<double, Pair<MeshFace, MeshFace>>(Count);
+
+            // Find adjacent pairs of tris and sort by edge length
+            for (int i = 0; i < Count - 1; i++)
+            {
+                MeshFace faceA = this[i];
+                if (faceA.IsTri)
+                {
+                    for (int j = i + 1; j < Count; j++)
+                    {
+                        MeshFace faceB = this[j];
+                        if (faceB.IsTri)
+                        {
+                            double length = faceA.SharedEdgeLengthSquared(faceB);
+                            if (length > 0)
+                                sortedPairs.AddSafe(length, Pair.Create(faceA, faceB));
+                        }
+                    }
+                }
+            }
+
+            // Reverse through pairs and join:
+            for (int i = sortedPairs.Count - 1; i >= 0; i--)
+            {
+                var pair = sortedPairs.Values[i];
+                if (Contains(pair.First.GUID) && Contains(pair.Second.GUID))
+                {
+                    Remove(pair.First);
+                    Remove(pair.Second);
+                    Add(pair.First.MergeWith(pair.Second));
+                }
+            }
+
+            /*
             // Populate lists:
             var sortedLists = new SortedList<double, IList<MeshFace>>(Count / 2);
 
@@ -226,6 +273,49 @@ namespace Nucleus.Geometry
                     }
                 }
             }
+            */
+        }
+
+        /// <summary>
+        /// Extract all edges from the faces in this collection.
+        /// This may include duplicates where edges are shared between
+        /// faces.
+        /// </summary>
+        /// <returns></returns>
+        public IList<MeshEdge> ExtractAllEdges()
+        {
+            var result = new List<MeshEdge>(Count * 3);
+            foreach (MeshFace face in this)
+            {
+                result.AddRange(face.GetEdges());
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Extract all naked edges from the faces in this collection.
+        /// Shared edges will be automatically
+        /// removed.
+        /// </summary>
+        /// <returns></returns>
+        public IList<MeshEdge> ExtractNakedEdges()
+        {
+            var result = ExtractAllEdges();
+            result.RemoveAllDuplicates();
+            return result;
+        }
+
+        /// <summary>
+        /// Extract all naked edges from the faces in this collection.
+        /// Shared edges will be automatically
+        /// removed.
+        /// </summary>
+        /// <returns></returns>
+        public IList<MeshEdge> ExtractUniqueEdges()
+        {
+            var result = ExtractAllEdges();
+            result.RemoveDuplicates();
+            return result;
         }
 
         #endregion

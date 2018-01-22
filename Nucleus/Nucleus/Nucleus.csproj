@@ -59,10 +59,12 @@
     <Compile Include="Base\CollectionCopyAttribute.cs" />
     <Compile Include="Base\IUniqueWithModifiableGUID.cs" />
     <Compile Include="Base\KeyedCollection.cs" />
+    <Compile Include="Base\Pair.cs" />
     <Compile Include="Base\SetFilterCollection.cs" />
     <Compile Include="Conversion\ModelConversionOptions.cs" />
     <Compile Include="Extensions\CharExtensions.cs" />
     <Compile Include="Extensions\BoolExtensions.cs" />
+    <Compile Include="Extensions\EventHandlerExtensions.cs" />
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="Extensions\NotifyCollectionChangedEventArgsExtensions.cs" />
     <Compile Include="Geometry\MeshEdgeLink.cs" />
@@ -134,6 +136,7 @@
     <Compile Include="Model\LoadCaseTable.cs" />
     <Compile Include="Model\LoadCaseType.cs" />
     <Compile Include="Model\Loading\AreaLoad.cs" />
+    <Compile Include="Model\Loading\PanelLoad.cs" />
     <Compile Include="Model\Loading\GravityLoad.cs" />
     <Compile Include="Model\Loading\LinearElementLoad.cs" />
     <Compile Include="Model\Loading\ForceLoad.cs" />
@@ -147,6 +150,7 @@
     <Compile Include="Model\PanelElementSet.cs" />
     <Compile Include="Model\PointElement.cs" />
     <Compile Include="Model\PropertyMatchFilter.cs" />
+    <Compile Include="Model\ResultsCaseCollection.cs" />
     <Compile Include="Model\SectionProfiles\ChannelProfile.cs" />
     <Compile Include="Model\SectionProfiles\DeltaProfile.cs" />
     <Compile Include="Model\SectionProfiles\GeometricProfile.cs" />
@@ -363,6 +367,7 @@
     <Compile Include="Results\ResultsDictionary.cs" />
     <Compile Include="UI\AutoUIAttribute.cs" />
     <Compile Include="UI\AutoUIComboBoxAttribute.cs" />
+    <Compile Include="UI\AutoUISliderAttribute.cs" />
     <Compile Include="UI\IAutoUIHostable.cs" />
     <Compile Include="UI\IUserInteraction.cs" />
     <Compile Include="UI\UIOption.cs" />

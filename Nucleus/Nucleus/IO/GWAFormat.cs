@@ -1,4 +1,5 @@
 ﻿using Nucleus.Model;
+using Nucleus.Model.Loading;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +43,23 @@ namespace Nucleus.IO
             Add(typeof(NodeSet),
                 "LIST\t{" + CONTEXT + ".GetID()}\t{Name}\tNODE\t{" + CONTEXT + ".ListDefinition()}");
 
+            Add(typeof(LoadCase),
+                "LOAD_TITLE\t{*.GetID()}\t{Name}");
+
+            Add(typeof(NodeLoad),
+                "NODE_LOAD.2\t{Name}\t{AppliedTo.*.ListDefinition()}\t{Case.*.GetID()}\t{Axes.*.GetID()}\t{Direction}\t{Value.Evaluate()}");
+
+            Add(typeof(LinearElementLoad),
+                "LOAD_BEAM_UDL.2\t{Name}\t{AppliedTo.*.ListDefinition()}\t{Case.*.GetID()}\t{Axes.*.GetID()}\tNO\t{Direction}\t{Value.Evaluate()}");
+
+            Add(typeof(PanelLoad),
+                "LOAD_2D_FACE.2\t{Name}\t{AppliedTo.*.ListDefinition()}\t{Case.*.GetID()}\t{Axes.*.GetID()}\tCONS\tNO\t{Direction}\t{Value.Evaluate()}");
+
+            Add(typeof(GravityLoad),
+                "LOAD_GRAVITY.2\t{Name}\t{AppliedTo.*.ListDefinition()}\t{Case.*.GetID()}\t{GravityVector().X}\t{GravityVector().Y}\t{GravityVector().Z}");
+
+            Add(typeof(ThermalLoad),
+                "TEMP_BEAM.2\t{Name}\t{AppliedTo.*.ListDefinition()}\t{Case.*.GetID()}\tCONS\t{Value.Evaluate()}"); //TODO: TEMP_2D
         }
 
         #endregion

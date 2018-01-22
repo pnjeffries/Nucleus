@@ -812,6 +812,18 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Check whether the specified point lies within the area enclosed by this curve
+        /// on the XY plane
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        /// <remarks>TODO: Implement more refined checks on arcs</remarks>
+        public virtual bool EnclosesXY(Vector point)
+        {
+            return Vertices.PolygonContainmentXY(point);
+        }
+
+        /// <summary>
         /// Offset this curve on the XY plane.
         /// </summary>
         /// <param name="distances">The offset distance.
@@ -856,6 +868,20 @@ namespace Nucleus.Geometry
             result.Add(this);
             return result;
         }
+
+        // TODO: Reinstate
+        // Temporarily removed as the need to deal with looping &
+        // reversing made extraction a lot more complicated than first thought!
+
+        /*
+        /// <summary>
+        /// Extract a portion of this curve as a new curve
+        /// </summary>
+        /// <param name="subDomain">The subdomain of this curve to
+        /// be extracted as a new curve</param>
+        /// <returns></returns>
+        public abstract Curve Extract(Interval subDomain);
+        */
 
         public override string ToString()
         {

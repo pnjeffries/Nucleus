@@ -109,6 +109,16 @@ namespace Nucleus.Model
             return new LoadCollection();
         }
 
+        /// <summary>
+        /// Does this case contain the specified load?
+        /// </summary>
+        /// <param name="load"></param>
+        /// <returns></returns>
+        public override bool Contains(Load load)
+        {
+            return load.Case == this;
+        }
+
         #endregion
     }
 }

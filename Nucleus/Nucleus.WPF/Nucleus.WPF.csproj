@@ -173,6 +173,7 @@
       <DependentUpon>ViewScroller.xaml</DependentUpon>
     </Compile>
     <Compile Include="Extensions\VisualExtensions.cs" />
+    <Compile Include="WPFMeshBuilder.cs" />
     <Compile Include="WPFtoFB.cs" />
   </ItemGroup>
   <ItemGroup>

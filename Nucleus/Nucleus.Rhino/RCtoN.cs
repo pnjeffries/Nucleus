@@ -49,6 +49,18 @@ namespace Nucleus.Rhino
         }
 
         /// <summary>
+        /// Convert a set of Rhino points to Nucleus vectors
+        /// </summary>
+        /// <param name="points">The points to convert</param>
+        /// <returns></returns>
+        public static IList<Vector> Convert(List<RC.Point3d> points)
+        {
+            var result = new List<Vector>(points.Count());
+            foreach (RC.Point3d pt in points) result.Add(Convert(pt));
+            return result;
+        }
+
+        /// <summary>
         /// Convert a Rhino vector to a Nucleus one.
         /// This is assumed to be unitless and will *not* automatically be
         /// converted into the current Rhino units.

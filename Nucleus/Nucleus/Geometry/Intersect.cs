@@ -382,6 +382,81 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Calculate the intersection between a ray and a triangle using the
+        /// Möller–Trumbore algorithm.  See:
+        /// https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm.
+        /// Returns the parameter t, being the multiplication of the rayDirection from the rayOrigin.
+        /// If there is no intersection between the ray and the triangle, double.NaN will be returned.
+        /// </summary>
+        /// <param name="rayOrigin">The origin point of the ray</param>
+        /// <param name="rayDirection">The direction of the ray.</param>
+        /// <param name="tri0">The first corner of the triangle</param>
+        /// <param name="tri1">The second corner of the triangle</param>
+        /// <param name="tri2">The third corner of the triangle</param>
+        /// <returns></returns>
+        public static double RayTriangle(Vector rayOrigin, Vector rayDirection, Vector tri0, Vector tri1, Vector tri2)
+        {
+            double tolerance = 0.0000001;
+            Vector edge1 = tri1 - tri0;
+            Vector edge2 = tri2 - tri1;
+            Vector h = rayDirection.Cross(edge2);
+            double a = edge1.Dot(h);
+            if (a > -tolerance && a < tolerance) return double.NaN;
+            double f = 1 / a;
+            Vector s = rayOrigin - tri0;
+            double u = f * s.Dot(h);
+            if (u < 0.0 || u > 1.0) return double.NaN;
+            Vector q = s.Cross(edge1);
+            double v = f * rayDirection.Dot(q);
+            if (v < 0.0 || u + v > 1.0) return double.NaN;
+            return f * edge2.Dot(q);
+        }
+
+        /// <summary>
+        /// Calculate the intersection between a ray and a mesh face.
+        /// Returns the parameter t, being the multiplication of the rayDirection from the rayOrigin.
+        /// If there is no intersection between the ray and the triangle, double.NaN will be returned.
+        /// </summary>
+        /// <param name="rayOrigin">The origin point of the ray.</param>
+        /// <param name="rayDirection">The direction of the ray.</param>
+        /// <param name="face">The mesh face.</param>
+        /// <returns></returns>
+        public static double RayFace(Vector rayOrigin, Vector rayDirection, IList<Vertex> face)
+        {
+            if (face.Count < 3) return double.NaN;
+            Vector vA = face[0].Position;
+            for (int i = 0; i < face.Count - 2; i++)
+            {
+                Vector vB = face[i + 1].Position;
+                Vector vC = face[i + 2].Position;
+                double t = RayTriangle(rayOrigin, rayDirection, vA, vB, vC);
+                if (!t.IsNaN()) return t;
+            }
+            return double.NaN;
+        }
+
+        /// <summary>
+        /// Calculate the intersection between a ray and a mesh.
+        /// Returns the parameter t, being the multiplication of the rayDirection from the rayOrigin.
+        /// If there is no intersection between the ray and the triangle, double.NaN will be returned.
+        /// </summary>
+        /// <param name="rayOrigin">The origin point of the ray.</param>
+        /// <param name="rayDirection">The direction of the ray.</param>
+        /// <param name="mesh">The mesh.</param>
+        /// <returns></returns>
+        public static double RayMesh(Vector rayOrigin, Vector rayDirection, Mesh mesh)
+        {
+            double t = double.NaN;
+            foreach (MeshFace face in mesh.Faces)
+            {
+                double t2 = RayFace(rayOrigin, rayDirection, face);
+                if (!t2.IsNaN() && (t.IsNaN() || (t < 0 && t2 > t) || (t2 > 0 && t2 < t))
+                    t = t2;
+            }
+            return t;
+        }
+
+        /// <summary>
         /// Find the intersection point between a ray half-line and a line segment on the XY plane, if one exists
         /// </summary>
         /// <param name="rayStart">The ray start point</param>

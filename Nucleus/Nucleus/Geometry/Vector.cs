@@ -1451,6 +1451,49 @@ namespace Nucleus.Geometry
             }
             return result;
         }
+
+        /// <summary>
+        /// Calculate the plane these points lie on, if they are planar.
+        /// Returns null if the vertex collection is non-planar within the specified tolerance 
+        /// or if there are insufficient points to describe a plane.
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>Modified copy of the equivalent algorithm for vertices</remarks>
+        public static Plane Plane(this IList<Vector> v, double tolerance = 0.0000001)
+        {
+            if (v.Count > 2)
+            {
+                Vector o = v[0];
+                Vector x = v[1] - o;
+                Vector xy = v[2] - o;
+                int i = 2;
+                while (i < v.Count - 1)
+                {
+                    i++;
+                    if (!xy.IsZero() && !x.IsParallelTo(xy)) break;
+                    else xy = v[i] - o;
+                }
+                Plane result = new Plane(o, x, xy);
+                while (i < v.Count)
+                {
+                    if (result.DistanceTo(v[i]).Abs() > tolerance) return null;
+                    i++;
+                }
+                return result;
+            }
+            else return null;
+        }
+
+        /// <summary>
+        /// Do all points in this set lie on the same plane?
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static bool ArePlanar(this IList<Vector> v, double tolerance = 0.0000001)
+        {
+            if (v.Count > 3 && v.Plane() == null) return false;
+            else return true;
+        }
     }
 }
 

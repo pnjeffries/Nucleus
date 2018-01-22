@@ -59,10 +59,12 @@ namespace Nucleus.Analysis
         /// Requires UDL and Length.
         /// </summary>
         /// <returns></returns>
-        public double MaxMoment()
+        public double MaxMoment(ICalculationLog log = null)
         {
             // M = wl²/8
+            log?.Symbol("Moment").Write(" = ").Symbol("UDL").Symbol("Length").Superscript("2").WriteLine("/8");
             return UDL * Length.Squared() / 8;
+            
         }
 
         /// <summary>

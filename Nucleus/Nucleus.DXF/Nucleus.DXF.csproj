@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{36955035-2ED9-4E01-A440-C95C1051B0BB}</ProjectGuid>
+    <ProjectGuid>{843DE218-013A-4894-B354-EB567AF43278}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nucleus.DXF</RootNamespace>

@@ -1,4 +1,5 @@
 ﻿using Nucleus.Geometry;
+using Nucleus.UI;
 using Nucleus.WPF.Converters;
 using System;
 using System.Collections.Generic;
@@ -60,7 +61,7 @@ namespace Nucleus.WPF
         /// Tick frequency dependency property
         /// </summary>
         public static readonly DependencyProperty TickFrequencyProperty
-            = DependencyProperty.Register("TickFrequency", typeof(double), typeof(SliderFieldControl), new PropertyMetadata(0.1));
+            = DependencyProperty.Register("TickFrequency", typeof(double), typeof(SliderFieldControl), new PropertyMetadata(0.001));
 
         /// <summary>
         /// The slider tick frequency
@@ -174,6 +175,13 @@ namespace Nucleus.WPF
                 var binding = new Binding(property.Name);
                 binding.Converter = new IntConverter();
                 SetBinding(ValueProperty, binding);
+            }
+
+            AutoUISliderAttribute sAtt = property.GetCustomAttribute<AutoUISliderAttribute>();
+            if (sAtt != null)
+            {
+                Maximum = sAtt.Max;
+                Minimum = sAtt.Min;
             }
         }
 
