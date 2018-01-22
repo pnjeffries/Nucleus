@@ -56,6 +56,11 @@ namespace Nucleus.Geometry
         public Vector EndPoint { get { return End.Position; } }
 
         /// <summary>
+        /// Get the mid point of this edge
+        /// </summary>
+        public Vector MidPoint { get { return (StartPoint + EndPoint) * 0.5; } }
+
+        /// <summary>
         /// Get the length of this edge
         /// </summary>
         public double Length
@@ -103,6 +108,15 @@ namespace Nucleus.Geometry
         public bool Equals(ref MeshEdge other)
         {
             return ((Start == other.Start && End == other.End) || (Start == other.End && End == other.Start));
+        }
+
+        /// <summary>
+        /// Convert this edge to a line
+        /// </summary>
+        /// <returns></returns>
+        public Line ToLine()
+        {
+            return new Line(StartPoint, EndPoint);
         }
 
         #endregion

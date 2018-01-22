@@ -180,7 +180,9 @@ namespace Nucleus.Geometry
 
         /// <summary>
         /// Utility function to find the closest point between two axes
-        /// expressed by starting positions and vectors
+        /// expressed by starting positions and vectors.
+        /// If the two axes do not directly intersect, the closest point on
+        /// the first axis will be returned.
         /// </summary>
         /// <param name="pt0">The origin of the first axis</param>
         /// <param name="v0">The direction of the first axis</param>

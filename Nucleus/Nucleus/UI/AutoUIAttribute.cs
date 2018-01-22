@@ -32,7 +32,7 @@ namespace Nucleus.UI
     /// </summary>
     public class AutoUIAttribute : Attribute
     {
-        #region properties
+        #region Properties
 
         /// <summary>
         /// The order weighting for this property.  Those with a lower order
@@ -87,4 +87,6 @@ namespace Nucleus.UI
 
         #endregion
     }
+
+
 }

@@ -553,13 +553,17 @@ namespace Nucleus.Meshing
         /// <param name="family"></param>
         public virtual void AddPanelPreview(Surface geometry, BuildUpFamily family)
         {
-            if (geometry.IsValid && family != null)
+            if (geometry.IsValid)
             {
                 if (geometry is PlanarRegion)
                 {
                     PlanarRegion region = (PlanarRegion)geometry;
-                    double thickness = family.Layers.TotalThickness;
-                    AddPlanarRegion(region, thickness, thickness * family.SetOut.FactorFromTop());
+                    if (family != null)
+                    {
+                        double thickness = family.Layers.TotalThickness;
+                        AddPlanarRegion(region, thickness, thickness * family.SetOut.FactorFromTop());
+                    }
+                    else AddPlanarRegion(region);
                 }
             }
         }
@@ -581,7 +585,7 @@ namespace Nucleus.Meshing
         /// <param name="region"></param>
         /// <param name="thickness"></param>
         /// <param name="topOffset"></param>
-        public void AddPlanarRegion(PlanarRegion region, double thickness = 0, double topOffset = 0)
+        public void AddPlanarRegion(PlanarRegion region, double thickness = 0, double topOffset = 0, Vector offset = new Vector())
         {
             Plane plane = region.Plane;
             Vector[] perimeter = region.Perimeter.Facet(FacetAngle);
@@ -615,6 +619,11 @@ namespace Nucleus.Meshing
             }
             
             vertices.MoveLocalToGlobal(plane);
+            if (offset.IsValidNonZero())
+            {
+                vertices.Move(offset);
+            }
+
             if (topOffset != 0)
             {
                 Vector topMove = plane.Z * topOffset;
@@ -814,17 +823,18 @@ namespace Nucleus.Meshing
             else if (load is LinearElementLoad)
             {
                 LinearElementLoad eLoad = (LinearElementLoad)load;
+                double value = eLoad.Value.Evaluate<double>(context);
+                var distri = eLoad.Distribution;
                 foreach (LinearElement element in eLoad.AppliedTo.Items)
                 {
                     //TODO
-                    double value = eLoad.Value.Evaluate<double>(context);
-                    var distri = eLoad.Distribution;
                     KeyValuePair<double, double> last = new KeyValuePair<double, double>(double.NaN, double.NaN);
                     CartesianCoordinateSystem lastSys = null;
                     foreach (var kvp in distri)
                     {
                         CartesianCoordinateSystem cSys = 
                             eLoad.Axes.GetCoordinateSystem(element, kvp.Key) as CartesianCoordinateSystem; // TODO: Adjust to unitized length instead of parameter
+                        if (cSys == null) cSys = CartesianCoordinateSystem.Global;
                         Vector dir = cSys.GetAxisVector(eLoad.Direction);
                         if (lastSys != null)
                         {
@@ -834,6 +844,29 @@ namespace Nucleus.Meshing
                         lastSys = cSys;
                     }
                     // TODO: Deal with curved/kinked elements?
+                    // TODO: Moments & Torsions
+                }
+            }
+            else if (load is PanelLoad)
+            {
+                PanelLoad aLoad = (PanelLoad)load;
+                double value = aLoad.Value.Evaluate<double>(context);
+                foreach (PanelElement element in aLoad.AppliedTo.Items)
+                {
+                    CartesianCoordinateSystem cSys =
+                        aLoad.Axes.GetCoordinateSystem(element) as CartesianCoordinateSystem;
+                    if (cSys == null) cSys = CartesianCoordinateSystem.Global;
+                    Vector dir = cSys.GetAxisVector(aLoad.Direction);
+                    if (element.Geometry is PlanarRegion)
+                    {
+                        AddAreaLoad((PlanarRegion)element.Geometry, dir, value * factor);
+                    }
+                    else if (element.Geometry is Mesh)
+                    {
+                        AddAreaLoad((Mesh)element.Geometry, dir, value * factor);
+                        // TODO: Deal with loads applied in local axes with non-planar meshes!
+                        // Will require an offset rather than a simple translation...
+                    }
                 }
             }
 
@@ -884,21 +917,23 @@ namespace Nucleus.Meshing
 
             int p0i = -1;
             int e0i = -1;
-            for (int i = 0; i < zigZags - 1; i++)
+            for (int i = 0; i < zigZags; i++)
             {
                 if (i == 0) //Initialise starting vertices
                 {
                     Vector p0 = start.Interpolate(end, i * zigZagN);
-                    Vector e0 = p0 + direction * startLength.Interpolate(endLength, i * zigZagN);
+                    Vector e0 = p0 - direction * startLength;
                     p0i = AddVertex(p0);
                     e0i = AddVertex(e0);
                 }
 
                 // Determine points               
                 Vector p1 = start.Interpolate(end, (i + 0.5) * zigZagN);
-                Vector p2 = start.Interpolate(end, (i + 1.0) * zigZagN);                
-                Vector e1 = p1 + direction * startLength.Interpolate(endLength, (i + 0.5) * zigZagN);
-                Vector e2 = p2 + direction * startLength.Interpolate(endLength, (i + 1.0) * zigZagN);
+                Vector p2 = start.Interpolate(end, (i + 1.0) * zigZagN);
+                double l1 = startLength.Interpolate(endLength, (i + 0.5) * zigZagN);
+                Vector e1 = p1 - direction * l1;
+                Vector e2 = p2 - direction * startLength.Interpolate(endLength, (i + 1.0) * zigZagN);
+                p1 -= direction * (Math.Min(zigZagLength, l1.Abs()/2) * l1.Sign());
 
                 int p1i = AddVertex(p1);
                 int p2i = AddVertex(p2);     
@@ -911,6 +946,48 @@ namespace Nucleus.Meshing
                 p0i = p2i;
                 e0i = e2i;
             }
+        }
+
+        /// <summary>
+        /// Add faces and vertices to the mesh to represent an area load applied over a specified planar
+        /// region.
+        /// </summary>
+        /// <param name="region">The region to which the load is applied</param>
+        /// <param name="direction">The direction of the load</param>
+        /// <param name="length">The length of the arrows representing the load</param>
+        /// <param name="zigZagLength"></param>
+        public void AddAreaLoad(PlanarRegion region, Vector direction, double length, double zigZagLength = 1.0)
+        {
+            Vector offset = direction * -length;
+            AddPlanarRegion(region, 0, 0, offset);
+            Vector[] pts = region.Perimeter.Facet(this.FacetAngle);
+            for (int i = 0; i < pts.Length; i++)
+            {
+                Vector ptA = pts[i];
+                Vector ptB = pts.GetWrapped(i + 1);
+                AddLineLoad(ptA, ptB, direction, length, length, zigZagLength);
+            }
+        }
+
+        /// <summary>
+        /// Add faces and vertices to the mesh to represent an area load applied over a specified mesh
+        /// region.
+        /// </summary>
+        /// <param name="region">The region to which the load is applied</param>
+        /// <param name="direction">The direction of the load</param>
+        /// <param name="length">The length of the arrows representing the load</param>
+        /// <param name="zigZagLength"></param>
+        public void AddAreaLoad(Mesh region, Vector direction, double length, double zigZagLength = 1.0)
+        {
+            var edges = region.Faces.ExtractNakedEdges();
+            foreach (MeshEdge edge in edges)
+            {
+                AddLineLoad(edge.StartPoint, edge.EndPoint, direction, length, length, zigZagLength);
+            }
+            // TODO: optimise mesh offset
+            Mesh m2 = region.Duplicate();
+            m2.Move(direction * -length);
+            AddMesh(m2);
         }
 
         #endregion

@@ -67,13 +67,14 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
-        /// Remove all duplicate objects from this collection
+        /// Remove duplicate objects from this collection, leaving
+        /// the first discovered
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="list"></param>
         public static void RemoveDuplicates<T>(this IList<T> list)
         {
-            for (int i = list.Count - 2; i >= 0; i--)
+            for (int i = 0; i < list.Count - 1; i++)
             {
                 T itemA = list[i];
                 for (int j = list.Count - 1; j > i; j--)
@@ -81,10 +82,35 @@ namespace Nucleus.Extensions
                     if (itemA.Equals(list[j]))
                     {
                         list.RemoveAt(j);
-                        list.RemoveAt(i);
-                        j--;
-                        continue;
                     }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove *all* duplicate objects from this collection, including
+        /// the first instance discovered.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        public static void RemoveAllDuplicates<T>(this IList<T> list)
+        {
+            for (int i = 0; i < list.Count - 1; i++)
+            {
+                T itemA = list[i];
+                bool remove = false;
+                for (int j = list.Count - 1; j > i; j--)
+                {
+                    if (itemA.Equals(list[j]))
+                    {
+                        list.RemoveAt(j);
+                        remove = true;
+                    }
+                }
+                if (remove)
+                {
+                    list.RemoveAt(i);
+                    i--;
                 }
             }
         }

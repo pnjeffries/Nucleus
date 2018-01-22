@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nucleus.Geometry;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,16 @@ namespace Nucleus.Model.Loading
         public override string GetValueUnits()
         {
             return "m/s/s";
+        }
+
+        /// <summary>
+        /// Get a vector which describes the direction and magnitude
+        /// of the gravity load.  The default evaluation context will be used.
+        /// </summary>
+        /// <returns></returns>
+        public Vector GravityVector()
+        {
+            return GetDirectionVector(null) * Value;
         }
     }
 }

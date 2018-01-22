@@ -48,6 +48,10 @@ namespace Nucleus.WPF
                     {
                         control = new ComboFieldControl();
                     }
+                    else if (property.HasAttribute(typeof(AutoUISliderAttribute))) // Slider attributes
+                    {
+                        control = new SliderFieldControl();
+                    }
                     else if (pType.IsAssignableFrom(typeof(double)) || pType.IsAssignableFrom(typeof(int))) // Numbers
                     {
                         control = new SliderFieldControl();

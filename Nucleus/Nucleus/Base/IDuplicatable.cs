@@ -94,12 +94,18 @@ namespace Nucleus.Base
                 foreach (object item in source)
                 {
                     CopyBehaviour behaviour = itemsBehaviour;
+                    CopyBehaviour subItemsBehaviour = itemsBehaviour;
                     if (item != null && item is IDuplicatable)
                     {
                         CopyAttribute cAtt = item.GetType().GetCustomAttribute<CopyAttribute>();
-                        if (cAtt != null) behaviour = cAtt.Behaviour;
+                        if (cAtt != null)
+                        {
+                            behaviour = cAtt.Behaviour;
+                            if (cAtt is CollectionCopyAttribute)
+                                subItemsBehaviour = ((CollectionCopyAttribute)cAtt).ItemsBehaviour;
+                        }
                     }
-                    object value = ValueToAssign(item, ref behaviour, itemsBehaviour, ref objectMap);
+                    object value = ValueToAssign(item, ref behaviour, subItemsBehaviour, ref objectMap);
                     if (target is IList)
                     {
                         ((IList)target).Add(value);
@@ -169,16 +175,17 @@ namespace Nucleus.Base
             Type sourceType = source.GetType();
             BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
             ICollection<FieldInfo> fields = targetType.GetAllFields(flags);
-            foreach (FieldInfo targetField in fields)
+            foreach (FieldInfo targetField 
+                in fields)
             {
                 FieldInfo sourceField = sourceType.GetBaseField(targetField.Name, flags);
                 if (sourceField != null && targetField.FieldType.IsAssignableFrom(sourceField.FieldType))
                 {
-                    //Have found a matching property - check for copy behaviour attributes:
-                    //Currently this is done on the source field.  Might it also be safer to check the target
-                    //field as well, for at least certain values?
+                    // Have found a matching property - check for copy behaviour attributes:
+                    // Currently this is done on the source field.  Might it also be safer to check the target
+                    // field as well, for at least certain values?
                     CopyAttribute copyAtt = sourceField.GetAttribute<CopyAttribute>();
-                    //If copy attribute is not set on the field, we will try it on the type:
+                    // If copy attribute is not set on the field, we will try it on the type:
                     if (copyAtt == null) copyAtt = sourceField.FieldType.GetCustomAttribute<CopyAttribute>();
 
                     CopyBehaviour behaviour = CopyBehaviour.COPY;

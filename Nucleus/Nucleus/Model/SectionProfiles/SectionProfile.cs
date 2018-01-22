@@ -55,6 +55,16 @@ namespace Nucleus.Model
         }
 
         /// <summary>
+        /// The shorthand designating the type of catalogue section, obtained
+        /// from the starting letters of the CatalogueName.  For example, for
+        /// Universal Beams this would be "UB".
+        /// </summary>
+        public string CatalogueTypeDesignation
+        {
+            get { return _CatalogueName?.StartingLetters(); }
+        }
+
+        /// <summary>
         /// The outer perimeter curve of this section profile.
         /// </summary>
         public abstract Curve Perimeter { get; }

@@ -78,6 +78,7 @@ namespace Nucleus.Dynamo
         public static DS.PolyCurve Convert(PolyCurve pCurve)
         {
             //TODO
+            throw new NotImplementedException();
         }
     }
 }

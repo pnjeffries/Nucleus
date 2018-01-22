@@ -87,7 +87,7 @@ namespace Nucleus.Model
         /// <summary>
         /// Private backing field for Density property
         /// </summary>
-        private double _Density = 0;
+        private double _Density = 8050;
 
         /// <summary>
         /// The density of the material, in kg/m³

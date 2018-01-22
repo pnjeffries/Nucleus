@@ -13,6 +13,161 @@
                 
             </ResourceDictionary.MergedDictionaries>
             <converters:NullOrEmptyVisibilityConverter x:Key="NullOrEmptyVisibilityConverter"/>
+
+            <!-- Arrowless expander template for Group headers based on: 
+            https://stackoverflow.com/questions/1070685/hiding-the-arrows-for-the-wpf-expander-control -->
+            <Style x:Key="ExpanderHeaderFocusVisual">
+                <Setter Property="Control.Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Border>
+                                <Rectangle SnapsToDevicePixels="true"
+                           Margin="0"
+                           Stroke="Black"
+                           StrokeDashArray="1 2"
+                           StrokeThickness="1" />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+           
+            <Style x:Key="ExpanderDownHeaderStyle"
+       TargetType="{x:Type ToggleButton}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                            <Border Padding="{TemplateBinding Padding}">
+                                <Grid SnapsToDevicePixels="False"
+                          Background="Transparent">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Grid Width="15" Height="13" SnapsToDevicePixels="True">
+                                            <!-- Rectangle 9x9 pixels -->
+                                            <Rectangle Width="9" Height="9" Stroke="#919191" SnapsToDevicePixels="true">
+                                                <Rectangle.Fill>
+                                                    <LinearGradientBrush EndPoint="0.5,2" StartPoint="0.5,0">
+                                                        <GradientStop Color="White" Offset="0"/>
+                                                        <GradientStop Color="Silver" Offset="0.5"/>
+                                                        <GradientStop Color="LightGray" Offset="1"/>
+                                                    </LinearGradientBrush>
+                                                </Rectangle.Fill>
+                                            </Rectangle>
+                                            <!-- Vertical line inside rectangle -->
+                                            <Rectangle x:Name="ExpandPath" Width="1" Height="5" Stroke="Black" SnapsToDevicePixels="true"/>
+                                            <!-- Horizontal line inside rectangle -->
+                                            <Rectangle Width="5" Height="1" Stroke="Black" SnapsToDevicePixels="true"/>
+                                        </Grid>
+                                        <ContentPresenter SnapsToDevicePixels="True"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Center"
+                                          RecognizesAccessKey="True" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Visibility"  TargetName="ExpandPath" Value="Collapsed"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
+            <Style x:Key="ArrowlessExpanderTemplate"
+       TargetType="{x:Type Expander}">
+                <Setter Property="Foreground"
+            Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+                <Setter Property="Background"
+            Value="Transparent" />
+                <Setter Property="HorizontalContentAlignment"
+            Value="Stretch" />
+                <Setter Property="VerticalContentAlignment"
+            Value="Stretch" />
+                <Setter Property="BorderBrush"
+            Value="Transparent" />
+                <Setter Property="BorderThickness"
+            Value="1" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Expander}">
+                            <Border SnapsToDevicePixels="true"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="3">
+                                <DockPanel>
+                                    <ToggleButton FontFamily="{TemplateBinding FontFamily}"
+                                      FontSize="{TemplateBinding FontSize}"
+                                      FontStretch="{TemplateBinding FontStretch}"
+                                      FontStyle="{TemplateBinding FontStyle}"
+                                      FontWeight="{TemplateBinding FontWeight}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      Padding="{TemplateBinding Padding}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      FocusVisualStyle="{StaticResource ExpanderHeaderFocusVisual}"
+                                      Margin="1"
+                                      MinHeight="0"
+                                      MinWidth="0"
+                                      x:Name="HeaderSite"
+                                      Style="{StaticResource ExpanderDownHeaderStyle}"
+                                      Content="{TemplateBinding Header}"
+                                      ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                      ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"
+                                      DockPanel.Dock="Top"
+                                      IsChecked="{Binding Path=IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" />
+                                    <ContentPresenter Focusable="false"
+                                          Visibility="Collapsed"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          Margin="{TemplateBinding Padding}"
+                                          x:Name="ExpandSite"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          DockPanel.Dock="Bottom" />
+                                </DockPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsExpanded"
+                             Value="true">
+                                    <Setter Property="Visibility"
+                                TargetName="ExpandSite"
+                                Value="Visible" />
+                                </Trigger>
+                                
+                                <Trigger Property="IsEnabled"
+                             Value="false">
+                                    <Setter Property="Foreground"
+                                Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="GroupItem" TargetType="{x:Type GroupItem}">
+                <Setter Property="Margin" Value="0,0,0,0"/>
+                <Setter Property="Visibility" 
+                        Value="{Binding Path=Name, Converter={StaticResource NullOrEmptyVisibilityConverter}}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type GroupItem}">
+                            <Expander IsExpanded="False" BorderThickness="0" Style="{StaticResource ArrowlessExpanderTemplate}">
+                                <Expander.Header>
+                                    <DockPanel>
+                                        <TextBlock Text="{Binding Path=Name}" FontWeight="Bold"/>
+                                    </DockPanel>
+                                </Expander.Header>
+                                <Expander.Content>
+                                    <Border Margin="5,0,0,0">
+                                        <ItemsPresenter />
+                                    </Border>
+                                </Expander.Content>
+                            </Expander>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </ResourceDictionary>
     </local:FieldControl.Resources>
     <Grid Name="LayoutRoot">
@@ -34,8 +189,19 @@
                   StaysOpenOnEdit="{Binding Path=IsEditable}"
                   Text="{Binding Path=Text}"
                   TextSearch.TextPath="{Binding Path=TextSearchPath}"
-                  Name="ComboBox"
-                  />
+                  >
+            <ComboBox.GroupStyle>
+                <GroupStyle ContainerStyle="{StaticResource GroupItem}"/>
+                <!--<GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>-->
+            </ComboBox.GroupStyle>
+
+        </ComboBox>
         <ContentPresenter Grid.Column="2" Content="{Binding Path=ExtraContent}"/>
     </Grid>
 </local:FieldControl>

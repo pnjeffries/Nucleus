@@ -35,8 +35,9 @@ namespace Nucleus.Geometry
     /// parent mesh.
     /// </summary>
     [Serializable]
+    [CollectionCopy(CopyBehaviour.DUPLICATE, CopyBehaviour.MAP_OR_COPY)]
     public class MeshFace : 
-        List<Vertex>, IUnique
+        List<Vertex>, IUnique, IDuplicatable
         //VertexCollection, IUnique //Slower!
     {
         #region Properties
@@ -585,6 +586,29 @@ namespace Nucleus.Geometry
                 if (Contains(v)) count++;
             }
             return count;
+        }
+
+        /// <summary>
+        /// Find the length of the first found edge shared with the specified other face.
+        /// If no shared edge exists, will return 0.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public double SharedEdgeLengthSquared(MeshFace other)
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                Vertex v = this[i];
+                if (other.Contains(v))
+                {
+                    Vertex v2 = this.GetWrapped(i + 1);
+                    if (other.Contains(v2))
+                    {
+                        return v.DistanceToSquared(v2);
+                    }
+                }
+            }
+            return 0;
         }
 
         /// <summary>

@@ -18,11 +18,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Nucleus.Base;
 using Nucleus.Extensions;
 using Nucleus.Meshing;
 using Nucleus.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -64,6 +66,7 @@ namespace Nucleus.Geometry
         /// <summary>
         /// Private backing field for Faces property
         /// </summary>
+        [CollectionCopy(CopyBehaviour.DUPLICATE, CopyBehaviour.DUPLICATE)]
         private MeshFaceCollection _Faces;
 
         /// <summary>
@@ -254,6 +257,134 @@ namespace Nucleus.Geometry
                 return face.GetPlane();
             }
             return null;
+        }
+
+        /// <summary>
+        /// Write  this mesh to a string in OBJ format
+        /// </summary>
+        /// <returns></returns>
+        public string ToOBJ()
+        {
+            string result = null;
+            using (var tW = new StringWriter())
+            {
+                ToOBJ(tW);
+                result = tW.ToString();
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Write this mesh to a stream in OBJ format
+        /// </summary>
+        /// <returns></returns>
+        public void ToOBJ(Stream stream)
+        {
+            using (var writer = new StreamWriter(stream))
+            {
+                ToOBJ(writer);
+            }
+        }
+
+        /// <summary>
+        /// Write this mesh to a stream in OBJ format
+        /// </summary>
+        /// <returns></returns>
+        public void ToOBJ(TextWriter writer)
+        {
+            writer.WriteLine("# Vertices");
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                Vertex v = Vertices[i];
+                writer.Write("v ");
+                writer.Write(v.X);
+                writer.Write(" ");
+                writer.Write(v.Y);
+                writer.Write(" ");
+                writer.Write(v.Z);
+                writer.WriteLine();
+                v.Number = i;
+            }
+            writer.WriteLine();
+            writer.WriteLine("# Faces");
+            foreach(MeshFace face in Faces)
+            {
+                writer.Write("f");
+                foreach (Vertex v in face)
+                {
+                    writer.Write(" ");
+                    writer.Write(v.Number);
+                }
+            }
+            writer.Flush();
+        }
+
+        /// <summary>
+        /// Load mesh geometry in Wavefront OBJ format from a string.
+        /// The new geometry will be added to any existing already in this mesh.
+        /// </summary>
+        /// <param name="obj"></param>
+        public void FromOBJ(string obj)
+        {
+            using (StringReader reader = new StringReader(obj))
+            {
+                FromOBJ(reader);
+            }
+        }
+
+        /// <summary>
+        /// Load mesh geometry in Wavefront OBJ format from a stream.
+        /// The new geometry will be added to any existing already in this mesh.
+        /// </summary>
+        /// <param name="stream"></param>
+        public void FromOBJ(Stream stream)
+        {
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                FromOBJ(reader);
+            }
+        }
+
+        /// <summary>
+        /// Load mesh geometry in Wavefront OBJ format.
+        /// The new geometry will be added to any existing already in this mesh.
+        /// </summary>
+        /// <param name="reader"></param>
+        public void FromOBJ(TextReader reader)
+        {
+            int offset = Vertices.Count;
+            while (reader.Peek() >= 0)
+            {
+                string line = reader.ReadLine().Trim().Before('#');
+                string[] tokens = line.Split(' ');
+                if (tokens.Length > 0)
+                {
+                    string key = tokens[0];
+                    if (key.EqualsIgnoreCase("v"))
+                    {
+                        // Vertex:
+                        Vertex v = new Vertex(Vector.FromTokensList(tokens, 1));
+                        Vertices.Add(v);
+                    }
+                    else if (key.EqualsIgnoreCase("f"))
+                    {
+                        // Face:
+                        MeshFace face = new MeshFace();
+                        for (int i = 1; i < tokens.Length; i++)
+                        {
+                            string[] subTokens = tokens[i].Split('/');
+                            if (subTokens.Length > 0)
+                            {
+                                int vi = subTokens[0].ToInteger(-1);
+                                if (vi >= 0 && vi + offset < Vertices.Count)
+                                {
+                                    face.Add(Vertices[vi]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         #endregion

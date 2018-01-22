@@ -55,11 +55,21 @@ namespace Nucleus.Maths
         #region Methods
 
         /// <summary>
+        /// Evaluate the expression and return the calculated value.
+        /// The default context will be used.
+        /// </summary>
+        /// <returns></returns>
+        public object Evaluate()
+        {
+            return Evaluate(null);
+        }
+
+        /// <summary>
         /// Evaluate the expression and return the calculated value
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="context">The evaluation context to use</param>
         /// <returns></returns>
-        public abstract object Evaluate(IEvaluationContext context = null);
+        public abstract object Evaluate(IEvaluationContext context);
 
         /// <summary>
         /// Evaluate the expression and return the calculated value of the

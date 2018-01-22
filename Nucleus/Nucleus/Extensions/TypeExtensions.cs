@@ -43,11 +43,13 @@ namespace Nucleus.Extensions
         /// </summary>
         /// <param name="type">This type</param>
         /// <param name="ancestorType">A type which is an ancestor of this one</param>
+        /// <param name="interfaceProxy">The value to be returned in the case that the 
+        /// specified type is not a direct ancestor but is still assignable</param>
         /// <returns>If the specified type is an ancestor of this one, the number of
         /// inheritance levels between the two types.  If the specified type is this 
         /// type, 0.  If the specified type cannot be found in the inheritance chain,
         /// -1.</returns>
-        public static int InheritanceLevelsTo(this Type type, Type ancestorType)
+        public static int InheritanceLevelsTo(this Type type, Type ancestorType, int interfaceProxy = -1)
         {
             int count = 0;
             while (type != null && type != ancestorType)
@@ -56,6 +58,8 @@ namespace Nucleus.Extensions
                 type = type.BaseType;
             }
             if (type == ancestorType) return count;
+            else if (interfaceProxy >= 0 && ancestorType.IsAssignableFrom(type))
+                return interfaceProxy;
             else return -1;
         }
 
@@ -67,10 +71,12 @@ namespace Nucleus.Extensions
         /// <param name="inTypes">The collection of types to look within</param>
         /// <param name="includeSelf">If true (default) the type itself may be returned if found.
         /// Otherwise it will be excluded from the search and only its ancestors may be returned.</param>
+        /// <param name="interfaceProxy">The number of inheritance levels to be assumed in the case of
+        /// compatible interfaces</param>
         /// <returns>The type in this collection that is closest in the inheritance
         /// hierarchy to the specified type.  Or, null if the type does not have an
         /// ancestor in the collection.</returns>
-        public static Type ClosestAncestor(this IEnumerable<Type> inTypes, Type forType, bool includeSelf = true)
+        public static Type ClosestAncestor(this IEnumerable<Type> inTypes, Type forType, bool includeSelf = true, int interfaceProxy = 100000)
         {
             int minDist = -1;
             Type closest = null;
@@ -78,7 +84,7 @@ namespace Nucleus.Extensions
             if (!includeSelf) distLimit = 1;
             foreach (Type ancestorType in inTypes)
             {
-                int dist = forType.InheritanceLevelsTo(ancestorType);
+                int dist = forType.InheritanceLevelsTo(ancestorType, interfaceProxy);
                 if (dist >= distLimit && (minDist < 0 || dist < minDist))
                 {
                     minDist = dist;

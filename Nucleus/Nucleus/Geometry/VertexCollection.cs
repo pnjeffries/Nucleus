@@ -150,7 +150,7 @@ namespace Nucleus.Geometry
         /// or if there are insufficient points to describe a plane.
         /// </summary>
         /// <returns></returns>
-        public Plane Plane(double tolerance)
+        public Plane Plane(double tolerance = 0.0000001)
         {
             if (Count > 2)
             {
@@ -167,7 +167,7 @@ namespace Nucleus.Geometry
                 Plane result = new Plane(o, x, xy);
                 while (i < Count)
                 {
-                    if (result.DistanceTo(this[i].Position) > tolerance) return null;
+                    if (result.DistanceTo(this[i].Position).Abs() > tolerance) return null;
                     i++;
                 }
                 return result;

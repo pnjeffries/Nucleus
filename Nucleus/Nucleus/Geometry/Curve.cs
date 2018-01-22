@@ -812,6 +812,18 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Check whether the specified point lies within the area enclosed by this curve
+        /// on the XY plane
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        /// <remarks>TODO: Implement more refined checks on arcs</remarks>
+        public virtual bool EnclosesXY(Vector point)
+        {
+            return Vertices.PolygonContainmentXY(point);
+        }
+
+        /// <summary>
         /// Offset this curve on the XY plane.
         /// </summary>
         /// <param name="distances">The offset distance.

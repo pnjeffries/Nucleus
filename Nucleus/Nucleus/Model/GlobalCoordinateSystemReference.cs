@@ -71,7 +71,7 @@ namespace Nucleus.Model
         /// <returns></returns>
         public override ICoordinateSystem GetCoordinateSystem(LinearElement element, double t)
         {
-            return CartesianCoordinateSystem.Global;
+            return new CartesianCoordinateSystem(element.Geometry.PointAt(t));
         }
 
         /// <summary>

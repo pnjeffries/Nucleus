@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus", "Nucleus\Nucleus.csproj", "{7635522C-178F-4DB5-9106-FF8DFD4B833B}"
 EndProject
@@ -38,6 +40,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.Dynamo", "Nucleus.Dynamo\Nucleus.Dynamo.csproj", "{5CCA615C-2B79-47AB-93B9-32A0F5E6B447}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.Loader", "Nucleus.Loader\Nucleus.Loader.csproj", "{17A8D133-2B30-4329-A7F0-56FCD53A700D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.BriefFE", "Nucleus.BriefFE\Nucleus.BriefFE.csproj", "{4A84ADB6-900F-42BF-AC2B-E74E21EFBC4C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -117,6 +120,10 @@ Global
 		{17A8D133-2B30-4329-A7F0-56FCD53A700D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17A8D133-2B30-4329-A7F0-56FCD53A700D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17A8D133-2B30-4329-A7F0-56FCD53A700D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A84ADB6-900F-42BF-AC2B-E74E21EFBC4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A84ADB6-900F-42BF-AC2B-E74E21EFBC4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A84ADB6-900F-42BF-AC2B-E74E21EFBC4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A84ADB6-900F-42BF-AC2B-E74E21EFBC4C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -17,5 +17,6 @@ namespace Nucleus.Model
         Live = 20,
         Wind = 30,
         Seismic = 100,
+        Thermal = 200
     }
 }
