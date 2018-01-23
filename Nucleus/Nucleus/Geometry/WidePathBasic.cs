@@ -85,6 +85,66 @@ namespace Nucleus.Geometry
             set { ChangeProperty(ref _RightOffset, value, "RightOffset"); }
         }
 
+        /// <summary>
+        /// Private backing field for StartCapLeft property
+        /// </summary>
+        private Curve _StartCapLeft = null;
+
+        /// <summary>
+        /// The curve capping the left side of the starting end of the path.
+        /// Will usually be null.
+        /// </summary>
+        public Curve StartCapLeft
+        {
+            get { return _StartCapLeft; }
+            set { ChangeProperty(ref _StartCapLeft, value, "StartCapLeft"); }
+        }
+
+        /// <summary>
+        /// Private backing field for StartCapRight property
+        /// </summary>
+        private Curve _StartCapRight = null;
+
+        /// <summary>
+        /// The curve capping the right side of the starting end of the path.
+        /// Will usually be null.
+        /// </summary>
+        public Curve StartCapRight
+        {
+            get { return _StartCapRight; }
+            set { ChangeProperty(ref _StartCapRight, value, "StartCapRight"); }
+        }
+
+        /// <summary>
+        /// Private backing field for EndCapLeft property
+        /// </summary>
+        private Curve _EndCapLeft = null;
+
+        /// <summary>
+        /// The curve capping the left side of the end of the path.
+        /// Will usually be null.
+        /// </summary>
+        public Curve EndCapLeft
+        {
+            get { return _EndCapLeft; }
+            set { ChangeProperty(ref _EndCapLeft, value, "EndCapLeft"); }
+        }
+
+        /// <summary>
+        /// Private backing field for EndCapRight property
+        /// </summary>
+        private Curve _EndCapRight = null;
+
+        /// <summary>
+        /// The curve capping the right side of the end of the path.
+        /// Will usually be null.
+        /// </summary>
+        public Curve EndCapRight
+        {
+            get { return _EndCapRight; }
+            set { ChangeProperty(ref _EndCapRight, value, "EndCapRight"); }
+        }
+
         #endregion
 
         #region Constructors

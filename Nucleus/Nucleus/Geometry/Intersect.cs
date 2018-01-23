@@ -450,10 +450,23 @@ namespace Nucleus.Geometry
             foreach (MeshFace face in mesh.Faces)
             {
                 double t2 = RayFace(rayOrigin, rayDirection, face);
-                if (!t2.IsNaN() && (t.IsNaN() || (t < 0 && t2 > t) || (t2 > 0 && t2 < t))
+                if (!t2.IsNaN() && (t.IsNaN() || (t < 0 && t2 > t) || (t2 > 0 && t2 < t)))
                     t = t2;
             }
             return t;
+        }
+
+        /// <summary>
+        /// Calculate the intersection between a ray and a mesh.
+        /// Returns the parameter t, being the multiplication of the ray Direction from the ray Origin.
+        /// If there is no intersection between the ray and the triangle, double.NaN will be returned.
+        /// </summary>
+        /// <param name="ray">The ray</param>
+        /// <param name="mesh">The mesh</param>
+        /// <returns></returns>
+        public static double RayMesh(Axis ray, Mesh mesh)
+        {
+            return RayMesh(ray.Origin, ray.Direction, mesh);
         }
 
         /// <summary>

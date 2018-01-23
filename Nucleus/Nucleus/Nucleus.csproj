@@ -62,6 +62,7 @@
     <Compile Include="Base\Pair.cs" />
     <Compile Include="Base\SetFilterCollection.cs" />
     <Compile Include="Conversion\ModelConversionOptions.cs" />
+    <Compile Include="DDTree\MeshFaceDDTree.cs" />
     <Compile Include="Extensions\CharExtensions.cs" />
     <Compile Include="Extensions\BoolExtensions.cs" />
     <Compile Include="Extensions\EventHandlerExtensions.cs" />

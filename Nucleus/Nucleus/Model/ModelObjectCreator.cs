@@ -494,8 +494,6 @@ namespace Nucleus.Model
         public TLoad Load<TLoad>(LoadCase lCase, ExecutionInfo exInfo = null)
         where TLoad : Load, new()
         {
-            NodeLoad result = new NodeLoad();
-            result = Model.History.Update(exInfo, result);
             TLoad result = new TLoad();
             result = (TLoad)Model.History.Update(exInfo, result);
             result.Case = lCase;

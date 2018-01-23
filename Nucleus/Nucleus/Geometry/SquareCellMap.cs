@@ -190,7 +190,7 @@ namespace Nucleus.Geometry
         /// <param name="cellIndex">The index of the starting cell</param>
         /// <param name="adjacencyIndex">The adjacency index of the cell to retrieve</param>
         /// <returns></returns>
-        public int AdjacentCell(int cellIndex, int adjacencyIndex)
+        public override int AdjacentCell(int cellIndex, int adjacencyIndex)
         {
             int i = ColumnIndex(cellIndex);
             int j = ColumnIndex(cellIndex);
@@ -217,7 +217,7 @@ namespace Nucleus.Geometry
         /// <param name="cellIndex">The index of the starting cell</param>
         /// <param name="direction">The direction of the cell to retrieve</param>
         /// <returns></returns>
-        public int AdjacentCell(int cellIndex, Vector direction)
+        public override int AdjacentCell(int cellIndex, Vector direction)
         {
             int i = ColumnIndex(cellIndex);
             int j = RowIndex(cellIndex);

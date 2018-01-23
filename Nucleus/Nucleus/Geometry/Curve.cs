@@ -1065,15 +1065,20 @@ namespace Nucleus.Geometry
                 Vector intPt = Intersect.LineLineXY(crvEnd0.Position, tan0, crvEnd1.Position, tan1, ref t0, ref t1);
                 if (intPt.IsValid())
                 {
-                    if (detectMismatches && IsExtension(t0, crvEnd0) != IsExtension(t1, crvEnd1))
+                    if (detectMismatches)
                     {
-                        // May be a mis-match!
-                        Curve crv0 = crvEnd0.Owner as Curve;
-                        Curve crv1 = crvEnd1.Owner as Curve;
-                        if (crv0 == null || crv1 == null || 
-                            crv0.GetOtherEnd(crvEnd0).Position.IsCloser(intPt, crvEnd0.Position) ||
-                            crv1.GetOtherEnd(crvEnd1).Position.IsCloser(intPt, crvEnd1.Position))
-                            return false;
+                        bool ext0 = IsExtension(t0, crvEnd0);
+                        bool ext1 = IsExtension(t1, crvEnd1);
+                        if (ext0 != ext1)
+                        {
+                            // May be a mis-match!
+                            Curve crv0 = crvEnd0.Owner as Curve;
+                            Curve crv1 = crvEnd1.Owner as Curve;
+                            if (crv0 == null || crv1 == null ||
+                                crv0.GetOtherEnd(crvEnd0).Position.IsCloser(crvEnd0.Position, intPt) ||
+                                crv1.GetOtherEnd(crvEnd1).Position.IsCloser(crvEnd1.Position, intPt))
+                                return false;
+                        }
                     }
                     crvEnd0.Position = crvEnd0.Position.WithXY(intPt.X, intPt.Y);
                     crvEnd1.Position = crvEnd1.Position.WithXY(intPt.X, intPt.Y);

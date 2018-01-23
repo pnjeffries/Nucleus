@@ -1506,6 +1506,8 @@ namespace Nucleus.Geometry
                 if (!v[i].XYEquals(other[i])) return false;
             }
             return true;
+        }
+
         /// Calculate the plane these points lie on, if they are planar.
         /// Returns null if the vertex collection is non-planar within the specified tolerance 
         /// or if there are insufficient points to describe a plane.

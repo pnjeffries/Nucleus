@@ -34,5 +34,22 @@ namespace Nucleus.Geometry
         /// <param name="point"></param>
         /// <returns></returns>
         public abstract int IndexAt(Vector location);
+
+        /// <summary>
+        /// Get the cell index of the specified adjacent cell to the specified cell
+        /// </summary>
+        /// <param name="cellIndex">The index of the starting cell</param>
+        /// <param name="adjacencyIndex">The adjacency index of the cell to retrieve</param>
+        /// <returns></returns>
+        public abstract int AdjacentCell(int cellIndex, int adjacencyIndex);
+
+        /// <summary>
+        /// Get the cell index of the cell adjacent to the cell with the specified
+        /// index in the specified direction.
+        /// </summary>
+        /// <param name="cellIndex">The index of the starting cell</param>
+        /// <param name="direction">The direction of the cell to retrieve</param>
+        /// <returns></returns>
+        public abstract int AdjacentCell(int cellIndex, Vector direction);
     }
 }

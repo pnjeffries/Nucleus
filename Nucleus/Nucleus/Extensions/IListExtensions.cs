@@ -201,5 +201,64 @@ namespace Nucleus.Extensions
             return result;
         }
 
+        /// <summary>
+        /// Find the maximum value of a property or method on the items in this list
+        /// </summary>
+        /// <typeparam name="TItem">The type of item in the list</typeparam>
+        /// <typeparam name="TProperty">The type of the property to be interrogated</typeparam>
+        /// <param name="list"></param>
+        /// <param name="propertyDelegate">Delegate function which returns the value of the property
+        /// for each item in this list.</param>
+        /// <returns></returns>
+        public static TProperty MaxDelegateValue<TItem, TProperty>(this IList<TItem> list, Func<TItem, TProperty> propertyDelegate)
+            where TProperty : IComparable<TProperty>
+        {
+            if (list.Count == 0) return default(TProperty);
+            TProperty result = propertyDelegate.Invoke(list[0]);
+            for (int i = 1; i < list.Count; i++)
+            {
+                TProperty value = propertyDelegate.Invoke(list[i]);
+                if (value.CompareTo(result) == 1) result = value; 
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Find the minimum value of a property or method on the items in this list
+        /// </summary>
+        /// <typeparam name="TItem">The type of item in the list</typeparam>
+        /// <typeparam name="TProperty">The type of the property to be interrogated</typeparam>
+        /// <param name="list"></param>
+        /// <param name="propertyDelegate">Delegate function which returns the value
+        /// for each list item.</param>
+        /// <returns></returns>
+        public static TProperty MinDelegateValue<TItem, TProperty>(this IList<TItem> list, Func<TItem, TProperty> propertyDelegate)
+            where TProperty : IComparable<TProperty>
+        {
+            if (list.Count == 0) return default(TProperty);
+            TProperty result = propertyDelegate.Invoke(list[0]);
+            for (int i = 1; i < list.Count; i++)
+            {
+                TProperty value = propertyDelegate.Invoke(list[i]);
+                if (value.CompareTo(result) == -1) result = value;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Find the average of a set of double values obtainable via a delegate function from the items
+        /// in this list.
+        /// </summary>
+        /// <typeparam name="TItem">The type of item in this list.</typeparam>
+        /// <param name="list"></param>
+        /// <param name="valueDelegate">Delegate function which returns the value to be averaged for each list item.</param>
+        /// <returns></returns>
+        public static double AverageDelegateValue<TItem>(this IList<TItem> list, Func<TItem, double> valueDelegate)
+        {
+            double result = 0;
+            for (int i = 0; i < list.Count; i++) result += valueDelegate.Invoke(list[i]);
+            if (list.Count > 0) result /= list.Count;
+            return result;
+        }
     }
 }

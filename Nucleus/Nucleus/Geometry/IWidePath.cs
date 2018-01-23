@@ -41,6 +41,30 @@ namespace Nucleus.Geometry
         /// The offset distance of the right edge from the spine
         /// </summary>
         double RightOffset { get; }
+
+        /// <summary>
+        /// The curve capping the left side of the starting end of the path.
+        /// Will usually be null.
+        /// </summary>
+        Curve StartCapLeft { get; set; }
+
+        /// <summary>
+        /// The curve capping the right side of the starting end of the path.
+        /// Will usually be null.
+        /// </summary>
+        Curve StartCapRight { get; set; }
+
+        /// <summary>
+        /// The curve capping the left side of the end of the path.
+        /// Will usually be null.
+        /// </summary>
+        Curve EndCapLeft { get; set; }
+
+        /// <summary>
+        /// The curve capping the right side of the end of the path.
+        /// Will usually be null.
+        /// </summary>
+        Curve EndCapRight { get; set; }
     }
 
     /// <summary>
@@ -89,7 +113,7 @@ namespace Nucleus.Geometry
             // Trim edges at nodes:
             foreach (Node node in nodes)
             {
-                if (node.Vertices.Count > 1)
+                if (node.Vertices.Count > 0)
                 {
                     // Sort connected vertices by the angle pointing away from the node
                     var angleSorted = new SortedList<double, Vertex>(node.Vertices.Count);
@@ -119,7 +143,7 @@ namespace Nucleus.Geometry
                             // Work out correct edges to match up based on direction:
                             Vertex edgeVR;
                             Vertex edgeVL;
-                            
+
                             if (v.IsStart)
                             {
                                 edgeVR = path.RightEdge.Start;
@@ -142,9 +166,15 @@ namespace Nucleus.Geometry
                             if (!Curve.MatchEnds(edgeVR, edgeVR2, true))
                             {
                                 if (edgeVR.Position.XYDistanceToSquared(node.Position) > edgeVR2.Position.XYDistanceToSquared(node.Position))
+                                {
                                     Curve.ExtendToLineXY(edgeVR2, node.Position, edgeVR.Position - node.Position);
+                                    path.SetEndEdge(edgeVR, new Line(edgeVR.Position, edgeVR2.Position));
+                                }
                                 else
+                                {
                                     Curve.ExtendToLineXY(edgeVR, node.Position, edgeVR2.Position - node.Position);
+                                    pathR.SetEndEdge(edgeVR2, new Line(edgeVR2.Position, edgeVR.Position));
+                                }
                                 /*(Curve crv = Curve.Connect(edgeVR, edgeVR2.Position);
                                 if (crv != null)
                                 {
@@ -155,9 +185,15 @@ namespace Nucleus.Geometry
                             if (!Curve.MatchEnds(edgeVL, edgeVL2, true))
                             {
                                 if (edgeVL.Position.XYDistanceToSquared(node.Position) > edgeVL2.Position.XYDistanceToSquared(node.Position))
+                                {
                                     Curve.ExtendToLineXY(edgeVL2, node.Position, edgeVL.Position - node.Position);
+                                    path.SetEndEdge(edgeVL, new Line(edgeVL.Position, edgeVL2.Position));
+                                }
                                 else
+                                {
                                     Curve.ExtendToLineXY(edgeVL, node.Position, edgeVL2.Position - node.Position);
+                                    pathL.SetEndEdge(edgeVL2, new Line(edgeVL2.Position, edgeVL.Position));
+                                }
                                 /*Curve crv = Curve.Connect(edgeVL, edgeVL2.Position);
                                 if (crv != null)
                                 {
@@ -167,8 +203,31 @@ namespace Nucleus.Geometry
                             }
                         }
                     }
+                    else if (angleSorted.Count == 1)
+                    {
+                        // Close off end:
+                        Vertex v = angleSorted.Values[0];
+                        TPath path = pathMap[v.Owner.GUID];
+                        if (v.IsStart)
+                        {
+                            path.StartCapLeft = new Line(path.LeftEdge.StartPoint, path.RightEdge.StartPoint);
+                        }
+                        else
+                        {
+                            path.EndCapLeft = new Line(path.LeftEdge.EndPoint, path.RightEdge.EndPoint);
+                        }
+                    }
                 }
+                
             }
+        }
+
+        private static void SetEndEdge(this IWidePath path, Vertex edgeEnd, Curve endCrv)
+        {
+            if (path.LeftEdge.Start == edgeEnd) path.StartCapLeft = endCrv;
+            else if (path.LeftEdge.End == edgeEnd) path.EndCapLeft = endCrv;
+            else if (path.RightEdge.Start == edgeEnd) path.StartCapRight = endCrv;
+            else path.EndCapRight = endCrv;
         }
 
         /// <summary>
