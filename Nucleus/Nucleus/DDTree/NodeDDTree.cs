@@ -110,6 +110,7 @@ namespace Nucleus.DDTree
             return pt.DistanceToSquared(entry.Position);
         }
 
+        /*
         /// <summary>
         /// Returns the minimum squared distance between two entries in the tree.
         /// Should be overridden to deal with the specific tree type
@@ -121,6 +122,7 @@ namespace Nucleus.DDTree
         {
             return entryA.DistanceToSquared(entryB);
         }
+        */
 
         /// <summary>
         /// Get the nominal position of the specified entry in the tree the specified dimensional axis.

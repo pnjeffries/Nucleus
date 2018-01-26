@@ -136,6 +136,10 @@ namespace Nucleus.Geometry
                             Vertex v = angleSorted.Values[i];
                             Vertex vL = angleSorted.Values.GetWrapped(i + 1);
 
+                            Angle a = new Angle(angleSorted.Keys[i]).NormalizeTo2PI();
+                            Angle aR = new Angle(angleSorted.Keys.GetWrapped(i - 1) - a);
+                            Angle aL = new Angle(angleSorted.Keys.GetWrapped(i + 1) - a).Explement();
+
                             TPath pathR = pathMap[vR.Owner.GUID];
                             TPath path = pathMap[v.Owner.GUID];
                             TPath pathL = pathMap[vL.Owner.GUID];
@@ -143,29 +147,63 @@ namespace Nucleus.Geometry
                             // Work out correct edges to match up based on direction:
                             Vertex edgeVR;
                             Vertex edgeVL;
+                            double offsR;
+                            double offsL;
 
                             if (v.IsStart)
                             {
+                                // Curve is pointing away from the node
                                 edgeVR = path.RightEdge.Start;
                                 edgeVL = path.LeftEdge.Start;
+                                offsR = path.RightOffset;
+                                offsL = path.LeftOffset;
                             }
                             else
                             {
+                                // Curve is pointing towards the node - flip everything!
                                 edgeVR = path.LeftEdge.End;
                                 edgeVL = path.RightEdge.End;
+                                offsR = path.LeftOffset;
+                                offsL = path.RightOffset;
                             }
 
                             Vertex edgeVR2;
-                            if (vR.IsStart) edgeVR2 = pathR.LeftEdge.Start;
-                            else edgeVR2 = pathR.RightEdge.End;
+                            double offsR2;
+                            if (vR.IsStart)
+                            {
+                                edgeVR2 = pathR.LeftEdge.Start;
+                                offsR2 = pathR.LeftOffset;
+                            }
+                            else
+                            {
+                                edgeVR2 = pathR.RightEdge.End;
+                                offsR2 = pathR.RightOffset;
+                            }
 
                             Vertex edgeVL2;
-                            if (vL.IsStart) edgeVL2 = pathL.RightEdge.Start;
-                            else edgeVL2 = pathL.LeftEdge.End;
-
-                            if (!Curve.MatchEnds(edgeVR, edgeVR2, true))
+                            double offsL2;
+                            if (vL.IsStart)
                             {
-                                if (edgeVR.Position.XYDistanceToSquared(node.Position) > edgeVR2.Position.XYDistanceToSquared(node.Position))
+                                edgeVL2 = pathL.RightEdge.Start;
+                                offsL2 = pathL.RightOffset;
+                            }
+                            else
+                            {
+                                edgeVL2 = pathL.LeftEdge.End;
+                                offsL2 = pathL.LeftOffset;
+                            }
+
+                            bool canTrimR = true;
+                            bool canTrimR2 = true;
+                            if (aR.IsReflex)
+                            {
+                                if (offsR > offsR2) canTrimR = false;
+                                else if (offsR2 > offsR) canTrimR2 = false;
+                            }
+
+                            if (!Curve.MatchEnds(edgeVR, edgeVR2, true, canTrimR, canTrimR2))
+                            {
+                                if (offsR > offsR2)
                                 {
                                     Curve.ExtendToLineXY(edgeVR2, node.Position, edgeVR.Position - node.Position);
                                     path.SetEndEdge(edgeVR, new Line(edgeVR.Position, edgeVR2.Position));
@@ -182,9 +220,19 @@ namespace Nucleus.Geometry
                                     else path.LeftEdge = crv;
                                 }*/
                             }
-                            if (!Curve.MatchEnds(edgeVL, edgeVL2, true))
+
+
+                            bool canTrimL = true;
+                            bool canTrimL2 = true;
+                            if (aL.IsReflex)
                             {
-                                if (edgeVL.Position.XYDistanceToSquared(node.Position) > edgeVL2.Position.XYDistanceToSquared(node.Position))
+                                if (offsL > offsL2) canTrimL = false;
+                                else if (offsL2 > offsL) canTrimL2 = false;
+                            }
+
+                            if (!Curve.MatchEnds(edgeVL, edgeVL2, true, canTrimL, canTrimL2))
+                            {
+                                if (offsL > offsL2)
                                 {
                                     Curve.ExtendToLineXY(edgeVL2, node.Position, edgeVL.Position - node.Position);
                                     path.SetEndEdge(edgeVL, new Line(edgeVL.Position, edgeVL2.Position));

@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Nucleus.Extensions;
 using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
@@ -417,6 +418,106 @@ namespace Nucleus.DDTree
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Swap the values of two doubles
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        private void Swap(ref double a, ref double b)
+        {
+            double aTemp = b;
+            a = b;
+            b = aTemp;
+        }
+
+        /// <summary>
+        /// Trace a ray through this node and its children searching for intersections with object geometry.
+        /// </summary>
+        /// <param name="ray">The ray to test</param>
+        /// <param name="hitTest">A method delegate which tests for intersections between an item in the tree and a ray
+        /// and returns the ray parameter of intersection (if any)</param>
+        /// <param name="tStart">A clipping value at the start of the section of the ray in which to test for collisions</param>
+        /// <param name="tEnd">A clipping parameter at the end of the section of the ray in which to test for collisions</param>
+        /// <returns></returns>
+        public RayHit<T> RayTrace(Axis ray, Func<T, Axis, double> hitTest, double tStart = 0, double tEnd = double.NaN)
+        {
+
+            if (_SplitDimension != Dimension.Undefined)
+            {
+                Vector entryPoint = ray.PointAt(tStart);
+
+                // Search through divisions the ray passes through (in order)
+                double startValue = _Tree.PositionInDimension(_SplitDimension, entryPoint);
+                double t = (startValue - _Origin) / _CellSize;
+                int startIndex = (int)Math.Floor(t);
+                if (startIndex < 0) startIndex = 0;
+                else if (startIndex >= _Branches.Length) startIndex = _Branches.Length - 1;
+
+                int increment = ray.Direction[_SplitDimension].Sign();
+
+                int endIndex;
+                if (tEnd.IsNaN())
+                {
+                    if (increment < 0) endIndex = 0;
+                    else endIndex = _Branches.Length - 1;
+                }
+                else
+                {
+                    Vector exitPoint = ray.PointAt(tEnd);
+                    double t2 = (startValue - _Origin) / _CellSize;
+                    endIndex = (int)Math.Floor(t2);
+                    if (endIndex < 0) endIndex = 0;
+                    else if (endIndex >= _Branches.Length) endIndex = _Branches.Length - 1;
+                }
+                                 // Need to carry through the 3D bounding planes of this cell somehow...
+
+                for (int i = startIndex; !i.Exceeded(endIndex, increment); i += increment)
+                {
+                    DDTreeNode<T> node = _Branches[i];
+                    if (node != null)
+                    {
+                        // Calculate the intersections with the planes either end of this cell to (potentially) restrict
+                        // the  
+                        double value0 = _Origin + i * _CellSize;
+                        double value1 = _Origin + (i + 1) * _CellSize;
+                        double t0 = i == 0 ? double.NaN : Intersect.LinePlane(ray.Origin, ray.Direction, _SplitDimension, value0);
+                        double t1 = i == _Branches.Length - 1 ? double.NaN : Intersect.LinePlane(ray.Origin, ray.Direction, _SplitDimension, value1);
+                        // The end cells are 'open' and so end at infinity
+                        if (increment < 0) Swap(ref t0, ref t1);
+
+                        double tStartNew = tStart;
+                        if (!t0.IsNaN() && t0 > tStart) tStartNew = t0;
+
+                        double tEndNew = tEnd;
+                        if (!t1.IsNaN() && t1 < tEnd) tEndNew = t1;
+
+                        RayHit<T> result = node.RayTrace(ray, hitTest, tStartNew, tEndNew);
+                        if (result != null) return result; // Hit something - unwind!
+                    }
+                }
+            }
+            else
+            {
+                // Search leaf for intersections
+                double tMin = double.MaxValue;
+                bool hit = false;
+                T hitItem = default(T);
+                foreach (T item in _Children)
+                {
+                    double t = hitTest.Invoke(item, ray);
+                    if (!t.IsNaN() && t >= 0 && t < tMin)
+                    {
+                        tMin = t;
+                        hitItem = item;
+                        hit = true;
+                    }
+                }
+                if (hit) return new RayHit<T>(hitItem, tMin);
+            }
+
+            return null;
         }
     }
 }

@@ -39,8 +39,6 @@
     <AssemblyOriginatorKeyFile>NucleusKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -63,17 +61,19 @@
     <Compile Include="Base\SetFilterCollection.cs" />
     <Compile Include="Conversion\ModelConversionOptions.cs" />
     <Compile Include="DDTree\MeshFaceDDTree.cs" />
+    <Compile Include="DDTree\RayHit.cs" />
     <Compile Include="Extensions\CharExtensions.cs" />
     <Compile Include="Extensions\BoolExtensions.cs" />
     <Compile Include="Extensions\EventHandlerExtensions.cs" />
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="Extensions\NotifyCollectionChangedEventArgsExtensions.cs" />
-    <Compile Include="Geometry\ICellMap.cs" />
+    <Compile Include="Geometry\Cell Maps\HexCellMap.cs" />
+    <Compile Include="Geometry\Cell Maps\ICellMap.cs" />
     <Compile Include="Geometry\IWidePath.cs" />
     <Compile Include="Geometry\MeshEdgeLink.cs" />
-    <Compile Include="Geometry\RegularCellMap.cs" />
+    <Compile Include="Geometry\Cell Maps\RegularCellMap.cs" />
     <Compile Include="Geometry\SixVector.cs" />
-    <Compile Include="Geometry\SquareCellMap.cs" />
+    <Compile Include="Geometry\Cell Maps\SquareCellMap.cs" />
     <Compile Include="Geometry\WidePathBasic.cs" />
     <Compile Include="IO\CustomSerializationBinder.cs" />
     <Compile Include="IO\DocumentSaveFileType.cs" />
@@ -114,7 +114,7 @@
     <Compile Include="Extensions\IDictionaryExtensions.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Extensions\IListExtensions.cs" />
-    <Compile Include="Extensions\IntExtensionscs.cs" />
+    <Compile Include="Extensions\IntExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\PropertyInfoExtensions.cs" />
     <Compile Include="Extensions\SortedListExtensions.cs" />
@@ -344,11 +344,14 @@
     <Compile Include="Physics\SpringForceComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Geometry\Vector.cs" />
+    <Compile Include="Rendering\Animation.cs" />
+    <Compile Include="Rendering\Animator.cs" />
     <Compile Include="Rendering\Colour.cs" />
     <Compile Include="Rendering\ColourBrush.cs" />
     <Compile Include="Rendering\ColourCollection.cs" />
     <Compile Include="Rendering\DisplayAttributes.cs" />
     <Compile Include="Rendering\DisplayBrush.cs" />
+    <Compile Include="Maths\Interpolation.cs" />
     <Compile Include="Rendering\IRenderable.cs" />
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Rendering\RenderingParameters.cs" />

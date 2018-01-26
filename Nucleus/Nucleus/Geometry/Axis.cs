@@ -174,6 +174,49 @@ namespace Nucleus.Geometry
             return Origin + Direction * t;
         }
 
+        /// <summary>
+        /// Find the parameter value at a certain length along this
+        /// axis.  If the direction vector of this ray is unitized,
+        /// the length and parameter will be the same.
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public double ParameterAt(double length)
+        {
+            if (length == 0) return 0;
+            else return Direction.Magnitude() / length;
+        }
+
+        /// <summary>
+        /// Determine the parameter at which this ray exits the specified bounding box.  This assumes that the ray origin lies
+        /// within the box to begin with and simply checks the three infinite planes on the relevant sides of the box.
+        /// </summary>
+        /// <param name="bounds"></param>
+        /// <returns></returns>
+        public double LeavesBounds(BoundingBox bounds)
+        {
+            if (bounds == null) return double.NaN;
+
+            double result = double.NaN;
+
+            double tX = double.NaN;
+            if (Direction.X > 0 && !bounds.MaxX.IsNaN()) tX = Intersect.LineYZPlane(Origin, Direction, bounds.MaxX);
+            else if (Direction.X < 0 && !bounds.MinX.IsNaN()) tX = Intersect.LineYZPlane(Origin, Direction, bounds.MinX);
+            if (!tX.IsNaN() && tX >= 0 && (result.IsNaN() || tX < result)) result = tX;
+
+            double tY = double.NaN;
+            if (Direction.Y > 0 && !bounds.MaxY.IsNaN()) tY = Intersect.LineXZPlane(Origin, Direction, bounds.MaxY);
+            else if (Direction.Y < 0 && !bounds.MinY.IsNaN()) tX = Intersect.LineXZPlane(Origin, Direction, bounds.MinY);
+            if (!tY.IsNaN() && tY >= 0 && (result.IsNaN() || tY < result)) result = tY;
+
+            double tZ = double.NaN;
+            if (Direction.Z > 0 && !bounds.MaxZ.IsNaN()) tZ = Intersect.LineXYPlane(Origin, Direction, bounds.MaxZ);
+            else if (Direction.Z < 0 && !bounds.MinZ.IsNaN()) tZ = Intersect.LineXYPlane(Origin, Direction, bounds.MinZ);
+            if (!tZ.IsNaN() && tZ >= 0 && (result.IsNaN() || tZ < result)) result = tZ;
+
+            return result;
+        }
+
         #endregion
 
         #region Static Methods

@@ -38,10 +38,12 @@ namespace Nucleus.DDTree
             return entry.Position.Z;
         }
 
+        /*
         public override double MinDistanceSquaredBetween(T entryA, T entryB)
         {
             return entryA.Position.DistanceToSquared(entryB.Position);
         }
+        */
 
         public override double MinXOf(T entry)
         {

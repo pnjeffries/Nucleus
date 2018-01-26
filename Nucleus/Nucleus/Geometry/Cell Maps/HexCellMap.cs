@@ -1,18 +1,12 @@
-﻿using Nucleus.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Geometry
+namespace Nucleus.Geometry.Cell_Maps
 {
-    /// <summary>
-    /// A data structure representing a map of regular square cells arranged in a orthogonal grid
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    [Serializable]
-    public class SquareCellMap<T> : RegularCellMap<T>
+    public class HexCellMap<T> : RegularCellMap<T>
     {
         #region Fields
 
@@ -67,7 +61,7 @@ namespace Nucleus.Geometry
         private double _CellSize = 1.0;
 
         /// <summary>
-        /// The edge dimension of each cell
+        /// The horizontal and vertical offset between cell centres
         /// </summary>
         public double CellSize
         {
@@ -82,37 +76,8 @@ namespace Nucleus.Geometry
         public override T this[int cellIndex]
         {
             get { return _Cells[cellIndex]; }
-            set {_Cells[cellIndex] = value; }
-        }
 
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// Initialise a new Square cell map with the specified dimensions
-        /// </summary>
-        /// <param name="sizeX"></param>
-        /// <param name="sizeY"></param>
-        /// <param name="cellSize"></param>
-        public SquareCellMap(int sizeX, int sizeY, double cellSize = 1.0)
-        {
-            _SizeX = sizeX;
-            _SizeY = sizeY;
-            _CellSize = cellSize;
-            _Cells = new T[sizeX * sizeY]; 
-        }
-
-        /// <summary>
-        /// Initialise a new square cell map at the given origin with the specified dimensions
-        /// </summary>
-        /// <param name="origin"></param>
-        /// <param name="sizeX"></param>
-        /// <param name="sizeY"></param>
-        /// <param name="cellSize"></param>
-        public SquareCellMap(Vector origin, int sizeX, int sizeY, double cellSize = 1.0) : this(sizeX, sizeY, cellSize)
-        {
-            _Origin = origin;
+            set { _Cells[cellIndex] = value; }
         }
 
         #endregion
@@ -147,7 +112,9 @@ namespace Nucleus.Geometry
         /// <returns></returns>
         public int IndexAt(double x, double y)
         {
-            return IndexAt((int)((x - _Origin.X) / CellSize), (int)((y - _Origin.Y) / CellSize));
+            throw new NotImplementedException();
+            // TODO!
+            // return IndexAt((int)((x - _Origin.X) / CellSize), (int)((y - _Origin.Y) / CellSize));
         }
 
         /// <summary>
@@ -184,50 +151,23 @@ namespace Nucleus.Geometry
             return cellIndex / SizeX;
         }
 
-        /// <summary>
-        /// Get the cell index of the specified adjacent cell to the specified cell
-        /// </summary>
-        /// <param name="cellIndex">The index of the starting cell</param>
-        /// <param name="adjacencyIndex">The adjacency index of the cell to retrieve</param>
-        /// <returns></returns>
-        public override int AdjacentCell(int cellIndex, int adjacencyIndex)
-        {
-            int i = ColumnIndex(cellIndex);
-            int j = ColumnIndex(cellIndex);
 
-            switch (adjacencyIndex)
-            {
-                case 0:
-                    return IndexAt(i + 1, j);
-                case 1:
-                    return IndexAt(i, j - 1);
-                case 2:
-                    return IndexAt(i - 1, j);
-                case 3:
-                    return IndexAt(i, j + 1);
-            }
-
-            return -1;
-        }
-
-        /// <summary>
-        /// Get the cell index of the cell adjacent to the cell with the specified
-        /// index in the specified direction.
-        /// </summary>
-        /// <param name="cellIndex">The index of the starting cell</param>
-        /// <param name="direction">The direction of the cell to retrieve</param>
-        /// <returns></returns>
         public override int AdjacentCell(int cellIndex, Vector direction)
         {
-            int i = ColumnIndex(cellIndex);
-            int j = RowIndex(cellIndex);
-
-            if (direction.X.Abs() > direction.Y.Abs()) //X-dominant
-                return IndexAt(i + direction.X.Sign(), j);
-            else //Y-dominant
-                return IndexAt(i, j + direction.Y.Sign());
+            throw new NotImplementedException();
         }
-         
+
+        public override int AdjacentCell(int cellIndex, int adjacencyIndex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Vector CellPosition(int cellIndex)
+        {
+            throw new NotImplementedException();
+        }
+
+        
         #endregion
     }
 }

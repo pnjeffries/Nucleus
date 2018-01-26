@@ -20,9 +20,25 @@ namespace Nucleus.DDTree
 
         #region Methods
 
+        /// <summary>
+        /// Trace a ray through this tree, testing for intersections with item geometry.
+        /// Returns information about the first intersection encountered.
+        /// </summary>
+        /// <param name="ray">The ray to test</param>
+        /// <returns></returns>
+        public RayHit<MeshFace> RayTrace(Axis ray)
+        {
+            return RayTrace(ray, HitTest);
+        }
+
+        private double HitTest(MeshFace item, Axis ray)
+        {
+            return Intersect.RayFace(ray.Origin, ray.Direction, item);
+        }
+
         public override double DistanceSquaredBetween(Vector pt, MeshFace entry)
         {
-            throw new NotImplementedException();
+            return pt.DistanceToSquared(entry.ClosestPoint(pt));
         }
 
         public override double MaxXOf(MeshFace entry)
@@ -38,11 +54,6 @@ namespace Nucleus.DDTree
         public override double MaxZOf(MeshFace entry)
         {
             return entry.MaxDelegateValue(i => i.Z);
-        }
-
-        public override double MinDistanceSquaredBetween(MeshFace entryA, MeshFace entryB)
-        {
-            throw new NotImplementedException();
         }
 
         public override double MinXOf(MeshFace entry)

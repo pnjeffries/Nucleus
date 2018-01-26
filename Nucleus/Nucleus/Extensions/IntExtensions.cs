@@ -29,7 +29,7 @@ namespace Nucleus.Extensions
     /// <summary>
     /// Extension methods for integers
     /// </summary>
-    public static class IntExtensionscs
+    public static class IntExtensions
     {
         /// <summary>
         /// Is this integer even?
@@ -86,5 +86,21 @@ namespace Nucleus.Extensions
             return value >= min && value <= max;
         }
 
+        /// <summary>
+        /// Has this integer value exceeded a limit.  The condition to test may
+        /// optionally be controlled by specifying the sign of the increment -
+        /// if positive will return true if the value is higher than the limit,
+        /// if negative will return true if the value is lower.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="limit"></param>
+        /// <param name="sign"></param>
+        /// <returns></returns>
+        public static bool Exceeded(this int value, int limit, int sign = 1)
+        {
+            if (sign < 0) return value < limit;
+            else return value > limit;
+        }
+        
     }
 }

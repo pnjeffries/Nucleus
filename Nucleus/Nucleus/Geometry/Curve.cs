@@ -1015,7 +1015,7 @@ namespace Nucleus.Geometry
         /// performed and only matches where both ends are extended or both ends are trimmed
         /// will be permitted.</param>
         /// <returns>True if the curve ends could be successfully matched, else false.</returns>
-        public static bool MatchEnds(Vertex crvEnd0, Vertex crvEnd1, bool detectMismatches = false)
+        public static bool MatchEnds(Vertex crvEnd0, Vertex crvEnd1, bool detectMismatches = false, bool canTrim0 = true, bool canTrim1 = true)
         {
             Curve crv0 = crvEnd0.Owner as Curve;
             Curve crv1 = crvEnd1.Owner as Curve;
@@ -1040,7 +1040,7 @@ namespace Nucleus.Geometry
                     }
                     else
                     {
-                        return MatchEnds(crvEnd0, crv0.TangentAt(crvEnd0), crvEnd1, crv1.TangentAt(crvEnd1), detectMismatches);
+                        return MatchEnds(crvEnd0, crv0.TangentAt(crvEnd0), crvEnd1, crv1.TangentAt(crvEnd1), detectMismatches, canTrim0, canTrim1);
                     }
                 }
             }
@@ -1056,7 +1056,7 @@ namespace Nucleus.Geometry
         /// <param name="crvEnd1">The curve end vertex of the second curve</param>
         /// <param name="tan1">The end tangency of the second curve</param>
         /// <returns></returns>
-        private static bool MatchEnds(Vertex crvEnd0, Vector tan0, Vertex crvEnd1, Vector tan1, bool detectMismatches = false)
+        private static bool MatchEnds(Vertex crvEnd0, Vector tan0, Vertex crvEnd1, Vector tan1, bool detectMismatches = false, bool canTrim0 = true, bool canTrim1 = true)
         {
             if (tan0.Z.IsTiny() && tan1.Z.IsTiny()) // 2D intersection:
             {
@@ -1072,6 +1072,8 @@ namespace Nucleus.Geometry
                         if (ext0 != ext1)
                         {
                             // May be a mis-match!
+                            if ((!canTrim0 && !ext0) || (!canTrim1 && !ext1)) return false;
+
                             Curve crv0 = crvEnd0.Owner as Curve;
                             Curve crv1 = crvEnd1.Owner as Curve;
                             if (crv0 == null || crv1 == null ||

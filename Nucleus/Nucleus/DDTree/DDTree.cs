@@ -111,6 +111,39 @@ namespace Nucleus.DDTree
         }
 
         /// <summary>
+        /// Trace a ray through this tree, testing for intersections with item geometry.
+        /// Returns information about the first intersection encountered.
+        /// </summary>
+        /// <param name="ray">The ray to test</param>
+        /// <param name="hitTest">A delegate function to determine whether an item in the
+        /// tree has been hit by the ray.  Should take in the object and ray as parameters
+        /// and return the ray intersection parameter on a hit or double.NaN on a miss.</param>
+        /// <returns></returns>
+        public RayHit<T> RayTrace(Axis ray, Func<T, Axis, double> hitTest)
+        {
+            return _RootNode.RayTrace(ray, hitTest);
+        }
+
+        /// <summary>
+        /// Trace a ray through this tree, testing for intersections with item geometry.
+        /// Returns information about the first intersection encountered.
+        /// </summary>
+        /// <param name="ray">The ray to test</param>
+        /// <param name="hitTest">A delegate function to determine whether an item in the
+        /// tree has been hit by the ray.  Should take in the object and ray as parameters
+        /// and return the ray intersection parameter on a hit or double.NaN on a miss.</param>
+        /// <param name="maxRange">The maximum range of the ray.  Beyond this range hits will
+        /// be ignored.</param>
+        /// <returns></returns>
+        public RayHit<T> RayTrace(Axis ray, Func<T, Axis, double> hitTest, double maxRange)
+        {
+            double tEnd = ray.ParameterAt(maxRange);
+            RayHit<T> hit = _RootNode.RayTrace(ray, hitTest);
+            if (hit != null && hit.Parameter < tEnd) return hit;
+            else return null;
+        }
+
+        /// <summary>
         /// Add an item to the tree
         /// </summary>
         /// <param name="item"></param>
@@ -185,6 +218,7 @@ namespace Nucleus.DDTree
         /// <returns></returns>
         public abstract double DistanceSquaredBetween(Vector pt, T entry);
 
+        /*
         /// <summary>
         /// Returns the minimum squared distance between two entries in the tree.
         /// Should be overridden to deal with the specific tree type
@@ -193,6 +227,7 @@ namespace Nucleus.DDTree
         /// <param name="entryB"></param>
         /// <returns></returns>
         public abstract double MinDistanceSquaredBetween(T entryA, T entryB);
+        */
 
         /// <summary>
         /// Get the nominal position of the specified entry in the tree the specified dimensional axis.

@@ -440,6 +440,29 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find and return the point within the specified set of points which is closest
+        /// to this point.
+        /// </summary>
+        /// <param name="points"></param>
+        /// <returns></returns>
+        public Vector ClosestOf(params Vector[] points)
+        {
+            if (points.Length == 0) return Unset;
+            int iResult = 0;
+            double minDistSqd = points[0].DistanceToSquared(this);
+            for (int i = 1; i < points.Length; i++)
+            {
+                double distSqd = points[i].DistanceToSquared(this);
+                if (distSqd < minDistSqd)
+                {
+                    minDistSqd = distSqd;
+                    iResult = i;
+                }
+            }
+            return points[iResult];
+        }
+
+        /// <summary>
         /// Find the angle on the XY plane from this position vector to another
         /// </summary>
         /// <param name="other">The position vector to measure the angle to</param>
@@ -1092,7 +1115,7 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Find the sqhared area of the 3D triangle denoted by the specified three vectors
+        /// Find the squared area of the 3D triangle denoted by the specified three vectors
         /// </summary>
         /// <param name="pt0">The first vertex point</param>
         /// <param name="pt1">The second vertex point</param>
@@ -1105,6 +1128,113 @@ namespace Nucleus.Geometry
             double d20 = pt2.DistanceTo(pt0);
             double s = (d01 + d12 + d20) / 2;
             return (s * (s - d01) * (s - d12) * (s - d20));
+        }
+
+        /// <summary>
+        /// Find the closest point on a triangle to a test point
+        /// </summary>
+        /// <param name="tri0">The first corner of the triangle</param>
+        /// <param name="tri1">The second corner of the triangle</param>
+        /// <param name="tri2">The third corner of the triangle</param>
+        /// <param name="testPt">The point for which to find the closest point</param>
+        /// <returns>The closest point as a Vector</returns>
+        /// <remarks>Base on https://www.gamedev.net/forums/topic/552906-closest-point-on-triangle/ </remarks>
+        public static Vector TriangleClosestPoint(Vector tri0, Vector tri1, Vector tri2, Vector testPt)
+        {
+            Vector edge0 = tri1 - tri0;
+            Vector edge1 = tri2 - tri0;
+            Vector v0 = tri0 - testPt;
+
+            double a = edge0.Dot(edge0);
+            double b = edge0.Dot(edge1);
+            double c = edge1.Dot(edge1);
+            double d = edge0.Dot(v0);
+            double e = edge1.Dot(v0);
+
+            double det = a * c - b * b;
+            double s = b * e - c * d;
+            double t = b * d - a * e;
+
+            if (s + t < det)
+            {
+                if (s < 0.0)
+                {
+                    if (t < 0.0)
+                    {
+                        if (d < 0.0)
+                        {
+                            s = (-d / a).Limit(0, 1);
+                            t = 0;
+                        }
+                        else
+                        {
+                            s = 0;
+                            t = (-e / c).Limit(0, 1);
+                        }
+                    }
+                    else
+                    {
+                        s = 0;
+                        t = (-e / c).Limit(0, 1);
+                    }
+                }
+                else if (t < 0)
+                {
+                    s = (-d / a).Limit(0, 1);
+                    t = 0;
+                }
+                else
+                {
+                    double invDet = 1.0 / det;
+                    s *= invDet;
+                    t *= invDet;
+                }
+            }
+            else
+            {
+                if (s < 0)
+                {
+                    double tmp0 = b + d;
+                    double tmp1 = c + e;
+                    if (tmp1 > tmp0)
+                    {
+                        double num = tmp1 - tmp0;
+                        double denom = a - 2 * b + c;
+                        s = (num / denom).Limit(0, 1);
+                        t = 1 - s;
+                    }
+                    else
+                    {
+                        t = (-e / c).Limit(0, 1);
+                        s = 0;
+                    }
+                }
+                else if (t < 0)
+                {
+                    if (a + d > b + e)
+                    {
+                        double num = c + e - b - d;
+                        double denom = a - 2 * b + c;
+                        s = (num / denom).Limit(0, 1);
+                        t = 1 - s;
+                    }
+                    else
+                    {
+                        s = (-e / c).Limit(0, 1);
+                        t = 0;
+                    }
+                }
+                else
+                {
+                    double num = c + e - b - d;
+                    double denom = a - 2 * b + c;
+                    s = (num / denom).Limit(0, 1);
+                    t = 1.0 - s;
+                }
+            }
+
+            return tri0 + s * edge0 + t * edge1;
+            // Could output the s and t parameters if necessary...
         }
 
         /// <summary>

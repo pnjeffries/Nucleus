@@ -163,8 +163,8 @@ namespace Nucleus.Base
             {
                 foreach (NotifyCollectionChangedEventHandler handler in handlers.GetInvocationList())
                 {
-                    if (handler.Target is CollectionView)
-                        ((CollectionView)handler.Target).Refresh();
+                    if (handler.Target is ICollectionView)// is CollectionView)
+                        ((ICollectionView)handler.Target).Refresh();
                     else
                         handler(this, e);
                 }

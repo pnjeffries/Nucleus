@@ -359,8 +359,9 @@ namespace Nucleus.Geometry
 
         /// <summary>
         /// Find the intersection between an infinite line and an infinite plane.
-        /// Expressed as a parameter t, the multiple of the rayDirection away from the rayOrigin
-        /// at which the intersection takes place.
+        /// Expressed as a parameter t, the multiple of the lineDirection away from the lineOrigin
+        /// at which the intersection takes place.  If no intersection (i.e. the line is parallel
+        /// to the plane) will return double.NaN.
         /// </summary>
         /// <param name="lineOrigin">A point on the line</param>
         /// <param name="lineDirection">A direction vector for the line</param>
@@ -380,6 +381,76 @@ namespace Nucleus.Geometry
             }
             return double.NaN;
         }
+
+        /// <summary>
+        /// Find the intersection between an infinite line and an infinite plane normal to one
+        /// of the primary global axes.
+        /// Expressed as a parameter t, the multiple of the lineDirection away from the lineOrigin
+        /// at which the intersection takes place.  If no intersection (i.e. the line is parallel
+        /// to the plane) will return double.NaN.
+        /// </summary>
+        /// <param name="lineOrigin">A point on the line</param>
+        /// <param name="lineDirection">A direction vector for the line</param>
+        /// <param name="dimension">The dimensional axis normal to the plane 
+        /// (for e.g. entering Dimension.Z would utilise a XY plane)</param>
+        /// <param name="planePosition">The position of the plane in the specified dimension</param>
+        /// <returns></returns>
+        public static double LinePlane(Vector lineOrigin, Vector lineDirection, Dimension dimension, double planePosition)
+        {
+            if (dimension == Dimension.X) return LineYZPlane(lineOrigin, lineDirection, planePosition);
+            else if (dimension == Dimension.Y) return LineXZPlane(lineOrigin, lineDirection, planePosition);
+            else if (dimension == Dimension.Z) return LineXYPlane(lineOrigin, lineDirection, planePosition);
+            else return double.NaN;
+        }
+
+        /// <summary>
+        /// Find the intersection between an infinite line and an infinite plane aligned
+        /// parallel to the global XY axes.
+        /// Expressed as a parameter t, the multiple of the lineDirection away from the lineOrigin
+        /// at which the intersection takes place.  If no intersection (i.e. the line is parallel
+        /// to the plane) will return double.NaN.
+        /// </summary>
+        /// <param name="lineOrigin">A point on the line</param>
+        /// <param name="lineDirection">A direction vector for the line</param>
+        /// <param name="x">The z-coordinate of the plane.</param>
+        /// <returns></returns>
+        public static double LineXYPlane(Vector lineOrigin, Vector lineDirection, double z)
+        {
+            return lineDirection.Z == 0 ? double.NaN : (z - lineOrigin.Z) / lineDirection.Z;
+        }
+
+        /// <summary>
+        /// Find the intersection between an infinite line and an infinite plane aligned
+        /// parallel to the global XZ axes.
+        /// Expressed as a parameter t, the multiple of the lineDirection away from the lineOrigin
+        /// at which the intersection takes place.  If no intersection (i.e. the line is parallel
+        /// to the plane) will return double.NaN.
+        /// </summary>
+        /// <param name="lineOrigin">A point on the line</param>
+        /// <param name="lineDirection">A direction vector for the line</param>
+        /// <param name="y">The y-coordinate of the plane.</param>
+        /// <returns></returns>
+        public static double LineXZPlane(Vector lineOrigin, Vector lineDirection, double y)
+        {
+            return lineDirection.Y == 0 ? double.NaN : (y - lineOrigin.Y) / lineDirection.Y;
+        }
+
+        /// <summary>
+        /// Find the intersection between an infinite line and an infinite plane aligned
+        /// parallel to the global YZ axes.
+        /// Expressed as a parameter t, the multiple of the lineDirection away from the lineOrigin
+        /// at which the intersection takes place.  If no intersection (i.e. the line is parallel
+        /// to the plane) will return double.NaN.
+        /// </summary>
+        /// <param name="lineOrigin">A point on the line</param>
+        /// <param name="lineDirection">A direction vector for the line</param>
+        /// <param name="x">The x-coordinate of the plane.</param>
+        /// <returns></returns>
+        public static double LineYZPlane(Vector lineOrigin, Vector lineDirection, double x)
+        {
+            return lineDirection.X == 0 ? double.NaN : (x - lineOrigin.X) / lineDirection.X;
+        }
+
 
         /// <summary>
         /// Calculate the intersection between a ray and a triangle using the
@@ -415,7 +486,7 @@ namespace Nucleus.Geometry
         /// <summary>
         /// Calculate the intersection between a ray and a mesh face.
         /// Returns the parameter t, being the multiplication of the rayDirection from the rayOrigin.
-        /// If there is no intersection between the ray and the triangle, double.NaN will be returned.
+        /// If there is no intersection between the ray and the face, double.NaN will be returned.
         /// </summary>
         /// <param name="rayOrigin">The origin point of the ray.</param>
         /// <param name="rayDirection">The direction of the ray.</param>
@@ -433,6 +504,19 @@ namespace Nucleus.Geometry
                 if (!t.IsNaN()) return t;
             }
             return double.NaN;
+        }
+
+        /// <summary>
+        /// Calculate the intersection between a ray and a mesh face.
+        /// Returns the parameter t, being the multiplication of the ray Direction from the ray Origin.
+        /// If there is no intersection between the ray and the face, double.NaN will be returned.
+        /// </summary>
+        /// <param name="ray">The ray.</param>
+        /// <param name="face">The mesh face.</param>
+        /// <returns></returns>
+        public static double RayFace(Axis ray, IList<Vertex> face)
+        {
+            return RayFace(ray.Origin, ray.Direction, face);
         }
 
         /// <summary>

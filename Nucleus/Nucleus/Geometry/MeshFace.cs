@@ -286,6 +286,40 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find the closest point on this mesh face to a test point, expressed as a
+        /// vector in 3d space.  This may be a position on the face or it may
+        /// be an edge of the face depending on the relative location
+        /// of the test point.
+        /// </summary>
+        /// <param name="toPoint">The test point to find the closest point to</param>
+        /// <returns></returns>
+        public Vector ClosestPoint(Vector toPoint)
+        {
+            if (Count < 3) return Vector.Unset;
+            else if (Count == 3) return Vector.TriangleClosestPoint(this[0].Position, this[1].Position, this[2].Position, toPoint);
+            else
+            {
+                // Treat as triangle fan around start vertex and find closest point on each sub-tri
+                Vector result = Vector.Unset;
+                double minDistSqd = 0;
+                Vector vA = this[0].Position;
+                for (int i = 0; i < Count - 2; i++)
+                {
+                    Vector vB = this[i + 1].Position;
+                    Vector vC = this[i + 2].Position;
+                    Vector v = Vector.TriangleClosestPoint(vA, vB, vC, toPoint);
+                    double distSqd = v.DistanceToSquared(toPoint);
+                    if (i == 0 || distSqd < minDistSqd)
+                    {
+                        result = v;
+                        minDistSqd = distSqd;
+                    }
+                }
+                return result;
+            }
+        }
+
+        /// <summary>
         /// Find the index of the closest edge in this mesh face to the specified point
         /// </summary>
         /// <param name="toPoint">The point to check against</param>

@@ -293,8 +293,9 @@ namespace Nucleus.Meshing
         /// Add strips of faces swept between a set of polylines defined as point lists
         /// </summary>
         /// <param name="pointLists">A list of lists of points representing polylines.  Each list should have the same number of points contained within.</param>
-        /// <param name="close"></param>
-        public void AddLoft(IList<IList<Vector>> pointLists, bool close = false)
+        /// <param name="close">If true, the ends of the points lists will also be joined to form a 'tube'</param>
+        /// <param name="flip">If true, the orientation of the mesh faces produced will be reversed (such that normals point in the opposite direction)</param>
+        public void AddLoft(IList<IList<Vector>> pointLists, bool close = false, bool flip = false)
         {
             for (int i = 0; i < pointLists.Count; i++)
             {
@@ -305,15 +306,27 @@ namespace Nucleus.Meshing
                     int vi = AddVertex(points[j]);
                     if (i > 0 && j > 0)
                     {
-                        AddFace(vi - 1 - stripSize, vi - 1, vi, vi - stripSize);
-                        if (close && j == stripSize - 1)
+                        if (flip)
                         {
-                            AddFace(vi + 1 - 2 * stripSize, vi - stripSize, vi, vi + 1 - stripSize); //Close meshing
+                            AddFace(vi - 1, vi - 1 - stripSize, vi - stripSize, vi);
+                            if (close && j == stripSize - 1)
+                            {
+                                AddFace(vi - stripSize, vi + 1 - 2 * stripSize, vi + 1 - stripSize, vi); //Close meshing
+                            }
+                        }
+                        else
+                        {
+                            AddFace(vi - 1 - stripSize, vi - 1, vi, vi - stripSize);
+                            if (close && j == stripSize - 1)
+                            {
+                                AddFace(vi + 1 - 2 * stripSize, vi - stripSize, vi, vi + 1 - stripSize); //Close meshing
+                            }
                         }
                     }
                 }
             }
         }
+
 
 
         /// <summary>
