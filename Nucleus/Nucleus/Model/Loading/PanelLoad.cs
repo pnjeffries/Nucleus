@@ -11,9 +11,7 @@ namespace Nucleus.Model.Loading
     /// <summary>
     /// A force load applied directly to the faces of panel elements
     /// </summary>
-    #if !JS
     [Serializable]
-#endif
     public class PanelLoad : ForceLoad<PanelElementSet, PanelElement>
     {
 
@@ -39,11 +37,10 @@ namespace Nucleus.Model.Loading
 
         #region Methods
 
-        /*
         public override string GetValueUnits()
         {
             return base.GetValueUnits() + "/m²";
-        }*/
+        }
 
         #endregion
     }
