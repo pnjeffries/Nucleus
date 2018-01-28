@@ -133,13 +133,17 @@ namespace Nucleus.Conversion
             _SecondIDName = secondIDName;
         }
 
+#if !JS
+
         protected IDMappingTable(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
 
-        #endregion
+#endif
 
-        #region Methods
+#endregion
+
+#region Methods
 
         /// <summary>
         /// Store the specified filepath and the current time
@@ -371,6 +375,6 @@ namespace Nucleus.Conversion
             return DefaultCategory;
         }
 
-        #endregion
+#endregion
     }
 }

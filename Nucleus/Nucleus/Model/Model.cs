@@ -715,6 +715,7 @@ namespace Nucleus.Model
             return box;
         }
 
+#if !JS
         /// <summary>
         /// Called immediately after deserialisation to re-register all objects
         /// </summary>
@@ -737,6 +738,7 @@ namespace Nucleus.Model
                 Register(unique);
             }
         }
+#endif
 
         /// <summary>
         /// Clear any volatile cached data that should be disposed when data within this model
@@ -760,9 +762,9 @@ namespace Nucleus.Model
             }
         }
 
-        #endregion
+#endregion
 
-        #region Event Handlers
+#region Event Handlers
 
         private void HandlesInternalCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -791,7 +793,7 @@ namespace Nucleus.Model
             }
         }
 
-        #endregion
+#endregion
 
 
     }

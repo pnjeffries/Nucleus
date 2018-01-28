@@ -52,7 +52,13 @@ namespace Nucleus.Extensions
         public static TAttribute GetCustomAttribute<TAttribute>(this PropertyInfo propertyInfo)
             where TAttribute : Attribute
         {
+#if !JS
             return Attribute.GetCustomAttribute(propertyInfo, typeof(TAttribute)) as TAttribute;
+#else
+            var attributes = Attribute.GetCustomAttributes(propertyInfo, typeof(TAttribute));
+            if (attributes.Length > 0) return attributes[0] as TAttribute;
+            else return null;
+#endif
         }
 
         /// <summary>
@@ -63,7 +69,13 @@ namespace Nucleus.Extensions
         /// <returns></returns>
         public static Attribute GetCustomAttribute(this PropertyInfo propertyInfo, Type attributeType)
         {
+#if !JS
             return Attribute.GetCustomAttribute(propertyInfo, attributeType);
+#else
+            var attributes = Attribute.GetCustomAttributes(propertyInfo, attributeType);
+            if (attributes.Length > 0) return attributes[0];
+            else return null;
+#endif
         }
     }
 }

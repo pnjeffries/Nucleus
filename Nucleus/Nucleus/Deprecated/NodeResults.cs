@@ -16,18 +16,20 @@ namespace Nucleus.Results.Deprecated
     {
         #region Constructors
 
+#if !JS
         /// <summary>
         /// Deserialisation constructor
         /// </summary>
         /// <param name="info"></param>
         /// <param name="context"></param>
         protected NodeResults(SerializationInfo info, StreamingContext context) : base(info, context) { }
+#endif
 
         /// <summary>
         /// Initialises a new empty NodeResults dictionary
         /// </summary>
         public NodeResults() : base() { }
 
-        #endregion
+#endregion
     }
 }

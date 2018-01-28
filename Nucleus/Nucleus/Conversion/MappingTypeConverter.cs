@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#if !JS
+
 using Nucleus.Base;
 using System;
 using System.Collections.Generic;
@@ -28,6 +30,7 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Conversion
 {
+
     /// <summary>
     /// Converter which provides a customisable property mapping from one type to another
     /// </summary>
@@ -35,7 +38,7 @@ namespace Nucleus.Conversion
     public class MappingTypeConverter : NotifyPropertyChangedBase, ITypeConverter
     {
 
-        #region Properties
+#region Properties
 
         /// <summary>
         /// Private backing member variable for TypeA property
@@ -91,15 +94,17 @@ namespace Nucleus.Conversion
             }
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         public object Convert(object fromObject)
         {
             throw new NotImplementedException();
         }
 
-        #endregion
+#endregion
     }
 }
+
+#endif

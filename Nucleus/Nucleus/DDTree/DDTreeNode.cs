@@ -432,6 +432,8 @@ namespace Nucleus.DDTree
             b = aTemp;
         }
 
+        private const double tEndDefault = 0.0/0.0;
+
         /// <summary>
         /// Trace a ray through this node and its children searching for intersections with object geometry.
         /// </summary>
@@ -441,7 +443,7 @@ namespace Nucleus.DDTree
         /// <param name="tStart">A clipping value at the start of the section of the ray in which to test for collisions</param>
         /// <param name="tEnd">A clipping parameter at the end of the section of the ray in which to test for collisions</param>
         /// <returns></returns>
-        public RayHit<T> RayTrace(Axis ray, Func<T, Axis, double> hitTest, double tStart = 0, double tEnd = double.NaN)
+        public RayHit<T> RayTrace(Axis ray, Func<T, Axis, double> hitTest, double tStart = 0, double tEnd = tEndDefault)
         {
 
             if (_SplitDimension != Dimension.Undefined)

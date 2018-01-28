@@ -113,7 +113,9 @@ namespace Nucleus.Results.Deprecated
 
         #endregion
 
-        #region Constructors
+#region Constructors
+
+#if !JS
 
         /// <summary>
         /// Deserialisation constructor
@@ -122,11 +124,13 @@ namespace Nucleus.Results.Deprecated
         /// <param name="context"></param>
         protected ModelResults(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
+#endif
+
         /// <summary>
         /// Initialises a new empty ModelResults
         /// </summary>
         public ModelResults() : base() { }
 
-        #endregion
+#endregion
     }
 }

@@ -79,8 +79,12 @@ namespace Nucleus.Base
             }
             else
             {
+#if !JS
                 // As a (potentially dangerous) fallback:
                 clone = (T)FormatterServices.GetUninitializedObject(obj.GetType());
+#else
+                throw new NotSupportedException("Class to be duplicated does not provide a parameterless constructor!");
+#endif
             }
 
             if (objectMap == null) objectMap = new Dictionary<object, object>();
@@ -132,7 +136,7 @@ namespace Nucleus.Base
             PropertyInfo[] properties = targetType.GetProperties(flags);
             foreach (PropertyInfo targetProperty in properties)
             {
-                if (targetProperty.CanWrite && targetProperty.GetSetMethod() != null && !targetProperty.GetSetMethod().IsAssembly)
+                if (targetProperty.CanWrite)// && targetProperty.GetSetMethod() != null && !targetProperty.GetSetMethod().IsAssembly)
                 {
                     PropertyInfo sourceProperty = sourceType.GetProperty(targetProperty.Name, flags);
                     if (sourceProperty != null && sourceProperty.CanRead && targetProperty.PropertyType.IsAssignableFrom(sourceProperty.PropertyType))

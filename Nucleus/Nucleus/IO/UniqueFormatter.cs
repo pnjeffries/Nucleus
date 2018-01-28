@@ -1,4 +1,6 @@
-﻿using Nucleus.Base;
+﻿#if !JS
+
+using Nucleus.Base;
 using Nucleus.Extensions;
 using System;
 using System.Collections;
@@ -698,3 +700,5 @@ namespace Nucleus.IO
         #endregion
     }
 }
+
+#endif

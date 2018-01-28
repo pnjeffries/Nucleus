@@ -101,12 +101,14 @@ namespace Nucleus.Model
             return item.GetType();
         }
 
+#if !JS
         [OnDeserialized()]
         public void OnDeserialized(StreamingContext context)
         {
             foreach (TData item in this)
                 RegisterPropertyChanged(item);
         }
+#endif
 
         protected void RegisterPropertyChanged(TData item)
         {
@@ -309,7 +311,7 @@ namespace Nucleus.Model
             return addTo;
         }
 
-        #endregion
+#endregion
 
     }
 
@@ -325,7 +327,7 @@ namespace Nucleus.Model
         where TOwner : IDataOwner
         where TTypeEnum : struct
     {
-        #region 
+#region 
         /// <summary>
         /// Get a data component of a standard built-in type
         /// </summary>
@@ -336,9 +338,9 @@ namespace Nucleus.Model
             get { return this[GetRepresentedType(typeEnum)]; }
         }
 
-        #endregion
+#endregion
 
-        #region Constructors
+#region Constructors
 
         /// <summary>
         /// Default constructor
@@ -354,9 +356,9 @@ namespace Nucleus.Model
         /// <param name="owner"></param>
         public DataStore(TOwner owner) : base(owner) { }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         /// <summary>
         /// Get the type represented by the specified data type enum
@@ -385,7 +387,7 @@ namespace Nucleus.Model
             return HasData(GetRepresentedType(typeEnum));
         }
 
-        #endregion
+#endregion
     }
 
     

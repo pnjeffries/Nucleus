@@ -20,11 +20,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace Nucleus.Extensions
 {
@@ -117,7 +114,7 @@ namespace Nucleus.Extensions
         /// <param name="fallbackValue">The value to be returned in the case that this string
         /// cannot be successfully parsed into a double.</param>
         /// <returns></returns>
-        public static double ToDouble(this string str, double fallbackValue = double.NaN)
+        public static double ToDouble(this string str, double fallbackValue = (0.0/0.0))
         {
             double result;
             if (double.TryParse(str, out result))
@@ -447,6 +444,8 @@ namespace Nucleus.Extensions
             return count;
         }
 
+#if !JS
+
         /// <summary>
         /// Trim an occurrences of the specified suffix from the end of this string
         /// </summary>
@@ -466,6 +465,7 @@ namespace Nucleus.Extensions
             }
             return input;
         }
+#endif
 
         /// <summary>
         /// Shorten this string to within the set maximum number of characters
@@ -686,8 +686,20 @@ namespace Nucleus.Extensions
         public static bool IsURI(this string str)
         {
             Uri uri;
+#if !JS
             return Uri.TryCreate(str, UriKind.Absolute, out uri) && 
                 (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
+#else
+            try
+            {
+                uri = new Uri(str);
+            }
+            catch 
+            {
+                return false;
+            }
+            return true;
+#endif
         }
 
         /// <summary>
@@ -739,6 +751,22 @@ namespace Nucleus.Extensions
             if (i > 0)
             {
                 return str.Substring(0, i);
+            }
+            else return str;
+        }
+
+        /// <summary>
+        /// Get the portion of this string after the last instance of the specified character
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="c"></param>
+        /// <returns></returns>
+        public static string AfterLast(this string str, char c)
+        {
+            int i = str.LastIndexOf(c);
+            if (i > 0)
+            {
+                return str.Substring(i + 1);
             }
             else return str;
         }

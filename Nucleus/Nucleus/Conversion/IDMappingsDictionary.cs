@@ -86,11 +86,14 @@ namespace Nucleus.Conversion
         public IDMappingsDictionary() : base()
         { }
 
+#if !JS
 
         protected IDMappingsDictionary(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
 
-        #endregion
+#endif
+
+#endregion
     }
 }

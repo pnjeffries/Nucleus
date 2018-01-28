@@ -1,4 +1,5 @@
 ﻿using Nucleus.Extensions;
+using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,6 +81,40 @@ namespace Nucleus.Maths
         /// <param name="beta">The optional Beta parameter used in some tweening methods</param>
         /// <returns>The interpolated value</returns>
         public static double Interpolate(this Interpolation i, double v0, double v1, double t, double alpha = DefaultAlpha, double beta = DefaultBeta)
+        {
+            t = i.Tween(t, alpha, beta);
+            return v0 + (v1 - v0) * t;
+        }
+
+        /// <summary>
+        /// Interpolate between two values using the algorithm represented by this enumerated value
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="v0">The first value to interpolate from</param>
+        /// <param name="v1">The second value to interpolate towards</param>
+        /// <param name="t">The interpolation parameter.  Typically will be between 0-1,
+        /// where 0 is v0 and 1 is v1</param>
+        /// <param name="alpha">The optional Alpha parameter used in some tweening methods</param>
+        /// <param name="beta">The optional Beta parameter used in some tweening methods</param>
+        /// <returns>The interpolated value</returns>
+        public static Vector Interpolate(this Interpolation i, Vector v0, Vector v1, double t, double alpha = DefaultAlpha, double beta = DefaultBeta)
+        {
+            t = i.Tween(t, alpha, beta);
+            return v0 + (v1 - v0) * t;
+        }
+
+        /// <summary>
+        /// Interpolate between two values using the algorithm represented by this enumerated value
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="v0">The first value to interpolate from</param>
+        /// <param name="v1">The second value to interpolate towards</param>
+        /// <param name="t">The interpolation parameter.  Typically will be between 0-1,
+        /// where 0 is v0 and 1 is v1</param>
+        /// <param name="alpha">The optional Alpha parameter used in some tweening methods</param>
+        /// <param name="beta">The optional Beta parameter used in some tweening methods</param>
+        /// <returns>The interpolated value</returns>
+        public static dynamic Interpolate(this Interpolation i, dynamic v0, dynamic v1, double t, double alpha = DefaultAlpha, double beta = DefaultBeta)
         {
             t = i.Tween(t, alpha, beta);
             return v0 + (v1 - v0) * t;

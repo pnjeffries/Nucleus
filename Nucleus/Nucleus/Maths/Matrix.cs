@@ -205,13 +205,20 @@ namespace Nucleus.Maths
         public virtual void SetBlock(int startRow, int startColumn, Matrix values)
         {
             //Possibly faster method using Array.Copy?
+#if !JS
             Parallel.For(0, Math.Min(Rows - startRow,values.Rows), i =>
+#else
+            for (int i = 0; i < Math.Min(Rows - startRow, values.Rows); i++)
+#endif
             {
                 for (int j = 0; j < Math.Min(Columns - startColumn, values.Columns); j++)
                 {
                     this[i + startRow, j + startColumn] = values[i, j];
                 }
-            });
+            }
+#if !JS
+            );
+#endif
         }
 
         /// <summary>
@@ -284,14 +291,20 @@ namespace Nucleus.Maths
         public Matrix Transpose()
         {
             Matrix result = CreateNewMatrix(Columns, Rows);
-            //for (int i = 0; i < Rows; i++)
-            Parallel.For(0, Rows, i =>
+#if JS
+            for (int i = 0; i < Rows; i++)
+#else
+                Parallel.For(0, Rows, i =>
+#endif
             {
                 for (int j = 0; j < Columns; j++)
                 {
                     result[j, i] = this[i, j];
                 }
-            });
+            }
+#if !JS
+            );
+#endif
             return result;
         }
 
@@ -417,14 +430,21 @@ namespace Nucleus.Maths
         public void Add(Matrix other)
         {
             if (Rows != other.Rows || Columns != other.Columns) throw new Exception("Matrix dimension mis-match.  Only matrices with the same dimensions can be added together.");
-            //for (int i = 0; i < Rows; i++)
+
+#if !JS
             Parallel.For(0, Rows, i =>
+#else
+            for (int i = 0; i < Rows; i++)
+#endif
             {
                 for (int j = 0; j < Columns; j++)
                 {
                     this[i, j] += other[i, j];
                 }
-            });
+            }
+#if !JS
+            );
+#endif
         }
 
         /// <summary>
@@ -435,14 +455,21 @@ namespace Nucleus.Maths
         public void Subtract(Matrix other)
         {
             if (Rows != other.Rows || Columns != other.Columns) throw new Exception("Matrix dimension mis-match.  Only matrices with the same dimensions can be added together.");
-            //for (int i = 0; i < Rows; i++)
+
+#if !JS
             Parallel.For(0, Rows, i =>
+#else
+            for (int i = 0; i < Rows; i++)
+#endif
             {
                 for (int j = 0; j < Columns; j++)
                 {
                     this[i, j] -= other[i, j];
                 }
-            });
+            }
+            #if !JS
+            );
+#endif
         }
 
         /// <summary>
@@ -452,14 +479,21 @@ namespace Nucleus.Maths
         /// <param name="scalar">The factor to multiply by</param>
         public void Multiply(double scalar)
         {
-            //for (int i = 0; i < Rows; i++)
+            
+#if !JS
             Parallel.For(0, Rows, i =>
+#else
+            for (int i = 0; i < Rows; i++)
+#endif
             {
                 for (int j = 0; j < Columns; j++)
                 {
                     this[i, j] *= scalar;
                 }
-            });
+            }
+            #if !JS
+            );
+#endif
         }
 
         /// <summary>
@@ -469,13 +503,20 @@ namespace Nucleus.Maths
         /// <param name="scalar">The factor to devide by</param>
         public void Divide(double scalar)
         {
-            Parallel.For(0, Rows, i => //for (int i = 0; i < Rows; i++)
+#if !JS
+            Parallel.For(0, Rows, i => 
+#else
+            for (int i = 0; i < Rows; i++)
+#endif
             {
                 for (int j = 0; j < Columns; j++)
                 {
                     this[i, j] /= scalar;
                 }
-            });
+            }
+#if !JS
+            );
+#endif
         }
 
         /// <summary>
@@ -487,7 +528,11 @@ namespace Nucleus.Maths
         public virtual Matrix SubMatrix(int row, int column)
         {
             Matrix result = CreateNewMatrix(Rows - 1, Columns - 1);
+#if !JS
             Parallel.For(0, Rows, i =>
+#else
+            for (int i = 0; i < Rows; i++)
+#endif
             {
                 if (i != row)
                 {
@@ -499,7 +544,10 @@ namespace Nucleus.Maths
                         else if (j > column) result[iT, j - 1] = this[i, j];
                     }
                 }
-            });
+            }
+#if !JS
+            );
+#endif
             return result;
         }
 
@@ -514,14 +562,21 @@ namespace Nucleus.Maths
             if (Rows != Columns) throw new MatrixException("Matrix is not square and therefore has no adjugate.");
             Matrix AT = this;//Transpose();
             Matrix result = CreateNewMatrix(AT.Rows, AT.Columns);
+#if !JS
             Parallel.For(0, Rows, i =>
+#else
+            for (int i = 0; i < Rows; i++)
+#endif
             {
                 for (int j = 0; j < Columns; j++)
                 {
                     Matrix sMatrix = AT.SubMatrix(i, j);
                     result[i, j] = sMatrix.Determinant() * Math.Pow(-1, i + j + 2);
                 }
-            });
+            }
+            #if !JS
+            );
+#endif
             return result.Transpose();
         }
 
@@ -558,7 +613,11 @@ namespace Nucleus.Maths
             else //Larger matrix
             {
                 double result = 0;
+#if !JS
                 Parallel.For(0, Columns, j =>
+#else
+                for (int j = 0; j < Columns; j++)
+#endif
                 {
                     double a = this[0, j];
                     if (a != 0)
@@ -566,7 +625,10 @@ namespace Nucleus.Maths
                         Matrix subMatrix = SubMatrix(0, j);
                         DoubleExtensions.InterlockedAdd(ref result, a * subMatrix.Determinant());
                     }
-                });
+                }
+#if !JS
+                );
+#endif
                 return result;
             }
         }
@@ -610,9 +672,9 @@ namespace Nucleus.Maths
             return sb.ToString();
         }
 
-        #endregion
+#endregion
 
-        #region Operators
+#region Operators
 
         /// <summary>
         /// Addition operator
@@ -684,23 +746,28 @@ namespace Nucleus.Maths
             int columns = b.Columns;
             
             Matrix result = a.CreateNewMatrix(rows, columns);
-            
-            //for (int i = 0; i < result.Rows; i++) //Old, un-parallel version
+
+#if !JS
             Parallel.For(0, rows, i => //Calculation will be run in parallel for each row
+#else
+            for (int i = 0; i < result.Rows; i++) //Old, un-parallel version
+#endif
+            {
+                for (int j = 0; j < columns; j++)
                 {
-                    for (int j = 0; j < columns; j++)
+                    // The value in each field will be the cumulative multiplication of the equivalent
+                    // row from A and column from B:
+                    double value = 0;
+                    for (int k = 0; k < aColumns; k++)
                     {
-                        // The value in each field will be the cumulative multiplication of the equivalent
-                        // row from A and column from B:
-                        double value = 0;
-                        for (int k = 0; k < aColumns; k++)
-                        {
-                            value += a[i, k] * b[k, j];
-                        }
-                        result[i, j] = value;
+                        value += a[i, k] * b[k, j];
                     }
+                    result[i, j] = value;
                 }
+            }
+#if !JS
             );
+#endif
 
             return result;
         }
@@ -718,7 +785,7 @@ namespace Nucleus.Maths
             return result;
         }
 
-        #endregion
+#endregion
 
     }
 }

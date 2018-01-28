@@ -20,13 +20,11 @@
 
 using Nucleus.IO;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization;
+#if !JS
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
+#endif
 
 namespace Nucleus.Base
 {
@@ -38,7 +36,7 @@ namespace Nucleus.Base
     [Serializable]
     public abstract class Document : Unique
     {
-        #region Properties
+#region Properties
 
         /// <summary>
         /// Private backing field for the FilePath property
@@ -68,9 +66,9 @@ namespace Nucleus.Base
             set { _LastSaved = value; }
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         /// <summary>
         /// Save this document to the last-saved location, if possible,
@@ -94,6 +92,8 @@ namespace Nucleus.Base
         /// <returns>True if the file was successfully saved, else false</returns>
         public virtual bool SaveAs(FilePath filePath, DocumentSaveFileType type = DocumentSaveFileType.Binary)
         {
+
+#if !JS
             try
             {
                 using (Stream stream = new FileStream(filePath,
@@ -123,6 +123,7 @@ namespace Nucleus.Base
                 throw new SerializationException("An error was encountered while attempting to save the document.", ex);
                 //TODO: Notify user of error
             }
+#endif
             return false;
         }
 
@@ -137,6 +138,7 @@ namespace Nucleus.Base
         public virtual bool SaveAs<T>(FilePath filePath, DocumentTextSerialiser<T> textSerialiser)
             where T : Document
         {
+#if !JS
             try
             {
                 Stream stream = new FileStream(filePath,
@@ -153,6 +155,7 @@ namespace Nucleus.Base
             {
                 //TODO: Notify user of error
             }
+#endif
             return false;
         }
 
@@ -162,6 +165,7 @@ namespace Nucleus.Base
         /// <returns></returns>
         public virtual byte[] ToBinary()
         {
+#if !JS
             using (MemoryStream stream = new MemoryStream())
             {
                 IFormatter formatter = new BinaryFormatter();
@@ -170,11 +174,14 @@ namespace Nucleus.Base
                 stream.Position = 0;
                 return stream.ToArray();
             }
+#else
+            return null;
+#endif
         }
 
-        #endregion
+#endregion
 
-        #region Static Methods
+#region Static Methods
 
         /// <summary>
         /// Load a document from a file stored in binary format
@@ -185,7 +192,7 @@ namespace Nucleus.Base
         public static T Load<T>(FilePath filePath, DocumentSaveFileType type = DocumentSaveFileType.Binary) where T : Document
         {
             T result = null;
-            
+#if !JS
             Stream stream = new FileStream(filePath,
                                       FileMode.Open,
                                       FileAccess.Read,
@@ -204,6 +211,7 @@ namespace Nucleus.Base
             }
             result.FilePath = filePath;
             stream.Close();
+#endif
             return result;
         }
 
@@ -215,14 +223,18 @@ namespace Nucleus.Base
         /// <returns></returns>
         public static T FromBinary<T>(byte[] binaryData) where T : Document
         {
+#if !JS
             using (var stream = new MemoryStream(binaryData))
             {
                 var formatter = new BinaryFormatter();
                 stream.Seek(0, SeekOrigin.Begin);
                 return formatter.Deserialize(stream) as T;
             }
+#else
+            return null;
+#endif
         }
 
-        #endregion
+#endregion
     }
 }

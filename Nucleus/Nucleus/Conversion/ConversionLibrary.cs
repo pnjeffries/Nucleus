@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#if !JS
+
 using Nucleus.Base;
 using System;
 using System.Collections.Generic;
@@ -189,3 +191,5 @@ namespace Nucleus.Conversion
 
     }
 }
+
+#endif

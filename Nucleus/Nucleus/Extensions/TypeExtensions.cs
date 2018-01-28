@@ -281,6 +281,7 @@ namespace Nucleus.Extensions
         /// <returns></returns>
         public static MethodInfo GetOnDeserializedMethod(this Type type)
         {
+#if !JS
             MethodInfo[] mInfos = type.GetMethods();
             foreach (MethodInfo mInfo in mInfos)
             {
@@ -289,6 +290,7 @@ namespace Nucleus.Extensions
                     return mInfo;
                 }
             }
+#endif
             return null;
         }
 
@@ -344,8 +346,10 @@ namespace Nucleus.Extensions
             {
                 // Ignore inherited fields.
                 if (field.DeclaringType == type && //Necessary?
-                    (!ignoreNonSerialised || !field.IsNotSerialized) //GetCustomAttribute(typeof(NonSerializedAttribute)) == null)
-                    && (filter == null || filter(field)))
+#if !JS
+                    (!ignoreNonSerialised || !field.IsNotSerialized) &&
+#endif
+                    (filter == null || filter(field)))
                 {
                     outFields.Add(field);
                 }
@@ -424,9 +428,16 @@ namespace Nucleus.Extensions
         /// <returns></returns>
         public static bool HasParameterlessConstructor(this Type type)
         {
+#if !JS
             return type.GetConstructor(BindingFlags.Instance | BindingFlags.Public, //| BindingFlags.NonPublic,
                                         null, Type.EmptyTypes, null) != null;
+#else
+            return type.GetConstructor(new Type[0]) != null;
+#endif
         }
+
+
+#if !JS
 
         /// <summary>
         /// Get a collection of all types which this type relies on for its definition
@@ -461,6 +472,7 @@ namespace Nucleus.Extensions
                 }
             }
         }
+#endif
 
         /// <summary>
         /// Get the type of the items stored within this collection type
@@ -487,7 +499,11 @@ namespace Nucleus.Extensions
                 {
                     foreach (Type arg in collectionType.GetGenericArguments())
                     {
+#if !JS
                         Type iEnum = typeof(IEnumerable<>).MakeGenericType(arg);
+#else
+                        Type iEnum = typeof(IEnumerable<>).MakeGenericType(new Type[] { arg });
+#endif
                         if (iEnum.IsAssignableFrom(collectionType)) return iEnum;
                     }
                 }
@@ -515,8 +531,13 @@ namespace Nucleus.Extensions
         public static TAttribute GetCustomAttribute<TAttribute>(this Type type)
             where TAttribute : Attribute
         {
+#if !JS
             return Attribute.GetCustomAttribute(type, typeof(TAttribute)) as TAttribute;
+#else
+            return null; //TODO!
+#endif
         }
+
         /// Create an instance of this type.
         /// Will use Activator.CreateInstance if a parameterless constructor exists, else
         /// will fall back to FormatterServices.GetUninitializedObject
@@ -525,8 +546,12 @@ namespace Nucleus.Extensions
         /// <returns></returns>
         public static object Instantiate(this Type type)
         {
+#if !JS
             if (type.HasParameterlessConstructor()) return Activator.CreateInstance(type);
             else return FormatterServices.GetUninitializedObject(type);
+#else
+            return Activator.CreateInstance(type);
+#endif
         }
 
         /// <summary>

@@ -23,9 +23,10 @@ namespace Nucleus.Exceptions
         public ExpressionException(string message, Exception innerException) : base(message, innerException)
         {
         }
-
+#if !JS
         protected ExpressionException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
+#endif
     }
 }

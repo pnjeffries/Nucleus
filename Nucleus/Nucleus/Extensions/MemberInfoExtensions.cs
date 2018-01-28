@@ -17,7 +17,13 @@ namespace Nucleus.Extensions
         public static TAttribute GetAttribute<TAttribute>(this MemberInfo memberInfo)
             where TAttribute : Attribute
         {
+#if !JS
             return Attribute.GetCustomAttribute(memberInfo, typeof(TAttribute)) as TAttribute;
+#else
+            var attributes = Attribute.GetCustomAttributes(memberInfo, typeof(TAttribute));
+            if (attributes.Length > 0) return attributes[0] as TAttribute;
+            else return null;
+#endif
         }
     }
 }

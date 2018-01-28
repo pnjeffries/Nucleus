@@ -1,4 +1,6 @@
-﻿using Nucleus.Base;
+﻿#if !JS
+
+using Nucleus.Base;
 using Nucleus.Events;
 using System;
 using System.Collections;
@@ -347,3 +349,5 @@ namespace Nucleus.Undo
 
     }
 }
+
+#endif

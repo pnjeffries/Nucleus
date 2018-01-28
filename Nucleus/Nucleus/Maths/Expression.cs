@@ -14,10 +14,12 @@ namespace Nucleus.Maths
     /// parsed and evaluated to return a number
     /// </summary>
     [Serializable]
+#if !JS
     [TypeConverter(typeof(ExpressionTypeConverter))]
+#endif
     public abstract class Expression
     {
-        #region Static Properties
+#region Static Properties
 
         /// <summary>
         /// The default global context which will be used when evaluating expressions
@@ -27,9 +29,9 @@ namespace Nucleus.Maths
         /// </summary>
         public static IEvaluationContext DefaultContext { get; set; } = null;
 
-        #endregion
+#endregion
 
-        #region Properties
+#region Properties
 
         /// <summary>
         /// Protected backing field for Description property
@@ -41,18 +43,18 @@ namespace Nucleus.Maths
         /// </summary>
         public string Description { get { return _Description; } }
 
-        #endregion
+#endregion
 
-        #region Constructor
+#region Constructor
 
         public Expression(string description)
         {
             _Description = description;
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         /// <summary>
         /// Evaluate the expression and return the calculated value.
@@ -473,9 +475,9 @@ namespace Nucleus.Maths
             return nextIndex;
         }
 
-        #endregion
+#endregion
 
-        #region Operators
+#region Operators
 
         /// <summary>
         /// Convert a double value into an expression
@@ -513,8 +515,10 @@ namespace Nucleus.Maths
             return v.ToString();
         }
 
-        #endregion
+#endregion
     }
+
+#if !JS
 
     /// <summary>
     /// Type converter for the expression class
@@ -535,4 +539,6 @@ namespace Nucleus.Maths
         }
 
     }
+
+#endif
 }

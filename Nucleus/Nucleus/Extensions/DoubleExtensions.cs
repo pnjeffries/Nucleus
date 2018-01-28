@@ -203,6 +203,7 @@ namespace Nucleus.Extensions
         /// <returns></returns>
         public static double InterlockedAdd(ref double toBeModified, double value)
         {
+#if !JS
             double newCurrentValue = 0;
             while (true)
             {
@@ -212,6 +213,10 @@ namespace Nucleus.Extensions
                 if (newCurrentValue == currentValue)
                     return newValue;
             }
+#else
+            // Since multithreading doesn't work in JS anyway...
+            return toBeModified += value;
+#endif
         }
 
         /// <summary>

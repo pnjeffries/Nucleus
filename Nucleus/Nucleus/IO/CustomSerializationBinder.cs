@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if !JS
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -29,3 +31,5 @@ namespace Nucleus.IO
         }
     }
 }
+
+#endif

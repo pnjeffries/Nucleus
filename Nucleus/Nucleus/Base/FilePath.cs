@@ -25,10 +25,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Reflection;
+using Nucleus.Extensions;
+
+#if !JS
 using System.Xml.Serialization;
 using System.Xml;
 using System.Xml.Schema;
-using Nucleus.Extensions;
+#endif
 
 namespace Nucleus.Base
 {
@@ -43,9 +46,12 @@ namespace Nucleus.Base
     /// as strings.
     /// </summary>
     [Serializable]
-    public struct FilePath : IXmlSerializable
+    public struct FilePath
+#if !JS
+        : IXmlSerializable
+#endif
     {
-        #region Constants
+#region Constants
 
         /// <summary>
         /// Get a filepath representing the path of the current AppData directory
@@ -57,6 +63,8 @@ namespace Nucleus.Base
                 return new FilePath(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
             }
         }
+
+#if !JS
 
         /// <summary>
         /// Get a filepath representing the path of the user's Temp directory
@@ -80,6 +88,8 @@ namespace Nucleus.Base
             }
         }
 
+#endif
+
         /// <summary>
         /// Get a filepath pointing to the local application data folder for the current user
         /// </summary>
@@ -91,9 +101,9 @@ namespace Nucleus.Base
             }
         }
 
-        #endregion
+#endregion
 
-        #region Properties
+#region Properties
 
         /// <summary>
         /// Private backing field for Path property
@@ -124,6 +134,25 @@ namespace Nucleus.Base
             get { return _Path != null; }
         }
 
+
+        /// <summary>
+        /// Gets the extension of this filepath.
+        /// Includes the preceding '.'.
+        /// </summary>
+        public string Extension
+        {
+            get
+            {
+#if !JS
+                return System.IO.Path.GetExtension(_Path);
+#else
+                return _Path.AfterLast('.');
+#endif
+            }
+        }
+
+#if !JS
+
         /// <summary>
         /// Does the file that this path points to exist?
         /// </summary>
@@ -135,12 +164,6 @@ namespace Nucleus.Base
         /// directory structure.
         /// </summary>
         public string FileName { get { return System.IO.Path.GetFileName(_Path); } }
-
-        /// <summary>
-        /// Gets the extension of this filepath.
-        /// Includes the preceding '.'.
-        /// </summary>
-        public string Extension { get { return System.IO.Path.GetExtension(_Path); } }
 
         /// <summary>
         /// Gets the directory of the filepath
@@ -165,9 +188,11 @@ namespace Nucleus.Base
             }
         }
 
-        #endregion
+#endif
 
-        #region Constructors
+#endregion
+
+#region Constructors
 
         /// <summary>
         /// Path Constructor
@@ -178,9 +203,9 @@ namespace Nucleus.Base
             _Path = path ?? "";
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         /// <summary>
         /// ToString override
@@ -199,6 +224,8 @@ namespace Nucleus.Base
         {
             return Path.GetHashCode();
         }
+
+#if !JS
 
         /// <summary>
         /// Returns a version of this FilePath with it's file extension trimmed off
@@ -230,9 +257,13 @@ namespace Nucleus.Base
             return new FilePath(TrimExtension() + suffix + Extension);
         }
 
-        #endregion
+#endif
 
-        #region Static Methods
+#endregion
+
+#region Static Methods
+
+#if !JS
 
         /// <summary>
         /// Return the path of the directory within which the specified loaded assembly exists
@@ -260,9 +291,11 @@ namespace Nucleus.Base
             writer.WriteString(_Path);
         }
 
-        #endregion
+#endif
 
-        #region Operators
+#endregion
+
+#region Operators
 
         /// <summary>
         /// Implicit to string conversion operator
@@ -282,6 +315,6 @@ namespace Nucleus.Base
             return new FilePath(path);
         }
 
-        #endregion
+#endregion
     }
 }

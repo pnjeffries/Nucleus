@@ -20,13 +20,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
 
 namespace Nucleus.Base
 {
@@ -163,18 +159,21 @@ namespace Nucleus.Base
             {
                 foreach (NotifyCollectionChangedEventHandler handler in handlers.GetInvocationList())
                 {
+
+#if !JS
                     if (handler.Target is ICollectionView)// is CollectionView)
                         ((ICollectionView)handler.Target).Refresh();
                     else
+#endif
                         handler(this, e);
                 }
             }
             if (e.Action != NotifyCollectionChangedAction.Replace) NotifyPropertyChanged("Count");
         }
 
-        #endregion
+#endregion
 
-        #region Constructors
+#region Constructors
 
         protected ObservableKeyedCollection() : base() { }
 
@@ -186,9 +185,9 @@ namespace Nucleus.Base
             }
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         /// <summary>
         /// Attempt to add a new item to the end of this collection, first checking whether the collection already
@@ -356,6 +355,6 @@ namespace Nucleus.Base
                 Add(item);
         }
 
-        #endregion
+#endregion
     }
 }

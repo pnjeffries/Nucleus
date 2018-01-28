@@ -31,21 +31,23 @@ namespace Nucleus.Results
 
         #endregion
 
-        #region Constructors
+#region Constructors
 
+#if !JS
         /// <summary>
         /// Deserialisation constructor
         /// </summary>
         /// <param name="info"></param>
         /// <param name="context"></param>
         protected ResultsDictionary(SerializationInfo info, StreamingContext context) : base(info, context) { }
+#endif
 
         /// <summary>
         /// Initialises a new empty ResultsDictionary
         /// </summary>
         public ResultsDictionary() : base() {}
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Returns either the value corresponding to the given key, if the key exists within the dictionary

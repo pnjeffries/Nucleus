@@ -18,6 +18,8 @@ namespace Nucleus.Results.Deprecated
     {
         #region Constructors
 
+#if !JS
+
         /// <summary>
         /// Deserialisation constructor
         /// </summary>
@@ -25,14 +27,16 @@ namespace Nucleus.Results.Deprecated
         /// <param name="context"></param>
         protected ModelObjectResults(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
+#endif
+
         /// <summary>
         /// Initialises a new empty ResultsDictionary
         /// </summary>
         public ModelObjectResults() : base() { }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         public ICaseResults Get(ResultsCase rCase)
         {
@@ -44,6 +48,6 @@ namespace Nucleus.Results.Deprecated
             throw new NotImplementedException();
         }
 
-        #endregion
+#endregion
     }
 }
