@@ -145,6 +145,25 @@ namespace Nucleus.Geometry
             set { ChangeProperty(ref _EndCapRight, value, "EndCapRight"); }
         }
 
+        
+
+        double IWidePath.LeftEndPinch
+        {
+            get
+            {
+                return 0;
+            }
+        }
+
+        double IWidePath.RightEndPinch
+        {
+            get
+            {
+                return 0;
+            }
+        }
+
+
         #endregion
 
         #region Constructors

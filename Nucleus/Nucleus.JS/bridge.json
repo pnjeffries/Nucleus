@@ -39,7 +39,7 @@
   // Set to true to enable bridge.report.log generation.
   // Default is false.
   "report": {
-    "enabled": false
+    "enabled": true
   },
 
   // Rules to manage generated JavaScript syntax.

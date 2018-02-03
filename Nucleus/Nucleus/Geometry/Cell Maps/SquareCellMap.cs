@@ -26,6 +26,14 @@ namespace Nucleus.Geometry
         #region Properties
 
         /// <summary>
+        /// Get the number of cells in this map
+        /// </summary>
+        public override int CellCount
+        {
+            get { return _Cells.Length; }
+        }
+
+        /// <summary>
         /// Private backing field for Origin property
         /// </summary>
         private Vector _Origin = Vector.Zero;
@@ -185,12 +193,26 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Get the maximum number of possible adjacent cells for the specified
+        /// cellIndex.  Note that this is only the maximum possible number and
+        /// does not guarantee that all adjacencyIndices up to this number will
+        /// return a cell that exists - you should check for this.
+        /// </summary>
+        /// <param name="cellIndex"></param>
+        /// <returns></returns>
+        public override int AdjacencyCount(int cellIndex)
+        {
+            if (Exists(cellIndex)) return 4;
+            else return 0;
+        }
+
+        /// <summary>
         /// Get the cell index of the specified adjacent cell to the specified cell
         /// </summary>
         /// <param name="cellIndex">The index of the starting cell</param>
         /// <param name="adjacencyIndex">The adjacency index of the cell to retrieve</param>
         /// <returns></returns>
-        public override int AdjacentCell(int cellIndex, int adjacencyIndex)
+        public override int AdjacentCellIndex(int cellIndex, int adjacencyIndex)
         {
             int i = ColumnIndex(cellIndex);
             int j = ColumnIndex(cellIndex);
@@ -217,7 +239,7 @@ namespace Nucleus.Geometry
         /// <param name="cellIndex">The index of the starting cell</param>
         /// <param name="direction">The direction of the cell to retrieve</param>
         /// <returns></returns>
-        public override int AdjacentCell(int cellIndex, Vector direction)
+        public override int AdjacentCellIndex(int cellIndex, Vector direction)
         {
             int i = ColumnIndex(cellIndex);
             int j = RowIndex(cellIndex);
@@ -236,6 +258,40 @@ namespace Nucleus.Geometry
         public override Vector CellPosition(int cellIndex)
         {
             return new Vector( ColumnIndex(cellIndex) + 0.5 * CellSize + Origin.X, RowIndex(cellIndex) + 0.5 * CellSize + Origin.Y);
+        }
+
+        /// <summary>
+        /// Get the number of vertices posessed by the cell at the specifed index
+        /// </summary>
+        /// <param name="cellIndex"></param>
+        /// <returns></returns>
+        public override int VertexCount(int cellIndex)
+        {
+            if (Exists(cellIndex)) return 4;
+            else return 0;
+        }
+
+        /// <summary>
+        /// Get the position of the specifed vertex of the specified cell
+        /// </summary>
+        /// <param name="cellIndex"></param>
+        /// <param name="vertexIndex"></param>
+        /// <returns></returns>
+        public override Vector CellVertex(int cellIndex, int vertexIndex)
+        {
+            Vector cP = CellPosition(cellIndex);
+            switch(vertexIndex)
+            {
+                case 0:
+                    return cP + new Vector(CellSize / 2, CellSize / 2);
+                case 1:
+                    return cP + new Vector(-CellSize / 2, CellSize / 2);
+                case 2:
+                    return cP + new Vector(-CellSize / 2, -CellSize / 2);
+                case 3:
+                    return cP + new Vector(CellSize / 2, -CellSize / 2);
+            }
+            return Vector.Unset;
         }
 
         #endregion

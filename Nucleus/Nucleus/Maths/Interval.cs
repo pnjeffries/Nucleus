@@ -318,6 +318,16 @@ namespace Nucleus.Maths
         }
 
         /// <summary>
+        /// Normalise another interval to the range of this one.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public Interval ParameterOf(Interval value)
+        {
+            return new Interval(ParameterOf(value.Start), ParameterOf(value.End));
+        }
+
+        /// <summary>
         /// Does this interval include the specified value?
         /// </summary>
         /// <param name="value"></param>
@@ -338,7 +348,7 @@ namespace Nucleus.Maths
         }
 
         /// <summary>
-        /// Does this interval entirely or partiall include another?
+        /// Does this interval entirely or partially include another?
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>

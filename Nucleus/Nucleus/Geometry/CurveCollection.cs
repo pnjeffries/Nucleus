@@ -84,6 +84,40 @@ namespace Nucleus.Geometry
             return longest;
         }
 
+        /// <summary>
+        /// Find the closest curve to a given point within this collection
+        /// </summary>
+        /// <param name="toPoint">The point to test from</param>
+        /// <param name="minDist">Output.  The minimum curve-point distance found.</param>
+        /// <param name="tClosest">Output.  The parameter of the closest point on the closest curve.</param>
+        /// <param name="closestPt">Output.  The closest point on the closest curve.</param>
+        /// <returns></returns>
+        public Curve ClosestCurve(Vector toPoint, out double minDist, out double tClosest, out Vector closestPt)
+        {
+            Curve result = null;
+            minDist = double.NaN;
+            tClosest = double.NaN;
+            closestPt = Vector.Unset;
+            foreach (Curve crv in this)
+            {
+                double t = crv.ClosestParameter(toPoint);
+                Vector pt = crv.PointAt(t);
+                if (pt.IsValid())
+                {
+                    double dist = pt.DistanceToSquared(toPoint);
+                    if (result == null || dist < minDist)
+                    {
+                        minDist = dist;
+                        result = crv;
+                        tClosest = t;
+                        closestPt = pt;
+                    }
+                }
+            }
+            if (!minDist.IsNaN()) minDist = minDist.Root();
+            return result;
+        }
+
         #endregion
 
     }

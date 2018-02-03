@@ -881,6 +881,7 @@ namespace Nucleus.Meshing
                         // Will require an offset rather than a simple translation...
                     }
                 }
+
             }
 
         }
@@ -1003,7 +1004,7 @@ namespace Nucleus.Meshing
             AddMesh(m2);
         }
 
-        #endregion
+#endregion
     }
 
     /// <summary>

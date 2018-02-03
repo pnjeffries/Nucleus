@@ -13,6 +13,7 @@ namespace Nucleus.Model.Loading
     /// direction.
     /// </summary>
     /// <typeparam name="TAppliedTo"></typeparam>
+    /// <typeparam name="TItem"></typeparam>
     [Serializable]
     public abstract class ForceLoad<TAppliedTo, TItem> : Load<TAppliedTo, TItem>
         where TAppliedTo : ModelObjectSetBase, new()
@@ -62,9 +63,9 @@ namespace Nucleus.Model.Loading
             set { ChangeProperty(ref _Axes, value, "Axes"); }
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         /// <summary>
         /// Set the force exerted by this load by specifying the force vector.
@@ -129,6 +130,6 @@ namespace Nucleus.Model.Loading
             else return "N";
         }
 
-        #endregion
+#endregion
     }
 }

@@ -43,6 +43,18 @@ namespace Nucleus.Geometry
         double RightOffset { get; }
 
         /// <summary>
+        /// The 'pinch' distance applied to the left-hand edge ends
+        /// in order to induce curvature in the left-hand edge curve
+        /// </summary>
+        double LeftEndPinch { get; }
+
+        /// <summary>
+        /// The 'pinch' distance applied to the right-hand edge ends
+        /// in order to induce curvature in the right-hand edge curve
+        /// </summary>
+        double RightEndPinch { get; }
+
+        /// <summary>
         /// The curve capping the left side of the starting end of the path.
         /// Will usually be null.
         /// </summary>
@@ -87,6 +99,79 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Replace the initially generated path edges with arcs with offset ends to induce curvature in the
+        /// outer edges.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="rightEndOffset"></param>
+        /// <param name="leftEndOffset"></param>
+        public static void CurveInitialPathEdges(this IWidePath path)
+        {
+
+            if (path.Spine != null)
+            {
+                double rightEndOffset = path.RightEndPinch;
+                double leftEndOffset = path.LeftEndPinch;
+
+                if (path.RightEdge != null && rightEndOffset > 0)
+                {
+                    rightEndOffset = Math.Min(rightEndOffset, path.RightOffset);
+                    Vector vRS = (path.Spine.StartPoint - path.RightEdge.StartPoint)/path.RightOffset;
+                    Vector vRE = (path.Spine.EndPoint - path.RightEdge.EndPoint)/path.RightOffset;
+                    path.RightEdge = new Arc(path.RightEdge.StartPoint + vRS * rightEndOffset, path.RightEdge.PointAt(0.5), path.RightEdge.EndPoint + vRE * rightEndOffset);
+                }
+                if (path.LeftEdge != null && leftEndOffset > 0)
+                {
+                    leftEndOffset = Math.Min(leftEndOffset, path.LeftOffset);
+                    Vector vLS = (path.Spine.StartPoint - path.LeftEdge.StartPoint) / path.LeftOffset;
+                    Vector vLE = (path.Spine.EndPoint - path.LeftEdge.EndPoint) / path.LeftOffset;
+                    path.LeftEdge = new Arc(path.LeftEdge.StartPoint + vLS * leftEndOffset, path.LeftEdge.PointAt(0.5), path.LeftEdge.EndPoint + vLE * leftEndOffset);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Find the point on this path specified by the given parameters.
+        /// </summary>
+        /// <param name="u">A normalised parameter along the path (where 0 = Start, 1 = End)</param>
+        /// <param name="v">A normalised parameter across the path (where 0 = Left, 1 = Right)</param>
+        /// <returns></returns>
+        public static Vector PointAt(this IWidePath path, double u, double v)
+        {
+            if (path.RightEdge != null && path.LeftEdge != null)
+            {
+                Vector vR = path.RightEdge.PointAt(u);
+                Vector vL = path.LeftEdge.PointAt(u);
+                return vL.Interpolate(vR, v);
+            }
+            else if (path.Spine != null) return path.Spine.PointAt(u);
+            else return Vector.Unset;
+        }
+
+        /// <summary>
+        /// Find the points on this path specified by the given parameters
+        /// </summary>
+        /// <param name="u">A normalised parameter along the path (where 0 = Start, 1 = End)</param>
+        /// <param name="v">A list of normalised parameters across the path (where 0 = Left, 1 = Right)</param>
+        /// <returns></returns>
+        public static Vector[] PointsAt(this IWidePath path, double u, IList<double> v)
+        {
+            if (path.RightEdge != null && path.LeftEdge != null)
+            {
+                Vector vR = path.RightEdge.PointAt(u);
+                Vector vL = path.LeftEdge.PointAt(u);
+                var result = new Vector[v.Count];
+                for (int i = 0; i < v.Count; i++)
+                {
+                    result[i] = vL.Interpolate(vR, v[i]);
+                }
+                return result;
+            }
+            else if (path.Spine != null) return new Vector[] { path.Spine.PointAt(u) };
+            else return null;
+        }
+
+        /// <summary>
         /// Generate the left and right edges of the paths in this network,
         /// automatically joining them at shared end nodes.  Nodes should have been
         /// generated for the network prior to calling this function.
@@ -105,6 +190,7 @@ namespace Nucleus.Geometry
                 {
                     pathMap[path.Spine.GUID] = path;
                     path.GenerateInitialPathEdges();
+                    path.CurveInitialPathEdges();
                 }
             }
 

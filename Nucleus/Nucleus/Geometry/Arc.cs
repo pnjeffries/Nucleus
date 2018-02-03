@@ -623,7 +623,7 @@ namespace Nucleus.Geometry
             else return ClosestParameter(vertex.Position);
         }
 
-        /*
+        
         /// <summary>
         /// Extract a portion of this curve as a new curve
         /// </summary>
@@ -632,10 +632,18 @@ namespace Nucleus.Geometry
         /// <returns></returns>
         public override Curve Extract(Interval subDomain)
         {
-            if (subDomain.Start <= 0 && subDomain.End >= 1.0 && Closed)
+            if (Closed && subDomain.Start <= 0 && subDomain.End >= 1.0)
             {
                 // Subdomain still represents a complete circle!
                 return new Arc(Circle);
+            }
+            else if (Closed && subDomain.IsDecreasing)
+            {
+                return new Arc(
+                    PointAt(subDomain.Start),
+                    PointAt((subDomain.Mid + 0.5) % 1.0),
+                    PointAt(subDomain.End),
+                    Attributes);
             }
             else
                 return new Arc(
@@ -644,7 +652,7 @@ namespace Nucleus.Geometry
                     PointAt(subDomain.End),
                     Attributes);
         }
-        */
+        
 
         #endregion
 

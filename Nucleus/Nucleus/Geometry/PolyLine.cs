@@ -243,7 +243,7 @@ namespace Nucleus.Geometry
             return result;
         }
 
-        /*
+        
         /// <summary>
         /// Extract a portion of this curve as a new curve
         /// </summary>
@@ -254,15 +254,39 @@ namespace Nucleus.Geometry
         {
             var pts = new List<Vector>();
             pts.Add(PointAt(subDomain.Start));
-            for (int i = 0; i < VertexCount; i++)
+            double offset = 1;
+            if (Closed) offset = 0;
+
+            if (!subDomain.IsDecreasing)
             {
-                if (((double)i) / VertexCount > subDomain.Start)
-                    pts.Add(Vertices[i].Position);
+                for (int i = 0; i < VertexCount; i++)
+                {
+                    double t = ((double)i) / (VertexCount - offset);
+                    if (t > subDomain.Start && t < subDomain.End)
+                        pts.Add(Vertices[i].Position);
+                }
+            }
+            else
+            {
+                //Loops!
+                for (int i = 0; i < VertexCount; i++)
+                {
+                    if (((double)i) / (VertexCount - offset) > subDomain.Start)
+                        pts.Add(Vertices[i].Position);
+                }
+                if (Closed) // Should this treat the polyline as closed even if it isn't?
+                {
+                    for (int i = 0; i < VertexCount; i++)
+                    {
+                        if (((double)i) / (VertexCount - offset) < subDomain.End)
+                            pts.Add(Vertices[i].Position);
+                    }
+                }
             }
             pts.Add(PointAt(subDomain.End));
             return new PolyLine(pts, Attributes);
         }
-        */
+        
 
         public override string ToString()
         {

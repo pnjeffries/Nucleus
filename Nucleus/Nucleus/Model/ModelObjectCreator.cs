@@ -558,13 +558,10 @@ namespace Nucleus.Model
         /// <returns></returns>
         public LinearElementLoad LinearElementLoad(LoadCase lCase, ExecutionInfo exInfo = null)
         {
-            LinearElementLoad result = new LinearElementLoad();
-            result = Model.History.Update(exInfo, result);
-            result.Case = lCase;
-            Model.Add(result);
-            return result;
             return Load<LinearElementLoad>(lCase, exInfo);
         }
+
+
 
         /// <summary>
         /// Create a new (or update an existing) panel load in the model
@@ -580,6 +577,7 @@ namespace Nucleus.Model
         {
             return Load<PanelLoad>(lCase, exInfo);
         }
+
 
         /// <summary>
         /// Create a new (or update an existing) level in the model
@@ -602,6 +600,6 @@ namespace Nucleus.Model
             return result;
         }
 
-        #endregion
+#endregion
     }
 }

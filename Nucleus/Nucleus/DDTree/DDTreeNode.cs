@@ -31,7 +31,7 @@ namespace Nucleus.DDTree
     /// <summary>
     /// A node in a D-D Tree
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The type of object contained by the tree</typeparam>
     class DDTreeNode<T>
     {
         private double _Origin; //The origin axis position
@@ -432,8 +432,6 @@ namespace Nucleus.DDTree
             b = aTemp;
         }
 
-        private const double tEndDefault = 0.0/0.0;
-
         /// <summary>
         /// Trace a ray through this node and its children searching for intersections with object geometry.
         /// </summary>
@@ -443,7 +441,7 @@ namespace Nucleus.DDTree
         /// <param name="tStart">A clipping value at the start of the section of the ray in which to test for collisions</param>
         /// <param name="tEnd">A clipping parameter at the end of the section of the ray in which to test for collisions</param>
         /// <returns></returns>
-        public RayHit<T> RayTrace(Axis ray, Func<T, Axis, double> hitTest, double tStart = 0, double tEnd = tEndDefault)
+        public RayHit<T> RayTrace(Axis ray, Func<T, Axis, double> hitTest, double tStart = 0, double tEnd = 0.0/0.0)
         {
 
             if (_SplitDimension != Dimension.Undefined)
@@ -473,7 +471,6 @@ namespace Nucleus.DDTree
                     if (endIndex < 0) endIndex = 0;
                     else if (endIndex >= _Branches.Length) endIndex = _Branches.Length - 1;
                 }
-                                 // Need to carry through the 3D bounding planes of this cell somehow...
 
                 for (int i = startIndex; !i.Exceeded(endIndex, increment); i += increment)
                 {
@@ -481,7 +478,7 @@ namespace Nucleus.DDTree
                     if (node != null)
                     {
                         // Calculate the intersections with the planes either end of this cell to (potentially) restrict
-                        // the  
+                        // the range of future checks
                         double value0 = _Origin + i * _CellSize;
                         double value1 = _Origin + (i + 1) * _CellSize;
                         double t0 = i == 0 ? double.NaN : Intersect.LinePlane(ray.Origin, ray.Direction, _SplitDimension, value0);
