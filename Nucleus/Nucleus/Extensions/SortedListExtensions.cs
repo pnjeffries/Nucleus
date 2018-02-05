@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Nucleus.Maths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,39 @@ namespace Nucleus.Extensions
     /// </summary>
     public static class SortedListExtensions
     {
+        /// <summary>
+        /// Determine a value at a specified key, even if an object with that key is not explicitly a
+        /// member of this list, interpolating between values as necessary.  Note that the datatype
+        /// held within this list must be interpolatable (i.e. it must implement an override of the '+',
+        /// '-' and '*' operators) or else you're gonna have a bad time.
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="key">The key value for which to retrieve or interpolate a value</param>
+        /// <param name="tweening">The tweening algorithm to be used for the interpolation.</param>
+        /// <returns></returns>
+        public static TValue InterpolatedValueAt<TValue>(this SortedList<double, TValue> list, double key, 
+            Interpolation tweening = Interpolation.LINEAR)
+        {
+            if (list.Count > 0)
+            {
+                if (list.ContainsKey(key)) return list[key];
+                else if (list.Count == 1) return list.Values[0];
+
+                double lastKey = list.Keys[0];
+                for (int i = 1; i < list.Count - 1; i++)
+                {
+                    double thisKey = list.Keys[i];
+                    if (key < thisKey || i == list.Count - 1)
+                    {
+                        double t = (key - lastKey) / (thisKey - lastKey);
+                        return tweening.Interpolate(list.Values[i - 1], list.Values[i], t);
+                    }
+                }
+            }
+            return default(TValue);
+        }
+
         /// <summary>
         /// Get the stored value with the key after the specified key value.
         /// Returns the first item in this list with a key that compared greater than

@@ -125,6 +125,7 @@
     <Compile Include="Field Controls\SetFieldControl.xaml.cs">
       <DependentUpon>SetFieldControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Sprite.cs" />
     <Compile Include="TextComboDialog.xaml.cs">
       <DependentUpon>TextComboDialog.xaml</DependentUpon>
     </Compile>

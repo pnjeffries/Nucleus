@@ -45,6 +45,11 @@ namespace Nucleus.Maths
         /// </summary>
         public static readonly Interval Unset = new Interval(double.NaN, double.NaN);
 
+        /// <summary>
+        /// The unit interval from 0 to 1.
+        /// </summary>
+        public static readonly Interval Unit = new Interval(0.0, 1.0);
+
         #endregion
 
         #region Fields
@@ -267,6 +272,17 @@ namespace Nucleus.Maths
         }
 
         /// <summary>
+        /// Wrap the start and end values of this interval to the
+        /// specified interval
+        /// </summary>
+        /// <param name="bounds"></param>
+        /// <returns></returns>
+        public Interval WrapTo(Interval bounds)
+        {
+            return new Interval(Start.WrapTo(bounds), End.WrapTo(bounds));
+        }
+
+        /// <summary>
         /// IComparable implementation.  Compares this interval to another.
         /// </summary>
         /// <param name="other"></param>
@@ -318,13 +334,44 @@ namespace Nucleus.Maths
         }
 
         /// <summary>
+        /// Normalise another interval to the range of this one.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public Interval ParameterOf(Interval value)
+        {
+            return new Interval(ParameterOf(value.Start), ParameterOf(value.End));
+        }
+
+        /// <summary>
         /// Does this interval include the specified value?
+        /// Both start and end are inclusive.
         /// </summary>
         /// <param name="value"></param>
         /// <returns>True if the specified value falls on or between the interval limits, else false.</returns>
         public bool Contains(double value)
         {
             return value >= Start && value <= End;
+        }
+
+        /// <summary>
+        /// Is the parameter t enclosed by this interval?
+        /// The start value is inclusive, the end is exclusive
+        /// </summary>
+        /// <param name="interval"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public bool EnclosesWrapped(double t)
+        {
+            if (IsDecreasing) return (t < End || t >= Start);
+            else return (t >= Start && t < End);
+        }
+
+        public bool ContainsWrapped(Interval contains)
+        {
+            if (this.IsDecreasing)
+                return (contains.Start < this.End || contains.Start > this.Start) && (contains.End < this.End || contains.End >this.Start);
+            else return (contains.Start > this.Start && contains.End < this.End);
         }
 
         /// <summary>
@@ -338,7 +385,7 @@ namespace Nucleus.Maths
         }
 
         /// <summary>
-        /// Does this interval entirely or partiall include another?
+        /// Does this interval entirely or partially include another?
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
@@ -479,6 +526,93 @@ namespace Nucleus.Maths
         {
             if (IsSingularity) return this.End.ToString();
             else return Start.ToString() + ":" + End.ToString();
+        }
+
+        
+        /// <summary>
+        /// Find the boolean difference of this interval and a set of other intervals which
+        /// subtract from it.
+        /// </summary>
+        /// <param name="detractors"></param>
+        /// <param name="domain"></param>
+        /// <returns></returns>
+        public IList<Interval> BooleanDifference(IList<Interval> subtractors)
+        {
+            IList<Interval> result = new List<Interval>();
+            BooleanDifference(subtractors, result);
+            return result;
+        }
+
+        /// <summary>
+        /// Find the boolean difference of this interval and a set of other intervals which
+        /// subtract from it.
+        /// </summary>
+        /// <param name="detractors"></param>
+        /// <param name="domain"></param>
+        /// <returns></returns>
+        public void BooleanDifference(IList<Interval> subtractors, IList<Interval> outList)
+        {
+            Interval interval = this;
+            if (subtractors.Count > 0)
+            {
+                double t = interval.Start;
+                Interval cutter = subtractors.FindEnclosing(t); // Test whether the start point is inside a cutter
+                bool wrapped = false; // Have we wrapped around the domain yet?
+
+                int cutterCount = 0;
+                while (true)
+                {
+                    if (cutterCount > subtractors.Count) return;
+                    if (cutter.IsValid)
+                    {
+                        if (cutter.IsDecreasing && t >= cutter.Start) wrapped = true; //
+
+                        // Move to the end of the current cutter:
+                        t = cutter.End;
+
+                        // Check for a next enclosing cutter:
+                        cutter = subtractors.FindEnclosing(t);
+                        cutterCount++;
+                    }
+                    else
+                    {
+                        double tNext = interval.End;
+                        // Move to the start of the next cutter:
+                        cutter = subtractors.FindNext(t);
+
+                        if (cutter.IsValid &&
+                            ((interval.IsIncreasing && tNext > cutter.Start) ||
+                            (interval.IsDecreasing)))
+                        {
+                            // Move to the start of the next cutter:
+                            tNext = cutter.Start;
+                        }
+                        else if (cutter.IsValid && !wrapped && interval.IsDecreasing)
+                        {
+                            // Wrap around to the start if the interval does:
+                            cutter = subtractors.FindNext(double.MinValue);
+                            wrapped = true;
+                            // Move to the start of the next cutter:
+                            if (cutter.IsValid && cutter.Start < tNext) tNext = cutter.Start;
+                        }
+
+                        if (tNext != t)
+                            outList.Add(new Interval(t, tNext));
+                        else
+                            tNext = t.NextValidValue(); //Nudge it forward!  Bit hacky...
+                        t = tNext;
+                    }
+
+                    // Check end conditions:
+                    if (interval.IsIncreasing && (t >= interval.End || wrapped)) return;
+                    if (interval.IsDecreasing && (t >= interval.End && wrapped)) return;
+                    if (outList.Count > subtractors.Count) return;
+                }
+            }
+            else
+            {
+                outList.Add(interval);
+            }
         }
 
         #endregion
@@ -652,6 +786,57 @@ namespace Nucleus.Maths
         public static bool operator != (Interval i, double d)
             => !i.Equals(d);
 
+        /// <summary>
+        /// Interval modulo operator
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="d"></param>
+        /// <returns></returns>
+        public static Interval operator % (Interval i, double d)
+        {
+            return new Interval(i.Start % d, i.End % d);
+        }
+
         #endregion
+    }
+
+    public static class IntervalExtensions
+    {
+        /// <summary>
+        /// Find the first interval in this collection that encloses the specified t value
+        /// </summary>
+        /// <param name="intervals"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static Interval FindEnclosing(this IList<Interval> intervals, double t)
+        {
+            foreach (Interval interval in intervals)
+            {
+                if (interval.Contains(t)) return interval;
+            }
+            return Interval.Unset;
+        }
+
+        /// <summary>
+        /// Find the next interval in this collection starting after the specified parameter
+        /// </summary>
+        /// <param name="intervals"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static Interval FindNext(this IList<Interval> intervals, double t)
+        {
+            Interval next = Interval.Unset;
+            if (intervals != null && intervals.Count > 0)
+            {
+                foreach (Interval interval in intervals)
+                {
+                    if (interval.Start > t && (!next.IsValid || next.Start > interval.Start))
+                    {
+                        next = interval;
+                    }
+                }
+            }
+            return next;
+        }
     }
 }

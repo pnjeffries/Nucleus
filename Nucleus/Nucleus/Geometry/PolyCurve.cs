@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Nucleus.Base;
 using Nucleus.Extensions;
 using Nucleus.Maths;
 using System;
@@ -521,7 +522,7 @@ namespace Nucleus.Geometry
             return result;
         }
 
-        /*
+        
         /// <summary>
         /// Extract a portion of this curve as a new curve
         /// </summary>
@@ -531,14 +532,45 @@ namespace Nucleus.Geometry
         public override Curve Extract(Interval subDomain)
         {
             var result = new PolyCurve();
-            int segCount = SegmentCount;
+            
+            Interval subDomainAdj = subDomain;
+            if (subDomain.IsDecreasing) subDomainAdj = new Interval(subDomain.Start, 1.0);
+
+            PopulateWithSubCurves(subDomainAdj, result);
+
+            // If looping, do a second pass:
+            if (Closed && subDomain.IsDecreasing)
+            {
+                PopulateWithSubCurves(new Maths.Interval(0.0, subDomain.End), result);
+            }
+
+            return result;
+        }
+        
+        /// <summary>
+        /// Populate another polycurve with the portions of this one which lie within
+        /// the specified subDomain
+        /// </summary>
+        /// <param name="subDomain"></param>
+        /// <param name="result"></param>
+        private void PopulateWithSubCurves(Interval subDomain, PolyCurve result)
+        {
+            double segCount = SegmentCount;
+            double segStart = 0;
             foreach (Curve subCrv in SubCurves)
             {
-                int subSC = subCrv.SegmentCount;
-                //TODO
+                double subSC = subCrv.SegmentCount;
+                double segEnd = segStart + subSC;
+                Interval crvDom = new Interval(segStart / segCount, segEnd / segCount);
+                if (subDomain.Contains(crvDom)) result.Add(subCrv.Duplicate());
+                else if (subDomain.Overlaps(crvDom))
+                {
+                    Curve subSubCrv = subCrv.Extract(crvDom.ParameterOf(subDomain.Overlap(crvDom)));
+                    if (subSubCrv != null) result.Add(subSubCrv);
+                }
+                segStart = segEnd;
             }
         }
-        */
 
         /// <summary>
         /// Could this PolyCurve be accurately represented using a polyline?

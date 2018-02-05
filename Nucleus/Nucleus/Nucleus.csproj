@@ -67,6 +67,8 @@
     <Compile Include="Extensions\EventHandlerExtensions.cs" />
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="Extensions\NotifyCollectionChangedEventArgsExtensions.cs" />
+    <Compile Include="Game\GameElement.cs" />
+    <Compile Include="Game\GameEntityFamily.cs" />
     <Compile Include="Geometry\Cell Maps\HexCellMap.cs" />
     <Compile Include="Geometry\Cell Maps\ICellMap.cs" />
     <Compile Include="Geometry\IWidePath.cs" />
@@ -346,6 +348,7 @@
     <Compile Include="Geometry\Vector.cs" />
     <Compile Include="Rendering\Animation.cs" />
     <Compile Include="Rendering\Animator.cs" />
+    <Compile Include="Rendering\AvatarStyle.cs" />
     <Compile Include="Rendering\Colour.cs" />
     <Compile Include="Rendering\ColourBrush.cs" />
     <Compile Include="Rendering\ColourCollection.cs" />
@@ -359,8 +362,12 @@
     <Compile Include="Rendering\SpriteDataCollection.cs" />
     <Compile Include="Rendering\TextureBrush.cs" />
     <Compile Include="Rendering\IRenderable.cs" />
+<<<<<<< HEAD
     <Compile Include="Rendering\ITexture.cs" />
     <Compile Include="Rendering\Rectangle.cs" />
+=======
+    <Compile Include="Rendering\PropertyAnimation.cs" />
+>>>>>>> 37b17972ddf0ee045ef41d4f9f470f0c728c297e
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Rendering\RenderingParameters.cs" />
     <Compile Include="Deprecated\CaseResults.cs" />

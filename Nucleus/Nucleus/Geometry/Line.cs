@@ -332,7 +332,6 @@ namespace Nucleus.Geometry
             return false;
         }
 
-        /*
         /// <summary>
         /// Extract a portion of this curve as a new curve
         /// </summary>
@@ -343,7 +342,6 @@ namespace Nucleus.Geometry
         {
             return new Line(PointAt(subDomain.Start), PointAt(subDomain.End), Attributes);
         }
-        */
 
         #endregion
 

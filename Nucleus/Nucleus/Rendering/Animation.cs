@@ -1,4 +1,6 @@
-﻿using Nucleus.Maths;
+﻿using Nucleus.Base;
+using Nucleus.Extensions;
+using Nucleus.Maths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +13,8 @@ namespace Nucleus.Rendering
     /// Base class for Animations - tweened transitions between multiple
     /// states that happen over time.
     /// </summary>
-    public abstract class Animation
+    [Serializable]
+    public abstract class Animation : Unique, IDuplicatable
     {
         #region Properties
 
@@ -127,6 +130,20 @@ namespace Nucleus.Rendering
         #region Properties
 
         /// <summary>
+        /// Private backing field for Target property
+        /// </summary>
+        private TTarget _Target;
+
+        /// <summary>
+        /// The object being animated
+        /// </summary>
+        public TTarget Target
+        {
+            get { return _Target; }
+            set { _Target = value; }
+        }
+
+        /// <summary>
         /// Private backing field for States property
         /// </summary>
         private SortedList<double, TState> _States = new SortedList<double, TState>();
@@ -151,6 +168,17 @@ namespace Nucleus.Rendering
         }
 
         /// <summary>
+        /// The (possibly interpolated) state at the current Time
+        /// </summary>
+        public TState CurrentState
+        {
+            get
+            {
+                return _States.InterpolatedValueAt(Time, Tweening);
+            }
+        }
+
+        /// <summary>
         /// The duration of this animation
         /// </summary>
         public override double Duration
@@ -163,6 +191,32 @@ namespace Nucleus.Rendering
 
         #endregion
 
-        
+        #region Constructors
+
+        public Animation()
+        {
+
+        }
+
+        public Animation(TTarget target, TState startState, TState endState, double duration, bool looping = false)
+        {
+            Target = target;
+            Initialise(startState, endState, duration);
+            Looping = looping;
+        }
+
+        /// <summary>
+        /// Initialise the stored start and end states of this animation
+        /// </summary>
+        /// <param name="startState"></param>
+        /// <param name="endState"></param>
+        /// <param name="duration"></param>
+        protected void Initialise(TState startState, TState endState, double duration)
+        {
+            States.Add(0, startState);
+            States.Add(duration, endState);
+        }
+
+        #endregion
     }
 }

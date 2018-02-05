@@ -8,6 +8,7 @@ using RC = Rhino.Geometry;
 
 namespace Nucleus.Rhino
 {
+    /*
     /// <summary>
     /// A wrapper for Rhino curve geometry which allows it to be
     /// interrogated as if it were a native Nucleus curve.  
@@ -131,4 +132,5 @@ namespace Nucleus.Rhino
 
         #endregion
     }
+    */
 }
