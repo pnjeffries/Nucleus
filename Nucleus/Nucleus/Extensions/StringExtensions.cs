@@ -82,6 +82,17 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Are all of the strings in this set numeric?
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static bool IsNumeric(this IList<string> str)
+        {
+            foreach (string s in str) if (!s.IsNumeric()) return false;
+            return true;
+        }
+
+        /// <summary>
         /// Removes all non-numeric characters from the start and end of this string.
         /// </summary>
         /// <param name="str"></param>
