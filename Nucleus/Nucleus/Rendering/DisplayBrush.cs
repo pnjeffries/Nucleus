@@ -38,5 +38,21 @@ namespace Nucleus.Rendering
         /// more complex shading is not available.
         /// </summary>
         public abstract Colour BaseColour { get; }
+
+        /// <summary>
+        /// Private backing member variable for the CachedData property
+        /// </summary>
+        private object _CachedData = null;
+
+        /// <summary>
+        /// A store for cached data and resources used by this brush.  
+        /// Usage will depend on context.
+        /// </summary>
+        public object CachedData
+        {
+            get { return _CachedData; }
+            set { _CachedData = value; }
+        }
+
     }
 }

@@ -352,7 +352,15 @@
     <Compile Include="Rendering\DisplayAttributes.cs" />
     <Compile Include="Rendering\DisplayBrush.cs" />
     <Compile Include="Maths\Interpolation.cs" />
+    <Compile Include="Rendering\ITextureLoader.cs" />
+    <Compile Include="Rendering\SpriteAnimation.cs" />
+    <Compile Include="Rendering\SpriteAnimationDirection.cs" />
+    <Compile Include="Rendering\SpriteData.cs" />
+    <Compile Include="Rendering\SpriteDataCollection.cs" />
+    <Compile Include="Rendering\TextureBrush.cs" />
     <Compile Include="Rendering\IRenderable.cs" />
+    <Compile Include="Rendering\ITexture.cs" />
+    <Compile Include="Rendering\Rectangle.cs" />
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Rendering\RenderingParameters.cs" />
     <Compile Include="Deprecated\CaseResults.cs" />

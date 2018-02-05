@@ -54,6 +54,16 @@ namespace Nucleus.WPF
         }
 
         /// <summary>
+        /// Convert a Nucleus Rectangle to a WPF Rect
+        /// </summary>
+        /// <param name="rectangle"></param>
+        /// <returns></returns>
+        public static W.Rect Convert(Rectangle rectangle)
+        {
+            return new W.Rect(rectangle.Left, rectangle.Top, rectangle.Width, rectangle.Height);
+        }
+
+        /// <summary>
         /// Convert a Nucleus ColourBrush to a WPF SolidColorBrush
         /// </summary>
         /// <param name="brush">The brush to convert</param>
@@ -64,6 +74,28 @@ namespace Nucleus.WPF
         public static Media.SolidColorBrush Convert(ColourBrush brush, byte alphaLimit = 255)
         {
             return new Media.SolidColorBrush(Convert(brush.Colour, alphaLimit));
+        }
+
+        /// <summary>
+        /// Convert a Nucleus ITexture to an equivalent ImageSource
+        /// </summary>
+        /// <param name="texture"></param>
+        /// <returns></returns>
+        public static Media.ImageSource Convert(ITexture texture)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Convert a Nucleus TextureBrush to a WPF ImageBrush
+        /// </summary>
+        /// <param name="brush"></param>
+        /// <returns></returns>
+        public static Media.ImageBrush Convert(TextureBrush brush)
+        {
+            var imgBrush = new Media.ImageBrush(Convert(brush.Texture));
+            if (brush.Region != null) imgBrush.Viewbox = Convert(brush.Region);
+            return imgBrush;
         }
 
         /// <summary>

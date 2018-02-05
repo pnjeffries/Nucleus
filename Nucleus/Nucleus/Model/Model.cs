@@ -732,7 +732,8 @@ namespace Nucleus.Model
             if (_CoordinateSystems != null) _CoordinateSystems.CollectionChanged += HandlesInternalCollectionChanged;
             if (_Sets != null) _Sets.CollectionChanged += HandlesInternalCollectionChanged;
             if (_LoadCases != null) _LoadCases.CollectionChanged += HandlesInternalCollectionChanged;
-
+            if (_Loads != null) _Loads.CollectionChanged += HandlesInternalCollectionChanged;
+            
             foreach (ModelObject unique in Everything)
             {
                 Register(unique);
