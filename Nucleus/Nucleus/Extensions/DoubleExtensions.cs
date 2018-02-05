@@ -316,6 +316,23 @@ namespace Nucleus.Extensions
             return totalD.Root();
         }
 
+        /// <summary>
+        /// Wrap this value until it falls into the specified interval
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="interval">The interval to wrap to.  Size should be > 0.</param>
+        /// <returns></returns>
+        public static double WrapTo(this double value, Interval interval)
+        {
+            double size = interval.Size;
+            if (size > 0)
+            {
+                while (value > interval.Max) value -= size;
+                while (value < interval.Min) value += size;
+            }
+            return value;
+        }
+
 
     }
 }

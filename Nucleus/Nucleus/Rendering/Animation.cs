@@ -1,4 +1,5 @@
-﻿using Nucleus.Extensions;
+﻿using Nucleus.Base;
+using Nucleus.Extensions;
 using Nucleus.Maths;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,8 @@ namespace Nucleus.Rendering
     /// Base class for Animations - tweened transitions between multiple
     /// states that happen over time.
     /// </summary>
-    public abstract class Animation
+    [Serializable]
+    public abstract class Animation : Unique, IDuplicatable
     {
         #region Properties
 

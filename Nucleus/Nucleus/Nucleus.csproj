@@ -67,6 +67,8 @@
     <Compile Include="Extensions\EventHandlerExtensions.cs" />
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="Extensions\NotifyCollectionChangedEventArgsExtensions.cs" />
+    <Compile Include="Game\GameElement.cs" />
+    <Compile Include="Game\GameEntityFamily.cs" />
     <Compile Include="Geometry\Cell Maps\HexCellMap.cs" />
     <Compile Include="Geometry\Cell Maps\ICellMap.cs" />
     <Compile Include="Geometry\IWidePath.cs" />
@@ -346,6 +348,7 @@
     <Compile Include="Geometry\Vector.cs" />
     <Compile Include="Rendering\Animation.cs" />
     <Compile Include="Rendering\Animator.cs" />
+    <Compile Include="Rendering\AvatarStyle.cs" />
     <Compile Include="Rendering\Colour.cs" />
     <Compile Include="Rendering\ColourBrush.cs" />
     <Compile Include="Rendering\ColourCollection.cs" />

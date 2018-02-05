@@ -268,7 +268,26 @@ namespace Nucleus.Geometry
         /// <returns></returns>
         public double LengthOf(Interval t)
         {
-            return LengthAt(t.End) - LengthAt(t.Start);
+            if (t.IsDecreasing && Closed)
+                return (Length - LengthAt(t.End) + LengthAt(t.Start));
+            else return LengthAt(t.End) - LengthAt(t.Start);
+        }
+
+        /// <summary>
+        /// Filter out from the specified list of domain intervals on this curve any which have a length
+        /// lower than the specified limit.
+        /// </summary>
+        /// <param name="intervals"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public IList<Interval> FilterBelowLength(IList<Interval> intervals, double limit)
+        {
+            var result = new List<Interval>();
+            foreach (var i in intervals)
+            {
+                if (LengthOf(i) >= limit) result.Add(i);
+            }
+            return result;
         }
 
         /// <summary>
@@ -279,11 +298,18 @@ namespace Nucleus.Geometry
         /// <param name="length">The length of the subdomain (i.e. the domain will start and end
         /// half of this distance from tMid) </param>
         /// <returns></returns>
-        public Interval SubdomainByCentre(double tMid, double length)
+        public virtual Interval SubdomainByCentre(double tMid, double length)
         {
             double midLength = LengthAt(tMid);
             double startLength = midLength - length / 2.0;
             double endLength = midLength + length / 2.0;
+
+            if (Closed)
+            {
+                double crvLength = Length;
+                startLength = startLength.WrapTo(new Interval(0,crvLength));
+                endLength = endLength.WrapTo(new Interval(0, crvLength));
+            }
             var result = new Interval(ParameterAt(startLength), ParameterAt(endLength));
             if (!Closed) return result.Overlap(new Interval(0, 1));
             else return result;
@@ -518,7 +544,7 @@ namespace Nucleus.Geometry
         /// <returns>The start vertex of the given segment, if it exists.  Else null.</returns>
         public virtual Vertex SegmentStart(int index)
         {
-            if (index < Vertices.Count) return Vertices[index];
+            if (index < Vertices.Count && index >= 0)  return Vertices[index];
             else return null;
         }
 
