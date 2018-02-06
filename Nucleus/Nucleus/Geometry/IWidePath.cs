@@ -209,8 +209,8 @@ namespace Nucleus.Geometry
                         if (v.Owner != null && v.Owner is Curve && pathMap.ContainsKey(v.Owner.GUID))
                         {
                             Curve crv = (Curve)v.Owner;
-                            if (v.IsStart) angleSorted.Add(crv.TangentAt(0).Angle, v);
-                            else if (v.IsEnd) angleSorted.Add(crv.TangentAt(1).Reverse().Angle, v);
+                            if (v.IsStart) angleSorted.AddSafe(crv.TangentAt(0).Angle, v);
+                            else if (v.IsEnd) angleSorted.AddSafe(crv.TangentAt(1).Reverse().Angle, v);
                         }
                     }
                     if (angleSorted.Count > 1)

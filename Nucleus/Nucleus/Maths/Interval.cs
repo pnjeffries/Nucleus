@@ -361,7 +361,7 @@ namespace Nucleus.Maths
         /// <param name="interval"></param>
         /// <param name="t"></param>
         /// <returns></returns>
-        public bool EnclosesWrapped(double t)
+        public bool ContainsOpenEndWrapped(double t)
         {
             if (IsDecreasing) return (t < End || t >= Start);
             else return (t >= Start && t < End);
@@ -524,8 +524,8 @@ namespace Nucleus.Maths
 
         public override string ToString()
         {
-            if (IsSingularity) return this.End.ToString();
-            else return Start.ToString() + ":" + End.ToString();
+            if (IsSingularity) return End.ToString();
+            else return "[" + Start.ToString() + ";" + End.ToString() + "]";
         }
 
         
@@ -595,6 +595,7 @@ namespace Nucleus.Maths
                             // Move to the start of the next cutter:
                             if (cutter.IsValid && cutter.Start < tNext) tNext = cutter.Start;
                         }
+                        else if (tNext < t) wrapped = true;
 
                         if (tNext != t)
                             outList.Add(new Interval(t, tNext));
@@ -812,7 +813,7 @@ namespace Nucleus.Maths
         {
             foreach (Interval interval in intervals)
             {
-                if (interval.Contains(t)) return interval;
+                if (interval.ContainsOpenEndWrapped(t)) return interval;
             }
             return Interval.Unset;
         }

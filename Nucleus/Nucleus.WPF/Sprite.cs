@@ -8,6 +8,7 @@ using System.Windows.Shapes;
 using Nucleus.Rendering;
 using System.Windows.Media;
 using System.Windows;
+using Nucleus.Geometry;
 
 namespace Nucleus.WPF
 {
@@ -23,6 +24,10 @@ namespace Nucleus.WPF
         #endregion
 
         #region Properties
+
+        public static DependencyProperty OrientationProperty =
+            DependencyProperty.Register("Orientation", typeof(Angle), typeof(Sprite),
+                new PropertyMetadata(0));
 
         /// <summary>
         /// Private backing member variable for the SpriteData property
@@ -59,6 +64,8 @@ namespace Nucleus.WPF
         static Sprite()
         {
             StretchProperty.OverrideMetadata(typeof(Sprite), new FrameworkPropertyMetadata(Stretch.Fill));
+            WidthProperty.OverrideMetadata(typeof(Sprite), new FrameworkPropertyMetadata(1));
+            HeightProperty.OverrideMetadata(typeof(Sprite), new FrameworkPropertyMetadata(1));
         }
 
         #endregion
