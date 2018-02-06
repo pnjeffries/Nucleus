@@ -33,6 +33,13 @@ namespace Nucleus.Analysis
         ICalculationLog Superscript(string text);
 
         /// <summary>
+        /// Write text to the log as a subscript
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        ICalculationLog Subscript(string text);
+
+        /// <summary>
         /// Write a symbol to the log
         /// </summary>
         /// <param name="name"></param>

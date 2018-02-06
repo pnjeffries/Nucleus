@@ -23,7 +23,7 @@ namespace Nucleus.Analysis
         /// <param name="udl"></param>
         public SimpleBeamAnalysis(double length, double udl)
         {
-            Length = length;
+            Span = length;
             UDL = udl;
         }
 
@@ -62,8 +62,8 @@ namespace Nucleus.Analysis
         public double MaxMoment(ICalculationLog log = null)
         {
             // M = wl²/8
-            log?.Symbol("Moment").Write(" = ").Symbol("UDL").Symbol("Length").Superscript("2").WriteLine("/8");
-            return UDL * Length.Squared() / 8;
+            log?.Symbol("Moment").Write(" = ").Symbol("UDL").Symbol("Span").Superscript("2").WriteLine("/8");
+            return UDL * Span.Squared() / 8;
             
         }
 
@@ -74,10 +74,11 @@ namespace Nucleus.Analysis
         /// <param name="x">The position along the beam, as a distance from
         /// the start (in m).</param>
         /// <returns></returns>
-        public double MomentAt(double x)
+        public double MomentAt(double x, ICalculationLog log = null)
         {
             // Mx = (wx/2)(l - x)
-            return (UDL * x / 2) * (Length - x);
+            log?.Write("(").Symbol("UDL").Symbol("x").Write("/2)(").Symbol("Span").Write("-").Symbol("x").WriteLine(")");
+            return (UDL * x / 2) * (Span - x);
         }
 
         /// <summary>
@@ -88,7 +89,7 @@ namespace Nucleus.Analysis
         public double MaxShear()
         {
             //V = wl/2
-            return UDL * Length / 2;
+            return UDL * Span / 2;
         }
 
         /// <summary>
@@ -102,7 +103,7 @@ namespace Nucleus.Analysis
         public double ShearAt(double x)
         {
             // Vx = w(l/2 - x)
-            return UDL * (Length / 2 - x);
+            return UDL * (Span / 2 - x);
         }
 
         /// <summary>
@@ -113,7 +114,7 @@ namespace Nucleus.Analysis
         public double MaxDeflection()
         {
             // Δmax = (5wl^4) / (384EI)
-            return (5 * UDL * Length.Power(4)) / (384 * E * I);
+            return (5 * UDL * Span.Power(4)) / (384 * E * I);
         }
 
         /// <summary>
@@ -124,7 +125,7 @@ namespace Nucleus.Analysis
         public double TotalLoad()
         {
             // W = wl
-            return UDL * Length;
+            return UDL * Span;
         }
 
         /// <summary>
@@ -137,7 +138,7 @@ namespace Nucleus.Analysis
             double[] result = new double[5];
             // fn = (Kn/2π) * √(EIg/(w*l^4))
             double g = 9.8; //acceleration due to gravity (m/s)
-            double fnBase = (1 / (2 * Math.PI)) * Math.Sqrt((E * I * g) / (UDL * Length.Power(4)));
+            double fnBase = (1 / (2 * Math.PI)) * Math.Sqrt((E * I * g) / (UDL * Span.Power(4)));
             // Mode 1: Kn = 9.87
             result[0] = 9.87 * fnBase;
             // Mode 2: Kn = 39.5

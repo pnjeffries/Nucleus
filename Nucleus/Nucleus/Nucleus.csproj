@@ -53,6 +53,7 @@
     <Compile Include="Actions\ExecutionInfo.cs" />
     <Compile Include="Analysis\BeamAnalysisBase.cs" />
     <Compile Include="Analysis\ICalculationLog.cs" />
+    <Compile Include="Analysis\ICalculationScenario.cs" />
     <Compile Include="Base\Bool6D.cs" />
     <Compile Include="Base\CollectionCopyAttribute.cs" />
     <Compile Include="Base\IUniqueWithModifiableGUID.cs" />
@@ -89,7 +90,6 @@
     <Compile Include="Maths\NamedDataSet.cs" />
     <Compile Include="Maths\NamedDataSetCollection.cs" />
     <Compile Include="Maths\MathsHelper.cs" />
-    <Compile Include="Analysis\SimpleTrussAnalysis.cs" />
     <Compile Include="Model\BuildUpFamilyCollection.cs" />
     <Compile Include="Model\BuildUpLayer.cs" />
     <Compile Include="Model\BuildUpLayerCollection.cs" />

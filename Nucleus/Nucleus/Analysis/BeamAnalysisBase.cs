@@ -15,9 +15,9 @@ namespace Nucleus.Analysis
         #region Properties
 
         /// <summary>
-        /// The overall length of the member (m)
+        /// The overall span of the member (m)
         /// </summary>
-        public double Length { get; set; }
+        public double Span { get; set; }
 
         /// <summary>
         /// The uniformly distributed load along the beam (N/m)
@@ -42,7 +42,7 @@ namespace Nucleus.Analysis
 
         protected BeamAnalysisBase(LinearElement element, double udl)
         {
-            Length = element.Geometry.Length;
+            Span = element.Geometry.Length;
             UDL = udl;
             Material material = element.Family?.GetPrimaryMaterial();
             if (material != null && material is IsoMaterial)
