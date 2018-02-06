@@ -37,12 +37,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
-    <Compile Include="Bridge Fixes\Collection.cs" />
-    <Compile Include="Bridge Fixes\INotifyCollectionChanged.cs" />
+    <Compile Include="Bridge Kludges\Collection.cs" />
+    <Compile Include="Bridge Kludges\INotifyCollectionChanged.cs" />
     <Compile Include="..\Nucleus\**\*.cs">
       <Link>%(RecursiveDir)%(FileName)</Link>
     </Compile>
-    <Compile Include="Bridge Fixes\SortedList.cs" />
+    <Compile Include="Bridge Kludges\SortedList.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="bridge.json" />

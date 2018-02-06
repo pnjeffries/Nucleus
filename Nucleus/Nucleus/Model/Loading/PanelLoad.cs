@@ -38,11 +38,10 @@ namespace Nucleus.Model.Loading
 
         #region Methods
 
-        /*
         public override string GetValueUnits()
         {
             return base.GetValueUnits() + "/m²";
-        }*/
+        }
 
         #endregion
 
