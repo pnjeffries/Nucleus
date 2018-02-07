@@ -236,7 +236,7 @@ namespace Nucleus.DDTree
         /// <param name="dimension"></param>
         /// <param name="entry"></param>
         /// <returns></returns>
-        public abstract double PositionInDimension(Dimension dimension, T entry);
+        public abstract double PositionInDimension(CoordinateAxis dimension, T entry);
 
         /// <summary>
         /// Get the position of the specified point along the specified dimension's axis
@@ -244,13 +244,13 @@ namespace Nucleus.DDTree
         /// <param name="dimension"></param>
         /// <param name="pt"></param>
         /// <returns></returns>
-        public double PositionInDimension(Dimension dimension, Vector pt)
+        public double PositionInDimension(CoordinateAxis dimension, Vector pt)
         {
             switch (dimension)
             {
-                case Dimension.X:
+                case CoordinateAxis.X:
                     return pt.X;
-                case Dimension.Y:
+                case CoordinateAxis.Y:
                     return pt.Y;
                 default:
                     return pt.Z;

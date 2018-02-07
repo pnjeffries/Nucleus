@@ -131,13 +131,13 @@ namespace Nucleus.DDTree
         /// <param name="dimension"></param>
         /// <param name="entry"></param>
         /// <returns></returns>
-        public override double PositionInDimension(Dimension dimension, Node entry)
+        public override double PositionInDimension(CoordinateAxis dimension, Node entry)
         {
             switch (dimension)
             {
-                case Dimension.X:
+                case CoordinateAxis.X:
                     return entry.Position.X;
-                case Dimension.Y:
+                case CoordinateAxis.Y:
                     return entry.Position.Y;
                 default:
                     return entry.Position.Z;

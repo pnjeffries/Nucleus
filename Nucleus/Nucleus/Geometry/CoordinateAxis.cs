@@ -29,5 +29,6 @@ namespace Nucleus.Geometry
     /// <summary>
     /// An enum representing one of the standard three dimensions
     /// </summary>
-    public enum Dimension { Undefined = 0, X = 1, Y = 2, Z = 3 };
+    public enum CoordinateAxis{
+        Undefined = 0, X = 1, Y = 2, Z = 3 };
 }

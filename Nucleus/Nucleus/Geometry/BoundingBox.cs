@@ -583,10 +583,10 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="dimension"></param>
         /// <returns></returns>
-        public double MinInDimension(Dimension dimension)
+        public double MinInDimension(CoordinateAxis dimension)
         {
-            if (dimension == Dimension.X) return MinX;
-            else if (dimension == Dimension.Y) return MinY;
+            if (dimension == CoordinateAxis.X) return MinX;
+            else if (dimension == CoordinateAxis.Y) return MinY;
             else return MinZ;
         }
 
@@ -595,10 +595,10 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="dimension"></param>
         /// <returns></returns>
-        public double MaxInDimension(Dimension dimension)
+        public double MaxInDimension(CoordinateAxis dimension)
         {
-            if (dimension == Dimension.X) return MaxX;
-            else if (dimension == Dimension.Y) return MaxY;
+            if (dimension == CoordinateAxis.X) return MaxX;
+            else if (dimension == CoordinateAxis.Y) return MaxY;
             else return MaxZ;
         }
 
@@ -607,10 +607,10 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="dimension"></param>
         /// <returns></returns>
-        public Interval IntervalInDimension(Dimension dimension)
+        public Interval IntervalInDimension(CoordinateAxis dimension)
         {
-            if (dimension == Dimension.X) return X;
-            else if (dimension == Dimension.Y) return Y;
+            if (dimension == CoordinateAxis.X) return X;
+            else if (dimension == CoordinateAxis.Y) return Y;
             else return Z;
         }
 

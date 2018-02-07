@@ -255,7 +255,7 @@
     <Compile Include="Geometry\Curve.cs" />
     <Compile Include="Geometry\CurveCollection.cs" />
     <Compile Include="Geometry\CylindricalCoordinateSystem.cs" />
-    <Compile Include="Geometry\Dimension.cs" />
+    <Compile Include="Geometry\CoordinateAxis.cs" />
     <Compile Include="Geometry\Circle.cs" />
     <Compile Include="Geometry\ICoordinateSystem.cs" />
     <Compile Include="Geometry\IPosition.cs" />
@@ -404,6 +404,7 @@
     <Compile Include="Undo\UndoStageCollection.cs" />
     <Compile Include="Units\DimensionAttribute.cs" />
     <Compile Include="Units\DimensionType.cs" />
+    <Compile Include="Units\IDimension.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FreeBuild.licenseheader" />
