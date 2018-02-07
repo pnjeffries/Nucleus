@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Shapes;
 using Nucleus.Rendering;
 using System.Windows.Media;
+using SWM = System.Windows.Media;
 using System.Windows;
 using Nucleus.Geometry;
 
@@ -28,6 +29,16 @@ namespace Nucleus.WPF
         public static DependencyProperty OrientationProperty =
             DependencyProperty.Register("Orientation", typeof(Angle), typeof(Sprite),
                 new PropertyMetadata(0));
+
+        /// <summary>
+        /// The orientation of the sprite.
+        /// </summary>
+        public Angle Orientation
+        {
+            get { return (Angle)GetValue(OrientationProperty); }
+            set { SetValue(OrientationProperty, value); }
+        }
+
 
         /// <summary>
         /// Private backing member variable for the SpriteData property
@@ -53,7 +64,7 @@ namespace Nucleus.WPF
             get { return new RectangleGeometry(_Rectangle); }
         }
 
-        public override Transform GeometryTransform => Transform.Identity;
+        public override SWM.Transform GeometryTransform => SWM.Transform.Identity;
 
         #endregion
 
