@@ -71,7 +71,7 @@ namespace Nucleus.DDTree
             return entry.MinDelegateValue(i => i.Z);
         }
 
-        public override double PositionInDimension(Dimension dimension, MeshFace entry)
+        public override double PositionInDimension(CoordinateAxis dimension, MeshFace entry)
         {
             return entry.AverageDelegateValue(i => i.Position[dimension]);
         }

@@ -26,9 +26,67 @@ namespace Nucleus.WPF
 
         #region Properties
 
+        /// <summary>
+        /// Called when the value of a visually-important sprite dependency property is changed
+        /// </summary>
+        /// <param name="d"></param>
+        /// <param name="e"></param>
+        private static void OnAnimationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((Sprite)d).AnimationChanged();
+        }
+
+        /// <summary>
+        /// Called when the value of a visually-important sprite dependency property is changed
+        /// </summary>
+        /// <param name="d"></param>
+        /// <param name="e"></param>
+        private static void OnVisualChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((Sprite)d).VisualChanged();
+        }
+
+        /// <summary>
+        /// Animation name Dependency Property
+        /// </summary>
+        public static DependencyProperty AnimationProperty =
+            DependencyProperty.Register("Animation", typeof(string), typeof(Sprite),
+                new FrameworkPropertyMetadata("Idle", FrameworkPropertyMetadataOptions.AffectsRender,
+                    new PropertyChangedCallback(OnAnimationChanged)));
+
+        /// <summary>
+        /// The name of the current animation
+        /// </summary>
+        public string Animation
+        {
+            get { return GetValue(AnimationProperty).ToString(); }
+            set { SetValue(AnimationProperty, value); }
+        }
+
+        /// <summary>
+        /// Animation progress dependency property
+        /// </summary>
+        public static DependencyProperty AnimationProgressProperty =
+            DependencyProperty.Register("AnimationProgress", typeof(double), typeof(Sprite),
+                new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.AffectsRender,
+                    new PropertyChangedCallback(OnVisualChanged)));
+
+        /// <summary>
+        /// The progress of the current animation
+        /// </summary>
+        public double AnimationProgress
+        {
+            get { return (double)GetValue(AnimationProgressProperty); }
+            set { SetValue(AnimationProgressProperty, value); }
+        }
+
+        /// <summary>
+        /// Orientaion Dependency Property
+        /// </summary>
         public static DependencyProperty OrientationProperty =
             DependencyProperty.Register("Orientation", typeof(Angle), typeof(Sprite),
-                new PropertyMetadata(0));
+                new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.AffectsRender,
+                new PropertyChangedCallback(OnVisualChanged)));
 
         /// <summary>
         /// The orientation of the sprite.
@@ -81,10 +139,25 @@ namespace Nucleus.WPF
 
         #endregion
 
-        #region Method
+        #region Methods
+
+        protected void VisualChanged()
+        {
+            Fill = null;
+        }
+
+        protected void AnimationChanged()
+        {
+            Fill = null;
+            AnimationProgress = 0;
+        }
 
         protected override void OnRender(DrawingContext drawingContext)
         {
+            if (Fill == null && SpriteData != null)
+            {
+                ToWPF.Convert(SpriteData.GetFrame(Animation, Orientation, AnimationProgress));
+            }
             drawingContext.DrawRectangle(Fill, null, _Rectangle);
         }
 

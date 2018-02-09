@@ -49,7 +49,7 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static Guid BakePoint(Vector point)
         {
-            return BakePoint(NtoRC.Convert(point));
+            return BakePoint(ToRC.Convert(point));
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Nucleus.Rhino
         {
             bool result = false;
             Writing = true;
-            result = ReplacePoint(obj, NtoRC.Convert(point));
+            result = ReplacePoint(obj, ToRC.Convert(point));
             Writing = false;
             return result;
         }
@@ -95,7 +95,7 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static Guid BakeCurve(FB.Curve curve)
         {
-            return BakeCurve(NtoRC.Convert(curve));
+            return BakeCurve(ToRC.Convert(curve));
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static bool ReplaceCurve(Guid obj, FB.Curve curve)
         {
-            return ReplaceCurve(obj, NtoRC.Convert(curve));
+            return ReplaceCurve(obj, ToRC.Convert(curve));
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static Guid BakeLine(Vector startPoint, Vector endPoint)
         {
-            return BakeLine(NtoRC.Convert(startPoint), NtoRC.Convert(endPoint));
+            return BakeLine(ToRC.Convert(startPoint), ToRC.Convert(endPoint));
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static bool ReplaceLine(Guid obj, Vector startPoint, Vector endPoint)
         {
-            return ReplaceLine(obj, NtoRC.Convert(startPoint), NtoRC.Convert(endPoint));
+            return ReplaceLine(obj, ToRC.Convert(startPoint), ToRC.Convert(endPoint));
         }
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace Nucleus.Rhino
             Guid result = Guid.Empty;
             if (geometry != null)
             {
-                GeometryBase gB = NtoRC.Convert(geometry);
+                GeometryBase gB = ToRC.Convert(geometry);
                 if (gB != null)
                 {
                     Writing = true;
@@ -332,7 +332,7 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static bool Replace(Guid objID, VertexGeometry geometry)
         {
-            return Replace(objID, NtoRC.Convert(geometry));
+            return Replace(objID, ToRC.Convert(geometry));
         }
 
         /// <summary>
@@ -610,7 +610,7 @@ namespace Nucleus.Rhino
         public static bool SetLayerColour(int layerID, Colour colour)
         {
             var layer = RhinoDoc.ActiveDoc.Layers[layerID];
-            layer.Color = NtoRC.Convert(colour);
+            layer.Color = ToRC.Convert(colour);
             return layer.CommitChanges();
         }
 

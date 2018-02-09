@@ -54,14 +54,14 @@ namespace Nucleus.DDTree
         /// The dimensional axis along which the space in this node is divided.
         /// If this is Undefined, the node is not split.
         /// </summary>
-        private Dimension _SplitDimension = Dimension.Undefined;
+        private CoordinateAxis _SplitDimension = CoordinateAxis.Undefined;
 
         /// <summary>
         /// Is this node a leaf node (i.e. is it not divided)
         /// </summary>
         public bool IsLeafNode
         {
-            get { return _SplitDimension == Dimension.Undefined; }
+            get { return _SplitDimension == CoordinateAxis.Undefined; }
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Nucleus.DDTree
         public void Add(T item)
         {
             _Children.Add(item);
-            if (_SplitDimension != Dimension.Undefined)
+            if (_SplitDimension != CoordinateAxis.Undefined)
             {
                 AddToBranch(item);
             }
@@ -115,7 +115,7 @@ namespace Nucleus.DDTree
             if (_Children.Contains(item))
             {
                 _Children.Remove(item);
-                if (_SplitDimension != Dimension.Undefined)
+                if (_SplitDimension != CoordinateAxis.Undefined)
                 {
                     for (int i = 0; i < _Branches.Length; i++)
                     {
@@ -144,7 +144,7 @@ namespace Nucleus.DDTree
         /// <param name="output"></param>
         public void CloseTo(Vector pt, double distanceSquared, ref IList<T> output)
         {
-            if (_SplitDimension != Dimension.Undefined)
+            if (_SplitDimension != CoordinateAxis.Undefined)
             {
                 double value = _Tree.PositionInDimension(_SplitDimension, pt);
                 //Check starting cell:
@@ -211,7 +211,7 @@ namespace Nucleus.DDTree
 
         public void ItemsInside(BoundingBox box, ref IList<T> output)
         {
-            if (_SplitDimension != Dimension.Undefined)
+            if (_SplitDimension != CoordinateAxis.Undefined)
             {
                 double min = box.MinInDimension(_SplitDimension);
                 double max = box.MaxInDimension(_SplitDimension);
@@ -255,7 +255,7 @@ namespace Nucleus.DDTree
         {
             T result = default(T);
 
-            if (_SplitDimension != Dimension.Undefined)
+            if (_SplitDimension != CoordinateAxis.Undefined)
             {
                 double value = _Tree.PositionInDimension(_SplitDimension, pt);
                 //Check starting cell:
@@ -336,7 +336,7 @@ namespace Nucleus.DDTree
         /// <param name="min"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        protected Dimension LargestDimension(IList<T> collection, out double min, out double max)
+        protected CoordinateAxis LargestDimension(IList<T> collection, out double min, out double max)
         {
             if (collection.Count > 0)
             {
@@ -367,24 +367,24 @@ namespace Nucleus.DDTree
                 {
                     min = minX;
                     max = maxX;
-                    return Dimension.X;
+                    return CoordinateAxis.X;
                 }
                 else if (dY > dZ)
                 {
                     min = minY;
                     max = maxY;
-                    return Dimension.Y;
+                    return CoordinateAxis.Y;
                 }
                 else
                 {
                     min = minZ;
                     max = maxZ;
-                    return Dimension.Z;
+                    return CoordinateAxis.Z;
                 }
             }
             min = 0;
             max = 0;
-            return Dimension.Undefined;
+            return CoordinateAxis.Undefined;
         }
 
         /// <summary>
@@ -396,7 +396,7 @@ namespace Nucleus.DDTree
             {
                 double max;
                 double min;
-                Dimension largest = LargestDimension(_Children, out min, out max);
+                CoordinateAxis largest = LargestDimension(_Children, out min, out max);
 
                 int divisions = Math.Min(_Children.Count, Math.Min(_Tree.MaxDivisions, (int)Math.Floor(max - min / _Tree.MinCellSize) + 1));
                 if (divisions > 1)
@@ -444,7 +444,7 @@ namespace Nucleus.DDTree
         public RayHit<T> RayTrace(Axis ray, Func<T, Axis, double> hitTest, double tStart = 0, double tEnd = 0.0/0.0)
         {
 
-            if (_SplitDimension != Dimension.Undefined)
+            if (_SplitDimension != CoordinateAxis.Undefined)
             {
                 Vector entryPoint = ray.PointAt(tStart);
 

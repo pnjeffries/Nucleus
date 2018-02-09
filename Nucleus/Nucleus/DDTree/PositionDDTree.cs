@@ -60,7 +60,7 @@ namespace Nucleus.DDTree
             return entry.Position.Z;
         }
 
-        public override double PositionInDimension(Dimension dimension, T entry)
+        public override double PositionInDimension(CoordinateAxis dimension, T entry)
         {
             return entry.Position[dimension];
         }

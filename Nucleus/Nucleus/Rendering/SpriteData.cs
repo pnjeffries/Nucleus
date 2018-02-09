@@ -1,5 +1,6 @@
 ﻿using Nucleus.Base;
 using Nucleus.Extensions;
+using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,6 +35,57 @@ namespace Nucleus.Rendering
         #region Constructors
 
         public SpriteData() { }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Get the default animation for this sprite
+        /// </summary>
+        /// <returns></returns>
+        public SpriteAnimation GetDefaultAnimation()
+        {
+            if (_Animations.ContainsKey("Idle")) return _Animations["Idle"];
+            else return _Animations.Values.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Get the animation on this Sprite with the specified name, if one exists.
+        /// Otherwise, will return the default (usually, 'Idle') animation.
+        /// </summary>
+        /// <param name="animationName"></param>
+        /// <returns></returns>
+        public SpriteAnimation GetAnimation(string animationName)
+        {
+            if (_Animations.ContainsKey(animationName)) return _Animations[animationName];
+            else return GetDefaultAnimation();
+        }
+
+        /// <summary>
+        /// Get the closest direction of the animation with the specified name (or,
+        /// the default animation if no animation with this name exists).
+        /// </summary>
+        /// <param name="animationName"></param>
+        /// <param name="orientation"></param>
+        /// <returns></returns>
+        public SpriteAnimationDirection GetDirection(string animationName, Angle orientation)
+        {
+            return GetAnimation(animationName)?.GetDirection(orientation);
+        }
+
+        /// <summary>
+        /// Get the appropriate frame of the appropriate direction of the animation with the
+        /// specified name (or the default animation if no animation with the given name exists)
+        /// </summary>
+        /// <param name="animationName"></param>
+        /// <param name="orientation"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public TextureBrush GetFrame(string animationName, Angle orientation, double t)
+        {
+            return GetDirection(animationName, orientation)?.GetFrame(t);
+        }
 
         #endregion
 

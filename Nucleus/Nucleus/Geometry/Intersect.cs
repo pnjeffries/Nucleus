@@ -395,11 +395,11 @@ namespace Nucleus.Geometry
         /// (for e.g. entering Dimension.Z would utilise a XY plane)</param>
         /// <param name="planePosition">The position of the plane in the specified dimension</param>
         /// <returns></returns>
-        public static double LinePlane(Vector lineOrigin, Vector lineDirection, Dimension dimension, double planePosition)
+        public static double LinePlane(Vector lineOrigin, Vector lineDirection, CoordinateAxis dimension, double planePosition)
         {
-            if (dimension == Dimension.X) return LineYZPlane(lineOrigin, lineDirection, planePosition);
-            else if (dimension == Dimension.Y) return LineXZPlane(lineOrigin, lineDirection, planePosition);
-            else if (dimension == Dimension.Z) return LineXYPlane(lineOrigin, lineDirection, planePosition);
+            if (dimension == CoordinateAxis.X) return LineYZPlane(lineOrigin, lineDirection, planePosition);
+            else if (dimension == CoordinateAxis.Y) return LineXZPlane(lineOrigin, lineDirection, planePosition);
+            else if (dimension == CoordinateAxis.Z) return LineXYPlane(lineOrigin, lineDirection, planePosition);
             else return double.NaN;
         }
 

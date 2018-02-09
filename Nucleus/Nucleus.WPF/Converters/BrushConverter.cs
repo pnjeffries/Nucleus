@@ -22,11 +22,11 @@ namespace Nucleus.WPF.Converters
             if (parameter != null) alphaLimit = (byte)(int)parameter;
             if (value is DisplayBrush)
             {
-                return FBtoWPF.Convert((DisplayBrush)value, alphaLimit);
+                return ToWPF.Convert((DisplayBrush)value, alphaLimit);
             }
             else if (value is Colour)
             {
-                return new SolidColorBrush(FBtoWPF.Convert((Colour)value, alphaLimit));
+                return new SolidColorBrush(ToWPF.Convert((Colour)value, alphaLimit));
             }
             return value;
         }

@@ -121,13 +121,13 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="dimension"></param>
         /// <returns></returns>
-        public double this[Dimension dimension]
+        public double this[CoordinateAxis dimension]
         {
             get
             {
-                if (dimension == Dimension.X) return X;
-                else if (dimension == Dimension.Y) return Y;
-                else if (dimension == Dimension.Z) return Z;
+                if (dimension == CoordinateAxis.X) return X;
+                else if (dimension == CoordinateAxis.Y) return Y;
+                else if (dimension == CoordinateAxis.Z) return Z;
                 else return 0;
             }
         }
@@ -954,7 +954,7 @@ namespace Nucleus.Geometry
         /// <param name="newY">The source dimension to use for the y component of the new vector</param>
         /// <param name="newZ">The source dimension to use for the z component of the new vector</param>
         /// <returns></returns>
-        public Vector Remap(Dimension newX, Dimension newY, Dimension newZ)
+        public Vector Remap(CoordinateAxis newX, CoordinateAxis newY, CoordinateAxis newZ)
         {
             return new Vector(this[newX], this[newY], this[newZ]);
         }

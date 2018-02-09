@@ -23,6 +23,27 @@ namespace Nucleus.Rendering
             get { return _Frames; }
         }
 
-            #endregion
+        #endregion
+
+        #region Methods
+
+        public TextureBrush GetFrame(double t)
+        {
+            if (_Frames.Count > 0)
+            {
+                int i = (int)Math.Floor(t * _Frames.Count);
+                while (i >= _Frames.Count)
+                {
+                    i -= _Frames.Count;
+                }
+                return _Frames[i];
+            }
+            else
+            {
+                return null;
+            }
         }
+
+        #endregion
     }
+}

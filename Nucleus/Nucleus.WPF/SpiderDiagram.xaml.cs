@@ -197,7 +197,7 @@ namespace Nucleus.WPF
                 foreach (NamedDataSet dataSet in SourceData)
                 {
                     Polygon pgon = new Polygon();
-                    Color color = FBtoWPF.Convert(dataSet.Colour.CapBrightness(ColourBrightnessCap));
+                    Color color = ToWPF.Convert(dataSet.Colour.CapBrightness(ColourBrightnessCap));
                     pgon.Stroke = new SolidColorBrush(color);
                     pgon.StrokeThickness = 2;
                     pgon.StrokeLineJoin = PenLineJoin.Bevel;

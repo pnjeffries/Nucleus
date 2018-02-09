@@ -18,7 +18,7 @@ namespace Nucleus.WPF.Converters
         {
             if (value is Mesh)
             {
-                return FBtoWPF.Convert((Mesh)value);
+                return ToWPF.Convert((Mesh)value);
             }
             return null;
         }

@@ -176,7 +176,7 @@ namespace Nucleus.WPF
             {
                 Curve crv = (Curve)shape;
                 PathGeometry pathGeo = new PathGeometry();
-                pathGeo.Figures.Add(FBtoWPF.Convert(crv));
+                pathGeo.Figures.Add(ToWPF.Convert(crv));
 
                 Path path = new Path();
                 path.DataContext = crv;
@@ -232,7 +232,7 @@ namespace Nucleus.WPF
                 CurveCollection voids = reg.Voids;
 
                 PathGeometry perimeterPath = new PathGeometry();
-                perimeterPath.Figures.Add(FBtoWPF.Convert(perimeter));
+                perimeterPath.Figures.Add(ToWPF.Convert(perimeter));
 
                 CombinedGeometry cg = new CombinedGeometry();
                 cg.GeometryCombineMode = GeometryCombineMode.Exclude;
@@ -243,7 +243,7 @@ namespace Nucleus.WPF
                     PathGeometry inside = new PathGeometry();
                     foreach (Curve vCrv in voids)
                     {
-                        inside.Figures.Add(FBtoWPF.Convert(vCrv));
+                        inside.Figures.Add(ToWPF.Convert(vCrv));
                     }
                     cg.Geometry2 = inside;
                 }
@@ -277,7 +277,7 @@ namespace Nucleus.WPF
                 tB.Padding = new Thickness(0);
                 if (label.TextBinding != null)
                 {
-                    tB.SetBinding(TextBlock.TextProperty, FBtoWPF.Convert(label.TextBinding));
+                    tB.SetBinding(TextBlock.TextProperty, ToWPF.Convert(label.TextBinding));
                 }
                 else tB.SetBinding(TextBlock.TextProperty, new Binding("Text"));
                 tB.FontSize = 1; //label.TextSize;
