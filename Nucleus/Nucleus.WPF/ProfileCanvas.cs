@@ -89,7 +89,7 @@ namespace Nucleus.WPF
                         bBox.Include(perimeter.BoundingBox);
 
                         PathGeometry perimeterPath = new PathGeometry();
-                        perimeterPath.Figures.Add(FBtoWPF.Convert(perimeter));
+                        perimeterPath.Figures.Add(ToWPF.Convert(perimeter));
 
                         CombinedGeometry cg = new CombinedGeometry();
                         cg.GeometryCombineMode = GeometryCombineMode.Exclude;
@@ -100,7 +100,7 @@ namespace Nucleus.WPF
                             PathGeometry inside = new PathGeometry();
                             foreach (Curve vCrv in voids)
                             {
-                                inside.Figures.Add(FBtoWPF.Convert(vCrv));
+                                inside.Figures.Add(ToWPF.Convert(vCrv));
                             }
                             cg.Geometry2 = inside;
                         }

@@ -58,9 +58,7 @@ namespace Nucleus.Rendering
 
                 foreach (var entry in Directions)
                 {
-                    Angle dA = angle - entry.Key;
-                    while (dA > 180) dA -= 360;
-                    while (dA < -180) dA += 360;
+                    Angle dA = (angle - entry.Key).Normalize();
                     if (dA.Abs() < mindA.Abs())
                     {
                         closest = entry.Value;

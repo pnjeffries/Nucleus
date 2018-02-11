@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Shapes;
 using Nucleus.Rendering;
 using System.Windows.Media;
+using SWM = System.Windows.Media;
 using System.Windows;
 using Nucleus.Geometry;
 using SWM = System.Windows.Media;
@@ -26,6 +27,15 @@ namespace Nucleus.WPF
 
         #region Properties
 
+        /// <summary>
+        /// Called when the value of a visually-important sprite dependency property is changed
+        /// </summary>
+        /// <param name="d"></param>
+        /// <param name="e"></param>
+        private static void OnAnimationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((Sprite)d).AnimationChanged();
+        }
 
         /// <summary>
         /// Called when the value of a visually-important sprite dependency property is changed
@@ -43,7 +53,7 @@ namespace Nucleus.WPF
         public static DependencyProperty AnimationProperty =
             DependencyProperty.Register("Animation", typeof(string), typeof(Sprite),
                 new FrameworkPropertyMetadata("Idle", FrameworkPropertyMetadataOptions.AffectsRender,
-                    new PropertyChangedCallback(OnVisualChanged)));
+                    new PropertyChangedCallback(OnAnimationChanged)));
 
         /// <summary>
         /// The name of the current animation
@@ -78,6 +88,16 @@ namespace Nucleus.WPF
             DependencyProperty.Register("Orientation", typeof(Angle), typeof(Sprite),
                 new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.AffectsRender,
                 new PropertyChangedCallback(OnVisualChanged)));
+
+        /// <summary>
+        /// The orientation of the sprite.
+        /// </summary>
+        public Angle Orientation
+        {
+            get { return (Angle)GetValue(OrientationProperty); }
+            set { SetValue(OrientationProperty, value); }
+        }
+
 
         /// <summary>
         /// Private backing member variable for the SpriteData property
@@ -124,14 +144,20 @@ namespace Nucleus.WPF
 
         protected void VisualChanged()
         {
+            Fill = null;
+        }
 
+        protected void AnimationChanged()
+        {
+            Fill = null;
+            AnimationProgress = 0;
         }
 
         protected override void OnRender(DrawingContext drawingContext)
         {
             if (Fill == null && SpriteData != null)
             {
-
+                ToWPF.Convert(SpriteData.GetFrame(Animation, Orientation, AnimationProgress));
             }
             drawingContext.DrawRectangle(Fill, null, _Rectangle);
         }

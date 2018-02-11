@@ -296,7 +296,7 @@ namespace Nucleus.WPF
                         Colour col = Colour.FromHSV(i * 360.0 / Data.Count, 255, 255);
 
                         Polyline pLine = new Polyline();
-                        pLine.Stroke = new SolidColorBrush(FBtoWPF.Convert(col));
+                        pLine.Stroke = new SolidColorBrush(ToWPF.Convert(col));
                         //pLine.StrokeThickness = 1.0;
                         pLine.ToolTip = data.Name;
                         ToolTipService.SetInitialShowDelay(pLine, 0);

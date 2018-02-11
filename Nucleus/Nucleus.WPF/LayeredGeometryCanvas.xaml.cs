@@ -143,7 +143,7 @@ namespace Nucleus.WPF
             get
             {
                 System.Windows.Point p = Mouse.GetPosition(ItemsControl);
-                return WPFtoFB.Convert(p);
+                return FromWPF.Convert(p);
             }
         }
 
@@ -187,7 +187,7 @@ namespace Nucleus.WPF
         public VertexGeometry GeometryOver(FB.Vector point)
         {
             _hTR = null;
-            VisualTreeHelper.HitTest(ItemsControl,new HitTestFilterCallback(HitTestFilterCallback), new HitTestResultCallback(HitTestResultCallback), new PointHitTestParameters(FBtoWPF.Convert(point)));
+            VisualTreeHelper.HitTest(ItemsControl,new HitTestFilterCallback(HitTestFilterCallback), new HitTestResultCallback(HitTestResultCallback), new PointHitTestParameters(ToWPF.Convert(point)));
             if (_hTR != null)
             {
                 FrameworkElement fE = _hTR.VisualHit as FrameworkElement;
