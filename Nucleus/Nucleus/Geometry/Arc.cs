@@ -530,6 +530,23 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Offset this curve on the XY plane, automatically determining (where possible)
+        /// the direction of offset which will result in the curve being offset within itself.
+        /// Note that it will not be possible to accurately predict this for all curves.
+        /// </summary>
+        /// <param name="distances">The offset distance.
+        /// Positive numbers will result in the offset curve being to the right-hand 
+        /// side, looking along the curve.  Negative numbers to the left.  This will be
+        /// automatically inverted (in-place) if the curve is anticlockwise so that
+        /// positive numbers entered will result in an offset inwards and negative numbers outwards.</param>
+        /// <returns></returns>
+        public override Curve OffsetInwards(ref double distance)
+        {
+            if (!IsClockwise) distance *= -1;
+            return Offset(distance);
+        }
+
+        /// <summary>
         /// Offset this curve on the XY plane by varying distances for
         /// each span.
         /// </summary>

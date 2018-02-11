@@ -9,6 +9,7 @@ using Nucleus.Rendering;
 using System.Windows.Media;
 using System.Windows;
 using Nucleus.Geometry;
+using SWM = System.Windows.Media;
 
 namespace Nucleus.WPF
 {
@@ -102,7 +103,7 @@ namespace Nucleus.WPF
             get { return new RectangleGeometry(_Rectangle); }
         }
 
-        public override Transform GeometryTransform => Transform.Identity;
+        public override SWM.Transform GeometryTransform => SWM.Transform.Identity;
 
         #endregion
 

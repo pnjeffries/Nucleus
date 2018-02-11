@@ -250,7 +250,7 @@ namespace Nucleus.GSA
         public void ReadSets(Model.Model model, GSAConversionContext context)
         {
             RaiseMessage("Reading sets...");
-
+            ParseGWALines(GWAGetAll(Keywords.List), model, context);
         }
 
         // Abortive attempt to use the new struct types:

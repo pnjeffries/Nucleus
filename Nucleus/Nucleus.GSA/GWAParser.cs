@@ -92,6 +92,8 @@ namespace Nucleus.GSA
                 ReadBuildUp(gwa, model, context);
             else if (gwa.StartsWith("PROP_SEC", StringComparison.CurrentCultureIgnoreCase))
                 ReadSection(gwa, model, context);
+            else if (gwa.StartsWith("LIST", StringComparison.CurrentCultureIgnoreCase))
+                ReadList(gwa, model, context);
         }
 
         /// <summary>
@@ -414,6 +416,11 @@ namespace Nucleus.GSA
             else node.Data.RemoveData<NodeSupport>(); //Clear restraints on existing nodes
 
             context.IDMap.Add(node, gsaID);
+        }
+
+        public void ReadList(string gwa, Model.Model model, GSAConversionContext context)
+        {
+            // TODO
         }
 
         #endregion
