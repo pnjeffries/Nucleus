@@ -15,7 +15,7 @@ namespace Nucleus.Rhino
     /// <summary>
     /// Conversion class to convert Nucleus object to RhinoCommon ones
     /// </summary>
-    public static class NtoRC
+    public static class ToRC
     {
         /// <summary>
         /// Get the current length conversion factor from SI units (m) in which Nucleus objects are defined

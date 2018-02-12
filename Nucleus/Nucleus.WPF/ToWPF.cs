@@ -17,7 +17,7 @@ namespace Nucleus.WPF
     /// <summary>
     /// Helper class of static functions to convert Nucleus objects to WPF shapes
     /// </summary>
-    public static class FBtoWPF
+    public static class ToWPF
     {
         /// <summary>
         /// Convert a Nucleus vector to a WPF point

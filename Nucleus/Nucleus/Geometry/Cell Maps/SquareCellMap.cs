@@ -1,5 +1,6 @@
 ﻿using Nucleus.Extensions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace Nucleus.Geometry
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [Serializable]
-    public class SquareCellMap<T> : RegularCellMap<T>
+    public class SquareCellMap<T> : ICellMap<T>
     {
         #region Fields
 
@@ -28,7 +29,7 @@ namespace Nucleus.Geometry
         /// <summary>
         /// Get the number of cells in this map
         /// </summary>
-        public override int CellCount
+        public int CellCount
         {
             get { return _Cells.Length; }
         }
@@ -87,7 +88,7 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="cellIndex">The 1-dimensional cell index</param>
         /// <returns></returns>
-        public override T this[int cellIndex]
+        public T this[int cellIndex]
         {
             get { return _Cells[cellIndex]; }
             set {_Cells[cellIndex] = value; }
@@ -132,7 +133,7 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="cellIndex"></param>
         /// <returns></returns>
-        public override bool Exists(int cellIndex)
+        public bool Exists(int cellIndex)
         {
             return (cellIndex >= 0 && cellIndex < _Cells.Length);
         }
@@ -142,7 +143,7 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public override int IndexAt(Vector location)
+        public int IndexAt(Vector location)
         {
             return IndexAt(location.X, location.Y);
         }
@@ -200,7 +201,7 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="cellIndex"></param>
         /// <returns></returns>
-        public override int AdjacencyCount(int cellIndex)
+        public int AdjacencyCount(int cellIndex)
         {
             if (Exists(cellIndex)) return 4;
             else return 0;
@@ -212,7 +213,7 @@ namespace Nucleus.Geometry
         /// <param name="cellIndex">The index of the starting cell</param>
         /// <param name="adjacencyIndex">The adjacency index of the cell to retrieve</param>
         /// <returns></returns>
-        public override int AdjacentCellIndex(int cellIndex, int adjacencyIndex)
+        public int AdjacentCellIndex(int cellIndex, int adjacencyIndex)
         {
             int i = ColumnIndex(cellIndex);
             int j = ColumnIndex(cellIndex);
@@ -239,7 +240,7 @@ namespace Nucleus.Geometry
         /// <param name="cellIndex">The index of the starting cell</param>
         /// <param name="direction">The direction of the cell to retrieve</param>
         /// <returns></returns>
-        public override int AdjacentCellIndex(int cellIndex, Vector direction)
+        public int AdjacentCellIndex(int cellIndex, Vector direction)
         {
             int i = ColumnIndex(cellIndex);
             int j = RowIndex(cellIndex);
@@ -255,7 +256,7 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="cellIndex">The index of the cell to determine the position for</param>
         /// <returns></returns>
-        public override Vector CellPosition(int cellIndex)
+        public Vector CellPosition(int cellIndex)
         {
             return new Vector( ColumnIndex(cellIndex) + 0.5 * CellSize + Origin.X, RowIndex(cellIndex) + 0.5 * CellSize + Origin.Y);
         }
@@ -265,7 +266,7 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="cellIndex"></param>
         /// <returns></returns>
-        public override int VertexCount(int cellIndex)
+        public int VertexCount(int cellIndex)
         {
             if (Exists(cellIndex)) return 4;
             else return 0;
@@ -277,7 +278,7 @@ namespace Nucleus.Geometry
         /// <param name="cellIndex"></param>
         /// <param name="vertexIndex"></param>
         /// <returns></returns>
-        public override Vector CellVertex(int cellIndex, int vertexIndex)
+        public Vector CellVertex(int cellIndex, int vertexIndex)
         {
             Vector cP = CellPosition(cellIndex);
             switch(vertexIndex)
@@ -293,6 +294,18 @@ namespace Nucleus.Geometry
             }
             return Vector.Unset;
         }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return ((IEnumerable<T>)_Cells).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _Cells.GetEnumerator();
+        }
+
+
 
         #endregion
     }

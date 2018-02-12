@@ -10,7 +10,7 @@ namespace Nucleus.Geometry
     /// A generic interface for maps of cells
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface ICellMap<T>
+    public interface ICellMap<T> : IEnumerable<T>
     {
         /// <summary>
         /// Get or set the contents of the cell at the specified cell index

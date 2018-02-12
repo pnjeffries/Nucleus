@@ -188,11 +188,17 @@ namespace Nucleus.Base
             }
         }
 
+#else
+        /// <summary>
+        /// Gets the directory of the filepath
+        /// </summary>
+        public string Directory { get { return _Path.BeforeLast('\\'); } }
+
 #endif
 
-#endregion
+        #endregion
 
-#region Constructors
+        #region Constructors
 
         /// <summary>
         /// Path Constructor

@@ -72,6 +72,7 @@
     <Compile Include="Converters\AreEqualConverter.cs" />
     <Compile Include="Converters\GraphPointsConverter.cs" />
     <Compile Include="Converters\GreaterThanConverter.cs" />
+    <Compile Include="Converters\IAutoUIHostableVisibilityConverter.cs" />
     <Compile Include="Converters\IntConverter.cs" />
     <Compile Include="Converters\IsTypeConverter.cs" />
     <Compile Include="Converters\IsZeroConverter.cs" />
@@ -95,7 +96,7 @@
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="EnumBindingSourceExtension.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="FBtoWPF.cs" />
+    <Compile Include="ToWPF.cs" />
     <Compile Include="Field Controls\Bool6DFieldControl.xaml.cs">
       <DependentUpon>Bool6DFieldControl.xaml</DependentUpon>
     </Compile>
@@ -175,7 +176,7 @@
     </Compile>
     <Compile Include="Extensions\VisualExtensions.cs" />
     <Compile Include="WPFMeshBuilder.cs" />
-    <Compile Include="WPFtoFB.cs" />
+    <Compile Include="FromWPF.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="AutoUIDialog.xaml">

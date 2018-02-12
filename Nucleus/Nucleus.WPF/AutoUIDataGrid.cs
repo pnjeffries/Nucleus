@@ -115,12 +115,15 @@ namespace Nucleus.WPF
                     cbFactory.SetValue(ComboBox.IsTextSearchEnabledProperty, true);
                     cbFactory.SetValue(ComboBox.IsEditableProperty, true);
                     cbFactory.SetValue(ComboBox.PaddingProperty, new Thickness(2.0, 0.0, 2.0, 0.0));
-                    cbFactory.SetBinding(ComboBox.TextProperty, binding);
+                    //cbFactory.SetBinding(ComboBox.TextProperty, binding);
 
                     // Set ItemsSource binding:
                     Binding sourceBinding;
                     if (!string.IsNullOrEmpty(cBA.ItemsSource))
-                        sourceBinding = new Binding(cBA.ItemsSource);
+                    {
+                        sourceBinding = new Binding();
+                        sourceBinding.Path = new PropertyPath(cBA.ItemsSource);
+                    }
                     else
                     {
                         sourceBinding = new Binding();

@@ -17,7 +17,7 @@ namespace Nucleus.Rhino
     /// <summary>
     /// Helper class to convert from RhinoCommon to Nucleus format
     /// </summary>
-    public static class RCtoN
+    public static class FromRC
     {
         /// <summary>
         /// Get the current length conversion factor from the current Rhino document units to 

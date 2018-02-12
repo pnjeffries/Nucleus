@@ -45,7 +45,7 @@ namespace Nucleus.Analysis
         {
             // K = M/(bd²fck)
             log.Write("{K} = {M}/({b}{d}²{fck}");
-            return M/(b * d * d * fck)
+            return M / (b * d * d * fck);
         }
 
         #endregion

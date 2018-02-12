@@ -12,7 +12,7 @@ namespace Nucleus.Geometry
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [Serializable]
-    public abstract class RegularCellMap<T> : Unique, ICellMap<T>
+    public abstract class RegularCellMap<T> : Unique
     {
         /// <summary>
         /// Get or set the contents of the cell at the specified cell index

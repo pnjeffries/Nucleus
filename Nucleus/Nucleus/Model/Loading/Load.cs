@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Nucleus.Extensions;
 using Nucleus.Maths;
 using Nucleus.UI;
 using System;
@@ -65,6 +66,12 @@ namespace Nucleus.Model.Loading
         {
             get { return _Value; }
             set { ChangeProperty(ref _Value, value, "Value"); }
+        }
+
+        [AutoUI(Order = 250, Label = "Type")]
+        public virtual string LoadType
+        {
+            get { return GetType().Name.AutoSpace(); }
         }
 
         #endregion
