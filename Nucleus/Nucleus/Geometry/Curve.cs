@@ -872,6 +872,24 @@ namespace Nucleus.Geometry
         public abstract Curve Offset(IList<double> distances);
 
         /// <summary>
+        /// Offset this curve on the XY plane, automatically determining (where possible)
+        /// the direction of offset which will result in the curve being offset within itself.
+        /// Note that it will not be possible to accurately predict this for all curves.
+        /// </summary>
+        /// <param name="distances">The offset distance.
+        /// Positive numbers will result in the offset curve being to the right-hand 
+        /// side, looking along the curve.  Negative numbers to the left.  This will be
+        /// automatically inverted (in-place) if the curve is anticlockwise so that
+        /// positive numbers entered will result in an offset inwards and negative numbers outwards.</param>
+        /// <returns></returns>
+        public virtual Curve OffsetInwards(ref double distance)
+        {
+            double cTS = Vertices.ClockwiseTestSum();
+            if (cTS < 0) distance *= -1;
+            return Offset(distance);
+        }
+
+        /// <summary>
         /// Is this curve clockwise in the XY plane?
         /// </summary>
         /// <returns></returns>

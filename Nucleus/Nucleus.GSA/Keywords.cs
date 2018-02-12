@@ -15,5 +15,6 @@ namespace Nucleus.GSA
         public const string Element = "EL.2";
         public const string Section = "PROP_SEC";
         public const string BuildUp = "PROP_2D";
+        public const string List = "LIST";
     }
 }

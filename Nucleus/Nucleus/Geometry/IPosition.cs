@@ -189,6 +189,58 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find the furthest object in this set from the specified position
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="positions"></param>
+        /// <param name="fromThis"></param>
+        /// <returns></returns>
+        public static T FindFurthest<T>(this IEnumerable<T> positions, Vector fromThis)
+            where T:class, IPosition
+        {
+            T result = null;
+            double maxDist = 0;
+            foreach (T position in positions)
+            {
+                double dist = position.DistanceToSquared(fromThis);
+                if (result == null || dist > maxDist)
+                {
+                    result = position;
+                    maxDist = dist;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Find the closest object in this set to the specified position that lies in the specified direction
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="positions"></param>
+        /// <param name="toPoint"></param>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public static T FindFurthestInDirection<T>(this IEnumerable<T> positions, Vector toPoint, Vector direction)
+            where T : class, IPosition
+        {
+            T result = null;
+            double maxDist = 0;
+            foreach (T position in positions)
+            {
+                if (position.Position.IsInDirection(direction, toPoint))
+                {
+                    double dist = position.DistanceToSquared(toPoint);
+                    if (result == null || dist > maxDist)
+                    {
+                        result = position;
+                        maxDist = dist;
+                    }
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Find the closest object in this enumerable to the specified position
         /// </summary>
         /// <typeparam name="T"></typeparam>

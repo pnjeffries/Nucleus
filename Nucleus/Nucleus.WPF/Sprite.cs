@@ -10,6 +10,7 @@ using System.Windows.Media;
 using SWM = System.Windows.Media;
 using System.Windows;
 using Nucleus.Geometry;
+using SWM = System.Windows.Media;
 
 namespace Nucleus.WPF
 {
