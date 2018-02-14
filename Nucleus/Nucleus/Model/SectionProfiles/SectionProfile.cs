@@ -162,6 +162,7 @@ namespace Nucleus.Model
         /// <summary>
         /// Private backing field for Section property
         /// </summary>
+        [Copy(CopyBehaviour.MAP)]
         private SectionFamily _Section = null;
 
         /// <summary>

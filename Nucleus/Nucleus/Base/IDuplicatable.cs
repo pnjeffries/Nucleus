@@ -139,7 +139,9 @@ namespace Nucleus.Base
                 if (targetProperty.CanWrite)// && targetProperty.GetSetMethod() != null && !targetProperty.GetSetMethod().IsAssembly)
                 {
                     PropertyInfo sourceProperty = sourceType.GetProperty(targetProperty.Name, flags);
-                    if (sourceProperty != null && sourceProperty.CanRead && targetProperty.PropertyType.IsAssignableFrom(sourceProperty.PropertyType))
+                    if (sourceProperty != null && sourceProperty.CanRead && 
+                        targetProperty.PropertyType.IsAssignableFrom(sourceProperty.PropertyType)
+                        && targetProperty.SetMethod.IsPublic)
                     {
                         object value = sourceProperty.GetValue(source, null);
                         targetProperty.SetValue(target, value, null);
