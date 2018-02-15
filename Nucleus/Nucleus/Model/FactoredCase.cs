@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Nucleus.Model
 {
     /// <summary>
-    /// Abstract, generic base class for cases which have been factored
+    /// Abstract, generic base class for the combination of a case and a scalar factor
     /// </summary>
     /// <typeparam name="TCase"></typeparam>
     [Serializable]

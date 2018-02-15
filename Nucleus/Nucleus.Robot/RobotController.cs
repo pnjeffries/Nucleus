@@ -1340,7 +1340,7 @@ namespace Nucleus.Robot
                 }
                 else if (profile is AngleProfile) //L Section
                 {
-                    var rProfile = (SymmetricIProfile)profile;
+                    var rProfile = (AngleProfile)profile;
                     data.Type = IRobotBarSectionType.I_BST_NS_L;
                     data.ShapeType = IRobotBarSectionShapeType.I_BSST_UUAP;
                     RobotBarSectionNonstdData nsdata = data.CreateNonstd(0);

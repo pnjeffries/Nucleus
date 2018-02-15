@@ -95,6 +95,7 @@
     <Compile Include="Model\BuildUpFamilyCollection.cs" />
     <Compile Include="Model\BuildUpLayer.cs" />
     <Compile Include="Model\BuildUpLayerCollection.cs" />
+    <Compile Include="Model\ElementUse.cs" />
     <Compile Include="Model\FamilyFilter.cs" />
     <Compile Include="Base\ISetFilter.cs" />
     <Compile Include="Base\PathBinding.cs" />
@@ -371,6 +372,7 @@
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Rendering\RenderingParameters.cs" />
     <Compile Include="Deprecated\CaseResults.cs" />
+    <Compile Include="Rendering\TextureLoaderBase.cs" />
     <Compile Include="Results\CaseLinearElementResults.cs" />
     <Compile Include="Results\CaseNodeResults.cs" />
     <Compile Include="Results\CaseResults.cs" />

@@ -156,7 +156,7 @@ namespace Nucleus.WPF
         {
             if (Fill == null && SpriteData != null)
             {
-                ToWPF.Convert(SpriteData.GetFrame(Animation, Orientation, AnimationProgress));
+                Fill = ToWPF.Convert(SpriteData.GetFrame(Animation, Orientation, AnimationProgress));
             }
             drawingContext.DrawRectangle(Fill, null, _Rectangle);
         }

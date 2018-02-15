@@ -10,12 +10,41 @@ namespace Nucleus.Model
 {
     /// <summary>
     /// Data component which stores the translational and rotational
-    /// releases of a vertex which forms part of an element definition.
+    /// releases of a vertex which forms part of an element definition,
+    /// for use during structural analysis, physics simulation etc.
+    /// If 
     /// </summary>
     [Serializable]
     [Copy(CopyBehaviour.DUPLICATE)]
     public class VertexReleases : Unique, IVertexDataComponent
     {
+        #region Constants
+
+        /// <summary>
+        /// Get a new VertexReleases component set up to represent full fixity in all directions.
+        /// This is the default condition which will be assumed if no VertexReleases component is
+        /// attached to the vertex, so you can simply remove any previous releases component from
+        /// the vertex rather than use this value.
+        /// </summary>
+        public static VertexReleases Fixed { get { return new VertexReleases(new Bool6D(false)); } }
+
+        /// <summary>
+        /// Get a new VertexReleases component set up to represent full moment release of the vertex.
+        /// </summary>
+        public static VertexReleases Pinned { get { return new VertexReleases(new Bool6D(false, false, false, true, true, true)); } }
+
+        /// <summary>
+        /// Get a new VertexReleases component set up to represent release in the XX and YY axes only.
+        /// </summary>
+        public static VertexReleases MomentsReleased { get { return new VertexReleases(new Bool6D(false, false, false, true, true, false)); } }
+
+        /// <summary>
+        /// Get a new VertexReleases component set up to represent full rotational and translational release.
+        /// </summary>
+        public static VertexReleases Free { get { return new VertexReleases(new Bool6D(true)); } }
+
+        #endregion
+
         #region Properties
 
         /// <summary>

@@ -177,6 +177,8 @@
     <Compile Include="Extensions\VisualExtensions.cs" />
     <Compile Include="WPFMeshBuilder.cs" />
     <Compile Include="FromWPF.cs" />
+    <Compile Include="WPFTexture.cs" />
+    <Compile Include="WPFTextureLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="AutoUIDialog.xaml">
