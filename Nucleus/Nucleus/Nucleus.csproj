@@ -74,6 +74,7 @@
     <Compile Include="Game\GameEntityFamily.cs" />
     <Compile Include="Geometry\Cell Maps\HexCellMap.cs" />
     <Compile Include="Geometry\Cell Maps\ICellMap.cs" />
+    <Compile Include="Geometry\Cell Maps\MapCell.cs" />
     <Compile Include="Geometry\IWidePath.cs" />
     <Compile Include="Geometry\MeshEdgeLink.cs" />
     <Compile Include="Geometry\Cell Maps\RegularCellMap.cs" />
@@ -92,10 +93,12 @@
     <Compile Include="Maths\NamedDataSet.cs" />
     <Compile Include="Maths\NamedDataSetCollection.cs" />
     <Compile Include="Maths\MathsHelper.cs" />
+    <Compile Include="Model\AnalysisCase.cs" />
     <Compile Include="Model\BuildUpFamilyCollection.cs" />
     <Compile Include="Model\BuildUpLayer.cs" />
     <Compile Include="Model\BuildUpLayerCollection.cs" />
     <Compile Include="Model\ElementUse.cs" />
+    <Compile Include="Model\FactoredLoadCaseCollection.cs" />
     <Compile Include="Model\FamilyFilter.cs" />
     <Compile Include="Base\ISetFilter.cs" />
     <Compile Include="Base\PathBinding.cs" />

@@ -105,7 +105,7 @@ namespace Nucleus.Robot
 
                 return filePath.Exists;
             }
-            catch (COMException ex) { RaiseMessage(ex.Message); }
+            catch (Exception ex) { RaiseMessage("Robot file failed to save!" + Environment.NewLine + ex.Message); }
             return false;
         }
 

@@ -19,7 +19,7 @@ namespace Nucleus.Revit
         {
             get
             {
-                throw new NotFiniteNumberException();
+                throw new NotImplementedException();
                 //TODO: return Host.Instance.RevitDocument;
             }
         }
@@ -36,7 +36,7 @@ namespace Nucleus.Revit
         {
             FamilyInstance instance = CreateFamilyInstance(symbol, structuralType);
 
-            AD.Curve rCrv = FBtoRevit.Convert(curve);
+            AD.Curve rCrv = ToRevit.Convert(curve);
             if (rCrv != null)
             {
                 LocationCurve location = instance.Location as LocationCurve;

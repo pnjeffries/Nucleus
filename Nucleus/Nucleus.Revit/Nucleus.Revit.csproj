@@ -53,10 +53,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FamilyInstanceExtensions.cs" />
-    <Compile Include="FBtoRevit.cs" />
+    <Compile Include="ToRevit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RevitOutput.cs" />
-    <Compile Include="RevitToFB.cs" />
+    <Compile Include="FromRevit.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nucleus\Nucleus.csproj">

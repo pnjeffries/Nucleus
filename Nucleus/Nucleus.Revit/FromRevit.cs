@@ -13,7 +13,7 @@ namespace Nucleus.Revit
     /// <summary>
     /// Static conversion helper functions to convert Revit types into Nucleus equivalents
     /// </summary>
-    public static class RevitToFB
+    public static class FromRevit
     {
         /// <summary>
         /// Get or set the scaling factor to be used when converting Revit entities to Nucleus ones.

@@ -318,6 +318,11 @@ namespace Nucleus.ETABS
             }
         }
 
+        /// <summary>
+        /// Write a Build-Up property to ETABS
+        /// </summary>
+        /// <param name="buildUp"></param>
+        /// <param name="context"></param>
         public void WriteBuildUp(BuildUpFamily buildUp, ETABSConversionContext context)
         {
             string name = buildUp.Name;
@@ -328,6 +333,11 @@ namespace Nucleus.ETABS
             // TODO: Check if working
         }
 
+        /// <summary>
+        /// Write Levels to ETABS as Storeys
+        /// </summary>
+        /// <param name="levels"></param>
+        /// <param name="context"></param>
         public void WriteStoreys(LevelCollection levels, ETABSConversionContext context)
         {
             string[] storeyNames = new string[levels.Count];
@@ -343,6 +353,11 @@ namespace Nucleus.ETABS
             SapModel.Story.SetStories(storeyNames, storeyElevations, null, isMasterStorey, null, null, null); // Are nulls OK?
         }
 
+        /// <summary>
+        /// Write Linear Elements to ETABS
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <param name="context"></param>
         public void WriteLinearElements(LinearElementCollection elements, ETABSConversionContext context)
         {
             foreach (LinearElement element in elements)
@@ -365,6 +380,11 @@ namespace Nucleus.ETABS
             }
         }
 
+        /// <summary>
+        /// Write Panel Elements to ETABS
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <param name="context"></param>
         public void WritePanelElements(PanelElementCollection elements, ETABSConversionContext context)
         {
             foreach (PanelElement element in elements)
@@ -387,6 +407,7 @@ namespace Nucleus.ETABS
                 }
             }
         }
+
 
         public void WriteSets(ModelObjectSetCollection sets, ETABSConversionContext context)
         {
@@ -411,6 +432,11 @@ namespace Nucleus.ETABS
             }
         }
 
+        /// <summary>
+        /// Write loads to ETABS
+        /// </summary>
+        /// <param name="loads"></param>
+        /// <param name="context"></param>
         public void WriteLoads(LoadCollection loads, ETABSConversionContext context)
         {
             // ?
