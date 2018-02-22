@@ -47,6 +47,12 @@ namespace Nucleus.UI
         public string Label { get; set; } = null;
 
         /// <summary>
+        /// The sub-property on this field that should be used as a proxy for
+        /// this value.
+        /// </summary>
+        public string SubProperty { get; set; } = null;
+
+        /// <summary>
         /// The name of the string property on the same object which governs the
         /// label test of the generated UI control.  If this property is null or invalid
         /// then the label will use the Label property of this attribute or failing that

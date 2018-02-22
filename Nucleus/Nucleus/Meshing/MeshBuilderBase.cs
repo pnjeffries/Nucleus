@@ -828,7 +828,7 @@ namespace Nucleus.Meshing
                     Vector dir = cSys.DirectionVector(nLoad.Direction);
                     Vector sideways = cSys.DirectionVector(nLoad.Direction.FirstPerpendicular());
                     Vector sideways2 = cSys.DirectionVector(nLoad.Direction.SecondPerpendicular());
-                    double value = nLoad.Value.Evaluate<double>(context);
+                    double value = nLoad.Value?.Evaluate<double>(context) ?? 0;
                     AddArrow(node.Position, dir, sideways,  value * factor, scale * 0.4);
                     AddArrow(node.Position, dir, sideways2, value * factor, scale * 0.4);
                 }

@@ -83,13 +83,23 @@ namespace Nucleus.WPF
                 model = ((IOwned<Model.Model>)ItemsSource).Owner;
             }
 
-            foreach (PropertyInfo property in properties)
+            foreach (PropertyInfo p in properties)
             {
-                Binding binding = new Binding(property.Name);
+                PropertyInfo property = p;
+                Binding binding = null;
+                AutoUIAttribute aUI = property.GetCustomAttribute<AutoUIAttribute>();
+                if (aUI.SubProperty != null)
+                {
+                    // Switch to displaying sub-property
+                    binding = new Binding(property.Name + "." + aUI.SubProperty);
+                    property = property.PropertyType.GetProperty(aUI.SubProperty);
+                    aUI = property.GetCustomAttribute<AutoUIAttribute>();
+                }
+                else binding = new Binding(property.Name);
                 binding.Converter = new TextConverter(model);
                 if (!property.CanWrite) binding.Mode = BindingMode.OneWay;
                 DataGridColumn column;
-                AutoUIAttribute aUI = property.GetCustomAttribute<AutoUIAttribute>(); ;
+                
                 if (property.HasAttribute(typeof(AutoUIComboBoxAttribute)))
                 {
                     AutoUIComboBoxAttribute cBA = property.GetCustomAttribute<AutoUIComboBoxAttribute>();
@@ -152,7 +162,7 @@ namespace Nucleus.WPF
                     textColumn.Binding = binding;
                 }
                 if (aUI?.Label != null) column.Header = aUI.Label;
-                else column.Header = property.Name.AutoSpace();
+                else column.Header = p.Name.AutoSpace();
 
                 column.MinWidth = 100;
 

@@ -322,6 +322,14 @@ namespace Nucleus.Model
         #region Methods
 
         /// <summary>
+        /// Called when the definition of this set is changed in some way
+        /// </summary>
+        protected virtual void OnDefinitionChanged()
+        {
+            NotifyPropertyChanged("Definition");
+        }
+
+        /// <summary>
         /// Get the final set of items contained within this set, consisting of all items in the base collection
         /// and any subsets (or all items in the model if 'All' is true) that pass all filters specified via the
         /// Filters property.
@@ -350,6 +358,7 @@ namespace Nucleus.Model
         public void Add(TItem item)
         {
             BaseCollection.TryAdd(item);
+            OnDefinitionChanged();
         }
 
         /// <summary>
@@ -361,6 +370,7 @@ namespace Nucleus.Model
         public void Add(TCollection items)
         {
             BaseCollection.TryAddRange(items);
+            OnDefinitionChanged();
         }
 
         /// <summary>
@@ -373,6 +383,7 @@ namespace Nucleus.Model
         {
             if (_SubSets == null) _SubSets = new TSubSetCollection();
             _SubSets.Add(set);
+            OnDefinitionChanged();
         }
 
         /// <summary>
@@ -442,6 +453,7 @@ namespace Nucleus.Model
                             }
                         }
                     }
+                    OnDefinitionChanged();
                     return true;
                 }
             }
@@ -456,6 +468,7 @@ namespace Nucleus.Model
             BaseCollection.Clear();
             _Filters = null;
             All = false;
+            OnDefinitionChanged();
         }
 
         /// <summary>
@@ -466,6 +479,7 @@ namespace Nucleus.Model
         {
             if (_Filters == null) _Filters = new TFilterCollection();
             _Filters.TryAdd(filter);
+            OnDefinitionChanged();
         }
 
         /// <summary>

@@ -24,6 +24,7 @@ using Nucleus.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -105,6 +106,8 @@ namespace Nucleus.Model.Loading
         where TAppliedTo : ModelObjectSetBase, new()
         where TItem : ModelObject
     {
+        #region Properties
+
         /// <summary>
         /// Private backing field for AppliedTo property
         /// </summary>
@@ -113,15 +116,38 @@ namespace Nucleus.Model.Loading
         /// <summary>
         /// The set of objects that this load is applied to
         /// </summary>
-        [AutoUI(500)]
+        [AutoUI(500, SubProperty = "Definition")]
         public TAppliedTo AppliedTo
         {
             get
             {
-                if (_AppliedTo == null) _AppliedTo = new TAppliedTo();
+                if (_AppliedTo == null)
+                {
+                    _AppliedTo = new TAppliedTo();
+                    _AppliedTo.PropertyChanged += _AppliedTo_PropertyChanged;
+                }
                 _AppliedTo.Model = Model;
                 return _AppliedTo;
             }
+        }
+
+        private void _AppliedTo_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            NotifyPropertyChanged("AppliedTo"); //Bubble up property changed event
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Called immediately after deserialisation to re-register all objects
+        /// </summary>
+        /// <param name="context"></param>
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext context)
+        {
+            if (_AppliedTo != null) _AppliedTo.PropertyChanged += _AppliedTo_PropertyChanged;
         }
 
         /// <summary>
@@ -153,5 +179,6 @@ namespace Nucleus.Model.Loading
             return "";
         }
 
+        #endregion
     }
 }

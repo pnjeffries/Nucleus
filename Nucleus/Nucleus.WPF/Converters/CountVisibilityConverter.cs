@@ -17,7 +17,7 @@ namespace Nucleus.WPF.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value != null && ((int)value) > 0)
+            if (value != null && System.Convert.ToInt32(value) > 0)
             {
                 return Visibility.Visible;
             }
