@@ -23,7 +23,7 @@ namespace Nucleus.Model
         private double _Factor = 1;
 
         /// <summary>
-        /// The factor by which the case results should be maginified
+        /// The factor by which the case results should be magnified
         /// </summary>
         public double Factor
         {

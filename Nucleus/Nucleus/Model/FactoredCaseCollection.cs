@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace Nucleus.Model
 {
     /// <summary>
-    /// A collection of Factored Load Cases
+    /// A collection of factored cases
     /// </summary>
-    public class FactoredLoadCaseCollection : UniquesCollection<FactoredLoadCase>
+    public class FactoredCaseCollection : UniquesCollection<FactoredCase>
     {
     }
 }

@@ -97,8 +97,9 @@
     <Compile Include="Model\BuildUpFamilyCollection.cs" />
     <Compile Include="Model\BuildUpLayer.cs" />
     <Compile Include="Model\BuildUpLayerCollection.cs" />
+    <Compile Include="Model\CombinationCase.cs" />
     <Compile Include="Model\ElementUse.cs" />
-    <Compile Include="Model\FactoredLoadCaseCollection.cs" />
+    <Compile Include="Model\FactoredCaseCollection.cs" />
     <Compile Include="Model\FamilyFilter.cs" />
     <Compile Include="Base\ISetFilter.cs" />
     <Compile Include="Base\PathBinding.cs" />
@@ -205,7 +206,6 @@
     <Compile Include="Model\SectionProfiles\CircularProfile.cs" />
     <Compile Include="Model\ElementVertex.cs" />
     <Compile Include="Model\FactoredCase.cs" />
-    <Compile Include="Model\FactoredLoadCase.cs" />
     <Compile Include="Model\IModelImporter.cs" />
     <Compile Include="DDTree\NodeDDTree.cs" />
     <Compile Include="Exceptions\GeometryException.cs" />

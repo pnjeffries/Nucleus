@@ -531,7 +531,27 @@ namespace Nucleus.Robot
                         }
                         else if (record.Type == IRobotLoadRecordType.I_LRT_UNIFORM)
                         {
-                            //TODO: Panel load
+                            // Create area load
+                            PanelLoad aLoad = load as PanelLoad;
+                            if (aLoad == null) aLoad = model.Create.PanelLoad(lCase);
+                            else aLoad.Case = lCase;
+
+                            Vector force = new Vector(
+                            record.GetValue((short)IRobotUniformRecordValues.I_URV_PX),
+                             record.GetValue((short)IRobotUniformRecordValues.I_URV_PY),
+                              record.GetValue((short)IRobotUniformRecordValues.I_URV_PZ));
+                            aLoad.SetForce(force);
+
+                            // Elements applied to:
+                            RobotSelection appliedTo = record.Objects;
+                            aLoad.AppliedTo.Clear();
+                            for (int k = 1; k <= appliedTo.Count; k++)
+                            {
+                                PanelElement element = context.IDMap.GetMappedPanelElement(appliedTo.Get(k), model);
+                                if (element != null) aLoad.AppliedTo.Add(element);
+                            }
+
+                            context.IDMap.Add(aLoad, record);
                         }
                         else if (record.Type == IRobotLoadRecordType.I_LRT_IN_CONTOUR)
                         {
@@ -1783,13 +1803,19 @@ namespace Nucleus.Robot
                 else if (load is PanelLoad)
                 {
                     PanelLoad aLoad = (PanelLoad)load;
-                    type = IRobotLoadRecordType.I_LRT_PRESSURE; //?
+                    type = IRobotLoadRecordType.I_LRT_UNIFORM;//I_LRT_PRESSURE; //?
                     if (lRecord == null || lRecord.Type != type)
                         lRecord = rCase.Records.Create(type) as RobotLoadRecord;
 
                     lRecord.Objects.FromText(context.IDMap.ToIDString(aLoad.AppliedTo));
-                    lRecord.SetValue((short)IRobotPressureRecordValues.I_PRV_P, aLoad.Value);
-                    //TODO
+                    //lRecord.SetValue((short)IRobotPressureRecordValues.I_PRV_P, aLoad.Value);
+                    Vector force = aLoad.Direction.Vector() * aLoad.Value; //TODO: Provide evaluation context?
+                    if (!aLoad.IsMoment)
+                    {
+                        lRecord.SetValue((short)IRobotUniformRecordValues.I_URV_PX, force.X);
+                        lRecord.SetValue((short)IRobotUniformRecordValues.I_URV_PY, force.Y);
+                        lRecord.SetValue((short)IRobotUniformRecordValues.I_URV_PZ, force.Z);
+                    }
                 }
 
                 context.IDMap.Add(load, lRecord);
