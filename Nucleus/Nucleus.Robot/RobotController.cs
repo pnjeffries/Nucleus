@@ -1705,7 +1705,8 @@ namespace Nucleus.Robot
                     rCase.Name = lCase.Name;
                 }
             }
-            context.IDMap.Add(lCase, rCase);
+
+            if (rCase != null) context.IDMap.Add(lCase, rCase);
 
             if (rCase != null && rCase is RobotSimpleCase)
             {
