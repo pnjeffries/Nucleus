@@ -186,9 +186,9 @@ namespace Nucleus.Robot
                 ReadBuildUps(model, context);
             }
             if (options.Nodes) ReadNodes(model, robotNodes, context);
-            if (options.LinearElements) UpdateModelLinearElementsFromRobotFile(model, robotNodes, context);
-            if (options.PanelElements) UpdateModelPanelElementsFromRobotFile(model, robotNodes, context);
-            if (options.Sets) UpdateModelSetsFromRobotFile(model, context);
+            if (options.LinearElements) ReadLinearElements(model, robotNodes, context);
+            if (options.PanelElements) ReadPanelElements(model, robotNodes, context);
+            if (options.Sets) ReadSets(model, context);
             if (options.Loading) ReadLoads(model, context);
             RaiseMessage("Data reading completed.");
             return false;
@@ -302,7 +302,7 @@ namespace Nucleus.Robot
         /// <param name="robotNodes"></param>
         /// <param name="map"></param>
         /// <param name="context"></param>
-        private void UpdateModelLinearElementsFromRobotFile(Model.Model model, IRobotCollection robotNodes, RobotConversionContext context)
+        private void ReadLinearElements(Model.Model model, IRobotCollection robotNodes, RobotConversionContext context)
         {
             RaiseMessage("Reading Bars...");
 
@@ -361,7 +361,7 @@ namespace Nucleus.Robot
             }
         }
 
-        private void UpdateModelPanelElementsFromRobotFile(Model.Model model, IRobotCollection robotNodes, RobotConversionContext context)
+        private void ReadPanelElements(Model.Model model, IRobotCollection robotNodes, RobotConversionContext context)
         {
             RaiseMessage("Reading Panels...");
 
@@ -444,7 +444,7 @@ namespace Nucleus.Robot
                     var records = sCase.Records;
                     for (int j = 1; j <= records.Count; j++)
                     {
-                        RobotLoadRecord record = (RobotLoadRecord)records.Get(i);
+                        RobotLoadRecord record = (RobotLoadRecord)records.Get(j);
                         Load load = context.IDMap.GetMappedLoad(record.UniqueId.ToString(), model);
                         if (record.Type == IRobotLoadRecordType.I_LRT_NODE_FORCE) // Node load
                         {
@@ -607,7 +607,7 @@ namespace Nucleus.Robot
             }
         }
 
-        private void UpdateModelSetsFromRobotFile(Model.Model model, RobotConversionContext context)
+        private void ReadSets(Model.Model model, RobotConversionContext context)
         {
             RaiseMessage("Reading Groups...");
 
@@ -717,7 +717,7 @@ namespace Nucleus.Robot
                 NodeCollection nodes = model.Nodes;
                 if (context.Options.Update) nodes = nodes.Modified(context.Options.UpdateSince);
                 if (nodes.Count > 0) RaiseMessage("Writing Nodes...");
-                UpdateRobotNodesFromModel(model, nodes, context);
+                WriteNodes(model, nodes, context);
             }
 
             if (context.Options.Families)
@@ -725,7 +725,7 @@ namespace Nucleus.Robot
                 FamilyCollection properties = model.Families;
                 if (context.Options.Update) properties = properties.Modified(context.Options.UpdateSince);
                 if (properties.Count > 0) RaiseMessage("Writing Properties...");
-                UpdateRobotPropertiesFromModel(model, properties, context);
+                WriteFamilies(model, properties, context);
             }
 
             if (context.Options.LinearElements)
@@ -733,7 +733,7 @@ namespace Nucleus.Robot
                 LinearElementCollection linearElements = model.Elements.LinearElements;
                 if (context.Options.Update) linearElements = linearElements.Modified(context.Options.UpdateSince);
                 if (linearElements.Count > 0) RaiseMessage("Writing Bars...");
-                UpdateRobotBarsFromModel(model, linearElements, context);
+                WriteLinearElements(model, linearElements, context);
             }
 
             if (context.Options.PanelElements)
@@ -741,7 +741,7 @@ namespace Nucleus.Robot
                 PanelElementCollection panelElements = model.Elements.PanelElements;
                 if (context.Options.Update) panelElements = panelElements.Modified(context.Options.UpdateSince);
                 if (panelElements.Count > 0) RaiseMessage("Writing Panels...");
-                UpdateRobotPanelsFromModel(model, panelElements, context);
+                WritePanels(model, panelElements, context);
             }
 
             if (context.Options.Sets)
@@ -771,11 +771,11 @@ namespace Nucleus.Robot
         /// <param name="nodes"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        private bool UpdateRobotNodesFromModel(Model.Model model, NodeCollection nodes, RobotConversionContext context)
+        private bool WriteNodes(Model.Model model, NodeCollection nodes, RobotConversionContext context)
         {
             foreach (Node node in nodes)
             {
-                UpdateRobotNode(node, context);
+                WriteNode(node, context);
             }
             return true;
         }
@@ -787,17 +787,17 @@ namespace Nucleus.Robot
         /// <param name="properties"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        private bool UpdateRobotPropertiesFromModel(Model.Model model, FamilyCollection properties, RobotConversionContext context)
+        private bool WriteFamilies(Model.Model model, FamilyCollection properties, RobotConversionContext context)
         {
             foreach (Family property in properties)
             {
                 if (property is SectionFamily)
                 {
-                    UpdateRobotSection((SectionFamily)property, context);
+                    WriteSection((SectionFamily)property, context);
                 }
                 else if (property is BuildUpFamily)
                 {
-                    UpdateRobotThickness((BuildUpFamily)property, context);
+                    WriteBuildUp((BuildUpFamily)property, context);
                 }
             }
             return true;
@@ -810,11 +810,11 @@ namespace Nucleus.Robot
         /// <param name="linearElements"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        private bool UpdateRobotBarsFromModel(Model.Model model, LinearElementCollection linearElements, RobotConversionContext context)
+        private bool WriteLinearElements(Model.Model model, LinearElementCollection linearElements, RobotConversionContext context)
         {
             foreach (LinearElement element in linearElements)
             {
-                UpdateRobotBar(element, context);
+                ReadLinearElement(element, context);
             }
             return true;
         }
@@ -826,11 +826,11 @@ namespace Nucleus.Robot
         /// <param name="panelElements"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        private bool UpdateRobotPanelsFromModel(Model.Model model, PanelElementCollection panelElements, RobotConversionContext context)
+        private bool WritePanels(Model.Model model, PanelElementCollection panelElements, RobotConversionContext context)
         {
             foreach (PanelElement element in panelElements)
             {
-                UpdateRobotPanel(element, context);
+                WritePanelElement(element, context);
             }
             return true;
         }
@@ -1059,7 +1059,7 @@ namespace Nucleus.Robot
         /// <param name="context"></param>
         /// <param name="updatePosition"></param>
         /// <returns></returns>
-        public IRobotNode UpdateRobotNode(Node node, RobotConversionContext context)
+        public IRobotNode WriteNode(Node node, RobotConversionContext context)
         {
             int mappedID = -1;
             IRobotNode rNode = null;
@@ -1105,7 +1105,7 @@ namespace Nucleus.Robot
         /// <param name="element"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public IRobotBar UpdateRobotBar(LinearElement element, RobotConversionContext context)
+        public IRobotBar ReadLinearElement(LinearElement element, RobotConversionContext context)
         {
             int mappedID = -1;
             IRobotBar bar = null;
@@ -1177,7 +1177,7 @@ namespace Nucleus.Robot
         /// <param name="element"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public IRobotObjObject UpdateRobotPanel(PanelElement element, RobotConversionContext context)
+        public IRobotObjObject WritePanelElement(PanelElement element, RobotConversionContext context)
         {
             int mappedID = -1;
             IRobotObjObject obj = null;
@@ -1246,7 +1246,7 @@ namespace Nucleus.Robot
         /// <param name="section"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public IRobotLabel UpdateRobotSection(SectionFamily section, RobotConversionContext context)
+        public IRobotLabel WriteSection(SectionFamily section, RobotConversionContext context)
         {
             string mappedID;
             IRobotLabel label = null;
@@ -1272,7 +1272,7 @@ namespace Nucleus.Robot
 
                 RobotBarSectionData rData = label.Data as RobotBarSectionData;
                 rData.Name = section.Name;
-                UpdateRobotSectionGeometry(rData, section.Profile);
+                WriteSectionGeometry(rData, section.Profile);
                 //TODO: More data
 
                 context.IDMap.Add(section, label);
@@ -1288,7 +1288,7 @@ namespace Nucleus.Robot
         /// </summary>
         /// <param name="data"></param>
         /// <param name="profile"></param>
-        protected void UpdateRobotSectionGeometry(RobotBarSectionData data, SectionProfile profile)
+        protected void WriteSectionGeometry(RobotBarSectionData data, SectionProfile profile)
         {
             if (profile != null)
             {
@@ -1579,7 +1579,7 @@ namespace Nucleus.Robot
         /// <param name="family"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public IRobotLabel UpdateRobotThickness(BuildUpFamily family, RobotConversionContext context)
+        public IRobotLabel WriteBuildUp(BuildUpFamily family, RobotConversionContext context)
         {
             string mappedID;
             IRobotLabel label = null;
@@ -1705,7 +1705,8 @@ namespace Nucleus.Robot
                     rCase.Name = lCase.Name;
                 }
             }
-            context.IDMap.Add(lCase, rCase);
+
+            if (rCase != null) context.IDMap.Add(lCase, rCase);
 
             if (rCase != null && rCase is RobotSimpleCase)
             {
@@ -1836,7 +1837,7 @@ namespace Nucleus.Robot
             if (context.IDMap.HasSecondID(context.IDMap.NodeCategory, node.GUID))
                 return int.Parse(context.IDMap.GetSecondID(context.IDMap.NodeCategory, node.GUID));
             else
-                return UpdateRobotNode(node, context).Number;
+                return WriteNode(node, context).Number;
         }
 
         /// <summary>
@@ -1851,7 +1852,7 @@ namespace Nucleus.Robot
             if (context.IDMap.HasSecondID(context.IDMap.SectionCategory, section.GUID))
                 return context.IDMap.GetSecondID(context.IDMap.SectionCategory, section.GUID);
             else
-                return UpdateRobotSection(section, context).Name;
+                return WriteSection(section, context).Name;
         }
 
         /// <summary>
@@ -1866,7 +1867,7 @@ namespace Nucleus.Robot
             if (context.IDMap.HasSecondID(context.IDMap.ThicknessCategory, family.GUID))
                 return context.IDMap.GetSecondID(context.IDMap.ThicknessCategory, family.GUID);
             else
-                return UpdateRobotThickness(family, context).Name;
+                return WriteBuildUp(family, context).Name;
         }
 
         #endregion

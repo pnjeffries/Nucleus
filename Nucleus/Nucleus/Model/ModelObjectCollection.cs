@@ -91,11 +91,11 @@ namespace Nucleus.Model
         /// <param name="name">The name to search for.</param>
         /// <param name="ignore">Optional.  If specified this object will be ignore during the search.</param>
         /// <returns></returns>
-        public virtual TItem FindByName(string name, TItem ignore = null)
+        public virtual TItem FindByName(string name, TItem ignore = null, bool includeDeleted = false)
         {
             foreach(TItem mO in this)
             {
-                if (mO.Name == name && mO != ignore) return mO;
+                if (mO.Name == name && mO != ignore && (includeDeleted || !mO.IsDeleted)) return mO;
             }
             return null;
         }
