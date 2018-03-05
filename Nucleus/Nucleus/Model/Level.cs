@@ -48,12 +48,17 @@ namespace Nucleus.Model
         public double Z
         {
             get { return _Z; }
-            set { _Z = value; NotifyPropertyChanged("Z"); }
+            set
+            {
+                _Z = value; NotifyPropertyChanged("Z");
+                if (_Name == null) NotifyPropertyChanged("Name");
+            }
         }
 
         /// <summary>
         /// The name of this level.
         /// </summary>
+        [AutoUI(100)]
         public override string Name
         {
             get
