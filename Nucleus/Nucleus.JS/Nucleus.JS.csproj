@@ -43,6 +43,7 @@
       <Link>%(RecursiveDir)%(FileName)</Link>
     </Compile>
     <Compile Include="Bridge Kludges\SortedList.cs" />
+    <Compile Include="Bridge Kludges\StreamingContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="bridge.json" />

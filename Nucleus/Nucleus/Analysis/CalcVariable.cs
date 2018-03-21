@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Analysis
 {
+    /*
     /// <summary>
     /// Immutable struct used to store a calculation variable with additional metadata.
     /// </summary>
@@ -128,4 +129,5 @@ namespace Nucleus.Analysis
 
         #endregion
     }
+    */
 }

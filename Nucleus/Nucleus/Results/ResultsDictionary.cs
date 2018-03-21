@@ -31,7 +31,7 @@ namespace Nucleus.Results
 
         #endregion
 
-#region Constructors
+        #region Constructors
 
 #if !JS
         /// <summary>
@@ -47,7 +47,7 @@ namespace Nucleus.Results
         /// </summary>
         public ResultsDictionary() : base() {}
 
-#endregion
+        #endregion
 
         /// <summary>
         /// Returns either the value corresponding to the given key, if the key exists within the dictionary

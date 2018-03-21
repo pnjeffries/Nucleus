@@ -68,6 +68,8 @@
     <Compile Include="Converters\BrushConverter.cs" />
     <Compile Include="Converters\CollectionNotEmptyConverter.cs" />
     <Compile Include="Converters\CountVisibilityConverter.cs" />
+    <Compile Include="Converters\DictionaryKeyedBooleanVisibilityConverter.cs" />
+    <Compile Include="Converters\DictionaryKeyedValueConverter.cs" />
     <Compile Include="Converters\ExpanderHeaderWidthConverter.cs" />
     <Compile Include="Converters\AreEqualConverter.cs" />
     <Compile Include="Converters\GraphPointsConverter.cs" />
@@ -88,6 +90,7 @@
     <Compile Include="Converters\TextConverter.cs" />
     <Compile Include="Converters\TreeViewLineConverter.cs" />
     <Compile Include="Converters\UndeletedCountConverter.cs" />
+    <Compile Include="Converters\UpperCaseConverter.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="ErrorIcon.xaml.cs">
       <DependentUpon>ErrorIcon.xaml</DependentUpon>

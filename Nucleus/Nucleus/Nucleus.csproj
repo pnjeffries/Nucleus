@@ -51,17 +51,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\ExecutionInfo.cs" />
+    <Compile Include="AI\Network.cs" />
+    <Compile Include="AI\Neuron.cs" />
     <Compile Include="Analysis\BeamAnalysisBase.cs" />
     <Compile Include="Analysis\CalcVariable.cs" />
     <Compile Include="Analysis\FlatConcreteSlabChecks.cs" />
     <Compile Include="Analysis\ICalculationLog.cs" />
     <Compile Include="Analysis\ICalculationScenario.cs" />
+    <Compile Include="Analysis\WindLoadsBox.cs" />
     <Compile Include="Base\Bool6D.cs" />
     <Compile Include="Base\CollectionCopyAttribute.cs" />
     <Compile Include="Base\IUniqueWithModifiableGUID.cs" />
     <Compile Include="Base\KeyedCollection.cs" />
+    <Compile Include="Base\ObservablePairCollection.cs" />
     <Compile Include="Base\Pair.cs" />
     <Compile Include="Base\SetFilterCollection.cs" />
+    <Compile Include="Calculation\CalculationAttribute.cs" />
+    <Compile Include="Calculation\CalculationInputAttribute.cs" />
+    <Compile Include="Calculation\CalculationOutputAttribute.cs" />
+    <Compile Include="Calculation\CalculationVariableAttribute.cs" />
     <Compile Include="Conversion\ModelConversionOptions.cs" />
     <Compile Include="DDTree\MeshFaceDDTree.cs" />
     <Compile Include="DDTree\RayHit.cs" />
@@ -75,12 +83,14 @@
     <Compile Include="Geometry\Cell Maps\HexCellMap.cs" />
     <Compile Include="Geometry\Cell Maps\ICellMap.cs" />
     <Compile Include="Geometry\Cell Maps\MapCell.cs" />
+    <Compile Include="Geometry\ISimpleCurve.cs" />
     <Compile Include="Geometry\IWidePath.cs" />
     <Compile Include="Geometry\MeshEdgeLink.cs" />
     <Compile Include="Geometry\Cell Maps\RegularCellMap.cs" />
     <Compile Include="Geometry\SixVector.cs" />
     <Compile Include="Geometry\Cell Maps\SquareCellMap.cs" />
     <Compile Include="Geometry\WidePathBasic.cs" />
+    <Compile Include="IO\CSVReader.cs" />
     <Compile Include="IO\CustomSerializationBinder.cs" />
     <Compile Include="IO\DocumentSaveFileType.cs" />
     <Compile Include="IO\IApplicationClient.cs" />
@@ -415,9 +425,7 @@
     <None Include="FreeBuild.licenseheader" />
     <None Include="NucleusKey.snk" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="AI\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

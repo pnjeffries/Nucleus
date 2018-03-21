@@ -185,6 +185,7 @@ namespace Nucleus.Robot
                 ReadSections(model, context);
                 ReadBuildUps(model, context);
             }
+            if (options.Levels) ReadLevels(model, context);
             if (options.Nodes) ReadNodes(model, robotNodes, context);
             if (options.LinearElements) ReadLinearElements(model, robotNodes, context);
             if (options.PanelElements) ReadPanelElements(model, robotNodes, context);
@@ -652,6 +653,32 @@ namespace Nucleus.Robot
             }
         }
 
+        private void ReadLevels(Model.Model model, RobotConversionContext context)
+        {
+            RaiseMessage("Reading Levels...");
+
+            RobotStoreyMngr storeys = Robot.Project.Structure.Storeys;
+            for (int i = 1; i <= storeys.Count; i++)
+            {
+                RobotStorey storey = storeys.Get(i);
+                if (storey != null)
+                {
+                    Level level = context.IDMap.GetMappedLevel(i.ToString(), model);
+                    if (level == null) // Create new level
+                        level = model.Create.Level(storey.Level, context.ExInfo);
+                    else // Existing mapped level found
+                    {
+                        level.Z = storey.Level;
+                        level.Undelete();
+                    }
+                    level.Name = storey.Name;
+
+                    //Store mapping data:
+                    context.IDMap.Add(level, i);
+                }
+            }
+        }
+
         #endregion
 
         #region Nucleus to Robot
@@ -711,6 +738,14 @@ namespace Nucleus.Robot
         public bool UpdateRobotFromModel(Model.Model model, RobotConversionContext context)
         {
             RaiseMessage("Writing data to Robot...");
+
+            if (context.Options.Levels)
+            {
+                LevelCollection levels = model.Levels;
+                if (context.Options.Update) levels = levels.Modified(context.Options.UpdateSince);
+                if (levels.Count > 0) RaiseMessage("Writing Levels...");
+                WriteLevels(model, levels, context);
+            }
 
             if (context.Options.Nodes)
             {
@@ -863,6 +898,22 @@ namespace Nucleus.Robot
             foreach (var lc in loadCases)
             {
                 WriteLoadCase(lc, context);
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Update the levels in the open Robot model from a collection of levels
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="levels"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        private bool WriteLevels(Model.Model model, LevelCollection levels, RobotConversionContext context)
+        {
+            foreach (var lvl in levels)
+            {
+                WriteLevel(lvl, context);
             }
             return true;
         }
@@ -1667,6 +1718,38 @@ namespace Nucleus.Robot
             }
 
             context.IDMap.Add(set, intID);
+        }
+
+        /// <summary>
+        /// Write a level to Robot as a Storey
+        /// </summary>
+        /// <param name="level"></param>
+        /// <param name="context"></param>
+        public void WriteLevel(Level level, RobotConversionContext context)
+        {
+            string mappedID;
+            RobotStorey storey = null;
+            RobotStoreyMngr storeys = Robot.Project.Structure.Storeys;
+            int intID = -1;
+            if (context.IDMap.HasSecondID(context.IDMap.LevelCategory, level.GUID))
+            {
+                mappedID = context.IDMap.GetSecondID(context.IDMap.LevelCategory, level.GUID);
+                intID = int.Parse(mappedID);
+                if (level.IsDeleted)
+                {
+                    if (context.Options.DeleteObjects) storeys.Delete(intID);
+                }
+                else storey = storeys.Get(intID);
+            }
+            if (!level.IsDeleted)
+            {
+                if (storey == null)
+                    intID = storeys.Create2(level.Name, level.Z);
+                else
+                    storey.Level = level.Z;
+            }
+
+            context.IDMap.Add(level, intID);
         }
 
         /// <summary>

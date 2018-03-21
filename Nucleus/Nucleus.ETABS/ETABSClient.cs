@@ -196,13 +196,13 @@ namespace Nucleus.ETABS
                 WritePanelElements(panelElements, context);
             }
 
-            /*if (context.Options.Sets)
+            if (context.Options.Sets)
             {
                 ModelObjectSetCollection sets = model.Sets;
                 //if (context.Options.Update) sets = //TODO?
                 if (sets.Count > 0) RaiseMessage("Writing Groups...");
-                UpdateRobotGroupsFromModel(model, sets, context);
-            }*/
+                WriteSets(sets, context);
+            }
 
             return true;
         }
@@ -412,9 +412,29 @@ namespace Nucleus.ETABS
         public void WriteSets(ModelObjectSetCollection sets, ETABSConversionContext context)
         {
             foreach (var set in sets)
-            {
-                SapModel.GroupDef.SetGroup(set.Name);
-                // No way in API to set contained elements?
+            { 
+                string setName = set.Name;
+                SapModel.GroupDef.SetGroup(setName);
+                if (set is LinearElementSet)
+                {
+                    var lES = (LinearElementSet)set;
+                    var items = lES.Items;
+                    foreach (var item in items)
+                    {
+                        string id = context.IDMap.GetSecondID(item);
+                        if (id != null) SapModel.FrameObj.SetGroupAssign(id, setName);
+                    }
+                }
+                else if (set is PanelElementSet)
+                {
+                    var lES = (PanelElementSet)set;
+                    var items = lES.Items;
+                    foreach (var item in items)
+                    {
+                        string id = context.IDMap.GetSecondID(item);
+                        if (id != null) SapModel.AreaObj.SetGroupAssign(id, setName);
+                    }
+                }
             }
         }
 

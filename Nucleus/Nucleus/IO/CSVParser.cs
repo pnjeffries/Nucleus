@@ -34,7 +34,7 @@ namespace Nucleus.IO
     /// A class to parse CSV data and generate objects based upon it
     /// </summary>
     /// <typeparam name="TBase">The base type of the data to be constructed</typeparam>
-    public class CSVParser<TBase> : MessageRaiser
+    public class CSVParser<TBase> : CSVReader
         where TBase : class
     {
         #region Fields
@@ -52,11 +52,6 @@ namespace Nucleus.IO
         #endregion
 
         #region Properties
-
-        /// <summary>
-        /// The delimiting character.  By default, this is a comma.
-        /// </summary>
-        public char Delimiter { get; set; } = ',';
 
         /// <summary>
         /// The map of columns to object properties

@@ -33,11 +33,14 @@ namespace Nucleus.Geometry
             }
         }
 
+        /// <summary>
+        /// Is this point geometry valid?
+        /// </summary>
         public override bool IsValid
         {
             get
             {
-                return _Vertex != null;
+                return _Vertex != null && Position.IsValid();
             }
         }
 

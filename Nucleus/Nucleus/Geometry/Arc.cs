@@ -33,7 +33,7 @@ namespace Nucleus.Geometry
     /// A planar arc of constant radius described by three points.
     /// </summary>
     [Serializable]
-    public class Arc : Curve
+    public class Arc : Curve, ISimpleCurve
     {
         #region Properties
 
@@ -627,6 +627,25 @@ namespace Nucleus.Geometry
             else return false;
         }
 
+        
+        /// <summary>
+        /// Is the specified point within the specified subset of the
+        /// angle range of this arc's sector?
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="arcBounds">The </param>
+        /// <returns></returns>
+        public bool IsInAngleRange(Vector point, Interval arcBounds)
+        {
+            Angle angle = Circle.Azimuth(point);
+            Angle toStart = Circle.Azimuth(PointAt(arcBounds.Start));
+            Angle radMeasure = RadianMeasure * arcBounds.Size;
+            Angle toPointFromStart = (angle - toStart).ToSign(radMeasure.Sign());
+            if (toPointFromStart.Abs() <= radMeasure.Abs()) return true;
+            else return false;
+        }
+        
+
         /// <summary>
         /// Get the curve parameter at the specified vertex
         /// </summary>
@@ -669,7 +688,20 @@ namespace Nucleus.Geometry
                     PointAt(subDomain.End),
                     Attributes);
         }
-        
+
+        /// <summary>
+        /// Decompose this curve down to simple primitive curve types such
+        /// as line and arc segments.  Arcs are already 'simple' and so this
+        /// will just return a list containing this arc.
+        /// </summary>
+        /// <returns></returns>
+        public override IList<ISimpleCurve> ToSimpleCurves()
+        {
+            var result = new List<ISimpleCurve>();
+            result.Add(this);
+            return result;
+        }
+
 
         #endregion
 

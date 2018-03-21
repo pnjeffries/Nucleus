@@ -60,6 +60,11 @@ namespace Nucleus.Robot
         /// </summary>
         public string LoadCategory { get { return "Loads"; } }
 
+        /// <summary>
+        /// The name of the category under which levels are stored
+        /// </summary>
+        public string LevelCategory { get { return "Levels"; } }
+
         #endregion
 
         #region Constructor
@@ -274,6 +279,18 @@ namespace Nucleus.Robot
             return null;
         }
 
+        /// <summary>
+        /// Get the Nucleus level, if any mapped to the specified robotID
+        /// </summary>
+        /// <param name="robotID"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public Level GetMappedLevel(string robotID, Model.Model model)
+        {
+            if (HasFirstID(LevelCategory, robotID)) return model.Levels.TryGet(GetFirstID(LevelCategory, robotID)) as Level;
+            return null;
+        }
+
         public ModelObject GetMapped(IRobotObjectType type, string robotID, Model.Model model)
         {
             if (type == IRobotObjectType.I_OT_NODE) return GetMappedModelNode(robotID, model);
@@ -363,6 +380,16 @@ namespace Nucleus.Robot
         }
 
         /// <summary>
+        /// Add a new Level entry to this mapping table
+        /// </summary>
+        /// <param name="level"></param>
+        /// <param name="storeyID"></param>
+        public void Add(Level level, int storeyID)
+        {
+            Add(LevelCategory, level.GUID, storeyID.ToString());
+        }
+
+        /// <summary>
         /// Remove a node record
         /// </summary>
         /// <param name="node"></param>
@@ -423,6 +450,15 @@ namespace Nucleus.Robot
         public void Remove(ModelObjectSetBase set)
         {
             Remove(SetsCategory, set.GUID);
+        }
+
+        /// <summary>
+        /// Remove a level entry
+        /// </summary>
+        /// <param name="level"></param>
+        public void Remove(Level level)
+        {
+            Remove(LevelCategory, level.GUID);
         }
 
         /// <summary>

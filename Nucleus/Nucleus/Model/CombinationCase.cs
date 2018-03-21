@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nucleus.Model.Loading;
+using Nucleus.Extensions;
 
 namespace Nucleus.Model
 {
@@ -82,6 +83,16 @@ namespace Nucleus.Model
         }
 
         /// <summary>
+        /// Add a (potentially factored) case to this combination.
+        /// </summary>
+        /// <param name="rCase"></param>
+        /// <param name="factor"></param>
+        public void Add(ResultsCase rCase, double factor = 1.0)
+        {
+            Cases.Add(new FactoredCase(rCase, factor));
+        }
+
+        /// <summary>
         /// Build and return a string description of this combination case,
         /// optionally expanding other referenced combinations
         /// </summary>
@@ -112,6 +123,19 @@ namespace Nucleus.Model
             }
             return sb.ToString();
         }
+
+        /*
+        /// <summary>
+        /// Populate this combination from a string definition.
+        /// This will overwrite the previous contents of this combination.
+        /// </summary>
+        /// <param name="definition"></param>
+        /// <param name="model"></param>
+        public void FromDefinition(string definition, Model model)
+        {
+            //TODO!
+            throw new NotImplementedException();
+        }*/
 
         #endregion
     }

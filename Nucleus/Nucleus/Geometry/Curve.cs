@@ -899,6 +899,23 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Decompose this curve down to simple primitive curve types such
+        /// as line and arc segments.  This may return a list containing only
+        /// itself if the curve is already a simple type
+        /// </summary>
+        /// <returns></returns>
+        public abstract IList<ISimpleCurve> ToSimpleCurves();
+
+        /// <summary>
+        /// Does this curve self-intersect on the XY plane?
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool IsSelfIntersectingXY()
+        {
+            return false;
+        }
+
+        /// <summary>
         /// 'Explode' this curve into a collection of its constituent
         /// segments as individual curves.
         /// </summary>

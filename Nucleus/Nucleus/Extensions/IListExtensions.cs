@@ -260,5 +260,24 @@ namespace Nucleus.Extensions
             if (list.Count > 0) result /= list.Count;
             return result;
         }
+
+        /// <summary>
+        /// Get a value from this 2-dimensional jagged list, returning a fallback value in the case that the specified indices are
+        /// out-of bounds
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <param name="lists"></param>
+        /// <param name="i">The index in the outer list</param>
+        /// <param name="j">The index in the inner list</param>
+        /// <param name="fallback">The value to be returned when the specified index doesn't exist in this dataset</param>
+        /// <returns></returns>
+        public static TItem GetSafe<TItem>(this IList<IList<TItem>> lists, int i, int j, TItem fallback = default(TItem))
+        {
+            if (i >= 0 && i < lists.Count)
+            {
+                if (j >= 0 && j < lists[i].Count) return lists[i][j];
+            }
+            return fallback;
+        }
     }
 }
