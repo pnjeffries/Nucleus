@@ -33,7 +33,7 @@ namespace Nucleus.WPF
         /// </summary>
         /// <param name="d"></param>
         /// <param name="e"></param>
-        private static object OnSourceDataChanged(DependencyObject d, object baseValue)
+        private static object OnSourceDataCoerced(DependencyObject d, object baseValue)
         {
             ((SpiderDiagram)d).WatchSource(baseValue);
             ((SpiderDiagram)d).Refresh();
@@ -41,11 +41,22 @@ namespace Nucleus.WPF
         }
 
         /// <summary>
+        /// Static callback function when data property changed
+        /// </summary>
+        /// <param name="d"></param>
+        /// <param name="e"></param>
+        private static void OnSourceDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            //((SpiderDiagram)d).WatchSource(baseValue);
+            ((SpiderDiagram)d).Refresh();
+        }
+
+        /// <summary>
         /// Data dependency property
         /// </summary>
         public static DependencyProperty SourceDataProperty =
             DependencyProperty.Register("SourceData", typeof(INamedDataSetCollection), typeof(SpiderDiagram),
-                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, null, new CoerceValueCallback(OnSourceDataChanged)));
+                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, new PropertyChangedCallback(OnSourceDataChanged), new CoerceValueCallback(OnSourceDataCoerced)));
 
         /// <summary>
         /// The data to display.  Should be a collection of NamedDataSets or derivative types
@@ -69,6 +80,19 @@ namespace Nucleus.WPF
             set { SetValue(AxisRangesProperty, value); }
         }
 
+        public static DependencyProperty MinimumAxisRangeProperty =
+            DependencyProperty.Register("MinimumAxisRange", typeof(Interval), typeof(SpiderDiagram),
+                new FrameworkPropertyMetadata(Interval.Unset));
+
+        /// <summary>
+        /// The minimum range on each axis
+        /// </summary>
+        public Interval MinimumAxisRange
+        {
+            get { return (Interval)GetValue(MinimumAxisRangeProperty); }
+            set { SetValue(MinimumAxisRangeProperty, value); }
+        }
+
         public static DependencyProperty FillOpacityProperty =
             DependencyProperty.Register("FillOpacity", typeof(double), typeof(SpiderDiagram));
 
@@ -80,6 +104,20 @@ namespace Nucleus.WPF
             get { return (double)GetValue(FillOpacityProperty); }
             set { SetValue(FillOpacityProperty, value); }
         }
+
+        public static DependencyProperty LabelFontSizeProperty =
+            DependencyProperty.Register("LabelFontSize", typeof(double), typeof(SpiderDiagram),
+                new FrameworkPropertyMetadata(6.0));
+
+        /// <summary>
+        /// The size of the font used to display axis labels
+        /// </summary>
+        public double LabelFontSize
+        {
+            get { return (double)GetValue(LabelFontSizeProperty); }
+            set { SetValue(LabelFontSizeProperty, value); }
+        }
+
 
         public static DependencyProperty ColourBrightnessCapProperty =
             DependencyProperty.Register("ColourBrightnessCap", typeof(double), typeof(SpiderDiagram),
@@ -149,6 +187,7 @@ namespace Nucleus.WPF
                 {
                     axisRanges = SourceData.GetValueRanges();
                 }
+                if (MinimumAxisRange.IsValid) axisRanges.UnionAll(MinimumAxisRange);
 
                 //Draw axes:
                 List<string> axes = SourceData.GetAllKeys().ToList();
@@ -170,7 +209,7 @@ namespace Nucleus.WPF
                     TextBlock tB = new TextBlock();
                     tB.Text = axisName;
                     tB.Width = radius - 3;
-                    tB.FontSize = 6;
+                    tB.FontSize = LabelFontSize;
                     if (angle <= Math.PI)
                     {
                         tB.TextAlignment = TextAlignment.Right;

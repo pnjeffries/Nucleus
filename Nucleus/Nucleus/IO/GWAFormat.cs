@@ -60,6 +60,9 @@ namespace Nucleus.IO
 
             Add(typeof(ThermalLoad),
                 "TEMP_BEAM.2\t{Name}\t{AppliedTo.*.ListDefinition()}\t{Case.*.GetID()}\tCONS\t{Value.Evaluate()}"); //TODO: TEMP_2D
+
+            Add(typeof(Level),
+                "GRID_PLANE\t{*.GetID()}\t{Name}\tZ\tELEV\t{Z}");
         }
 
 #endregion

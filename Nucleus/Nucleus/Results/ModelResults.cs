@@ -1,4 +1,5 @@
-﻿using Nucleus.Maths;
+﻿using Nucleus.Geometry;
+using Nucleus.Maths;
 using Nucleus.Model;
 using System;
 using System.Collections.Generic;
@@ -127,6 +128,23 @@ namespace Nucleus.Results
             {
                 kvp.Value.Remove(rCase);
             }
+        }
+
+        /// <summary>
+        /// Calculate the deformed centreline geometry of a linear element
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public Curve DeformedGeometry(LinearElement element, ResultsCase rCase)
+        {
+            var sNode = element.StartNode;
+            var eNode = element.EndNode;
+            Vector sDef = this[sNode, rCase]?.GetMaxDisplacementVector() ?? Vector.Zero;
+            Vector eDef = this[eNode, rCase]?.GetMaxDisplacementVector() ?? Vector.Zero;
+
+            // TODO: Add in offsets + rotation
+            // TODO: Add in element deflection
+            return new Line(sNode.Position + sDef, sNode.Position + eDef);
         }
 
         #endregion

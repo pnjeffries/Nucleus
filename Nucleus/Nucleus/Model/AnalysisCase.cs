@@ -12,6 +12,8 @@ namespace Nucleus.Model
     /// </summary>
     public class AnalysisCase : ResultsCase
     {
+
+
         public override bool Contains(Load load)
         {
             throw new NotImplementedException();

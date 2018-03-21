@@ -218,6 +218,31 @@ namespace Nucleus.Geometry
             return result;
         }
 
+
+        // <summary>
+        /// Does this polyline self-intersect on the XY plane?
+        /// </summary>
+        /// <returns></returns>
+        public override bool IsSelfIntersectingXY()
+        {
+            for (int i = 0; i < SegmentCount - 1; i++)
+            {
+                Vertex vA0 = Vertices[i];
+                Vertex vA1 = Vertices[i + 1];
+                for (int j = i + 2; j < SegmentCount; j++)
+                {
+                    Vertex vB0 = Vertices[j];
+                    Vertex vB1 = Vertices.GetWrapped(j + 1);
+                    double t0 = 0;
+                    double t1 = 0;
+                    Vector intersection = Intersect.LineLineXY(vA0.Position, vA1.Position - vA0.Position, 
+                        vB0.Position, vB1.Position - vB0.Position, ref t0, ref t1);
+                    if (intersection.IsValid() && t0 >= 0 && t0 <= 1 && t1 >= 0 && t0 <= 1) return true;
+                }
+            }
+            return false;
+        }
+
         /// <summary>
         /// Convert this polyline into a polycurve containing
         /// line objects representing the same geometry
@@ -286,7 +311,16 @@ namespace Nucleus.Geometry
             pts.Add(PointAt(subDomain.End));
             return new PolyLine(pts, Attributes);
         }
-        
+
+        /// <summary>
+        /// Decompose this curve down to simple primitive curve types such
+        /// as line and arc segments.
+        /// </summary>
+        /// <returns></returns>
+        public override IList<ISimpleCurve> ToSimpleCurves()
+        {
+            return (List<ISimpleCurve>)ToLines(); //?
+        }
 
         public override string ToString()
         {

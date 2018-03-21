@@ -255,6 +255,17 @@ namespace Nucleus.Excel
         /// </summary>
         /// <param name="row">The row number of the cell</param>
         /// <param name="column">The column number of the cell</param>
+        /// <returns>The data from within the specified cell</returns>
+        public TValue GetCellValue<TValue>(int row, int column)
+        {
+            return (TValue)Convert.ChangeType(GetCellValue(row, column), typeof(TValue));
+        }
+
+        /// <summary>
+        /// Get the current value of the specified cell
+        /// </summary>
+        /// <param name="row">The row number of the cell</param>
+        /// <param name="column">The column number of the cell</param>
         /// <param name="sheet">Optional.Specify the sheet the value is to be extracted from.</param>
         /// <returns>The data from within the specified cell</returns>
         public object GetCellValue(int row, int column, Worksheet sheet)

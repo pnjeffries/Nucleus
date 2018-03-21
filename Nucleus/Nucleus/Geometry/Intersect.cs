@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using Nucleus.Extensions;
+using Nucleus.Maths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -145,7 +146,23 @@ namespace Nucleus.Geometry
         /// <param name="lineB">The second line</param>
         /// <param name="bounded">If true, intersections outside the bounds of the line segments specified will be ignored.</param>
         /// <returns></returns>
-        public static Vector LineLineXY(Line lineA, Line lineB, bool bounded = false)
+        public static Vector LineLineXY(Line lineA, Line lineB, bool bounded)
+        {
+            Interval bounds = Interval.Unset;
+            if (bounded) bounds = Interval.Unit;
+            return LineLineXY(lineA, lineB, bounds);
+        }
+
+        /// <summary>
+        /// Find the intersection point, if one exists, for two lines on the XY plane.
+        /// By default, the lines will be treated as extending to infinity, but may optionally
+        /// be bounded to not return intersections outside the extents of the lines themselves.
+        /// </summary>
+        /// <param name="lineA">The first line</param>
+        /// <param name="lineB">The second line</param>
+        /// <param name="bounds">The parameter-space range on each line where intersections are valid</param>
+        /// <returns></returns>
+        public static Vector LineLineXY(Line lineA, Line lineB, Interval bounds)
         {
             Vector pt0 = lineA.StartPoint;
             Vector v0 = lineA.EndPoint - pt0;
@@ -154,7 +171,7 @@ namespace Nucleus.Geometry
             double t0 = 0;
             double t1 = 0;
             Vector result = LineLineXY(pt0, v0, pt1, v1, ref t0, ref t1);
-            if (!bounded || (result.IsValid() && t0 >= 0 && t0 <= 1 && t1 >= 0 && t1 <= 1)) return result;
+            if (!bounds.IsValid || (result.IsValid() && t0 >= bounds.Min && t0 <= bounds.Max && t1 >= bounds.Min && t1 <= bounds.Max)) return result;
             else return Vector.Unset;
         }
 
@@ -251,27 +268,48 @@ namespace Nucleus.Geometry
         /// By default, the line is assumed to be infinite, however the calculation may optionally 
         /// be bounded to exclude intersections beyond the ends of the specified line segment
         /// </summary>
-        /// <param name="line"></param>
-        /// <param name="arc"></param>
-        /// <param name="lineBounded"></param>
+        /// <param name="lineOrigin">The start point of the line</param>
+        /// <param name="lineVect">The vector from the start of the line to its end</param>
+        /// <param name="arc">The arc</param>
+        /// <param name="lineBounded">Optional.  If true, intersections which lie outside of
+        /// the extents of the line will be ignored.</param>
         /// <returns></returns>
-        public static Vector[] LineArcXY(Vector lineOrigin, Vector lineDir, Arc arc, bool lineBounded = false)
+        public static Vector[] LineArcXY(Vector lineOrigin, Vector lineVect, Arc arc, bool lineBounded = false)
         {
-            double[] ts = LineCircleXY(lineOrigin, lineDir, arc.Circle.Origin, arc.Circle.Radius);
+            Interval bounds = Interval.Unset;
+            if (lineBounded) bounds = Interval.Unit;
+            return LineArcXY(lineOrigin, lineVect, arc, bounds);
+        }
+
+        /// <summary>
+        /// Find the intersection points, if any exist, for a line and an arc on the XY plane.
+        /// By default, the line is assumed to be infinite, however the calculation may optionally 
+        /// be bounded to exclude intersections beyond the ends of the specified line segment
+        /// </summary>
+        /// <param name="lineOrigin">The start point of the line</param>
+        /// <param name="lineVect">The vector from the start of the line to its end</param>
+        /// <param name="arc">The arc</param>
+        /// <param name="lineBounds">The range on the line, as a proportion of the line length, where intersections
+        /// will be valid.  0 will represent the start of the line and 1 its end.</param>
+        /// <returns></returns>
+        public static Vector[] LineArcXY(Vector lineOrigin, Vector lineVect, Arc arc, Interval lineBounds)
+        {
+            bool lineBounded = lineBounds.IsValid;
+            double[] ts = LineCircleXY(lineOrigin, lineVect, arc.Circle.Origin, arc.Circle.Radius);
             
             // Sort out which intersections exist and (optionally) are within bounds:
-            bool t0Valid = ts.Length > 0 && (!lineBounded || (ts[0] >= 0 && ts[0] <= 1));
-            bool t1Valid = ts.Length > 1 && (!lineBounded || (ts[1] >= 0 && ts[1] <= 1));
+            bool t0Valid = ts.Length > 0 && (!lineBounded || (ts[0] >= lineBounds.Min && ts[0] <= lineBounds.Max));
+            bool t1Valid = ts.Length > 1 && (!lineBounded || (ts[1] >= lineBounds.Min && ts[1] <= lineBounds.Max));
             Vector pt0 = Vector.Unset;
             Vector pt1 = Vector.Unset;
             if (t0Valid)
             {
-                pt0 = lineOrigin + lineDir * ts[0];
+                pt0 = lineOrigin + lineVect * ts[0];
                 if (!arc.IsInAngleRange(pt0)) t0Valid = false;
             }
             if (t1Valid)
             {
-                pt1 = lineOrigin + lineDir * ts[1];
+                pt1 = lineOrigin + lineVect * ts[1];
                 if (!arc.IsInAngleRange(pt1)) t1Valid = false;
             }
 
@@ -283,6 +321,30 @@ namespace Nucleus.Geometry
             else if (t1Valid)
                 return new Vector[] { pt1 };
             else return new Vector[] { };
+        }
+
+        /// <summary>
+        /// Find the intersection points, if any exist, for a line and an arc on the XY plane
+        /// </summary>
+        /// <param name="line">The line</param>
+        /// <param name="arc">The arc</param>
+        /// <returns></returns>
+        public static Vector[] LineArcXY(Line line, Arc arc)
+        {
+            return LineArcXY(line.StartPoint, line.EndPoint - line.StartPoint, arc, true);
+        }
+
+        /// <summary>
+        /// Find the intersection points, if any exist, for a portion of a line and an arc on the XY plane
+        /// </summary>
+        /// <param name="line">The line</param>
+        /// <param name="arc">The arc</param>
+        /// <param name="lineBounds">The range on the line, as a proportion of the line length, where intersections
+        /// will be valid.  0 will represent the start of the line and 1 its end.</param>
+        /// <returns></returns>
+        public static Vector[] LineArcXY(Line line, Arc arc, Interval lineBounds)
+        {
+            return LineArcXY(line.StartPoint, line.EndPoint - line.StartPoint, arc, lineBounds);
         }
 
         /// <summary>
@@ -324,7 +386,7 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="c0">The first circle on the XY plane</param>
         /// <param name="c1">The second circle on the XY plane</param>
-        /// <returns></returns>
+        /// <returns>An array of intersection points, which may contain 0, 1 or 2 points.</returns>
         public static Vector[] CircleCircleXY(Circle c0, Circle c1)
         {
             return CircleCircleXY(c0.Origin, c0.Radius, c1.Origin, c1.Radius);
@@ -337,15 +399,28 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="arc0">The first arc on the XY plane</param>
         /// <param name="arc1">The second arc on the XY plane</param>
-        /// <returns></returns>
+        /// <returns>An array of intersection points, which may contain 0, 1 or 2 points.</returns>
         public static Vector[] ArcArcXY(Arc arc0, Arc arc1)
+        {
+            return ArcArcXY(arc0, arc1, Interval.Unit);
+        }
+
+        /// <summary>
+        /// Find the intersections between two arcs on the XY plane.
+        /// The provided arcs will be assumed to lie on the XY plane even if
+        /// they do not.
+        /// </summary>
+        /// <param name="arc0">The first arc on the XY plane</param>
+        /// <param name="arc1">The second arc on the XY plane</param>
+        /// <returns>An array of intersection points, which may contain 0, 1 or 2 points.</returns>
+        public static Vector[] ArcArcXY(Arc arc0, Arc arc1, Interval firstArcBounds)
         {
             Vector[] v = CircleCircleXY(arc0.Circle, arc1.Circle);
 
             // Check that the points found lie on both of the arcs:
 
-            bool v0Valid = (v.Length > 0 && arc0.IsInAngleRange(v[0]) && arc1.IsInAngleRange(v[0]));
-            bool v1Valid = (v.Length > 1 && arc0.IsInAngleRange(v[1]) && arc1.IsInAngleRange(v[1]));
+            bool v0Valid = (v.Length > 0 && arc0.IsInAngleRange(v[0], firstArcBounds) && arc1.IsInAngleRange(v[0]));
+            bool v1Valid = (v.Length > 1 && arc0.IsInAngleRange(v[1], firstArcBounds) && arc1.IsInAngleRange(v[1]));
 
             if (v0Valid)
             {
@@ -355,6 +430,39 @@ namespace Nucleus.Geometry
             else if (v1Valid)
                 return new Vector[] { v[1] };
             else return new Vector[] { };
+        }
+
+        /// <summary>
+        /// Find the intersections between two simple curves on the XY plane.
+        /// </summary>
+        /// <param name="crv0">The first curve</param>
+        /// <param name="crv1">The second curve</param>
+        /// <param name="endStartTolerance">The tolerance distance from the end of the first curve 
+        /// within which intersections with the second will be ignored.  Enables self-intersection checks without
+        /// false positives from matching curve ends.</param>
+        /// <returns>An array of intersection points, which may contain 0, 1 or 2 points.</returns>
+        public static Vector[] CurveCurveXY(ISimpleCurve crv0, ISimpleCurve crv1, double endStartTolerance = 0)
+        {
+            if (crv0 is Line)
+            {
+                if (crv1 is Line)
+                {
+                    Vector v = LineLineXY((Line)crv0, (Line)crv1,  new Interval(0, 1 - endStartTolerance));
+                    if (v.IsValid()) return new Vector[] { v };
+                    else return new Vector[] { };
+                }
+                else if (crv1 is Arc)
+                {
+                    return LineArcXY((Line)crv0, (Arc)crv1, new Interval(0, 1 - endStartTolerance));
+                }
+            }
+            else if (crv0 is Arc)
+            {
+                if (crv1 is Line) return LineArcXY((Line)crv1, (Arc)crv0, new Interval(endStartTolerance, 1));
+                else if (crv1 is Arc) return ArcArcXY((Arc)crv0, (Arc)crv1, new Interval(0, 1 - endStartTolerance));
+            }
+            throw new NotImplementedException("Intersection between curve types '" + crv0.GetType().Name +
+                "' and '" + crv1.GetType().Name + "' cannot be resolved.");
         }
 
         /// <summary>

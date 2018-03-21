@@ -7,20 +7,23 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Loader
 {
+    /// <summary>
+    /// Helper class to aid with installing and loading the most recent version of shared DLLs and resource files
+    /// in order to avoid clashes when multiple Nucleus-using applications or plugins are active within the same
+    /// process.
+    /// </summary>
     public static class AssemblyLoader
     {
+
         /// <summary>
-        /// Load a nucleus assembly, first of all checking it against the version saved in the local appdata folder
-        /// and using the most recent
+        /// Install a nucleus assembly to the shared install location, if it is a more recent
+        /// version than any existing assembly with the same name already saved in the same location.
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
         public static string InstallAssembly(string filePath)
         {
-            string nucleusFolder = "/Nucleus/";
-            string fileName = Path.GetFileName(filePath);
-            string local = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + nucleusFolder;
-            string filePathLocal = local + fileName;
+            string filePathLocal = AssemblyInstallLocation(filePath);
             if (File.Exists(filePath))
             {
                 if (!File.Exists(filePathLocal))
@@ -41,6 +44,20 @@ namespace Nucleus.Loader
             }
 
             return "Error: Assembly '" + filePath + "' could not be found!";
+        }
+
+        /// <summary>
+        /// Get the install location for the specified DLL or resource
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static string AssemblyInstallLocation(string filePath)
+        {
+            string nucleusFolder = "/Nucleus/";
+            string fileName = Path.GetFileName(filePath);
+            string local = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + nucleusFolder;
+            string filePathLocal = local + fileName;
+            return filePathLocal;
         }
 
     }

@@ -32,7 +32,7 @@ namespace Nucleus.Geometry
     /// A straight line between two points.
     /// </summary>
     [Serializable]
-    public class Line : Curve
+    public class Line : Curve, ISimpleCurve
     {
 
         #region Properties
@@ -341,6 +341,19 @@ namespace Nucleus.Geometry
         public override Curve Extract(Interval subDomain)
         {
             return new Line(PointAt(subDomain.Start), PointAt(subDomain.End), Attributes);
+        }
+
+        /// <summary>
+        /// Decompose this curve down to simple primitive curve types such
+        /// as line and arc segments.  Lines are already 'simple' and so this
+        /// will just return a list containing this line.
+        /// </summary>
+        /// <returns></returns>
+        public override IList<ISimpleCurve> ToSimpleCurves()
+        {
+            var result = new List<ISimpleCurve>();
+            result.Add(this);
+            return result;
         }
 
         #endregion

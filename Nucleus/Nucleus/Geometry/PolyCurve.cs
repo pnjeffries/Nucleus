@@ -631,6 +631,44 @@ namespace Nucleus.Geometry
             return result;
         }
 
+        /// <summary>
+        /// Decompose this polycurve down to simple primitive curve types such
+        /// as line and arc segments
+        /// </summary>
+        /// <returns></returns>
+        public override IList<ISimpleCurve> ToSimpleCurves()
+        {
+            var result = new List<ISimpleCurve>();
+            foreach (Curve subCrv in SubCurves)
+            {
+                if (subCrv is ISimpleCurve) result.Add((ISimpleCurve)subCrv);
+                else result.AddRange(subCrv.ToSimpleCurves());
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Does this curve self-intersect on the XY plane?
+        /// </summary>
+        /// <returns></returns>
+        public override bool IsSelfIntersectingXY()
+        {
+            var simples = ToSimpleCurves();
+            int max = simples.Count;
+            if (Closed) max++;
+            for (int i = 0; i < max - 1; i++)
+            {
+                ISimpleCurve crvA = simples[i];
+                for (int j = i + 1; j < max; j++)
+                {
+                    ISimpleCurve crvB = simples.GetWrapped(j);
+                    var chuck = Intersect.CurveCurveXY(crvA, crvB, 0.0001);
+                    if (chuck != null && chuck.Length > 0) return true;
+                }
+            }
+            return false;
+        }
+
         public override string ToString()
         {
             return "PolyCurve";
