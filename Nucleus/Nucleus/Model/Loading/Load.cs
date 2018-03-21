@@ -93,6 +93,13 @@ namespace Nucleus.Model.Loading
         /// <returns></returns>
         public abstract bool CanApplyToType(Type type);
 
+        /// <summary>
+        /// Apply this load to an object, if possible
+        /// </summary>
+        /// <param name="mObj"></param>
+        /// <returns>True if the load could be applied.</returns>
+        public abstract bool ApplyTo(ModelObject mObj);
+
         #endregion
     }
 
@@ -168,6 +175,20 @@ namespace Nucleus.Model.Loading
         public override bool CanApplyToType(Type type)
         {
             return typeof(TItem).IsAssignableFrom(type);
+        }
+
+        /// <summary>
+        /// Apply this load to the specified object, if possible.
+        /// </summary>
+        /// <param name="mObj"></param>
+        /// <returns>True on success, else false.</returns>
+        public override bool ApplyTo(ModelObject mObj)
+        {
+            if (mObj is TItem)
+            {
+                return ((IModelObjectSet)AppliedTo).Add(mObj);
+            }
+            return false;
         }
 
         /// <summary>

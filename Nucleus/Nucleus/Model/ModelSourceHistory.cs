@@ -90,7 +90,7 @@ namespace Nucleus.Model
                 if (iterations.Count > exInfo.Iteration)
                 {
                     IList<ModelObject> iteration = iterations[exInfo.Iteration];
-                    if (iteration.Count > exInfo.HistoryItemCount) return iteration[exInfo.HistoryItemCount];
+                    if (iteration != null && iteration.Count > exInfo.HistoryItemCount) return iteration[exInfo.HistoryItemCount];
                 }
             }
             return null;
@@ -212,12 +212,15 @@ namespace Nucleus.Model
                 for (int i = iteration + 1; i < iterations.Count; i++)
                 {
                     IList<ModelObject> uniques = iterations[i];
-                    foreach (ModelObject unique in uniques)
+                    if (uniques != null)
                     {
-                        if (unique != null)
+                        foreach (ModelObject unique in uniques)
                         {
-                            unique.Delete();
-                            if (cleanNodes) CleanNodes(unique);
+                            if (unique != null)
+                            {
+                                unique.Delete();
+                                if (cleanNodes) CleanNodes(unique);
+                            }
                         }
                     }
                 }

@@ -27,6 +27,37 @@ namespace Nucleus.BriefFE
         }
 
         /// <summary>
+        /// Convert a Nucleus point to a Brief FE PointYZ.
+        /// NOTE: The X and Y coordinates of the input point
+        /// will map to the Y and Z coordinates of the output
+        /// point, respectively.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public static BFE.PointYZ ConvertYZ(Vector point)
+        {
+            return new BFE.PointYZ(point.X, point.Y);
+        }
+
+        /// <summary>
+        /// Convert a list of Nucleus points to Brief FE PointYZs.
+        /// NOTE: The X and Y coordinates of the input point
+        /// will map to the Y and Z coordinates of the output
+        /// point, respectively.
+        /// </summary>
+        /// <param name="points"></param>
+        /// <returns></returns>
+        public static BFE.PointYZ[] ConvertYZ(IList<Vector> points)
+        {
+            var result = new BFE.PointYZ[points.Count];
+            for (int i = 0; i < points.Count; i++)
+            {
+                result[i] = ConvertYZ(points[i]);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Convert a boolean to a BFE Constraint enum
         /// </summary>
         /// <param name="boolean"></param>
@@ -62,7 +93,7 @@ namespace Nucleus.BriefFE
         {
             var result = new BFE.Node(Convert(node.Position))
             {
-                Label = node.GUID.ToString()
+                Label = node.GUID.ToString(),
             };
             if (node.HasData<NodeSupport>())
             {
@@ -70,6 +101,18 @@ namespace Nucleus.BriefFE
                 result.Constraints = Convert(nS.Fixity);
             }
             return result;
+        }
+
+        /// <summary>
+        /// Convert a Nucleus curve on the XY plane to a Brief FE PolygonYz
+        /// (on the YZ plane)
+        /// </summary>
+        /// <param name="curve"></param>
+        /// <param name="tolerance"></param>
+        /// <returns></returns>
+        public static BFE.PolygonYz Convert(Curve curve, Angle tolerance)
+        {
+            return new BFE.PolygonYz(ConvertYZ(curve.Facet(tolerance)));
         }
     }
 }

@@ -43,7 +43,7 @@ namespace Nucleus.Geometry
     [Serializable]
     [DebuggerDisplay("( {X} , {Y} , {Z}) ")]
     public struct Vector :
-        IEquatable<Vector>
+        IEquatable<Vector>, IConvertible
     {
         #region Constants
 
@@ -1077,6 +1077,96 @@ namespace Nucleus.Geometry
         {
             return string.Format("({0:0.####},{1:0.####},{2:0.####})", X, Y, Z);
         }
+
+        #region IConvertible Implementation
+
+        TypeCode IConvertible.GetTypeCode()
+        {
+            return TypeCode.Object;
+        }
+
+        bool IConvertible.ToBoolean(IFormatProvider provider)
+        {
+            throw new InvalidCastException();
+        }
+
+        char IConvertible.ToChar(IFormatProvider provider)
+        {
+            throw new InvalidCastException();
+        }
+
+        sbyte IConvertible.ToSByte(IFormatProvider provider)
+        {
+            throw new InvalidCastException();
+        }
+
+        byte IConvertible.ToByte(IFormatProvider provider)
+        {
+            throw new InvalidCastException();
+        }
+
+        short IConvertible.ToInt16(IFormatProvider provider)
+        {
+            throw new InvalidCastException();
+        }
+
+        ushort IConvertible.ToUInt16(IFormatProvider provider)
+        {
+            throw new InvalidCastException();
+        }
+
+        int IConvertible.ToInt32(IFormatProvider provider)
+        {
+            throw new InvalidCastException();
+        }
+
+        uint IConvertible.ToUInt32(IFormatProvider provider)
+        {
+            throw new InvalidCastException();
+        }
+
+        long IConvertible.ToInt64(IFormatProvider provider)
+        {
+            throw new InvalidCastException();
+        }
+
+        ulong IConvertible.ToUInt64(IFormatProvider provider)
+        {
+            throw new InvalidCastException();
+        }
+
+        float IConvertible.ToSingle(IFormatProvider provider)
+        {
+            throw new InvalidCastException();
+        }
+
+        double IConvertible.ToDouble(IFormatProvider provider)
+        {
+            throw new InvalidCastException();
+        }
+
+        decimal IConvertible.ToDecimal(IFormatProvider provider)
+        {
+            throw new InvalidCastException();
+        }
+
+        DateTime IConvertible.ToDateTime(IFormatProvider provider)
+        {
+            throw new InvalidCastException();
+        }
+
+        string IConvertible.ToString(IFormatProvider provider)
+        {
+            return ToString();
+        }
+
+        object IConvertible.ToType(Type conversionType, IFormatProvider provider)
+        {
+            if (conversionType.IsAssignableFrom(typeof(string))) return ToString();
+            else throw new InvalidCastException();
+        }
+
+        #endregion
 
         #endregion
 

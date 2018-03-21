@@ -11,6 +11,7 @@ namespace Nucleus.Model.Loading
     /// A Gravity load which is applied to elements and generates a force
     /// based on an acceleration and the individual mass of those elements
     /// </summary>
+    [Serializable]
     public class GravityLoad : ForceLoad<ElementSet, Element>
     {
         /// <summary>
