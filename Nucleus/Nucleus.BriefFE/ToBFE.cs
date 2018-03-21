@@ -150,5 +150,29 @@ namespace Nucleus.BriefFE
             if (material is IsoMaterial) return Convert((IsoMaterial)material);
             else throw new NotImplementedException("Conversion of " + material.GetType().Name + " not supported.");
         }
+
+        /// <summary>
+        /// Convert a Nucleus Direction to a BFE LoadDirection
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public static BFE.LoadDirection Convert(Direction direction)
+        {
+            if (direction == Direction.X) return BFE.LoadDirection.X;
+            if (direction == Direction.Y) return BFE.LoadDirection.Y;
+            if (direction == Direction.Z) return BFE.LoadDirection.Z;
+            else throw new NotImplementedException(); //TODO: Figure out how to do moments!
+        }
+
+        /// <summary>
+        /// Convert a Nucleus CoordinateSystemReference to a BFE CoordinationSystem
+        /// </summary>
+        /// <param name="cSystem"></param>
+        /// <returns></returns>
+        public static BFE.CoordinationSystem Convert(CoordinateSystemReference cSystem)
+        {
+            if (cSystem.IsLocal) return BFE.CoordinationSystem.Local;
+            else return BFE.CoordinationSystem.Global; // TODO: Throw error?
+        }
     }
 }

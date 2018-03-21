@@ -1,4 +1,6 @@
-﻿using Nucleus.Model;
+﻿using Nucleus.Geometry;
+using Nucleus.Model;
+using Nucleus.Model.Loading;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +15,7 @@ namespace Nucleus.BriefFE
     /// </summary>
     public class BriefFEClient
     {
-        public void InitialiseAnalysisModel(Model.Model model)
+        public CurveCollection AnalyseModel(Model.Model model)
         {
             // Create model:
             var feModel = new BFE.Model();
@@ -72,6 +74,41 @@ namespace Nucleus.BriefFE
                     }   
                 }
             }
+
+            //Loading time!
+            // TODO: Limit to specific load cases?
+            foreach (var load in model.Loads)
+            {
+                if (load is LinearElementLoad)
+                {
+                    var lEL = (LinearElementLoad)load;
+                    if (lEL.IsMoment) throw new NotSupportedException("Moment loads not supported!");
+                    else
+                    {
+                        // TODO: Set load case
+                        var bLoad = new BFE.UniformLoad1D(lEL.Value, ToBFE.Convert(lEL.Direction), ToBFE.Convert(lEL.Axes));
+
+                        // TODO: Generalise
+                        var elements = lEL.AppliedTo.Items;
+                        foreach (var el in elements)
+                        {
+                            elementMap[el.GUID].Loads.Add(bLoad);
+                        }
+                    }
+                }
+            }
+
+            feModel.Solve();
+
+            foreach (var kvp in nodesMap)
+            {
+                kvp.Value.GetNodalDisplacement();
+            }
+
+            /*foreach (var element in model.Elements)
+            {
+                bNS = nodesMap[element]
+            }*/
         }
     }
 }

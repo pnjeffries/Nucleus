@@ -51,7 +51,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\ExecutionInfo.cs" />
-    <Compile Include="AI\Neuron.cs" />
     <Compile Include="Analysis\BeamAnalysisBase.cs" />
     <Compile Include="Analysis\CalcVariable.cs" />
     <Compile Include="Analysis\FlatConcreteSlabChecks.cs" />
@@ -416,7 +415,9 @@
     <None Include="FreeBuild.licenseheader" />
     <None Include="NucleusKey.snk" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="AI\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
