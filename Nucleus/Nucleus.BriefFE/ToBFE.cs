@@ -114,5 +114,65 @@ namespace Nucleus.BriefFE
         {
             return new BFE.PolygonYz(ConvertYZ(curve.Facet(tolerance)));
         }
+
+        /// <summary>
+        /// Convert a Nucleus curve on the XY plane to a Brief FE PolygonYz
+        /// (on the YZ plane)
+        /// </summary>
+        /// <param name="curve"></param>
+        /// <param name="tolerance"></param>
+        /// <returns></returns>
+        public static BFE.PolygonYz Convert(Curve curve)
+        {
+            return Convert(curve, Tolerance.Angle);
+        }
+
+        /// <summary>
+        /// Convert a Nucleus material to a BFE one
+        /// </summary>
+        /// <param name="material"></param>
+        /// <returns></returns>
+        public static BFE.Materials.UniformIsotropicMaterial Convert(IsoMaterial material)
+        {
+            var result = new BFE.Materials.UniformIsotropicMaterial();
+            result.YoungModulus = material.E;
+            result.PoissonRatio = material.PoissonsRatio;
+            return result;
+        }
+
+        /// <summary>
+        /// Convert a Nucleus material to a BFE one
+        /// </summary>
+        /// <param name="material"></param>
+        /// <returns></returns>
+        public static BFE.Materials.BaseMaterial Convert(Material material)
+        {
+            if (material is IsoMaterial) return Convert((IsoMaterial)material);
+            else throw new NotImplementedException("Conversion of " + material.GetType().Name + " not supported.");
+        }
+
+        /// <summary>
+        /// Convert a Nucleus Direction to a BFE LoadDirection
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public static BFE.LoadDirection Convert(Direction direction)
+        {
+            if (direction == Direction.X) return BFE.LoadDirection.X;
+            if (direction == Direction.Y) return BFE.LoadDirection.Y;
+            if (direction == Direction.Z) return BFE.LoadDirection.Z;
+            else throw new NotImplementedException(); //TODO: Figure out how to do moments!
+        }
+
+        /// <summary>
+        /// Convert a Nucleus CoordinateSystemReference to a BFE CoordinationSystem
+        /// </summary>
+        /// <param name="cSystem"></param>
+        /// <returns></returns>
+        public static BFE.CoordinationSystem Convert(CoordinateSystemReference cSystem)
+        {
+            if (cSystem.IsLocal) return BFE.CoordinationSystem.Local;
+            else return BFE.CoordinationSystem.Global; // TODO: Throw error?
+        }
     }
 }
