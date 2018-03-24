@@ -445,8 +445,8 @@ namespace Nucleus.Robot
                     var records = sCase.Records;
                     for (int j = 1; j <= records.Count; j++)
                     {
-                        RobotLoadRecord record = (RobotLoadRecord)records.Get(j);
-                        Load load = context.IDMap.GetMappedLoad(record.UniqueId.ToString(), model);
+                        IRobotLoadRecord record = records.Get(j);
+                        Load load = null;//context.IDMap.GetMappedLoad(record.UniqueId.ToString(), model);
                         if (record.Type == IRobotLoadRecordType.I_LRT_NODE_FORCE) // Node load
                         {
                             NodeLoad nLoad = load as NodeLoad;

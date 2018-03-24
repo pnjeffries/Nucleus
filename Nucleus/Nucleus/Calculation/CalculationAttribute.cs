@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nucleus.Units;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,10 @@ namespace Nucleus.Calculation
     /// </summary>
     public class CalculationAttribute : Attribute
     {
+        #region Properties
+
+        public DimensionType Dimension { get; set; } = DimensionType.Dimensionless;
+
+        #endregion
     }
 }

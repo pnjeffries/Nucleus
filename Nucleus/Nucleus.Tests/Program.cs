@@ -33,6 +33,8 @@ namespace Nucleus.Tests
             Console.WriteLine(" o) Hyperlink detection");
             Console.WriteLine(" p) Excel Timesheet Unique Descriptions");
             Console.WriteLine(" q) ETABS Writing");
+            Console.WriteLine(" r) Wind Calc");
+            Console.WriteLine(" s) Self-Intersection");
 
             char option = Console.ReadKey(true).KeyChar;
 
@@ -148,7 +150,17 @@ namespace Nucleus.Tests
                 ETABS_Tests.WriteToETABS();
             }
 
-                Console.Read();
+            if (option == 'a' || option == 'r')
+            {
+                Calc_Tests.WindCalcTest();
+            }
+
+            if (option == 'a' || option == 's')
+            {
+                Curve_Tests.SelfIntersectionTest();
+            }
+
+            Console.Read();
         }
     }
 }

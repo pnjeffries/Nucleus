@@ -364,9 +364,10 @@ namespace Nucleus.Robot
         /// </summary>
         /// <param name="load"></param>
         /// <param name="rLoad"></param>
-        public void Add(Load load, RobotLoadRecord rLoad)
+        public void Add(Load load, IRobotLoadRecord rLoad)
         {
-            Add(CaseCategory, load.GUID, rLoad.UniqueId.ToString());
+            //TODO!
+            //Add(CaseCategory, load.GUID, rLoad.UniqueId.ToString());
         }
 
         /// <summary>

@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 namespace Nucleus.Units
 {
     /// <summary>
-    /// Enum to represent different 
+    /// Enum to represent different physical dimensions
     /// </summary>
     [Serializable]
     public enum DimensionType

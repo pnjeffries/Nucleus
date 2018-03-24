@@ -43,7 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Calc_Tests.cs" />
     <Compile Include="Core.cs" />
+    <Compile Include="Curve_Tests.cs" />
     <Compile Include="DDTree_Tests.cs" />
     <Compile Include="ETABS_Tests.cs" />
     <Compile Include="Excel_Tests.cs" />

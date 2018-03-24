@@ -80,28 +80,55 @@ namespace Nucleus.Analysis
             return q_p * c_s * c_d * c_f * a_sh;
         }
 
-        /*public double ForceCoefficient(double h, double d)
+        /// <summary>
+        /// Calculate the wind force coefficient based on the height and depth of the building
+        /// </summary>
+        /// <param name="h">The height of the building</param>
+        /// <param name="d">The depth of the building</param>
+        /// <returns></returns>
+        public double ForceCoefficient(double h, double d)
         {
-            if (h / d <= 1.0)
+            if (h / d <= 0.25)
+                return 0.68;
+            else if (h / d <= 1.0)
                 return 0.935 + 0.1839 * Math.Log(h / d);
-            else if (h/d <= 5.0)
-                return 
-                //TODO: Finish!
-        }*/
+            else if (h / d <= 5.0)
+                return (0.8125 + 0.0375 * h / d) * (1.1 + 0.1243 * Math.Log(h / d));
+            else
+                throw new NotImplementedException("Building h/d values of > 5 are not currently supported");
+                // TODO: Finish!
+                // For greater ratios, Figures 7.23 and 7.36 from EN 1991-1-4 should be used.
+        }
+
+        /// <summary>
+        /// Calculate the wind frictional force (F_fr)
+        /// </summary>
+        /// <param name="c_fr">The friction coefficient (see EN 1991-1-4 Table 7.10)</param>
+        /// <param name="q_p">The peak velocity pressure.  May substitute for q_p(o) in an orographic situation.</param>
+        /// <param name="A_fr">The frictional area.</param>
+        /// <returns></returns>
+        public double FrictionalForce(double c_fr, double q_p, double A_fr)
+        {
+            return c_fr * q_p * A_fr;
+        }
 
         /// <summary>
         /// Test-run of wind calculation
         /// </summary>
         /// <returns></returns>
-        public double Test()
+        public void Test(StringBuilder log)
         {
+            log.AppendLine("Simple Wind Calc Example");
+            log.AppendLine("========================");
             double v_map = 21.5; // Velocity from map
             double A = 0; // Altitude
             double h = 20; // Building height
-            double b = 144; // Bredth in m
+            double b = 104; // Bredth in m
+            double d = 144; // Depth in m
 
-
+            
             double c_alt = AltitudeFactor(A, 0.6 * h);
+            log.AppendLine("c_alt = " + c_alt);
 
             double c_dir = 1.0; //Directional coefficient - non-directional approach taken!
                                 // TODO: Implement directional wind!
@@ -119,17 +146,47 @@ namespace Nucleus.Analysis
             //TODO: This as well!
 
             double q_p = PeakVelocityPressure(v_map, c_alt, c_dir, c_e, c_eT);
+            log.AppendLine("q_p = " + q_p + " Pa");
 
             double c_o = 1.0; // Orography factor
-            // NON-CONSERVATIVE VALUE - not valid for buidlings on or near peaks
+            // NON-CONSERVATIVE VALUE - not valid for buildings on or near peaks
             //TODO: Calculate Orographic peak velocity pressure
 
             double delta_s = 0.05; //Logarithmic decrement of structural damping (typical for steel)
             double c_d = 1.011; // Dynamic factor (Non-conservative value!)
+            double c_f = ForceCoefficient(h,d); // Force coefficient (non-conservative value!)
+            log.AppendLine("c_f = " + c_f);
+            double c_s = 1.0; // Size factor (taken conservatively as 1)
 
-            //double F_w = WindForce(q_p, c_s)
+            double a_sh = b * h;
 
-            throw new NotImplementedException();
+            double F_w = WindForce(q_p, c_s, c_d, c_f, a_sh);
+            log.AppendLine("F_w = " + F_w + " N");
+
+            if (d*(b + 2*h) < b*h)
+            {
+                // Total area of surfaces parallel with the wind < 4 * the total area of surfaces perpendicular to it
+                // (For a cuboid)
+                // Friction may be ignored!
+                log.AppendLine("Friction may be ignored.");
+            }
+            else
+            {
+                // Friction may not be ignored!
+                log.AppendLine("Friction must be considered.");
+                double c_fr = 0.04; //Friction coefficient (conservative value for ribbed surfaces)
+                double detatchment = Math.Min(2 * b, 4 * h);
+                double A_fr = Math.Max((d - detatchment), 0) * (2 * h + b); //Friction area
+                double F_fr = FrictionalForce(c_fr, q_p, A_fr);
+                log.AppendLine("F_fr = " + F_fr + " N");
+                F_w += F_fr;
+                log.AppendLine("F_w' = F_w + F_fr = " + F_w + " N");
+                // TODO!
+            }
+
+            log.AppendLine("Smeared Wind Pressure: " + (F_w / a_sh) + " Pa");
+
+            //throw new NotImplementedException();
         }
 
     }
