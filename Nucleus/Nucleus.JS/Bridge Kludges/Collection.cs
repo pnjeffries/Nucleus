@@ -197,6 +197,12 @@ namespace System.Collections.ObjectModel
             }
         }
 
+        public bool IsFixedSize => throw new NotImplementedException();
+
+        public object SyncRoot => throw new NotImplementedException();
+
+        public bool IsSynchronized => throw new NotImplementedException();
+
         int IList.Add(object value)
         {
 

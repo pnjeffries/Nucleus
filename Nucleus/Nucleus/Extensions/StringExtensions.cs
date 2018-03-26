@@ -441,6 +441,16 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Remove all whitespace characters from this string
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string RemoveWhitespace(this string str)
+        {
+            return string.Join("", str.Split(default(string[]), StringSplitOptions.RemoveEmptyEntries));
+        }
+
+        /// <summary>
         /// Count the number of non-null-or-whitespace entries in this array of strings
         /// </summary>
         /// <param name="strings"></param>

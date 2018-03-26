@@ -152,7 +152,7 @@ namespace Nucleus.Base
                     case 0: return X;
                     case 1: return Y;
                     case 2: return Z;
-                    case 3: return ZZ;
+                    case 3: return XX;
                     case 4: return YY;
                     case 5: return ZZ;
                 }

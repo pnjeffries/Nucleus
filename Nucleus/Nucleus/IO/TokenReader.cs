@@ -128,6 +128,7 @@ namespace Nucleus.IO
         public double NextDouble()
         {
             string next = Next();
+            if (next == null) return 0;
             return double.Parse(next);
         }
 

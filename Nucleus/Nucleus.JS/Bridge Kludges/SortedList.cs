@@ -312,6 +312,14 @@ namespace System.Collections.Generic
             get { return false; }
         }
 
+        bool IDictionary.IsFixedSize => throw new NotImplementedException();
+
+        int ICollection.Count => throw new NotImplementedException();
+
+        object ICollection.SyncRoot => throw new NotImplementedException();
+
+        bool ICollection.IsSynchronized => throw new NotImplementedException();
+
         /*bool System.Collections.IDictionary.IsFixedSize
         {
             get { return false; }
@@ -655,6 +663,26 @@ namespace System.Collections.Generic
             throw new NotImplementedException();
         }
 
+        bool IDictionary.Contains(object key)
+        {
+            throw new NotImplementedException();
+        }
+
+        IDictionaryEnumerator IDictionary.GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
+        void IDictionary.Clear()
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IDictionary.Remove(object key)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <include file='doc\SortedList.uex' path='docs/doc[@for="SortedListEnumerator"]/*' />
 #if !FEATURE_NETCORE
@@ -913,6 +941,10 @@ namespace System.Collections.Generic
                 get { return false; }
             }
 
+            public object SyncRoot => throw new NotImplementedException();
+
+            bool ICollection.IsSynchronized => throw new NotImplementedException();
+
             /*
             Object System.Collections.ICollection.SyncRoot
             {
@@ -1029,10 +1061,14 @@ namespace System.Collections.Generic
                 get { return false; }
             }
 
-           /* Object System.Collections.ICollection.SyncRoot
-            {
-                get { return ((ICollection)_dict).SyncRoot; }
-            }*/
+            public object SyncRoot => ((ICollection)_dict).SyncRoot;
+
+            bool ICollection.IsSynchronized => ((ICollection)_dict).IsSynchronized;
+
+            /* Object System.Collections.ICollection.SyncRoot
+             {
+                 get { return ((ICollection)_dict).SyncRoot; }
+             }*/
 
             public void Add(TValue key)
             {

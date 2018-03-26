@@ -23,11 +23,11 @@ namespace Nucleus.GSA
         /// Read a model from a GWA syntax text file
         /// </summary>
         /// <returns></returns>
-        public Model.Model ReadGWAFile(FilePath filePath, ref GSAIDMappingTable idMap, GSAConversionOptions options = null)
+        public Model.Model ReadGWAFile(FilePath filePath, ref GSAIDMappingTable idMap, GSAConversionOptions options = null, SectionProfileLibrary sectLib = null)
         {
             if (idMap == null) idMap = new GSAIDMappingTable();
             if (options == null) options = new GSAConversionOptions();
-            var context = new GSAConversionContext(idMap, options);
+            var context = new GSAConversionContext(idMap, options, sectLib);
             return ReadGWAFile(filePath, context);
         }
 
@@ -190,11 +190,14 @@ namespace Nucleus.GSA
         /// <returns></returns>
         public SectionProfile ReadProfile(string description, GSAConversionContext context)
         {
-            var tr = new TokenReader(description, ' ', ',');
+            var tr = new TokenReader(description, ' ', ',', '%');
             string type = tr.Next();
             if (type.EqualsIgnoreCase("CAT")) // Catalogue section
             {
                 // CAT <Type ID> <Sec name> <Date>
+                tr.Next();
+                string catName = tr.Next();
+                return context.SectionLibrary?.GetByCatalogueName(catName);
                 // TODO: Try to find equivalent section in catalogue
             }
             else if (type.EqualsIgnoreCase("STD")) // Standard section
@@ -294,7 +297,13 @@ namespace Nucleus.GSA
                 var linEl = context.IDMap.GetModelObject<LinearElement>(model, gsaID.ToString());
                 if (linEl == null) linEl = model.Create.LinearElement(null);
                 element = linEl;
-                linEl.Family = context.IDMap.GetModelObject<SectionFamily>(model, propID);
+                var family = context.IDMap.GetModelObject<SectionFamily>(model, propID);
+                if (family == null)
+                {
+                    family = model.Create.SectionFamily();
+                    context.IDMap.Add(family, propID);
+                }
+                linEl.Family = family;
                 Node n0 = context.IDMap.GetModelObject<Node>(model, tr.Next()); // Start node
                 Node n1 = context.IDMap.GetModelObject<Node>(model, tr.Next()); // End node
                 linEl.Geometry = new Line(n0, n1);
@@ -305,7 +314,13 @@ namespace Nucleus.GSA
                 var panEl = context.IDMap.GetModelObject<PanelElement>(model, gsaID.ToString());
                 if (panEl == null) panEl = model.Create.PanelElement(null);
                 element = panEl;
-                panEl.Family = context.IDMap.GetModelObject<BuildUpFamily>(model, propID);
+                var family = context.IDMap.GetModelObject<BuildUpFamily>(model, propID);
+                if (family == null)
+                {
+                    family = model.Create.BuildUpFamily();
+                    context.IDMap.Add(family, propID);
+                }
+                panEl.Family = family;
                 var nodes = new NodeCollection();
                 for (int i = 0; i < nodeCount; i++)
                 {

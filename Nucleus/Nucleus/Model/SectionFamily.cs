@@ -24,6 +24,7 @@ using Nucleus.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -156,7 +157,8 @@ namespace Nucleus.Model
         public SectionProfile ChangeProfieType(Type newType)
         {
             SectionProfile oldProfile = Profile;
-            SectionProfile newProfile = Activator.CreateInstance(newType) as SectionProfile;
+            Assembly assembly = Assembly.Load(newType.Assembly.FullName);
+            SectionProfile newProfile = assembly.CreateInstance(newType.FullName) as SectionProfile;
             if (newProfile != null)
             {
                 if (oldProfile != null) newProfile.CopyPropertiesFrom(oldProfile);

@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using Nucleus.Base;
+using Nucleus.Extensions;
 using Nucleus.IO;
 using System;
 using System.Collections.Generic;
@@ -62,9 +63,10 @@ namespace Nucleus.Model
         /// <returns></returns>
         public SectionProfile GetByCatalogueName(string name)
         {
+            name = name.RemoveWhitespace();
             foreach (SectionProfile profile in this)
             {
-                if (profile.CatalogueName == name) return profile;
+                if (profile.CatalogueName.RemoveWhitespace() == name) return profile;
             }
             return null;
         }

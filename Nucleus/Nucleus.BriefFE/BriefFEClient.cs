@@ -109,6 +109,7 @@ namespace Nucleus.BriefFE
             {
                 bNS = nodesMap[element]
             }*/
+            return null;
         }
     }
 }
