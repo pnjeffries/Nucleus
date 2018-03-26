@@ -55,7 +55,10 @@
     <Compile Include="AI\Neuron.cs" />
     <Compile Include="Alerts\AlertCollection.cs" />
     <Compile Include="Alerts\AlertLevel.cs" />
+    <Compile Include="Alerts\ElementAlert.cs" />
+    <Compile Include="Alerts\LoadAlert.cs" />
     <Compile Include="Alerts\ModelObjectAlert.cs" />
+    <Compile Include="Alerts\NodeAlert.cs" />
     <Compile Include="Analysis\BeamAnalysisBase.cs" />
     <Compile Include="Analysis\CalcVariable.cs" />
     <Compile Include="Analysis\FlatConcreteSlabChecks.cs" />

@@ -46,7 +46,18 @@ namespace Nucleus.Alerts
             {
                 _Message = value;
                 NotifyPropertyChanged("Message");
+                NotifyPropertyChanged("DisplayText");
             }
+        }
+
+        /// <summary>
+        /// The text which is displayed in the UI to describe this alert
+        /// to the user.  By default consists of the set Message, but may
+        /// be overridden to allow composite messages to be displayed.
+        /// </summary>
+        public virtual string DisplayText
+        {
+            get { return _Message; }
         }
 
         /// <summary>
@@ -104,12 +115,15 @@ namespace Nucleus.Alerts
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public virtual void Merge(Alert other) { }
+        public virtual void Merge(Alert other)
+        {
+            NotifyPropertiesChanged("DisplayText");
+        }
 
 
         public override string ToString()
         {
-            return Message;
+            return DisplayText;
         }
 
         #endregion

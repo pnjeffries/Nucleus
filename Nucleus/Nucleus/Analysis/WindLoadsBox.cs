@@ -123,8 +123,8 @@ namespace Nucleus.Analysis
             double v_map = 21.5; // Velocity from map
             double A = 0; // Altitude
             double h = 20; // Building height
-            double b = 104; // Bredth in m
-            double d = 144; // Depth in m
+            double b = 144; // Bredth in m
+            double d = 108; // Depth in m
 
             
             double c_alt = AltitudeFactor(A, 0.6 * h);
