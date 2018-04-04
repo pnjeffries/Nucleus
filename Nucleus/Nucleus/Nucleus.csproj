@@ -55,6 +55,7 @@
     <Compile Include="AI\Neuron.cs" />
     <Compile Include="Alerts\AlertCollection.cs" />
     <Compile Include="Alerts\AlertLevel.cs" />
+    <Compile Include="Alerts\AlertLog.cs" />
     <Compile Include="Alerts\ElementAlert.cs" />
     <Compile Include="Alerts\LoadAlert.cs" />
     <Compile Include="Alerts\ModelObjectAlert.cs" />
@@ -85,8 +86,6 @@
     <Compile Include="Extensions\EventHandlerExtensions.cs" />
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="Extensions\NotifyCollectionChangedEventArgsExtensions.cs" />
-    <Compile Include="Game\GameElement.cs" />
-    <Compile Include="Game\GameEntityFamily.cs" />
     <Compile Include="Geometry\Cell Maps\HexCellMap.cs" />
     <Compile Include="Geometry\Cell Maps\ICellMap.cs" />
     <Compile Include="Geometry\Cell Maps\MapCell.cs" />

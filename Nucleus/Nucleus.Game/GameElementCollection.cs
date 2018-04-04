@@ -8,13 +8,9 @@ using System.Threading.Tasks;
 namespace Nucleus.Game
 {
     /// <summary>
-    /// A game entity family description
+    /// A collection of game elements
     /// </summary>
-    public class GameEntityFamily : Family
+    public class GameElementCollection : ElementCollection<GameElement, GameElementCollection>
     {
-        public override Material GetPrimaryMaterial()
-        {
-            return null; //TODO?
-        }
     }
 }

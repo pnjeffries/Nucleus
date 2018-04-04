@@ -9,9 +9,7 @@
              d:DesignHeight="26" d:DesignWidth="300">
     <local:FieldControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                
-            </ResourceDictionary.MergedDictionaries>
+            
             <converters:NullOrEmptyVisibilityConverter x:Key="NullOrEmptyVisibilityConverter"/>
 
             <!-- Arrowless expander template for Group headers based on: 
@@ -192,13 +190,6 @@
                   >
             <ComboBox.GroupStyle>
                 <GroupStyle ContainerStyle="{StaticResource GroupItem}"/>
-                <!--<GroupStyle>
-                    <GroupStyle.HeaderTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Name}"/>
-                        </DataTemplate>
-                    </GroupStyle.HeaderTemplate>
-                </GroupStyle>-->
             </ComboBox.GroupStyle>
 
         </ComboBox>

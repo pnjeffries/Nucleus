@@ -70,6 +70,7 @@
     <Compile Include="Converters\CountVisibilityConverter.cs" />
     <Compile Include="Converters\DictionaryKeyedBooleanVisibilityConverter.cs" />
     <Compile Include="Converters\DictionaryKeyedValueConverter.cs" />
+    <Compile Include="Converters\EnumConverter.cs" />
     <Compile Include="Converters\ExpanderHeaderWidthConverter.cs" />
     <Compile Include="Converters\AreEqualConverter.cs" />
     <Compile Include="Converters\GraphPointsConverter.cs" />
