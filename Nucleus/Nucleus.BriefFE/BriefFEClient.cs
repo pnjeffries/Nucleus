@@ -1,4 +1,5 @@
-﻿using Nucleus.Geometry;
+﻿using Nucleus.Alerts;
+using Nucleus.Geometry;
 using Nucleus.Model;
 using Nucleus.Model.Loading;
 using System;
@@ -15,7 +16,7 @@ namespace Nucleus.BriefFE
     /// </summary>
     public class BriefFEClient
     {
-        public CurveCollection AnalyseModel(Model.Model model)
+        public CurveCollection AnalyseModel(Model.Model model, AlertLog alertLog = null)
         {
             // Create model:
             var feModel = new BFE.Model();
@@ -71,7 +72,9 @@ namespace Nucleus.BriefFE
                         el.E = linEl.Family.GetPrimaryMaterial()?.GetE(Geometry.Direction.X) ?? 210e9;
                         feModel.Elements.Add(el);
                         elementMap.Add(element.GUID, el);
-                    }   
+                    }
+                    else
+                        alertLog.RaiseAlert("INCOMPLETE DATA", linEl, "Incomplete data.  Will be excluded from analysis.");
                 }
             }
 
@@ -82,7 +85,7 @@ namespace Nucleus.BriefFE
                 if (load is LinearElementLoad)
                 {
                     var lEL = (LinearElementLoad)load;
-                    if (lEL.IsMoment) throw new NotSupportedException("Moment loads not supported!");
+                    if (lEL.IsMoment) alertLog.RaiseAlert("MOMENTS UNSUPPORTED", load, "Moment line loads are not supported.");
                     else
                     {
                         // TODO: Set load case
@@ -96,6 +99,7 @@ namespace Nucleus.BriefFE
                         }
                     }
                 }
+                else alertLog.RaiseAlert("LOAD TYPE UNSUPPORTED", load, "Load type is not supported.");
             }
 
             feModel.Solve();

@@ -12,6 +12,9 @@ namespace Nucleus.Alerts
     /// </summary>
     public class AlertCollection : ObservableKeyedCollection<string, Alert>
     {
+
+        #region Methods
+
         protected override string GetKeyForItem(Alert item)
         {
             return item.AlertID;
@@ -32,5 +35,19 @@ namespace Nucleus.Alerts
             else
                 Add(alert);
         }
+
+        /// <summary>
+        /// Get the highest level of an alert in this collection
+        /// </summary>
+        /// <returns></returns>
+        public AlertLevel HighestLevel()
+        {
+            AlertLevel result = AlertLevel.Information;
+            foreach (var alert in this)
+                if (alert.Level > result) result = alert.Level;
+            return result;
+        }
+
+        #endregion
     }
 }

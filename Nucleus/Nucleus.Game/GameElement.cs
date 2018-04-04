@@ -12,7 +12,7 @@ namespace Nucleus.Game
     /// An interactive entity for use in a game or simulation
     /// </summary>
     /// <typeparam name="TFamily"></typeparam>
-    public class GameElement : Element<Point, GameEntityFamily>
+    public class GameElement : Element<Point, GameFamily>
         //TODO: Genericise family?
     {
         public override Vector GetNominalPosition()
