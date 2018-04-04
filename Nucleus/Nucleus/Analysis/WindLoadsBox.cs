@@ -120,7 +120,7 @@ namespace Nucleus.Analysis
         {
             log.AppendLine("Simple Wind Calc Example");
             log.AppendLine("========================");
-            double v_map = 21.5; // Velocity from map
+            double v_map = 24.3; // Velocity from map
             double A = 0; // Altitude
             double h = 20; // Building height
             double b = 144; // Bredth in m

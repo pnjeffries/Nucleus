@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Collections.ObjectModel;
+using System.Collections;
 
 namespace Nucleus.Base
 {
     /// <summary>
     /// A customised re-implementation of System.Collections.ObjectModel.KeyedCollection that
     /// marks the backing dictionary as nonserialisable in order to avoid storing redundant data
+    /// and makes some other small improvements.
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TItem"></typeparam>
@@ -19,7 +21,7 @@ namespace Nucleus.Base
     [System.Runtime.InteropServices.ComVisible(false)]
     //[DebuggerTypeProxy(typeof(Mscorlib_KeyedCollectionDebugView<,>))]
     [DebuggerDisplay("Count = {Count}")]
-    public abstract class KeyedCollection<TKey, TItem> : Collection<TItem>
+    public abstract class KeyedCollection<TKey, TItem> : Collection<TItem>, IDictionary
     {
         #region Fields
 
@@ -53,6 +55,52 @@ namespace Nucleus.Base
             get
             {
                 return comparer;
+            }
+        }
+
+        ICollection IDictionary.Keys
+        {
+            get
+            {
+                return _Dictionary.Keys;
+            }
+        }
+
+        ICollection IDictionary.Values
+        {
+            get
+            {
+                return _Dictionary.Values;
+            }
+        }
+
+        bool IDictionary.IsReadOnly
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        bool IDictionary.IsFixedSize
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        object IDictionary.this[object key]
+        {
+            get
+            {
+                if (!(key is TKey)) throw new KeyNotFoundException();
+                return this[(TKey)key];
+            }
+
+            set
+            {
+                throw new NotSupportedException();
             }
         }
 
@@ -332,6 +380,31 @@ namespace Nucleus.Base
                 Insert(Count - i, itemA);
                 // TODO: Freeze dictionary modification during this?
             }
+        }
+
+        bool IDictionary.Contains(object key)
+        {
+            return Contains((TKey)key);
+        }
+
+        void IDictionary.Add(object key, object value)
+        {
+            Add((TItem)value);
+        }
+
+        void IDictionary.Clear()
+        {
+            this.Clear();
+        }
+
+        IDictionaryEnumerator IDictionary.GetEnumerator()
+        {
+            return _Dictionary.GetEnumerator();
+        }
+
+        void IDictionary.Remove(object key)
+        {
+            Remove((TKey)key);
         }
 
         #endregion

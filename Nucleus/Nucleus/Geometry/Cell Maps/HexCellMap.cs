@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Geometry.Cell_Maps
+namespace Nucleus.Geometry
 {
     public class HexCellMap<T> : RegularCellMap<T>
     {

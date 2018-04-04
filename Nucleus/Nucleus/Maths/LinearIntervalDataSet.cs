@@ -102,9 +102,14 @@ namespace Nucleus.Maths
             Add(key, new Interval(value));
         }
 
-        protected override Interval Interpolate(int i0, int i1, double t)
+        //protected override Interval Interpolate(int i0, int i1, double t)
+        //{
+        //    return Values[i0].Interpolate(Values[i1], Keys[i0], Keys[i1], t);
+        //}
+
+        protected override Interval Interpolate(Interval v0, Interval v1, double factor)
         {
-            return Values[i0].Interpolate(Values[i1], Keys[i0], Keys[i1], t);
+            return v0.Interpolate(v1, factor);
         }
 
         /// <summary>

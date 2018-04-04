@@ -203,6 +203,7 @@ namespace Nucleus.WPF
                     axis.Stroke = Brushes.Black;
                     axis.StrokeThickness = 1;
                     axis.Opacity = 0.6;
+                    axis.ToolTip = axisName;
 
                     MainCanvas.Children.Add(axis);
 
@@ -228,6 +229,7 @@ namespace Nucleus.WPF
                         tB.RenderTransform = rTrans;
                     }
                     tB.Opacity = 0.8;
+                    tB.ToolTip = axisName;
 
                     MainCanvas.Children.Add(tB);
                 }

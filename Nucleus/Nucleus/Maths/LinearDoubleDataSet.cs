@@ -86,9 +86,14 @@ namespace Nucleus.Maths
 
         #region Methods
 
-        protected override double Interpolate(int i0, int i1, double t)
+        //protected override double Interpolate(int i0, int i1, double t)
+        //{
+        //    return Values[i0].Interpolate(Values[i1], t);
+        //}
+
+        protected override double Interpolate(double v0, double v1, double factor)
         {
-            return Values[i0].Interpolate(Values[i1], t);
+            return Interpolation.LINEAR.Interpolate(v0, v1, factor);
         }
 
         /// <summary>

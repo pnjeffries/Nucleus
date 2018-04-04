@@ -84,6 +84,12 @@ namespace Nucleus.Rendering
         /// <summary> The shade of magenta used in the Ramboll standard palette </summary>
         public static readonly Colour RambollWarmRed = new Colour(198, 52, 24);
 
+        /// <summary> The shade of brown used as an addition to the Ramboll standard palette </summary>
+        public static readonly Colour RambollBrown = new Colour(99, 26, 12);
+
+        /// <summary> The shade of yellow used as an addition to the Ramboll standard palette </summary>
+        public static readonly Colour RambollYellow = new Colour(255, 192, 0);
+
         /// <summary> The shade of orange used in the Salamander logo </summary>
         public static readonly Colour SalamanderOrange = new Colour(255, 97, 47);
 
@@ -100,7 +106,9 @@ namespace Nucleus.Rendering
                 RambollWarmRed,
                 RambollCyan,
                 RambollDarkGrey,
-                Black};
+                Black,
+                RambollBrown,
+                RambollYellow};
 
 
         #endregion
@@ -346,6 +354,36 @@ namespace Nucleus.Rendering
         public override string ToString()
         {
             return "#" + BitConverter.ToString(ToByteArray()).Replace("-", "");
+        }
+
+        /// <summary>
+        /// Multiply all components of this colour by a scalar factor.
+        /// Components will be clamped to 0-255 to prevent overflow.
+        /// </summary>
+        /// <param name="scalar"></param>
+        /// <returns></returns>
+        public Colour Scale(double scalar)
+        {
+            return new Colour(
+                (int)(A * scalar),
+                (int)(R * scalar),
+                (int)(G * scalar),
+                (int)(B * scalar));
+        }
+
+        /// <summary>
+        /// Interpolate between this colour and another
+        /// </summary>
+        /// <param name="towards">The colour to interpolate towards</param>
+        /// <param name="factor">The interpolation factor.  0 = this colour, 1 = the 'towards' colour</param>
+        /// <returns>An interpolated colour</returns>
+        public Colour Interpolate(Colour towards, double factor)
+        {
+            return new Colour(
+                (byte)(A + (towards.A - A) * factor),
+                (byte)(R + (towards.R - R) * factor),
+                (byte)(G + (towards.G - G) * factor),
+                (byte)(B + (towards.B - B) * factor));
         }
 
         #endregion

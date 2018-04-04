@@ -143,7 +143,29 @@ namespace Nucleus.Maths
         /// <param name="i1"></param>
         /// <param name="t"></param>
         /// <returns></returns>
-        protected abstract TValue Interpolate(int i0, int i1, double t);
+        protected TValue Interpolate(int i0, int i1, double t)
+        {
+            TValue v0 = Values[i0];
+            TValue v1 = Values[i1];
+            double k0 = Keys[i0];
+            double k1 = Keys[i1];
+            return Interpolate(v0,v1,(t - k0) / (k1 - k0));
+        }
+
+        /// <summary>
+        /// Overridable interpolation function to provide
+        /// efficient interpolation for the data set type
+        /// </summary>
+        /// <param name="i0"></param>
+        /// <param name="i1"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        protected virtual TValue Interpolate(TValue v0, TValue v1, double factor)
+        {
+            return Interpolation.LINEAR.Interpolate(v0, v1, factor);
+        }
+
+
 
         #endregion
     }

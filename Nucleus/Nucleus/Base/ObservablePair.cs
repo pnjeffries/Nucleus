@@ -32,6 +32,11 @@ namespace Nucleus.Base
             set { _First = value; NotifyPropertyChanged("First"); }
         }
 
+        public TFirst Key
+        {
+            get { return _First; }
+        }
+
         /// <summary>
         /// Private backing field for the Second property
         /// </summary>
@@ -44,6 +49,11 @@ namespace Nucleus.Base
         {
             get { return _Second; }
             set { _Second = value; NotifyPropertyChanged("Second"); }
+        }
+
+        public TSecond Value
+        {
+            get { return _Second; }
         }
 
         #endregion

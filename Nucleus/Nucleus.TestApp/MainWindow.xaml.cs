@@ -105,7 +105,7 @@ namespace Nucleus.TestApp
             data.Add("Base Loads", new Interval(rng.NextDouble()));
             data.Add("Modularity", new Interval(rng.NextDouble()));
             data.Add("Craneage", new Interval(rng.NextDouble()));
-            var diagramData = new NamedDataSet("DataSet 1", data, Colour.RambollCyan);
+            var diagramData = new NamedDataSet("Option 1", data, Colour.RambollCyan);
 
             var data2 = new Dictionary<string, Interval>();
             data2.Add("Daylighting", new Interval(rng.NextDouble()));
@@ -114,7 +114,7 @@ namespace Nucleus.TestApp
             data2.Add("Base Loads", new Interval(rng.NextDouble()));
             data2.Add("Modularity", new Interval(rng.NextDouble()));
             data2.Add("Craneage", new Interval(rng.NextDouble()));
-            var diagramData2 = new NamedDataSet("DataSet 2", data2, Colour.RambollLimeGreen);
+            var diagramData2 = new NamedDataSet("Option 2", data2, Colour.RambollLimeGreen);
 
             var data3 = new Dictionary<string, Interval>();
             data3.Add("Daylighting", new Interval(rng.NextDouble()));
@@ -123,7 +123,7 @@ namespace Nucleus.TestApp
             data3.Add("Base Loads", new Interval(rng.NextDouble()));
             data3.Add("Modularity", new Interval(rng.NextDouble()));
             data3.Add("Craneage", new Interval(rng.NextDouble()));
-            var diagramData3 = new NamedDataSet("DataSet 3", data3, Colour.RambollMagenta);
+            var diagramData3 = new NamedDataSet("Option 3", data3, Colour.RambollMagenta);
 
             var data4 = new Dictionary<string, Interval>();
             data4.Add("Daylighting", new Interval(rng.NextDouble()));
@@ -132,7 +132,7 @@ namespace Nucleus.TestApp
             data4.Add("Base Loads", new Interval(rng.NextDouble()));
             data4.Add("Modularity", new Interval(rng.NextDouble()));
             data4.Add("Craneage", new Interval(rng.NextDouble()));
-            var diagramData4 = new NamedDataSet("DataSet 4", data4, Colour.RambollWarmRed);
+            var diagramData4 = new NamedDataSet("Option 4", data4, Colour.RambollWarmRed);
 
 
             var diagramDataCollection = new NamedDataSetCollection();
@@ -141,11 +141,17 @@ namespace Nucleus.TestApp
             diagramDataCollection.Add(diagramData3);
             diagramDataCollection.Add(diagramData4);
             SpiderDiagram.SourceData = diagramDataCollection;
+            BarChart.SourceData = diagramDataCollection;
         }
 
         private void GenerateSpiderButton_Click(object sender, RoutedEventArgs e)
         {
             GenerateSpider();
+        }
+
+        private void GenerateBarButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

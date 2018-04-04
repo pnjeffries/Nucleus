@@ -1,5 +1,6 @@
 ﻿using Nucleus.Extensions;
 using Nucleus.Geometry;
+using Nucleus.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -107,6 +108,25 @@ namespace Nucleus.Maths
         /// Interpolate between two values using the algorithm represented by this enumerated value
         /// </summary>
         /// <param name="i"></param>
+        /// <param name="c0">The first value to interpolate from</param>
+        /// <param name="c1">The second value to interpolate towards</param>
+        /// <param name="t">The interpolation parameter.  Typically will be between 0-1,
+        /// where 0 is v0 and 1 is v1</param>
+        /// <param name="alpha">The optional Alpha parameter used in some tweening methods</param>
+        /// <param name="beta">The optional Beta parameter used in some tweening methods</param>
+        /// <returns>The interpolated value</returns>
+        public static Colour Interpolate(this Interpolation i, Colour c0, Colour c1, double t, double alpha = DefaultAlpha, double beta = DefaultBeta)
+        {
+            t = i.Tween(t, alpha, beta);
+            return c0.Interpolate(c1, t);
+        }
+
+        /// <summary>
+        /// Interpolate between two values using the algorithm represented by this enumerated value.
+        /// This will only successfully work for datatypes which implement the +, - and * operators
+        /// and are unbounded.
+        /// </summary>
+        /// <param name="i"></param>
         /// <param name="v0">The first value to interpolate from</param>
         /// <param name="v1">The second value to interpolate towards</param>
         /// <param name="t">The interpolation parameter.  Typically will be between 0-1,
@@ -114,11 +134,18 @@ namespace Nucleus.Maths
         /// <param name="alpha">The optional Alpha parameter used in some tweening methods</param>
         /// <param name="beta">The optional Beta parameter used in some tweening methods</param>
         /// <returns>The interpolated value</returns>
-        public static dynamic Interpolate(this Interpolation i, dynamic v0, dynamic v1, double t, double alpha = DefaultAlpha, double beta = DefaultBeta)
+        public static TValue Interpolate<TValue>(this Interpolation i, TValue v0, TValue v1, double t, double alpha = DefaultAlpha, double beta = DefaultBeta)
         {
+            //if (typeof(TValue).IsAssignableFrom(typeof(Colour)))
+            //{
+            //    return (TValue)(object)i.Interpolate<Colour>((Colour)(object)v0, (Colour)(object)v1, t, alpha, beta); //Fuck me this is awkward...
+            //}
             t = i.Tween(t, alpha, beta);
-            return v0 + (v1 - v0) * t;
+            dynamic v0d = v0;
+            dynamic v1d = v1;
+            return v0d + (v1d - v0d) * t;
         }
+
 
         /// <summary>
         /// Tween a value using the algorithm represented by this enumerated value

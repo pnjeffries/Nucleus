@@ -56,6 +56,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BarChart.xaml.cs">
+      <DependentUpon>BarChart.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChartKey.xaml.cs">
+      <DependentUpon>ChartKey.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\AllZeroVisibilityConverter.cs" />
     <Compile Include="AutoUIDataGrid.cs" />
     <Compile Include="AutoUIDialog.xaml.cs">
@@ -64,14 +70,17 @@
     <Compile Include="AutoUIWrapPanel.cs" />
     <Compile Include="AutoUIUniformGrid.cs" />
     <Compile Include="BindingGrouplessDataGrid.cs" />
+    <Compile Include="Converters\BarKeyedBrushConverter.cs" />
     <Compile Include="Converters\BooleanVisibilityConverter.cs" />
     <Compile Include="Converters\BrushConverter.cs" />
     <Compile Include="Converters\CollectionNotEmptyConverter.cs" />
+    <Compile Include="Converters\ColourScaleConverter.cs" />
     <Compile Include="Converters\CountVisibilityConverter.cs" />
     <Compile Include="Converters\DictionaryKeyedBooleanVisibilityConverter.cs" />
     <Compile Include="Converters\DictionaryKeyedValueConverter.cs" />
     <Compile Include="Converters\ExpanderHeaderWidthConverter.cs" />
     <Compile Include="Converters\AreEqualConverter.cs" />
+    <Compile Include="Converters\FadeOutConverter.cs" />
     <Compile Include="Converters\GraphPointsConverter.cs" />
     <Compile Include="Converters\GreaterThanConverter.cs" />
     <Compile Include="Converters\IAutoUIHostableVisibilityConverter.cs" />
@@ -85,6 +94,7 @@
     <Compile Include="Converters\NaNToBlankConverter.cs" />
     <Compile Include="Converters\NumericIDConverter.cs" />
     <Compile Include="Converters\RadiansDegreesConverter.cs" />
+    <Compile Include="Converters\ScalarConverter.cs" />
     <Compile Include="Converters\ScaleConverter.cs" />
     <Compile Include="Converters\SliderConverter.cs" />
     <Compile Include="Converters\TextConverter.cs" />
@@ -98,6 +108,7 @@
     <Compile Include="Extensions\AutoUIComboBoxAttributeExtensions.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="EnumBindingSourceExtension.cs" />
+    <Compile Include="Extensions\GridExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="ToWPF.cs" />
     <Compile Include="Field Controls\Bool6DFieldControl.xaml.cs">
@@ -174,6 +185,7 @@
     </Compile>
     <Compile Include="SubTypeBindingSourceExtension.cs" />
     <Compile Include="Extensions\UIElementCollectionExtensions.cs" />
+    <Compile Include="VerticalViewbox.cs" />
     <Compile Include="ViewScroller.xaml.cs">
       <DependentUpon>ViewScroller.xaml</DependentUpon>
     </Compile>
@@ -185,6 +197,14 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="AutoUIDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BarChart.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChartKey.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

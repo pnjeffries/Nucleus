@@ -1,16 +1,20 @@
-﻿using System;
+﻿using Nucleus.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Geometry.Cell_Maps
+namespace Nucleus.Geometry
 {
     /// <summary>
     /// A cell in an ICellMap which acts as a container for other objects
     /// </summary>
-    public class MapCell<TItem, TCollection>
+    /// <remarks>Hmmm... this is getting a bit overly complicated...</remarks>
+    public abstract class MapCell<TItem, TCollection, TSelf> : 
+        DataOwner<MapCellDataStore<TSelf>, IMapCellDataComponent, TSelf>
         where TCollection : IList<TItem>, new()
+        where TSelf : MapCell<TItem, TCollection, TSelf>
     {
         #region Properties
 

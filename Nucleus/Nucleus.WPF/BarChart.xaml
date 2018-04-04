@@ -1,0 +1,132 @@
+﻿<UserControl x:Class="Nucleus.WPF.BarChart"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Nucleus.WPF"
+             xmlns:converters="clr-namespace:Nucleus.WPF.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <converters:BarKeyedBrushConverter x:Key="BarKeyedBrushConverter"/>
+        <converters:ScalarConverter x:Key="ScalarConverter"/>
+    </UserControl.Resources>
+    <Grid Name="LayoutRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border BorderThickness="0, 0, 0, 1" BorderBrush="Black">
+        <local:VerticalViewbox>
+            <ItemsControl ItemsSource="{Binding SourceData}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                    <UniformGrid Rows="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    </UniformGrid>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <!--Bar Template-->
+                        <Grid SnapsToDevicePixels="True">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="1" VerticalAlignment="Bottom">
+                                <ItemsControl ItemsSource="{Binding Path=Data}" >
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel VerticalAlignment="Bottom"></StackPanel>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Height="{Binding Path=Value.Max}" 
+                                                    HorizontalAlignment="Stretch">
+                                                <Grid.Background>
+                                                    <MultiBinding Converter="{StaticResource BarKeyedBrushConverter}">
+                                                        <Binding Path="Key"/>
+                                                        <Binding Path="DataContext.BarBrushes" ElementName="LayoutRoot"/>
+                                                    </MultiBinding>
+                                                </Grid.Background>
+                                                <Grid.ToolTip>
+                                                    <TextBlock Text="{Binding Path=Key}"/>
+                                                </Grid.ToolTip>
+
+                                                <Grid Opacity="{Binding Path=DataContext.Shading, ElementName=LayoutRoot,
+                                                    Converter={StaticResource ScalarConverter}, ConverterParameter=0.2}" 
+                                                      IsHitTestVisible="False">
+                                                    <Grid.Background>
+                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                            <GradientStopCollection>
+                                                                <GradientStop Color="#66000000" Offset="0"/>
+                                                                <GradientStop Color="transparent" Offset="0.2" />
+                                                                <GradientStop Color="transparent" Offset="0.7" />
+                                                                <GradientStop Color="#99000000" Offset="1" />
+                                                            </GradientStopCollection>
+                                                        </LinearGradientBrush>
+                                                    </Grid.Background>
+                                                </Grid>
+
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <Grid Opacity="{Binding Path=DataContext.Shading, ElementName=LayoutRoot}"
+                                      IsHitTestVisible="False">
+                                    <Grid.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStopCollection>
+                                                <GradientStop Color="#33000000" Offset="0"/>
+                                                <GradientStop Color="transparent" Offset="0.1" />
+                                                <GradientStop Color="white" Offset="0.2" />
+                                                <GradientStop Color="transparent" Offset="0.5" />
+                                                <GradientStop Color="#66000000" Offset="1" />
+                                            </GradientStopCollection>
+                                        </LinearGradientBrush>
+                                    </Grid.Background>
+                                </Grid>
+
+                                <Grid Opacity="{Binding Path=DataContext.Shading, ElementName=LayoutRoot,
+                                    Converter={StaticResource ScalarConverter}, ConverterParameter=0.5}"
+                                      IsHitTestVisible="False">
+                                    <Grid.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStopCollection>
+                                                <GradientStop Color="White" Offset="0"/>
+                                                <GradientStop Color="transparent" Offset="0.2" />
+                                                <GradientStop Color="#99000000" Offset="1" />
+                                            </GradientStopCollection>
+                                        </LinearGradientBrush>
+                                    </Grid.Background>
+                                </Grid>
+
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </local:VerticalViewbox>
+        </Border>
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding SourceData}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="1" HorizontalAlignment="Stretch"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Path=Name}"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,2,0,2"
+                                   TextWrapping="WrapWithOverflow"
+                                   TextAlignment="Center"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+    </Grid>
+</UserControl>
