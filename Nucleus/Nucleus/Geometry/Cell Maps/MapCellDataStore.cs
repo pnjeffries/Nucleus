@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Geometry
 {
-    public class MapCellDataStore<TMapCell> : DataStore<IMapCellDataComponent, TMapCell>
-        where TMapCell : IDataOwner
+    /// <summary>
+    /// Extensible storage mechanism for adding tagged data to MapCells
+    /// </summary>
+    public class MapCellDataStore : DataStore<IMapCellDataComponent, MapCell>
     {
     }
 }

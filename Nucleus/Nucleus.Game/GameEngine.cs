@@ -48,6 +48,19 @@ namespace Nucleus.Game
             }
         }
 
+        /// <summary>
+        /// Private backing member variable for the Module property
+        /// </summary>
+        private GameModule _Module;
+
+        /// <summary>
+        /// The currently loaded module
+        /// </summary>
+        public GameModule Module
+        {
+            get { return _Module; }
+        }
+        
         #endregion
 
         #region Methods
@@ -57,6 +70,8 @@ namespace Nucleus.Game
         /// </summary>
         public virtual void StartUp()
         {
+            State = Module?.StartingState();
+
             _LastUpdate = DateTime.UtcNow;
         }
 

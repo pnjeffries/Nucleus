@@ -86,15 +86,9 @@
     <Compile Include="Extensions\EventHandlerExtensions.cs" />
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="Extensions\NotifyCollectionChangedEventArgsExtensions.cs" />
-    <Compile Include="Game\CellMapStage.cs" />
-    <Compile Include="Game\GameElement.cs" />
-    <Compile Include="Game\GameEntityFamily.cs" />
-    <Compile Include="Game\GameMapCell.cs" />
-    <Compile Include="Game\IEffect.cs" />
-    <Compile Include="Game\IEffectLog.cs" />
-    <Compile Include="Game\GameStage.cs" />
     <Compile Include="Geometry\Cell Maps\HexCellMap.cs" />
     <Compile Include="Geometry\Cell Maps\ICellMap.cs" />
+    <Compile Include="Geometry\Cell Maps\IMapCell.cs" />
     <Compile Include="Geometry\Cell Maps\IMapCellDataComponent.cs" />
     <Compile Include="Geometry\Cell Maps\MapCell.cs" />
     <Compile Include="Geometry\Cell Maps\MapCellDataStore.cs" />

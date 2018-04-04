@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nucleus.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,12 +18,12 @@ namespace Nucleus.Game
         /// <summary>
         /// Private backing member variable for the Elements property
         /// </summary>
-        private GameElementCollection _Elements = new GameElementCollection();
+        private ElementCollection _Elements = new ElementCollection();
 
         /// <summary>
         /// The collection of currently active game elements
         /// </summary>
-        public GameElementCollection Elements
+        public ElementCollection Elements
         {
             get { return _Elements; }
             set
@@ -35,12 +36,12 @@ namespace Nucleus.Game
         /// <summary>
         /// Private backing member variable for the Controlled property
         /// </summary>
-        private GameElementCollection _Controlled = new GameElementCollection();
+        private ElementCollection _Controlled = new ElementCollection();
 
         /// <summary>
         /// The collection of game elements which are currently directly under the player's control
         /// </summary>
-        public GameElementCollection Controlled
+        public ElementCollection Controlled
         {
             get { return _Controlled; }
             set
