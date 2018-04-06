@@ -10,7 +10,6 @@ namespace Nucleus.Geometry
     /// <summary>
     /// A cell in an ICellMap which acts as a container for other objects
     /// </summary>
-    /// <remarks>Hmmm... this is getting a bit overly complicated...</remarks>
     public class MapCell : DataOwner<MapCellDataStore, IMapCellDataComponent, MapCell>, IMapCell
     {
         #region Properties

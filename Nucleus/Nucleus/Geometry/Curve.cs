@@ -381,6 +381,24 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Compare this curve to another by span tangencies.
+        /// Returns true only if the two curves have the same number of spans
+        /// and the curve tangencies at the mid-point of each span are facing
+        /// within 90 degrees of one another.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool CheckSegmentTangents(Curve other)
+        {
+            if (SegmentCount != other.SegmentCount) return false;
+            for (int i = 0; i < SegmentCount; i++)
+            {
+                if (TangentAt(i, 0.5) * other.TangentAt(i, 0.5) < 0) return false;
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Evaluate the local coordinate system at a position along this curve.
         /// By convention, the x-axis of the local coordinate system will point along the
         /// curve and the z-axis will be orientated as closely as possible to global Z, unless

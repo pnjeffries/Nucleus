@@ -1,4 +1,5 @@
-﻿using Nucleus.Model;
+﻿using Nucleus.Base;
+using Nucleus.Model;
 using Nucleus.Model.Loading;
 using System;
 using System.Collections.Generic;
@@ -11,8 +12,9 @@ namespace Nucleus.Alerts
     /// <summary>
     /// A log to store alerts raised during a process
     /// </summary>
-    public class AlertLog : AlertCollection
+    public class AlertLog : AlertCollection, ILog
     {
+
         /// <summary>
         /// Raise an alert
         /// </summary>
@@ -77,6 +79,15 @@ namespace Nucleus.Alerts
         public void RaiseAlert(string alertID, Load load, string message, AlertLevel level = AlertLevel.Information)
         {
             AddOrMerge(new LoadAlert(alertID, load, message, level));
+        }
+
+        /// <summary>
+        /// ILog WriteText implementation
+        /// </summary>
+        /// <param name="text"></param>
+        void ILog.WriteText(string text)
+        {
+            RaiseAlert(text);
         }
     }
 }

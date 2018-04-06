@@ -11,7 +11,9 @@ namespace Nucleus.Game
     /// A basic game state that implements the fundamental mechanics
     /// of a game in a fairly general way
     /// </summary>
-    public class BasicGameState : GameState
+    [Serializable]
+    public class BasicGameState<TStage> : GameState
+        where TStage : GameStage
     {
         #region Properties
 
@@ -50,6 +52,25 @@ namespace Nucleus.Game
                 NotifyPropertyChanged("Controlled");
             }
         }
+
+        /// <summary>
+        /// Private backing member variable for the Stage property
+        /// </summary>
+        private TStage _Stage = null;
+
+        /// <summary>
+        /// The current stage
+        /// </summary>
+        public TStage Stage
+        {
+            get { return _Stage; }
+            set
+            {
+                _Stage = value;
+                NotifyPropertyChanged("Stage");
+            }
+        }
+
 
         #endregion
     }

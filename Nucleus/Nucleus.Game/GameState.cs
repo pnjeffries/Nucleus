@@ -10,6 +10,7 @@ namespace Nucleus.Game
     /// <summary>
     /// Abstract base class for states within a game (levels, menus etc.)
     /// </summary>
+    [Serializable]
     public abstract class GameState : Unique
     {
         #region Methods

@@ -69,6 +69,7 @@
     <Compile Include="Alerts\Alert.cs" />
     <Compile Include="Base\Bool6D.cs" />
     <Compile Include="Base\CollectionCopyAttribute.cs" />
+    <Compile Include="Base\ILog.cs" />
     <Compile Include="Base\IUniqueWithModifiableGUID.cs" />
     <Compile Include="Base\KeyedCollection.cs" />
     <Compile Include="Base\ObservablePairCollection.cs" />

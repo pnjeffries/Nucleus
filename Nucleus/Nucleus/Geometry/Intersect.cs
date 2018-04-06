@@ -125,7 +125,7 @@ namespace Nucleus.Geometry
                 double m2 = v1.Y / v1.X;
                 double c2 = pt1.Y - m2 * pt1.X;
 
-                if (m1 - m2 == 0) return Vector.Unset;
+                if ((m1 - m2).IsTiny()) return Vector.Unset;
                 else
                 {
                     double x = (c2 - c1) / (m1 - m2);
