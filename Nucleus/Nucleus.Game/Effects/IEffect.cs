@@ -1,4 +1,5 @@
-﻿using Nucleus.Model;
+﻿using Nucleus.Base;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Nucleus.Game
     /// <summary>
     /// Interface for an effect which is to be applied to an element
     /// </summary>
-    public interface IEffect
+    public interface IEffect : IUnique
     {
         /// <summary>
         /// Has the effect been spent?
@@ -65,7 +66,7 @@ namespace Nucleus.Game
         /// <param name="list"></param>
         /// <param name="target"></param>
         /// <param name="log"></param>
-        public static void ApplyAll<TTarget>(this IList<IEffect<TTarget>> list, TTarget target, IEffectLog log)
+        public static void ApplyAll<TTarget>(this IList<IEffect<TTarget>> list, IEffectLog log)
         {
             foreach (var effect in list)
             {

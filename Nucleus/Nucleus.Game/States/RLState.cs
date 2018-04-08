@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Game
 {
-    class BasicEffect
+    /// <summary>
+    /// A game state for Roguelikes
+    /// </summary>
+    [Serializable]
+    public class RLState : BasicGameState<MapStage>
     {
     }
 }
