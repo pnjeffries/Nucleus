@@ -59,6 +59,7 @@ namespace Nucleus.Game
         public GameModule Module
         {
             get { return _Module; }
+            private set { ChangeProperty(ref _Module, value, "Module"); }
         }
         
         #endregion
@@ -66,7 +67,8 @@ namespace Nucleus.Game
         #region Methods
 
         /// <summary>
-        /// Perform engine initialisation
+        /// Perform engine initialisation.
+        /// This should be done after a module has been loaded.
         /// </summary>
         public virtual void StartUp()
         {
@@ -87,6 +89,15 @@ namespace Nucleus.Game
             State.Update(info);
 
             _LastUpdate = now;
+        }
+
+        /// <summary>
+        /// Load a module into the engine
+        /// </summary>
+        /// <param name="module"></param>
+        public void LoadModule(GameModule module)
+        {
+            Module = module;
         }
 
         #endregion
