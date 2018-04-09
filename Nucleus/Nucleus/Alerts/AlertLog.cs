@@ -1,4 +1,5 @@
 ﻿using Nucleus.Base;
+using Nucleus.Logs;
 using Nucleus.Model;
 using Nucleus.Model.Loading;
 using System;

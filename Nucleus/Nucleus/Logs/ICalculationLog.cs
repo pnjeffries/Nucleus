@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Analysis
+namespace Nucleus.Logs
 {
     /// <summary>
     /// A message log object that can be used to output records of calculations

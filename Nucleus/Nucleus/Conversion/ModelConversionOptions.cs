@@ -123,6 +123,21 @@ namespace Nucleus.Conversion
         }
 
         /// <summary>
+        /// Private backing field for Constraints property
+        /// </summary>
+        private bool _Constraints = true;
+
+        /// <summary>
+        /// Read/Write Rigid Constraints?
+        /// </summary>
+        [AutoUI(15, ToolTip = "Read/Write Nodal Rigid Constraints?")]
+        public bool Constraints
+        {
+            get { return _Constraints; }
+            set { ChangeProperty(ref _Constraints, value, "Constraints"); }
+        }
+
+        /// <summary>
         /// Private backing field for Sets property
         /// </summary>
         private bool _Sets = true;
@@ -130,7 +145,7 @@ namespace Nucleus.Conversion
         /// <summary>
         /// Read/Write Sets?
         /// </summary>
-        [AutoUI(15, ToolTip = "Read/Write Saved Selection Sets?")]
+        [AutoUI(17, ToolTip = "Read/Write Saved Selection Sets?")]
         public bool Sets
         {
             get { return _Sets; }
