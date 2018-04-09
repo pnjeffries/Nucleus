@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Base
+namespace Nucleus.Logs
 {
     /// <summary>
     /// An interface for message logs

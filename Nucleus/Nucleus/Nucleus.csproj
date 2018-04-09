@@ -64,13 +64,13 @@
     <Compile Include="Analysis\CalcVariable.cs" />
     <Compile Include="Analysis\EC3MemberChecks.cs" />
     <Compile Include="Analysis\FlatConcreteSlabChecks.cs" />
-    <Compile Include="Analysis\ICalculationLog.cs" />
+    <Compile Include="Logs\ICalculationLog.cs" />
     <Compile Include="Analysis\ICalculationScenario.cs" />
     <Compile Include="Analysis\WindLoadsBox.cs" />
     <Compile Include="Alerts\Alert.cs" />
     <Compile Include="Base\Bool6D.cs" />
     <Compile Include="Base\CollectionCopyAttribute.cs" />
-    <Compile Include="Base\ILog.cs" />
+    <Compile Include="Logs\ILog.cs" />
     <Compile Include="Base\IUniqueWithModifiableGUID.cs" />
     <Compile Include="Base\KeyedCollection.cs" />
     <Compile Include="Base\ObservablePairCollection.cs" />
@@ -118,7 +118,9 @@
     <Compile Include="Model\BuildUpFamilyCollection.cs" />
     <Compile Include="Model\BuildUpLayer.cs" />
     <Compile Include="Model\BuildUpLayerCollection.cs" />
+    <Compile Include="Model\ConstraintElement.cs" />
     <Compile Include="Model\CombinationCase.cs" />
+    <Compile Include="Model\ConstraintFamily.cs" />
     <Compile Include="Model\ElementUse.cs" />
     <Compile Include="Model\FactoredCaseCollection.cs" />
     <Compile Include="Model\FamilyFilter.cs" />

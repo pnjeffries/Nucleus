@@ -12,9 +12,6 @@ namespace Nucleus.Analysis
     /// </summary>
     public interface ICalculationScenario
     {
-        /// <summary>
-        /// The log to be used to print
-        /// </summary>
-        ICalculationLog Log { get; set; }
+      
     }
 }

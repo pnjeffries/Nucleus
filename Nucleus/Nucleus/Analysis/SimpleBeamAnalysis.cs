@@ -1,4 +1,6 @@
-﻿using Nucleus.Extensions;
+﻿using Nucleus.Base;
+using Nucleus.Extensions;
+using Nucleus.Logs;
 using Nucleus.Model;
 using System;
 using System.Collections.Generic;
