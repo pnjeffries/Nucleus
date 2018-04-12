@@ -1199,7 +1199,11 @@ namespace Nucleus.Robot
                 }
 
                 // Offsets:
-                if (element.Geometry != null && element.Geometry.Vertices.HasNodalOffsets)
+                if (element.Geometry != null && 
+                    (element.Geometry.Vertices.HasNodalOffsets ||
+                    (element.Family != null &&
+                    (element.Family.Profile.HorizontalSetOut.IsEdge() ||
+                        element.Family.Profile.VerticalSetOut.IsEdge()))))
                 {
                     IRobotLabel offsets = GetOffset(element.Start.Offset, element.End.Offset, element.Family);
                     bar.SetLabel(IRobotLabelType.I_LT_BAR_OFFSET, offsets.Name);
@@ -1432,7 +1436,8 @@ namespace Nucleus.Robot
                     nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_C_TW, rProfile.WebThickness);
                 }
                 //TODO: Offset?
-
+                
+                data.CalcNonstdGeometry(); //?
             }
         }
 

@@ -359,6 +359,43 @@ namespace Nucleus.Model
         public abstract Vector GetTotalOffset(HorizontalSetOut toHorizontal = HorizontalSetOut.Centroid,
             VerticalSetOut toVertical = VerticalSetOut.Centroid);
 
+        
+        /// <summary>
+        /// Determine and return the classification of this section according to Eurocode 3
+        /// Section 5.5.  The cross-section
+        /// </summary>
+        /// <param name="compression">The axial force in the section, in N.
+        /// Compression is positive, tension is negative.</param>
+        /// <param name="bendingXX">Bending in the section about the local XX axis</param>
+        /// <param name="bendingYY">Bending in the section about the local YY axis</param>
+        /// <returns></returns>
+        public CrossSectionClass CrossSectionClass(double compression, double bendingXX, double bendingYY)
+        {
+            CrossSectionClass result = CrossSectionClass.Indeterminate;
+            if (Material != null && Material.Category == MaterialCategory.Steel)
+            {
+                double fy = Material.GetYieldStrength(Direction.X);
+                // TODO: Adjust for effective thickness?  (i.e. if >40mm)
+                double epsilon = Math.Sqrt(235000000 / fy);
+
+                double alpha = 1.0; //Full compression!
+                //TODO: Calculate alpha based on mix of compression & bending!
+
+                double cOverT = InternalCompressionCOverT();
+
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get the value of c/t to be used when determining the cross-section
+        /// class for this section profile
+        /// </summary>
+        /// <returns></returns>
+        protected virtual double InternalCompressionCOverT() { throw new NotImplementedException(); }
+        
+        
         public override string ToString()
         {
             if (CatalogueName != null) return CatalogueName;

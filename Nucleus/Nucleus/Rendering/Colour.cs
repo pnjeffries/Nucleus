@@ -98,6 +98,25 @@ namespace Nucleus.Rendering
         /// </summary>
         public static readonly Colour[] RambollPalette
             = new Colour[]{
+                RambollCyan,
+                RambollLightGrey,
+                RambollLightBlue,
+                RambollGreen,
+                RambollLimeGreen,
+                RambollMagenta,
+                RambollWarmRed,
+                RambollBrown,
+                RambollYellow,
+                RambollDarkGrey,
+                Black
+
+};
+
+        /// <summary>
+        /// The standard Ramboll colour palette (re-ordered)
+        /// </summary>
+        public static readonly Colour[] RambollPalette2
+            = new Colour[]{
                 RambollLightBlue,
                 RambollLightGrey,
                 RambollLimeGreen,

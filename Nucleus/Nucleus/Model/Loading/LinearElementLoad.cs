@@ -45,7 +45,7 @@ namespace Nucleus.Model.Loading
         /// <param name="scalingFactor"></param>
         public void SetUniform(double scalingFactor = 1.0)
         {
-            Distribution = new Maths.LinearDoubleDataSet(0, scalingFactor);
+            Distribution = new LinearDoubleDataSet(scalingFactor);
         }
 
         #endregion

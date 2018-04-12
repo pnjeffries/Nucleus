@@ -41,27 +41,27 @@ namespace Nucleus.Model
         /// <summary>
         /// Default Steel material
         /// </summary>
-        public static Material Steel { get { return new IsoMaterial("Steel"); } }
+        public static Material Steel { get { return new IsoMaterial("Steel", MaterialCategory.Steel); } }
 
         /// <summary>
         /// Default Concrete material
         /// </summary>
-        public static Material Concrete { get { return new IsoMaterial("Concrete"); } }
+        public static Material Concrete { get { return new IsoMaterial("Concrete", MaterialCategory.Concrete); } }
 
         /// <summary>
         /// Get a default Wood material
         /// </summary>
-        public static Material Wood { get { return new IsoMaterial("Wood"); } }
+        public static Material Wood { get { return new IsoMaterial("Wood", MaterialCategory.Wood); } }
 
         /// <summary>
         /// Default Aluminium material
         /// </summary>
-        public static Material Aluminium { get { return new IsoMaterial("Aluminium"); } }
+        public static Material Aluminium { get { return new IsoMaterial("Aluminium", MaterialCategory.Aluminium); } }
 
         /// <summary>
         /// Default Glass material
         /// </summary>
-        public static Material Glass { get { return new IsoMaterial("Glass"); } }
+        public static Material Glass { get { return new IsoMaterial("Glass", MaterialCategory.Glass); } }
 
         /// <summary>
         /// Get a collection of all the default materials
@@ -98,6 +98,22 @@ namespace Nucleus.Model
             set { ChangeProperty(ref _Density, value, "Density"); }
         }
 
+        /// <summary>
+        /// Private backing field for Category property
+        /// </summary>
+        private MaterialCategory _Category = MaterialCategory.Undefined;
+
+        /// <summary>
+        /// The preset category under which this material falls.
+        /// Used to determine applicable design codes and to map
+        /// to equivalent material properties in other software.
+        /// </summary>
+        public MaterialCategory Category
+        {
+            get { return _Category; }
+            set { ChangeProperty(ref _Category, value, "Category"); }
+        }
+
         #endregion
 
         #region Constructors
@@ -111,7 +127,11 @@ namespace Nucleus.Model
         /// Name constructor
         /// </summary>
         /// <param name="name"></param>
-        public Material(string name) : base(name) { }
+        public Material(string name, MaterialCategory category = MaterialCategory.Undefined) 
+            : base(name)
+        {
+            _Category = category;
+        }
 
         #endregion
 
@@ -122,6 +142,14 @@ namespace Nucleus.Model
         /// in the specified direction, in N/m²
         /// </summary>
         public abstract double GetE(Direction direction);
+
+        /// <summary>
+        /// Get the yield strength of this material in the specified
+        /// direction, in Pa.
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public abstract double GetYieldStrength(Direction direction);
 
         #endregion
     }

@@ -90,6 +90,20 @@ namespace Nucleus.Model
             set { ChangeProperty(ref _Alpha, value, "Alpha"); }
         }
 
+        /// <summary>
+        /// Private backing field for yield strength
+        /// </summary>
+        private double _YieldStrength = 0;
+
+        /// <summary>
+        /// The yield strength of this material, in Pa
+        /// </summary>
+        public double YieldStrength
+        {
+            get { return _YieldStrength; }
+            set { ChangeProperty(ref _YieldStrength, value, "YieldStrength"); }
+        }
+
         #endregion
 
         #region Constructors
@@ -103,7 +117,7 @@ namespace Nucleus.Model
         /// Name constructor
         /// </summary>
         /// <param name="name"></param>
-        public IsoMaterial(string name) : base(name) { }
+        public IsoMaterial(string name, MaterialCategory category = MaterialCategory.Undefined) : base(name, category) { }
 
         public IsoMaterial(string name, double e, double poissonsRatio = 0.3, double alpha = 12.0)
             :this(name)
@@ -124,6 +138,17 @@ namespace Nucleus.Model
         public override double GetE(Direction direction)
         {
             return E;
+        }
+
+        /// <summary>
+        /// Get the yield strength of this material in the specified
+        /// direction, in Pa.
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public override double GetYieldStrength(Direction direction)
+        {
+            return YieldStrength;
         }
 
         #endregion

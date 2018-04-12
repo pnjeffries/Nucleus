@@ -120,6 +120,7 @@
     <Compile Include="Model\ConstraintElement.cs" />
     <Compile Include="Model\CombinationCase.cs" />
     <Compile Include="Model\ConstraintFamily.cs" />
+    <Compile Include="Model\CrossSectionClass.cs" />
     <Compile Include="Model\ElementUse.cs" />
     <Compile Include="Model\FactoredCaseCollection.cs" />
     <Compile Include="Model\FamilyFilter.cs" />
@@ -182,6 +183,7 @@
     <Compile Include="Model\LoadTable.cs" />
     <Compile Include="Model\LocalCoordinateSystemReference.cs" />
     <Compile Include="Model\CoordinateSystemReferenceCollection.cs" />
+    <Compile Include="Model\MaterialCategory.cs" />
     <Compile Include="Model\ModelObjectSetTable.cs" />
     <Compile Include="Model\MultiElementVertex.cs" />
     <Compile Include="Model\PanelElementSet.cs" />
