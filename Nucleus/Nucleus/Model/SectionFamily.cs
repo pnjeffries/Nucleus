@@ -44,6 +44,7 @@ namespace Nucleus.Model
         /// <summary>
         /// Private backing member variable for the Profile property
         /// </summary>
+        [Copy(CopyBehaviour.DUPLICATE)]
         private SectionProfile _Profile = null;
 
         /// <summary>

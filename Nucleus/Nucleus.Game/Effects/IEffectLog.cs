@@ -1,11 +1,12 @@
 ﻿using Nucleus.Base;
+using Nucleus.Logs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Game
+namespace Nucleus.Log
 {
     /// <summary>
     /// An interface for log objects which report on effects

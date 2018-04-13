@@ -1,6 +1,7 @@
 ﻿using Nucleus.Base;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,8 +20,26 @@ namespace Nucleus.WPF
     /// <summary>
     /// Interaction logic for Bool6DFieldControl.xaml
     /// </summary>
-    public partial class Bool6DFieldControl : FieldControl
+    public partial class Bool6DFieldControl : FieldControl, INotifyPropertyChanged
     {
+        #region Events
+
+        /// <summary>
+        /// Event raised when a property of this object is changed
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Raise a PropertyChanged event for the specified property name
+        /// </summary>
+        /// <param name="propertyName">The name of the property</param>
+        protected virtual void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
+
         #region Properties
 
         /// <summary>
@@ -40,6 +59,7 @@ namespace Nucleus.WPF
                     Value = ((Bool6D)Value).WithX(value);
                 else
                     Value = new Bool6D(value, false, false, false, false, false);
+                NotifyPropertyChanged("X");
             }
         }
 
@@ -60,6 +80,7 @@ namespace Nucleus.WPF
                     Value = ((Bool6D)Value).WithY(value);
                 else
                     Value = new Bool6D(false, value, false, false, false, false);
+                NotifyPropertyChanged("Y");
             }
         }
 
@@ -80,6 +101,7 @@ namespace Nucleus.WPF
                     Value = ((Bool6D)Value).WithZ(value);
                 else
                     Value = new Bool6D(false, false, value, false, false, false);
+                NotifyPropertyChanged("Z");
             }
         }
 
@@ -100,6 +122,7 @@ namespace Nucleus.WPF
                     Value = ((Bool6D)Value).WithXX(value);
                 else
                     Value = new Bool6D(false, false, false, value, false, false);
+                NotifyPropertyChanged("XX");
             }
         }
 
@@ -160,8 +183,13 @@ namespace Nucleus.WPF
 
         protected override void OnValueChanged(DependencyPropertyChangedEventArgs e)
         {
-            // TODO: Notify properties changed!
             base.OnValueChanged(e);
+            NotifyPropertyChanged("X");
+            NotifyPropertyChanged("Y");
+            NotifyPropertyChanged("Z");
+            NotifyPropertyChanged("XX");
+            NotifyPropertyChanged("YY");
+            NotifyPropertyChanged("ZZ");
         }
 
         #endregion

@@ -11,7 +11,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
-using FB = Nucleus.Geometry;
+using NG = Nucleus.Geometry;
+using NB = Nucleus.Base;
 
 namespace Nucleus.WPF
 {
@@ -64,7 +65,11 @@ namespace Nucleus.WPF
                     {
                         control = new CheckBoxFieldControl();
                     }
-                    else if (pType == typeof(FB.Vector)) // Vectors
+                    else if (pType == typeof(NB.Bool6D)) // Bool6Ds
+                    {
+                        control = new Bool6DFieldControl();
+                    }
+                    else if (pType == typeof(NG.Vector)) // Vectors
                     {
                         control = new VectorFieldControl();
                     }

@@ -369,7 +369,7 @@ namespace Nucleus.Model
         /// <param name="bendingXX">Bending in the section about the local XX axis</param>
         /// <param name="bendingYY">Bending in the section about the local YY axis</param>
         /// <returns></returns>
-        public CrossSectionClass CrossSectionClass(double compression, double bendingXX, double bendingYY)
+        public CrossSectionClass SectionClass(double compression, double bendingXX, double bendingYY)
         {
             CrossSectionClass result = CrossSectionClass.Indeterminate;
             if (Material != null && Material.Category == MaterialCategory.Steel)
