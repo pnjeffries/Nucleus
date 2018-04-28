@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 namespace Nucleus.Model
 {
     /// <summary>
-    /// A collection of results cases
+    /// A collection of nodal constraint elements
     /// </summary>
-    [Serializable]
-    public class ResultsCaseCollection : ModelObjectCollection<ResultsCase>
+    public class ConstraintElementCollection : ElementCollection<ConstraintElement, ConstraintElementCollection>
     {
-
     }
 }

@@ -561,7 +561,20 @@ namespace Nucleus.Model
             return Load<LinearElementLoad>(lCase, exInfo);
         }
 
-
+        /// <summary>
+        /// Create a new (or update an existing) linear element point load in the model
+        /// </summary>
+        /// <param name="lCase">The case of which the new load is to be part</param>
+        /// <param name="exInfo">Optional.  The execution information of the current action.
+        /// If an object has been created previously with matching execution information then
+        /// instead of creating a new item this previous one will be updated and returned instead.
+        /// This enables this method to be used parametrically.</param>
+        /// <returns>The created or updated load case.</param>
+        /// <returns></returns>
+        public LinearElementPointLoad LinearElementPointLoad(LoadCase lCase, ExecutionInfo exInfo = null)
+        {
+            return Load<LinearElementPointLoad>(lCase, exInfo);
+        }
 
         /// <summary>
         /// Create a new (or update an existing) panel load in the model
@@ -577,7 +590,6 @@ namespace Nucleus.Model
         {
             return Load<PanelLoad>(lCase, exInfo);
         }
-
 
         /// <summary>
         /// Create a new (or update an existing) level in the model
@@ -600,6 +612,6 @@ namespace Nucleus.Model
             return result;
         }
 
-#endregion
+        #endregion
     }
 }

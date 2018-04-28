@@ -986,6 +986,11 @@ namespace Nucleus.Robot
             else
             {
                 int hash = start.GetHashCode() ^ end.GetHashCode();
+                if (section?.Profile != null)
+                {
+                    if (section.Profile.HorizontalSetOut.IsEdge()) hash = hash ^ section.Profile.HorizontalSetOut.GetHashCode();
+                    if (section.Profile.VerticalSetOut.IsEdge()) hash = hash ^ section.Profile.VerticalSetOut.GetHashCode();
+                }
                 RobotLabelServer labels = Robot.Project.Structure.Labels;
                 string name = hash.ToString();
                 if (labels.Exist(IRobotLabelType.I_LT_BAR_OFFSET, name) != 0)
@@ -1199,13 +1204,9 @@ namespace Nucleus.Robot
                 }
 
                 // Offsets:
-                if (element.Geometry != null && 
-                    (element.Geometry.Vertices.HasNodalOffsets ||
-                    (element.Family != null &&
-                    (element.Family.Profile.HorizontalSetOut.IsEdge() ||
-                        element.Family.Profile.VerticalSetOut.IsEdge()))))
+                IRobotLabel offsets = GetOffset(element.Start.Offset, element.End.Offset, element.Family);
+                if (offsets != null)
                 {
-                    IRobotLabel offsets = GetOffset(element.Start.Offset, element.End.Offset, element.Family);
                     bar.SetLabel(IRobotLabelType.I_LT_BAR_OFFSET, offsets.Name);
                 }
                 else
@@ -1882,11 +1883,54 @@ namespace Nucleus.Robot
                     lRecord.Objects.FromText(context.IDMap.ToIDString(lELoad.AppliedTo));
                     //TODO: Axis
                     Vector force = lELoad.Direction.Vector() * lELoad.Value; //TODO: Provide evaluation context?
+
+                    if (lELoad.Axes.IsLocal)
+                        lRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_LOCAL, 1);
+                    else
+                        lRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_LOCAL, 0);
+
                     if (!lELoad.IsMoment)
                     {
                         lRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PX, force.X);
                         lRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PY, force.Y);
                         lRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PZ, force.Z);
+                    }
+                }
+                else if (load is LinearElementPointLoad)
+                {
+                    LinearElementPointLoad lELoad = (LinearElementPointLoad)load;
+                    type = IRobotLoadRecordType.I_LRT_BAR_FORCE_CONCENTRATED;
+                    if (lRecord == null || lRecord.Type != type)
+                        lRecord = rCase.Records.Create(type) as RobotLoadRecord;
+
+                    lRecord.Objects.FromText(context.IDMap.ToIDString(lELoad.AppliedTo));
+
+                    //TODO: Axis
+                    Vector force = lELoad.Direction.Vector() * lELoad.Value; //TODO: Provide evaluation context?
+
+                    if (lELoad.Axes.IsLocal)
+                        lRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_LOC, 1);
+                    else
+                        lRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_LOC, 0);
+
+                    lRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_X, lELoad.Position);
+
+                    if (lELoad.Relative == true)
+                        lRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_REL, 1);
+                    else
+                        lRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_REL, 0);
+
+                    if (!lELoad.IsMoment)
+                    {
+                        lRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FX, force.X);
+                        lRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FY, force.Y);
+                        lRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FZ, force.Z);
+                    }
+                    else
+                    {
+                        lRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CX, force.X);
+                        lRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CY, force.Y);
+                        lRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CZ, force.Z);
                     }
                 }
                 else if (load is PanelLoad)
@@ -1899,6 +1943,12 @@ namespace Nucleus.Robot
                     lRecord.Objects.FromText(context.IDMap.ToIDString(aLoad.AppliedTo));
                     //lRecord.SetValue((short)IRobotPressureRecordValues.I_PRV_P, aLoad.Value);
                     Vector force = aLoad.Direction.Vector() * aLoad.Value; //TODO: Provide evaluation context?
+
+                    if (aLoad.Axes.IsLocal)
+                        lRecord.SetValue((short)IRobotUniformRecordValues.I_URV_LOCAL_SYSTEM, 1);
+                    else
+                        lRecord.SetValue((short)IRobotUniformRecordValues.I_URV_LOCAL_SYSTEM, 0);
+
                     if (!aLoad.IsMoment)
                     {
                         lRecord.SetValue((short)IRobotUniformRecordValues.I_URV_PX, force.X);

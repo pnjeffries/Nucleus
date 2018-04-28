@@ -49,6 +49,12 @@ namespace Nucleus.Model
         /// <param name="other"></param>
         protected DataOwner(DataOwner other) : base(other) { }
 
+        /// <summary>
+        /// Name constructor
+        /// </summary>
+        /// <param name="name"></param>
+        protected DataOwner(string name) : base(name) { }
+
         #endregion
 
         #region Methods
@@ -149,6 +155,12 @@ namespace Nucleus.Model
         /// </summary>
         /// <param name="other"></param>
         protected DataOwner(DataOwner<TDataStore,TData, TOwner> other) : base(other) { }
+
+        /// <summary>
+        /// Name constructor
+        /// </summary>
+        /// <param name="name"></param>
+        protected DataOwner(string name) : base(name) { }
 
         #endregion
 

@@ -11,7 +11,7 @@ namespace Nucleus.Model
     /// Abstract base class for cases which produce results
     /// </summary>
     [Serializable]
-    public abstract class ResultsCase : ModelObject
+    public abstract class ResultsCase : DesignCase
     {
 
         #region Constructors
@@ -28,16 +28,5 @@ namespace Nucleus.Model
         protected ResultsCase(string name) : base(name) { }
 
         #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Does this case contain the specified load?
-        /// </summary>
-        /// <param name="load"></param>
-        /// <returns></returns>
-        public abstract bool Contains(Load load);
-
-#endregion
     }
 }

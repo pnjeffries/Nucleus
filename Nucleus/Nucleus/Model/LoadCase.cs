@@ -32,7 +32,7 @@ namespace Nucleus.Model
     /// A set of loading which is applied to the model under a particular condition
     /// </summary>
     [Serializable]
-    public class LoadCase : ResultsCase
+    public class LoadCase : DesignCase, ILoadCase
     {
         #region Properties
 
@@ -114,7 +114,7 @@ namespace Nucleus.Model
         /// </summary>
         /// <param name="load"></param>
         /// <returns></returns>
-        public override bool Contains(Load load)
+        public bool Contains(Load load)
         {
             return load.Case == this;
         }

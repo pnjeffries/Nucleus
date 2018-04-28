@@ -13,14 +13,14 @@ namespace Nucleus.Model
     /// <typeparam name="TCase"></typeparam>
     [Serializable]
     public abstract class FactoredCase<TCase> : Unique
-        where TCase : ResultsCase
+        where TCase : DesignCase
     {
         #region Properties
 
         /// <summary>
         /// Private backing field for Factor property
         /// </summary>
-        private double _Factor = 1;
+        private double _Factor = 1.0;
 
         /// <summary>
         /// The factor by which the case results should be magnified
@@ -28,7 +28,7 @@ namespace Nucleus.Model
         public double Factor
         {
             get { return _Factor; }
-            set { _Factor = value;  NotifyPropertyChanged("Factor"); }
+            set { ChangeProperty(ref _Factor, value, "Factor"); }
         }
 
         /// <summary>
@@ -42,12 +42,43 @@ namespace Nucleus.Model
         public TCase Case
         {
             get { return _Case; }
-            set { _Case = value;  NotifyPropertyChanged("Case"); }
+            set { ChangeProperty(ref _Case, value, "Case"); }
+        }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initialise an empty factored case.
+        /// </summary>
+        public FactoredCase() : base() { }
+
+        /// <summary>
+        /// Initialise a new FactoredCase with a factor of 1 and the
+        /// speciifed case.
+        /// </summary>
+        /// <param name="dCase"></param>
+        public FactoredCase(TCase dCase) : base()
+        {
+            _Case = dCase;
+        }
+
+        /// <summary>
+        /// Initialise a new FactoredCase with the specifed factor
+        /// and case.
+        /// </summary>
+        /// <param name="factor"></param>
+        /// <param name="dCase"></param>
+        public FactoredCase(double factor, TCase dCase) : this(dCase)
+        {
+            _Factor = factor;
         }
 
         #endregion
     }
 
+    /*
     /// <summary>
     /// A results case with a factor applied.
     /// </summary>
@@ -69,4 +100,6 @@ namespace Nucleus.Model
 
         #endregion
     }
+    */
+
 }

@@ -10,13 +10,40 @@ namespace Nucleus.Model
     /// <summary>
     /// A particular condition to be analysed.
     /// </summary>
+    [Serializable]
     public class AnalysisCase : ResultsCase
     {
+        #region Properties
 
+        /// <summary>
+        /// Private backing member variable for the Task property
+        /// </summary>
+        private AnalysisTask _Task = null;
 
-        public override bool Contains(Load load)
+        /// <summary>
+        /// The analysis task to which this analysis case belongs
+        /// </summary>
+        public AnalysisTask Task
         {
-            throw new NotImplementedException();
+            get { return _Task; }
+            set { ChangeProperty(ref _Task, value, "Task"); }
         }
+
+        /// <summary>
+        /// Private backing member variable for the LoadCase property
+        /// </summary>
+        private ILoadCase _LoadCase = null;
+
+        /// <summary>
+        /// The load case which is to be analysed
+        /// </summary>
+        public ILoadCase LoadCase
+        {
+            get { return _LoadCase; }
+            set { ChangeProperty(ref _LoadCase, value, "LoadCase"); }
+        }
+
+        #endregion
+
     }
 }
