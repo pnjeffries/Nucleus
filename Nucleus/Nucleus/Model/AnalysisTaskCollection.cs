@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 namespace Nucleus.Model
 {
     /// <summary>
-    /// A collection of results cases
+    /// A collection of analysis tasks
     /// </summary>
-    [Serializable]
-    public class ResultsCaseCollection : ModelObjectCollection<ResultsCase>
+    public class AnalysisTaskCollection : ModelObjectCollection<AnalysisTask>
     {
-
     }
 }

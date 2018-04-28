@@ -222,6 +222,23 @@ namespace Nucleus.Model
         }
 
         /// <summary>
+        /// Extract a collection of all the constraint elements in this collection.
+        /// A new collection will be generated each time this is called.
+        /// </summary>
+        public ConstraintElementCollection ConstraintElemnts
+        {
+            get
+            {
+                var result = new ConstraintElementCollection();
+                foreach (Element element in this)
+                {
+                    if (element is ConstraintElement) result.Add((ConstraintElement)element);
+                }
+                return result;
+            }
+        }
+
+        /// <summary>
         /// Does this collection contain linear elements and only linear elements?
         /// </summary>
         public bool IsAllLinear

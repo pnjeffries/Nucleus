@@ -886,8 +886,9 @@ namespace Nucleus.Geometry
         /// <param name="distances">The offset distance.
         /// Positive numbers will result in the offset curve being to the right-hand 
         /// side, looking along the curve.  Negative numbers to the left.</param>
+        /// <param name="tidy">If true (default) collapsed segments will be removed.</param>
         /// <returns></returns>
-        public abstract Curve Offset(IList<double> distances);
+        public abstract Curve Offset(IList<double> distances, bool tidy = true);
 
         /// <summary>
         /// Offset this curve on the XY plane, automatically determining (where possible)

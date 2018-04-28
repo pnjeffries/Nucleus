@@ -422,6 +422,7 @@ namespace Nucleus.Maths
             else return this;
         }
 
+
         /// <summary>
         /// Find the union of this and another interval.
         /// </summary>

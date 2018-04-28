@@ -8,6 +8,7 @@ using Nucleus.Extensions;
 
 namespace Nucleus.Model
 {
+    /*
     /// <summary>
     /// A combination of (potentially factored) cases
     /// </summary>
@@ -135,8 +136,10 @@ namespace Nucleus.Model
         {
             //TODO!
             throw new NotImplementedException();
-        }*/
+        }
 
         #endregion
     }
+    */
+
 }

@@ -32,7 +32,7 @@ namespace Nucleus.Model
     /// Base class for materials
     /// </summary>
     [Serializable]
-    public abstract class Material : ModelObject
+    public abstract class Material : DataOwner<MaterialDataStore, IMaterialDataComponent, Material>
     {
         //TODO: Add material properties
 
@@ -150,6 +150,11 @@ namespace Nucleus.Model
         /// <param name="direction"></param>
         /// <returns></returns>
         public abstract double GetYieldStrength(Direction direction);
+
+        protected override MaterialDataStore NewDataStore()
+        {
+            return new MaterialDataStore(this);
+        }
 
         #endregion
     }

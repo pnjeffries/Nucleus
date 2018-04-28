@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 namespace Nucleus.Model
 {
     /// <summary>
-    /// A collection of results cases
+    /// An object which holds information about an analytical task which
+    /// has been or is to be processed
     /// </summary>
     [Serializable]
-    public class ResultsCaseCollection : ModelObjectCollection<ResultsCase>
+    public class AnalysisTask : ModelObject
     {
-
     }
 }
