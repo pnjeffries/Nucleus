@@ -81,8 +81,9 @@ namespace Nucleus.Model
             foreach (ModelObject mObj in items)
             {
                 IList<T> ids = idMap.GetSecondID(mObj.GUID);
-                foreach (T id in ids)
-                    result.Add(id);
+                if (ids != null)
+                    foreach (T id in ids)
+                        result.Add(id);
             }
             return result;
         }

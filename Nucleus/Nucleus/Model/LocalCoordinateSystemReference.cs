@@ -66,9 +66,15 @@ namespace Nucleus.Model
             return null;
         }
 
+        public ICoordinateSystem GetCoordinateSystem(PanelElement element)
+        {
+            return element.LocalCoordinateSystem();
+        }
+
         public override ICoordinateSystem GetCoordinateSystem(ModelObject onObject)
         {
             if (onObject is LinearElement) return GetCoordinateSystem((LinearElement)onObject, 0.5);
+            else if (onObject is PanelElement) return GetCoordinateSystem((PanelElement)onObject);
             //TODO: Node local coordinate system
             return CartesianCoordinateSystem.Global;
         }

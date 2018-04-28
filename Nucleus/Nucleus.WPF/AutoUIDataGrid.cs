@@ -145,6 +145,13 @@ namespace Nucleus.WPF
                         {
                             sourceBinding.Path = new PropertyPath("Model.Families");
                         }
+                        else if (typeof(CoordinateSystemReference).IsAssignableFrom(property.PropertyType))
+                        {
+                            // TEMP: Should be updated to include custom coordinate systems!
+                            var pInfo = typeof(CoordinateSystemReference).GetProperty("StandardValues");
+                            sourceBinding.Path = new PropertyPath("(0)", pInfo);
+                           //cbFactory.SetValue(ComboBox.ItemsSourceProperty, CoordinateSystemReference.StandardValues);
+                        }
                         //sourceBinding.Converter = new ModelTableConverter();
                         //sourceBinding.ConverterParameter = property.PropertyType;
                     }

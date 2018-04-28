@@ -28,6 +28,21 @@ namespace Nucleus.Model
         /// </summary>
         public static LocalCoordinateSystemReference Local { get { return LocalCoordinateSystemReference.Instance; } }
 
+        private static CoordinateSystemReferenceCollection _StandardValues = null;
+
+        /// <summary>
+        /// A collection of the 'standard' CoordinateSystemReference values.
+        /// </summary>
+        public static CoordinateSystemReferenceCollection StandardValues
+        {
+            get
+            {
+                if (_StandardValues == null) _StandardValues = new CoordinateSystemReferenceCollection(Global, Local);
+                return _StandardValues;
+            }
+        }
+           
+
         #endregion
 
         #region Properties
