@@ -829,7 +829,7 @@ namespace Nucleus.Meshing
                     Vector sideways = cSys.DirectionVector(nLoad.Direction.FirstPerpendicular());
                     Vector sideways2 = cSys.DirectionVector(nLoad.Direction.SecondPerpendicular());
                     double value = nLoad.Value?.Evaluate<double>(context) ?? 0;
-                    AddArrow(node.Position, dir, sideways,  value * factor, scale * 0.4);
+                    AddArrow(node.Position, dir, sideways, value * factor, scale * 0.4);
                     AddArrow(node.Position, dir, sideways2, value * factor, scale * 0.4);
                 }
             }
@@ -845,7 +845,7 @@ namespace Nucleus.Meshing
                     CartesianCoordinateSystem lastSys = null;
                     foreach (var kvp in distri)
                     {
-                        CartesianCoordinateSystem cSys = 
+                        CartesianCoordinateSystem cSys =
                             eLoad.Axes.GetCoordinateSystem(element, kvp.Key) as CartesianCoordinateSystem; // TODO: Adjust to unitized length instead of parameter
                         if (cSys == null) cSys = CartesianCoordinateSystem.Global;
                         Vector dir = cSys.GetAxisVector(eLoad.Direction);
@@ -858,6 +858,32 @@ namespace Nucleus.Meshing
                     }
                     // TODO: Deal with curved/kinked elements?
                     // TODO: Moments & Torsions
+                }
+            }
+            else if (load is LinearElementPointLoad)
+            {
+                LinearElementPointLoad eLoad = (LinearElementPointLoad)load;
+                double value = eLoad.Value.Evaluate<double>(context);
+                foreach (LinearElement element in eLoad.AppliedTo.Items)
+                {
+                    if (element.Geometry != null)
+                    {
+                        //TODO
+                        double t = eLoad.Position;
+                        if (!eLoad.Relative)
+                        {
+                            element.Geometry.ParameterAt(eLoad.Position);
+                        }
+                        KeyValuePair<double, double> last = new KeyValuePair<double, double>(double.NaN, double.NaN);
+                        CartesianCoordinateSystem cSys =
+                                eLoad.Axes.GetCoordinateSystem(element, t) as CartesianCoordinateSystem; // TODO: Adjust to unitized length instead of parameter
+                        if (cSys == null) cSys = CartesianCoordinateSystem.Global;
+                        Vector dir = cSys.GetAxisVector(eLoad.Direction);
+                        Vector sideways = cSys.DirectionVector(eLoad.Direction.FirstPerpendicular());
+                        Vector sideways2 = cSys.DirectionVector(eLoad.Direction.SecondPerpendicular());
+                        AddArrow(cSys.Origin, dir, sideways, value * factor, scale * 0.4);
+                        AddArrow(cSys.Origin, dir, sideways2, value * factor, scale * 0.4);
+                    }
                 }
             }
             else if (load is PanelLoad)

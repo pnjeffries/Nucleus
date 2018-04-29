@@ -127,6 +127,7 @@
     <Compile Include="Model\ConstraintFamily.cs" />
     <Compile Include="Model\CrossSectionClass.cs" />
     <Compile Include="Model\DesignCase.cs" />
+    <Compile Include="Model\DesignCaseCollection.cs" />
     <Compile Include="Model\ElementUse.cs" />
     <Compile Include="Model\FactoredLoadCase.cs" />
     <Compile Include="Model\FactoredLoadCaseCollection.cs" />
