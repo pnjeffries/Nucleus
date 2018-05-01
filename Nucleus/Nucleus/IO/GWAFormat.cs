@@ -28,8 +28,8 @@ namespace Nucleus.IO
 
             Add(typeof(PanelElement),
                 IF + " *.HasMeshRepresentation()" + THEN + 
-                "EL\t{" + CONTEXT + ".GetID()}\t{Name}\tNO_RGB\t{" + CONTEXT + ".ElementType()}\t{Family." + CONTEXT + ".GetID()}\t{" + CONTEXT + 
-                ".ElementGroup()}\t{" + CONTEXT + ".ElementTopo()}"); //TODO
+                "EL\t{" + CONTEXT + ".GetID()}\t{Name}\tNO_RGB\t{" + CONTEXT + ".ElementType()}\t{Family." + CONTEXT + ".GetID()}\t{" + 
+                CONTEXT + ".ElementGroup()}\t{" + CONTEXT + ".ElementTopo()}"); //TODO
 
             Add(typeof(SectionFamily), 
                 "PROP_SEC\t{" + CONTEXT + ".GetID()}\t{Name}\tNO_RGB\t{" + CONTEXT + ".FamilyMaterial()}\t{" + CONTEXT + ".SectionDescription()}");

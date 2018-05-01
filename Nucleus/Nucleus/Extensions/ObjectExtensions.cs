@@ -143,13 +143,16 @@ namespace Nucleus.Extensions
 
             if (context.HasSubComponentsToWrite(obj))
             {
+                int oldIndex = context.SubComponentIndex;
                 //Sub-items:
                 while (context.HasSubComponentsToWrite(obj))
                 {
-                    CreateFormattedString(obj, format, openTag, closeTag, ifTag, thenTag, context, resultBuilder, pathBuilder);
+                    CreateFormattedString(obj, format, openTag, closeTag, 
+                        ifTag, thenTag, context, resultBuilder, pathBuilder);
                     resultBuilder.AppendLine();
                     context.SubComponentIndex++;
                 }
+                context.SubComponentIndex = oldIndex;
             }
             else
             {

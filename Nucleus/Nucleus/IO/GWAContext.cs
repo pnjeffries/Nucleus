@@ -17,6 +17,10 @@ namespace Nucleus.IO
     /// </summary>
     public class GWAContext : StringConversionContextBase
     {
+        // TODO: SubComponentIndex is a single parameter which will potentially be used
+        // for sub-objects on properties as well.  This can lead to unwanted ID increments.
+        // TO BE FIXED!
+
         #region Fields
 
         /// <summary>
@@ -30,6 +34,12 @@ namespace Nucleus.IO
 
         private IDMappingTable<Guid, IList<int>> _IDMap = new IDMappingTable<Guid, IList<int>>("Nucleus", "GSA");
 
+        /// <summary>
+        /// The ID mapping table
+        /// </summary>
+        /// <remarks>
+        /// Currently, this does not categorise the items, meaning it's not usable to map back again...
+        /// </remarks>
         public IDMappingTable<Guid, IList<int>> IDMap
         {
             get { return _IDMap; }
@@ -315,6 +325,8 @@ namespace Nucleus.IO
             {
                 if (obj is GlobalCoordinateSystemReference) return "GLOBAL";
                 else if (obj is LocalCoordinateSystemReference) return "LOCAL";
+
+                //if (!HasSubComponentsToWrite(obj)) subComponentIndex = 0; //Now unnecessary?
 
                 ModelObject mObj = (ModelObject)obj;
                 if (IDMap.HasSecondID(mObj.GUID))
