@@ -26,10 +26,13 @@ namespace Nucleus.Tests
             var format = new GWAFormat();
             Core.Print(format.ToString());
             format.Save("C:\\TEMP\\GWAFormat.txt");
-            var serialiser = new ModelDocumentTextSerialiser(format, new GWAContext());
+            var context = new GWAContext();
+            var serialiser = new ModelDocumentTextSerialiser(format, context);
             sw.Start();
             Core.Print(serialiser.Serialize(doc));
             sw.Stop();
+
+            Core.Print(context.IDMap.ToCSV());
 
             return sw.Elapsed;
         }

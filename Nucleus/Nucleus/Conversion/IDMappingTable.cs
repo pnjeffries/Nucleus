@@ -27,6 +27,8 @@ using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using Nucleus.Extensions;
 using Nucleus.Model;
+using System.Collections;
+using System.IO;
 
 namespace Nucleus.Conversion
 {
@@ -375,6 +377,61 @@ namespace Nucleus.Conversion
             return DefaultCategory;
         }
 
-#endregion
+        /// <summary>
+        /// Write this ID map to a mapping table in CSV format
+        /// </summary>
+        /// <param name="separator"></param>
+        /// <returns></returns>
+        public string ToCSV(string separator = ",")
+        {
+            var sb = new StringBuilder();
+
+            // Title block:
+            sb.Append("Category");
+            sb.Append(separator);
+            sb.Append(FirstIDName);
+            sb.Append(separator);
+            sb.Append(SecondIDName);
+            sb.AppendLine();
+
+            foreach (var kvp in this)
+            {
+                foreach (var kvp2 in kvp.Value)
+                {
+                    sb.Append(kvp.Key); // Category
+                    sb.Append(separator);
+                    sb.Append(kvp2.Key); // First ID
+                    sb.Append(separator);
+                    if (kvp2.Value is IList)
+                    {
+                        IList list = (IList)kvp2.Value;
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            if (i > 0) sb.Append(separator);
+                            sb.Append(list[i]);
+                        }
+                    }
+                    else
+                        sb.Append(kvp2.Value); // Second ID
+                    sb.AppendLine();
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Write out this TextFormat to a text file
+        /// </summary>
+        /// <param name="filePath"></param>
+        public void SaveAsCSV(FilePath filePath, string separator = ",")
+        {
+            var writer = new StreamWriter(filePath);
+            writer.Write(ToCSV(separator));
+            writer.Flush();
+            writer.Close();
+        }
+
+        #endregion
     }
 }

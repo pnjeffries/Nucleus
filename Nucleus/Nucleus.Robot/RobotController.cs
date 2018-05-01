@@ -518,6 +518,12 @@ namespace Nucleus.Robot
                             eLoad.SetForce(force);
                             eLoad.SetUniform();
 
+                            // Load coordinate system:
+                            if (record.GetValue((short)IRobotUniformRecordValues.I_URV_LOCAL_SYSTEM) != 0)
+                                eLoad.Axes = CoordinateSystemReference.Local;
+                            else
+                                eLoad.Axes = CoordinateSystemReference.Global;
+
                             // Elements applied to:
                             RobotSelection appliedTo = record.Objects;
                             eLoad.AppliedTo.Clear();
@@ -529,6 +535,45 @@ namespace Nucleus.Robot
 
                             context.IDMap.Add(eLoad, record);
 
+                        }
+                        else if (record.Type == IRobotLoadRecordType.I_LRT_BAR_FORCE_CONCENTRATED)
+                        {
+                            LinearElementPointLoad eLoad = load as LinearElementPointLoad;
+                            if (eLoad == null)
+                                eLoad = model.Create.LinearElementPointLoad(lCase);
+                            else
+                                eLoad.Case = lCase;
+
+                            // Load value:
+                            Vector force = new Vector(
+                            record.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FX),
+                             record.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FY),
+                              record.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FZ));
+                            eLoad.SetForce(force);
+                            // TODO: Set moments
+
+                            // Load position:
+                            eLoad.Position = record.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_X);
+                            eLoad.Relative = record.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_REL) != 0;
+
+                            // Load coordinate system:
+                            if (record.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_LOC) != 0)
+                                eLoad.Axes = CoordinateSystemReference.Local;
+                            else
+                                eLoad.Axes = CoordinateSystemReference.Global;
+
+                            // TODO: Projected
+
+                            // Elements applied to:
+                            RobotSelection appliedTo = record.Objects;
+                            eLoad.AppliedTo.Clear();
+                            for (int k = 1; k <= appliedTo.Count; k++)
+                            {
+                                LinearElement element = context.IDMap.GetMappedLinearElement(appliedTo.Get(k), model);
+                                if (element != null) eLoad.AppliedTo.Add(element);
+                            }
+
+                            context.IDMap.Add(eLoad, record);
                         }
                         else if (record.Type == IRobotLoadRecordType.I_LRT_UNIFORM)
                         {
@@ -542,6 +587,14 @@ namespace Nucleus.Robot
                              record.GetValue((short)IRobotUniformRecordValues.I_URV_PY),
                               record.GetValue((short)IRobotUniformRecordValues.I_URV_PZ));
                             aLoad.SetForce(force);
+
+                            // Load coordinate system:
+                            if (record.GetValue((short)IRobotUniformRecordValues.I_URV_LOCAL_SYSTEM) != 0)
+                                aLoad.Axes = CoordinateSystemReference.Local;
+                            else
+                                aLoad.Axes = CoordinateSystemReference.Global;
+
+                            // TODO: Projected
 
                             // Elements applied to:
                             RobotSelection appliedTo = record.Objects;
@@ -588,6 +641,8 @@ namespace Nucleus.Robot
                             double pressure = record.GetValue((short)IRobotPressureRecordValues.I_PRV_P);
 
                             aLoad.Value = pressure;
+                            aLoad.Direction = Direction.Z;
+                            aLoad.Axes = CoordinateSystemReference.Local; //?
 
                             // Elements applied to:
                             RobotSelection appliedTo = record.Objects;
