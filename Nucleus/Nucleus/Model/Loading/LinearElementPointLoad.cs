@@ -1,4 +1,5 @@
 ﻿using Nucleus.Geometry;
+using Nucleus.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,7 @@ namespace Nucleus.Model.Loading
         /// Otherwise (when Relative = false) it is an absolute distance
         /// value from the element start.
         /// </summary>
+        [AutoUI(650)]
         public double Position
         {
             get { return _Position; }
@@ -47,6 +49,7 @@ namespace Nucleus.Model.Loading
         /// Otherwise (when Relative = false) it is an absolute distance
         /// value from the element start.
         /// </summary>
+        [AutoUI(655)]
         public bool Relative
         {
             get { return _Relative; }

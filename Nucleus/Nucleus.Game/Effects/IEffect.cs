@@ -1,4 +1,5 @@
 ﻿using Nucleus.Base;
+using Nucleus.Log;
 using Nucleus.Model;
 using System;
 using System.Collections.Generic;

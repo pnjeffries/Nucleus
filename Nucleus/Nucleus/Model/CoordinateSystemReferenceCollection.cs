@@ -42,5 +42,14 @@ namespace Nucleus.Model
         /// </summary>
         /// <param name="model"></param>
         protected CoordinateSystemReferenceCollection(Model model) : base(model) { }
+
+        /// <summary>
+        /// Initialise a collection with the specified initial value(s)
+        /// </summary>
+        /// <param name="sysRef"></param>
+        public CoordinateSystemReferenceCollection(params CoordinateSystemReference[] sysRef)
+        {
+            AddRange(sysRef);
+        }
     }
 }
