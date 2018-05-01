@@ -3,6 +3,7 @@ using Nucleus.Conversion;
 using Nucleus.Extensions;
 using Nucleus.Geometry;
 using Nucleus.Model;
+using Nucleus.Model.Loading;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -156,6 +157,21 @@ namespace Nucleus.IO
                 return b6D.ToString("R", "F");
             }
             return "FFFFFF";
+        }
+
+        /// <summary>
+        /// Get a point load position in GWA form (-ve if relative)
+        /// </summary>
+        /// <returns></returns>
+        public double PointLoadPosition()
+        {
+            if (SourceObject is LinearElementPointLoad)
+            {
+                var lEPL = (LinearElementPointLoad)SourceObject;
+                if (lEPL.Relative) return -lEPL.Position;
+                else return lEPL.Position;
+            }
+            return 0;
         }
 
         /// <summary>

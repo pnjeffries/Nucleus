@@ -52,6 +52,10 @@ namespace Nucleus.IO
             Add(typeof(LinearElementLoad),
                 "LOAD_BEAM_UDL.2\t{Name}\t{AppliedTo.*.ListDefinition()}\t{Case.*.GetID()}\t{Axes.*.GetID()}\tNO\t{Direction}\t{Value.Evaluate()}");
 
+            //LOAD_BEAM_POINT.2 | name | list | case | axis | proj | dir | pos | value
+            Add(typeof(LinearElementPointLoad),
+                "LOAD_BEAM_POINT.2\t{Name}\t{AppliedTo.*.ListDefinition()}\t{Case.*.GetID()}\t{Axes.*.GetID()}\tNO\t{*.PointLoadPosition()}\t{Value.Evaluate()}");
+
             Add(typeof(PanelLoad),
                 "LOAD_2D_FACE.2\t{Name}\t{AppliedTo.*.ListDefinition()}\t{Case.*.GetID()}\t{Axes.*.GetID()}\tCONS\tNO\t{Direction}\t{Value.Evaluate()}");
 
