@@ -1,4 +1,5 @@
-﻿using Nucleus.Base;
+﻿using Nucleus.Alerts;
+using Nucleus.Base;
 using Nucleus.Conversion;
 using Nucleus.Extensions;
 using Nucleus.Geometry;
@@ -159,12 +160,12 @@ namespace Nucleus.Robot
         /// calling this function.
         /// </summary>
         /// <returns></returns>
-        public Model.Model LoadModelFromRobot(ref RobotIDMappingTable idMap, RobotConversionOptions options = null)
+        public Model.Model LoadModelFromRobot(ref RobotIDMappingTable idMap, RobotConversionOptions options = null, AlertLog log = null)
         {
             var model = new Model.Model();
             if (idMap == null) idMap = new RobotIDMappingTable();
             if (options == null) options = new RobotConversionOptions();
-            var context = new RobotConversionContext(idMap, options);
+            var context = new RobotConversionContext(idMap, options, log);
             UpdateModelFromRobot(model, context);
             return model;
         }
@@ -748,13 +749,14 @@ namespace Nucleus.Robot
         /// to synchronise the models in future.</param>
         /// <param name="options">The conversion options.  If null, the default options will be used.</param>
         /// <returns></returns>
-        public bool WriteModelToRobot(FilePath filePath, Model.Model model, ref RobotIDMappingTable idMap, RobotConversionOptions options = null)
+        public bool WriteModelToRobot(FilePath filePath, Model.Model model, ref RobotIDMappingTable idMap, RobotConversionOptions options = null, AlertLog log = null)
         {
             if (New())
             {
                 if (idMap == null) idMap = new RobotIDMappingTable();
                 if (options == null) options = new RobotConversionOptions();
-                var context = new RobotConversionContext(idMap, options);
+                //if (log == null) log = new AlertLog();
+                var context = new RobotConversionContext(idMap, options, log);
                 UpdateRobotFromModel(model, context);
                 return Save(filePath);
             }
@@ -771,20 +773,18 @@ namespace Nucleus.Robot
         /// to synchronise the models in future.</param>
         /// <param name="options">The conversion options.  If null, the default options will be used.</param>
         /// <returns></returns>
-        public bool UpdateRobotFromModel(FilePath filePath, Model.Model model, ref RobotIDMappingTable idMap, RobotConversionOptions options = null)
+        public bool UpdateRobotFromModel(FilePath filePath, Model.Model model, ref RobotIDMappingTable idMap, RobotConversionOptions options = null, AlertLog log = null)
         {
             if (Open(filePath) || New())
             {
                 if (idMap == null) idMap = new RobotIDMappingTable();
                 if (options == null) options = new RobotConversionOptions();
-                var context = new RobotConversionContext(idMap, options);
+                //if (log == null) log = new AlertLog();
+                var context = new RobotConversionContext(idMap, options, log);
                 UpdateRobotFromModel(model, context);
                 return Save(filePath);
             }
-            else
-            {
-                return false;
-            }
+            else return false;
         }
 
         /// <summary>

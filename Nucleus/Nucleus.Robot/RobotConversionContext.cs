@@ -26,9 +26,9 @@ namespace Nucleus.Robot
         public RobotConversionOptions Options { get; set; } = new RobotConversionOptions();
 
         /// <summary>
-        /// The alert log
+        /// The current alert log
         /// </summary>
-        public AlertLog Log { get; set; } = new AlertLog();
+        public AlertLog Log { get; set; }
 
         #endregion
 
@@ -49,10 +49,11 @@ namespace Nucleus.Robot
         /// </summary>
         /// <param name="idMap"></param>
         /// <param name="options"></param>
-        public RobotConversionContext(RobotIDMappingTable idMap, RobotConversionOptions options) 
+        public RobotConversionContext(RobotIDMappingTable idMap, RobotConversionOptions options, AlertLog log) 
             : this(idMap)
         {
             Options = options;
+            Log = log;
         }
 
         #endregion

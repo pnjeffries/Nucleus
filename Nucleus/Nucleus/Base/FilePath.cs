@@ -256,11 +256,23 @@ namespace Nucleus.Base
         /// Returns a copy of this FilePath with a suffix appended to the filename, inserted between the
         /// file name and extension
         /// </summary>
-        /// <param name="suffix"></param>
+        /// <param name="suffix">The suffix to add to the filename</param>
         /// <returns></returns>
         public FilePath AddNameSuffix(string suffix)
         {
             return new FilePath(TrimExtension() + suffix + Extension);
+        }
+
+        /// <summary>
+        /// Returns a copy of this FilePath with a suffix appended to the filename, inserted between the
+        /// file name and extension
+        /// </summary>
+        /// <param name="suffix">The suffix to add to the filename</param>
+        /// <param name="newExtension">The new file extension.  If not preceded with a '.' one will be added automatically.</param>
+        /// <returns></returns>
+        public FilePath AddNameSuffix(string suffix, string newExtension)
+        {
+            return new FilePath(TrimExtension() + suffix + (newExtension.StartsWith(".") ? newExtension : "." + newExtension));
         }
 
 #endif
