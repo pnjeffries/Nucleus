@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace Nucleus.Alerts
 {
@@ -20,8 +21,10 @@ namespace Nucleus.Alerts
         /// Raise an alert
         /// </summary>
         /// <param name="alert">The alert to add to the log</param>
-        public void RaiseAlert(Alert alert)
+        public virtual void RaiseAlert(Alert alert)
         {
+            //Application.Current.Dispatcher.Invoke(new Action(() => AddOrMerge(alert)));
+            //Dispatcher.Invoke(new Action(() => AddOrMerge(alert)));
             AddOrMerge(alert);
         }
 
@@ -32,7 +35,7 @@ namespace Nucleus.Alerts
         /// <param name="level">The level of the alert</param>
         public void RaiseAlert(string message, AlertLevel level = AlertLevel.Information)
         {
-            AddOrMerge(new Alert(message, level));
+            RaiseAlert(new Alert(message, level));
         }
 
         /// <summary>
@@ -43,7 +46,19 @@ namespace Nucleus.Alerts
         /// <param name="level">The level of the alert</param>
         public void RaiseAlert(string alertID, string message, AlertLevel level = AlertLevel.Information)
         {
-            AddOrMerge(new Alert(alertID, message, level));
+            RaiseAlert(new Alert(alertID, message, level));
+        }
+
+        /// <summary>
+        /// Raise a progress alert, merging it with any previous alerts with the same ID
+        /// </summary>
+        /// <param name="alertID">The identifier for the alert type.  Multiple alerts with the same ID will be merged.</param>
+        /// <param name="message">The message to display</param>
+        /// <param name="progress">The progress of the operation</param>
+        /// <param name="level">The level of the alert</param>
+        public void RaiseAlert(string alertID, string message, double progress, AlertLevel level = AlertLevel.Information)
+        {
+            RaiseAlert(new ProgressAlert(alertID, message, progress, level));
         }
 
         /// <summary>
@@ -55,7 +70,7 @@ namespace Nucleus.Alerts
         /// <param name="level">The level of the alert.</param>
         public void RaiseAlert(string alertID, Element element, string message, AlertLevel level = AlertLevel.Information)
         {
-            AddOrMerge(new ElementAlert(alertID, element, message, level));
+            RaiseAlert(new ElementAlert(alertID, element, message, level));
         }
 
         /// <summary>
@@ -67,7 +82,7 @@ namespace Nucleus.Alerts
         /// <param name="level">The level of the alert.</param>
         public void RaiseAlert(string alertID, Node node, string message, AlertLevel level = AlertLevel.Information)
         {
-            AddOrMerge(new NodeAlert(alertID, node, message, level));
+            RaiseAlert(new NodeAlert(alertID, node, message, level));
         }
 
         /// <summary>
@@ -79,7 +94,7 @@ namespace Nucleus.Alerts
         /// <param name="level">The level of the alert.</param>
         public void RaiseAlert(string alertID, Load load, string message, AlertLevel level = AlertLevel.Information)
         {
-            AddOrMerge(new LoadAlert(alertID, load, message, level));
+            RaiseAlert(new LoadAlert(alertID, load, message, level));
         }
 
         /// <summary>

@@ -154,7 +154,7 @@ namespace Nucleus.Geometry
         /// <returns></returns>
         public override Curve Offset(IList<double> distances, bool tidy = true)
         {
-            Vector[] pts = new Vector[Vertices.Count];
+            IList<Vector> pts = new Vector[Vertices.Count]; //The offset points
             for (int i = 0; i < Vertices.Count; i++)
             {
                 Vector p0 = Vector.Unset; // Last point
@@ -183,6 +183,12 @@ namespace Nucleus.Geometry
                     Vector o2 = v2.PerpendicularXY() * d2;
                     Vector pOff = Intersect.LineLineXY(p0 + o1, v1, p2 + o2, v2);
                     pts[i] = pOff;
+
+                    if (tidy)
+                    {
+                        // Check for segment inversion:
+                        // TODO!
+                    }
                 }
                 else
                 {

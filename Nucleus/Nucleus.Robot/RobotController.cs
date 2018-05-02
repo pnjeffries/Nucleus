@@ -781,7 +781,10 @@ namespace Nucleus.Robot
                 UpdateRobotFromModel(model, context);
                 return Save(filePath);
             }
-            else return false;
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -863,10 +866,13 @@ namespace Nucleus.Robot
         /// <returns></returns>
         private bool WriteNodes(Model.Model model, NodeCollection nodes, RobotConversionContext context)
         {
-            foreach (Node node in nodes)
+            for (int i = 0; i < nodes.Count; i++)
             {
+                Node node = nodes[i];
+                context.Log.RaiseAlert("NodeProg", "Writing Nodes...", (double)i / (double)nodes.Count);
                 WriteNode(node, context);
             }
+            context.Log.RaiseAlert("NodeProg", "Writing Nodes Complete.", 1.0);
             return true;
         }
 
@@ -966,10 +972,13 @@ namespace Nucleus.Robot
         /// <returns></returns>
         private bool WriteLevels(Model.Model model, LevelCollection levels, RobotConversionContext context)
         {
-            foreach (var lvl in levels)
+            for (int i = 0; i < levels.Count; i++)
             {
+                context.Log.RaiseAlert("LVLProg", "Writing Levels...", (double)i / (double)levels.Count);
+                var lvl = levels[i];
                 WriteLevel(lvl, context);
             }
+            context.Log.RaiseAlert("LVLProg", "Writing Levels Complete.", 1.0);
             return true;
         }
 

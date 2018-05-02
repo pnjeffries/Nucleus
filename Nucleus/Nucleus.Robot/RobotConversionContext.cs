@@ -1,4 +1,5 @@
-﻿using Nucleus.Conversion;
+﻿using Nucleus.Alerts;
+using Nucleus.Conversion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,11 @@ namespace Nucleus.Robot
         /// The current conversion options set
         /// </summary>
         public RobotConversionOptions Options { get; set; } = new RobotConversionOptions();
+
+        /// <summary>
+        /// The alert log
+        /// </summary>
+        public AlertLog Log { get; set; } = new AlertLog();
 
         #endregion
 

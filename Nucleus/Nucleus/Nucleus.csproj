@@ -60,6 +60,7 @@
     <Compile Include="Alerts\LoadAlert.cs" />
     <Compile Include="Alerts\ModelObjectAlert.cs" />
     <Compile Include="Alerts\NodeAlert.cs" />
+    <Compile Include="Alerts\ProgressAlert.cs" />
     <Compile Include="Analysis\BeamAnalysisBase.cs" />
     <Compile Include="Analysis\CalcVariable.cs" />
     <Compile Include="Analysis\EC3MemberChecks.cs" />

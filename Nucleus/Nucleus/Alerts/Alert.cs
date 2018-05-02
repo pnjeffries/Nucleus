@@ -117,6 +117,7 @@ namespace Nucleus.Alerts
         /// <returns></returns>
         public virtual void Merge(Alert other)
         {
+            Message = other.Message;
             NotifyPropertiesChanged("DisplayText");
         }
 
