@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Nucleus.WPF"
         mc:Ignorable="d"
-        Title="AlertsLogDialog" Height="300" Width="300">
+        Title="Log" Height="300" Width="300" Topmost="True">
     <Grid>
         <local:AlertsLogViewer></local:AlertsLogViewer>
     </Grid>

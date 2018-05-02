@@ -14,9 +14,11 @@ namespace Nucleus.WPF
     /// </summary>
     public class AsyncAlertLog : AlertLog
     {
+        public Window Window { get; set; }
+
         public override void RaiseAlert(Alert alert)
         {
-            Application.Current.Dispatcher.Invoke(new Action(() => AddOrMerge(alert)));
+            Window.Dispatcher.Invoke(new Action(() => AddOrMerge(alert)));
         }
     }
 }

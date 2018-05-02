@@ -869,10 +869,10 @@ namespace Nucleus.Robot
             for (int i = 0; i < nodes.Count; i++)
             {
                 Node node = nodes[i];
-                context.Log.RaiseAlert("NodeProg", "Writing Nodes...", (double)i / (double)nodes.Count);
+                context.Log?.RaiseAlert("NodeProg", "Writing Nodes...", (double)i / (double)nodes.Count);
                 WriteNode(node, context);
             }
-            context.Log.RaiseAlert("NodeProg", "Writing Nodes Complete.", 1.0);
+            context.Log?.RaiseAlert("NodeProg", "Writing Nodes Complete.", 1.0);
             return true;
         }
 
@@ -885,8 +885,10 @@ namespace Nucleus.Robot
         /// <returns></returns>
         private bool WriteFamilies(Model.Model model, FamilyCollection properties, RobotConversionContext context)
         {
-            foreach (Family property in properties)
+            for (int i = 0; i < properties.Count; i++)
             {
+                var property = properties[i];
+                context.Log?.RaiseAlert("FamilyProg", "Writing Properties...", (double)i / (double)properties.Count);
                 if (property is SectionFamily)
                 {
                     WriteSection((SectionFamily)property, context);
@@ -896,6 +898,7 @@ namespace Nucleus.Robot
                     WriteBuildUp((BuildUpFamily)property, context);
                 }
             }
+            context.Log?.RaiseAlert("FamilyProg", "Writing Properties Complete.", 1.0);
             return true;
         }
 
@@ -908,10 +911,13 @@ namespace Nucleus.Robot
         /// <returns></returns>
         private bool WriteLinearElements(Model.Model model, LinearElementCollection linearElements, RobotConversionContext context)
         {
-            foreach (LinearElement element in linearElements)
+            for(int i = 0; i < linearElements.Count; i++)
             {
+                LinearElement element = linearElements[i];
+                context.Log?.RaiseAlert("BarProg", "Writing Bars...", (double)i / (double)linearElements.Count);
                 ReadLinearElement(element, context);
             }
+            context.Log?.RaiseAlert("BarProg", "Writing Bars Completed.", 1.0);
             return true;
         }
 
@@ -924,10 +930,13 @@ namespace Nucleus.Robot
         /// <returns></returns>
         private bool WritePanels(Model.Model model, PanelElementCollection panelElements, RobotConversionContext context)
         {
-            foreach (PanelElement element in panelElements)
+            for (int i = 0; i < panelElements.Count; i++)
             {
+                PanelElement element = panelElements[i];
+                context.Log?.RaiseAlert("PanelProg", "Writing Panels...", (double)i / (double)panelElements.Count);
                 WritePanelElement(element, context);
             }
+            context.Log?.RaiseAlert("PanelProg", "Writing Panels Completed.", 1.0);
             return true;
         }
 
@@ -974,11 +983,11 @@ namespace Nucleus.Robot
         {
             for (int i = 0; i < levels.Count; i++)
             {
-                context.Log.RaiseAlert("LVLProg", "Writing Levels...", (double)i / (double)levels.Count);
+                context.Log?.RaiseAlert("LVLProg", "Writing Levels...", (double)i / (double)levels.Count);
                 var lvl = levels[i];
                 WriteLevel(lvl, context);
             }
-            context.Log.RaiseAlert("LVLProg", "Writing Levels Complete.", 1.0);
+            context.Log?.RaiseAlert("LVLProg", "Writing Levels Complete.", 1.0);
             return true;
         }
 
