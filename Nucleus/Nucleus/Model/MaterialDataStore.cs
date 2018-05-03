@@ -10,6 +10,7 @@ namespace Nucleus.Model
     /// A data storage mechanism for materials
     /// Stores data components keyed by type.
     /// </summary>
+    [Serializable]
     public class MaterialDataStore : DataStore<IMaterialDataComponent, Material>
     {
         #region Constructor

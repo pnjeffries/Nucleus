@@ -33,7 +33,7 @@ namespace Nucleus.Alerts
         {
             get
             {
-                return Message + " " + ((int)Progress * 100) + "%";
+                return Message + " " + ((int)(Progress * 100)) + "%";
             }
         }
 
