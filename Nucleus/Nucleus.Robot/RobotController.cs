@@ -850,7 +850,7 @@ namespace Nucleus.Robot
                 var loadCases = model.LoadCases;
                 //if (context.Options.Update) loadCases = //TODO?
                 if (loadCases.Count > 0) RaiseMessage("Writing Loads...");
-                WriteLoads(model, loadCases, context);
+                WriteLoads(model, loadCases, context, model.Loads.Count);
             }
 
             RaiseMessage("Data writing completed.");
@@ -949,10 +949,13 @@ namespace Nucleus.Robot
         /// <returns></returns>
         private bool WriteGroups(ModelObjectSetCollection sets, RobotConversionContext context)
         {
-            foreach (var set in sets)
+            for (int i = 0; i < sets.Count; i++)
             {
+                var set = sets[i];
+                context.Log?.RaiseAlert("GroupProg", "Writing Groups...", (double)i / (double)sets.Count);
                 WriteGroup(set, context);
             }
+            context.Log?.RaiseAlert("GroupProg", "Writing Groups Completed.", 1.0);
             return true;
         }
 
@@ -963,12 +966,15 @@ namespace Nucleus.Robot
         /// <param name="loadCases"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        private bool WriteLoads(Model.Model model, LoadCaseCollection loadCases, RobotConversionContext context)
+        private bool WriteLoads(Model.Model model, LoadCaseCollection loadCases, RobotConversionContext context, int totalLoads)
         {
+            int lw = 0; ;
             foreach (var lc in loadCases)
             {
-                WriteLoadCase(lc, context);
+                WriteLoadCase(lc, context, ref lw);
+                context.Log?.RaiseAlert("LoadProg", "Writing Loads...", (double)lw / (double)totalLoads);
             }
+            context.Log?.RaiseAlert("LoadProg", "Writing Loads Completed.", 1.0);
             return true;
         }
 
@@ -1836,7 +1842,7 @@ namespace Nucleus.Robot
         /// </summary>
         /// <param name="lCase"></param>
         /// <param name="context"></param>
-        public void WriteLoadCase(LoadCase lCase, RobotConversionContext context)
+        public void WriteLoadCase(LoadCase lCase, RobotConversionContext context, ref int lw)
         {
             string mappedID;
             IRobotCase rCase = null;
@@ -1876,6 +1882,7 @@ namespace Nucleus.Robot
                 foreach (var load in loads)
                 {
                     WriteLoad(load, (RobotSimpleCase)rCase, context);
+                    lw++;
                 }
             }
         }

@@ -183,12 +183,23 @@ namespace Nucleus.Geometry
                     Vector o2 = v2.PerpendicularXY() * d2;
                     Vector pOff = Intersect.LineLineXY(p0 + o1, v1, p2 + o2, v2);
                     pts[i] = pOff;
+                    /*bool add = true;
 
-                    if (tidy)
+                    if (tidy && pts.Count > 0)
                     {
                         // Check for segment inversion:
                         // TODO!
+                        Vector v1B = (pOff - pts.Last());
+                        if (v1B.Dot(v1) < 0)
+                        {
+                            // Segment flipped!
+                            add = false;
+
+                            //Adjust last point to lie on the intersection with the prior segment:
+
+                        }
                     }
+                    if (add) pts.Add(pOff);*/
                 }
                 else
                 {
@@ -215,6 +226,19 @@ namespace Nucleus.Geometry
                     else pts[i] = p1; // Can't offset!
                 }
             }
+
+            if (tidy)
+            {
+                IList<Vector> tidyPts = new List<Vector>();
+
+                // Post-processing step: remove collapsed segments
+                for (int i = 0; i < pts.Count; i++)
+                {
+                    Vector vOff = pts.GetWrapped(i + 1) - pts[i];
+                    //TODO
+                }
+            }
+
             return new PolyLine(pts, Closed);
         }
 
@@ -338,7 +362,9 @@ namespace Nucleus.Geometry
         /// <returns></returns>
         public override IList<ISimpleCurve> ToSimpleCurves()
         {
-            return (List<ISimpleCurve>)ToLines(); //?
+            var result = new List<ISimpleCurve>();
+            result.AddRange(ToLines());
+            return result;
         }
 
         public override string ToString()

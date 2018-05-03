@@ -514,7 +514,6 @@ namespace Nucleus.Geometry
                         MatchEnds(prevCrv.End, offsetCrv.Start);
                     }
                     result.Add(offsetCrv);
-                    // TODO: Remove flipped/zero-length segments
                 }
             }
 
@@ -522,10 +521,52 @@ namespace Nucleus.Geometry
             if (Closed && result.SubCurves.Count > 1)
                 MatchEnds(result.SubCurves.Last().End, result.SubCurves.First().Start);
 
+            if (tidy)
+            {
+                List<Curve> originals = new List<Curve>();
+                originals.AddRange(SubCurves);
+
+                // Removed flipped segments
+                int j = 0;
+                while (j < result.SubCurves.Count)
+                {
+                    Curve offset = result.SubCurves[j];
+                    Curve original = originals[j];
+
+                    if (IsOffsetCurveFlipped(original, offset))
+                    {
+                        if (result.SubCurves.Count > 0)
+                        {
+                            Curve previous = result.SubCurves.GetWrapped(j - 1);
+                            Curve subsequent = result.SubCurves.GetWrapped(j + 1);
+                            MatchEnds(previous.End, subsequent.Start);
+                        }
+                        result.SubCurves.RemoveAt(j);
+                        originals.RemoveAt(j);
+                        //j--;
+                    }
+                    else
+                        j++;
+                }
+            }
+
             return result;
         }
 
-        
+        private bool IsOffsetCurveFlipped(Curve original, Curve offset)
+        {
+            if (original.Closed)
+            {
+                return (original.IsClockwiseXY() != offset.IsClockwiseXY());
+            }
+            else
+            {
+                Vector v1 = original.EndPoint - original.StartPoint;
+                Vector v2 = offset.EndPoint - offset.StartPoint;
+                return v1.Dot(v2) < 0;
+            }
+        }
+
         /// <summary>
         /// Extract a portion of this curve as a new curve
         /// </summary>
