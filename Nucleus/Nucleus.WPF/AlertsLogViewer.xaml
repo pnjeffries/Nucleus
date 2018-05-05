@@ -9,11 +9,18 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid Name="LayoutRoot">
         <ListBox ItemsSource="{Binding}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
+            <ListBox.Resources>
+                <DataTemplate DataType="{x:Type alerts:Alert}">
                     <TextBlock Text="{Binding Path=DisplayText}" TextWrapping="WrapWithOverflow"/>
                 </DataTemplate>
-            </ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type alerts:ProgressAlert}">
+                    <Grid>
+                        <ProgressBar Grid.Column="1" Value="{Binding Path=Progress}" Maximum="1.0"></ProgressBar>
+                        <TextBlock Text="{Binding Path=DisplayText}" TextWrapping="WrapWithOverflow" 
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.Resources>
         </ListBox>
     </Grid>
 </UserControl>

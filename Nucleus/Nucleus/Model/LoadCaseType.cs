@@ -30,6 +30,11 @@ namespace Nucleus.Model
         Live = 20,
 
         /// <summary>
+        /// The load is an accidental load due to causes such as explosion, impact, etc.
+        /// </summary>
+        Accidental = 25,
+
+        /// <summary>
         /// The load is due to wind action on the structure
         /// </summary>
         Wind = 30,

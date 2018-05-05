@@ -315,6 +315,19 @@ namespace Nucleus.Geometry
             }
             return minDist;
         }
-        
+
+        /// <summary>
+        /// Get the vector from the position at the specified index to the
+        /// position after it in this list
+        /// </summary>
+        /// <param name="v"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public static Vector VectorToNext<TPosition>(this IList<TPosition> v, int index)
+            where TPosition : IPosition
+        {
+            return v.GetWrapped(index).Position - v[index].Position;
+        }
+
     }
 }

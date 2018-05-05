@@ -1769,6 +1769,18 @@ namespace Nucleus.Geometry
             if (v.Count > 3 && v.Plane() == null) return false;
             else return true;
         }
+
+        /// <summary>
+        /// Get the vector from the point at the specified index to the
+        /// point after it in this list
+        /// </summary>
+        /// <param name="v"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public static Vector VectorToNext(this IList<Vector> v, int index)
+        {
+            return v.GetWrapped(index) - v[index];
+        }
     }
 }
 

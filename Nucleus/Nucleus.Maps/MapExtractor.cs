@@ -204,6 +204,27 @@ namespace Nucleus.Maps
                                     break;
                                 }
                             }
+                            if (geometry is Curve && way.Tags.ContainsKey("height"))
+                            {
+                                string heightTag = way.Tags["height"];
+                                heightTag = heightTag.TrimEnd('m').Trim();
+                                double height;
+                                if (double.TryParse(heightTag, out height))
+                                {
+                                    // TODO: Deal with tags with units on the end!
+                                    geometry = new Extrusion((Curve)geometry, new Vector(0, 0, height));
+                                }
+                            }
+                            if (geometry is Curve && way.Tags.ContainsKey("building:levels"))
+                            {
+                                string levelsTag = way.Tags["building:levels"];
+                                double levels;
+                                if (double.TryParse(levelsTag, out levels))
+                                {
+                                    // TODO: Deal with tags with units on the end!
+                                    geometry = new Extrusion((Curve)geometry, new Vector(0, 0, levels * 3.0));
+                                }
+                            }
                         }
                         var layer = result.GetOrCreate(layerName);
                         layer.Add(geometry);

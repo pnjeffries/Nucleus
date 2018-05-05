@@ -65,6 +65,8 @@
     <Compile Include="Analysis\CalcVariable.cs" />
     <Compile Include="Analysis\EC3MemberChecks.cs" />
     <Compile Include="Analysis\FlatConcreteSlabChecks.cs" />
+    <Compile Include="Geometry\Extrusion.cs" />
+    <Compile Include="Geometry\Solid.cs" />
     <Compile Include="Logs\ICalculationLog.cs" />
     <Compile Include="Analysis\ICalculationScenario.cs" />
     <Compile Include="Analysis\WindLoadsBox.cs" />

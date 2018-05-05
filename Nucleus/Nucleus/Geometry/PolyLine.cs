@@ -231,10 +231,17 @@ namespace Nucleus.Geometry
             {
                 IList<Vector> tidyPts = new List<Vector>();
 
+                int max = pts.Count;
+                if (!Closed) max -= 1;
                 // Post-processing step: remove collapsed segments
-                for (int i = 0; i < pts.Count; i++)
+                for (int i = 0; i < max; i++)
                 {
-                    Vector vOff = pts.GetWrapped(i + 1) - pts[i];
+                    Vector vOff = pts.VectorToNext(i);
+                    Vector vOri = Vertices.VectorToNext(i);
+                    if (vOff.Dot(vOri) < 0) // Flipped!
+                    {
+
+                    }
                     //TODO
                 }
             }

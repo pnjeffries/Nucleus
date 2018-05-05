@@ -127,14 +127,18 @@ namespace Nucleus.Geometry
         {
             get
             {
-                VertexCollection combined = new VertexCollection();
-                combined.AddRange(Perimeter.Vertices);
-                foreach (Curve voidCrv in Voids)
+                if (Voids != null && Voids.Count > 0)
                 {
-                    combined.AddRange(voidCrv.Vertices);
+                    VertexCollection combined = new VertexCollection();
+                    combined.AddRange(Perimeter.Vertices);
+                    foreach (Curve voidCrv in Voids)
+                    {
+                        combined.AddRange(voidCrv.Vertices);
+                    }
+                    //TODO: Additional vertices?
+                    return combined;
                 }
-                //TODO: Additional vertices?
-                return combined;
+                else return Perimeter.Vertices;
             }
         }
 

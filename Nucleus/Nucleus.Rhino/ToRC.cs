@@ -319,6 +319,39 @@ namespace Nucleus.Rhino
         }
 
         /// <summary>
+        /// Convert a Nucleus extrusion volume to a Rhino one
+        /// </summary>
+        /// <param name="extrusion"></param>
+        /// <returns></returns>
+        public static RC.Extrusion Convert(Extrusion extrusion)
+        {
+            if (extrusion.IsValid)
+            {
+                Curve perimeter = extrusion.Profile?.Perimeter;
+                CurveCollection voids = extrusion.Profile?.Voids;
+                if (perimeter != null)
+                {
+                    RC.Curve profile = Convert(perimeter);
+                   // var cSystem = new CartesianCoordinateSystem(new Vector(), extrusion.Path);
+                        //If a line, create an extrusion:
+                        RC.Extrusion ext = new RC.Extrusion();
+
+                    ext.SetPathAndUp(new RC.Point3d(0, 0, 0), Convert(extrusion.Path), RC.Vector3d.YAxis); //TODO: Test!
+                            //ConvertVector(cSystem.Z));
+                        ext.SetOuterProfile(profile, true);
+                        if (voids != null)
+                        {
+                            var voidCrvs = Convert(voids);
+                            foreach (var rCrv in voidCrvs) ext.AddInnerProfile(rCrv);
+                        }
+                        //RC.Surface surface = RC.Extrusion.CreateExtrusion(profile, new RC.Vector3d(Convert(element.End.Position - element.Start.Position)));
+                        return ext;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Convert a LinearElement to a Rhino Brep
         /// </summary>
         /// <param name="element"></param>
@@ -383,6 +416,7 @@ namespace Nucleus.Rhino
         {
             if (geometry is Curve) return Convert((Curve)geometry);
             else if (geometry is Surface) return Convert((Surface)geometry);
+            else if (geometry is Extrusion) return Convert((Extrusion)geometry);
             return null;
         }
 

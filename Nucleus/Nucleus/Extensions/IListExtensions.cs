@@ -55,16 +55,19 @@ namespace Nucleus.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="list"></param>
         /// <param name="index"></param>
+        /// <param name="wrap">Wrapping toggle - if false the wrapping will not occur and the list
+        /// will be accessed normally.</param>
         /// <returns></returns>
-        public static T GetWrapped<T>(this IList<T> list, int index)
+        public static T GetWrapped<T>(this IList<T> list, int index, bool wrap = true)
         {
-            if (list.Count > 0)
+            if (wrap && list.Count > 0)
             {
                 while (index >= list.Count) index -= list.Count;
                 while (index < 0) index += list.Count;
             }
             return list[index];
         }
+
 
         /// <summary>
         /// Remove duplicate objects from this collection, leaving

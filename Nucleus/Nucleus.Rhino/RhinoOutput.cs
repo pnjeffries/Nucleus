@@ -264,7 +264,7 @@ namespace Nucleus.Rhino
                     result = Bake(gB);
                     Writing = false;
                 }
-                else throw new NotImplementedException();
+                //else throw new NotImplementedException();
             }
 
             return result;

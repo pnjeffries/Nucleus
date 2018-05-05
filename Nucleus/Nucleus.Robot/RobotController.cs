@@ -1340,6 +1340,7 @@ namespace Nucleus.Robot
                     else if (element.Geometry is Mesh)
                     {
                         //TODO: Meshes!
+                        context.Log.RaiseAlert("PanlMsh", element, "Panels represented by mesh geometry cannot currently be exported.", AlertLevel.Warning);
                     }
                 }
 
@@ -1358,9 +1359,22 @@ namespace Nucleus.Robot
                         obj.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, GetMappedThicknessID(element.Family, context));
                     }
 
-                    Vector dir = element.LocalCoordinateSystem()?.X ?? Vector.Unset;
-                    if (dir.IsValid())
+                    var cSys = element.LocalCoordinateSystem();
+                    if (cSys != null)
+                    {
+                        if (cSys.Z.Z < 0 || (cSys.Z.Z == 0 &&
+                            (cSys.Z.X < 0 || (cSys.Z.X == 0 &&
+                            cSys.Z.Y < 0))))
+                        {
+                            // Flip panel z-axis:
+                            obj.Main.Attribs.DirZ = 1;
+                        }
+                        else obj.Main.Attribs.DirZ = 0;
+                        Vector dir = cSys.X;
                         obj.Main.Attribs.SetDirX(IRobotObjLocalXDirDefinitionType.I_OLXDDT_CARTESIAN, dir.X, dir.Y, dir.Z);
+                    }
+                    
+
                     
                     obj.Initialize();
                     obj.Update();
@@ -1407,7 +1421,8 @@ namespace Nucleus.Robot
 
                 RobotBarSectionData rData = label.Data as RobotBarSectionData;
                 rData.Name = section.Name;
-                WriteSectionGeometry(rData, section.Profile);
+                if (!WriteSectionGeometry(rData, section.Profile))
+                    context.Log.RaiseAlert("SectGeo", "Section '" + section.Name + "' profile geometry could not be written.", AlertLevel.Warning);
                 //TODO: More data
 
                 context.IDMap.Add(section, label);
@@ -1423,7 +1438,7 @@ namespace Nucleus.Robot
         /// </summary>
         /// <param name="data"></param>
         /// <param name="profile"></param>
-        protected void WriteSectionGeometry(RobotBarSectionData data, SectionProfile profile)
+        protected bool WriteSectionGeometry(RobotBarSectionData data, SectionProfile profile)
         {
             if (profile != null)
             {
@@ -1515,10 +1530,14 @@ namespace Nucleus.Robot
                     nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_C_TF, rProfile.FlangeThickness);
                     nsdata.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_C_TW, rProfile.WebThickness);
                 }
+                else return false;
                 //TODO: Offset?
-                
-                data.CalcNonstdGeometry(); //?
+
+                data.CalcNonstdGeometry();
+
+                return true;
             }
+            else return false;
         }
 
         /// <summary>
@@ -1838,6 +1857,22 @@ namespace Nucleus.Robot
         }
 
         /// <summary>
+        /// Get the equivalent Robot nature for the load type
+        /// </summary>
+        /// <param name="lCase"></param>
+        /// <returns></returns>
+        private IRobotCaseNature EquivalentCaseNature(LoadCase lCase)
+        {
+            if (lCase.CaseType == LoadCaseType.Dead) return IRobotCaseNature.I_CN_PERMANENT;
+            else if (lCase.CaseType == LoadCaseType.Live) return IRobotCaseNature.I_CN_EXPLOATATION;
+            else if (lCase.CaseType == LoadCaseType.Seismic) return IRobotCaseNature.I_CN_SEISMIC;
+            else if (lCase.CaseType == LoadCaseType.Thermal) return IRobotCaseNature.I_CN_TEMPERATURE;
+            else if (lCase.CaseType == LoadCaseType.Wind) return IRobotCaseNature.I_CN_WIND;
+            else if (lCase.CaseType == LoadCaseType.Accidental) return IRobotCaseNature.I_CN_ACCIDENTAL;
+            else return IRobotCaseNature.I_CN_PERMANENT; //?
+        }
+
+        /// <summary>
         /// Write a load case to Robot
         /// </summary>
         /// <param name="lCase"></param>
@@ -1864,7 +1899,7 @@ namespace Nucleus.Robot
                 {
                     intID = Robot.Project.Structure.Cases.FreeNumber;
                     rCase = Robot.Project.Structure.Cases.CreateSimple(
-                        intID, lCase.Name, IRobotCaseNature.I_CN_PERMANENT,
+                        intID, lCase.Name, EquivalentCaseNature(lCase),
                         IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR);
                 }
                 //TODO: Populate nature + type better
