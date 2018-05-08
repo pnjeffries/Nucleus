@@ -48,7 +48,7 @@ namespace Nucleus.Model
         public LoadCaseType CaseType
         {
             get { return _CaseType; }
-            set { ChangeProperty(ref _CaseType, value, "Type"); }
+            set { ChangeProperty(ref _CaseType, value, "CaseType"); }
         }
 
         #endregion

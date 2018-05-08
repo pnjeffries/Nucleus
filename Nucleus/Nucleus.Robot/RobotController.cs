@@ -1443,7 +1443,7 @@ namespace Nucleus.Robot
             if (profile != null)
             {
                 //Attempt to load catalogue section:
-                if (!string.IsNullOrWhiteSpace(profile.CatalogueName) && data.LoadFromDBase(profile.CatalogueName) != 0) return;
+                if (!string.IsNullOrWhiteSpace(profile.CatalogueName) && data.LoadFromDBase(profile.CatalogueName) != 0) return true;
 
                 if (profile is SymmetricIProfile) //I Section
                 {

@@ -20,6 +20,7 @@
 
 using Nucleus.Base;
 using Nucleus.Geometry;
+using Nucleus.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,22 +47,50 @@ namespace Nucleus.Model
         /// <summary>
         /// Default Concrete material
         /// </summary>
-        public static Material Concrete { get { return new IsoMaterial("Concrete", MaterialCategory.Concrete); } }
+        public static Material Concrete
+        {
+            get
+            {
+                return new IsoMaterial("Concrete", MaterialCategory.Concrete)
+                { Density = 2400 };
+            }
+        }
 
         /// <summary>
         /// Get a default Wood material
         /// </summary>
-        public static Material Wood { get { return new IsoMaterial("Wood", MaterialCategory.Wood); } }
+        public static Material Wood
+        {
+            get
+            {
+                return new IsoMaterial("Wood", MaterialCategory.Wood)
+                { Density = 500 };
+            }
+        }
 
         /// <summary>
         /// Default Aluminium material
         /// </summary>
-        public static Material Aluminium { get { return new IsoMaterial("Aluminium", MaterialCategory.Aluminium); } }
+        public static Material Aluminium
+        {
+            get
+            {
+                return new IsoMaterial("Aluminium", MaterialCategory.Aluminium)
+                { Density = 2720 };
+            }
+        }
 
         /// <summary>
         /// Default Glass material
         /// </summary>
-        public static Material Glass { get { return new IsoMaterial("Glass", MaterialCategory.Glass); } }
+        public static Material Glass
+        {
+            get
+            {
+                return new IsoMaterial("Glass", MaterialCategory.Glass)
+                { Density = 2500 };
+            }
+        }
 
         /// <summary>
         /// Get a collection of all the default materials
@@ -92,6 +121,7 @@ namespace Nucleus.Model
         /// <summary>
         /// The density of the material, in kg/m³
         /// </summary>
+        //[AutoUI(300)]
         public double Density
         {
             get { return _Density; }
@@ -108,6 +138,7 @@ namespace Nucleus.Model
         /// Used to determine applicable design codes and to map
         /// to equivalent material properties in other software.
         /// </summary>
+        [AutoUI(200)]
         public MaterialCategory Category
         {
             get { return _Category; }

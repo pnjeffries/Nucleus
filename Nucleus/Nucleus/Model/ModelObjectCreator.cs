@@ -426,6 +426,26 @@ namespace Nucleus.Model
         }
 
         /// <summary>
+        /// Create a new (or update an existing) material in the model
+        /// </summary>
+        /// <param name="name">The name of the material. 
+        /// May be modified with a numerical suffix if the name already exists in
+        /// the model.</param>
+        /// <param name="exInfo">Optional.  The execution information of the current action.
+        /// If an object has been created previously with matching execution information then
+        /// instead of creating a new item this previous one will be updated and returned instead.
+        /// This enables this method to be used parametrically.</param>
+        /// <returns>The created or updated </returns>
+        public IsoMaterial IsoMaterial(string name, ExecutionInfo exInfo = null)
+        {
+            IsoMaterial result = new IsoMaterial();
+            result = Model.History.Update(exInfo, result);
+            result.Name = Model.Materials.NextAvailableName(name, result);
+            Model.Add(result);
+            return result;
+        }
+
+        /// <summary>
         /// Create a new (or update an existing) coordinate system in the model
         /// </summary>
         /// <param name="cSystem">The geometry coordinate system to assign as this user system</param>

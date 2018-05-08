@@ -40,6 +40,25 @@ namespace Nucleus.Model
         public MaterialCollection(): base() { }
 
         /// <summary>
+        /// Constructor initialising a new MaterialCollection containing 
+        /// the specified item
+        /// </summary>
+        /// <param name="item"></param>
+        public MaterialCollection(Material item) : base()
+        {
+            Add(item);
+        }
+
+        /// <summary>
+        /// Initialise a new MaterialCollection containing the specified items
+        /// </summary>
+        /// <param name="materials"></param>
+        public MaterialCollection(IEnumerable<Material> materials) : base()
+        {
+            AddRange(materials);
+        }
+
+        /// <summary>
         /// Owner constructor
         /// </summary>
         /// <param name="model"></param>

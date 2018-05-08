@@ -90,9 +90,11 @@ namespace Nucleus.Base
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public static IList<T> Undeleted<T>(this IList<T> list) where T:IDeletable
+        public static TList Undeleted<TList,T>(this TList list)
+            where TList : IList<T>, new()
+            where T:IDeletable
         {
-            List<T> result = new List<T>(list.Count);
+            TList result = new TList();
             foreach (T item in list)
             {
                 if (!item.IsDeleted) result.Add(item);
