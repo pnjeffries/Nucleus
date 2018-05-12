@@ -49,7 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExcelController.cs" />
+    <Compile Include="ExcelClient.cs" />
     <Compile Include="ExcelHelper.cs" />
     <Compile Include="ExcelSequenceOrientation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

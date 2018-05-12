@@ -27,5 +27,15 @@ namespace Nucleus.Alerts
         /// the process to be halted.
         /// </summary>
         Error = 200,
+
+        /// <summary>
+        /// The alert indicates a condition has been passed
+        /// </summary>
+        Pass = 500,
+
+        /// <summary>
+        /// The alert indicates that a condition has been failed
+        /// </summary>
+        Fail = 510
     }
 }

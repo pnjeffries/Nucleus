@@ -211,7 +211,7 @@ namespace Nucleus.Maps
                                 double height;
                                 if (double.TryParse(heightTag, out height))
                                 {
-                                    // TODO: Deal with tags with units on the end!
+                                    // TODO: Deal with tags with different units on the end!
                                     geometry = new Extrusion((Curve)geometry, new Vector(0, 0, height));
                                 }
                             }
@@ -221,7 +221,6 @@ namespace Nucleus.Maps
                                 double levels;
                                 if (double.TryParse(levelsTag, out levels))
                                 {
-                                    // TODO: Deal with tags with units on the end!
                                     geometry = new Extrusion((Curve)geometry, new Vector(0, 0, levels * 3.0));
                                 }
                             }

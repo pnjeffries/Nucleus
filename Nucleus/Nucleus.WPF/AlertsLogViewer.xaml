@@ -4,20 +4,49 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Nucleus.WPF"
+             xmlns:converters="clr-namespace:Nucleus.WPF.Converters"
              xmlns:alerts="clr-namespace:Nucleus.Alerts;assembly=Nucleus"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <converters:IsEqualVisibilityConverter x:Key="IsEqualVisibilityConverter"/>
+    </UserControl.Resources>
     <Grid Name="LayoutRoot">
-        <ListBox ItemsSource="{Binding}">
+        <ListBox ItemsSource="{Binding}" HorizontalContentAlignment="Stretch">
             <ListBox.Resources>
                 <DataTemplate DataType="{x:Type alerts:Alert}">
-                    <TextBlock Text="{Binding Path=DisplayText}" TextWrapping="WrapWithOverflow"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <local:AlertWarningIcon Margin="2,2,6,2"
+                                                Visibility="{Binding Path=Level, Converter={StaticResource IsEqualVisibilityConverter},
+                            ConverterParameter={x:Static alerts:AlertLevel.Warning}}"></local:AlertWarningIcon>
+
+                        <local:AlertErrorIcon Margin="2,2,6,2"
+                                              Visibility="{Binding Path=Level, Converter={StaticResource IsEqualVisibilityConverter},
+                            ConverterParameter={x:Static alerts:AlertLevel.Error}}"></local:AlertErrorIcon>
+
+                        <local:AlertPassIcon Margin="2,2,6,2"
+                                             Visibility="{Binding Path=Level, Converter={StaticResource IsEqualVisibilityConverter},
+                            ConverterParameter={x:Static alerts:AlertLevel.Pass}}"/>
+
+                        <local:AlertFailIcon Margin="2,2,6,2"
+                                             Visibility="{Binding Path=Level, Converter={StaticResource IsEqualVisibilityConverter},
+                            ConverterParameter={x:Static alerts:AlertLevel.Fail}}"/>
+
+                        <TextBlock Grid.Column="1"  Text="{Binding Path=DisplayText}" TextWrapping="WrapWithOverflow"
+                                   VerticalAlignment="Center"/>
+                    </Grid>
+                    
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type alerts:ProgressAlert}">
                     <Grid>
                         <ProgressBar Grid.Column="1" Value="{Binding Path=Progress}" Maximum="1.0"></ProgressBar>
                         <TextBlock Text="{Binding Path=DisplayText}" TextWrapping="WrapWithOverflow" 
-                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2"/>
                     </Grid>
                 </DataTemplate>
             </ListBox.Resources>

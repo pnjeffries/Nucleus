@@ -78,7 +78,8 @@ namespace Nucleus.Base
         }
 
         /// <summary>
-        /// Get a filepath pointing to the current working directory
+        /// Get a filepath pointing to the current working directory.
+        /// Will not include a trailing slash
         /// </summary>
         public static FilePath Current
         {

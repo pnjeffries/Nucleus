@@ -60,7 +60,7 @@ namespace Nucleus.Alerts
         {
             if (other is ProgressAlert)
             {
-                _Progress = ((ProgressAlert)other).Progress;
+                Progress = ((ProgressAlert)other).Progress;
             }
             base.Merge(other);
         }
