@@ -1253,4 +1253,106 @@ namespace Nucleus.Geometry
         #endregion
     }
 
+    /// <summary>
+    /// Static class containing helper extension methods for collections of curves
+    /// </summary>
+    public static class CurveExtensions
+    {
+
+        /// <summary>
+        /// Offset all curves in this collection on the XY plane by the specified distance
+        /// </summary>
+        /// <param name="curves"></param>
+        /// <param name="distance">The offset distance</param>
+        /// <returns></returns>
+        public static CurveCollection OffsetAll(this IList<Curve> curves, double distance)
+        {
+            var result = new CurveCollection();
+            foreach (var crv in curves)
+            {
+                var offsetCrv = crv.Offset(distance);
+                if (offsetCrv != null) result.Add(offsetCrv);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Offset all curves in this collection on the XY plane, automatically determining
+        /// for closed curves (where possible) the direction of offset that will result in the offset
+        /// curve being inside the starting curve.  Note that determining this may not be possible for
+        /// all curves.
+        /// </summary>
+        /// <param name="curves"></param>
+        /// <param name="distance"></param>
+        /// <returns></returns>
+        public static CurveCollection OffsetAllInwards(this IList<Curve> curves, double distance)
+        {
+            var result = new CurveCollection();
+            foreach (var crv in curves)
+            {
+                double dist2 = distance;
+                var offsetCrv = crv.OffsetInwards(ref dist2);
+                if (offsetCrv != null) result.Add(offsetCrv);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 'Explode' these curves into individual curve segments
+        /// </summary>
+        /// <param name="curves"></param>
+        /// <param name="recursive"></param>
+        /// <returns></returns>
+        public static CurveCollection ExplodeAll(this IList<Curve> curves, bool recursive = true)
+        {
+            var result = new CurveCollection();
+            foreach (var crv in curves)
+            {
+               result.AddRange(crv.Explode());
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Join as many curves as possible in this collection which have matching ends
+        /// into PolyCurves.  Returns the collection of curves post joining.
+        /// </summary>
+        /// <param name="curves"></param>
+        /// <returns></returns>
+        public static CurveCollection JoinCurves(this IList<Curve> curves)
+        {
+            var matched = new List<List<Curve>>();
+            foreach (var crv in curves)
+            {
+                bool found = false;
+                foreach (var matchedSet in matched)
+                {
+                    if (crv.StartPoint.DistanceToSquared(matchedSet.Last().EndPoint).IsTiny())
+                    {
+                        matchedSet.Add(crv);
+                        found = true;
+                        break;
+                    }
+                    else if (crv.EndPoint.DistanceToSquared(matchedSet.First().StartPoint).IsTiny())
+                    {
+                        matchedSet.Insert(0, crv);
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    matched.Add(new List<Curve>() { crv });
+                }
+            }
+            var result = new CurveCollection();
+            foreach (var matchedSet in matched)
+            {
+                var pCrv = new PolyCurve(matchedSet);
+                result.Add(pCrv);
+            }
+            //TODO: Recursive joining for unordered curve sets
+            return result;
+        }
+    }
 }

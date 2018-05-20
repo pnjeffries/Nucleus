@@ -170,6 +170,7 @@ namespace Nucleus.TestApp
                         log.RaiseAlert("PROC", "Process Running...", (double)i / (double)1000);
                         Thread.Sleep(2);
                     }
+                    log.RaiseAlert("PROC", "Process Complete", 1);
 
                     log.RaiseAlert("WAR", "Warning: An Error may be about to occur!", Alerts.AlertLevel.Warning);
 
@@ -180,6 +181,7 @@ namespace Nucleus.TestApp
                         log.RaiseAlert("PROC3", "Process 3 Running...", (double)i / (double)1000);
                         Thread.Sleep(3);
                     }
+                    log.RaiseAlert("PROC3", "Process 3 Complete", 1);
 
                     log.RaiseAlert("AL1", "Process Complete.");
 
@@ -199,6 +201,7 @@ namespace Nucleus.TestApp
                     log.RaiseAlert("PROC2", "Process 2 Running...", (double)i / (double)1000);
                     Thread.Sleep(3);
                 }
+                log.RaiseAlert("PROC2", "Process 2 Complete", 1);
 
                 log.RaiseAlert("AL1", "Process Complete.");
 
