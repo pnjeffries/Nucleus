@@ -14,11 +14,30 @@ namespace Nucleus.WPF
     /// </summary>
     public class AsyncAlertLog : AlertLog
     {
+        #region Properties
+
+        /// <summary>
+        /// The window whose dispatcher this alert log uses to invoke alert changes
+        /// </summary>
         public Window Window { get; set; }
+
+        #endregion
+
+        #region Constructors
+
+        public AsyncAlertLog():base() { }
+
+        public AsyncAlertLog(Window window):base() { Window = window; }
+
+        #endregion
+
+        #region Methods
 
         public override void RaiseAlert(Alert alert)
         {
             Window.Dispatcher.Invoke(new Action(() => AddOrMerge(alert)));
         }
+
+        #endregion
     }
 }

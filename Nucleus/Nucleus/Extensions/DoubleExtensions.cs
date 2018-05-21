@@ -59,6 +59,18 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Returns the magnitude of this double with a sign matching the specified value
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="toThis"></param>
+        /// <returns></returns>
+        public static double MatchSign(this double value, double toThis)
+        {
+            if (value.Sign() != toThis.Sign()) return -value;
+            else return value;
+        }
+
+        /// <summary>
         /// Raise this number to a power.
         /// Shortcut for Math.Pow(x,y)
         /// </summary>

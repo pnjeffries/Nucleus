@@ -19,6 +19,7 @@ using Nucleus.DXF;
 using Nucleus.WPF;
 using Nucleus.Maths;
 using Nucleus.Rendering;
+using System.Threading;
 
 namespace Nucleus.TestApp
 {
@@ -152,6 +153,59 @@ namespace Nucleus.TestApp
         private void GenerateBarButton_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void DummyRun_Click(object sender, RoutedEventArgs e)
+        {
+            AsyncAlertLog log = new AsyncAlertLog();
+            log.Window = this;
+            LogViewer.DataContext = log;
+
+            new Thread(() =>
+                {
+                    log.RaiseAlert("AL1", "Starting Process...");
+
+                    for (int i = 0; i <= 1000; i++)
+                    {
+                        log.RaiseAlert("PROC", "Process Running...", (double)i / (double)1000);
+                        Thread.Sleep(2);
+                    }
+                    log.RaiseAlert("PROC", "Process Complete", 1);
+
+                    log.RaiseAlert("WAR", "Warning: An Error may be about to occur!", Alerts.AlertLevel.Warning);
+
+                    log.RaiseAlert("ERR", "An Error has occurred!", Alerts.AlertLevel.Error);
+
+                    for (int i = 0; i <= 1000; i++)
+                    {
+                        log.RaiseAlert("PROC3", "Process 3 Running...", (double)i / (double)1000);
+                        Thread.Sleep(3);
+                    }
+                    log.RaiseAlert("PROC3", "Process 3 Complete", 1);
+
+                    log.RaiseAlert("AL1", "Process Complete.");
+
+                    log.RaiseAlert("PASS", "Condition 1: Passed", Alerts.AlertLevel.Pass);
+
+                    log.RaiseAlert("FAIL", "Condition 2: Failed", Alerts.AlertLevel.Fail);
+
+                }).Start();
+
+            new Thread(() =>
+            {
+                log.RaiseAlert("AL1", "Starting Process...");
+
+
+                for (int i = 0; i <= 1000; i++)
+                {
+                    log.RaiseAlert("PROC2", "Process 2 Running...", (double)i / (double)1000);
+                    Thread.Sleep(3);
+                }
+                log.RaiseAlert("PROC2", "Process 2 Complete", 1);
+
+                log.RaiseAlert("AL1", "Process Complete.");
+
+            }).Start();
         }
     }
 }

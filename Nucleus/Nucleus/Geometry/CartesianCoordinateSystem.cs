@@ -303,6 +303,11 @@ namespace Nucleus.Geometry
             return new CartesianCoordinateSystem(Origin, -X, -Y, Z);
         }
 
+        public override string ToString()
+        {
+            return Origin.ToString() + "|" + X.ToString() + "|" + Y.ToString() + "|" + Z.ToString();
+        }
+
         #endregion
     }
 }

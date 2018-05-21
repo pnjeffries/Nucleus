@@ -164,6 +164,18 @@
                     <Border Name="TrackPad" Background="Transparent"/>
                 </Grid>
             </TabItem>
+            <TabItem Header="Alert Log">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <fb:AlertsLogViewer Name="LogViewer">
+                        
+                    </fb:AlertsLogViewer>
+                    <Button Grid.Row="1" Click="DummyRun_Click">Run Dummy Process</Button>
+                </Grid>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

@@ -56,11 +56,23 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlertErrorIcon.xaml.cs">
+      <DependentUpon>AlertErrorIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="AlertFailIcon.xaml.cs">
+      <DependentUpon>AlertFailIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="AlertPassIcon.xaml.cs">
+      <DependentUpon>AlertPassIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="AlertsLogDialog.xaml.cs">
       <DependentUpon>AlertsLogDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="AlertsLogViewer.xaml.cs">
       <DependentUpon>AlertsLogViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="AlertWarningIcon.xaml.cs">
+      <DependentUpon>AlertWarningIcon.xaml</DependentUpon>
     </Compile>
     <Compile Include="AsyncAlertLog.cs" />
     <Compile Include="BarChart.xaml.cs">
@@ -93,6 +105,7 @@
     <Compile Include="Converters\GreaterThanConverter.cs" />
     <Compile Include="Converters\IAutoUIHostableVisibilityConverter.cs" />
     <Compile Include="Converters\IntConverter.cs" />
+    <Compile Include="Converters\IsEqualVisibilityConverter.cs" />
     <Compile Include="Converters\IsTypeConverter.cs" />
     <Compile Include="Converters\IsZeroConverter.cs" />
     <Compile Include="Converters\MeshConverter.cs" />
@@ -204,11 +217,27 @@
     <Compile Include="WPFTextureLoader.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="AlertErrorIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AlertFailIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AlertPassIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="AlertsLogDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="AlertsLogViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AlertWarningIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

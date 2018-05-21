@@ -26,6 +26,7 @@ using System.Threading.Tasks;
 using Microsoft.Office.Interop.Excel;
 using System.Runtime.InteropServices;
 using Nucleus.Extensions;
+using Nucleus.Geometry;
 
 namespace Nucleus.Excel
 {
@@ -34,7 +35,7 @@ namespace Nucleus.Excel
     /// Wraps basic Excel interop behaviour and allows interaction without
     /// the need to involve yourself with specialised Excel types.
     /// </summary>
-    public class ExcelController
+    public class ExcelClient
     {
         #region Properties
 
@@ -88,7 +89,7 @@ namespace Nucleus.Excel
         /// <summary>
         /// Default constructor
         /// </summary>
-        public ExcelController()
+        public ExcelClient()
         {
 
         }
@@ -97,7 +98,7 @@ namespace Nucleus.Excel
         /// Initialises the excel link and opens the specified workbook
         /// </summary>
         /// <param name="filePath">The path of the excel file to open</param>
-        public ExcelController(string filePath) : this()
+        public ExcelClient(string filePath) : this()
         {
             OpenWorkbook(filePath);
         }
@@ -214,11 +215,19 @@ namespace Nucleus.Excel
         /// <summary>
         /// Find the index of the last used row in an Excel worksheet
         /// </summary>
+        public long LastRow()
+        {
+            return LastRow(null);
+        }
+
+        /// <summary>
+        /// Find the index of the last used row in an Excel worksheet
+        /// </summary>
         /// <param name="sheet">Optional.  The worksheet to count the number of rows in.
         /// If not specified, the currently active sheet will be used.</param>
         /// <returns>The last used row in the worksheet.  This will include rows 
         /// that have contained values at any time and so may be an overestimate.</returns>
-        public long LastRow(Worksheet sheet = null)
+        public long LastRow(Worksheet sheet)
         {
             if (sheet == null) sheet = ActiveSheet;
             Range usedRange = sheet.UsedRange;
@@ -259,6 +268,37 @@ namespace Nucleus.Excel
         public TValue GetCellValue<TValue>(int row, int column)
         {
             return (TValue)Convert.ChangeType(GetCellValue(row, column), typeof(TValue));
+        }
+
+        /// <summary>
+        /// Get a vector from 3 cells containing the X,Y and Z coordinates
+        /// sequentially starting at the specifed row and column and following
+        /// in adjacent columns
+        /// </summary>
+        /// <param name="row">The row number of the three cells</param>
+        /// <param name="startColumn">The starting column of the three cells 
+        /// (containing the X coordinate)</param>
+        /// <returns></returns>
+        public Vector GetVector(int row, int startColumn)
+        {
+            return new Vector(
+                GetCellValue<double>(row, startColumn),
+                GetCellValue<double>(row, startColumn + 1),
+                GetCellValue<double>(row, startColumn + 2));
+        }
+
+        /// <summary>
+        /// Write a vector's X, Y and Z coordinates to three sequential
+        /// cells on the specified row starting in the specified column
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="startColumn"></param>
+        /// <param name="vector"></param>
+        public void SetVector(int row, int startColumn, Vector vector)
+        {
+            SetCellValue(row, startColumn, vector.X);
+            SetCellValue(row, startColumn + 1, vector.Y);
+            SetCellValue(row, startColumn + 2, vector.Z);
         }
 
         /// <summary>

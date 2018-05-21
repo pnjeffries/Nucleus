@@ -89,6 +89,21 @@ namespace Nucleus.Model.Loading
             return SetPosition(element.Geometry, closestTo);
         }
 
+        /// <summary>
+        /// Calculate the moment induced in a simply supported beam
+        /// by this point load at a given position x along a member
+        /// of length l
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="l"></param>
+        /// <returns></returns>
+        internal double SimpleBeamMoment(double x, double l)
+        {
+            //TODO: Consider direction of point load
+
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }
