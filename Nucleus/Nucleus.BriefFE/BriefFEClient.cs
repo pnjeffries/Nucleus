@@ -2,6 +2,7 @@
 using Nucleus.Geometry;
 using Nucleus.Model;
 using Nucleus.Model.Loading;
+using Nucleus.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +17,18 @@ namespace Nucleus.BriefFE
     /// </summary>
     public class BriefFEClient
     {
-        public CurveCollection AnalyseModel(Model.Model model, AlertLog alertLog = null)
+        /// <summary>
+        /// Run an analysis on the specified model
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="alertLog"></param>
+        /// <returns></returns>
+        public ModelResults AnalyseModel(Model.Model model, AnalysisCaseCollection cases, AlertLog alertLog = null)
         {
+            alertLog?.RaiseAlert("BLD", "Building analysis model...");
+
+            var results = new ModelResults();
+
             // Create model:
             var feModel = new BFE.Model();
 
@@ -85,7 +96,7 @@ namespace Nucleus.BriefFE
                 if (load is LinearElementLoad)
                 {
                     var lEL = (LinearElementLoad)load;
-                    if (lEL.IsMoment) alertLog.RaiseAlert("MOMENTS UNSUPPORTED", load, "Moment line loads are not supported.");
+                    if (lEL.IsMoment) alertLog.RaiseAlert("MOMENTS UNSUPPORTED", load, "Moment line loads are not supported.", AlertLevel.Error);
                     else
                     {
                         // TODO: Set load case
@@ -99,21 +110,31 @@ namespace Nucleus.BriefFE
                         }
                     }
                 }
-                else alertLog.RaiseAlert("LOAD TYPE UNSUPPORTED", load, "Load type is not supported.");
+                else alertLog.RaiseAlert("LOAD TYPE UNSUPPORTED", load, "Load type is not supported.", AlertLevel.Error);
             }
+
+            alertLog?.RaiseAlert("BLD", "Analysis model built.");
+
+            alertLog.RaiseAlert("SLV", "Solving...");
 
             feModel.Solve();
 
+            alertLog.RaiseAlert("SLV", "Solved.");
+
             foreach (var kvp in nodesMap)
             {
-                kvp.Value.GetNodalDisplacement();
+                var disp = kvp.Value.GetNodalDisplacement();
+                var nR = new NodeResults();
+                var cNR = new CaseNodeResults();
+
+                nR.Add(cNR);
             }
 
             /*foreach (var element in model.Elements)
             {
                 bNS = nodesMap[element]
             }*/
-            return null;
+            return results;
         }
     }
 }

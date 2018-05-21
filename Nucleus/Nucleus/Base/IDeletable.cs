@@ -102,6 +102,24 @@ namespace Nucleus.Base
             return result;
         }
 
+        
+        /// <summary>
+        /// Extract the subset of objects from this collection that are not deleted,
+        /// as a list.
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static IList<T> Undeleted<T>(this IList<T> list)
+            where T:IDeletable
+        {
+            var result = new List<T>();
+            foreach (T item in list)
+            {
+                if (!item.IsDeleted) result.Add(item);
+            }
+            return result;
+        }
+
         /// <summary>
         /// Get the number of objects in this collection which are not deleted
         /// </summary>
