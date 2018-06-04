@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\CurveExtensions.cs" />
+    <Compile Include="Extensions\IntervalExtensions.cs" />
     <Compile Include="Extensions\Point3dExtensions.cs" />
     <Compile Include="Extensions\Vector3dExtensions.cs" />
     <Compile Include="ToRC.cs" />

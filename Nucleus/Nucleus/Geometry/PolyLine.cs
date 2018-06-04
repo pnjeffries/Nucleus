@@ -152,7 +152,7 @@ namespace Nucleus.Geometry
         /// side, looking along the curve.  Negative numbers to the left.</param>
         /// <param name="tidy">If true (default) collapsed segments will be removed.</param>
         /// <returns></returns>
-        public override Curve Offset(IList<double> distances, bool tidy = true)
+        public override Curve Offset(IList<double> distances, bool tidy = true, bool copyAttributes = true)
         {
             IList<Vector> pts = new Vector[Vertices.Count]; //The offset points
             for (int i = 0; i < Vertices.Count; i++)
@@ -246,7 +246,7 @@ namespace Nucleus.Geometry
                 }
             }
 
-            return new PolyLine(pts, Closed);
+            return new PolyLine(pts, Closed, copyAttributes ? Attributes : null);
         }
 
         /// <summary>
@@ -286,7 +286,8 @@ namespace Nucleus.Geometry
                         double t1 = 0;
                         Vector intersection = Intersect.LineLineXY(vA0.Position, vA1.Position - vA0.Position,
                             vB0.Position, vB1.Position - vB0.Position, ref t0, ref t1);
-                        if (intersection.IsValid() && t0 >= 0 && t0 <= 1 && t1 >= 0 && t0 <= 1) return true;
+                        if (intersection.IsValid() && t0 >= 0 && t0 <= 1 && t1 >= 0 && t1 <= 1)
+                            return true;
                     }
                 }
             }

@@ -782,6 +782,27 @@ namespace Nucleus.Geometry
             else return null;
         }
 
+        /// <summary>
+        /// Project a point along the global Z-axis onto this mesh face.
+        /// Returns the Z-coordinate of the projected point or double.NaN
+        /// if the point does not lie within the triangle on the XY plane.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public double ProjectPoint(Vector point)
+        {
+            Vertex vA = this[0];
+            for (int i = 0; i < Count - 2; i++)
+            {
+                Vertex vB = this[i + 1];
+                Vertex vC = this[i + 2];
+                double z = Triangle.ZCoordinateOfPoint(point.X, point.Y, 
+                    vA.Position, vB.Position, vC.Position, true);
+                if (!double.IsNaN(z)) return z;
+            }
+            return double.NaN;
+        }
+
         #endregion
 
     }

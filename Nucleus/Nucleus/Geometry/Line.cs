@@ -285,11 +285,11 @@ namespace Nucleus.Geometry
         /// Positive numbers will result in the offset curve being to the right-hand 
         /// side, looking along the curve.  Negative numbers to the left.</param>
         /// <returns></returns>
-        public override Curve Offset(double distance)
+        public override Curve Offset(double distance, bool tidy = true, bool copyAttributes = true)
         {
             Vector dir = Direction;
             dir = dir.PerpendicularXY() * distance;
-            return new Line(StartPoint + dir, EndPoint + dir);
+            return new Line(StartPoint + dir, EndPoint + dir, copyAttributes ? Attributes : null);
         }
 
         /// <summary>
@@ -301,11 +301,11 @@ namespace Nucleus.Geometry
         /// side, looking along the curve.  Negative numbers to the left.</param>
         /// <param name="tidy">If true (default) collapsed segments will be removed.</param>
         /// <returns></returns>
-        public override Curve Offset(IList<double> distances, bool tidy = true)
+        public override Curve Offset(IList<double> distances, bool tidy = true, bool copyAttributes = true)
         {
             if (distances != null && distances.Count > 0)
-                return Offset(distances[0]);
-            else return Offset(0);
+                return Offset(distances[0], tidy, copyAttributes);
+            else return Offset(0, tidy, copyAttributes);
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿#if !JS
 
+using Nucleus.Alerts;
 using Nucleus.Base;
 using Nucleus.Extensions;
 using System;
@@ -74,8 +75,9 @@ namespace Nucleus.IO
 
         #region Methods
 
-        public void Serialize(Stream stream, IUnique source)
+        public void Serialize(Stream stream, IUnique source, AlertLog log = null)
         {
+            log?.RaiseAlert("BEG", "Beginning serialisation...");
             _Format = new Dictionary<string, TypeFieldsFormat>();
             _Aliases = new Dictionary<Type, string>();
             _Uniques = new UniquesCollection();
@@ -88,6 +90,7 @@ namespace Nucleus.IO
             int i = 0;
             while (i < _Uniques.Count)
             {
+                log?.RaiseAlert("PROG", "Writing...", (double)i / (double)_Uniques.Count, AlertLevel.Information);
                 IUnique unique = _Uniques[i];
                 _Writer.WriteLine(SerializeItem(unique));
                 i++;
@@ -99,6 +102,8 @@ namespace Nucleus.IO
             //_Writer.Write(GenerateFormatDescription());
 
             _Writer.Flush();
+
+            log?.RaiseAlert("BEG", "Serialisation complete.");
         }
 
         /// <summary>
@@ -360,7 +365,7 @@ namespace Nucleus.IO
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
-        public TypeFieldsFormat ReadFormat(string line)
+        public TypeFieldsFormat ReadFormat(string line, AlertLog log = null)
         {
             TypeFieldsFormat result;
             int i = FORMAT.Length;
@@ -377,7 +382,7 @@ namespace Nucleus.IO
                     {
                         FieldInfo field = type.GetBaseField(fieldName);
                         //TODO: check for mapped fields if null
-                        if (field == null) RaiseError("Field '" + fieldName + "' cannot be found on type '" + type.Name + "'.");
+                        if (field == null) log?.RaiseAlert("FNF " + fieldName + " on " + typeName,"Field '" + fieldName + "' cannot be found on type '" + type.Name + "'.", AlertLevel.Warning);
                         fields.Add(field);
                     }
                 }
@@ -430,7 +435,7 @@ namespace Nucleus.IO
                 return null;
         }
 
-        public IUnique Deserialize(Stream stream)
+        public IUnique Deserialize(Stream stream, AlertLog log = null)
         {
             IUnique result = null;
 
@@ -439,14 +444,18 @@ namespace Nucleus.IO
             _Uniques = new UniquesCollection();
             _Reader = new StreamReader(stream);
 
-            //First, read through once to end:
+            // First, read through once to end:
+            log?.RaiseAlert("FORM", "Reading format data...");
+
             string line;
+            int lineCount = 0;
 
             while ((line = _Reader.ReadLine()) != null)
             {
+                lineCount++;
                 if (line.StartsWith(FORMAT))
                 {
-                    ReadFormat(line);
+                    ReadFormat(line, log);
                 }
                 else if (line.StartsWith(DATA))
                 {
@@ -472,18 +481,22 @@ namespace Nucleus.IO
                         _Uniques.Add(unique);
                         if (result == null) result = unique; // Set primary output object
                     }
-                    else RaiseError("Formatting data for type alias '" + typeAlias + "' not found.");
+                    else log?.RaiseAlert("FNF" + typeAlias, "Formatting data for type alias '" + typeAlias + "' not found.", AlertLevel.Warning);
                 }
             }
 
-            //Next: Second pass - populate fields with data
+            log?.RaiseAlert("FORM", "Format data read.");
 
-            //Rewind:
+            // Next: Second pass - populate fields with data
+
+            // Rewind:
             stream.Seek(0, SeekOrigin.Begin);
             _Reader = new StreamReader(stream);
+            int lineNum = 0;
 
             while ((line = _Reader.ReadLine()) != null)
             {
+                log?.RaiseAlert("DAT", "Reading data...", (double)lineNum / (double)lineCount);
                 if (line.StartsWith(DATA))
                 {
                     // Initial pass: Create object
@@ -494,19 +507,26 @@ namespace Nucleus.IO
                     {
                         TypeFieldsFormat format = _Format[typeAlias];
                         object unique = _Uniques[new Guid(guid)];
-                        PopulateFields(ref unique, format, ref i, line);
+                        PopulateFields(ref unique, format, ref i, line, log);
                     }
                 }
+                lineNum++;
             }
 
-            //Finally: Call OnDeserialized function on each object
+            log?.RaiseAlert("DAT", "Reading data complete.", 1.0);
+
+            log?.RaiseAlert("FIN", "Finalising...");
+
+            // Finally: Call OnDeserialized function on each object
             foreach (var unique in _Uniques)
             {
                 MethodInfo mInfo = unique.GetType().GetOnDeserializedMethod();
                 if (mInfo != null)
                     mInfo.Invoke(unique, new object[] { new StreamingContext() });
-                //TODO: Pass in populated streamingcontext arguments?
+                // TODO: Pass in populated streamingcontext arguments?
             }
+
+            log?.RaiseAlert("FIN", "Finalised");
 
             return result;
         }
@@ -539,7 +559,7 @@ namespace Nucleus.IO
             }
         }
 
-        protected void PopulateFields(ref object target, TypeFieldsFormat format, ref int i, string line)
+        protected void PopulateFields(ref object target, TypeFieldsFormat format, ref int i, string line, AlertLog log)
         {
             string chunk;
             int j = 0;
@@ -636,7 +656,7 @@ namespace Nucleus.IO
                         {
                             value = Activator.CreateInstance(subFormat.Type, new object[] { 0 });
                         }
-                        PopulateFields(ref value, subFormat, ref i, line);
+                        PopulateFields(ref value, subFormat, ref i, line, log);
                         if (j < format.Fields.Count)
                         {
                             // Is sub-object belonging to a field
@@ -674,7 +694,7 @@ namespace Nucleus.IO
                     }
                     else
                     {
-                        RaiseError("Formatting data for type alias '" + chunk + "' not found.");
+                        log?.RaiseAlert("FNF" + chunk, "Formatting data for type alias '" + chunk + "' not found.", AlertLevel.Warning);
                     }
                 }
                 else if (c == KEY_SEPARATOR && target is IDictionary)

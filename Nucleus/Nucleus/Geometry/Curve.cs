@@ -874,7 +874,7 @@ namespace Nucleus.Geometry
         /// Positive numbers will result in the offset curve being to the right-hand 
         /// side, looking along the curve.  Negative numbers to the left.</param>
         /// <returns></returns>
-        public virtual Curve Offset(double distance)
+        public virtual Curve Offset(double distance, bool tidy = true, bool copyAttributes = true)
         {
             return Offset(new double[] { distance });
         }
@@ -887,8 +887,10 @@ namespace Nucleus.Geometry
         /// Positive numbers will result in the offset curve being to the right-hand 
         /// side, looking along the curve.  Negative numbers to the left.</param>
         /// <param name="tidy">If true (default) collapsed segments will be removed.</param>
+        /// <param name="copyAttributes">If true (default) the attributes of this curve will be copied
+        /// to the offset one.</param>
         /// <returns></returns>
-        public abstract Curve Offset(IList<double> distances, bool tidy = true);
+        public abstract Curve Offset(IList<double> distances, bool tidy = true, bool copyAttributes = true);
 
         /// <summary>
         /// Offset this curve on the XY plane, automatically determining (where possible)
@@ -901,11 +903,11 @@ namespace Nucleus.Geometry
         /// automatically inverted (in-place) if the curve is anticlockwise so that
         /// positive numbers entered will result in an offset inwards and negative numbers outwards.</param>
         /// <returns></returns>
-        public virtual Curve OffsetInwards(ref double distance)
+        public virtual Curve OffsetInwards(ref double distance, bool tidy = true, bool copyAttributes = true)
         {
             double cTS = Vertices.ClockwiseTestSum();
             if (cTS < 0) distance *= -1;
-            return Offset(distance);
+            return Offset(distance, tidy, copyAttributes);
         }
 
         /// <summary>

@@ -195,6 +195,21 @@ namespace Nucleus.Geometry
 
         /// <summary>
         /// Calculate the surface area of this mesh's faces.
+        /// </summary>
+        /// <returns></returns>
+        public override double CalculateArea()
+        {
+            double result = 0;
+            foreach (MeshFace face in Faces)
+            {
+                double faceArea = face.CalculateArea();
+                result += faceArea;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Calculate the surface area of this mesh's faces.
         /// NOTE: CENTROID CALCULATION NOT CURRENTLY IMPLEMENTED
         /// </summary>
         /// <param name="centroid"></param>
@@ -257,6 +272,23 @@ namespace Nucleus.Geometry
                 return face.GetPlane();
             }
             return null;
+        }
+
+        /// <summary>
+        /// Project the specified point onto this mesh along the global
+        /// z-axis, returning all z-coordinates 
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public IList<double> ProjectPoint(Vector point)
+        {
+            var result = new List<double>();
+            foreach (MeshFace face in Faces)
+            {
+                double z = face.ProjectPoint(point);
+                if (!double.IsNaN(z)) result.Add(z);
+            }
+            return result;
         }
 
         /// <summary>

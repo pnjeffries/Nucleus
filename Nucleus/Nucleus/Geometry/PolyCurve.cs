@@ -491,7 +491,7 @@ namespace Nucleus.Geometry
         /// side, looking along the curve.  Negative numbers to the left.</param>
         /// <param name="tidy">If true (default) collapsed segments will be removed.</param>
         /// <returns></returns>
-        public override Curve Offset(IList<double> distances, bool tidy = true)
+        public override Curve Offset(IList<double> distances, bool tidy = true, bool copyAttributes = true)
         {
             //TODO: Implement collapsed segments tidying
 
@@ -514,6 +514,7 @@ namespace Nucleus.Geometry
                         MatchEnds(prevCrv.End, offsetCrv.Start);
                     }
                     result.Add(offsetCrv);
+                    if (copyAttributes && offsetCrv.Attributes == null) offsetCrv.Attributes = Attributes;
                 }
             }
 

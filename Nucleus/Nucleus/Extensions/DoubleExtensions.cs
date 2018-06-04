@@ -339,8 +339,11 @@ namespace Nucleus.Extensions
             double size = interval.Size;
             if (size > 0)
             {
-                while (value > interval.Max) value -= size;
-                while (value < interval.Min) value += size;
+                if (value < interval.Min)
+                    value = interval.Max - (interval.Min - value) % size;
+                else
+                    value = interval.Min + (value - interval.Min) % size;
+
             }
             return value;
         }

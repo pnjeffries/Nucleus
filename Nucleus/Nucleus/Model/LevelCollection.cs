@@ -28,11 +28,8 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Model
 {
-    /// <summary>
-    /// A collection of levels.
-    /// </summary>
-    [Serializable]
-    public class LevelCollection : ModelObjectCollection<Level>
+    public class LevelCollection<TLevel> : ModelObjectCollection<TLevel>
+        where TLevel : Level
     {
         #region Constructors
 
@@ -51,17 +48,19 @@ namespace Nucleus.Model
 
         #region Methods
 
+        #region Methods
+
         /// <summary>
         /// Search through this collection and find the next highest level after
         /// the one specified.
         /// </summary>
         /// <param name="level"></param>
         /// <returns></returns>
-        public Level NextLevelAbove(double z)
+        public TLevel NextLevelAbove(double z)
         {
             double minDistance = 0;
-            Level result = null;
-            foreach (Level testLevel in this)
+            TLevel result = null;
+            foreach (TLevel testLevel in this)
             {
                 double dist = testLevel.Z - z;
                 if (dist > 0 && (result == null || dist < minDistance))
@@ -79,11 +78,11 @@ namespace Nucleus.Model
         /// </summary>
         /// <param name="level"></param>
         /// <returns></returns>
-        public Level NextLevelBelow(double z)
+        public TLevel NextLevelBelow(double z)
         {
             double minDistance = 0;
-            Level result = null;
-            foreach (Level testLevel in this)
+            TLevel result = null;
+            foreach (TLevel testLevel in this)
             {
                 double dist = z - testLevel.Z;
                 if (dist > 0 && (result == null || dist < minDistance))
@@ -102,7 +101,7 @@ namespace Nucleus.Model
         /// <param name="tolerance">The distance below which the position is assumed to
         /// lie 'on' the layer.</param>
         /// <returns></returns>
-        public Level LevelOf(double z, double tolerance)
+        public TLevel LevelOf(double z, double tolerance)
         {
             return NextLevelBelow(z + tolerance);
         }
@@ -114,7 +113,7 @@ namespace Nucleus.Model
         /// <param name="tolerance">The distance below which the position is assumed to
         /// lie 'on' the layer.</param>
         /// <returns></returns>
-        public Level LevelOf(Vector position, double tolerance)
+        public TLevel LevelOf(Vector position, double tolerance)
         {
             return LevelOf(position.Z, tolerance);
         }
@@ -124,11 +123,11 @@ namespace Nucleus.Model
         /// </summary>
         /// <param name="z"></param>
         /// <returns></returns>
-        public Level NearestLevel(double z)
+        public TLevel NearestLevel(double z)
         {
             double minDistance = 0;
-            Level result = null;
-            foreach (Level level in this)
+            TLevel result = null;
+            foreach (TLevel level in this)
             {
                 double dist = (level.Z - z).Abs();
                 if (result == null || dist < minDistance)
@@ -139,6 +138,30 @@ namespace Nucleus.Model
             }
             return result;
         }
+
+        #endregion
+    }
+
+    /// <summary>
+    /// A collection of levels.
+    /// </summary>
+    [Serializable]
+    public class LevelCollection : LevelCollection<Level>
+    {
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor.  Initialises a new empty LevelCollection.
+        /// </summary>
+        public LevelCollection() : base() { }
+
+        /// <summary>
+        /// Owner constructor.  Initialises a new LevelCollection owned by the specified model.
+        /// </summary>
+        /// <param name="model">The model that owns the items in this collection</param>
+        public LevelCollection(Model model) : base(model) { }
+
+        #endregion
 
         /// <summary>
         /// Get the subset of this collection which has a recorded modification after the specified date and time

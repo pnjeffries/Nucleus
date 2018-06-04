@@ -60,7 +60,7 @@ namespace Nucleus.Geometry
         /// Calculate the surface area of this surface
         /// </summary>
         /// <returns></returns>
-        public double CalculateArea()
+        public virtual double CalculateArea()
         {
             Vector centroid;
             return CalculateArea(out centroid);
