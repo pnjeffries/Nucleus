@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nucleus.Geometry;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,14 @@ namespace Nucleus.Geometry
     /// </summary>
     public interface IMapCell
     {
+        /// <summary>
+        /// The index of the cell in its owning map
+        /// </summary>
+        int Index { get; }
+
+        /// <summary>
+        /// The map to which this cell belongs
+        /// </summary>
+        ICellMap Map { get; }
     }
 }

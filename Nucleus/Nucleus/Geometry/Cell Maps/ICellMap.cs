@@ -7,18 +7,10 @@ using System.Threading.Tasks;
 namespace Nucleus.Geometry
 {
     /// <summary>
-    /// A generic interface for maps of cells
+    /// A base interface for maps of cells
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface ICellMap<T> : IEnumerable<T>
+    public interface ICellMap
     {
-        /// <summary>
-        /// Get or set the contents of the cell at the specified cell index
-        /// </summary>
-        /// <param name="cellIndex">The 1-dimensional cell index</param>
-        /// <returns></returns>
-        T this[int cellIndex] { get; set; }
-
         /// <summary>
         /// Get the number of cells in this map
         /// </summary>
@@ -86,6 +78,20 @@ namespace Nucleus.Geometry
         /// <param name="cellIndex"></param>
         /// <returns></returns>
         int VertexCount(int cellIndex);
+    }
+
+    /// <summary>
+    /// A generic interface for maps of cells
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public interface ICellMap<T> : ICellMap, IEnumerable<T>
+    {
+        /// <summary>
+        /// Get or set the contents of the cell at the specified cell index
+        /// </summary>
+        /// <param name="cellIndex">The 1-dimensional cell index</param>
+        /// <returns></returns>
+        T this[int cellIndex] { get; set; }  
     }
 
     /// <summary>

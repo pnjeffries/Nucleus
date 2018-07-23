@@ -26,7 +26,6 @@ namespace Nucleus.Game
         public EffectCollection Effects
         {
             get { return _Effects; }
-
         }
 
         #endregion

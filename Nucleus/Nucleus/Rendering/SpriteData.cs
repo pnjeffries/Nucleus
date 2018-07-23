@@ -156,7 +156,6 @@ namespace Nucleus.Rendering
 
                     }
 
-
                 }
             }
             return result;

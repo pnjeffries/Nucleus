@@ -93,15 +93,23 @@ namespace Nucleus.Maps
         /// <param name="right">The upper-bound longitude</param>
         /// <param name="top">The upper-bound latitude</param>
         /// <param name="saveTo">The filepath to save the map file to</param>
-        public void DownloadMap(double left, double bottom, double right, double top, FilePath saveTo)
+        public bool DownloadMap(double left, double bottom, double right, double top, FilePath saveTo)
         {
             //Compile the OpenStreetMap API URL:
             string osmAPIGet = OSMAPI + OSMAPIVersion + "/map?bbox=" +
                 left + "," + bottom + "," + right + "," + top;
             using (var client = new WebClient())
             {
-                client.DownloadFile(osmAPIGet, saveTo);
+                try
+                {
+                    client.DownloadFile(osmAPIGet, saveTo);
+                }
+                catch(Exception ex)
+                {
+                    return false;
+                }
             }
+            return true;
         }
 
         /// <summary>
@@ -110,14 +118,25 @@ namespace Nucleus.Maps
         /// <param name="address"></param>
         /// <param name="layerNames"></param>
         /// <returns></returns>
-        public GeometryLayerTable ReadMap(string address, IList<string> layerNames = null)
+        public GeometryLayerTable ReadMap(string address, double range = 0.005, IList<string> layerNames = null)
         {
             Vector ll = LatitudeAndLongitudeFromAddress(address);
             if (!ll.IsValid()) return null;
             double latitude = ll.Y;
             double longitude = ll.X;
+            return ReadMap(latitude, longitude, range, layerNames);
+        }
+
+        /// <summary>
+        /// Read map geometry data, automatically retrieving the 
+        /// </summary>
+        /// <param name="address"></param>
+        /// <param name="layerNames"></param>
+        /// <returns></returns>
+        public GeometryLayerTable ReadMap(double latitude, double longitude, double range = 0.005, IList<string> layerNames = null)
+        {
             FilePath osmFile = FilePath.Temp + "TempMap.osm";
-            DownloadMap(latitude, longitude, osmFile);
+            DownloadMap(latitude, longitude, osmFile, range);
             return ReadMap(osmFile, latitude, longitude);
         }
 
@@ -140,97 +159,104 @@ namespace Nucleus.Maps
             var nodes = new Dictionary<long, OsmSharp.Node>();
             var ways = new Dictionary<long, OsmSharp.Way>();
 
-            using (var fileStream = filePath.Info.OpenRead())
+            if (filePath.Exists)
             {
-                var source = new XmlOsmStreamSource(fileStream);
+                using (var fileStream = filePath.Info.OpenRead())
+                {
+                    var source = new XmlOsmStreamSource(fileStream);
 
-                foreach (var element in source)
-                {
-                    if (element.Id != null)
+                    foreach (var element in source)
                     {
-                        if (element.Type == OsmSharp.OsmGeoType.Node)
+                        if (element.Id != null)
                         {
-                            nodes.Add((long)element.Id, (OsmSharp.Node)element);
-                        }
-                        else if (element.Type == OsmSharp.OsmGeoType.Way)
-                        {
-                            ways.Add((long)element.Id, (OsmSharp.Way)element);
-                        }
-                        //TODO: Relations?
-                    }
-                }
-                foreach (var way in ways.Values)
-                {
-                    var pts = new List<Vector>(way.Nodes.Length);
-                    for (int i = 0; i < way.Nodes.Length; i++)
-                    {
-                        long nodeID = way.Nodes[i];
-                        if (nodes.ContainsKey(nodeID))
-                        {
-                            var node = nodes[nodeID];
-                            pts.Add(node.Position(originLatitude, originLongitude));
-                        }
-                    }
-                    VertexGeometry geometry = null;
-                    if (pts.Count == 2)
-                    {
-                        geometry = new Line(pts[0], pts[1]);
-                    }
-                    else if (pts.Count > 2)
-                    {
-                        geometry = new PolyLine(pts);
-                        //TODO: Areas
-                    }
-                    if (geometry != null)
-                    {
-                        string layerName = "Miscellaneous";
-                        //Assign layer according to keys:
-                        if (way.Tags != null)
-                        {
-                            foreach (string name in layerNames)
+                            if (element.Type == OsmSharp.OsmGeoType.Node)
                             {
-                                string lName = name.ToLower();
-                                if (way.Tags.ContainsKey(lName))
+                                nodes.Add((long)element.Id, (OsmSharp.Node)element);
+                            }
+                            else if (element.Type == OsmSharp.OsmGeoType.Way)
+                            {
+                                ways.Add((long)element.Id, (OsmSharp.Way)element);
+                            }
+                            //TODO: Relations?
+                        }
+                    }
+                    foreach (var way in ways.Values)
+                    {
+                        var pts = new List<Vector>(way.Nodes.Length);
+                        for (int i = 0; i < way.Nodes.Length; i++)
+                        {
+                            long nodeID = way.Nodes[i];
+                            if (nodes.ContainsKey(nodeID))
+                            {
+                                var node = nodes[nodeID];
+                                pts.Add(node.Position(originLatitude, originLongitude));
+                            }
+                        }
+                        VertexGeometry geometry = null;
+                        if (pts.Count == 2)
+                        {
+                            geometry = new Line(pts[0], pts[1]);
+                        }
+                        else if (pts.Count > 2)
+                        {
+                            geometry = new PolyLine(pts);
+                            //TODO: Areas
+                        }
+                        if (geometry != null)
+                        {
+                            string layerName = "Miscellaneous";
+                            //Assign layer according to keys:
+                            if (way.Tags != null)
+                            {
+                                foreach (string name in layerNames)
                                 {
-                                    string value = way.Tags[lName];
-                                    if (LayerSeparator != null && !string.IsNullOrWhiteSpace(value) && value != "yes")
+                                    string lName = name.ToLower();
+                                    if (way.Tags.ContainsKey(lName))
                                     {
-                                        layerName = name + LayerSeparator + value;
+                                        string value = way.Tags[lName];
+                                        if (LayerSeparator != null && !string.IsNullOrWhiteSpace(value) && value != "yes")
+                                        {
+                                            layerName = name + LayerSeparator + value;
+                                        }
+                                        else
+                                        {
+                                            layerName = name;
+                                        }
+                                        break;
                                     }
-                                    else
+                                }
+                                if (geometry is Curve && way.Tags.ContainsKey("height"))
+                                {
+                                    string heightTag = way.Tags["height"];
+                                    heightTag = heightTag.TrimEnd('m').Trim();
+                                    double height;
+                                    if (double.TryParse(heightTag, out height))
                                     {
-                                        layerName = name;
+                                        // TODO: Deal with tags with different units on the end!
+                                        geometry = new Extrusion((Curve)geometry, new Vector(0, 0, height));
                                     }
-                                    break;
                                 }
-                            }
-                            if (geometry is Curve && way.Tags.ContainsKey("height"))
-                            {
-                                string heightTag = way.Tags["height"];
-                                heightTag = heightTag.TrimEnd('m').Trim();
-                                double height;
-                                if (double.TryParse(heightTag, out height))
+                                if (geometry is Curve && way.Tags.ContainsKey("building:levels"))
                                 {
-                                    // TODO: Deal with tags with different units on the end!
-                                    geometry = new Extrusion((Curve)geometry, new Vector(0, 0, height));
+                                    string levelsTag = way.Tags["building:levels"];
+                                    double levels;
+                                    if (double.TryParse(levelsTag, out levels))
+                                    {
+                                        geometry = new Extrusion((Curve)geometry, new Vector(0, 0, levels * 3.0));
+                                    }
                                 }
                             }
-                            if (geometry is Curve && way.Tags.ContainsKey("building:levels"))
-                            {
-                                string levelsTag = way.Tags["building:levels"];
-                                double levels;
-                                if (double.TryParse(levelsTag, out levels))
-                                {
-                                    geometry = new Extrusion((Curve)geometry, new Vector(0, 0, levels * 3.0));
-                                }
-                            }
+                            var layer = result.GetOrCreate(layerName);
+                            layer.Add(geometry);
                         }
-                        var layer = result.GetOrCreate(layerName);
-                        layer.Add(geometry);
                     }
                 }
             }
+            else return null;
+
+
             return result;
+
         }
 
         #endregion

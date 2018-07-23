@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Effects\BasicEffect.cs" />
+    <Compile Include="Effects\IEffectContext.cs" />
     <Compile Include="States\RLState.cs" />
     <Compile Include="States\BasicGameState.cs" />
     <Compile Include="Effects\EffectCollection.cs" />

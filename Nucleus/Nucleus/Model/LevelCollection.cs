@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Model
 {
+    [Serializable]
     public class LevelCollection<TLevel> : ModelObjectCollection<TLevel>
         where TLevel : Level
     {
