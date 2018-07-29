@@ -28,6 +28,11 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Model
 {
+    /// <summary>
+    /// A generic collection of levels
+    /// </summary>
+    /// <typeparam name="TLevel"></typeparam>
+    [Serializable]
     public class LevelCollection<TLevel> : ModelObjectCollection<TLevel>
         where TLevel : Level
     {

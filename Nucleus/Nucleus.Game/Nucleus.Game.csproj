@@ -40,11 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\AvailableActions.cs" />
     <Compile Include="Effects\BasicEffect.cs" />
+    <Compile Include="InputFunction.cs" />
+    <Compile Include="InputManager.cs" />
     <Compile Include="States\RLState.cs" />
     <Compile Include="States\BasicGameState.cs" />
     <Compile Include="Effects\EffectCollection.cs" />
-    <Compile Include="GameAction.cs" />
+    <Compile Include="Actions\GameAction.cs" />
     <Compile Include="GameEngine.cs" />
     <Compile Include="GameModule.cs" />
     <Compile Include="GameStage.cs" />

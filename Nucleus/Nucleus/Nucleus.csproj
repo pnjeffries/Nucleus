@@ -122,6 +122,7 @@
     <Compile Include="Maths\NamedDataSetCollection.cs" />
     <Compile Include="Maths\MathsHelper.cs" />
     <Compile Include="Model\AnalysisCase.cs" />
+    <Compile Include="Model\AnalysisCaseCollection.cs" />
     <Compile Include="Model\AnalysisTask.cs" />
     <Compile Include="Model\AnalysisTaskCollection.cs" />
     <Compile Include="Model\BuildUpFamilyCollection.cs" />

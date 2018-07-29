@@ -1,4 +1,5 @@
 ﻿using Nucleus.Base;
+using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,28 @@ namespace Nucleus.Game
         /// Called every frame update
         /// </summary>
         public virtual void Update(UpdateInfo info)
+        {
+
+        }
+        
+        /// <summary>
+        /// Called when the user presses a key or button
+        /// </summary>
+        /// <param name="input">The input function pressed</param>
+        /// <param name="direction">The direction associated with the input,
+        /// if applicable.</param>
+        public virtual void InputPress(InputFunction input, Vector direction)
+        {
+
+        }
+
+        /// <summary>
+        /// Called when the user releases a key or button
+        /// </summary>
+        /// <param name="input">The input function pressed</param>
+        /// <param name="direction">The direction associated with the input,
+        /// if applicable.</param>
+        public virtual void InputRelease(InputFunction input, Vector direction)
         {
 
         }

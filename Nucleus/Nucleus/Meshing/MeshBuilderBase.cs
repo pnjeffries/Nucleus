@@ -449,7 +449,8 @@ namespace Nucleus.Meshing
         }
 
         /// <summary>
-        /// Display a model geometry
+        /// Display a model geometry as 3D element section and panel
+        /// mesh geometry
         /// </summary>
         /// <param name="model"></param>
         public void AddModel(Model.Model model)
