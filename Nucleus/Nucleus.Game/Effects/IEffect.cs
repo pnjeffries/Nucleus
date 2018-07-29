@@ -26,8 +26,9 @@ namespace Nucleus.Game
         /// </summary>
         /// <param name="target">The target element</param>
         /// <param name="log">A message log used to report back the outcome of the effect</param>
+        /// <param name="context">The context in which the effect is being applied</param>
         /// <returns></returns>
-        bool Apply(IEffectLog log);
+        bool Apply(IEffectLog log, IEffectContext context = null);
     }
 
     /// <summary>

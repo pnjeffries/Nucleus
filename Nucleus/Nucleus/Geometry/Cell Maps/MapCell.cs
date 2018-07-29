@@ -28,6 +28,47 @@ namespace Nucleus.Geometry
             set { _Contents = value; }
         }
 
+        private int _Index;
+
+        /// <summary>
+        /// The index of the cell
+        /// </summary>
+        public int Index
+        {
+            get
+            {
+                return _Index;
+            }
+        }
+
+        private ICellMap _Map;
+
+        /// <summary>
+        /// The map to which the cell belongs
+        /// </summary>
+        public ICellMap Map
+        {
+            get
+            {
+                return _Map;
+            }
+        }
+
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="map"></param>
+        public MapCell(int index, ICellMap map)
+        {
+            _Index = index;
+            _Map = map;
+        }
+
         #endregion
 
         #region Methods
