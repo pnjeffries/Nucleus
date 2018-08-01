@@ -375,6 +375,78 @@ namespace Nucleus.Geometry
             return result;
         }
 
+        /// <summary>
+        /// Reduce the length of this curve from the start
+        /// by the specified value
+        /// </summary>
+        /// <param name="length">The length to cut back from the curve end</param>
+        /// <returns>True if successful, false if not.</returns>
+        public override bool TrimStart(double length)
+        {
+            bool result = false;
+            double l0 = 0;
+            int removeTo = 0;
+            for (int i = 0; i < SegmentCount; i++)
+            {
+                double lS = CalculateSegmentLength(i);
+                double l1 = l0 + lS;
+                if (l1 > length)
+                {
+                    // Found trim point
+                    removeTo = i;
+                    Vertices[i].Position = PointAt(i, ((length - l0) / lS));
+                    result = true;
+                    break;
+                }
+                l0 = l1;
+            }
+            if (result)
+            {
+                //Remove preceding vertices
+                for (int i = 0; i < removeTo; i++)
+                {
+                    if (Vertices.Count > 0) Vertices.RemoveAt(0);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Reduce the length of this curve from the end
+        /// by the specified value
+        /// </summary>
+        /// <param name="length">The length to cut back from the curve end</param>
+        /// <returns>True if successful, false if not.</returns>
+        public override bool TrimEnd(double length)
+        {
+            bool result = false;
+            double l0 = 0;
+            int removeTo = 0;
+            for (int i = SegmentCount - 1; i >= 0; i--)
+            {
+                double lS = CalculateSegmentLength(i);
+                double l1 = l0 + lS;
+                if (l1 > length)
+                {
+                    // Found trim point
+                    removeTo = i + 1;
+                    Vertices[i + 1].Position = PointAt(i, 1 - ((length - l0) / lS));
+                    result = true;
+                    break;
+                }
+                l0 = l1;
+            }
+            if (result)
+            {
+                for (int i = Vertices.Count ; i > removeTo; i--)
+                {
+                    //Remove vertices after
+                    if (Vertices.Count > 0) Vertices.RemoveAt(Vertices.Count - 1);
+                }
+            }
+            return result;
+        }
+
         public override string ToString()
         {
             return "Polyline";

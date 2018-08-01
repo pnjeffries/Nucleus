@@ -101,6 +101,28 @@ namespace Nucleus.Extensions
             if (sign < 0) return value < limit;
             else return value > limit;
         }
-        
+
+        /// <summary>
+        /// Find and return the index of the value in this list closest
+        /// but lower than the specified value
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static int ClosestIndexBelow(this IList<int> list, int value)
+        {
+            int iBest = -1;
+            int vBest = int.MinValue;
+            for (int i = 0; i < list.Count; i++)
+            {
+                int v = list[i];
+                if (v < value && (iBest < 0 || v > vBest))
+                {
+                    iBest = i;
+                    vBest = v;
+                }
+            }
+            return iBest;
+        }
     }
 }

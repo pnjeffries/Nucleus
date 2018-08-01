@@ -201,6 +201,7 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static Curve Convert(RC.Curve curve)
         {
+            if (curve == null) return null;
             if (curve is RC.LineCurve) return Convert((RC.LineCurve)curve);
             else if (curve.IsLinear()) return Convert(new RC.Line(curve.PointAtStart, curve.PointAtEnd));
             else if (curve.IsPolyline())
@@ -226,6 +227,7 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static Mesh Convert(RC.Mesh mesh)
         {
+            if (mesh == null) return null;
             Mesh result = new Mesh();
             for (int i = 0; i < mesh.Vertices.Count; i++)
             {
@@ -391,7 +393,11 @@ namespace Nucleus.Rhino
         public static CurveCollection Convert(IList<RC.Curve> curves)
         {
             var result = new CurveCollection();
-            foreach (var crv in curves) result.Add(Convert(crv));
+            foreach (var crv in curves)
+            {
+                var converted = Convert(crv);
+                if (converted != null) result.Add(converted);
+            }
             return result;
         }
 

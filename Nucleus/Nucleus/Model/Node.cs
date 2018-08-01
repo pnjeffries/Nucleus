@@ -159,14 +159,28 @@ namespace Nucleus.Model
         {
             var result = new ElementCollection();
 
-            foreach (Vertex v in Vertices)
-            {
-                if (v.Element != null && !result.Contains(v.Element.GUID) &&
-                    (!undeletedOnly || !v.Element.IsDeleted))
-                    result.Add(v.Element);
-            }
+            GetConnectedElements(result, undeletedOnly);
 
             return result;
+        }
+
+        /// <summary>
+        /// Get a collection of all elements connected to this node
+        /// </summary>
+        /// <param name="addTo">Add the elements to this collection, which will be returned as the result</param>
+        /// <param name="undeletedOnly">If true, only elements that are not marked
+        /// as deleted will be returned</param>
+        /// <returns></returns>
+        public ElementCollection GetConnectedElements(ElementCollection addTo, bool undeletedOnly = true, Element ignore = null)
+        {
+            foreach (Vertex v in Vertices)
+            {
+                if (v.Element != null && v.Element != ignore && !addTo.Contains(v.Element.GUID) &&
+                    (!undeletedOnly || !v.Element.IsDeleted))
+                    addTo.Add(v.Element);
+            }
+
+            return addTo;
         }
 
         /// <summary>

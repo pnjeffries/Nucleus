@@ -1781,6 +1781,24 @@ namespace Nucleus.Geometry
         {
             return v.GetWrapped(index) - v[index];
         }
+
+        /// <summary>
+        /// Find the maximum angle between any of the vectors in this collection
+        /// and the specified other vector
+        /// </summary>
+        /// <param name="v"></param>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public static Angle MaximumAngleBetween(this IList<Vector> v, Vector other)
+        {
+            Angle max = 0;
+            foreach (Vector vector in v)
+            {
+                Angle angle = vector.AngleBetween(other);
+                if (angle > max) max = angle;
+            }
+            return max;
+        }
     }
 }
 

@@ -776,14 +776,143 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find the section(s) of a polycurve which lie(s) inside the specified polygon
+        /// </summary>
+        /// <param name="pLine"></param>
+        /// <param name="polygon"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static CurveCollection CurveInPolygonXY(Curve crv, IList<Vertex> polygon)
+        {
+            if (crv is Line)
+                return LineInPolygonXY((Line)crv, polygon);
+            else if (crv is Arc)
+                return ArcInPolygonXY((Arc)crv, polygon);
+            else if (crv is PolyLine)
+                return PolyLineInPolygonXY((PolyLine)crv, polygon);
+            else if (crv is PolyCurve)
+                return PolyCurveInPolygonXY((PolyCurve)crv, polygon);
+            else
+                throw new NotImplementedException(); //New curve types need to go here!
+        }
+
+        /// <summary>
+        /// Find the section(s) of a polycurve which lie(s) inside the specified polygon
+        /// </summary>
+        /// <param name="pLine"></param>
+        /// <param name="polygon"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static CurveCollection PolyCurveInPolygonXY(PolyCurve pCurve, IList<Vertex> polygon, CurveCollection result = null)
+        {
+            if (result == null) result = new CurveCollection();
+            foreach (var crv in pCurve.SubCurves)
+            {
+                if (crv is Line)
+                    LineInPolygonXY((Line)crv, polygon, result);
+                else if (crv is Arc)
+                    ArcInPolygonXY((Arc)crv, polygon, result);
+                else if (crv is PolyLine)
+                    PolyLineInPolygonXY((PolyLine)crv, polygon, result);
+                else if (crv is PolyCurve)
+                    PolyCurveInPolygonXY((PolyCurve)crv, polygon, result);
+                else
+                    throw new NotImplementedException(); //New curve types need to go here!
+            }
+            return result.JoinOrderedCurves();
+        }
+
+        /// <summary>
+        /// Find the section(s) of a polyline which lie(s) inside the specified polygon
+        /// </summary>
+        /// <param name="pLine"></param>
+        /// <param name="polygon"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static CurveCollection PolyLineInPolygonXY(PolyLine pLine, IList<Vertex> polygon, CurveCollection result = null)
+        {
+            if (result == null) result = new CurveCollection();
+            foreach (var line in pLine.ToLines())
+            {
+                LineInPolygonXY(line, polygon, result);
+            }
+            return result.JoinOrderedCurves();
+        }
+
+        /// <summary>
+        /// Find the section(s) of an arc which lie(s) inside the specified polygon
+        /// </summary>
+        /// <param name="arc"></param>
+        /// <param name="polygon"></param>
+        /// <returns></returns>
+        public static CurveCollection ArcInPolygonXY(Arc arc, IList<Vertex> polygon, CurveCollection result = null)
+        {
+            if (result == null) result = new CurveCollection();
+            double tolerance = Tolerance.Distance;
+            var intersections = new SortedList<double, Vector>();
+
+            Vector ptL = arc.StartPoint;
+            Vector vL = arc.EndPoint - ptL;
+
+            for (int i = 0; i < polygon.Count; i++) // Loop through polygon's edges
+            {
+                Vertex vP0 = polygon[i];
+                Vertex vP1 = polygon.GetWrapped(i + 1);
+                Vector ptP = vP0.Position;
+                Vector vP = vP1.Position - ptP;
+                if (!vP.IsZero())
+                {
+                    //double t0 = 0;
+                    //double t1 = 0;
+                    Vector[] iPts = LineArcXY(ptP, vP, arc, true);
+                    //LineLineXY(ptL, vL, ptP, vP, ref t0, ref t1); // Find infinite line intersection
+                    if (iPts.Length > 0)
+                        // && t0 >= -tolerance && t0 <= 1 + tolerance && t1 >= -tolerance && t1 <= 1 + tolerance)
+                    {
+                        foreach (var iPt in iPts)
+                        {
+                            double t0 = arc.ClosestParameter(iPt);
+                            if (intersections.ContainsKey(t0)) intersections.Remove(t0); 
+                            //if we have two intersections at the same point ignore both of them!
+                            else intersections.Add(t0, iPt);
+                        }
+                    }
+                }
+            }
+
+            int j = 0;
+            if (polygon.PolygonContainmentXY(arc.StartPoint))
+            {
+                if (intersections.Count == 0) result.Add(arc); // Input line is wholly inside polygon
+                else
+                {
+                    result.Add(arc.Extract(new Interval(0, intersections.Keys[0])));
+                    //new Line(line.StartPoint, intersections.Values[0]));
+                    j += 1;
+                }
+            }
+            for (int i = j; i < intersections.Count; i += 2)
+            {
+                double tEnd;//Vector endPt;
+                if (i + 1 < intersections.Count) tEnd = intersections.Keys[i + 1];
+                else tEnd = 1;
+
+                result.Add(arc.Extract(new Interval(intersections.Keys[i], tEnd)));
+                    //new Line(intersections.Values[i], endPt));
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Find the section(s) of a line which lie(s) inside the specified polygon
         /// </summary>
         /// <param name="line"></param>
         /// <param name="polygon"></param>
         /// <returns></returns>
-        public static CurveCollection LineInPolygonXY(Line line, IList<Vertex> polygon)
+        public static CurveCollection LineInPolygonXY(Line line, IList<Vertex> polygon, CurveCollection result = null)
         {
-            CurveCollection result = new CurveCollection();
+            if (result == null) result = new CurveCollection();
             double tolerance = Tolerance.Distance;
             var intersections = new SortedList<double, Vector>();
             
