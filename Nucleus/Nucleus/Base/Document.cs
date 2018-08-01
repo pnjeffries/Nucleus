@@ -105,7 +105,7 @@ namespace Nucleus.Base
                         IFormatter formatter = new BinaryFormatter();
                         formatter.Serialize(stream, this);
                     }
-                    else if (type == DocumentSaveFileType.ASS)
+                    else if (type == DocumentSaveFileType.Text)
                     {
                         var formatter = new UniqueFormatter();
                         formatter.Serialize(stream, this);
@@ -204,7 +204,7 @@ namespace Nucleus.Base
                 formatter.Binder = new CustomSerializationBinder();
                 result = formatter.Deserialize(stream) as T;
             }
-            else if (type == DocumentSaveFileType.ASS)
+            else if (type == DocumentSaveFileType.Text)
             {
                 var formatter = new UniqueFormatter();
                 result = formatter.Deserialize(stream) as T;

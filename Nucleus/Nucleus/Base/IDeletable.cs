@@ -78,9 +78,12 @@ namespace Nucleus.Base
         public static void RemoveDeleted<TItem>(this IList<TItem> list)
             where TItem : IDeletable
         {
-            for (int i = list.Count - 1; i >= 0; i--)
+            if (list != null)
             {
-                if (list[i].IsDeleted) list.RemoveAt(i);
+                for (int i = list.Count - 1; i >= 0; i--)
+                {
+                    if (list[i].IsDeleted) list.RemoveAt(i);
+                }
             }
         }
 

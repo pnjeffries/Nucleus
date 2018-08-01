@@ -31,6 +31,11 @@ namespace Nucleus.Game
         public static GameEngine Instance { get { return _Instance; } }
 
         /// <summary>
+        /// The sub-manager which handles user input
+        /// </summary>
+        public InputManager Input { get; } = new InputManager();
+
+        /// <summary>
         /// Private backing member variable for the State property
         /// </summary>
         private GameState _State = null;
@@ -99,6 +104,8 @@ namespace Nucleus.Game
         {
             Module = module;
         }
+
+        
 
         #endregion
     }

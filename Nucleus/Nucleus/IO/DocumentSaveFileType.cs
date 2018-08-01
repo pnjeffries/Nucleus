@@ -9,6 +9,6 @@ namespace Nucleus.IO
     public enum DocumentSaveFileType
     {
         Binary = 0,
-        ASS = 1
+        Text = 1
     }
 }

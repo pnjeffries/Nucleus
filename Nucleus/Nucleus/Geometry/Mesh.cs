@@ -307,6 +307,22 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Write this mesh to a file in OBJ format
+        /// </summary>
+        /// <param name="path"></param>
+        public void ToOBJ(FilePath filePath)
+        {
+            using (Stream stream = new FileStream(filePath,
+                                     FileMode.Create,
+                                     FileAccess.Write, FileShare.None))
+            {
+                ToOBJ(stream);
+                stream.Flush();
+                stream.Close();
+            }
+        }
+
+        /// <summary>
         /// Write this mesh to a stream in OBJ format
         /// </summary>
         /// <returns></returns>
