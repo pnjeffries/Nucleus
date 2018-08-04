@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Artitecture\CellGenerationType.cs" />
     <Compile Include="Artitecture\Room.cs" />
+    <Compile Include="Components\HitPoints.cs" />
     <Compile Include="Components\AvailableActions.cs" />
     <Compile Include="Artitecture\DungeonArtitect.cs" />
     <Compile Include="Components\IEndOfTurn.cs" />

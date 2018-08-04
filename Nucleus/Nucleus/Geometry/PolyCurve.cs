@@ -269,6 +269,34 @@ namespace Nucleus.Geometry
             return double.NaN;
         }
 
+        /*
+        /// <summary>
+        /// Get the curve parameter at the specified length along this curve.
+        /// If the returned parameter falls outside the range 0-1, the specified
+        /// length does not fall within the domain of the curve.
+        /// </summary>
+        /// <param name="length">The distance along the curve from the start of the curve to the point in question</param>
+        /// <returns>A curve parameter</returns>
+        public override double ParameterAt(double length)
+        {
+            int segs = 0;
+            int segCount = SegmentCount;
+            double l0 = 0;
+            foreach (Curve subCrv in SubCurves)
+            {
+                double crvLength = subCrv.Length;
+                double l1 = l0 + crvLength;
+                if (l1 > length)
+                {
+                    double t = subCrv.ParameterAt(length - l0);
+                    return (segs + (t * subCrv.SegmentCount)) / segCount;
+                }
+                segs += subCrv.SegmentCount;
+            }
+            return double.NaN;
+        }
+        */
+
         /// <summary>
         /// Evaluate a point defined by a parameter within a specified span.
         /// </summary>
@@ -729,6 +757,166 @@ namespace Nucleus.Geometry
                 subCrv.Reverse();
             }
             SubCurves.Reverse();
+        }
+
+        /// <summary>
+        /// Reduce the length of this curve from the start
+        /// by the specified value
+        /// </summary>
+        /// <param name="length">The length to cut back from the curve end</param>
+        /// <returns>True if successful, false if not.</returns>
+        public override bool TrimStart(double length)
+        {
+            bool result = false;
+            double l0 = 0;
+            for (int i = 0; i < SubCurves.Count; i++)
+            {
+                Curve subCrv = SubCurves[i];
+                double crvLength = subCrv.Length;
+                double l1 = l0 + crvLength;
+                if (l1 > length)
+                {
+                    result = subCrv.TrimStart(length - l0);
+                    for (int j = 0; j < i; j++)
+                    {
+                        SubCurves.RemoveAt(0);
+                    }
+                    break;
+                }
+            }
+
+            return result;
+
+        }
+
+        /// <summary>
+        /// Reduce the length of this curve from the end
+        /// by the specified value
+        /// </summary>
+        /// <param name="length">The length to cut back from the curve end</param>
+        /// <returns>True if successful, false if not.</returns>
+        public override bool TrimEnd(double length)
+        {
+            bool result = false;
+            double l0 = 0;
+            for (int i = 0; i < SubCurves.Count; i++)
+            {
+                Curve subCrv = SubCurves[SubCurves.Count - 1 - i];
+                double crvLength = subCrv.Length;
+                double l1 = l0 + crvLength;
+                if (l1 > length)
+                {
+                    result = subCrv.TrimStart(length - l0);
+                    for (int j = 0; j < i; j++)
+                    {
+                        SubCurves.RemoveAt(0);
+                    }
+                    break;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Automatically fillet any sharp corners between segments in the PolyCurve
+        /// </summary>
+        /// <param name="angleLimit">The smallest permissible angle</param>
+        /// <param name="filletLength">The smallest permissible length of the added fillet curve</param>
+        public void FilletSharpCorners(Angle angleLimit, double filletLength)
+        {
+            int iMax = SubCurves.Count - 1;
+            if (Closed) iMax += 1;
+            for (int i = 0; i < iMax; i++)
+            {
+                Curve crvA = SubCurves.GetWrapped(i);
+                //TODO: Recursively fillet polys
+                Curve crvB = SubCurves.GetWrapped(i + 1);
+
+                Vector tA = crvA.TangentAt(1);
+                Vector tB = crvB.TangentAt(0);
+
+                Angle angle = (Math.PI - tA.AngleBetween(tB).Abs());
+
+                if (angle < angleLimit)
+                {
+                    double cutBack = filletLength / (2 * Math.Sin(angle / 2));
+                    if (crvA.TrimEnd(cutBack) && crvB.TrimStart(cutBack))
+                    {
+                        Line fillet = new Line(crvA.EndPoint, crvB.StartPoint);
+                        SubCurves.Insert(i + 1, fillet);
+                        i++;
+                        iMax++;
+                    }
+                    //TODO: Deal with failed trims better
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// Extract from this PolyCurve a chain of subcurves, starting with the
+        /// longest and continuing to select the longest edge until no more can
+        /// be added without adding an edge which is within an angle tolerance of
+        /// an existing curve within the chain.
+        /// </summary>
+        /// <returns></returns>
+        public PolyCurve ExtractLongCurveChain(Angle maxAngle)
+        {
+            Curve longest = SubCurves.GetLongest();
+            if (longest != null)
+            {
+                var tangents = new List<Vector>();
+                tangents.Add(longest.TangentAt(0.5));
+                var result = new PolyCurve(longest);
+                int iL = SubCurves.IndexOf(longest);
+                int i0 = iL - 1;
+                int i1 = iL + 1;
+                bool closed = Closed;
+                bool tryPre = true;
+                bool tryPost = true;
+                while (tryPre || tryPost)
+                {
+                    Curve pre = tryPre ? SubCurves.GetWrapped(i0, closed) : null;
+                    Curve post = tryPost ? SubCurves.GetWrapped(i1, closed) : null;
+                    if (post != null && (pre == null || post.Length > pre.Length))
+                    {
+                        Vector tang = post.TangentAt(0.5);
+                        if (result.SubCurves.Contains(post.GUID) || tangents.MaximumAngleBetween(tang).Abs() > maxAngle)
+                        {
+                            tryPost = false;
+                        }
+                        else
+                        {
+                            result.SubCurves.Add(post);
+                            tangents.Add(tang);
+                            i1++;
+                        }
+                    }
+                    else if (pre != null)
+                    {
+                        Vector tang = pre.TangentAt(0.5);
+                        if (result.SubCurves.Contains(pre.GUID) || tangents.MaximumAngleBetween(tang).Abs() > maxAngle)
+                        {
+                            tryPre = false;
+                        }
+                        else
+                        { 
+                            result.SubCurves.Insert(0, pre);
+                            tangents.Add(tang);
+                            i0--;
+                        }
+                    }
+                    else
+                    {
+                        tryPre = false;
+                        tryPost = false;
+                    }
+                }
+                return result;
+
+            }
+            return null;
         }
 
         #endregion

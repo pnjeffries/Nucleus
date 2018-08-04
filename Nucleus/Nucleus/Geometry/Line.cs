@@ -214,13 +214,19 @@ namespace Nucleus.Geometry
         /// <summary>
         /// Evaluate a point on this curve a specified distance from the start or end.
         /// </summary>
-        /// <param name="length">The length along the line </param>
-        /// <param name="fromEnd"></param>
+        /// <param name="length">The length along the curve</param>
+        /// <param name="fromEnd">If true, the length will be measured from the end
+        /// of the curve.  If false (default) it will be measured from the start.</param>
         /// <returns></returns>
-        public Vector PointAtLength(double length, bool fromEnd = false)
+        public override Vector PointAtLength(double length, bool fromEnd = false)
         {
-            if (!fromEnd) return StartPoint.Interpolate(EndPoint, length / Length);
-            else return EndPoint.Interpolate(StartPoint, length / Length);
+            double lineLength = Length;
+            if (length <= lineLength)
+            {
+                if (!fromEnd) return StartPoint.Interpolate(EndPoint, length / lineLength);
+                else return EndPoint.Interpolate(StartPoint, length / lineLength);
+            }
+            else return Vector.Unset;
         }
 
         /// <summary>

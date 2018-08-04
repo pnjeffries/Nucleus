@@ -195,6 +195,19 @@ namespace Nucleus.Geometry
             }
         }
 
+        /// <summary>
+        /// Evaluate a point on this curve a specified distance from the start or end.
+        /// </summary>
+        /// <param name="length">The length along the curve</param>
+        /// <param name="fromEnd">If true, the length will be measured from the end
+        /// of the curve.  If false (default) it will be measured from the start.</param>
+        /// <returns></returns>
+        public virtual Vector PointAtLength(double length, bool fromEnd = false)
+        {
+            if (fromEnd) length = Length - length;
+            double t = ParameterAt(length);
+            return PointAt(t);
+        }
 
         /// <summary>
         /// Get the curve parameter at the specified vertex
@@ -876,7 +889,7 @@ namespace Nucleus.Geometry
         /// <returns></returns>
         public virtual Curve Offset(double distance, bool tidy = true, bool copyAttributes = true)
         {
-            return Offset(new double[] { distance });
+            return Offset(new double[] { distance }, tidy, copyAttributes);
         }
 
         /// <summary>
@@ -971,6 +984,56 @@ namespace Nucleus.Geometry
             return Start;
         }
 
+        /// <summary>
+        /// Reduce the length of this curve, trimming from the specifed end vertex
+        /// by the specified value
+        /// </summary>
+        /// <param name="lineEnd">The vertex at the end of this curve
+        /// to trim back.  The entered value should be either the
+        /// start or end vertex of this line.</param>
+        /// <param name="length">The length to cut back from the curve end</param>
+        /// <returns>True if successful, false if not.</returns>
+        public virtual bool Trim(Vertex lineEnd, double length)
+        {
+            if (lineEnd == Start) return TrimStart(length);
+            else if (lineEnd == End) return TrimEnd(length);
+            else return false;
+        }
+
+        /// <summary>
+        /// Reduce the length of this curve from the start
+        /// by the specified value
+        /// </summary>
+        /// <param name="length">The length to cut back from the curve end</param>
+        /// <returns>True if successful, false if not.</returns>
+        public virtual bool TrimStart(double length)
+        {
+            Vector pt = PointAtLength(length);
+            if (pt.IsValid())
+            {
+                Start.Position = pt;
+                return true;
+            }
+            else return false;
+        }
+
+        /// <summary>
+        /// Reduce the length of this curve from the end
+        /// by the specified value
+        /// </summary>
+        /// <param name="length">The length to cut back from the curve end</param>
+        /// <returns>True if successful, false if not.</returns>
+        public virtual bool TrimEnd(double length)
+        {
+            Vector pt = PointAtLength(length, true);
+            if (pt.IsValid())
+            {
+                End.Position = pt;
+                return true;
+            }
+            else return false;
+        }
+
         public override string ToString()
         {
             return "Curve";
@@ -983,6 +1046,7 @@ namespace Nucleus.Geometry
         {
             Vertices.Reverse();
         }
+
 
         #endregion
 
@@ -1356,5 +1420,71 @@ namespace Nucleus.Geometry
             //TODO: Recursive joining for unordered curve sets
             return result;
         }
+
+        /// <summary>
+        /// Join together a sequential set of curves where their end points
+        /// lie within tolerance of one another.  Where multiple curves can be
+        /// joined they will be brought together as PolyCurves, otherwise they
+        /// will be added directly to the result collection.
+        /// </summary>
+        /// <param name="curves"></param>
+        /// <returns></returns>
+        public static CurveCollection JoinOrderedCurves(this IList<Curve> curves, CurveCollection result = null)
+        {
+            if (result == null) result = new CurveCollection();
+            IList<Curve> current = new List<Curve>();
+            double tolerance = Tolerance.Distance * Tolerance.Distance;
+            for (int i = 0; i < curves.Count; i++)
+            {
+                Curve crv = curves[i];
+                if (current.Count == 0 ||
+                    current.Last().EndPoint.DistanceToSquared(crv.StartPoint) < tolerance)
+                {
+                    // Carry on building the chain... 
+                }
+                else
+                {
+                    // Break the chain... (Sorry, Fleetwood Mack)
+                    if (current.Count == 1) result.Add(current[0]);
+                    else
+                    {
+                        var pCrv = new PolyCurve(current);
+                        result.Add(pCrv);
+                        current.Clear();
+                    }
+                }
+                current.Add(crv);
+            }
+
+            if (current.Count == 1) result.Add(current[0]);
+            else if (current.Count > 0)
+            {
+                var pCrv = new PolyCurve(current);
+                result.Add(pCrv);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Extract an array of all the tangencies of the curves in
+        /// this collection at the specified parameter location.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="curves"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static Vector[] TangentsAt<T>(IList<T> curves, double t)
+            where T:Curve
+        {
+            var result = new Vector[curves.Count];
+            for (int i = 0; i < curves.Count; i++)
+            {
+                result[i] = curves[i]?.TangentAt(t) ?? Vector.Unset;
+            }
+            return result;
+        }
+
+        
     }
 }
