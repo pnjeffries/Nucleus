@@ -40,25 +40,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Artitecture\CellGenerationType.cs" />
+    <Compile Include="Artitecture\Room.cs" />
     <Compile Include="Components\AvailableActions.cs" />
+    <Compile Include="Artitecture\DungeonArtitect.cs" />
+    <Compile Include="Components\IEndOfTurn.cs" />
+    <Compile Include="Components\MapAwareness.cs" />
+    <Compile Include="Components\VisionBlocker.cs" />
     <Compile Include="Effects\BasicEffect.cs" />
+    <Compile Include="Effects\EffectContext.cs" />
     <Compile Include="InputFunction.cs" />
     <Compile Include="InputManager.cs" />
     <Compile Include="Effects\IEffectContext.cs" />
+    <Compile Include="Artitecture\RoomTemplate.cs" />
     <Compile Include="States\RLState.cs" />
     <Compile Include="States\BasicGameState.cs" />
     <Compile Include="Effects\EffectCollection.cs" />
     <Compile Include="Actions\GameAction.cs" />
     <Compile Include="GameEngine.cs" />
     <Compile Include="GameModule.cs" />
-    <Compile Include="GameStage.cs" />
+    <Compile Include="Stages\GameStage.cs" />
     <Compile Include="States\GameState.cs" />
     <Compile Include="Effects\IEffect.cs" />
     <Compile Include="Effects\IEffectLog.cs" />
     <Compile Include="Components\MapCellCollider.cs" />
-    <Compile Include="MapStage.cs" />
+    <Compile Include="Stages\MapStage.cs" />
     <Compile Include="Effects\MoveCellEffect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TurnContext.cs" />
     <Compile Include="UpdateInfo.cs" />
   </ItemGroup>
   <ItemGroup>

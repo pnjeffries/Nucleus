@@ -9,7 +9,7 @@ namespace Nucleus.Game
 {
     public class MoveCellEffect : BasicEffect
     {
-        public override bool Apply(IEffectLog log)
+        public override bool Apply(IEffectLog log, IEffectContext context)
         {
             throw new NotImplementedException();
         }

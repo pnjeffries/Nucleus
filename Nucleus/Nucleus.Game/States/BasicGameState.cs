@@ -35,15 +35,16 @@ namespace Nucleus.Game
             }
         }
 
+
         /// <summary>
         /// Private backing member variable for the Controlled property
         /// </summary>
-        private ElementCollection _Controlled = new ElementCollection();
+        private Element _Controlled = null;
 
         /// <summary>
-        /// The collection of game elements which are currently directly under the player's control
+        /// The game element which is currently directly under the player's control
         /// </summary>
-        public ElementCollection Controlled
+        public Element Controlled
         {
             get { return _Controlled; }
             set

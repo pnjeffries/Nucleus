@@ -15,11 +15,11 @@ namespace Nucleus.Geometry
         /// <summary>
         /// The index of the cell in its owning map
         /// </summary>
-        int Index { get; }
+        int Index { get; set; }
 
         /// <summary>
         /// The map to which this cell belongs
         /// </summary>
-        ICellMap Map { get; }
+        ICellMap Map { get; set; }
     }
 }

@@ -26,6 +26,11 @@ namespace Nucleus.Game
 
         #region Methods
 
+        public override void StartUp()
+        {
+            EndTurnOf(Controlled);
+        }
+
         /// <summary>
         /// Called when the user releases a key or button
         /// </summary>
@@ -35,10 +40,34 @@ namespace Nucleus.Game
         public override void InputRelease(InputFunction input, Vector direction)
         {
             base.InputRelease(input, direction);
-            Element controlled = Controlled.FirstOrDefault();
+            Element controlled = Controlled;
             if (controlled != null)
             {
+                //Move element:
+                MapData mD = controlled.GetData<MapData>();
+                if (mD != null && mD.MapCell != null)
+                {
+                    MapCell newCell = Stage.Map.AdjacentCell(mD.MapCell.Index, direction);
+                    if (newCell != null && (controlled.GetData<MapCellCollider>()?.CanEnter(newCell) ?? true))
+                        newCell.PlaceInCell(controlled);
+                    EndTurnOf(controlled);
+                }
 
+            }
+        }
+
+        /// <summary>
+        /// Process the end of the turn
+        /// </summary>
+        public void EndTurnOf(Element element)
+        {
+            var context = new TurnContext(this, Stage, element);
+            foreach (IElementDataComponent dC in element.Data)
+            {
+                if (dC is IEndOfTurn)
+                {
+                    ((IEndOfTurn)dC).EndOfTurn(context);
+                }
             }
         }
 

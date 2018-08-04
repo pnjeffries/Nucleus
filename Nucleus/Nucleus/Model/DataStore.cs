@@ -249,6 +249,11 @@ namespace Nucleus.Model
                 Remove(type);
             }
             Add(component);
+            /*if (component is IOwned<TOwner> && Owner != null)
+            {
+                ((IOwned<TOwner>)component).Owner = Owner;
+                //TODO?
+            }*/
         }
 
         /// <summary>

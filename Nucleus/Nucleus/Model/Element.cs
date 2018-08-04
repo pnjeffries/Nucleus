@@ -163,6 +163,27 @@ namespace Nucleus.Model
 
         #endregion
 
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        protected Element() { }
+
+        /// <summary>
+        /// Name constructor.
+        /// </summary>
+        /// <param name="name"></param>
+        protected Element(string name) : base(name) { }
+
+        /// <summary>
+        /// Duplication constructor
+        /// </summary>
+        /// <param name="other"></param>
+        protected Element(Element other) : base(other) { }
+
+        #endregion
+
         #region Methods
 
         protected override ElementDataStore NewDataStore()
@@ -372,12 +393,19 @@ namespace Nucleus.Model
         protected Element() { }
 
         /// <summary>
+        /// Name constructor.
+        /// </summary>
+        /// <param name="name"></param>
+        protected Element(string name) : base(name) { }
+
+        /// <summary>
         /// Duplication constructor
         /// </summary>
         /// <param name="other"></param>
-        protected Element(Element<TShape,TFamily> other)
+        protected Element(Element<TShape, TFamily> other) : base(other)
         {
-
+            Geometry = other.Geometry?.Duplicate();
+            Family = other.Family;
         }
 
         #endregion

@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -46,7 +47,7 @@ namespace Nucleus.Base
         /// Raise a PropertyChanged event for the specified property name
         /// </summary>
         /// <param name="propertyName">The name of the property</param>
-        protected virtual void NotifyPropertyChanged(string propertyName)
+        protected virtual void NotifyPropertyChanged([CallerMemberName]string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -121,10 +122,10 @@ namespace Nucleus.Base
         /// <typeparam name="T">The type of the property</typeparam>
         /// <param name="backingField">The backing field to be changed</param>
         /// <param name="newValue">The new value to be assigned</param>
-        /// <param name="propertyName">The name of the property</param>
+        /// <param name="propertyName">The name of the property.  If not specified the CallerMemberName will be used.</param>
         /// <param name="notifyIfSame">If false (default), a property changed notification will not be raised
         /// unless the old and new values of the property are not equal.  If true, it will be raised regardless.</param>
-        protected virtual void ChangeProperty<T>(ref T backingField, T newValue, string propertyName, bool notifyIfSame = false)
+        protected virtual void ChangeProperty<T>(ref T backingField, T newValue, [CallerMemberName]string propertyName = "", bool notifyIfSame = false)
         {
             T oldValue = backingField;
             backingField = newValue;

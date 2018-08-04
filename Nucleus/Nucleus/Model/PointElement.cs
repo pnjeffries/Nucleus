@@ -15,6 +15,26 @@ namespace Nucleus.Model
     [Serializable]
     public class PointElement : Element<Point, BlockFamily>
     {
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public PointElement() : base() { }
+
+        /// <summary>
+        /// Name constructor
+        /// </summary>
+        /// <param name="name"></param>
+        public PointElement(string name)
+        {
+            Name = name;
+        }
+
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Get a point in space which nominally describes the position of this element,
         /// to be used for display attachments and the like.
@@ -36,5 +56,7 @@ namespace Nucleus.Model
         {
             Orientation = vector.Angle;
         }
+
+        #endregion
     }
 }
