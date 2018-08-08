@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Log
+namespace Nucleus.Logs
 {
     /// <summary>
     /// An interface for log objects which report on effects

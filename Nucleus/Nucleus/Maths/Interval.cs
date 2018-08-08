@@ -523,6 +523,16 @@ namespace Nucleus.Maths
             return new Interval(Start, value);
         }
 
+        /// <summary>
+        /// Generate a random double within this interval
+        /// </summary>
+        /// <param name="rng">The random number generator to use</param>
+        /// <returns></returns>
+        public double Random(Random rng)
+        {
+            return Start + rng.NextDouble() * Size;
+        }
+
         public override string ToString()
         {
             if (IsSingularity) return End.ToString();
@@ -616,6 +626,8 @@ namespace Nucleus.Maths
                 outList.Add(interval);
             }
         }
+
+       
 
         #endregion
 

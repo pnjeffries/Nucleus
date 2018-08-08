@@ -1,5 +1,5 @@
 ﻿using Nucleus.Base;
-using Nucleus.Log;
+using Nucleus.Logs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +32,6 @@ namespace Nucleus.Game
         #endregion
 
 
-        public abstract bool Apply(IEffectLog log, IEffectContext context);
+        public abstract bool Apply(IEffectLog log, EffectContext context);
     }
 }
