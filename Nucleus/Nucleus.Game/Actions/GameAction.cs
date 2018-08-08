@@ -11,6 +11,7 @@ namespace Nucleus.Game
     /// An action is a process that may be performed by a game element
     /// which has one or more effects
     /// </summary>
+    [Serializable]
     public class GameAction : Named
     {
         #region Properties
@@ -26,6 +27,22 @@ namespace Nucleus.Game
         public EffectCollection Effects
         {
             get { return _Effects; }
+        }
+
+        #endregion
+
+        #region Constructor
+
+        public GameAction() { }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="effects"></param>
+        public GameAction(string name, params IEffect[] effects): base(name)
+        {
+            foreach (IEffect effect in effects) _Effects.Add(effect);
         }
 
         #endregion

@@ -12,9 +12,17 @@ namespace Nucleus.Game
     /// Provides a collection of all available actions which
     /// are available to that actor
     /// </summary>
+    [Serializable]
     public class AvailableActions : IElementDataComponent
     {
         #region Properties
+
+        private GameActionCollection _Actions = new GameActionCollection();
+
+        /// <summary>
+        /// The collection of actions available to this element
+        /// </summary>
+        public GameActionCollection Actions { get { return _Actions; } }
 
         #endregion
     }
