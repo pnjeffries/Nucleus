@@ -248,6 +248,18 @@ namespace Nucleus.Model
         }
 
         /// <summary>
+        /// Attach multiple data components to this object
+        /// </summary>
+        /// <param name="data"></param>
+        public void SetData(params TData[] data)
+        {
+            foreach (TData d in data)
+            {
+                SetData(d);
+            }
+        }
+
+        /// <summary>
         /// Remove any attached data components of the specified type
         /// </summary>
         /// <param name="ofType"></param>

@@ -78,6 +78,23 @@ namespace Nucleus.Geometry
         /// <param name="cellIndex"></param>
         /// <returns></returns>
         int VertexCount(int cellIndex);
+
+        /// <summary>
+        /// Get a list of the cells in this map within a given range of a given position,
+        /// ordered by distance
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="range"></param>
+        /// <returns></returns>
+        IList<int> CellsOrderedByDistance(Vector position, double range);
+
+        /// <summary>
+        /// Spawn a new grid of the same type and size but with a different
+        /// generic type
+        /// </summary>
+        /// <typeparam name="E"></typeparam>
+        /// <returns></returns>
+        ICellMap<E> SpawnNewGrid<E>();
     }
 
     /// <summary>
@@ -91,7 +108,7 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="cellIndex">The 1-dimensional cell index</param>
         /// <returns></returns>
-        T this[int cellIndex] { get; set; }  
+        T this[int cellIndex] { get; set; }
     }
 
     /// <summary>
@@ -188,5 +205,100 @@ namespace Nucleus.Geometry
             return null;
         }
 
+        /// <summary>
+        /// Set a cell in this map.  This will back-register the map and index
+        /// with the cell itself.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="map"></param>
+        /// <param name="index"></param>
+        /// <param name="cell"></param>
+        public static void SetCell<T>(this ICellMap<T> map, int index, T cell)
+            where T:IMapCell
+        {
+            map[index] = cell;
+            cell.Index = index;
+            cell.Map = map;
+        }
+
+        /// <summary>
+        /// Populate this map with cells
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="map"></param>
+        public static void InitialiseCells<T>(this ICellMap<T> map)
+            where T:IMapCell, new() 
+        {
+            for (int i = 0; i < map.CellCount; i++)
+            {
+                T cell = new T();
+                map.SetCell(i, cell);
+            }
+        }
+
+      /// <summary>
+      /// Generate a field of view within this cell map
+      /// </summary>
+      /// <param name="fromPoint"></param>
+      /// <param name="maxRange"></param>
+      /// <param name="transparencyCondition"></param>
+      /// <param name="outGrid"></param>
+      /// <param name="visibleValue">The value to set in the output grid to indicate visibility</param>
+        public static void FieldOfView<E,T>(this ICellMap<T> grid, Vector fromPoint, double maxRange, Func<T, bool> transparencyCondition,
+                ICellMap<E> outGrid, E visibleValue)
+        {
+            double tolerance = 0.00001;
+            double maxRangeSqd = maxRange * maxRange;
+            AngleIntervals shadows = new AngleIntervals();
+            IList<int> cIs = grid.CellsOrderedByDistance(fromPoint, Math.Ceiling(maxRange));
+            int current = grid.IndexAt(fromPoint);
+
+            foreach (int index in cIs)
+            {
+                Vector centroid = grid.CellPosition(index);
+                double distSqd = fromPoint.DistanceToSquared(centroid);
+                if (distSqd > maxRangeSqd) return; //Shortcut, reached end of range (?)
+                T item = grid[index];
+                bool opaque = !transparencyCondition.Invoke(item);
+
+                if ((opaque || !shadows.IsEmpty) && index != current)
+                {
+
+                    double angle = fromPoint.AngleTo(centroid).NormalizeTo2PI();
+                    if (!shadows.isInsideRegion(angle, tolerance))
+                    {
+                        //Is visible:
+                        outGrid[index] = visibleValue;
+                    }
+
+                    if (opaque)
+                    {
+                        //Add to shadows:
+                        Angle mindA = 0;
+                        Angle maxdA = 0;
+                        for (int i = 0; i < grid.VertexCount(index); i++)
+                        {
+                            Vector vertex = grid.CellVertex(index, i);
+                            Angle dA = (fromPoint.AngleTo(vertex) - angle).Normalize();
+                            if (dA < mindA) mindA = dA;
+                            if (dA > maxdA) maxdA = dA;
+                        }
+                        mindA *= 0.9;
+                        maxdA *= 0.9;
+                        Angle start = (angle + mindA).NormalizeTo2PI();
+                        Angle end = (angle + maxdA).NormalizeTo2PI();
+                        shadows.addRegion(start, end);
+
+                        //Shortcut: end if full:
+                        if (shadows.IsFull) return;
+                    }
+                }
+                else
+                {
+                    outGrid[index] = visibleValue;
+                }
+
+            }
+        }
     }
 }

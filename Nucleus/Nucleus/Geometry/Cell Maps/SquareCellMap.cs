@@ -94,6 +94,19 @@ namespace Nucleus.Geometry
             set {_Cells[cellIndex] = value; }
         }
 
+        /// <summary>
+        /// Get or set the contents of the cell at the specified column
+        /// and row index.
+        /// </summary>
+        /// <param name="columnIndex">The column (x) index</param>
+        /// <param name="rowIndex">The row (y) index</param>
+        /// <returns></returns>
+        public T this[int columnIndex, int rowIndex]
+        {
+            get { return this[IndexAt((int)columnIndex, (int)rowIndex)]; }
+            set { this[IndexAt((int)columnIndex, (int)rowIndex)] = value; }
+        }
+
         #endregion
 
         #region Constructors
@@ -109,7 +122,7 @@ namespace Nucleus.Geometry
             _SizeX = sizeX;
             _SizeY = sizeY;
             _CellSize = cellSize;
-            _Cells = new T[sizeX * sizeY]; 
+            _Cells = new T[sizeX * sizeY];
         }
 
         /// <summary>
@@ -305,8 +318,51 @@ namespace Nucleus.Geometry
             return _Cells.GetEnumerator();
         }
 
+        /// <summary>
+        /// Get a list of the cells in this map within a given range of a given position,
+        /// ordered by distance
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="range"></param>
+        /// <returns></returns>
+        public IList<int> CellsOrderedByDistance(Vector position, double range)
+        {
+            IList<int> result = new List<int>(SizeX * SizeY);
+            int cellIndex = IndexAt(position);
+            int startX = ColumnIndex(cellIndex);
+            int startY = RowIndex(cellIndex);
+            int maxRingNo = Math.Max(Math.Max(startX, SizeX - startX), Math.Max(startY, SizeY - startY));
+            if (range > 0) maxRingNo = (int)Math.Min(maxRingNo, range);
+            if (Exists(cellIndex)) result.Add(cellIndex);
+            for (int ringNo = 1; ringNo <= maxRingNo; ringNo++)
+            {
+                int offset = 0;
+                while (offset != -ringNo)
+                {
+                    int offX = offset;
+                    int offY = ringNo;
+                    for (int n = 0; n < 4; n++)
+                    {
+                        int index = IndexAt(startX + offX, startY + offY);
+                        if (Exists(index)) result.Add(index);
 
+                        int oldOffX = offX;
+                        offX = offY;
+                        offY = -oldOffX;
+                    }
+                    offset *= -1;
+                    if (offset >= 0) offset += 1;
+                }
+            }
 
+            return result;
+        }
+
+        public ICellMap<E> SpawnNewGrid<E>()
+        {
+            return new SquareCellMap<E>(SizeX, SizeY, CellSize);
+        }
+        
         #endregion
     }
 }

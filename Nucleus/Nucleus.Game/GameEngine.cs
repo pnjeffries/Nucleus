@@ -80,6 +80,8 @@ namespace Nucleus.Game
             State = Module?.StartingState();
 
             _LastUpdate = DateTime.UtcNow;
+
+            State?.StartUp();
         }
 
         /// <summary>

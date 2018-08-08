@@ -15,6 +15,8 @@ namespace Nucleus.Game
     /// </summary>
     public class MapCellCollider : Unique, IMapCellDataComponent, IElementDataComponent
     {
+        #region Properties
+
         /// <summary>
         /// Private backing member variable for the Solid property
         /// </summary>
@@ -32,5 +34,28 @@ namespace Nucleus.Game
                 NotifyPropertyChanged("Solid");
             }
         }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Can the owner of this collider enter the specified cell?
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <returns></returns>
+        public bool CanEnter(MapCell cell)
+        {
+            if (!Solid) return true; //Can pass through!
+            foreach (Element el in cell.Contents)
+            {
+                MapCellCollider other = el.GetData<MapCellCollider>();
+                if (other != null && other.Solid) return false; // Blockage!
+            }
+            return true; // No blockage!
+        }
+
+        #endregion
+
     }
 }

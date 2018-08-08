@@ -39,6 +39,7 @@ namespace Nucleus.Geometry
             {
                 return _Index;
             }
+            set { _Index = value; }
         }
 
         private ICellMap _Map;
@@ -52,11 +53,28 @@ namespace Nucleus.Geometry
             {
                 return _Map;
             }
+            set { _Map = value; }
+        }
+
+        /// <summary>
+        /// Get the position of this map cell
+        /// </summary>
+        public Vector Position
+        {
+            get { return Map?.CellPosition(_Index) ?? Vector.Unset; }
         }
 
         #endregion
 
         #region Constructor
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public MapCell()
+        {
+
+        }
 
         /// <summary>
         /// Constructor
@@ -76,6 +94,28 @@ namespace Nucleus.Geometry
         protected override MapCellDataStore NewDataStore()
         {
             return new MapCellDataStore();
+        }
+
+        /// <summary>
+        /// Move the specified element to this cell.
+        /// The element will be removed from any cell it occupies.
+        /// TODO: Modify this for multi-cell entities?
+        /// </summary>
+        /// <param name="element"></param>
+        public void PlaceInCell(Element element)
+        {
+            if (!Contents.Contains(element))
+            {
+                MapData mD = element.GetData<MapData>(true);
+                if (mD.MapCell != null && mD.MapCell.Contents.Contains(element))
+                {
+                    mD.MapCell.Contents.Remove(element);
+                    mD.MapCell.NotifyPropertyChanged("Contents"); //TEMP
+                }
+                Contents.Add(element);
+                mD.MapCell = this;
+                NotifyPropertyChanged("Contents"); //TEMP
+            }
         }
 
         #endregion
