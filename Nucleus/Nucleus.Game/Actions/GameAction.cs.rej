@@ -1,0 +1,9 @@
+diff a/Nucleus/Nucleus.Game/Actions/GameAction.cs b/Nucleus/Nucleus.Game/Actions/GameAction.cs	(rejected hunks)
+@@ -32,6 +32,7 @@
+  
+          #endregion
+  
+++<<<<<<< HEAD
+ +        #region Constructors
+ +
+ +        public GameAction() { }

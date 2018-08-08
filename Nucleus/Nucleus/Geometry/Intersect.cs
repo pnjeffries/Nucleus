@@ -29,7 +29,8 @@ using System.Threading.Tasks;
 namespace Nucleus.Geometry
 {
     /// <summary>
-    /// A static helper class of functions to find the intersections between geometries of various types
+    /// A static class of helper functions to find the intersections 
+    /// between geometries of various types
     /// </summary>
     public static class Intersect
     {
@@ -345,6 +346,41 @@ namespace Nucleus.Geometry
         public static Vector[] LineArcXY(Line line, Arc arc, Interval lineBounds)
         {
             return LineArcXY(line.StartPoint, line.EndPoint - line.StartPoint, arc, lineBounds);
+        }
+
+        /// <summary>
+        /// Find the intersection(s) between a curve and an infinite line
+        /// </summary>
+        /// <param name="curve"></param>
+        /// <param name="lnPt"></param>
+        /// <param name="lnDir"></param>
+        /// <returns>The list of intersection parameters on the curve</returns>
+        public static IList<double> CurveLineXY(Curve curve, Vector lnPt, Vector lnDir, IList<double> result = null, double domainAdjustMin = 0, double domainAdjustMax = 1)
+        {
+            if (result == null) result = new List<double>();
+            if (curve is Line)
+            {
+                double t0 = -1, t1 = -1;
+                LineLineXY(curve.StartPoint, curve.EndPoint - curve.StartPoint, lnPt, lnDir, ref t0, ref t1);
+                if (t0 >= 0 && t0 <= 1)
+                {
+                    double t = (domainAdjustMin + t0 * (domainAdjustMax - domainAdjustMin));
+                    result.Add(t);
+                }
+            }
+            else if (curve is Arc)
+            {
+                var arc = (Arc)curve;
+                Vector[] intPts = LineArcXY(lnPt, lnDir, arc);
+                foreach (var intPt in intPts)
+                {
+                    double t = arc.ClosestParameter(intPt);
+                    t = (domainAdjustMin + t * (domainAdjustMax - domainAdjustMin));
+                    result.Add(t);
+                }
+            }
+            //TODO: Polys
+            return result;
         }
 
         /// <summary>

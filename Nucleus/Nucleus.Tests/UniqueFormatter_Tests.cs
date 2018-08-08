@@ -41,7 +41,7 @@ namespace Nucleus.Tests
 
             sw.Reset();
             sw.Start();
-            doc.SaveAs(filePath, DocumentSaveFileType.ASS);
+            doc.SaveAs(filePath, DocumentSaveFileType.Text);
             sw.Stop();
             Core.Print("ASS: " + sw.Elapsed);
 
@@ -55,7 +55,7 @@ namespace Nucleus.Tests
 
             sw.Reset();
             sw.Start();
-            ModelDocument mDoc = Document.Load<ModelDocument>(filePath, DocumentSaveFileType.ASS);
+            ModelDocument mDoc = Document.Load<ModelDocument>(filePath, DocumentSaveFileType.Text);
             sw.Stop();
             Core.Print("ASS: " + sw.Elapsed);
 

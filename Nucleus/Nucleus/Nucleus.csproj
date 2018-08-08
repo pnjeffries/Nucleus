@@ -73,7 +73,9 @@
     <Compile Include="Geometry\Cell Maps\PartialCellObscurance.cs" />
     <Compile Include="Geometry\CompassDirection.cs" />
     <Compile Include="Geometry\Extrusion.cs" />
+    <Compile Include="Geometry\Rectangle.cs" />
     <Compile Include="Geometry\Solid.cs" />
+    <Compile Include="Geometry\SurfaceCollection.cs" />
     <Compile Include="Geometry\Triangle.cs" />
     <Compile Include="Logs\ICalculationLog.cs" />
     <Compile Include="Analysis\ICalculationScenario.cs" />

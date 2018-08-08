@@ -12,7 +12,7 @@ namespace Nucleus.Tests
     {
         public static void ProcessTimeSheet()
         {
-            var excel = new ExcelController();
+            var excel = new ExcelClient();
             excel.ShowExcel();
             excel.OpenWorkbook("\\\\ukramlonfiler01\\adm\\0000-0999\\00020\\Business Service Areas\\Buildings and Designs\\Ramboll Computational Design\\Admin\\MaconomyDataPJ.xls");
             excel.OpenWorksheet("Exported Data");

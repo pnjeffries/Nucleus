@@ -231,6 +231,19 @@ namespace Nucleus.Geometry
             return result.Rotate(toOrient + orientation);
         }
 
+        /*
+        /// <summary>
+        /// Split this region into two along a straight line
+        /// </summary>
+        /// <param name="splitPt"></param>
+        /// <param name="splitDir"></param>
+        /// <returns></returns>
+        public IList<PlanarRegion> Split(Vector splitPt, Vector splitDir)
+        {
+            
+        }
+        */
+
         #endregion
     }
 }
