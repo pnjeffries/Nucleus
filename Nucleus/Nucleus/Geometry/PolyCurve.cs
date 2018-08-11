@@ -568,7 +568,10 @@ namespace Nucleus.Geometry
                         {
                             Curve previous = result.SubCurves.GetWrapped(j - 1);
                             Curve subsequent = result.SubCurves.GetWrapped(j + 1);
-                            MatchEnds(previous.End, subsequent.Start);
+                            bool worked = MatchEnds(previous.End, subsequent.Start);
+                            //TODO: Deal with failed matches (for e.g. when adjacent edges are parallel)
+                            //if (!worked)
+                                //return null; //TEMP: prevents invalid offsets, but a bit overkilly!
                         }
                         result.SubCurves.RemoveAt(j);
                         originals.RemoveAt(j);

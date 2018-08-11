@@ -58,7 +58,7 @@ namespace Nucleus.WPF
         /// </summary>
         /// <param name="rectangle"></param>
         /// <returns></returns>
-        public static W.Rect Convert(Rectangle rectangle)
+        public static W.Rect Convert(Rendering.Rectangle rectangle)
         {
             return new W.Rect(rectangle.Left, rectangle.Top, rectangle.Width, rectangle.Height);
         }

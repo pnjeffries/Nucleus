@@ -820,7 +820,8 @@ namespace Nucleus.Geometry
         /// <returns></returns>
         public static CurveCollection CurveInPolygonXY(Curve crv, IList<Vertex> polygon)
         {
-            if (crv is Line)
+            if (crv == null) return new CurveCollection();
+            else if (crv is Line)
                 return LineInPolygonXY((Line)crv, polygon);
             else if (crv is Arc)
                 return ArcInPolygonXY((Arc)crv, polygon);

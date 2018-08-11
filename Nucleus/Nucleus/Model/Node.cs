@@ -339,5 +339,30 @@ namespace Nucleus.Model
             }
             return result;
         }
+
+        /// <summary>
+        /// Find all the nodes in this list that have lower than or equal to the specified
+        /// number of connected elements.  Can be used to identify isolated or 'dead-end' nodes
+        /// </summary>
+        /// <param name="nodes"></param>
+        /// <param name="maxCount"></param>
+        /// <returns></returns>
+        public static NodeCollection WithMaxConnectedElements(this IList<Node> nodes, int maxCount)
+        {
+            var result = new NodeCollection();
+            foreach (var node in nodes)
+            {
+                int elCount = 0;
+                foreach (var v in node.Vertices)
+                {
+                    if (v.Element != null && !v.Element.IsDeleted)
+                    {
+                        elCount++;
+                    }
+                }
+                if (elCount <= maxCount) result.Add(node);
+            }
+            return result;
+        }
     }
 }
