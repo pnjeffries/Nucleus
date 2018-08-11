@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Game.Artitecture
+namespace Nucleus.Game
 {
     /// <summary>
     /// An enum to store the type of a cell during map generation

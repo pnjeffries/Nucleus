@@ -126,6 +126,7 @@
     <Compile Include="Logs\StringLog.cs" />
     <Compile Include="Maths\Fresnel.cs" />
     <Compile Include="Maths\INamedDataSetCollection.cs" />
+    <Compile Include="Maths\IntInterval.cs" />
     <Compile Include="Maths\NamedDataSet.cs" />
     <Compile Include="Maths\NamedDataSetCollection.cs" />
     <Compile Include="Maths\MathsHelper.cs" />

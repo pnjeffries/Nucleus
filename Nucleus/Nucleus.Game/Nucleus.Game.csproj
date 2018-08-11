@@ -47,13 +47,15 @@
     <Compile Include="Components\AvailableActions.cs" />
     <Compile Include="Artitecture\DungeonArtitect.cs" />
     <Compile Include="Components\IEndOfTurn.cs" />
+    <Compile Include="Components\IStartOfTurn.cs" />
     <Compile Include="Components\MapAwareness.cs" />
+    <Compile Include="Components\Memorable.cs" />
     <Compile Include="Components\VisionBlocker.cs" />
     <Compile Include="Effects\BasicEffect.cs" />
+    <Compile Include="Effects\DamageEffect.cs" />
     <Compile Include="Effects\EffectContext.cs" />
     <Compile Include="InputFunction.cs" />
     <Compile Include="InputManager.cs" />
-    <Compile Include="Effects\IEffectContext.cs" />
     <Compile Include="Artitecture\RoomTemplate.cs" />
     <Compile Include="States\RLState.cs" />
     <Compile Include="States\BasicGameState.cs" />

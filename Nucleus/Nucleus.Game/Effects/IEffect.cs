@@ -1,5 +1,5 @@
 ﻿using Nucleus.Base;
-using Nucleus.Log;
+using Nucleus.Logs;
 using Nucleus.Model;
 using System;
 using System.Collections.Generic;
@@ -28,7 +28,7 @@ namespace Nucleus.Game
         /// <param name="log">A message log used to report back the outcome of the effect</param>
         /// <param name="context">The context in which the effect is being applied</param>
         /// <returns></returns>
-        bool Apply(IEffectLog log, IEffectContext context = null);
+        bool Apply(IEffectLog log, EffectContext context = null);
     }
 
     /// <summary>

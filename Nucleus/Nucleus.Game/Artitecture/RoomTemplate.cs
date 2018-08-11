@@ -16,12 +16,12 @@ namespace Nucleus.Game
         /// <summary>
         /// Private backing member variable for the Dimension1 property
         /// </summary>
-        private Interval _Dimension1 = new Interval(1, 6);
+        private IntInterval _Dimension1 = new IntInterval(1, 6);
 
         /// <summary>
         /// The domain of possible values for the first dimension of this room.
         /// </summary>
-        public Interval Dimension1
+        public IntInterval Dimension1
         {
             get { return _Dimension1; }
             set
@@ -34,12 +34,12 @@ namespace Nucleus.Game
         /// <summary>
         /// Private backing member variable for the Dimension2 property
         /// </summary>
-        private Interval _Dimension2 = new Interval(2, 6);
+        private IntInterval _Dimension2 = new IntInterval(2, 6);
 
         /// <summary>
         /// The domain of possible values for the second dimension of this room.
         /// </summary>
-        public Interval Dimension2
+        public IntInterval Dimension2
         {
             get { return _Dimension2; }
             set
