@@ -110,6 +110,11 @@ namespace Nucleus.BriefFE
                         }
                     }
                 }
+                else if (load is NodeLoad)
+                {
+                    var nL = (NodeLoad)load;
+                  
+                }
                 else alertLog.RaiseAlert("LOAD TYPE UNSUPPORTED", load, "Load type is not supported.", AlertLevel.Error);
             }
 
@@ -127,7 +132,7 @@ namespace Nucleus.BriefFE
                 var nR = new NodeResults();
                 var cNR = new CaseNodeResults();
 
-                //nR.Add(cNR);
+                nR.Add(cNR);
             }
 
             /*foreach (var element in model.Elements)

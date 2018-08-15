@@ -58,7 +58,8 @@ namespace Nucleus.Geometry
             {
                 foreach (Vertex v in geom.Vertices)
                 {
-                    result.Add(v);
+                    if (!result.Contains(v.GUID))
+                        result.Add(v);
                 }
             }
             return result;

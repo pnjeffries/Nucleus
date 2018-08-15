@@ -18,6 +18,20 @@ namespace Nucleus.Game
         #region Properties
 
         /// <summary>
+        /// Private backing member variable for the Trigger property
+        /// </summary>
+        private ActionInputTrigger _Trigger;
+
+        /// <summary>
+        /// The input combination which will trigger this action.
+        /// </summary>
+        public ActionInputTrigger Trigger
+        {
+            get { return _Trigger; }
+            set { _Trigger = value; }
+        }
+
+        /// <summary>
         /// Private backing member variable for the Effects property
         /// </summary>
         private EffectCollection _Effects = new EffectCollection();
@@ -32,7 +46,6 @@ namespace Nucleus.Game
 
         #endregion
 
-<<<<<<< HEAD
         #region Constructors
 
         public GameAction() { }
@@ -85,22 +98,9 @@ namespace Nucleus.Game
                 return true;
             }
             return false;
-=======
-        #region Constructor
-
-        public GameAction() { }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="effects"></param>
-        public GameAction(string name, params IEffect[] effects): base(name)
-        {
-            foreach (IEffect effect in effects) _Effects.Add(effect);
->>>>>>> b148d4897475db509de91469e8e765353e0be61a
         }
 
         #endregion
+
     }
 }
