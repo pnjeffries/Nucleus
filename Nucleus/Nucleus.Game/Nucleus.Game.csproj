@@ -42,7 +42,11 @@
   <ItemGroup>
     <Compile Include="Actions\GameActionCollection.cs" />
     <Compile Include="Artitecture\CellGenerationType.cs" />
+    <Compile Include="Artitecture\ExitPlacement.cs" />
     <Compile Include="Artitecture\Room.cs" />
+    <Compile Include="Artitecture\RoomCollection.cs" />
+    <Compile Include="Artitecture\RoomTemplateCollection.cs" />
+    <Compile Include="Artitecture\RoomType.cs" />
     <Compile Include="Components\HitPoints.cs" />
     <Compile Include="Components\AvailableActions.cs" />
     <Compile Include="Artitecture\DungeonArtitect.cs" />

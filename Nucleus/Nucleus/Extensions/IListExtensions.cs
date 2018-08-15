@@ -282,5 +282,18 @@ namespace Nucleus.Extensions
             }
             return fallback;
         }
+
+        /// <summary>
+        /// Get a random item from this list.
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="rng">The random number generator to use to determine the item to be selected</param>
+        /// <returns></returns>
+        public static TItem GetRandom<TItem>(this IList<TItem> list, Random rng)
+        {
+            int i = rng.Next(0, list.Count);
+            return list[i];
+        }
     }
 }

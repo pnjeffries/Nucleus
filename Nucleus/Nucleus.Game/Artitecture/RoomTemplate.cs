@@ -14,6 +14,25 @@ namespace Nucleus.Game
         #region Properties
 
         /// <summary>
+        /// Private backing member variable for the RoomType property
+        /// </summary>
+        private RoomType _RoomType = RoomType.Room;
+
+        /// <summary>
+        /// The type of the room
+        /// </summary>
+        public RoomType RoomType
+        {
+            get { return _RoomType; }
+            set
+            {
+                _RoomType = value;
+                NotifyPropertyChanged("RoomType");
+            }
+        }
+
+
+        /// <summary>
         /// Private backing member variable for the Dimension1 property
         /// </summary>
         private IntInterval _Dimension1 = new IntInterval(1, 6);
@@ -66,6 +85,25 @@ namespace Nucleus.Game
                 NotifyPropertyChanged("EntryWidth");
             }
         }
+
+        /// <summary>
+        /// Private backing member variable for the ExitPlacement property
+        /// </summary>
+        private ExitPlacement _ExitPlacement = ExitPlacement.Any;
+
+        /// <summary>
+        /// The logic for the placement of the primary exit from this room
+        /// </summary>
+        public ExitPlacement ExitPlacement
+        {
+            get { return _ExitPlacement; }
+            set
+            {
+                _ExitPlacement = value;
+                NotifyPropertyChanged("ExitPlacement");
+            }
+        }
+
 
         /// <summary>
         /// Private backing member variable for the SproutTries property
@@ -169,6 +207,51 @@ namespace Nucleus.Game
         // EntryTemplate
         // SlopeTemplate
 
+
+        #endregion
+
+        #region Constructors
+
+        public RoomTemplate() { }
+
+        public RoomTemplate(RoomType roomType, int dim1Min, int dim1Max, int dim2Min, int dim2Max)
+        {
+            RoomType = roomType;
+            Dimension1 = new IntInterval(dim1Min, dim1Max);
+            Dimension2 = new IntInterval(dim2Min, dim2Max);
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Determine the generation type for a cell within a room
+        /// with this template
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="iMin"></param>
+        /// <param name="iMax"></param>
+        /// <param name="j"></param>
+        /// <param name="jMin"></param>
+        /// <param name="jMax"></param>
+        /// <returns></returns>
+        public virtual CellGenerationType GenTypeForCell(int i, int iMin, int iMax, int j, int jMin, int jMax)
+        {
+            if ((i == iMin - 1 && (j == jMin - 1 || j == jMax + 1)) ||
+                    (i == iMax + 1 && (j == jMin - 1 || j == jMax + 1)))
+            {
+                return CellGenerationType.WallCorner;
+            }
+            else if (i < iMin || i > iMax || j < jMin || j > jMax)
+            {
+                return CellGenerationType.Wall;
+            }
+            else
+            {
+                return CellGenerationType.Void;
+            }
+        }
 
         #endregion
     }

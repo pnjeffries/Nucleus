@@ -73,7 +73,7 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Get the maximum value in the first dimension
+        /// Get the maximum value in the second dimension
         /// </summary>
         public TCoord YMax
         {
@@ -83,6 +83,23 @@ namespace Nucleus.Geometry
                 else return YStart;
             }
         }
+
+        /// <summary>
+        /// Get the size of the domain in the first dimension
+        /// </summary>
+        public TCoord XSize
+        {
+            get { return Subtract(XEnd, XStart); }
+        }
+
+        /// <summary>
+        /// Get the size of the domain in the second dimension
+        /// </summary>
+        public TCoord YSize
+        {
+            get { return Subtract(YEnd, YStart); }
+        }
+
 
         #endregion
 
@@ -161,6 +178,54 @@ namespace Nucleus.Geometry
             XEnd = Add(XEnd, amount);
             YStart = Subtract(YStart, amount);
             YEnd = Add(YEnd, amount);
+        }
+
+        /// <summary>
+        /// Grow this rectangle in the specified direction
+        /// by the specified amount
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <param name="amount"></param>
+        public void Grow(CompassDirection direction, TCoord amount)
+        {
+            if (direction == CompassDirection.North)
+                YEnd = Add(YEnd, amount);
+            else if (direction == CompassDirection.East)
+                XEnd = Add(XEnd, amount);
+            else if (direction == CompassDirection.South)
+                YStart = Subtract(YStart, amount);
+            else if (direction == CompassDirection.West)
+                XStart = Subtract(XStart, amount);
+        }
+
+        /// <summary>
+        /// Move this rectangle in the specified direction by the
+        /// specified distance
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <param name="distance"></param>
+        public void Move(CompassDirection direction, TCoord distance)
+        {
+            if (direction == CompassDirection.North)
+            {
+                YStart = Add(YStart, distance);
+                YEnd = Add(YEnd, distance);
+            }
+            else if (direction == CompassDirection.East)
+            {
+                XStart = Add(XStart, distance);
+                XEnd = Add(XEnd, distance);
+            }
+            else if (direction == CompassDirection.South)
+            {
+                YStart = Subtract(YStart, distance);
+                YEnd = Subtract(YEnd, distance);
+            }
+            else if (direction == CompassDirection.West)
+            {
+                XStart = Subtract(XStart, distance);
+                XEnd = Subtract(XEnd, distance);
+            }
         }
 
         /// <summary>
@@ -288,6 +353,26 @@ namespace Nucleus.Geometry
 
         #region Methods
 
+        /// <summary>
+        /// Create a new IntRectangle representing the area to be added if this
+        /// rectangle were to grow by the specified distance in the specified
+        /// direction.
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <param name="distance"></param>
+        /// <returns></returns>
+        public IntRectangle GrowZone(CompassDirection direction, int distance)
+        {
+            if (direction == CompassDirection.North)
+                return new IntRectangle(XStart, XEnd, YEnd + 1, YEnd + distance);
+            else if (direction == CompassDirection.East)
+                return new IntRectangle(XEnd + 1, XEnd + distance, YStart, YEnd);
+            else if (direction == CompassDirection.South)
+                return new IntRectangle(XStart, XEnd, YStart - distance, YStart - 1);
+            else
+                return new IntRectangle(XStart - distance, XStart - 1, YStart, YEnd);
+        }
+
         protected override int Add(int v1, int v2)
         {
             return v1 + v2;
@@ -296,6 +381,25 @@ namespace Nucleus.Geometry
         protected override int Subtract(int v1, int v2)
         {
             return v1 - v2;
+        }
+
+        /// <summary>
+        /// Choose a random point on the outside edge of this rectangle
+        /// </summary>
+        /// <param name="edge"></param>
+        /// <param name="rng"></param>
+        /// <param name="endOffset"></param>
+        /// <param name="i"></param>
+        /// <param name="j"></param>
+        public void RandomPointOnEdge(CompassDirection edge, Random rng, int endOffset, ref int i, ref int j)
+        {
+            if (edge == CompassDirection.North) j = YMax + 1;
+            else if (edge == CompassDirection.East) i = XMax + 1;
+            else if (edge == CompassDirection.South) j = YMin - 1;
+            else if (edge == CompassDirection.West) i = XMin - 1;
+
+            if (edge.IsHorizontal()) j = rng.Next(YMin, YMax - endOffset + 1);
+            else i = rng.Next(XMin, XMax - endOffset + 1);
         }
 
         #endregion

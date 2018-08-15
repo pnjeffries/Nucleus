@@ -46,15 +46,14 @@ namespace Nucleus.Game
         /// <summary>
         /// Private backing member variable for the Connections property
         /// </summary>
-        private IList<Room> _Connections = new List<Room>();
+        private RoomCollection _Connections = new RoomCollection();
 
         /// <summary>
         /// The rooms which connect to this one
         /// </summary>
-        public IList<Room> Connections
+        public RoomCollection Connections
         {
             get { return _Connections; }
-            set { _Connections = value; }
         }
 
 
