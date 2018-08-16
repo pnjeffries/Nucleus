@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Game.Components
+namespace Nucleus.Game
 {
     /// <summary>
     /// Interface for data components which process at the start of 

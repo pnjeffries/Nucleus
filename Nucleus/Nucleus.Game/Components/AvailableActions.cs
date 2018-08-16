@@ -1,4 +1,5 @@
-﻿using Nucleus.Model;
+﻿using Nucleus.Geometry;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Nucleus.Game
     /// are available to that actor
     /// </summary>
     [Serializable]
-    public class AvailableActions : IElementDataComponent
+    public class AvailableActions : IElementDataComponent, IStartOfTurn, IEndOfTurn
     {
         #region Properties
 
@@ -23,6 +24,22 @@ namespace Nucleus.Game
         /// The collection of actions available to this element
         /// </summary>
         public GameActionCollection Actions { get { return _Actions; } }
+
+        #endregion
+
+        #region Methods
+
+        public virtual void StartOfTurn(TurnContext context)
+        {
+            // TODO: Move to separate component:
+            
+        }
+
+        public void EndOfTurn(TurnContext context)
+        {
+            // Clear all available actions
+            Actions.Clear();
+        }
 
         #endregion
     }

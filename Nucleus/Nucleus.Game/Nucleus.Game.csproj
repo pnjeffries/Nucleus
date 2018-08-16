@@ -40,10 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\ActionCellInputTrigger.cs" />
     <Compile Include="Actions\ActionInputTrigger.cs" />
     <Compile Include="Actions\GameActionCollection.cs" />
+    <Compile Include="Actions\MoveCellAction.cs" />
     <Compile Include="Artitecture\CellGenerationType.cs" />
     <Compile Include="Artitecture\Room.cs" />
+    <Compile Include="Components\ActionProposer.cs" />
     <Compile Include="Components\HitPoints.cs" />
     <Compile Include="Components\AvailableActions.cs" />
     <Compile Include="Artitecture\DungeonArtitect.cs" />
@@ -51,6 +54,7 @@
     <Compile Include="Components\IStartOfTurn.cs" />
     <Compile Include="Components\MapAwareness.cs" />
     <Compile Include="Components\Memorable.cs" />
+    <Compile Include="Components\MoveCellProposer.cs" />
     <Compile Include="Components\VisionBlocker.cs" />
     <Compile Include="Effects\BasicEffect.cs" />
     <Compile Include="Effects\DamageEffect.cs" />

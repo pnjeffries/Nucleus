@@ -15,24 +15,29 @@ namespace Nucleus.Game
         Undefined = 0,
 
         /// <summary>
+        /// Movement (in any direction)
+        /// </summary>
+        Move = 1000,
+
+        /// <summary>
         /// Upwards movement
         /// </summary>
-        Up = 1000,
+        Up = 1100,
 
         /// <summary>
         /// Rightwards movement
         /// </summary>
-        Right = 1100,
+        Right = 1200,
 
         /// <summary>
         /// Downwards movement
         /// </summary>
-        Down = 1200,
+        Down = 1300,
 
         /// <summary>
         /// Leftwards movement
         /// </summary>
-        Left = 1300,
+        Left = 1400,
         
     }
 
@@ -62,6 +67,12 @@ namespace Nucleus.Game
                 default:
                     return Vector.Unset;
             }
+        }
+
+        public static InputFunction ToTopLevel(this InputFunction iF)
+        {
+            int i = (int)iF;
+            return (InputFunction)((i/1000)*1000);
         }
     }
 }
