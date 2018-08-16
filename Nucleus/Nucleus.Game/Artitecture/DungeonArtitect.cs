@@ -39,6 +39,11 @@ namespace Nucleus.Game
         }
 
         /// <summary>
+        /// The map of room references
+        /// </summary>
+        public SquareCellMap<Room> RoomMap { get; private set; }
+
+        /// <summary>
         /// Has the level exit yet been placed?
         /// </summary>
         public bool ExitPlaced { get; set; } = false;
@@ -62,6 +67,7 @@ namespace Nucleus.Game
         public DungeonArtitect(int iSize, int jSize)
         {
             _Blueprint = new SquareCellMap<CellGenerationType>(iSize, jSize);
+            RoomMap = new SquareCellMap<Room>(iSize, jSize);
         }
 
         #endregion
@@ -332,7 +338,7 @@ namespace Nucleus.Game
                         //Room interior
                         //MapCellTemplate cellTemplate = template.templateForCell(i, iMin, iMax, j, jMin, jMax);
                         CellGenerationType cellType = template.GenTypeForCell(i, iMin, iMax, j, jMin, jMax);
-                        SetCell(i, j, cellType);
+                        SetCell(i, j, cellType, newRoom);
                         //setCellTemplate(i, j, cellTemplate, cellType, cellFloor);
                         //assignCellRoom(i, j, newRoom);
                     }
@@ -347,30 +353,13 @@ namespace Nucleus.Game
         /// <param name="i"></param>
         /// <param name="j"></param>
         /// <param name="genType"></param>
-        public void SetCell(int i, int j, CellGenerationType genType)
+        public void SetCell(int i, int j, CellGenerationType genType, Room room = null)
         {
             _Blueprint[i, j] = genType;
+            RoomMap[i, j] = room;
         }
 
-        /// <summary>
-        /// Set a block of cells to the specified type
-        /// </summary>
-        /// <param name="iMin"></param>
-        /// <param name="iMax"></param>
-        /// <param name="jMin"></param>
-        /// <param name="jMax"></param>
-        /// <param name="genType"></param>
-        public void SetBlock(int iMin, int iMax, int jMin, int jMax, CellGenerationType genType)
-        {
-            for (int i = iMin; i <= iMax; i++)
-            {
-                for (int j = jMin; j <= jMax; j++)
-                {
-                    SetCell(i, j, genType);
-                }
-            }
-        }
-
+        
         /// <summary>
         /// Determine an exit direction based on the current placement logic
         /// </summary>

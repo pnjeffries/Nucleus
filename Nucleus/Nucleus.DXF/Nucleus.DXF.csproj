@@ -60,14 +60,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nucleus\Nucleus.csproj">
-      <Project>{7635522c-178f-4db5-9106-ff8dfd4b833b}</Project>
-      <Name>Nucleus</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="NucleusKey.snk" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nucleus\Nucleus.csproj">
+      <Project>{756018c1-57a3-4cd4-98a8-404264e74cf1}</Project>
+      <Name>Nucleus</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

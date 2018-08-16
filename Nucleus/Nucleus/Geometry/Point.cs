@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nucleus.Base;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,7 @@ namespace Nucleus.Geometry
         /// <summary>
         /// Private backing field for Vertex property
         /// </summary>
+        [Copy(CopyBehaviour.DUPLICATE)]
         private Vertex _Vertex;
 
         /// <summary>

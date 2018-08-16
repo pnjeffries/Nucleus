@@ -18,6 +18,20 @@ namespace Nucleus.Game
         #region Properties
 
         /// <summary>
+        /// Private backing member variable for the Trigger property
+        /// </summary>
+        private ActionInputTrigger _Trigger;
+
+        /// <summary>
+        /// The input combination which will trigger this action.
+        /// </summary>
+        public ActionInputTrigger Trigger
+        {
+            get { return _Trigger; }
+            set { _Trigger = value; }
+        }
+
+        /// <summary>
         /// Private backing member variable for the Effects property
         /// </summary>
         private EffectCollection _Effects = new EffectCollection();
@@ -87,5 +101,6 @@ namespace Nucleus.Game
         }
 
         #endregion
+
     }
 }
