@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nucleus.Base;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace Nucleus.Geometry
     /// <summary>
     /// A base interface for maps of cells
     /// </summary>
-    public interface ICellMap
+    public interface ICellMap : IDuplicatable
     {
         /// <summary>
         /// Get the number of cells in this map

@@ -57,6 +57,22 @@ namespace Nucleus.Game
         }
 
         /// <summary>
+        /// Process the start of the turn
+        /// </summary>
+        /// <param name="element"></param>
+        public void StartTurnOf(Element element)
+        {
+            var context = new TurnContext(this, Stage, element);
+            foreach (IElementDataComponent dC in element.Data)
+            {
+                if (dC is IStartOfTurn)
+                {
+                    ((IStartOfTurn)dC).StartOfTurn(context);
+                }
+            }
+        }
+
+        /// <summary>
         /// Process the end of the turn
         /// </summary>
         public void EndTurnOf(Element element)

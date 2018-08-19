@@ -108,7 +108,7 @@ namespace Nucleus.Game
         /// <summary>
         /// Private backing member variable for the SproutTries property
         /// </summary>
-        private int _SproutTries = 4;
+        private int _SproutTries = 6;
 
         /// <summary>
         /// The number of attempts that will be made to generate rooms coming off of one of this type

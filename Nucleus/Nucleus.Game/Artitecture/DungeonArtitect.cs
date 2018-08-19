@@ -1,4 +1,5 @@
-﻿using Nucleus.Extensions;
+﻿using Nucleus.Base;
+using Nucleus.Extensions;
 using Nucleus.Geometry;
 using Nucleus.Maths;
 using System;
@@ -58,6 +59,13 @@ namespace Nucleus.Game
         /// </summary>
         public RoomTemplateCollection Templates { get; } = new RoomTemplateCollection();
 
+        /// <summary>
+        /// A collection of 'snapshot' images of the dungeon being generated.
+        /// By default this is null and no snapshots will be recorded.  If populated
+        /// with a suitable container snapshots will be taken as each room is added
+        /// </summary>
+        public IList<SquareCellMap<CellGenerationType>> Snapshots { get; set; } = null;
+
         #endregion
 
         #region Constructors
@@ -73,6 +81,22 @@ namespace Nucleus.Game
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Take a snapshot of the current state of the blueprint and add it to the snapshots collection
+        /// </summary>
+        public void TakeSnapshot()
+        {
+            if (Snapshots != null)
+            {
+                var snap = new SquareCellMap<CellGenerationType>(_Blueprint.SizeX, _Blueprint.SizeY);
+                for(int i = 0; i < Blueprint.CellCount; i++)
+                {
+                    snap[i] = Blueprint[i];
+                }
+                Snapshots.Add(snap);
+            }
+        }
 
         /// <summary>
         /// Generate a dungeon map
@@ -454,6 +478,9 @@ namespace Nucleus.Game
                     // Create room:
                     Room newRoom = GenerateRoom(bounds, template);
 
+                    //Take snapshot:
+                    TakeSnapshot();
+
                     if (template.RoomType == RoomType.Exit) ExitPlaced = true;
 
                     //TODO: Store room & connections
@@ -491,8 +518,6 @@ namespace Nucleus.Game
                             //Select door position for this try:
                             bounds.RandomPointOnEdge(doorDirection, _RNG, newDoorWidth - 1, ref iNewDoor, ref jNewDoor);
 
-                            //TODO: Take snapshot
-
                             if (RecursiveGrowth(iNewDoor, jNewDoor, nextRoom, doorDirection, true, newRoom)) result = true;
                         }
                         tries -= 1;
@@ -506,8 +531,12 @@ namespace Nucleus.Game
                 {
                     // TODO: Check room connections
                     GenerateDoorway(iDoor, jDoor, direction, template.EntryWidth);
+
+                    
                 }
             }
+
+
 
             return result;
         }
