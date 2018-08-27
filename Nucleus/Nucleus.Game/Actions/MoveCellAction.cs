@@ -17,7 +17,7 @@ namespace Nucleus.Game
 
         public MoveCellAction(MapCell cell)
         {
-            Trigger = new ActionCellInputTrigger(cell.Index, InputFunction.)
+            Trigger = new ActionCellInputTrigger(cell.Index, InputFunction.Move);
             Effects.Add(new MoveCellEffect(cell.Index));
         }
 

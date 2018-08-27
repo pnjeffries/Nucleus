@@ -17,4 +17,18 @@ namespace Nucleus.Game
         WallCorner,
         Door
     }
+
+    public static class CellGenerationTypeExtensions
+    {
+        /// <summary>
+        /// Is this a wall type?
+        /// </summary>
+        /// <param name="genType"></param>
+        /// <returns></returns>
+        public static bool IsWall(this CellGenerationType genType)
+        {
+            return (genType == CellGenerationType.Wall ||
+                genType == CellGenerationType.WallCorner);
+        }
+    }
 }
