@@ -32,6 +32,6 @@ namespace Nucleus.Game
         #endregion
 
 
-        public abstract bool Apply(IEffectLog log, EffectContext context);
+        public abstract bool Apply(IActionLog log, EffectContext context);
     }
 }

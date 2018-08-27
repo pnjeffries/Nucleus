@@ -29,6 +29,10 @@ namespace Nucleus.DDTree
 {
     /// <summary>
     /// The abstract base class for Divided-Dimension Trees.
+    /// This data structure works a lot like a binary partition tree only instead of
+    /// branching in two each time, each level of the D-D tree is subdivided into a number
+    /// of evenly-sized partitions.  This allows for much faster spatial indexing in cases where
+    /// objects are reasonably evenly distributed throughout a particular region of space.
     /// To implement a tree to hold a particular type of object, this class should be extended
     /// and the abstract functions overridden to deal with that type.
     /// </summary>

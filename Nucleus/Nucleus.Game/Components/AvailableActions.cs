@@ -14,7 +14,7 @@ namespace Nucleus.Game
     /// are available to that actor
     /// </summary>
     [Serializable]
-    public class AvailableActions : IElementDataComponent, IStartOfTurn, IEndOfTurn
+    public class AvailableActions : IElementDataComponent, IEndOfTurn
     {
         #region Properties
 
@@ -29,17 +29,34 @@ namespace Nucleus.Game
 
         #region Methods
 
-        public virtual void StartOfTurn(TurnContext context)
-        {
-            // TODO: Move to separate component:
-            
-        }
-
         public void EndOfTurn(TurnContext context)
         {
             // Clear all available actions
             Actions.Clear();
         }
+
+        /// <summary>
+        /// Get the action assigned to the specified user input function
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public GameAction ActionForInput(InputFunction input)
+        {
+            var trigger = new ActionInputTrigger(input);
+            return Actions.FirstMatch(trigger);
+        }
+
+        /// <summary>
+        /// Get the action assigned to the specified user input function
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public GameAction ActionForInput(InputFunction input, int cellIndex)
+        {
+            var trigger = new ActionCellInputTrigger(cellIndex, input);
+            return Actions.FirstMatch(trigger);
+        }
+
 
         #endregion
     }

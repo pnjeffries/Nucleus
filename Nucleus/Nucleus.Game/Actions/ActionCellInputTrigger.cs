@@ -39,5 +39,15 @@ namespace Nucleus.Game
         }
 
         #endregion
+
+        #region Methods
+
+        public override bool Matches(ActionInputTrigger other)
+        {
+            return base.Matches(other) && other is ActionCellInputTrigger 
+                && _TargetCell == ((ActionCellInputTrigger)other).TargetCell;
+        }
+
+        #endregion
     }
 }

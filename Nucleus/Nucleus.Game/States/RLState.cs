@@ -1,4 +1,5 @@
 ﻿using Nucleus.Geometry;
+using Nucleus.Logs;
 using Nucleus.Model;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,47 @@ namespace Nucleus.Game
     [Serializable]
     public class RLState : BasicGameState<MapStage>
     {
+        #region Properties
+
+        /// <summary>
+        /// Private backing member variable for the Active property
+        /// </summary>
+        private Element _Active = null;
+
+        /// <summary>
+        /// The element who is currently activated for a turn.
+        /// </summary>
+        public Element Active
+        {
+            get { return _Active; }
+            set
+            {
+                _Active = value;
+                NotifyPropertyChanged("Active");
+            }
+        }
+
+        /// <summary>
+        /// Private backing member variable for the Log property
+        /// </summary>
+        private IActionLog _Log = null;
+
+        /// <summary>
+        /// The logger which stores and displays messages to the user.  May be null, in which case no messages will be displayed.
+        /// </summary>
+        public IActionLog Log
+        {
+            get { return _Log; }
+            set
+            {
+                _Log = value;
+                NotifyPropertyChanged("Log");
+            }
+        }
+
+
+        #endregion
+
         #region Constructor
 
         public RLState()
@@ -41,15 +83,35 @@ namespace Nucleus.Game
         {
             base.InputRelease(input, direction);
             Element controlled = Controlled;
-            if (controlled != null)
+            if (controlled != null && controlled == Active)
             {
-                //Move element:
-                MapData mD = controlled.GetData<MapData>();
-                if (mD != null && mD.MapCell != null)
+                var aA = controlled.GetData<AvailableActions>();
+
+                if (direction.IsValidNonZero())
                 {
-                    MapCell newCell = Stage.Map.AdjacentCell(mD.MapCell.Index, direction);
-                    if (newCell != null && (controlled.GetData<MapCellCollider>()?.CanEnter(newCell) ?? true))
-                        newCell.PlaceInCell(controlled);
+                    //Find targetted cell:
+                    MapData mD = controlled.GetData<MapData>();
+                    if (mD != null && mD.MapCell != null)
+                    {
+                        MapCell newCell = Stage.Map.AdjacentCell(mD.MapCell.Index, direction);
+                        var tAction = aA.ActionForInput(input, newCell.Index);
+                        if (tAction != null)
+                        {
+                            tAction.Attempt(Log, new EffectContext(controlled, this, direction));
+                            EndTurnOf(controlled);
+                            return;
+                        }
+                        /*if (newCell != null && (controlled.GetData<MapCellCollider>()?.CanEnter(newCell) ?? true))
+                            newCell.PlaceInCell(controlled);
+                        EndTurnOf(controlled);*/
+                    }
+                }
+
+                // Haven't found a targeted action; fallback to:
+                var action = aA.ActionForInput(input);
+                if (action != null)
+                {
+                    action.Attempt(Log, new EffectContext(controlled, this));
                     EndTurnOf(controlled);
                 }
 
@@ -63,6 +125,7 @@ namespace Nucleus.Game
         public void StartTurnOf(Element element)
         {
             var context = new TurnContext(this, Stage, element);
+            Active = element;
             foreach (IElementDataComponent dC in element.Data)
             {
                 if (dC is IStartOfTurn)
@@ -84,6 +147,41 @@ namespace Nucleus.Game
                 {
                     ((IEndOfTurn)dC).EndOfTurn(context);
                 }
+            }
+            NextTurn();
+        }
+
+        /// <summary>
+        /// Progress to the next turn
+        /// </summary>
+        public void NextTurn()
+        {
+            // Find element with next turn:
+            Element next = null;
+            int lowest = 0;
+            foreach (Element element in Elements)
+            {
+                var tC = element.GetData<TurnCounter>();
+                if (tC != null && next == null || lowest > tC.CountDown)
+                {
+                    next = element;
+                    lowest = tC.CountDown;
+                }
+            }
+            // Adjust turn counters for everything:
+            foreach (Element element in Elements)
+            {
+                var tC = element.GetData<TurnCounter>();
+                if (tC != null)
+                {
+                    tC.CountDown -= lowest;
+                }
+            }
+            // TODO: Switch to more efficient system?
+
+            if (next != null)
+            {
+                StartTurnOf(next);
             }
         }
 

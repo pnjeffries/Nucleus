@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 namespace Nucleus.Logs
 {
     /// <summary>
-    /// An interface for log objects which report on effects
+    /// An interface for log objects which report on actions
     /// </summary>
-    public interface IEffectLog : ILog
+    public interface IActionLog : ILog
     {
     }
 }

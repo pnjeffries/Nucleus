@@ -74,7 +74,7 @@ namespace Nucleus.Game
         /// <param name="log"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public virtual bool Attempt(IEffectLog log, EffectContext context)
+        public virtual bool Attempt(IActionLog log, EffectContext context)
         {
             return true;
         }
@@ -85,7 +85,7 @@ namespace Nucleus.Game
         /// <param name="log"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public virtual bool Enact(IEffectLog log, EffectContext context)
+        public virtual bool Enact(IActionLog log, EffectContext context)
         {
             // TODO: Populate context
             if (Attempt(log, context))

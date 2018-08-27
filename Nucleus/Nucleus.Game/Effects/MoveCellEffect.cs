@@ -43,7 +43,7 @@ namespace Nucleus.Game
 
         #region Methods
 
-        public override bool Apply(IEffectLog log, EffectContext context)
+        public override bool Apply(IActionLog log, EffectContext context)
         {
             Element mover = context.Target;
             if (mover != null)

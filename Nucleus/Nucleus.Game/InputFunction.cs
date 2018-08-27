@@ -7,6 +7,14 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Game
 {
+    /// <summary>
+    /// An enumerated value representing different possible
+    /// user input functions.
+    /// </summary>
+    /// <remarks>Values whose integer equivalent is a multiple
+    /// of 1000 are 'top level' and taken for certain purposes
+    /// as being equivalent to those within the range of the
+    /// next 999 values.</remarks>
     public enum InputFunction
     {
         /// <summary>
@@ -38,6 +46,11 @@ namespace Nucleus.Game
         /// Leftwards movement
         /// </summary>
         Left = 1400,
+
+        /// <summary>
+        /// A resting action
+        /// </summary>
+        Rest = 2000
         
     }
 
@@ -69,10 +82,27 @@ namespace Nucleus.Game
             }
         }
 
+        /// <summary>
+        /// Convert this input to a 'top level' input that represents a
+        /// category of different inputs
+        /// </summary>
+        /// <param name="iF"></param>
+        /// <returns></returns>
         public static InputFunction ToTopLevel(this InputFunction iF)
         {
             int i = (int)iF;
             return (InputFunction)((i/1000)*1000);
+        }
+
+        /// <summary>
+        /// Is this a 'top level' input that represents a category of
+        /// different sub-inputs?
+        /// </summary>
+        /// <param name="iF"></param>
+        /// <returns></returns>
+        public static bool IsTopLevel(this InputFunction iF)
+        {
+            return ((int)iF) % 1000 == 0;
         }
     }
 }

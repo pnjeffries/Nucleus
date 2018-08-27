@@ -12,7 +12,7 @@ namespace Nucleus.Game.Effects
     /// </summary>
     public class DamageEffect : BasicEffect
     {
-        public override bool Apply(IEffectLog log, EffectContext context)
+        public override bool Apply(IActionLog log, EffectContext context)
         {
             throw new NotImplementedException();
         }

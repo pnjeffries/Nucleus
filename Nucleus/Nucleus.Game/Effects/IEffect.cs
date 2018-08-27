@@ -28,7 +28,7 @@ namespace Nucleus.Game
         /// <param name="log">A message log used to report back the outcome of the effect</param>
         /// <param name="context">The context in which the effect is being applied</param>
         /// <returns></returns>
-        bool Apply(IEffectLog log, EffectContext context = null);
+        bool Apply(IActionLog log, EffectContext context = null);
     }
 
     /// <summary>
@@ -68,7 +68,7 @@ namespace Nucleus.Game
         /// <param name="list"></param>
         /// <param name="target"></param>
         /// <param name="log"></param>
-        public static void ApplyAll<TTarget>(this IList<IEffect<TTarget>> list, IEffectLog log)
+        public static void ApplyAll<TTarget>(this IList<IEffect<TTarget>> list, IActionLog log)
         {
             foreach (var effect in list)
             {
