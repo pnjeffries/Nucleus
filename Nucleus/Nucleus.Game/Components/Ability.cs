@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Game.Components
+namespace Nucleus.Game
 {
     /// <summary>
     /// Base class for element data components which propose an action
     /// </summary>
     [Serializable]
-    public abstract class ActionProposer : IElementDataComponent, IStartOfTurn
+    public abstract class Ability : IElementDataComponent, IStartOfTurn
     {
         public void StartOfTurn(TurnContext context)
         {

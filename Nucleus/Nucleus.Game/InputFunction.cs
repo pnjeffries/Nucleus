@@ -50,7 +50,7 @@ namespace Nucleus.Game
         /// <summary>
         /// A resting action
         /// </summary>
-        Rest = 2000
+        Wait = 2000
         
     }
 

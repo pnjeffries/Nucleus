@@ -5,14 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Game.Components
+namespace Nucleus.Game
 {
     /// <summary>
     /// An element data component which indicates that the element is
     /// able to move between cells of its own volition and will generate
     /// suitable actions for open spaces
     /// </summary>
-    public class MoveCellProposer : ActionProposer
+    [Serializable]
+    public class MoveCellAbility : Ability
     {
         protected override void GenerateActions(TurnContext context, AvailableActions addTo)
         {
