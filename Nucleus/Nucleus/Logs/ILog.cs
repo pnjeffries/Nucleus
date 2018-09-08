@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nucleus.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,6 +47,22 @@ namespace Nucleus.Logs
             log.WriteText(text);
             log.WriteText(Environment.NewLine);
             return log;
+        }
+
+        /// <summary>
+        /// Write text to the log from a string of text containing markup
+        /// </summary>
+        /// <typeparam name="TLog"></typeparam>
+        /// <param name="log"></param>
+        /// <param name="markup"></param>
+        /// <param name="rng"></param>
+        /// <param name="subjects"></param>
+        /// <returns></returns>
+        public static TLog WriteMarkup<TLog>(this TLog log, string markup, Random rng, params object[] subjects)
+            where TLog : ILog
+        {
+            var parser = new LogScriptMarkupParser(log, subjects)
+            
         }
     }
 }

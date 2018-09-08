@@ -76,7 +76,7 @@
     <Compile Include="Stages\GameStage.cs" />
     <Compile Include="States\GameState.cs" />
     <Compile Include="Effects\IEffect.cs" />
-    <Compile Include="Actions\IActionLog.cs" />
+    <Compile Include="Logs\IActionLog.cs" />
     <Compile Include="Components\MapCellCollider.cs" />
     <Compile Include="Stages\MapStage.cs" />
     <Compile Include="Effects\MoveCellEffect.cs" />

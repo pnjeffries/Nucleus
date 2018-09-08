@@ -79,6 +79,7 @@
     <Compile Include="Geometry\Solid.cs" />
     <Compile Include="Geometry\SurfaceCollection.cs" />
     <Compile Include="Geometry\Triangle.cs" />
+    <Compile Include="Logs\LogScriptMarkupParser.cs" />
     <Compile Include="Logs\ICalculationLog.cs" />
     <Compile Include="Analysis\ICalculationScenario.cs" />
     <Compile Include="Analysis\WindLoadsBox.cs" />
@@ -120,11 +121,12 @@
     <Compile Include="IO\CustomSerializationBinder.cs" />
     <Compile Include="IO\DocumentSaveFileType.cs" />
     <Compile Include="IO\IApplicationClient.cs" />
-    <Compile Include="IO\Log.cs" />
     <Compile Include="IO\TokenReader.cs" />
     <Compile Include="IO\TypeFieldsFormat.cs" />
     <Compile Include="IO\UniqueFormatter.cs" />
     <Compile Include="Analysis\SimpleBeamAnalysis.cs" />
+    <Compile Include="Logs\LogScript.cs" />
+    <Compile Include="Logs\LogScriptEntry.cs" />
     <Compile Include="Logs\StringLog.cs" />
     <Compile Include="Maths\Fresnel.cs" />
     <Compile Include="Maths\INamedDataSetCollection.cs" />

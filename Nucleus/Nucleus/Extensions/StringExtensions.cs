@@ -625,16 +625,18 @@ namespace Nucleus.Extensions
 
         /// <summary>
         /// Get the first substring between matching open and close brackets in this string
-        /// after the specified position.
+        /// after the specified position.  Returns null if a matching pair of brackets is not found.
         /// </summary>
         /// <param name="str"></param>
-        /// <param name="startFrom"></param>
-        /// <param name="openBracket"></param>
-        /// <param name="closeBracket"></param>
+        /// <param name="startIndex">The index to start searching from.  Will be modified to give
+        /// the position of the opening bracket, or the last index in the string + 1 if nothing
+        /// was found.</param>
+        /// <param name="openBracket">The opening bracket character</param>
+        /// <param name="closeBracket">The closing bracket character</param>
         /// <returns></returns>
-        public static string NextBracketed(this string str, ref int startFrom, char openBracket = '(', char closeBracket = ')')
+        public static string NextBracketed(this string str, ref int startIndex, char openBracket = '(', char closeBracket = ')')
         {
-            int s0 = str.IndexOf(openBracket, startFrom);
+            int s0 = str.IndexOf(openBracket, startIndex);
             if (s0 >= 0)
             {
                 int bCount = 1;
@@ -645,6 +647,7 @@ namespace Nucleus.Extensions
                     if (c == closeBracket) bCount--;
                     if (bCount == 0) //Back to opening bracket level
                     {
+                        startIndex = s0;
                         return str.Substring(s0 + 1, i - s0 - 1);
                     }
                 }
@@ -806,6 +809,21 @@ namespace Nucleus.Extensions
                 result.Add(new string(new char[] { c }));
             }
             return result;
+        }
+
+        /// <summary>
+        /// Return the block of text from the specified index to the next instance of one
+        /// of the specified characters
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="index">The index to start from.  This will be modified to give
+        /// the index of the first found character</param>
+        /// <returns></returns>
+        public static string ToNext(this string str, ref int index, params char[] openChar)
+        {
+            int startIndex = index;
+            index = str.IndexOfAny(openChar, index);
+            return str.Substring(startIndex, index - startIndex);
         }
 
     }

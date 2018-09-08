@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nucleus.Logs;
+using Nucleus.Game.Components;
 
 namespace Nucleus.Game.Effects
 {
@@ -14,7 +15,11 @@ namespace Nucleus.Game.Effects
     {
         public override bool Apply(IActionLog log, EffectContext context)
         {
-            throw new NotImplementedException();
+            if (context?.Target != null && context.Target.HasData<HitPoints>())
+            {
+
+            }
+            else return false;
         }
     }
 }
