@@ -229,7 +229,7 @@ namespace Nucleus.Geometry
         public int AdjacentCellIndex(int cellIndex, int adjacencyIndex)
         {
             int i = ColumnIndex(cellIndex);
-            int j = ColumnIndex(cellIndex);
+            int j = RowIndex(cellIndex);
 
             switch (adjacencyIndex)
             {

@@ -70,6 +70,7 @@ namespace Nucleus.Game
 
         public override void StartUp()
         {
+            base.StartUp();
             EndTurnOf(Controlled);
         }
 
@@ -97,7 +98,7 @@ namespace Nucleus.Game
                         var tAction = aA.ActionForInput(input, newCell.Index);
                         if (tAction != null)
                         {
-                            tAction.Attempt(Log, new EffectContext(controlled, this, direction));
+                            tAction.Enact(Log, new EffectContext(controlled, this, direction));
                             EndTurnOf(controlled);
                             return;
                         }
@@ -108,10 +109,10 @@ namespace Nucleus.Game
                 }
 
                 // Haven't found a targeted action; fallback to:
-                var action = aA.ActionForInput(input);
+                var action = aA.ActionForInput(input.ToTopLevel());
                 if (action != null)
                 {
-                    action.Attempt(Log, new EffectContext(controlled, this));
+                    action.Enact(Log, new EffectContext(controlled, this));
                     EndTurnOf(controlled);
                 }
 

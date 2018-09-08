@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Game.Components
+namespace Nucleus.Game
 {
     /// <summary>
     /// A data component to hold the hit points value of destructable elements
