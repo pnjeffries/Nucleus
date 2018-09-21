@@ -8,6 +8,7 @@ using W = Microsoft.Office.Interop.Word;
 using Nucleus.Base;
 using Microsoft.Office.Core;
 using Nucleus.Rendering;
+using Nucleus.Logs;
 
 namespace Nucleus.Word
 {
@@ -15,7 +16,7 @@ namespace Nucleus.Word
     /// Controller class that wraps the Word API to facilitate easier
     /// sequential writing to a Word document.
     /// </summary>
-    public class WordController
+    public class WordController : ILog
     {
         #region Fields
 
@@ -618,6 +619,11 @@ namespace Nucleus.Word
             W.Document doc = ActiveDocument;
             int end = doc.Content.End;
             return doc.Range(end - 1, end);
+        }
+
+        void ILog.WriteText(string text)
+        {
+            Write(text);
         }
 
         #endregion

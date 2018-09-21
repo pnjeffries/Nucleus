@@ -127,6 +127,7 @@
     <Compile Include="Analysis\SimpleBeamAnalysis.cs" />
     <Compile Include="Logs\LogScript.cs" />
     <Compile Include="Logs\LogScriptEntry.cs" />
+    <Compile Include="Logs\NonExpandableAttribute.cs" />
     <Compile Include="Logs\StringLog.cs" />
     <Compile Include="Maths\Fresnel.cs" />
     <Compile Include="Maths\INamedDataSetCollection.cs" />

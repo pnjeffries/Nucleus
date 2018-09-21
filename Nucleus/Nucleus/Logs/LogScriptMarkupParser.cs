@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -99,14 +100,24 @@ namespace Nucleus.Logs
             Subjects = subjects;
         }
 
+        public LogScriptMarkupParser(ILog log, object[] subjects, Random rng) : this(log,subjects)
+        {
+            RNG = rng;
+        }
+
         #endregion
 
         #region Methods
 
+        /// <summary>
+        /// Parse and write a markup string to the log
+        /// </summary>
+        /// <param name="markup"></param>
         public void WriteToLog(string markup)
         {
+            string expanded = ExpandMarkup(markup);
+
             int i = 0;
-            
             while (i < markup.Length)
             {
                 int iS = i;
@@ -119,38 +130,196 @@ namespace Nucleus.Logs
 
                 if (nextMarkup != null)
                 {
-                    string expanded = ParseTag(nextMarkup, 1);
+                    ExecuteTag(nextMarkup, 1);
+                    i += nextMarkup.Length + 1;
+                }
+            }
+        }
 
+        /// <summary>
+        /// Expand any expandable tags within a markup string
+        /// </summary>
+        /// <param name="markup"></param>
+        /// <returns></returns>
+        public string ExpandMarkup(string markup)
+        {
+            int i = 0;
+            var sb = new StringBuilder();
+
+            while (i < markup.Length)
+            {
+                int iS = i;
+                string nextMarkup = markup.NextBracketed(ref i, MARKUP_OPEN, MARKUP_CLOSE);
+
+                // Write preceding text:
+                string text = markup.Substring(iS, i - iS - 1);
+                if (!string.IsNullOrEmpty(text))
+                    sb.Append(text);
+
+                if (nextMarkup != null)
+                {
+                    string expanded = ExecuteTag(nextMarkup, 0);
+                    sb.Append(expanded);
                     i += nextMarkup.Length + 1;
                 }
 
             }
+            return sb.ToString();
         }
 
-        public string ParseTag(string markup, int pass)
+        /// <summary>
+        /// Execute a markup tag.  In the first pass (pass = 0) expandable
+        /// tags will be expanded.  In the second executable tags will executed.
+        /// </summary>
+        /// <param name="markup"></param>
+        /// <param name="pass"></param>
+        /// <returns></returns>
+        public string ExecuteTag(string markup, int pass)
         {
             int iS = 0;
             string argumentBit = markup.NextBracketed(ref iS, ARGUMENT_OPEN, ARGUMENT_CLOSE);
-            string functionName = markup.Substring(0, iS);
+            string functionName = markup.Substring(0, iS).ToUpper().Replace('/', '_');
 
-            // In the first pass, tags with arguments will be processed:
-            if (argumentBit != null)
+            // First we check if any method with that name exist and if so its return type
+            MethodInfo method = GetType().GetMethod(functionName);
+
+            // Don't invoke method if it is not expandable (doesn't return a string) & this is the
+            // first pass.
+            if (method != null && (method.ReturnType.IsAssignableFrom(typeof(string)) || pass > 0))
             {
-                string[] arguments = argumentBit.Split(ARGUMENT_SEPARATOR);
-                for (int i = 0; i < arguments.Length; i++)
+                // Refine the function call by checking the arguments:
+
+                string[] arguments = null;
+
+                // In the first pass, tags with arguments will be processed:
+                if (argumentBit != null)
                 {
-                    arguments[i] = ParseArgument(arguments[i]);
+                    arguments = argumentBit.Split(ARGUMENT_SEPARATOR);
+                    Type[] types = new Type[arguments.Length];
+                    for (int i = 0; i < arguments.Length; i++)
+                    {
+                        arguments[i] = ExpandMarkup(arguments[i]);
+                        types[i] = typeof(string);
+                    }
+
+                    method = GetType().GetMethod(functionName, types);
+                }
+                else
+                {
+                    method = GetType().GetMethod(functionName, Type.EmptyTypes);
+                }
+
+                if (method != null)
+                {
+                    return method.Invoke(this, arguments)?.ToString();
                 }
             }
-        }
 
-        public string ParseArgument(string argument)
-        {
-            string subTag = argument.Next
+            return markup;
         }
 
         #endregion
 
+        #region Markup Tag Methods
+
+        /// <summary>
+        /// Bold on
+        /// </summary>
+        public void B()
+        {
+            Log.Bold(true);
+        }
+
+        /// <summary>
+        /// Bold off
+        /// </summary>
+        public void _B()
+        {
+            Log.Bold(false);
+        }
+
+        /// <summary>
+        /// Italics on
+        /// </summary>
+        public void I()
+        {
+            Log.Italics(true);
+        }
+
+        /// <summary>
+        /// Italics off
+        /// </summary>
+        public void _I()
+        {
+            Log.Italics(false);
+        }
+
+        /// <summary>
+        /// Select a random value
+        /// </summary>
+        /// <param name="arg1"></param>
+        /// <param name="arg2"></param>
+        /// <returns></returns>
+        public string RANDOM(string arg1, string arg2)
+        {
+            return RANDOMInternal(arg1, arg2);
+        }
+
+        /// <summary>
+        /// Select a random value
+        /// </summary>
+        /// <returns></returns>
+        public string RANDOM(string arg1, string arg2, string arg3)
+        {
+            return RANDOMInternal(arg1, arg2, arg3);
+        }
+
+        /// <summary>
+        /// Select a random value
+        /// </summary>
+        /// <returns></returns>
+        public string RANDOM(string arg1, string arg2, string arg3, string arg4)
+        {
+            return RANDOMInternal(arg1, arg2, arg3, arg4);
+        }
+
+        /// <summary>
+        /// Select a random value
+        /// </summary>
+        /// <returns></returns>
+        public string RANDOM(string arg1, string arg2, string arg3, string arg4, string arg5)
+        {
+            return RANDOMInternal(arg1, arg2, arg3, arg4, arg5);
+        }
+
+        /// <summary>
+        /// Select a random value
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        private string RANDOMInternal(params string[] args)
+        {
+            return args[RNG.Next(args.Length)];
+        }
+
+        /// <summary>
+        /// Retrieve a value from the specified subject
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public string SUBJECT(int index, string path)
+        {
+            try
+            {
+                var obj = Subjects[index];
+                return obj.GetFromPath(path).ToString();
+            }
+            catch { }
+            return "!ERROR!"; //TODO: Review - fallback to ""?
+        }
+
+        #endregion
 
     }
 }
