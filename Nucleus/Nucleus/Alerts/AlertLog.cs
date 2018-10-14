@@ -16,6 +16,12 @@ namespace Nucleus.Alerts
     /// </summary>
     public class AlertLog : AlertCollection, ILog
     {
+        #region Properties
+
+        bool ILog.IsBold { get => false; set { }}
+        bool ILog.IsItalicised { get => false; set { } }
+
+        #endregion
 
         /// <summary>
         /// Raise an alert

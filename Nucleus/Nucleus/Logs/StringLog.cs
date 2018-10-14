@@ -12,10 +12,17 @@ namespace Nucleus.Logs
     /// </summary>
     public class StringLog : ILog
     {
+        #region Properties
+
         /// <summary>
         /// The backing StringBuilder
         /// </summary>
         private StringBuilder _Builder = new StringBuilder();
+
+        bool ILog.IsBold { get { return false; } set { } }
+        bool ILog.IsItalicised { get { return false; } set { } }
+
+        #endregion
 
         public void WriteText(string text)
         {
@@ -25,6 +32,11 @@ namespace Nucleus.Logs
         public override string ToString()
         {
             return _Builder.ToString();
+        }
+
+        void ILog.WriteText(string text)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nucleus.Logs;
-using Nucleus.Game.Components;
 
 namespace Nucleus.Game.Effects
 {
@@ -17,7 +16,7 @@ namespace Nucleus.Game.Effects
         {
             if (context?.Target != null && context.Target.HasData<HitPoints>())
             {
-
+                throw new NotImplementedException();
             }
             else return false;
         }
