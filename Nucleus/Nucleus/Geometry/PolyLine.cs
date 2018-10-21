@@ -83,6 +83,19 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Initialise a polyline curve between the given set of points
+        /// </summary>
+        /// <param name="points"></param>
+        public PolyLine(params Vector[] points) : this(points, false, null) { }
+
+        /// <summary>
+        /// Initialise a polyline curve between the given set of points, optionally closing the loop
+        /// </summary>
+        /// <param name="close"></param>
+        /// <param name="points"></param>
+        public PolyLine(bool close, params Vector[] points) : this(points, close, null) { }
+
+        /// <summary>
         /// Points constructor.
         /// Creates a polyline between the specified set of points
         /// </summary>
@@ -299,7 +312,7 @@ namespace Nucleus.Geometry
         /// line objects representing the same geometry
         /// </summary>
         /// <returns></returns>
-        public PolyCurve ToPolyCurve()
+        public override PolyCurve ToPolyCurve()
         {
             return new PolyCurve(ToLines(), Attributes);
         }

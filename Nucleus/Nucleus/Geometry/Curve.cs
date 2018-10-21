@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Nucleus.Base;
 using Nucleus.Extensions;
 using Nucleus.Maths;
 using Nucleus.Units;
@@ -35,7 +36,10 @@ namespace Nucleus.Geometry
     /// </summary>
     /// <typeparam name="TVertex"></typeparam>
     /// <remarks>This class implements a default set of interrogation methods, which will treat
-    /// this curve as a polyline of straight segments between vertices.</remarks>
+    /// this curve as a polyline of straight segments between vertices.
+    /// While most curve functionality is implemented on the relevent subclass, any new curve types
+    /// should also take care to also add support to the relevent functions within the Intersect
+    /// helper class and any relevant conversion classes in dependent libraries.</remarks>
     [Serializable]
     public abstract class Curve: VertexGeometry
     {
@@ -218,7 +222,7 @@ namespace Nucleus.Geometry
         {
             var verts = Vertices;
             if (verts.Count > 0 && verts.Contains(vertex.GUID))
-                return verts.IndexOf(vertex) / (double)(verts.Count - 1);
+                return verts.IndexOf(vertex) / (double)(SegmentCount);
             else return 0;
         }
 
@@ -877,9 +881,9 @@ namespace Nucleus.Geometry
         /// <remarks>TODO: Implement more refined checks on arcs</remarks>
         public virtual bool EnclosesXY(Vector point)
         {
-            return Vertices.PolygonContainmentXY(point);
+            return Closed && Vertices.PolygonContainmentXY(point);
         }
-
+        
         /// <summary>
         /// Offset this curve on the XY plane.
         /// </summary>
@@ -896,7 +900,7 @@ namespace Nucleus.Geometry
         /// Offset this curve on the XY plane by varying distances for
         /// each span.
         /// </summary>
-        /// <param name="distances">The offset distance.
+        /// <param name="distances">The offset distances for each span, in order.
         /// Positive numbers will result in the offset curve being to the right-hand 
         /// side, looking along the curve.  Negative numbers to the left.</param>
         /// <param name="tidy">If true (default) collapsed segments will be removed.</param>
@@ -924,6 +928,29 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Offset this curve on the XY plane by varying distances for each span, 
+        /// automatically determining (where possible)
+        /// the direction of offset which will result in the curve being offset within itself.
+        /// Note that it will not be possible to accurately predict this for all curves.
+        /// </summary>
+        /// <param name="distances">The offset distances for each span, in order.
+        /// Positive numbers will result in the offset curve being to the right-hand 
+        /// side, looking along the curve.  Negative numbers to the left.  This will be
+        /// automatically inverted (in-place) if the curve is anticlockwise so that
+        /// positive numbers entered will result in an offset inwards and negative numbers outwards.</param>
+        /// <returns></returns>
+        public virtual Curve OffsetInwards(IList<double> distances, bool tidy = true, bool copyAttributes = true)
+        {
+            double cTS = Vertices.ClockwiseTestSum();
+            if (cTS < 0)
+            {
+                for (int i = 0; i < distances.Count; i++)
+                    distances[i] *= -1;
+            }
+            return Offset(distances, tidy, copyAttributes);
+        }
+
+        /// <summary>
         /// Is this curve clockwise in the XY plane?
         /// </summary>
         /// <returns></returns>
@@ -939,6 +966,18 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <returns></returns>
         public abstract IList<ISimpleCurve> ToSimpleCurves();
+
+        /// <summary>
+        /// Get a polycurve version of this curve.  If the curve is already a
+        /// polycurve then this will return a reference to the initial object,
+        /// otherwise a new polycurve will be created that contains the original
+        /// curve.
+        /// </summary>
+        /// <returns></returns>
+        public virtual PolyCurve ToPolyCurve()
+        {
+            return new PolyCurve(this, Attributes?.Duplicate());
+        }
 
         /// <summary>
         /// Does this curve self-intersect on the XY plane?

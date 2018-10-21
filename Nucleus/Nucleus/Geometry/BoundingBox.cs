@@ -241,7 +241,7 @@ namespace Nucleus.Geometry
         /// <param name="maxY"></param>
         /// <param name="minZ"></param>
         /// <param name="maxZ"></param>
-        public BoundingBox(double minX, double maxX, double minY, double maxY, double minZ, double maxZ)
+        public BoundingBox(double minX, double maxX, double minY, double maxY, double minZ = 0, double maxZ = 0)
         {
             MinX = minX;
             MaxX = maxX;

@@ -60,6 +60,24 @@ namespace Nucleus.Word
         #region Properties
 
         /// <summary>
+        /// Get or set whether text is written in bold
+        /// </summary>
+        public bool IsBold
+        {
+            get { return _Bold; }
+            set { _Bold = value; }
+        }
+
+        /// <summary>
+        /// Get or set whether text is written in italics
+        /// </summary>
+        public bool IsItalicised
+        {
+            get { return _Italics; }
+            set { _Italics = value; }
+        }
+
+        /// <summary>
         /// Private backing field for the Word property
         /// </summary>
         private Application _Word;

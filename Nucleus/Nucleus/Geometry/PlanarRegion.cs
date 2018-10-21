@@ -19,6 +19,8 @@
 // SOFTWARE.
 
 using Nucleus.Base;
+using Nucleus.Extensions;
+using Nucleus.Maths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -164,6 +166,15 @@ namespace Nucleus.Geometry
             : this(new PolyLine(new Vector[] { pt0, pt1, pt2, pt3 }, true, attributes)) { }
 
         /// <summary>
+        /// Initialises a new PlanarRegion with the specified edge vertices.
+        /// There should be a minimum of three points given and all should lie on the same
+        /// plane for the resulting surface to be valid.
+        /// </summary>
+        /// <param name="pts"></param>
+        public PlanarRegion(params Vector[] pts)
+            : this(new PolyLine(pts, true)) { }
+
+        /// <summary>
         /// Initialises a new PlanarSurface with the specified perimeter curve.
         /// </summary>
         /// <param name="perimeter"></param>
@@ -231,18 +242,67 @@ namespace Nucleus.Geometry
             return result.Rotate(toOrient + orientation);
         }
 
-        /*
+        
         /// <summary>
-        /// Split this region into two along a straight line
+        /// Does the specified point fall within this region?
         /// </summary>
-        /// <param name="splitPt"></param>
-        /// <param name="splitDir"></param>
+        /// <param name="pt">The point to test</param>
         /// <returns></returns>
-        public IList<PlanarRegion> Split(Vector splitPt, Vector splitDir)
+        public bool ContainsXY(Vector pt)
         {
-            
+            if (Perimeter.EnclosesXY(pt))
+            {
+                if (_Voids != null)
+                    foreach (var voidCrv in _Voids)
+                        if (voidCrv.EnclosesXY(pt)) return false;
+                return true;
+            }
+            return false;
         }
-        */
+
+        /// <summary>
+        /// Split this region into two (or more) sub-regions along a straight line
+        /// </summary>
+        /// <param name="splitPt">A point on the splitting line</param>
+        /// <param name="splitDir">The direction of the line</param>
+        /// <param name="splitWidth">Optional.  The width of the split.</param>
+        /// <returns>The resultant list of regions.  If the line does not bisect
+        /// this region and the region could not be split, this collection will contain
+        /// only the original region.</returns>
+        public IList<PlanarRegion> SplitByLineXY(Vector splitPt, Vector splitDir, double splitWidth = 0)
+        {
+            var result = new List<PlanarRegion>();
+            var outerInts = Intersect.CurveLineXY(Perimeter, splitPt, splitDir).ToList();
+            outerInts.Sort();
+            //TODO: void intersections
+            if (outerInts.Count > 1)
+            {
+                for (int i = 0; i < outerInts.Count; i++)
+                {
+                    double t0 = outerInts[i];
+                    double t1 = outerInts.GetWrapped(i + 1);
+                    Curve newPerimeter = Perimeter.Extract(new Interval(t0, t1))?.ToPolyCurve();
+                    //TODO: Cut through and include voids
+                    if (!newPerimeter.Closed)
+                    {
+                        ((PolyCurve)newPerimeter).Close();
+                        if (splitWidth > 0)
+                        {
+                            var offsets = new double[newPerimeter.SegmentCount];
+                            offsets[offsets.Length - 1] = splitWidth / 2;
+                            newPerimeter = newPerimeter.OffsetInwards(offsets);
+                        }
+                    }
+                    result.Add(new PlanarRegion(newPerimeter, Attributes?.Duplicate()));
+                }
+            }
+            else
+            {
+                result.Add(this); //Return the original
+            }
+            return result;
+        }
+        
 
         #endregion
     }

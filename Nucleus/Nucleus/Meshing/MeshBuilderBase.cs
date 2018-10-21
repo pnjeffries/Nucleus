@@ -180,6 +180,7 @@ namespace Nucleus.Meshing
             foreach (Vertex v in vertices)
             {
                 lastVI = AddVertex(v);
+                v.Number = lastVI;
             }
             return lastVI;
         }
@@ -446,6 +447,16 @@ namespace Nucleus.Meshing
                 Vector v4 = pointStrip2.GetBounded(0, reverse);
                 AddFace(v1, v2, v3, v4);
             }
+        }
+
+        /// <summary>
+        /// Create faces to represent a path with width
+        /// </summary>
+        /// <param name="path"></param>
+        public void AddWidePath(IWidePath path)
+        {
+            //TODO: Refine!
+            AddFace(path.LeftEdge.StartPoint, path.LeftEdge.EndPoint, path.RightEdge.EndPoint, path.RightEdge.StartPoint);
         }
 
         /// <summary>

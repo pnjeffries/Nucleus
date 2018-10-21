@@ -16,6 +16,8 @@ namespace Nucleus.Alerts
     /// </summary>
     public class AlertLog : AlertCollection, ILog
     {
+        bool ILog.IsBold { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        bool ILog.IsItalicised { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         #region Properties
 
         bool ILog.IsBold { get => false; set { }}

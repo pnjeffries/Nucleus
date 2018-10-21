@@ -697,7 +697,8 @@ namespace Nucleus.Geometry
         /// <param name="axis">A unit vector representing an axis of rotation.</param>
         /// <param name="angle">The angle of rotation, in radians.
         /// Counter-clockwise around the axis.</param>
-        /// <returns>A new vector created by rotating this vector anticlockwise about the given axis by the given angle.</returns>
+        /// <returns>A new vector created by rotating this vector anticlockwise about the 
+        /// given axis by the given angle.</returns>
         /// <remarks>Uses the Rodrigues Rotation Formula - see: 
         /// https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula </remarks>
         public Vector Rotate(Vector axis, Angle angle)
@@ -706,6 +707,18 @@ namespace Nucleus.Geometry
             //v_rot = v*cos(theta) + (k x v)sin(theta) + k(k*v)(1-cos(theta)
             return Scale(Math.Cos(angle)).Add(axis.Cross(ref this).Scale(Math.Sin(angle)).Add(
                 axis.Scale(axis.Dot(ref this)).Scale(1 - Math.Cos(angle))));
+        }
+
+        /// <summary>
+        /// Rotate this vector by an angle on the XY plane.
+        /// </summary>
+        /// <param name="angle">The angle of rotation, in radians.
+        /// Counter-clockwise around the global Z-axis.</param>
+        /// <returns>A new vector created by rotating this vector anticlockwise about the
+        /// given axis by the given angle.</returns>
+        public Vector Rotate(Angle angle)
+        {
+            return Rotate(UnitZ, angle); //TEMP - to be optimised!
         }
 
         /// <summary>
@@ -1504,7 +1517,6 @@ namespace Nucleus.Geometry
         public static Vector operator %(Vector v, double d)
             => new Vector(v.X % d, v.Y % d, v.Z % d);
 
-        
         #endregion
     }
 
