@@ -334,6 +334,12 @@ namespace Nucleus.Geometry
             else return false;
         }
 
+        /// <summary>
+        /// Check whether the specified point lies within the area enclosed by this curve
+        /// on the XY plane
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
         public override bool EnclosesXY(Vector point)
         {
             return false;

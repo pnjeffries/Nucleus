@@ -724,6 +724,16 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Get a polycurve version of this curve.  As this curve is
+        /// already a polycurve, this simply returns a self-reference.
+        /// </summary>
+        /// <returns></returns>
+        public override PolyCurve ToPolyCurve()
+        {
+            return this;
+        }
+
+        /// <summary>
         /// Does this curve self-intersect on the XY plane?
         /// </summary>
         /// <returns></returns>
@@ -876,8 +886,8 @@ namespace Nucleus.Geometry
                 int i0 = iL - 1;
                 int i1 = iL + 1;
                 bool closed = Closed;
-                bool tryPre = true;
-                bool tryPost = true;
+                bool tryPre = closed || i0 >= 0;
+                bool tryPost = closed || i1 < SubCurves.Count;
                 while (tryPre || tryPost)
                 {
                     Curve pre = tryPre ? SubCurves.GetWrapped(i0, closed) : null;
@@ -894,6 +904,7 @@ namespace Nucleus.Geometry
                             result.SubCurves.Add(post);
                             tangents.Add(tang);
                             i1++;
+                            if (!closed && i1 >= SubCurves.Count) tryPost = false;
                         }
                     }
                     else if (pre != null)
@@ -908,6 +919,7 @@ namespace Nucleus.Geometry
                             result.SubCurves.Insert(0, pre);
                             tangents.Add(tang);
                             i0--;
+                            if (!closed && i0 < 0) tryPre = false;
                         }
                     }
                     else

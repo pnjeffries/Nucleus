@@ -349,7 +349,7 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Find the intersection(s) between a curve and an infinite line
+        /// Find the intersection(s) between a curve and an infinite line on the XY plane
         /// </summary>
         /// <param name="curve"></param>
         /// <param name="lnPt"></param>
@@ -379,7 +379,42 @@ namespace Nucleus.Geometry
                     result.Add(t);
                 }
             }
-            //TODO: Polys
+            else if (curve is PolyLine)
+            {
+                var pLine = (PolyLine)curve;
+                for (int i = 0; i < pLine.SegmentCount; i++)
+                {
+                    var v0 = pLine.Vertices[i];
+                    var v1 = pLine.Vertices.GetWrapped(i + 1);
+                    double tMin = domainAdjustMin + pLine.ParameterAt(v0) * (domainAdjustMax - domainAdjustMin);
+                    double tMax = domainAdjustMin + pLine.ParameterAt(v1) * (domainAdjustMax - domainAdjustMin);
+                    double t0 = -1, t1 = -1;
+                    Vector sPt = pLine.Vertices[i].Position;
+                    Vector ePt = pLine.Vertices.GetWrapped(i + 1).Position;
+                    LineLineXY(sPt, ePt - sPt, lnPt, lnDir, ref t0, ref t1);
+                    if (t0 >= 0 && t0 <= 1)
+                    {
+                        double t = (tMin + t0 * (tMax - tMin));
+                        result.Add(t);
+                    }
+                }
+            }
+            else if (curve is PolyCurve)
+            {
+                var pCrv = (PolyCurve)curve;
+                foreach (var subCrv in pCrv.SubCurves)
+                {
+                    if (subCrv?.Start != null && subCrv.End != null)
+                    {
+                        double tMin = domainAdjustMin + pCrv.ParameterAt(subCrv.Start) * (domainAdjustMax - domainAdjustMin);
+                        double tMax = domainAdjustMin + pCrv.ParameterAt(subCrv.End) * (domainAdjustMax - domainAdjustMin);
+                        CurveLineXY(subCrv, lnPt, lnDir, result, tMin, tMax);
+                    }
+                }
+            }
+            else throw new NotSupportedException(
+                "The curve type '" + curve.GetType().Name + "' is not supported for XY line intersection operations.");
+            //TODO: Implement any other curve types
             return result;
         }
 
