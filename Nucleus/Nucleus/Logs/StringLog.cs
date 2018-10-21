@@ -19,15 +19,10 @@ namespace Nucleus.Logs
         /// </summary>
         private StringBuilder _Builder = new StringBuilder();
 
-<<<<<<< HEAD
-        bool ILog.IsBold { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        bool ILog.IsItalicised { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-=======
         bool ILog.IsBold { get { return false; } set { } }
         bool ILog.IsItalicised { get { return false; } set { } }
 
         #endregion
->>>>>>> 73930578dad9a0708fe7fa601914b8de6cd47a99
 
         public void WriteText(string text)
         {
