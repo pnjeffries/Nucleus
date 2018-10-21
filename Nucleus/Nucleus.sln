@@ -45,6 +45,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.JS", "Nucleus.JS\Nu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.Game", "Nucleus.Game\Nucleus.Game.csproj", "{4670712E-DF4B-4742-B0BC-144C9B4E41A1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.UnitTests", "Nucleus.UnitTests\Nucleus.UnitTests.csproj", "{BC06C656-7957-44CF-87A9-B1E47AB5DE42}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -135,6 +137,10 @@ Global
 		{4670712E-DF4B-4742-B0BC-144C9B4E41A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4670712E-DF4B-4742-B0BC-144C9B4E41A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4670712E-DF4B-4742-B0BC-144C9B4E41A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC06C656-7957-44CF-87A9-B1E47AB5DE42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC06C656-7957-44CF-87A9-B1E47AB5DE42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC06C656-7957-44CF-87A9-B1E47AB5DE42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC06C656-7957-44CF-87A9-B1E47AB5DE42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

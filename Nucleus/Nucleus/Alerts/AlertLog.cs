@@ -18,6 +18,12 @@ namespace Nucleus.Alerts
     {
         bool ILog.IsBold { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         bool ILog.IsItalicised { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        #region Properties
+
+        bool ILog.IsBold { get => false; set { }}
+        bool ILog.IsItalicised { get => false; set { } }
+
+        #endregion
 
         /// <summary>
         /// Raise an alert
