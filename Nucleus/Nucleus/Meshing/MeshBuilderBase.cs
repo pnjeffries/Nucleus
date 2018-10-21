@@ -238,7 +238,7 @@ namespace Nucleus.Meshing
         /// <param name="baseDepth"></param>
         /// <param name="height"></param>
         /// <param name="cSystem"></param>
-        public void AddCuboid(double width, double depth, double height, CartesianCoordinateSystem cSystem)
+        public void AddCuboid(double width, double depth, double height, CartesianCoordinateSystem cSystem = null)
         {
             AddTruncatedPyramid(width, depth, width, depth, height, cSystem);
         }
@@ -251,7 +251,7 @@ namespace Nucleus.Meshing
         /// <param name="baseDepth"></param>
         /// <param name="height"></param>
         /// <param name="cSystem"></param>
-        public void AddTruncatedPyramid(double baseWidth, double baseDepth, double topWidth, double topDepth, double height, CartesianCoordinateSystem cSystem)
+        public void AddTruncatedPyramid(double baseWidth, double baseDepth, double topWidth, double topDepth, double height, CartesianCoordinateSystem cSystem = null)
         {
             double bw2 = baseWidth / 2;
             double bd2 = baseDepth / 2;

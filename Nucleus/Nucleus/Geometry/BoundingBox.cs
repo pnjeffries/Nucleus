@@ -138,6 +138,11 @@ namespace Nucleus.Geometry
         public double MidZ { get { return (MinZ + MaxZ) / 2; } }
 
         /// <summary>
+        /// Get the mid-point vector of the box
+        /// </summary>
+        public Vector MidPoint { get { return new Vector(MidX, MidY, MidZ); } }
+
+        /// <summary>
         /// The size of this box in the x-axis
         /// </summary>
         public double SizeX { get { return MaxX - MinX; } }
@@ -151,6 +156,11 @@ namespace Nucleus.Geometry
         /// The size of this box in the z-axis
         /// </summary>
         public double SizeZ { get { return MaxZ - MinZ; } }
+
+        /// <summary>
+        /// Get a 3D vector that represents the size of this bounding box
+        /// </summary>
+        public Vector SizeVector { get { return new Vector(SizeX, SizeY, SizeZ); } }
 
         /// <summary>
         /// The interval of the values this box occupies in the X-Axis

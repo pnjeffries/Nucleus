@@ -47,6 +47,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.Game", "Nucleus.Gam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.UnitTests", "Nucleus.UnitTests\Nucleus.UnitTests.csproj", "{BC06C656-7957-44CF-87A9-B1E47AB5DE42}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.Unity", "Nucleus.Unity\Nucleus.Unity.csproj", "{639703CB-FA74-4A51-BD41-A350C08533F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +143,10 @@ Global
 		{BC06C656-7957-44CF-87A9-B1E47AB5DE42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC06C656-7957-44CF-87A9-B1E47AB5DE42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC06C656-7957-44CF-87A9-B1E47AB5DE42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{639703CB-FA74-4A51-BD41-A350C08533F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{639703CB-FA74-4A51-BD41-A350C08533F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{639703CB-FA74-4A51-BD41-A350C08533F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{639703CB-FA74-4A51-BD41-A350C08533F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
