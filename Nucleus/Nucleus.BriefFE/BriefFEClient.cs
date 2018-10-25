@@ -132,7 +132,7 @@ namespace Nucleus.BriefFE
                 var nR = new NodeResults();
                 var cNR = new CaseNodeResults();
 
-                nR.Add(cNR);
+                //nR.Add(cNR);
             }
 
             /*foreach (var element in model.Elements)

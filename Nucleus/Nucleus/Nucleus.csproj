@@ -68,6 +68,7 @@
     <Compile Include="Analysis\EC3MemberChecks.cs" />
     <Compile Include="Analysis\FlatConcreteSlabChecks.cs" />
     <Compile Include="Base\IFastDuplicatable.cs" />
+    <Compile Include="Analysis\SolarPositioning.cs" />
     <Compile Include="Base\Option.cs" />
     <Compile Include="Base\OptionCollection.cs" />
     <Compile Include="Geometry\AngleIntervals.cs" />
