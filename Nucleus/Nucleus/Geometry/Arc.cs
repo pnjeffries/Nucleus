@@ -191,6 +191,14 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Creates an arc which is a copy of an existing one
+        /// </summary>
+        /// <param name="other"></param>
+        public Arc(Arc other)
+            :this(other.StartPoint, other.PointOnArc, other.EndPoint, other.Attributes)
+        { }
+
+        /// <summary>
         /// Initialise an arc that forms a complete circle
         /// </summary>
         /// <param name="circle"></param>
@@ -704,6 +712,10 @@ namespace Nucleus.Geometry
             return result;
         }
 
+        protected override IFastDuplicatable CurveFastDuplicate()
+        {
+            return new Arc(this);
+        }
 
         #endregion
 

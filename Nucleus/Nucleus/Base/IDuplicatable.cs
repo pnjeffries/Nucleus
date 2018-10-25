@@ -33,9 +33,15 @@ namespace Nucleus.Base
 {
     /// <summary>
     /// Interface for objects which can be duplicated.
+    /// Objects implementing this interface automatically gain
+    /// a 'Duplicate()' extension method which uses reflection
+    /// to procedurally create a new object and populate its properties
+    /// to create a duplicate of the original.
     /// Duplicating produces a shallow clone with the exception
     /// of property values which are expected to be unique per instance
-    /// of the object, which will themselves be duplicated.
+    /// of the object, which will themselves be duplicated.  This is
+    /// determined by tagging those properties with the CopyBehaviour
+    /// attribute.
     /// </summary>
     public interface IDuplicatable
     {
@@ -51,11 +57,17 @@ namespace Nucleus.Base
         /// Family references will be copied, save for those which
         /// are intended to be unique to this object, which will themselves
         /// be duplicated.
+        /// This method uses reflection to walk through the full property tree
+        /// of the object and copy property values automatically depending on
+        /// the CopyBehaviour they are tagged with.
+        /// This is convenient and comprehensive, but can be very slow - be wary of
+        /// overusing it in performance-critical scenarios.
         /// </summary>
         /// <param name="itemsBehaviour">The duplication behaviour of items contained within
         /// this object, if this object is a collection</param>
         /// <returns>A duplicated copy of this object</returns>
-        public static T Duplicate<T>(this T obj, CopyBehaviour itemsBehaviour = CopyBehaviour.COPY) where T : IDuplicatable
+        public static T Duplicate<T>(this T obj, CopyBehaviour itemsBehaviour = CopyBehaviour.COPY) 
+            where T : IDuplicatable
         {
             Dictionary<object, object> objMap = null;
             return obj.Duplicate(ref objMap, itemsBehaviour);
@@ -181,8 +193,7 @@ namespace Nucleus.Base
             Type sourceType = source.GetType();
             BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
             ICollection<FieldInfo> fields = targetType.GetAllFields(flags);
-            foreach (FieldInfo targetField 
-                in fields)
+            foreach (FieldInfo targetField in fields)
             {
                 FieldInfo sourceField = sourceType.GetBaseField(targetField.Name, flags);
                 if (sourceField != null && targetField.FieldType.IsAssignableFrom(sourceField.FieldType))

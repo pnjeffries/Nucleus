@@ -19,8 +19,8 @@ namespace Nucleus.Alerts
      
         #region Properties
 
-        bool ILog.IsBold { get => false; set { }}
-        bool ILog.IsItalicised { get => false; set { } }
+        bool ILog.IsBold { get { return false; }  set { } }
+        bool ILog.IsItalicised { get { return false; } set { } }
 
         #endregion
 

@@ -25,6 +25,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nucleus.Maths;
+using Nucleus.Base;
 
 namespace Nucleus.Geometry
 {
@@ -70,6 +71,22 @@ namespace Nucleus.Geometry
             get { return _Vertices; }
         }
 
+        /// <summary>
+        /// Get an array of the points that define the geometry of this polyline
+        /// </summary>
+        public Vector[] Points
+        {
+            get
+            {
+                var result = new Vector[VertexCount];
+                for (int i = 0; i < VertexCount; i++)
+                {
+                    result[i] = Vertices[i].Position;
+                }
+                return result;
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -103,13 +120,21 @@ namespace Nucleus.Geometry
         /// <param name="close"></param>
         public PolyLine(IEnumerable<Vector> points, bool close, GeometryAttributes attributes = null) : this()
         {
-            foreach(Vector pt in points)
+            foreach (Vector pt in points)
             {
                 Vertices.Add(new Vertex(pt));
             }
             Closed = close;
             Attributes = attributes;
         }
+
+        /// <summary>
+        /// Create a PolyLine that is a copy of another PolyLine
+        /// </summary>
+        /// <param name="other"></param>
+        public PolyLine(PolyLine other)
+            : this(other.Points, other.Closed, other.Attributes)
+        { }
 
         /// <summary>
         /// Points constructor.
@@ -463,6 +488,11 @@ namespace Nucleus.Geometry
         public override string ToString()
         {
             return "Polyline";
+        }
+
+        protected override IFastDuplicatable CurveFastDuplicate()
+        {
+            return new PolyLine(this);
         }
 
         #endregion

@@ -456,7 +456,7 @@ namespace Nucleus.Meshing
         public void AddWidePath(IWidePath path)
         {
             //TODO: Refine!
-            AddFace(path.LeftEdge.StartPoint, path.LeftEdge.EndPoint, path.RightEdge.EndPoint, path.RightEdge.StartPoint);
+            AddFace(path.LeftEdge.EndPoint, path.LeftEdge.StartPoint, path.RightEdge.StartPoint, path.RightEdge.EndPoint);
         }
 
         /// <summary>

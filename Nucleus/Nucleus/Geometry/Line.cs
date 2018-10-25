@@ -25,6 +25,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nucleus.Maths;
+using Nucleus.Base;
 
 namespace Nucleus.Geometry
 {
@@ -104,6 +105,17 @@ namespace Nucleus.Geometry
         public Line()
         {
             _Vertices = new VertexCollection(this);
+        }
+
+        /// <summary>
+        /// Creates a new line with the same geometry as another.
+        /// </summary>
+        /// <param name="other"></param>
+        public Line(Line other) : this()
+        {
+            Vertices.Add(new Vertex(other.Start));
+            Vertices.Add(new Vertex(other.End));
+            Attributes = other.Attributes;
         }
 
         /// <summary>
@@ -367,6 +379,11 @@ namespace Nucleus.Geometry
             var result = new List<ISimpleCurve>();
             result.Add(this);
             return result;
+        }
+
+        protected override IFastDuplicatable CurveFastDuplicate()
+        {
+            return new Line(this);
         }
 
         #endregion

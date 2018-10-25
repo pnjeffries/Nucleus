@@ -401,6 +401,23 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Calculate the Manhatten distance from this position vector to another.
+        /// The Manhatten distance is the is the sum of the absolute difference between
+        /// each component of the two vectors - i.e. it is the distance you would have
+        /// to travel from one point to the other if you could only move orthogonally
+        /// along the global axes.
+        /// </summary>
+        /// <param name="position">Another position vector.</param>
+        /// <returns></returns>
+        public double ManhattenDistanceTo(Vector position)
+        {
+            double dX = position.X - X;
+            double dY = position.Y - Y;
+            double dZ = position.Z - Z;
+            return dX.Abs() + dY.Abs() + dZ.Abs();
+        }
+
+        /// <summary>
         /// Calculate the squared distance from this position vector to another
         /// on the XY plane.
         /// </summary>

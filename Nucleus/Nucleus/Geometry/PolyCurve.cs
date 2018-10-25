@@ -184,6 +184,20 @@ namespace Nucleus.Geometry
             }
         }
 
+        /// <summary>
+        /// Creates a new polycurve as a copy of another one
+        /// </summary>
+        /// <param name="other"></param>
+        public PolyCurve(PolyCurve other)
+            : this(other.FastDuplicateSubCurves(), other.Attributes)
+        { }
+
+        /// <summary>
+        /// Creates a new PolyCurve consisting of the specified sub-curves
+        /// </summary>
+        /// <param name="curves"></param>
+        public PolyCurve(params Curve[] curves) : this(curves, null) { }
+
         #endregion
 
         #region Methods
@@ -380,6 +394,32 @@ namespace Nucleus.Geometry
         public void Add(Curve subCurve)
         {
             SubCurves.Add(subCurve);
+        }
+
+        /// <summary>
+        /// Add a new sub-curve to this PolyCurve.
+        /// Note that to form a valid polycurve the new sub-curve *must*
+        /// start at a point within tolerance of the end point of the
+        /// last sub-curve.  If autoConnect is set to true, this condition
+        /// will be checked for and a line segment automatically added to
+        /// connect the curve ends if necessary.
+        /// </summary>
+        /// <param name="subCurve">The curve to add.</param>
+        /// <param name="autoConnect">If true, a line segment will automatically be added between
+        /// the end of the last curve and the start of the newly-added one to close
+        /// any gap between them, if necessary.</param>
+        public void Add(Curve subCurve, bool autoConnect)
+        {
+            if (autoConnect == true && SubCurves.Count > 0)
+            {
+                Vector endPt = SubCurves.Last().EndPoint;
+                if (endPt.DistanceToSquared(subCurve.StartPoint) > (Tolerance.Distance*Tolerance.Distance))
+                {
+                    //Out of tolerance; create a line:
+                    Add(new Line(endPt, subCurve.StartPoint));
+                }
+            }
+            Add(subCurve);
         }
 
         /// <summary>
@@ -932,6 +972,21 @@ namespace Nucleus.Geometry
 
             }
             return null;
+        }
+
+        /// <summary>
+        /// Create a collection of fast duplicates of the sub-curves in
+        /// this polycurve
+        /// </summary>
+        /// <returns></returns>
+        public IList<Curve> FastDuplicateSubCurves()
+        {
+            Curve[] result = new Curve[SubCurves.Count];
+            for (int i = 0; i < SubCurves.Count; i++)
+            {
+                result[i] = SubCurves[i].FastDuplicate();
+            }
+            return result;
         }
 
         #endregion

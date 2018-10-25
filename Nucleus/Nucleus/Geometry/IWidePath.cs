@@ -1,4 +1,6 @@
-﻿using Nucleus.DDTree;
+﻿using Nucleus.Base;
+using Nucleus.DDTree;
+using Nucleus.Exceptions;
 using Nucleus.Extensions;
 using Nucleus.Model;
 using System;
@@ -169,6 +171,39 @@ namespace Nucleus.Geometry
             }
             else if (path.Spine != null) return new Vector[] { path.Spine.PointAt(u) };
             else return null;
+        }
+
+        /// <summary>
+        /// Get a closed polycurve containing the edges of this section of the path.
+        /// The edges of the path must have been generated first.
+        /// </summary>
+        /// <returns></returns>
+        public static PolyCurve GetBoundaryCurve<TPath>(this TPath path)
+            where TPath:IWidePath
+        {
+            var result = new PolyCurve();
+
+            if (path.StartCapLeft != null)
+                result.Add(path.StartCapLeft);
+
+            if (path.LeftEdge != null)
+                result.Add(path.LeftEdge, true);
+
+            if (path.EndCapLeft != null)
+                result.Add(path.EndCapLeft, true);
+
+            if (path.EndCapRight != null)
+                result.Add(path.EndCapRight.Reversed(), true);
+
+            if (path.RightEdge != null) 
+                result.Add(path.RightEdge.Reversed(), true);
+
+            if (path.StartCapRight != null)
+                result.Add(path.StartCapRight.Reversed(), true);
+
+            result.Close();
+
+            return result;
         }
 
         /// <summary>
@@ -436,5 +471,7 @@ namespace Nucleus.Geometry
             foreach (TPath path in paths) result.Add(path.RightEdge);
             return result;
         }
+
+        
     }
 }

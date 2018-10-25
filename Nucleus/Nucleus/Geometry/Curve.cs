@@ -41,7 +41,7 @@ namespace Nucleus.Geometry
     /// should also take care to also add support to the relevent functions within the Intersect
     /// helper class and any relevant conversion classes in dependent libraries.</remarks>
     [Serializable]
-    public abstract class Curve: VertexGeometry
+    public abstract class Curve: VertexGeometry, IFastDuplicatable
     {
         #region Properties
 
@@ -1086,6 +1086,15 @@ namespace Nucleus.Geometry
             Vertices.Reverse();
         }
 
+        protected virtual IFastDuplicatable CurveFastDuplicate()
+        {
+            return this.Duplicate();
+        }
+
+        IFastDuplicatable IFastDuplicatable.FastDuplicate_Internal()
+        {
+            return CurveFastDuplicate();
+        }
 
         #endregion
 
@@ -1524,6 +1533,19 @@ namespace Nucleus.Geometry
             return result;
         }
 
+        /// <summary>
+        /// Returns a reversed duplicate of this curve.
+        /// </summary>
+        /// <typeparam name="TCurve"></typeparam>
+        /// <param name="curve"></param>
+        /// <returns></returns>
+        public static TCurve Reversed<TCurve>(this TCurve curve)
+            where TCurve : Curve
+        {
+            var crv = curve.FastDuplicate();
+            crv.Reverse();
+            return crv;
+        }
         
     }
 }
