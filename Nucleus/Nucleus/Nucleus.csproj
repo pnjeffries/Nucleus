@@ -22,6 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Debug\Nucleus.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -71,6 +72,10 @@
     <Compile Include="Analysis\SolarPositioning.cs" />
     <Compile Include="Base\Option.cs" />
     <Compile Include="Base\OptionCollection.cs" />
+    <Compile Include="Base\Parameter.cs" />
+    <Compile Include="Base\ParameterCollection.cs" />
+    <Compile Include="Base\ParameterGroup.cs" />
+    <Compile Include="Base\ParameterGroupCollection.cs" />
     <Compile Include="Geometry\AngleIntervals.cs" />
     <Compile Include="Geometry\Cell Maps\CellMapPosition.cs" />
     <Compile Include="Geometry\Cell Maps\CellObscurance.cs" />
@@ -460,6 +465,7 @@
     <Compile Include="UI\AutoUIAttribute.cs" />
     <Compile Include="UI\AutoUIComboBoxAttribute.cs" />
     <Compile Include="UI\AutoUISliderAttribute.cs" />
+    <Compile Include="UI\BindingChainLink.cs" />
     <Compile Include="UI\IAutoUIHostable.cs" />
     <Compile Include="UI\IUserInteraction.cs" />
     <Compile Include="UI\UIOption.cs" />

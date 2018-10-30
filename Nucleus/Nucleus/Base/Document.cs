@@ -36,7 +36,7 @@ namespace Nucleus.Base
     [Serializable]
     public abstract class Document : Unique
     {
-#region Properties
+        #region Properties
 
         /// <summary>
         /// Private backing field for the FilePath property
@@ -66,9 +66,9 @@ namespace Nucleus.Base
             set { _LastSaved = value; }
         }
 
-#endregion
+        #endregion
 
-#region Methods
+        #region Methods
 
         /// <summary>
         /// Save this document to the last-saved location, if possible,

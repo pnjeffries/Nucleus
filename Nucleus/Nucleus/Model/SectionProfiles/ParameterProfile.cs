@@ -199,7 +199,7 @@ namespace Nucleus.Model
         /// Calculate the offset of the profile centroid from the origin (mid) point
         /// </summary>
         /// <returns></returns>
-        /// <remarks>This basic version calculates the centroid from the perimeter & voids.
+        /// <remarks>This basic version calculates the centroid from the perimeter and voids.
         /// This can be overridden for the sake of efficiency in derived classes to save having
         /// to calculate the centroid for symmetrical types where the offset is always 0,0</remarks>
         protected virtual Vector CalculateCentroidOffset(Curve perimeter, CurveCollection voids)

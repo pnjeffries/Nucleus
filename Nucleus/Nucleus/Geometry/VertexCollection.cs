@@ -156,8 +156,15 @@ namespace Nucleus.Geometry
             {
                 Vector o = this[0].Position;
                 Vector x = this[1].Position - o;
-                Vector xy = this[2].Position - o;
-                int i = 2;
+                int i = 1;
+                while (i < Count - 1)
+                {
+                    i++;
+                    if (!x.IsZero()) break;
+                    else x = this[i].Position - o;
+                }
+
+                Vector xy = this[i].Position - o;
                 while (i < Count - 1)
                 {
                     i++;

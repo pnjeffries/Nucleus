@@ -265,6 +265,21 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Find the total of a set of double values obtainable via a delegate function from the
+        /// items in this list.
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="valueDelegate">Delegate function which returns the value to the summed.</param>
+        /// <returns></returns>
+        public static double TotalDelegateValue<TItem>(this IList<TItem> list, Func<TItem, double> valueDelegate)
+        {
+            double result = 0;
+            for (int i = 0; i < list.Count; i++) result += valueDelegate.Invoke(list[i]);
+            return result;
+        }
+
+        /// <summary>
         /// Get a value from this 2-dimensional jagged list, returning a fallback value in the case that the specified indices are
         /// out-of bounds
         /// </summary>
