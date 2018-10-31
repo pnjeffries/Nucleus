@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nucleus.Units;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,6 +41,20 @@ namespace Nucleus.Base
         {
             get { return _Group; }
             set { ChangeProperty(ref _Group, value); }
+        }
+
+        /// <summary>
+        /// Private backing field for the Units property
+        /// </summary>
+        private MeasurementUnit _Units = null;
+
+        /// <summary>
+        /// Get or set the units of measurement of the parameter
+        /// </summary>
+        public MeasurementUnit Units
+        {
+            get { return _Units; }
+            set { _Units = null; }
         }
 
         #endregion
@@ -101,8 +116,12 @@ namespace Nucleus.Base
         /// <summary>
         /// Creates a new parameter with the specified name.
         /// </summary>
-        /// <param name="name"></param>
-        public Parameter(string name) : base(name) { }
+        /// <param name="name">The name of the parameter</param>
+        /// <param name="units">The units in which the parameter is expressed</param>
+        public Parameter(string name, MeasurementUnit units = null) : base(name)
+        {
+            Units = units;
+        }
 
         /// <summary>
         /// Creates a new parameter with the specified name and
@@ -110,7 +129,8 @@ namespace Nucleus.Base
         /// </summary>
         /// <param name="name">The name of this parameter</param>
         /// <param name="value">The value of this parameter</param>
-        public Parameter(string name, T value) : base(name)
+        /// <param name="units">The units in which the parameter is expressed</param>
+        public Parameter(string name, T value, MeasurementUnit units = null) : this(name, units)
         {
             _Value = value;
         }
@@ -123,8 +143,9 @@ namespace Nucleus.Base
         /// <param name="group">The group within which this parameter
         /// should be displayed</param>
         /// <param name="value">The initial value of the parameter</param>
-        public Parameter(string name, ParameterGroup group, T value) 
-            : this(name, value)
+        /// <param name="units">The units in which the parameter is expressed</param>
+        public Parameter(string name, ParameterGroup group, T value, MeasurementUnit units = null) 
+            : this(name, value, units)
         {
             Group = group;
         }

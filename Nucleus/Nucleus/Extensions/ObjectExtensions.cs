@@ -46,6 +46,7 @@ namespace Nucleus.Extensions
             if (setOn != null)
             {
                 PropertyInfo pInfo = obj.GetType().GetProperty(path);
+                value = Convert.ChangeType(value, pInfo.PropertyType);
                 pInfo.SetValue(setOn, value);
             }
         }
