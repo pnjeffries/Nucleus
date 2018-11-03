@@ -852,7 +852,28 @@ namespace Nucleus.Analysis
             return (ro + Angle.Straight).NormalizeTo2PI(); //TODO: Adjust
         }
 
+        /// <summary>
+        /// Calculate the incidence angle to an inclined plane.
+        /// Step 3.16 and equation (47)
+        /// </summary>
+        /// <param name="slope">The slope of the surface measured from the horizontal plane</param>
+        /// <param name="surfaceAzimuth"> the surface azimuth rotation angle, measured from south 
+        /// to the projection of the surface normal on the horizontal plane, positive or negative 
+        /// if oriented west or east from south, respectively</param>
+        /// <param name="theta">The topocentric zenith angle</param>
+        /// <param name="sunAzimuth">The sun azimuth</param>
+        /// <param name="sunLongitude">The apparent sun longitude</param>
+        /// <returns></returns>
+        public static Angle CalculateIncidenceAngle(Angle slope, Angle surfaceAzimuth, Angle theta, 
+            Angle sunAzimuth, Angle sunLongitude)
+        {
+            Angle I = Math.Acos(Math.Cos(theta) * Math.Cos(slope) +
+                Math.Sin(slope) * Math.Sin(theta) * Math.Cos(sunAzimuth + sunLongitude));
+            return I;
+        }
 
+        public static AnglePair CalculateSunPosition(DateTime time, Angle latitude, Angle longitude,
+            double elevation)
 
     }
 }

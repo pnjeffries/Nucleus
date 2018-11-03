@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 namespace Nucleus.Geometry
 {
     /// <summary>
-    /// Structure to represent pairs of angles
+    /// Structure to represent pairs of angles.
+    /// Immutable.
     /// </summary>
+    [Serializable]
     public struct AnglePair
     {
         #region Fields
@@ -27,6 +29,11 @@ namespace Nucleus.Geometry
 
         #region Constructors
 
+        /// <summary>
+        /// Create a new AnglePair
+        /// </summary>
+        /// <param name="elevation"></param>
+        /// <param name="azimuth"></param>
         public AnglePair(Angle elevation, Angle azimuth)
         {
             Elevation = elevation;

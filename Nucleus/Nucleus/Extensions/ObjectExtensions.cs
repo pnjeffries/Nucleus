@@ -1,7 +1,9 @@
 ﻿using Nucleus.Conversion;
 using Nucleus.IO;
+using Nucleus.UI;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -23,12 +25,14 @@ namespace Nucleus.Extensions
         /// Parameterless methods may also be invoked by adding '()', i.e.:
         /// 'PropertyName.SubMethodName().SubSubPropertyName'.
         /// Methods and properties on the optional context object may also be invoked in the same way, via a
-        /// '[CONTEXT]' redirection.  For example: '[CONTEXT].MethodName()'.  When switching to the context
+        /// '*' redirection.  For example: '*.MethodName()'.  When switching to the context
         /// object the SetSourceObject method on it will be called and the current object or property value
         /// passed in.  This allows for complex operations to be performed in order to return a value
         /// provided that functionality is implemented in a suitable context object provided.</param>
         /// <param name="value">The value to be assigned to the property</param>
-        /// <param name="context"></param>
+        /// <param name="context">The (optional) string conversion context object.  If supplies this allows
+        /// the '*' symbol to be used within property paths in order to access properties and
+        /// functions supplied on the context object.</param>
         public static void SetByPath(this object obj, string path, object value, IStringConversionContext context = null)
         {
             object setOn = obj;
@@ -41,8 +45,36 @@ namespace Nucleus.Extensions
             }
             if (setOn != null)
             {
-                //TODO
+                PropertyInfo pInfo = obj.GetType().GetProperty(path);
+                value = Convert.ChangeType(value, pInfo.PropertyType);
+                pInfo.SetValue(setOn, value);
             }
+        }
+
+        /// <summary>
+        /// Generate a binding chain for the specified path on this object.
+        /// A binding chain is a list of all objects in the chain which implement the
+        /// INotifyPropertyChanged interface accompanied by the name of the property
+        /// on that object which, when changed, will require the bindings of objects 
+        /// further down the chain to be refreshed.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static IList<BindingChainLink> GenerateBindingChain(this object obj, string path)
+        {
+            var result = new List<BindingChainLink>();
+            string[] subStrings = path.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+            object nextObj = obj;
+            for (int i = 0; i < subStrings.Length; i++)
+            {
+                if (nextObj is INotifyPropertyChanged)
+                {
+                    result.Add(new UI.BindingChainLink((INotifyPropertyChanged)nextObj, subStrings[i]));
+                }
+                nextObj = nextObj.GetFromPath(subStrings[i]);
+            }
+            return result;
         }
 
         /// <summary>
@@ -54,10 +86,13 @@ namespace Nucleus.Extensions
         /// Parameterless methods may also be invoked by adding '()', i.e.:
         /// 'PropertyName.SubMethodName().SubSubPropertyName'.
         /// Methods and properties on the optional context object may also be invoked in the same way, via a
-        /// '[CONTEXT]' redirection.  For example: '[CONTEXT].MethodName()'.  When switching to the context
+        /// '*' redirection.  For example: '*.MethodName()'.  When switching to the context
         /// object the SetSourceObject method on it will be called and the current object or property value
         /// passed in.  This allows for complex operations to be performed in order to return a value
         /// provided that functionality is implemented in a suitable context object provided.</param>
+        /// <param name="context">The (optional) string conversion context object.  If supplies this allows
+        /// the '*' symbol to be used within property paths in order to access properties and
+        /// functions supplied on the context object.</param>
         /// <returns></returns>
         public static object GetFromPath(this object obj, string path, IStringConversionContext context = null)
         {
@@ -129,7 +164,7 @@ namespace Nucleus.Extensions
         /// <param name="openTag">The opening tag for specifying property paths.  Default is '{'.</param>
         /// <param name="closeTag">The closing tag for specifying property paths.  Default is '}'.</param>
         /// <param name="context">The (optional) string conversion context object.  If supplies this allows
-        /// the '[CONTEXT]' keyword to be used within property paths in order to access properties and
+        /// the '*' symbol to be used within property paths in order to access properties and
         /// functions supplied on the context object.</param>
         /// <returns></returns>
         public static string ToString(this object obj, string format, char openTag = '{', char closeTag = '}',

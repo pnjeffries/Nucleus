@@ -30,7 +30,10 @@ using Nucleus.Base;
 namespace Nucleus.Geometry
 {
     /// <summary>
-    /// A curve consisting of straight lines between vertices
+    /// A curve consisting of straight lines between vertices.
+    /// A polyline may be either open or closed - if closed the
+    /// last vertex is assumed to have a line segment connecting
+    /// it to the first vertex.
     /// </summary>
     [Serializable]
     public class PolyLine : Curve
@@ -410,6 +413,29 @@ namespace Nucleus.Geometry
         {
             var result = new List<ISimpleCurve>();
             result.AddRange(ToLines());
+            return result;
+        }
+
+        /// <summary>
+        /// Automatically tidy up this polyline by removing any adjacent 
+        /// duplicate vertices
+        /// </summary>
+        public bool Clean()
+        {
+            bool result = false;
+            double limit = Tolerance.Distance * Tolerance.Distance;
+            for (int i = SegmentCount; i > 0; i--)
+            {
+                // Check distance between adjacent vertices and remove
+                // any that are closer than tolerance
+                Vertex v0 = Vertices[i-1];
+                Vertex v1 = Vertices.GetWrapped(i);
+                if (v0.DistanceToSquared(v1) <= limit)
+                {
+                    Vertices.RemoveAt(i-1);
+                    result = true;
+                }  
+            }
             return result;
         }
 

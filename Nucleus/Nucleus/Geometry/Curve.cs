@@ -553,6 +553,39 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find the region of this curve (expressed as a parameter interval) which
+        /// overlaps with another curve, determined by projecting the start and end 
+        /// points of said curve onto this one.
+        /// </summary>
+        /// <param name="other">Another curve.  For the most meaningful results,
+        /// should run roughly parallel to this one.</param>
+        /// <returns></returns>
+        public Interval OverlapWith(Curve other)
+        {
+            //TODO: More sophisticated method for closed curves?
+            return new Interval(
+                ClosestParameter(other.StartPoint),
+                ClosestParameter(other.EndPoint));
+        }
+
+        /// <summary>
+        /// Find the region of this curve (expressed as a parameter interval) which
+        /// overlaps with a region of another curve, determined by projecting the
+        /// start and end of the specified domain on the other curve onto this one.
+        /// </summary>
+        /// <param name="other">Another curve.  For the most meaningful results,
+        /// should run roughly parallel to this one.</param>
+        /// <param name="domainOnOther">The region of the other curve to overlap
+        /// with this curve.</param>
+        /// <returns></returns>
+        public Interval OverlapWith(Curve other, Interval domainOnOther)
+        {
+            return new Interval(
+                ClosestParameter(other.PointAt(domainOnOther.Start)),
+                ClosestParameter(other.PointAt(domainOnOther.End)));
+        }
+
+        /// <summary>
         /// Calculate the shortest distance squared from this curve to the specified point
         /// </summary>
         /// <param name="point">The test point to find the distance to</param>
@@ -733,6 +766,22 @@ namespace Nucleus.Geometry
                 result += CalculateSegmentLength(i);
             }
             return result;
+        }
+
+        /// <summary>
+        /// Calculate the area enclosed by this curve, were the start and end points to be 
+        /// joined by a straight line segment.
+        /// A plane may optionally be specified, otherwise by default the projected area on 
+        /// the XY plane will be used.
+        /// </summary>
+        /// <param name="onPlane">The plane to use to calculate the area.
+        /// If not specified, the XY plane will be used.</param>
+        /// <returns>The signed area enclosed by this curve on the specified plane,
+        /// as a double.</returns>
+        public double CalculateEnclosedArea(Plane onPlane = null)
+        {
+            Vector c;
+            return CalculateEnclosedArea(out c, onPlane);
         }
 
         /// <summary>

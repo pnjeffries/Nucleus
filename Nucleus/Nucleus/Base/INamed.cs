@@ -37,7 +37,7 @@ namespace Nucleus.Base
         /// The name of this object
         /// </summary>
         [AutoUI(100)]
-        string Name { get; set; }
+        string Name { get; }
     }
 
     /// <summary>
