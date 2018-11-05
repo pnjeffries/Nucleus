@@ -209,12 +209,18 @@ namespace Nucleus.Base
         /// Add a collection of items to the end of this collection
         /// </summary>
         /// <param name="items">The items to be added to the end of the collection</param>
-        public void AddRange(IEnumerable<TItem> items)
+        public void AddRange<TItemSubType>(IEnumerable<TItemSubType> items)
+            where TItemSubType : TItem
         {
             _SuppressNotifyCollectionChanged = true;
-            foreach (var item in items) Add(item);
+            var newItems = new List<TItem>(items.Count());
+            foreach (var item in items)
+            {
+                Add(item);
+                newItems.Add(item);
+            }
             _SuppressNotifyCollectionChanged = false;
-            NotifyCollectionChangedMultiItem(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, new List<TItem>(items)));
+            NotifyCollectionChangedMultiItem(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, items));
         }
 
         /// <summary>

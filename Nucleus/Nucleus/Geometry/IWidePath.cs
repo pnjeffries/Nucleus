@@ -16,6 +16,8 @@ namespace Nucleus.Geometry
     /// a spine curve but that have sufficient width on plan for the left and right
     /// edges to be represented by separate curves.  For example; roads, building
     /// wings, beam representations in GAs, etc.
+    /// This interface provides attached extension functions to allow the generation
+    /// of geometry representing the boundaries of a network of paths.
     /// </summary>
     public interface IWidePath
     {
@@ -105,8 +107,6 @@ namespace Nucleus.Geometry
         /// outer edges.
         /// </summary>
         /// <param name="path"></param>
-        /// <param name="rightEndOffset"></param>
-        /// <param name="leftEndOffset"></param>
         public static void CurveInitialPathEdges(this IWidePath path)
         {
 
@@ -135,6 +135,7 @@ namespace Nucleus.Geometry
         /// <summary>
         /// Find the point on this path specified by the given parameters.
         /// </summary>
+        /// <param name="path"></param>
         /// <param name="u">A normalised parameter along the path (where 0 = Start, 1 = End)</param>
         /// <param name="v">A normalised parameter across the path (where 0 = Left, 1 = Right)</param>
         /// <returns></returns>
@@ -151,10 +152,15 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Find the points on this path specified by the given parameters
+        /// Find the points on this path specified by the given parameters.
+        /// The left and right edges of the path must have been previously
+        /// populated in order for this function to work correctly.
         /// </summary>
-        /// <param name="u">A normalised parameter along the path (where 0 = Start, 1 = End)</param>
-        /// <param name="v">A list of normalised parameters across the path (where 0 = Left, 1 = Right)</param>
+        /// <param name="path"></param>
+        /// <param name="u">A normalised parameter along the path 
+        /// (where 0 = Start, 1 = End)</param>
+        /// <param name="v">A list of normalised parameters across the path 
+        /// (where 0 = Left, 1 = Right)</param>
         /// <returns></returns>
         public static Vector[] PointsAt(this IWidePath path, double u, IList<double> v)
         {
@@ -170,6 +176,39 @@ namespace Nucleus.Geometry
                 return result;
             }
             else if (path.Spine != null) return new Vector[] { path.Spine.PointAt(u) };
+            else return null;
+        }
+
+        /// <summary>
+        /// Find the points on this path specified by the given parameters.
+        /// The right and left edges of the path must have been previously
+        /// populated in order for this function to return successfully.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="u">A list of normalised parameters along the path 
+        /// (where 0 = Start, 1 = End)</param>
+        /// <param name="v">A list of normalised parameters across the path 
+        /// (where 0 = Left, 1 = Right)</param>
+        /// <returns></returns>
+        public static Vector[,] PointsAt(this IWidePath path, IList<double> u, IList<double> v)
+        {
+            if (path.RightEdge != null && path.LeftEdge != null)
+            {
+                Vector[,] result = new Vector[u.Count, v.Count];
+                for (int i = 0; i < u.Count; i++)
+                {
+                    var vs = path.PointsAt(u[i], v);
+                    for (int j = 0; j < v.Count; j++)
+                    {
+                        result[i, j] = vs[j];
+                    }
+                }
+                return result;
+            }
+            /*else if (path.Spine != null)
+            {
+                //TODO?
+            }*/
             else return null;
         }
 

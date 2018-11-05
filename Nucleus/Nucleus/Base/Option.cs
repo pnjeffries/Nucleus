@@ -35,20 +35,6 @@ namespace Nucleus.Base
         #region Properties
 
         /// <summary>
-        /// Private backing member variable for the Parameters property
-        /// </summary>
-        private ParameterCollection _Parameters = new ParameterCollection();
-
-        /// <summary>
-        /// The set of input parameters associated with this option.  
-        /// The 'DNA' of the option.
-        /// </summary>
-        public ParameterCollection Parameters
-        {
-            get { return _Parameters; }
-        }
-
-        /// <summary>
         /// Private backing member variable for the Design property
         /// </summary>
         private TDesign _Design;

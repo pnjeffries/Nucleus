@@ -68,6 +68,7 @@
     <Compile Include="Analysis\CalcVariable.cs" />
     <Compile Include="Analysis\EC3MemberChecks.cs" />
     <Compile Include="Analysis\FlatConcreteSlabChecks.cs" />
+    <Compile Include="Base\DoubleParameter.cs" />
     <Compile Include="Base\IFastDuplicatable.cs" />
     <Compile Include="Analysis\SolarPositioning.cs" />
     <Compile Include="Base\Option.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Base\ParameterCollection.cs" />
     <Compile Include="Base\ParameterGroup.cs" />
     <Compile Include="Base\ParameterGroupCollection.cs" />
+    <Compile Include="Extensions\RandomExtensions.cs" />
     <Compile Include="Geometry\AngleIntervals.cs" />
     <Compile Include="Geometry\Cell Maps\CellMapPosition.cs" />
     <Compile Include="Geometry\Cell Maps\CellObscurance.cs" />
@@ -469,6 +471,7 @@
     <Compile Include="UI\BindingChainLink.cs" />
     <Compile Include="UI\IAutoUIHostable.cs" />
     <Compile Include="UI\IUserInteraction.cs" />
+    <Compile Include="UI\SelectionViewModel.cs" />
     <Compile Include="UI\UIOption.cs" />
     <Compile Include="Undo\CollectionUndoState.cs" />
     <Compile Include="Undo\PropertyUndoState.cs" />
