@@ -53,7 +53,14 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\ActionAttribute.cs" />
+    <Compile Include="Actions\ActionInputAttribute.cs" />
+    <Compile Include="Actions\ActionParameterAttribute.cs" />
     <Compile Include="Actions\ExecutionInfo.cs" />
+    <Compile Include="Actions\IAction.cs" />
+    <Compile Include="Actions\IContextualAction.cs" />
+    <Compile Include="Actions\IExportAction.cs" />
+    <Compile Include="Actions\PreviewParameters.cs" />
     <Compile Include="AI\Network.cs" />
     <Compile Include="AI\Neuron.cs" />
     <Compile Include="Alerts\AlertCollection.cs" />
@@ -79,6 +86,7 @@
     <Compile Include="Base\ParameterGroupCollection.cs" />
     <Compile Include="Extensions\RandomExtensions.cs" />
     <Compile Include="Geometry\AngleIntervals.cs" />
+    <Compile Include="Geometry\AnglePair.cs" />
     <Compile Include="Geometry\Cell Maps\CellMapPosition.cs" />
     <Compile Include="Geometry\Cell Maps\CellObscurance.cs" />
     <Compile Include="Geometry\Cell Maps\PartialCellObscurance.cs" />

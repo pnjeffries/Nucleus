@@ -75,11 +75,33 @@ namespace Nucleus.Extensions
         /// Shortcut for Math.Pow(x,y)
         /// </summary>
         /// <param name="value"></param>
-        /// <param name="power">The power to raise this number to</param>
+        /// <param name="power">The exponent to raise this number to</param>
         /// <returns></returns>
         public static double Power(this double value, double power)
         {
             return Math.Pow(value, power);
+        }
+
+        /// <summary>
+        /// Raise this number to an integer power.
+        /// Should be faster than Math.Pow because it does not
+        /// need to deal with the general case.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="power">The exponent to raise this number to</param>
+        /// <returns></returns>
+        public static double Power(this double value, int power)
+        {
+            if (power < 0) return 1 / (value.Power(power.Abs()));
+            double result = 1.0;
+            while (power > 0)
+            {
+                if (power % 2 == 1)
+                    result *= value;
+                power >>= 1;
+                value *= value;
+            }
+            return result;
         }
 
         /// <summary>

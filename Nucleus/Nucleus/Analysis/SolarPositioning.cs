@@ -1,4 +1,5 @@
-﻿using Nucleus.Geometry;
+﻿using Nucleus.Extensions;
+using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -306,6 +307,111 @@ namespace Nucleus.Analysis
             {4, 2.56, 6283.08}
         };
 
+        /// <summary>
+        /// The Y coefficients for sin terms given in table A4.3
+        /// </summary>
+        public static int[,] YTable = new int[,]
+        {
+            {0,0,0,0,1},
+            {-2,0,0,2,2},
+            {0,0,0,2,2},
+            {0,0,0,0,2},
+            {0,1,0,0,0},
+            {0,0,1,0,0},
+            {-2,1,0,2,2},
+            {0,0,0,2,1},
+            {0,0,1,2,2},
+            {-2,-1,0,2,2},
+            {-2,0,1,0,0},
+            {-2,0,0,2,1},
+            {0,0,-1,2,2},
+            {2,0,0,0,0},
+            {0,0,1,0,1},
+            {2,0,-1,2,2},
+            {0,0,-1,0,1},
+            {0,0,1,2,1},
+            {-2,0,2,0,0},
+            {0,0,-2,2,1},
+            {2,0,0,2,2},
+            {0,0,2,2,2},
+            {0,0,2,0,0},
+            {-2,0,1,2,2},
+            {0,0,0,2,0},
+            {-2,0,0,2,0},
+            {0,0,-1,2,1},
+            {0,2,0,0,0},
+            {2,0,-1,0,1},
+            {-2,2,0,2,2},
+            {0,1,0,0,1},
+            {-2,0,1,0,1},
+            {0,-1,0,0,1},
+            {0,0,2,-2,0},
+            {2,0,-1,2,1},
+            {2,0,1,2,2},
+            {0,1,0,2,2},
+            {-2,1,1,0,0},
+            {0,-1,0,2,2},
+            {2,0,0,2,1},
+            {2,0,1,0,0},
+            {-2,0,2,2,2},
+            {-2,0,1,2,1},
+            {2,0,-2,0,1},
+            {2,0,0,0,1},
+            {0,-1,1,0,0},
+            {-2,-1,0,2,1},
+            {-2,0,0,0,1},
+            {0,0,2,2,1},
+            {-2,0,2,0,1},
+            {-2,1,0,2,1},
+            {0,0,1,-2,0},
+            {-1,0,1,0,0},
+            {-2,1,0,0,0},
+            {1,0,0,0,0},
+            {0,0,1,2,0},
+            {0,0,-2,2,2},
+            {-1,-1,1,0,0},
+            {0,1,1,0,0},
+            {0,-1,1,2,2},
+            {2,-1,-1,2,2},
+            {0,0,3,2,2},
+            {2,-1,0,2,2}
+        };
+
+        /// <summary>
+        /// The column of 'a' coefficients from table A4.3
+        /// </summary>
+        public static double[] aTable = new double[]
+            {-171996,-13187,-2274,2062,1426,712,-517,-386,-301,217,-158,129,123,63,63,-59,
+                -58,-51,48, 46,-38,-31,29,29,26,-22,21,17,16,-16,-15,-13,-12,11,-10,-8,7,
+                -7,-7,-7,6,6,6,-6,-6,5,-5,-5,-5,4,4,4,-4,-4,-4,3,-3,-3,-3,-3,-3,-3,-3};
+
+        /// <summary>
+        /// The column of 'b' coefficients from table A4.3
+        /// </summary>
+        public static double[] bTable = new double[]
+            {-174.2,1.6,-0.2,0.2,-3.4,0.1, 1.2,-0.4,0,-0.5, 0,0.1,0,0,0.1,
+                0,-0.1,0, 0,  0,  0,  0,  0,  0,  0,  0,  0,  -0.1,   0,  0.1,    0,  0,
+                0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0};
+
+        /// <summary>
+        /// The column of 'c' coefficients from table A4.3
+        /// </summary>
+        public static double[] cTable = new double[]
+            {92025, 5736,   977,    -895,   54, -7, 224,    200,    129,    -95,    0,  -70,
+             -53,    0,  -33,    26, 32, 27, 0,  -24,    16, 13, 0,  -12,    0,  0,  -10,    0,
+             -8, 7,  9,  7,  6,  0,  5,  3,  -3, 0,  3,  3,  0,  -3, -3, 3,  3,  0,  3,  3,  3,
+                0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0};
+
+        /// <summary>
+        /// The column of 'd' coefficients from table A4.3
+        /// </summary>
+        public static double[] dTable = new double[]
+            {8.9,   -3.1,   -0.5,   0.5,    -0.1,   0,  -0.6,   0,  -0.1,   0.3,    0,  0,  0,  0,
+                0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                0,  0,  0,  0,  0,  0,  0 };
+
         #endregion
 
         /// <summary>
@@ -417,11 +523,13 @@ namespace Nucleus.Analysis
             double L4 = CalculateHeliocentricComponent(L4Table, julianMillenium);
             double L5 = CalculateHeliocentricComponent(L5Table, julianMillenium);
 
-            Angle L = (L0 + L1 * julianMillenium +
-                L2 * Math.Pow(julianMillenium, 2) +
-                L3 * Math.Pow(julianMillenium, 3) +
-                L4 * Math.Pow(julianMillenium, 4) +
-                L5 * Math.Pow(julianMillenium, 5)) / Math.Pow(10, 8);
+            Angle L = (L0 + 
+                L1 * julianMillenium +
+                L2 * julianMillenium.Power(2) +
+                L3 * julianMillenium.Power(3) +
+                L4 * julianMillenium.Power(4) +
+                L5 * julianMillenium.Power(5)) / 
+                (10.0).Power(8);
 
             return L.NormalizeTo2PI();
         }
@@ -439,7 +547,7 @@ namespace Nucleus.Analysis
 
             Angle B = (B0 + B1 * julianMillenium) / Math.Pow(10, 8);
 
-            return B;//.NormalizeTo2PI();
+            return B;
         }
 
         /// <summary>
@@ -463,5 +571,309 @@ namespace Nucleus.Analysis
 
             return R;
         }
+
+        /// <summary>
+        /// Calculate the geocentric longitude from the heliocentric longitude
+        /// </summary>
+        /// <param name="hcLong"></param>
+        /// <returns></returns>
+        public static Angle CalculateGeocentricLongitude(Angle hcLong)
+        {
+            return (hcLong + Angle.Straight).NormalizeTo2PI();
+        }
+
+        /// <summary>
+        /// Calculate the geocentric latitude from the heliocentric latitude
+        /// </summary>
+        /// <param name="hcLat"></param>
+        /// <returns></returns>
+        public static Angle CalculateGeocentricLatitude(Angle hcLat)
+        {
+            return -hcLat;
+        }
+
+        /// <summary>
+        /// Calculate the coefficient values used to calculate the 
+        /// nutation in longitude and obliquity.
+        /// Steps 3.4.1 to 3.4.5 and equations (15) to (19) in
+        /// the NREL paper.
+        /// </summary>
+        /// <param name="julianCentury"></param>
+        /// <returns></returns>
+        public static Angle[] CalculateNutationCoefficients(double julianCentury)
+        {
+            double jC2 = julianCentury * julianCentury;
+            double jC3 = jC2 * julianCentury;
+
+            // mean elongation of the moon from the sun:
+            Angle X0 = Angle.FromDegrees(
+                297.85036 + 445267.111480 * julianCentury -
+                0.0019142 * jC2 + jC3 / 189474);
+
+            // mean anomaly of the sun:
+            Angle X1 = Angle.FromDegrees(
+                357.52772 + 35999.050340 * julianCentury -
+                0.0001603 * jC2 - jC3 / 300000);
+
+            // mean anomaly of the moon:
+            Angle X2 = Angle.FromDegrees(
+                134.96298 + 477198.867398 * julianCentury +
+                0.0086972 * jC2 + jC3 / 56250);
+
+            // moon’s argument of latitude:
+            Angle X3 = Angle.FromDegrees(
+                93.27191 + 483202.017538 * julianCentury -
+                0.0036825 * jC2 + jC3 / 327270);
+
+            // longitude of the ascending node of the moon’s mean orbit on the
+            // ecliptic, measured from the mean equinox of the date:
+            Angle X4 = Angle.FromDegrees(
+                125.04452 - 1934.136261 * julianCentury +
+                0.0020708 * jC2 + jC3 / 450000);
+
+            return new Angle[] { X0, X1, X2, X3, X4 };
+        }
+
+        /// <summary>
+        /// Calculate the nutation in longitude for a specified julian century.
+        /// Step 3.4.7 and equations (20) and (22) in the NREL paper.
+        /// </summary>
+        /// <param name="julianCentury"></param>
+        /// <param name="X"></param>
+        /// <returns></returns>
+        public static Angle CalculateNutationInLongitude(double julianCentury, Angle[] X)
+        {
+            double sum = 0;
+            for (int i = 0; i < aTable.Length; i++)
+            {
+                double sum2 = 0;
+                for (int j = 0; j <= 4; j++)
+                {
+                    sum2 += X[j] * YTable[i, j];
+                }
+                sum += (aTable[i] + bTable[i] * julianCentury) * Math.Sin(sum2);
+            }
+            return Angle.FromDegrees(sum / 36000000);
+        }
+
+        /// <summary>
+        /// Calculate the nutation in longitude for a specified julian century.
+        /// Step 3.4.7 and equations (20) and (22) in the NREL paper.
+        /// </summary>
+        /// <param name="julianCentury"></param>
+        /// <param name="X"></param>
+        /// <returns></returns>
+        public static Angle CalculateNutationInObliquity(double julianCentury, Angle[] X)
+        {
+            double sum = 0;
+            for (int i = 0; i < cTable.Length; i++)
+            {
+                double sum2 = 0;
+                for (int j = 0; j <= 4; j++)
+                {
+                    sum2 += X[j] * YTable[i, j];
+                }
+                sum += (cTable[i] + dTable[i] * julianCentury) * Math.Cos(sum2);
+            }
+            return Angle.FromDegrees(sum / 36000000);
+        }
+
+        /// <summary>
+        /// Calculate the true obliquity of the eliptic.
+        /// Step 3.5 and equations (24) and (25) in the NREL paper
+        /// </summary>
+        /// <param name="julianMillenium"></param>
+        /// <param name="obliquityNutation"></param>
+        /// <returns></returns>
+        public static Angle CalculateTrueObliquityOfTheEliptic(double julianMillenium, Angle obliquityNutation)
+        {
+            double U = julianMillenium / 10;
+            double e0 = 84381.448 - 4680.93 * U - 1.55 * U * U + 1999.25 * U * U * U -
+                51.38 * U.Power(4) - 249.67 * U.Power(5) - 39.05 * U.Power(6) +
+                7.12 * U.Power(7) + 27.87 * U.Power(8) + 5.79 * U.Power(9) +
+                2.45 * U.Power(10);
+            return Angle.FromDegrees(e0 / 3600) + obliquityNutation;
+        }
+
+        /// <summary>
+        /// Calculate the aberration correction angle.
+        /// Step 3.6 and equation (26) in the NREL paper
+        /// </summary>
+        /// <param name="R"></param>
+        /// <returns></returns>
+        public static Angle CalculateAberrationCorrection(double R)
+        {
+            return -Angle.FromDegrees(20.4898 / (3600 * R));
+        }
+
+        /// <summary>
+        /// Calculate the apparent sun longitude.
+        /// Step 3.7 and equation (27) in the NREL paper
+        /// </summary>
+        /// <param name="geocentricLongitude"></param>
+        /// <param name="longitudeNutation"></param>
+        /// <param name="aberrationCorrection"></param>
+        /// <returns></returns>
+        public static Angle CalculateApparentSunLongitude(
+            Angle geocentricLongitude, Angle longitudeNutation, Angle aberrationCorrection)
+        {
+            return geocentricLongitude + longitudeNutation + aberrationCorrection;
+        }
+
+        /// <summary>
+        /// Calculate the apparent sidereal time at Greenwich.
+        /// Step 3.8 and equations (28) and (29) in the NREL paper
+        /// </summary>
+        public static Angle CalculateApparentSiderealTime(double julianDay, double julianCentury,
+            Angle longitudeNutation, Angle eclipticObliquity)
+        {
+            Angle v0 = Angle.FromDegrees(
+                280.46061837
+                + 360.98564736629 * (julianDay - 2451545)
+                + 0.000387933 * julianCentury * julianCentury
+                - (julianCentury * julianCentury * julianCentury) / 38710000.0);
+            v0 = v0.NormalizeTo2PI();
+            return v0 + longitudeNutation * Math.Cos(eclipticObliquity);
+        }
+
+        /// <summary>
+        /// Calculate the geocentric sun right ascension.
+        /// Step 3.8 and equation (30) in the NREL paper
+        /// </summary>
+        public static Angle CalculateGeocentricSunRightAscension(Angle apparentSunLong, Angle eclipticObliquity,
+            Angle gcLatitude)
+        {
+            Angle alpha = Math.Atan2(Math.Sin(apparentSunLong) * Math.Cos(eclipticObliquity) -
+                Math.Tan(gcLatitude) * Math.Sin(eclipticObliquity),
+                Math.Cos(apparentSunLong));
+            return alpha.NormalizeTo2PI();
+        }
+
+        /// <summary>
+        /// Calculate the geocentric sun declination.
+        /// Step 3.10 in the NREL paper.
+        /// </summary>
+        /// <param name="apparentSunLong"></param>
+        /// <param name="eclipticObliquity"></param>
+        /// <param name="gcLatitude"></param>
+        /// <returns></returns>
+        public static Angle CalculateGeocentricSunDeclination(Angle apparentSunLong, Angle eclipticObliquity,
+            Angle gcLatitude)
+        {
+            Angle gsd = Math.Asin(Math.Sin(gcLatitude) * Math.Cos(eclipticObliquity)
+                + Math.Cos(gcLatitude) * Math.Sin(eclipticObliquity) * Math.Sin(apparentSunLong));
+            return gsd;
+        }
+        
+        /// <summary>
+        /// Calculate the observer local hour angle, H
+        /// Step 3.11 and equation (32) in the NREL paper
+        /// </summary>
+        /// <param name="siderealTime"></param>
+        /// <param name="observerLongitude"></param>
+        /// <param name="sunRightAscension"></param>
+        /// <returns></returns>
+        public static Angle CalculateObserverLocalHourAngle(Angle siderealTime, Angle observerLongitude, 
+            Angle sunRightAscension)
+        {
+            return (siderealTime + observerLongitude - sunRightAscension).NormalizeTo2PI();
+        }
+
+        /// <summary>
+        /// Calculate the topocentric sun right ascension
+        /// Step 3.12 in the NREL paper
+        /// </summary>
+        /// <param name="earthRadiusVector"></param>
+        /// <param name="deltaAlpha">Output.   Parallax in the sun right ascension.</param>
+        /// <param name="alphaDash">Output.   Topocentric sun right ascension.</param>
+        /// <returns></returns>
+        public static Angle CalculateTopocentricSunDeclanation(double earthRadiusVector, 
+            Angle observerLatitude, double observerElevation, Angle observerLocalHour,
+            Angle gcSunDeclination, Angle sunRightAscension, 
+            out Angle deltaAlpha, out Angle alphaDash)
+        {
+            Angle xi = Angle.FromDegrees(8.794 / (3600.0 * earthRadiusVector));
+            Angle u = Math.Atan(0.99664719 * Math.Tan(observerLatitude));
+            double x = Math.Cos(u) + (observerElevation / 6378140.0) * Math.Cos(observerLatitude);
+            double y = 0.99664719 * Math.Sin(u) + (observerElevation / 6378140.0) * Math.Sin(observerLatitude);
+            double denom = Math.Cos(gcSunDeclination) - x * Math.Sin(xi) * Math.Cos(observerLocalHour);
+            deltaAlpha = Math.Atan2(-x * Math.Sin(xi) * Math.Sin(observerLocalHour), denom);
+            alphaDash = sunRightAscension + deltaAlpha;
+            return
+                Math.Atan2(
+                    (Math.Sin(gcSunDeclination) - y * Math.Sin(xi)) * Math.Cos(deltaAlpha), denom);
+        }
+
+        /// <summary>
+        /// Calculate the topocentric local hour angle.
+        /// Step 3.13 in the NREL paper
+        /// </summary>
+        /// <param name="localHourAngle"></param>
+        /// <param name="deltaAlpha"></param>
+        /// <returns></returns>
+        public static Angle CalculateTopocentricLocalHourAngle(Angle localHourAngle, Angle deltaAlpha)
+        {
+            return localHourAngle - deltaAlpha;
+        }
+
+        /// <summary>
+        /// Calculate the topocentric zenith angle.
+        /// Step 3.14 in the NREL paper.
+        /// </summary>
+        /// <param name="latitude"></param>
+        /// <param name="gcSunDeclination"></param>
+        /// <param name="tcLocalHour"></param>
+        /// <param name="pressure"></param>
+        /// <param name="temperature"></param>
+        /// <returns></returns>
+        public static Angle CalculateTopocentricZenithAngle(Angle latitude, Angle gcSunDeclination,
+            Angle tcLocalHour, double pressure, double temperature)
+        {
+            Angle e0 = Math.Asin(Math.Sin(latitude) * Math.Sin(gcSunDeclination) +
+                Math.Cos(latitude) * Math.Cos(gcSunDeclination) * Math.Cos(tcLocalHour));
+            Angle deltae = Angle.FromDegrees((pressure / 1010.0) * (283.0 / (273.0 + temperature)) *
+                1.02 / (60.0 * Math.Tan(Angle.FromDegrees(e0.Degrees + 10.3 / (e0.Degrees + 5.11)))));
+            Angle e = e0 + deltae;
+            Angle theta = Angle.Right - e;
+            return theta;
+        }
+
+
+        /// <summary>
+        /// Calculate topocentric azimuth angle.
+        /// Step 3.15 in the NREL paper.
+        /// </summary>
+        /// <returns>An angle measured eastward from north</returns>
+        public static Angle CalculateTopocentricAzimuthAngle(Angle tcLocalHour, Angle latitude,
+            Angle gcSunDeclination)
+        {
+            Angle ro = Math.Atan2(Math.Sin(tcLocalHour),
+                Math.Cos(tcLocalHour) * Math.Sin(latitude) - Math.Tan(gcSunDeclination) * Math.Cos(latitude));
+            return (ro + Angle.Straight).NormalizeTo2PI(); //TODO: Adjust
+        }
+
+        /// <summary>
+        /// Calculate the incidence angle to an inclined plane.
+        /// Step 3.16 and equation (47)
+        /// </summary>
+        /// <param name="slope">The slope of the surface measured from the horizontal plane</param>
+        /// <param name="surfaceAzimuth"> the surface azimuth rotation angle, measured from south 
+        /// to the projection of the surface normal on the horizontal plane, positive or negative 
+        /// if oriented west or east from south, respectively</param>
+        /// <param name="theta">The topocentric zenith angle</param>
+        /// <param name="sunAzimuth">The sun azimuth</param>
+        /// <param name="sunLongitude">The apparent sun longitude</param>
+        /// <returns></returns>
+        public static Angle CalculateIncidenceAngle(Angle slope, Angle surfaceAzimuth, Angle theta, 
+            Angle sunAzimuth, Angle sunLongitude)
+        {
+            Angle I = Math.Acos(Math.Cos(theta) * Math.Cos(slope) +
+                Math.Sin(slope) * Math.Sin(theta) * Math.Cos(sunAzimuth + sunLongitude));
+            return I;
+        }
+
+        public static AnglePair CalculateSunPosition(DateTime time, Angle latitude, Angle longitude,
+            double elevation)
+
     }
 }

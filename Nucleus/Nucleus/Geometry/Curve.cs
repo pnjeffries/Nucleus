@@ -553,6 +553,39 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find the region of this curve (expressed as a parameter interval) which
+        /// overlaps with another curve, determined by projecting the start and end 
+        /// points of said curve onto this one.
+        /// </summary>
+        /// <param name="other">Another curve.  For the most meaningful results,
+        /// should run roughly parallel to this one.</param>
+        /// <returns></returns>
+        public Interval OverlapWith(Curve other)
+        {
+            //TODO: More sophisticated method for closed curves?
+            return new Interval(
+                ClosestParameter(other.StartPoint),
+                ClosestParameter(other.EndPoint));
+        }
+
+        /// <summary>
+        /// Find the region of this curve (expressed as a parameter interval) which
+        /// overlaps with a region of another curve, determined by projecting the
+        /// start and end of the specified domain on the other curve onto this one.
+        /// </summary>
+        /// <param name="other">Another curve.  For the most meaningful results,
+        /// should run roughly parallel to this one.</param>
+        /// <param name="domainOnOther">The region of the other curve to overlap
+        /// with this curve.</param>
+        /// <returns></returns>
+        public Interval OverlapWith(Curve other, Interval domainOnOther)
+        {
+            return new Interval(
+                ClosestParameter(other.PointAt(domainOnOther.Start)),
+                ClosestParameter(other.PointAt(domainOnOther.End)));
+        }
+
+        /// <summary>
         /// Calculate the shortest distance squared from this curve to the specified point
         /// </summary>
         /// <param name="point">The test point to find the distance to</param>
