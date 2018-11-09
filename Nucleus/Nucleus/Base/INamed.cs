@@ -29,7 +29,7 @@ using System.Threading.Tasks;
 namespace Nucleus.Base
 {
     /// <summary>
-    /// Interface for objects which can be named
+    /// Interface for objects which have a name
     /// </summary>
     public interface INamed
     {
@@ -38,6 +38,19 @@ namespace Nucleus.Base
         /// </summary>
         [AutoUI(100)]
         string Name { get; }
+    }
+
+    /// <summary>
+    /// Interface for objects which have a name that
+    /// can be changed.
+    /// </summary>
+    public interface IMutableNamed : INamed
+    {
+        /// <summary>
+        /// The name of this object
+        /// </summary>
+        [AutoUI(100)]
+        new string Name { set; }
     }
 
     /// <summary>
