@@ -803,6 +803,24 @@ namespace Nucleus.Geometry
             return double.NaN;
         }
 
+        /// <summary>
+        /// Convert this mesh face into an array of integers
+        /// representing the indices of the vertices in this face.
+        /// The 'Number' property of the face vertices should
+        /// have been populated prior to calling this function (for
+        /// e.g. via the AssingVertexIndices function on VertexCollection)
+        /// </summary>
+        /// <returns></returns>
+        public int[] ToIndexArray()
+        {
+            var result = new int[Count];
+            for (int i = 0; i < Count; i++)
+            {
+                result[i] = this[i].Number;
+            }
+            return result;
+        }
+
         #endregion
 
     }

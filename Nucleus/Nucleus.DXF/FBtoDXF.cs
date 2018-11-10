@@ -269,6 +269,28 @@ namespace Nucleus.DXF
         }
 
         /// <summary>
+        /// Convert a .Nucleus mesh into a netDXF equivalent
+        /// </summary>
+        /// <param name="mesh"></param>
+        /// <returns></returns>
+        public static nDE.Mesh Convert(Mesh mesh)
+        {
+            mesh.Vertices.AssignVertexIndices(0);
+            var vertices = new List<Vector3>(mesh.VertexCount);
+            foreach (var vertex in mesh.Vertices)
+            {
+                vertices.Add(Convert(vertex.Position));
+            }
+            var faces = new List<int[]>(mesh.FaceCount);
+            foreach (var face in mesh.Faces)
+            {
+                faces.Add(face.ToIndexArray());
+            }
+            var result = new nDE.Mesh(vertices, faces);
+            return result;
+        }
+
+        /// <summary>
         /// Convert a Nucleus layer to a netDXF one
         /// </summary>
         /// <param name="layer"></param>
@@ -290,7 +312,7 @@ namespace Nucleus.DXF
         public static IList<nDE.EntityObject> Convert(VertexGeometry geo, IList<nDE.EntityObject> result = null)
         {
             if (result == null) result = new List<nDE.EntityObject>();
-            
+
             if (geo is Line) result.Add(Convert((Line)geo));
             else if (geo is PolyLine) result.Add(Convert((PolyLine)geo));
             else if (geo is Arc) result.Add(Convert((Arc)geo));
@@ -299,6 +321,7 @@ namespace Nucleus.DXF
             else if (geo is Label) result.Add(Convert((Label)geo));
             else if (geo is Point) result.Add(Convert((Point)geo));
             else if (geo is Cloud) Convert((Cloud)geo, result);
+            else if (geo is Mesh) result.Add(Convert((Mesh)geo));
             return result;
         }
     }

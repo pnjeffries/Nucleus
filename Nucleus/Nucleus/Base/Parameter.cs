@@ -57,6 +57,21 @@ namespace Nucleus.Base
             set { _Units = value; }
         }
 
+        /// <summary>
+        /// Private backing field for the Description property
+        /// </summary>
+        private string _Description = null;
+
+        /// <summary>
+        /// Get or set the description of this parameter.
+        /// May be used as a tooltip.
+        /// </summary>
+        public string Description
+        {
+            get { return _Description; }
+            set { _Description = value; }
+        }
+
         #endregion
 
         #region Constructor
@@ -139,17 +154,35 @@ namespace Nucleus.Base
         /// Creates a new parameter with the specified name, group
         /// and initial value.
         /// </summary>
-        /// <param name="name">The name of this parameter</param>
+        /// <param name="name">The name of this parameter.</param>
         /// <param name="group">The group within which this parameter
-        /// should be displayed</param>
-        /// <param name="value">The initial value of the parameter</param>
-        /// <param name="units">The units in which the parameter is expressed</param>
+        /// should be displayed.</param>
+        /// <param name="value">The initial value of the parameter.</param>
+        /// <param name="units">The units in which the parameter is expressed.</param>
         public Parameter(string name, ParameterGroup group, T value, MeasurementUnit units = null) 
             : this(name, value, units)
         {
             Group = group;
         }
 
+        /// <summary>
+        /// Creates a new parameter with the specified name, group,
+        /// initial value and description.
+        /// </summary>
+        /// <param name="name">The name of this parameter.</param>
+        /// <param name="group">The group within which this parameter
+        /// should be displayed.</param>
+        /// <param name="value">The initial value of the parameter.</param>
+        /// <param name="description">The description of the parameter's function.</param>
+        /// <param name="units">The units in which the parameter is expressed.</param>
+        public Parameter(string name, ParameterGroup group, T value, string description, MeasurementUnit units = null)
+            : this(name, value, units)
+        {
+            Group = group;
+            Description = description;
+        }
+
         #endregion
+
     }
 }

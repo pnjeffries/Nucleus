@@ -199,6 +199,7 @@ namespace Nucleus.Geometry
             Z = 0;
         }
 
+        /*
         /// <summary>
         /// Angle constructor.
         /// Create a new vector on the XY plane pointing in the specified
@@ -214,6 +215,7 @@ namespace Nucleus.Geometry
             Y = Math.Cos(angle) * magnitude;
             Z = 0;
         }
+        */
 
         /// <summary>
         /// Validity constructor.

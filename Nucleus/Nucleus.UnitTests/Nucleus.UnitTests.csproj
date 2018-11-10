@@ -49,6 +49,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DDTreeTests.cs" />
     <Compile Include="MathsTests.cs" />
     <Compile Include="CurveTests.cs" />
     <Compile Include="ExtensionsTests.cs" />

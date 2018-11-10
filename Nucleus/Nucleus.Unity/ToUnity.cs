@@ -31,6 +31,21 @@ namespace Nucleus.Unity
         }
 
         /// <summary>
+        /// Convert an array of .Nucleus vectors to a 3D Unity equivalent
+        /// </summary>
+        /// <param name="vs">The array of .Nucleus vectors to convert</param>
+        /// <returns></returns>
+        public static Vector3[] Convert(Vector[] vs)
+        {
+            var result = new Vector3[vs.Length];
+            for (int i = 0; i < vs.Length; i++)
+            {
+                result[i] = Convert(vs[i]);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Convert a .Nucleus vector to a 2D Unity equivalent
         /// </summary>
         /// <param name="v"></param>

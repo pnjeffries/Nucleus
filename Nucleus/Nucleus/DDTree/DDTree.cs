@@ -261,6 +261,45 @@ namespace Nucleus.DDTree
             }
         }
 
+        /// <summary>
+        /// Find the minimum position of the specified entry in the tree in the
+        /// specified axis
+        /// </summary>
+        /// <param name="dimension"></param>
+        /// <param name="entry"></param>
+        /// <returns></returns>
+        public double MinInDimension(CoordinateAxis dimension, T entry)
+        {
+            switch (dimension)
+            {
+                case CoordinateAxis.X:
+                    return MinXOf(entry);
+                case CoordinateAxis.Y:
+                    return MinYOf(entry);
+                default:
+                    return MinZOf(entry);
+            }
+        }
+
+        /// <summary>
+        /// Find the maximum position of the specified entry in the tree in the
+        /// specified axis
+        /// </summary>
+        /// <param name="dimension"></param>
+        /// <param name="entry"></param>
+        /// <returns></returns>
+        public double MaxInDimension(CoordinateAxis dimension, T entry)
+        {
+            switch (dimension)
+            {
+                case CoordinateAxis.X:
+                    return MaxXOf(entry);
+                case CoordinateAxis.Y:
+                    return MaxYOf(entry);
+                default:
+                    return MaxZOf(entry);
+            }
+        }
 
         /// <summary>
         /// Overridable function which allows filtering of results for
