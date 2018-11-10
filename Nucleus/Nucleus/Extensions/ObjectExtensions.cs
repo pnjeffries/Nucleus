@@ -40,12 +40,12 @@ namespace Nucleus.Extensions
             if (iLast > 0)
             {
                 string rootPath = path.Substring(0, iLast);
-                setOn = obj.GetFromPath(path, context);
+                setOn = obj.GetFromPath(rootPath, context);
                 path = path.Substring(iLast + 1);
             }
             if (setOn != null)
             {
-                PropertyInfo pInfo = obj.GetType().GetProperty(path);
+                PropertyInfo pInfo = setOn.GetType().GetProperty(path);
                 value = Convert.ChangeType(value, pInfo.PropertyType);
                 pInfo.SetValue(setOn, value);
             }
@@ -127,11 +127,25 @@ namespace Nucleus.Extensions
                         {
                             key = token.Substring(keyStart + 1);
                             token = token.Substring(0, keyStart);
+                            if (keyStart == 0) token = "Item";
                         }
                     }
                     if (key != null)
                     {
                         info = type.GetProperty(token, new Type[] { key.GetType() });
+                        if (info == null)
+                        {
+                            //Property accessor isn't indexed, but maybe the object itself is...
+                            info = type.GetProperty(token);
+                            if (info != null)
+                            {
+                                obj = info.GetValue(obj, null);
+                                if (obj != null)
+                                {
+                                    info = obj.GetType().GetProperty("Item", new Type[] { key.GetType() });
+                                }
+                            }
+                        }
                     }
                     else info = type.GetProperty(token);
                     if (info == null)

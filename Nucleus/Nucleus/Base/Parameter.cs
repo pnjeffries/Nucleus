@@ -54,7 +54,7 @@ namespace Nucleus.Base
         public MeasurementUnit Units
         {
             get { return _Units; }
-            set { _Units = null; }
+            set { _Units = value; }
         }
 
         #endregion

@@ -51,6 +51,8 @@
   <ItemGroup>
     <Compile Include="MathsTests.cs" />
     <Compile Include="CurveTests.cs" />
+    <Compile Include="ExtensionsTests.cs" />
+    <Compile Include="ParameterTests.cs" />
     <Compile Include="SolarPositioningTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VectorTests.cs" />

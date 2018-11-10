@@ -34,7 +34,10 @@ namespace Nucleus.Base
     /// </summary>
     [Serializable]
     public abstract class Unique 
-        : NotifyPropertyChangedBase, IUnique, IDuplicatable, IUniqueWithModifiableGUID
+        : NotifyPropertyChangedBase, 
+        IUnique, 
+        IDuplicatable, 
+        IUniqueWithModifiableGUID
     {
         #region Properties
 
@@ -55,5 +58,7 @@ namespace Nucleus.Base
         }
 
         #endregion
+
+        
     }
 }

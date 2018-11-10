@@ -24,8 +24,7 @@ namespace Nucleus.UnitTests
 
             Vector centroid;
             double area = polyCrv.CalculateEnclosedArea(out centroid);
-            throw new NotImplementedException();
-            //TODO: Assert!
+            Assert.AreEqual(205.309725, area, 0.0001);
         }
 
         [TestMethod]
@@ -100,8 +99,11 @@ namespace Nucleus.UnitTests
             polyCrv.AddArc(new Vector(10, 0));
             polyCrv.Add(new PolyLine(new Vector(10, 0), new Vector(5, 0), new Vector(5, -5)));
 
-            var polyCrv2 = polyCrv.FastDuplicate();
-            Assert.AreEqual(polyCrv.Length, polyCrv2.Length);
+            for (int i = 0; i < 1000; i++)
+            {
+                var polyCrv2 = polyCrv.FastDuplicate();
+                Assert.AreEqual(polyCrv.Length, polyCrv2.Length);
+            }
         }
 
         [TestMethod]
@@ -111,8 +113,11 @@ namespace Nucleus.UnitTests
             polyCrv.AddArc(new Vector(10, 0));
             polyCrv.Add(new PolyLine(new Vector(10, 0), new Vector(5, 0), new Vector(5, -5)));
 
-            var polyCrv2 = polyCrv.Duplicate();
-            Assert.AreEqual(polyCrv.Length, polyCrv2.Length);
+            for (int i = 0; i < 1000; i++)
+            {
+                var polyCrv2 = polyCrv.Duplicate();
+                Assert.AreEqual(polyCrv.Length, polyCrv2.Length);
+            }
         }
 
         [TestMethod]

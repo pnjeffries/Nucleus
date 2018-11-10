@@ -190,11 +190,28 @@ namespace Nucleus.Geometry
         /// Create a new vector on the XY plane pointing in the specified
         /// angle anticlockwise from the global X-axis.
         /// </summary>
-        /// <param name="angle">The angle, clockwise from the global X axis.  In radians.</param>
+        /// <param name="angle">The angle of the direction of the vector, clockwise
+        /// from the global X axis.  In radians.</param>
         public Vector(Angle angle)
         {
             X = Math.Cos(angle);
             Y = Math.Sin(angle);
+            Z = 0;
+        }
+
+        /// <summary>
+        /// Angle constructor.
+        /// Create a new vector on the XY plane pointing in the specified
+        /// angle anticlockwise from the global X-axis with the specified
+        /// magnitude.
+        /// </summary>
+        /// <param name="angle">The angle of the direction of the vector, clockwise 
+        /// from the global X axis.  In radians.</param>
+        /// <param name="magnitude">The magnitude of the vector</param>
+        public Vector(Angle angle, double magnitude)
+        {
+            X = Math.Cos(angle) * magnitude;
+            Y = Math.Cos(angle) * magnitude;
             Z = 0;
         }
 

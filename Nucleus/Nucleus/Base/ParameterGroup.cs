@@ -13,7 +13,7 @@ namespace Nucleus.Base
     /// to define their 
     /// </summary>
     [Serializable]
-    public class ParameterGroup : Named, IComparable<ParameterGroup>
+    public class ParameterGroup : Named, IComparable, IComparable<ParameterGroup>
     {
         #region Properties
 
@@ -74,7 +74,21 @@ namespace Nucleus.Base
         /// <returns></returns>
         public int CompareTo(ParameterGroup other)
         {
-            return Order.CompareTo(other.Order);
+            int result = Order.CompareTo(other.Order);
+            if (result == 0) return GUID.CompareTo(other.GUID);
+            return result;
+        }
+
+        /// <summary>
+        /// IComparable implementation to aid sorting groups
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public int CompareTo(object obj)
+        {
+            if (obj is ParameterGroup)
+                return CompareTo((ParameterGroup)obj);
+            else return 0;
         }
 
         #endregion
