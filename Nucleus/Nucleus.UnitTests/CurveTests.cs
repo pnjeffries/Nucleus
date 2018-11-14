@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nucleus.Base;
 using Nucleus.Geometry;
+using Nucleus.Maths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -130,6 +131,19 @@ namespace Nucleus.UnitTests
             Curve subCrv = polyCrv.Extract(domain);
 
             Assert.AreEqual(20, subCrv.Length, 0.00001);
+
+        }
+
+        [TestMethod]
+        public void CurveOverlapTest()
+        {
+            var crv1 = new Line(0, 0, 0, 10);
+
+            var crv2 = new Line(1, 5, 1, 15);
+
+            Interval intval = crv1.OverlapWith(crv2);
+            Assert.AreEqual(0.5, intval.Start);
+            Assert.AreEqual(1, intval.End);
         }
 
         

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeBuild.xBIM
+namespace Nucleus.Meshing
 {
-    public class Class1
+    class HalfEdgeVertex
     {
     }
 }

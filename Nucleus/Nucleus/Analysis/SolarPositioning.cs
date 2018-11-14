@@ -872,8 +872,68 @@ namespace Nucleus.Analysis
             return I;
         }
 
-        public static AnglePair CalculateSunPosition(DateTime time, Angle latitude, Angle longitude,
-            double elevation)
+        /// <summary>
+        /// Calculate the solar position at the specified time and location.
+        /// </summary>
+        /// <param name="date">The date and time, in Universal Time.</param>
+        /// <param name="latitude">The latitude of the observer.</param>
+        /// <param name="longitude">The longitude of the observer.</param>
+        /// <param name="altitude">The altitude of the observer.</param>
+        /// <param name="temperature">The annual average local temperature.</param>
+        /// <param name="pressure">The annual average local pressure.</param>
+        /// <param name="deltaT">The difference between the Earth rotation time and 
+        /// the Terrestrial Time (TT). It is derived from observation only and reported 
+        /// yearly in the Astronomical Almanac</param>
+        /// <returns></returns>
+        public static AnglePair CalculateSunPosition(DateTime date, Angle latitude, Angle longitude,
+            double altitude = 0, double temperature = 16, double pressure = 1013.25, double deltaT = 0)
+        {
+
+            double jD = CalculateJulianDay(date);
+            double jDE = jD + deltaT / 86400.0; //JDE
+
+            double jC = CalculateJulianCentury(jD);
+            double jCE = CalculateJulianCentury(jDE);
+
+            double jM = CalculateJulianMillenium(jC);
+            double jME = CalculateJulianMillenium(jCE);
+            Angle L = CalculateEarthHeliocentricLongitude(jME);
+
+            Angle B = CalculateEarthHeliocentricLatitude(jME);
+
+            double R = CalculateEarthRadiusVector(jME);
+
+            Angle[] X = CalculateNutationCoefficients(jCE);
+            Angle deltaR = CalculateNutationInLongitude(jCE, X);
+            Angle deltaG = CalculateNutationInObliquity(jCE, X);
+
+            Angle e = CalculateTrueObliquityOfTheEliptic(jME, deltaG);
+
+            Angle gcLat = CalculateGeocentricLatitude(B);
+            Angle gcLong = CalculateGeocentricLongitude(L);
+            Angle deltaTau = CalculateAberrationCorrection(R);
+
+            Angle lamda = CalculateApparentSunLongitude(gcLong, deltaR, deltaTau);
+
+            Angle v = CalculateApparentSiderealTime(jD, jC, deltaR, e);
+            Angle alpha = CalculateGeocentricSunRightAscension(lamda, e, gcLat);
+
+            Angle delta = CalculateGeocentricSunDeclination(lamda, e, gcLat);
+
+            Angle H = CalculateObserverLocalHourAngle(v, longitude, alpha);
+
+            Angle deltaAlpha;
+            Angle alphaDash;
+            Angle deltaDash = CalculateTopocentricSunDeclanation(
+                R, latitude, altitude, H, delta, alpha, out deltaAlpha, out alphaDash);
+
+            Angle Hdash = CalculateTopocentricLocalHourAngle(H, deltaAlpha);
+
+            Angle theta = CalculateTopocentricZenithAngle(latitude, delta, Hdash, pressure, temperature);
+            Angle azimuth = CalculateTopocentricAzimuthAngle(Hdash, latitude, delta);
+
+            return new AnglePair(theta, azimuth);
+        }
 
     }
 }

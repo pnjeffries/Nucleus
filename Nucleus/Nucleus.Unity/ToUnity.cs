@@ -80,6 +80,16 @@ namespace Nucleus.Unity
         }
 
         /// <summary>
+        /// Convert a .Nucleus colour to a Unity color32
+        /// </summary>
+        /// <param name="colour"></param>
+        /// <returns></returns>
+        public static U.Color32 Convert32(Colour colour)
+        {
+            return new U.Color32(colour.R, colour.G, colour.B, colour.A);
+        }
+
+        /// <summary>
         /// Convert a .Nucleus axis to a Unity ray
         /// </summary>
         /// <param name="axis"></param>

@@ -31,7 +31,7 @@ namespace Nucleus.Base
     /// Abstract base class for unique objects that can be named
     /// </summary>
     [Serializable]
-    public abstract class Named : Unique, INamed
+    public abstract class Named : Unique, IMutableNamed
     {
 
         #region Properties

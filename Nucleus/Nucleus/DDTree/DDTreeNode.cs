@@ -435,7 +435,9 @@ namespace Nucleus.DDTree
                     for (int i = 0; i < _Branches.Length; i++)
                     {
                         DDTreeNode<T> node = _Branches[i];
-                        if (node != null) node.Subdivide();
+                        if (node != null && 
+                            node.Children.Count < Children.Count)
+                            node.Subdivide();
                     }
                 }
             }

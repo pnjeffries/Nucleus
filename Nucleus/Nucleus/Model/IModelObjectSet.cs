@@ -11,7 +11,7 @@ namespace Nucleus.Model
     /// <summary>
     /// An interface for sets of Model Objects
     /// </summary>
-    public interface IModelObjectSet : INamed, IUnique
+    public interface IModelObjectSet : IMutableNamed, IUnique
     {
         /// <summary>
         /// Get the final set of items contained within this set, consisting of all items in the base collection

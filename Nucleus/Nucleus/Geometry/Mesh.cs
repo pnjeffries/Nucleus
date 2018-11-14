@@ -231,6 +231,32 @@ namespace Nucleus.Geometry
             return result;
         }
 
+        /// <summary>
+        /// Invert the direction of all the face normals in this mesh by reversing
+        /// the order of vertices in all faces.
+        /// </summary>
+        public void FlipNormals()
+        {
+            foreach (var face in Faces)
+                face.FlipNormal();
+        }
+
+        /// <summary>
+        /// Re-order the vertices in the faces of this mesh if necessary so that the
+        /// face normals are aligned as closely as possible with the specified
+        /// vector.
+        /// </summary>
+        /// <param name="alignTo">The vector to align the normals with</param>
+        /// <returns>True if any face was flipped, false if all remained as-was.</returns>
+        public bool AlignNormals(Vector alignTo)
+        {
+            bool result = false;
+            foreach (var face in Faces)
+                if (face.AlignNormal(alignTo))
+                    result = true;
+            return result;
+        }
+
         public override string ToString()
         {
             return "Mesh";

@@ -22,8 +22,43 @@ namespace Nucleus.UnitTests
             Mesh mesh = mB.Mesh;
 
             MeshFaceDDTree ddTree = new MeshFaceDDTree(mesh.Faces);
-            var rayHit = ddTree.RayTrace(new Axis(new Vector(0, -30), new Vector(0, 1)));
+            var rayHit = ddTree.RayTrace(new Axis(new Vector(0, -30, 10), new Vector(0, 1)));
             Assert.AreEqual(20, rayHit.Parameter);
+
+            var rayHit2 = ddTree.RayTrace(new Axis(new Vector(30, -30, 10),
+                new Vector(-1, 1).Unitize()));
+            Assert.AreEqual(28.28427, rayHit2.Parameter, 0.0001);
+
+            var rayHit3 = ddTree.RayTrace(new Axis(new Vector(0, -30, 30), new Vector(0, 1)));
+            Assert.AreEqual(null, rayHit3);
+        }
+
+        [TestMethod]
+        public void RaytraceTest2()
+        {
+            // Test multiple cubes
+            var mB = new MeshBuilder();
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    mB.AddCuboid(20, 20, 20, new CartesianCoordinateSystem(new Vector(30 * j, 30 * i)));
+                    mB.Finalize();
+                }
+            }
+            
+            Mesh mesh = mB.Mesh;
+
+            MeshFaceDDTree ddTree = new MeshFaceDDTree(mesh.Faces);
+            var rayHit = ddTree.RayTrace(new Axis(new Vector(0, -30, 10), new Vector(0, 1)));
+            Assert.AreEqual(20, rayHit.Parameter);
+
+            var rayHit2 = ddTree.RayTrace(new Axis(new Vector(30, -30, 10),
+                new Vector(-1, 1).Unitize()));
+            Assert.AreEqual(28.28427, rayHit2.Parameter, 0.0001);
+
+            var rayHit3 = ddTree.RayTrace(new Axis(new Vector(0, -30, 30), new Vector(0, 1)));
+            Assert.AreEqual(null, rayHit3);
         }
     }
 }
