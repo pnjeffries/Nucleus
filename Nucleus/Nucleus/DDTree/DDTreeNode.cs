@@ -78,14 +78,16 @@ namespace Nucleus.DDTree
         /// Add a new item to this node
         /// </summary>
         /// <param name="item"></param>
-        public void Add(T item)
+        /// <param name="autoSubdivide">If true, the node will automatically
+        /// subdivide when the maximum leaf population is exceeded.</param>
+        public void Add(T item, bool autoSubdivide = true)
         {
             _Children.Add(item);
             if (_SplitDimension != CoordinateAxis.Undefined)
             {
                 AddToBranch(item);
             }
-            else if (_Children.Count > _Tree.MaxLeafPopulation)  //Auto-split when number of children exceeds limit
+            else if (autoSubdivide && _Children.Count > _Tree.MaxLeafPopulation)  //Auto-split when number of children exceeds limit
             {
                 Subdivide();
             }
@@ -96,14 +98,33 @@ namespace Nucleus.DDTree
         /// Add an item to a branch node of this node
         /// </summary>
         /// <param name="item"></param>
-        protected void AddToBranch(T item)
+        protected void AddToBranch(T item, bool autoSubdivide = true)
         {
+            //TODO: As optimisation, re-enable the following for singularity objects?
+            /*
             double value = _Tree.PositionInDimension(_SplitDimension, item);
             int index = (int)Math.Floor((value - _Origin) / _CellSize);
             if (index < 0) index = 0;
             else if (index >= _Branches.Length) index = _Branches.Length - 1;
             if (_Branches[index] == null) _Branches[index] = new DDTreeNode<T>(_Tree);
             _Branches[index].Add(item);
+            */
+
+            double min = _Tree.MinInDimension(_SplitDimension, item);
+            int iMin = (int)Math.Floor((min - _Origin) / _CellSize);
+            if (iMin < 0) iMin = 0;
+            else if (iMin >= _Branches.Length) iMin = _Branches.Length - 1;
+
+            double max = _Tree.MaxInDimension(_SplitDimension, item);
+            int iMax = (int)Math.Floor((max - _Origin) / _CellSize);
+            if (iMax < 0) iMax = 0;
+            else if (iMax >= _Branches.Length) iMax = _Branches.Length - 1;
+
+            for (int i = iMin; i <= iMax; i++)
+            {
+                if (_Branches[i] == null) _Branches[i] = new DDTreeNode<T>(_Tree);
+                _Branches[i].Add(item, autoSubdivide);
+            }
         }
 
         /// <summary>
@@ -408,13 +429,15 @@ namespace Nucleus.DDTree
                     //Add all children to branches:
                     foreach (T child in _Children)
                     {
-                        AddToBranch(child);
+                        AddToBranch(child, false);
                     }
                     //Subdivide children:
                     for (int i = 0; i < _Branches.Length; i++)
                     {
                         DDTreeNode<T> node = _Branches[i];
-                        if (node != null) node.Subdivide();
+                        if (node != null && 
+                            node.Children.Count < Children.Count)
+                            node.Subdivide();
                     }
                 }
             }

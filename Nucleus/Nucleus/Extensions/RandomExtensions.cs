@@ -24,6 +24,31 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Returns a random floating-point number between minValue and maxValue
+        /// </summary>
+        /// <param name="rng"></param>
+        /// <param name="minValue">The minimum extent of the random range</param>
+        /// <param name="maxValue">The maximum extent of the random range</param>
+        /// <returns></returns>
+        public static double NextDouble(this Random rng, double minValue, double maxValue)
+        {
+            return minValue + rng.NextDouble() * (maxValue - minValue);
+        }
+
+        /// <summary>
+        /// Returns a random floating-point number within range of origin.
+        /// </summary>
+        /// <param name="rng"></param>
+        /// <param name="origin">The number to generate close to</param>
+        /// <param name="range">The difference either side of origin that gives
+        /// the acceptable range.</param>
+        /// <returns></returns>
+        public static double NextDoubleNear(this Random rng, double origin, double range)
+        {
+            return origin + rng.NextDouble(-range, range);
+        }
+
+        /// <summary>
         /// Returns a random angle between 0 and 2*PI radians
         /// </summary>
         /// <param name="rng"></param>
@@ -55,7 +80,9 @@ namespace Nucleus.Extensions
         /// <returns></returns>
         public static Vector NextPoint(this Random rng, Vector origin, double range)
         {
-            return origin + new Geometry.Vector(rng.NextAngle(), rng.NextDouble(range));
+            // TODO: square distance to give more even distribution?
+            return origin + new Geometry.Vector(rng.NextAngle()) * rng.NextDouble(range);
         }
+
     }
 }

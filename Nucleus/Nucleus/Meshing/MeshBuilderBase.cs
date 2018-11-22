@@ -232,12 +232,21 @@ namespace Nucleus.Meshing
         }
 
         /// <summary>
+        /// Add vertices and faces to the mesh to represent an extrusion solid.
+        /// </summary>
+        /// <param name="extrusion"></param>
+        public void AddExtrusion(Extrusion extrusion)
+        {
+            AddPlanarRegion(extrusion.Profile, extrusion.Path);
+        }
+
+        /// <summary>
         /// Add vertices and faces to the mesh to represent a cuboid of the specified dimensions,
         /// with its base on the XY plane of the specified coordinate system.
         /// </summary>
-        /// <param name="baseWidth"></param>
-        /// <param name="baseDepth"></param>
-        /// <param name="height"></param>
+        /// <param name="width">The width of the cuboid</param>
+        /// <param name="depth">The depth of the cuboid</param>
+        /// <param name="height">The height of the cuboid</param>
         /// <param name="cSystem"></param>
         public void AddCuboid(double width, double depth, double height, CartesianCoordinateSystem cSystem = null)
         {
@@ -609,12 +618,47 @@ namespace Nucleus.Meshing
         /// </summary>
         /// <param name="region"></param>
         /// <param name="thickness"></param>
+        /// <param name="autoFlip">Automatically flip normals to make them outside/upside</param>
         /// <param name="topOffset"></param>
-        public void AddPlanarRegion(PlanarRegion region, double thickness = 0, double topOffset = 0, Vector offset = new Vector())
+        /// <param name="offset"></param>
+        public void AddPlanarRegion(PlanarRegion region, double thickness = 0, double topOffset = 0, bool autoFlip = true,
+            Vector offset = new Vector())
+        {
+            AddPlanarRegion(region, Vector.Unset, thickness, topOffset, autoFlip, offset);
+        }
+
+        /// <summary>
+        /// Add a set of vertices and faces to the mesh representing a planar region with optional thickness
+        /// </summary>
+        /// <param name="region">The region to add</param>
+        /// <param name="path">The path to extrude the region along</param>
+        /// <param name="autoFlip">Automatically flip normals to make them outside/upside</param>
+        /// <param name="offset">The offset of the mesh from the region</param>
+        public void AddPlanarRegion(PlanarRegion region, Vector path, bool autoFlip = true, Vector offset = new Vector())
+        {
+            AddPlanarRegion(region, path, 0, 0, autoFlip, offset);
+        }
+
+        /// <summary>
+        /// Add a set of vertices and faces to the mesh representing a planar region with optional thickness
+        /// </summary>
+        /// <param name="region"></param>
+        /// <param name="path">The path to extrude the region along</param>
+        /// <param name="thickness"></param>
+        /// <param name="topOffset"></param>
+        /// <param name="autoFlip">Automatically flip normals to make them outside/upside</param>
+        /// <param name="offset"></param>
+        private void AddPlanarRegion(PlanarRegion region, Vector path, double thickness, double topOffset, bool autoFlip,
+            Vector offset = new Vector())
         {
             Plane plane = region.Plane;
             Vector[] perimeter = region.Perimeter.Facet(FacetAngle);
             Vector[] mappedPerimeter = perimeter.GlobalToLocal(plane);
+            /*if (autoFlip && mappedPerimeter.ClockwiseTestSum() < 0)
+            {
+                Array.Reverse(perimeter);
+                Array.Reverse(mappedPerimeter);
+            }*/
             VertexCollection vertices = new VertexCollection(mappedPerimeter);
             List<Vector[]> voidPerimeters = null;
             List<Vector[]> mappedVoidPerimeters = null;
@@ -649,9 +693,15 @@ namespace Nucleus.Meshing
                 vertices.Move(offset);
             }
 
-            if (topOffset != 0)
+            bool usePath = path.IsValid();
+            if (topOffset != 0 || usePath)
             {
-                Vector topMove = plane.Z * topOffset;
+                Vector topMove;
+                if (usePath)
+                    topMove = path;
+                else
+                    topMove = plane.Z * topOffset;
+
                 vertices.Move(topMove);
                 perimeter = perimeter.Move(topMove);
 
@@ -664,10 +714,19 @@ namespace Nucleus.Meshing
                 }
             }
             Mesh mesh = new Mesh(vertices, faces);
+
+            if (autoFlip)
+                if (!mesh.AlignNormals(Vector.UnitZ))
+                    Array.Reverse(perimeter);
+
             AddMesh(mesh);
-            if (thickness != 0)
+            if (thickness != 0 || usePath)
             {
-                Vector bottomMove = plane.Z * -thickness;
+                Vector bottomMove;
+                if (usePath)
+                    bottomMove = -path;
+                else
+                    bottomMove = plane.Z * -thickness;
                 mesh.Move(bottomMove);
                 AddMesh(mesh);
                 Vector[] bottomPerimeter = perimeter.Move(bottomMove);
@@ -1011,7 +1070,7 @@ namespace Nucleus.Meshing
         public void AddAreaLoad(PlanarRegion region, Vector direction, double length, double zigZagLength = 1.0)
         {
             Vector offset = direction * -length;
-            AddPlanarRegion(region, 0, 0, offset);
+            AddPlanarRegion(region, 0, 0, false, offset);
             Vector[] pts = region.Perimeter.Facet(this.FacetAngle);
             for (int i = 0; i < pts.Length; i++)
             {

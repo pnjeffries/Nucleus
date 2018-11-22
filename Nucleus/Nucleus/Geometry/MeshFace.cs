@@ -770,6 +770,34 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Re-order the vertices in this face so that the face normal
+        /// faces in the opposite direction.
+        /// </summary>
+        /// <returns></returns>
+        public void FlipNormal()
+        {
+            Reverse();
+            // If caching normal - flip it here.
+        }
+
+        /// <summary>
+        /// Re-order the vertices in this face if necessary so that the
+        /// face normal is aligned as closely as possible with the specified
+        /// vector.
+        /// </summary>
+        /// <param name="alignTo">The vector to align the normal with</param>
+        /// <returns>True if the face was flipped, false if it remained as-was.</returns>
+        public bool AlignNormal(Vector alignTo)
+        {
+            if (Normal.Dot(alignTo) < 0)
+            {
+                FlipNormal();
+                return true;
+            }
+            else return false;
+        }
+
+        /// <summary>
         /// Calculate and return the plane defined by the first three vertices of this
         /// face.
         /// </summary>
@@ -801,6 +829,24 @@ namespace Nucleus.Geometry
                 if (!double.IsNaN(z)) return z;
             }
             return double.NaN;
+        }
+
+        /// <summary>
+        /// Convert this mesh face into an array of integers
+        /// representing the indices of the vertices in this face.
+        /// The 'Number' property of the face vertices should
+        /// have been populated prior to calling this function (for
+        /// e.g. via the AssingVertexIndices function on VertexCollection)
+        /// </summary>
+        /// <returns></returns>
+        public int[] ToIndexArray()
+        {
+            var result = new int[Count];
+            for (int i = 0; i < Count; i++)
+            {
+                result[i] = this[i].Number;
+            }
+            return result;
         }
 
         #endregion

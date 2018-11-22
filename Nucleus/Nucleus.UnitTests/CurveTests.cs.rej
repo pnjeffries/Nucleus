@@ -1,0 +1,9 @@
+diff a/Nucleus/Nucleus.UnitTests/CurveTests.cs b/Nucleus/Nucleus.UnitTests/CurveTests.cs	(rejected hunks)
+@@ -121,6 +121,7 @@
+          }
+  
+          [TestMethod]
+++<<<<<<< HEAD
+ +        public void SubdomainByCentreTest()
+ +        {
+ +            var polyCrv = new PolyCurve(new Line(0, 0, 10, 10));

@@ -199,6 +199,7 @@ namespace Nucleus.Geometry
             Z = 0;
         }
 
+        /*
         /// <summary>
         /// Angle constructor.
         /// Create a new vector on the XY plane pointing in the specified
@@ -214,6 +215,7 @@ namespace Nucleus.Geometry
             Y = Math.Cos(angle) * magnitude;
             Z = 0;
         }
+        */
 
         /// <summary>
         /// Validity constructor.
@@ -1844,6 +1846,28 @@ namespace Nucleus.Geometry
                 if (angle > max) max = angle;
             }
             return max;
+        }
+
+        /// <summary>
+        /// Returns a sum value of (x1 - x0)(y1 + y0) for each vector between
+        /// points in this collection, which can be used to test whether the
+        /// points are overall stored in a clockwise or anti-clockwise direction.
+        /// If the result is greater than 0, the collection is clockwise.
+        /// If the result is less than 0, the collection is anticlockwise.
+        /// If the result is 0, it is indeterminate.
+        /// The final vector from the last vertex to the first one will also be included.
+        /// </summary>
+        /// <returns></returns>
+        public static double ClockwiseTestSum(this IList<Vector> v)
+        {
+            double result = 0;
+            for (int i = 0; i < v.Count; i++)
+            {
+                Vector v0 = v[i];
+                Vector v1 = v.GetWrapped(i + 1);
+                result += (v1.X - v0.X) * (v1.Y + v0.Y);
+            }
+            return result;
         }
     }
 }
