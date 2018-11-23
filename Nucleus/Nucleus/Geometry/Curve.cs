@@ -175,6 +175,27 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Evaluate a set of points along this curve defined by a set of parameters
+        /// </summary>
+        /// <param name="t">A set of normalised parameters defining points along this curve.
+        /// Note that parameter-space is not necessarily uniform and does not equate to a normalised length.
+        /// 0 = curve start, 1 = curve end.
+        /// For open curves, parameters outside the range 0-1 will be invalid.
+        /// For closed curves, parameters outside this range will 'wrap'.</param>
+        /// <returns>The vector coordinates describing a point on the curve at the specified parameter,
+        /// if the curve definition and parameter are valid.  Else, an unset vector.</returns>
+        /// <returns></returns>
+        public Vector[] PointsAt(IList<double> t)
+        {
+            var result = new Vector[t.Count];
+            for (int i = 0; i < t.Count; i++)
+            {
+                result[i] = PointAt(t[i]);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Evaluate a point defined by a parameter within a specified span.
         /// </summary>
         /// <param name="span">The index of the span.  Valid range 0 to SegmentCount - 1</param>
@@ -244,6 +265,56 @@ namespace Nucleus.Geometry
                 l0 = l1;
             }
             return length/l0;
+        }
+
+        /// <summary>
+        /// Returns a set of parameters evenly spaced along the curve with a specified spacing
+        /// </summary>
+        /// <param name="spacing">The distance between points</param>
+        /// <param name="firstOffset">The distance of the first point from the start of the curve.</param>
+        /// <returns></returns>
+        public virtual IList<double> ParametersAtSpacing(double spacing, double firstOffset = 0)
+        {
+            var result = new List<double>();
+            if (spacing > 0)
+            {
+                double l0 = 0;
+                double next = firstOffset;
+                for (int i = 0; i < SegmentCount; i++)
+                {
+                    double lS = CalculateSegmentLength(i);
+                    double l1 = l0 + lS;
+                    while (l1 >= next)
+                    {
+                        double t = ((double)i) / SegmentCount + ((next - l0) / lS) / SegmentCount;
+                        result.Add(t);
+                        next += spacing;
+                    }
+                    l0 = l1;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Returns a set of parameters at equidistant points along this curve produced by dividing the
+        /// curve into equal length segments.
+        /// </summary>
+        /// <param name="divisions">The number of equal segments to divide the curve into.</param>
+        /// <param name="proportionOfDivision">The position of the point within each segment, as a
+        /// proportion of the segment length.
+        /// Between 0-1, where for e.g. 0 is at the start of each segment, 0.5 is in the middle
+        /// and so on.</param>
+        /// <returns></returns>
+        public virtual IList<double> ParametersAtDivisions(int divisions, double proportionOfDivision = 0)
+        {
+            double length = Length;
+            double segLength = length / divisions;
+            var result = ParametersAtSpacing(segLength, segLength * proportionOfDivision);
+            if (proportionOfDivision % 1 == 0 && proportionOfDivision <= divisions
+                && !Closed && (1.0 - result.Last()).Abs() > 0.1 / divisions)
+                result.Add(1.0); // Add a last point to the end, if floating point errors mean it is missing
+            return result;
         }
 
         /// <summary>
