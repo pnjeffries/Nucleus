@@ -184,6 +184,46 @@ namespace Nucleus.Model
         }
 
         /// <summary>
+        /// Get a collection of all elements connected to this node
+        /// </summary>
+        /// <param name="addTo">Add the elements to this collection, which will be returned as the result</param>
+        /// <param name="undeletedOnly">If true, only elements that are not marked
+        /// as deleted will be returned</param>
+        /// <returns></returns>
+        public TElementCollection GetConnectedElements<TElement, TElementCollection>(TElementCollection addTo, bool undeletedOnly = true, TElement ignore = null)
+            where TElement : Element
+            where TElementCollection : ElementCollection<TElement, TElementCollection>, new()
+        {
+            foreach (Vertex v in Vertices)
+            {
+                if (v.Element != null && v.Element is TElement && v.Element != ignore && !addTo.Contains(v.Element.GUID) &&
+                    (!undeletedOnly || !v.Element.IsDeleted))
+                    addTo.Add((TElement)v.Element);
+            }
+
+            return addTo;
+        }
+
+        /// <summary>
+        /// Get the first encountered element of the specified type connected to this node
+        /// </summary>
+        /// <typeparam name="TElement"></typeparam>
+        /// <param name="undeletedOnly"></param>
+        /// <param name="ignore"></param>
+        /// <returns></returns>
+        public TElement GetFirstConnectedElement<TElement>(bool undeletedOnly = true, Element ignore = null)
+            where TElement : Element
+        {
+            foreach (Vertex v in Vertices)
+            {
+                if (v.Element != null && v.Element is TElement && v.Element != ignore &&
+                    (!undeletedOnly || !v.Element.IsDeleted))
+                    return (TElement)v.Element;
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Get a collection of the geometric objects whose vertices are connected to this node
         /// </summary>
         /// <returns></returns>

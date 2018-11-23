@@ -34,14 +34,18 @@ namespace Nucleus.Unity
         /// Convert an array of .Nucleus vectors to a 3D Unity equivalent
         /// </summary>
         /// <param name="vs">The array of .Nucleus vectors to convert</param>
+        /// <param name="close">If true, the first point will be repeated at the end of the list</param>
         /// <returns></returns>
-        public static Vector3[] Convert(Vector[] vs)
+        public static Vector3[] Convert(Vector[] vs, bool close = false)
         {
-            var result = new Vector3[vs.Length];
+            int length = vs.Length;
+            if (close) length += 1;
+            var result = new Vector3[length];
             for (int i = 0; i < vs.Length; i++)
             {
                 result[i] = Convert(vs[i]);
             }
+            if (close && vs.Length > 0) result[vs.Length] = Convert(vs[0]);
             return result;
         }
 

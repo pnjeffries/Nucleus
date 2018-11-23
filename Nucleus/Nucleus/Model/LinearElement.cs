@@ -255,4 +255,5 @@ namespace Nucleus.Model
         #endregion
 
     }
+
 }

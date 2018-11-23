@@ -511,6 +511,65 @@ namespace Nucleus.Geometry
             return result;
         }
 
-        
+        /// <summary>
+        /// Calculate the total length of the spines of all 
+        /// in this collection.
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static double TotalSpineLength<TPath>(this IList<TPath> list)
+            where TPath : IWidePath
+        {
+            double result = 0;
+            foreach (var element in list)
+            {
+                result += element.Spine.Length;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Count the number of dead-ends in the paths in this collection
+        /// </summary>
+        /// <typeparam name="TPath"></typeparam>
+        /// <param name="paths"></param>
+        /// <returns></returns>
+        public static int DeadEndCount<TPath>(this IList<TPath> paths)
+            where TPath : IWidePath
+        {
+            int result = 0;
+
+            var pathMap = new Dictionary<Guid, TPath>();
+
+            // Generate initial curves + build map:
+            foreach (TPath path in paths)
+            {
+                if (path.Spine != null)
+                {
+                    pathMap[path.Spine.GUID] = path;
+                    path.GenerateInitialPathEdges();
+                    path.CurveInitialPathEdges();
+                }
+            }
+
+            NodeCollection nodes = paths.ExtractNetworkPathNodes();
+
+            // Trim edges at nodes:
+            foreach (Node node in nodes)
+            {
+                int nCount = 0;
+                foreach (var v in node.Vertices)
+                {
+                    if (v.Owner != null && v.Owner is Curve && pathMap.ContainsKey(v.Owner.GUID))
+                    {
+                        nCount++;
+                    }
+                }
+                if (nCount == 1) result++;
+            }
+
+            return result;
+        }
+
     }
 }

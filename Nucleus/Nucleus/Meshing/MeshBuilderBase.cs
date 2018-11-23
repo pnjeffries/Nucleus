@@ -461,11 +461,31 @@ namespace Nucleus.Meshing
         /// <summary>
         /// Create faces to represent a path with width
         /// </summary>
-        /// <param name="path"></param>
-        public void AddWidePath(IWidePath path)
+        /// <param name="path">The path to add to the mesh</param>
+        /// <param name="extrude">An optional extrusion vector.  If non-zero the
+        /// path will be extruded along this vector in order to procude a mesh
+        /// with thickness.</param>
+        public void AddWidePath(IWidePath path, Vector extrude = new Vector())
         {
-            //TODO: Refine!
-            AddFace(path.LeftEdge.EndPoint, path.LeftEdge.StartPoint, path.RightEdge.StartPoint, path.RightEdge.EndPoint);
+            //TODO: Refine - patths that bifurcate will need more than one face
+            Vector pt0 = path.LeftEdge.EndPoint;
+            Vector pt1 = path.LeftEdge.StartPoint;
+            Vector pt2 = path.RightEdge.StartPoint;
+            Vector pt3 = path.RightEdge.EndPoint;
+            AddFace(pt0, pt1, pt2, pt3); //Topface
+
+            if (!extrude.IsZero())
+            {
+                Vector pt0B = pt0 + extrude;
+                Vector pt1B = pt1 + extrude;
+                Vector pt2B = pt2 + extrude;
+                Vector pt3B = pt3 + extrude;
+                AddFace(pt3B, pt2B, pt1B, pt0B); //Bumface
+                FillBetween(
+                    new Vector[] { pt0B, pt1B, pt2B, pt3B },
+                    new Vector[] { pt0, pt1, pt2, pt3 },
+                    false, true); //Sides
+            }
         }
 
         /// <summary>

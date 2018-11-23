@@ -72,6 +72,20 @@ namespace Nucleus.Base
             set { _Description = value; }
         }
 
+        /// <summary>
+        /// Private backing field for the Visible property
+        /// </summary>
+        private bool _Visible = true;
+
+        /// <summary>
+        /// Should the parameter be displayed?
+        /// </summary>
+        public bool Visible
+        {
+            get { return _Visible; }
+            set { ChangeProperty(ref _Visible, value); }
+        }
+
         #endregion
 
         #region Constructor

@@ -290,7 +290,7 @@ namespace Nucleus.Geometry
         {
             if (IsUndefined) return "";
             else if (IsMulti) return "Multi";
-            return (Radians / Math.PI).ToString() + "π";
+            return (Radians / Math.PI).ToString() + "π (" + Degrees + "°)";
         }
 
         #endregion

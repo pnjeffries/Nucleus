@@ -129,7 +129,7 @@ namespace Nucleus.Model
                 for (int i = 0; i < vertices.Count; i++)
                 {
                     Vertex v = vertices[i];
-                        result.Add(new ElementVertex(this, v, GetElementVertexDescription(i, vertices)));
+                    result.Add(new ElementVertex(this, v, GetElementVertexDescription(i, vertices)));
                 }
                 return result;
             }
@@ -307,14 +307,14 @@ namespace Nucleus.Model
                 }
                 else
                 {*/
-                    if (_Geometry != null && _Geometry.Element == this && _Geometry != value)
-                    {
-                        _Geometry.DettachNodes();
-                        _Geometry.Element = null;
-                    }
-                    _Geometry = value;
-                    if (_Geometry != null) _Geometry.Element = this;
-                    NotifyPropertyChanged("Geometry");
+                if (_Geometry != null && _Geometry.Element == this && _Geometry != value)
+                {
+                    _Geometry.DettachNodes();
+                    _Geometry.Element = null;
+                }
+                _Geometry = value;
+                if (_Geometry != null) _Geometry.Element = this;
+                NotifyPropertyChanged("Geometry");
                 //}
             }
         }
@@ -343,7 +343,7 @@ namespace Nucleus.Model
         /// </summary>
         [NonSerialized] //TEMP!
         private DerivedGeometryDictionary _DerivedGeometry = null;
-        
+
         /// <summary>
         /// Storage for derived geometric objects attached to this element.
         /// These represent geometric forms that the element may be represented by
@@ -424,5 +424,33 @@ namespace Nucleus.Model
 
         #endregion
 
+    }
+
+    /// <summary>
+    /// Static extension methods for the Element class
+    /// </summary>
+    public static class ElementExtensions
+    {
+        /// <summary>
+        /// Calculate the total length (of the set-out geometry curves) of all elements
+        /// in this collection.
+        /// </summary>
+        /// <typeparam name="TList"></typeparam>
+        /// <typeparam name="TElement"></typeparam>
+        /// <typeparam name="TFamily"></typeparam>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static double TotalLength<TList, TElement, TFamily>(this TList list)
+            where TList : IList<TElement>
+            where TElement : Element<Curve, TFamily>
+            where TFamily : Family
+        {
+            double result = 0;
+            foreach (var element in list)
+            {
+                result += element.Geometry.Length;
+            }
+            return result;
+        }
     }
 }
