@@ -674,11 +674,11 @@ namespace Nucleus.Meshing
             Plane plane = region.Plane;
             Vector[] perimeter = region.Perimeter.Facet(FacetAngle);
             Vector[] mappedPerimeter = perimeter.GlobalToLocal(plane);
-            /*if (autoFlip && mappedPerimeter.ClockwiseTestSum() < 0)
+            if (autoFlip && mappedPerimeter.ClockwiseTestSum() > 0)
             {
                 Array.Reverse(perimeter);
                 Array.Reverse(mappedPerimeter);
-            }*/
+            }
             VertexCollection vertices = new VertexCollection(mappedPerimeter);
             List<Vector[]> voidPerimeters = null;
             List<Vector[]> mappedVoidPerimeters = null;

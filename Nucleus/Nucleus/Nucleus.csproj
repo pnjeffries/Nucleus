@@ -79,6 +79,7 @@
     <Compile Include="Base\IFastDuplicatable.cs" />
     <Compile Include="Analysis\SolarPositioning.cs" />
     <Compile Include="Base\IntParameter.cs" />
+    <Compile Include="Base\IRefreshable.cs" />
     <Compile Include="Base\Option.cs" />
     <Compile Include="Base\OptionCollection.cs" />
     <Compile Include="Base\Parameter.cs" />

@@ -54,7 +54,8 @@ namespace Nucleus.UI
         private string _StringFormat = "{0}";
 
         /// <summary>
-        /// Gets or sets a string that specifies how to format the binding if it displays the bound value as a string.
+        /// Gets or sets a string that specifies how to format the bound value
+        /// when retrieving it via the GetBoundValueString() method.
         /// </summary>
         public string StringFormat
         {
@@ -142,6 +143,17 @@ namespace Nucleus.UI
                 return result;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Get the current value of the bound property expressed
+        /// as a string utilising the specififed StringFormat property
+        /// </summary>
+        /// <returns></returns>
+        public string GetBoundValueString()
+        {
+            object value = GetBoundValue();
+            return string.Format(StringFormat, value);
         }
 
         /// <summary>

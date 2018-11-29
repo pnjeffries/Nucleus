@@ -74,20 +74,110 @@ namespace Nucleus.Extensions
         /// <typeparam name="TValue"></typeparam>
         /// <param name="list"></param>
         /// <param name="key">The key value to search for</param>
+        /// <param name="nextKey">OUTPUT.  The key of the next value.</param>
         /// <param name="wrap">If true, the list is treated as wrapping - i.e. if no item with a key greater
         /// than that specified can be found the first item will be returned instead.</param>
         /// <returns></returns>
         public static TValue NextAfter<TKey, TValue>(this SortedList<TKey,TValue> list, 
-            TKey key, bool wrap = false)
+            TKey key, out TKey nextKey, bool wrap = false)
             where TKey : IComparable
             where TValue : class
         {
             foreach (KeyValuePair<TKey,TValue> kvp in list)
             {
-                if (kvp.Key.CompareTo(key) > 0) return kvp.Value;
+                if (kvp.Key.CompareTo(key) > 0)
+                {
+                    nextKey = kvp.Key;
+                    return kvp.Value;
+                }
             }
-            if (wrap && list.Count > 0) return list.First().Value;
+            if (wrap && list.Count > 0)
+            {
+                var kvp = list.First();
+                nextKey = kvp.Key;
+                return kvp.Value;
+            }
+            nextKey = default(TKey);
             return null;
+        }
+
+        /// <summary>
+        /// Get the stored value with the key after the specified key value.
+        /// Returns the first item in this list with a key that compared greater than
+        /// that specified.  If none can be found, returns null.
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="key">The key value to search for</param>
+        /// <param name="wrap">If true, the list is treated as wrapping - i.e. if no item with a key greater
+        /// than that specified can be found the first item will be returned instead.</param>
+        /// <returns></returns>
+        public static TValue NextAfter<TKey, TValue>(this SortedList<TKey, TValue> list,
+            TKey key, bool wrap = false)
+            where TKey : IComparable
+            where TValue : class
+        {
+            TKey outKey;
+            return list.NextAfter(key, out outKey, wrap);
+        }
+
+        /// <summary>
+        /// Get the stored value with the key before the specified key value.
+        /// Returns the last item in this list with a key that compared lower than
+        /// that specified.  If none can be found, returns null.
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="key">The key value to search for</param>
+        /// <param name="lastKey">OUTPUT. The last key before the specified key.</param>
+        /// <param name="wrap">If true, the list is treated as wrapping - i.e. if no item with a key lower
+        /// than that specified can be found the last item will be returned instead.</param>
+        /// <returns></returns>
+        public static TValue LastBefore<TKey, TValue>(this SortedList<TKey, TValue> list,
+            TKey key, out TKey lastKey, bool wrap = false)
+            where TKey : IComparable
+            where TValue : class
+        {
+            for(int i = list.Count -1; i >= 0; i--)
+            {
+                TKey thisKey = list.Keys[i];
+                if (thisKey.CompareTo(key) < 0)
+                {
+                    lastKey = thisKey;
+                    return list.Values[i];
+                }
+            }
+            if (wrap && list.Count > 0)
+            {
+                var kvp = list.Last();
+                lastKey = kvp.Key;
+                return kvp.Value;
+            }
+            lastKey = default(TKey);
+            return null;
+        }
+
+        /// <summary>
+        /// Get the stored value with the key before the specified key value.
+        /// Returns the last item in this list with a key that compared lower than
+        /// that specified.  If none can be found, returns null.
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="key">The key value to search for</param>
+        /// <param name="wrap">If true, the list is treated as wrapping - i.e. if no item with a key lower
+        /// than that specified can be found the last item will be returned instead.</param>
+        /// <returns></returns>
+        public static TValue LastBefore<TKey, TValue>(this SortedList<TKey, TValue> list,
+            TKey key, bool wrap = false)
+            where TKey : IComparable
+            where TValue : class
+        {
+            TKey outKey;
+            return list.LastBefore(key, out outKey, wrap);
         }
 
         /// <summary>
