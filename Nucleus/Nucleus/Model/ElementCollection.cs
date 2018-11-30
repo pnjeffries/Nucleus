@@ -108,7 +108,7 @@ namespace Nucleus.Model
         /// the vertices of elements.
         /// </summary>
         /// <param name="options"></param>
-        public void GenerateNodes(NodeGenerationParameters options)
+        public virtual void GenerateNodes(NodeGenerationParameters options)
         {
             foreach (Element element in this)
             {

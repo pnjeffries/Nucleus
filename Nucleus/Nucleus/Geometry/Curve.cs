@@ -272,11 +272,13 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="spacing">The distance between points</param>
         /// <param name="firstOffset">The distance of the first point from the start of the curve.</param>
+        /// <param name="countLimit">Optional.  The maximum number of parameters to be produced.
+        /// If set to 0 or below, the number of possible returned parameters is unlimited.</param>
         /// <returns></returns>
-        public virtual IList<double> ParametersAtSpacing(double spacing, double firstOffset = 0)
+        public virtual IList<double> ParametersAtSpacing(double spacing, double firstOffset = 0, int countLimit = 0)
         {
             var result = new List<double>();
-            if (spacing > 0)
+            if (spacing > 0.00001)
             {
                 double l0 = 0;
                 double next = firstOffset;
@@ -289,9 +291,16 @@ namespace Nucleus.Geometry
                         double t = ((double)i) / SegmentCount + ((next - l0) / lS) / SegmentCount;
                         result.Add(t);
                         next += spacing;
+                        // Cap at maxCount:
+                        if (countLimit > 0 && result.Count >= countLimit) return result;
                     }
                     l0 = l1;
                 }
+            }
+            else
+            {
+                // Spacing too small - just give the first point
+                result.Add(ParameterAt(firstOffset));
             }
             return result;
         }

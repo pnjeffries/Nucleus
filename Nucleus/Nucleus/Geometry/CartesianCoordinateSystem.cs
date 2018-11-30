@@ -309,5 +309,32 @@ namespace Nucleus.Geometry
         }
 
         #endregion
+
+        #region Static Methods
+
+        /// <summary>
+        /// Construct a cartesian coordinate system from X and Z axis vectors
+        /// </summary>
+        /// <param name="origin"></param>
+        /// <param name="xAxis"></param>
+        /// <param name="zAxis"></param>
+        /// <returns></returns>
+        public static CartesianCoordinateSystem FromXAndZ(Vector origin, Vector xAxis, Vector zAxis)
+        {
+            return new CartesianCoordinateSystem(origin, xAxis, zAxis.Cross(xAxis), zAxis);
+        }
+
+        /// <summary>
+        /// Construct a cartesian coordinate system from an X axis, using the global Z axis
+        /// </summary>
+        /// <param name="origin"></param>
+        /// <param name="xAxis"></param>
+        /// <returns></returns>
+        public static CartesianCoordinateSystem FromXAxis(Vector origin, Vector xAxis)
+        {
+            return FromXAndZ(origin, xAxis, Vector.UnitZ);
+        }
+
+        #endregion
     }
 }

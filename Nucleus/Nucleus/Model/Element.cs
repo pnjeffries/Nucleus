@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using Nucleus.Base;
+using Nucleus.DDTree;
 using Nucleus.Events;
 using Nucleus.Exceptions;
 using Nucleus.Geometry;
@@ -221,16 +222,30 @@ namespace Nucleus.Model
 
         /// <summary>
         /// Generate nodes for this element's vertices, if they do not already posess them
-        /// them.
+        /// them.  This relies on the element being included as part of a Model to function.
         /// </summary>
-        /// <param name="connectionTolerance"></param>
-        /// <param name="model"></param>
+        /// <param name="options">The node generation options</param>
         public virtual void GenerateNodes(NodeGenerationParameters options)
         {
             VertexGeometry geometry = GetGeometry();
             foreach (Vertex v in geometry.Vertices)
             {
                 v.GenerateNode(options);
+            }
+        }
+
+        /// <summary>
+        /// Generate nodes for this element's vertices, if they do not already posess them
+        /// them.  This override of the GenerateNodes function does not require the element
+        /// to be part of a Model.
+        /// </summary>
+        /// <param name="options">The node generation options</param>
+        public virtual void GenerateNodes(NodeGenerationParameters options, NodeCollection nodes, NodeDDTree nodeTree)
+        {
+            VertexGeometry geometry = GetGeometry();
+            foreach (Vertex v in geometry.Vertices)
+            {
+                v.GenerateNode(options, nodes, nodeTree);
             }
         }
 

@@ -108,6 +108,16 @@ namespace Nucleus.Geometry
         /// <param name="newOrigin">The origin point of the new plane</param>
         public Plane(CartesianCoordinateSystem cSystem, Vector newOrigin) : base(cSystem, newOrigin) { }
 
+        /// <summary>
+        /// Constructor explicitly specifying all axes.
+        /// The data is not validated.
+        /// </summary>
+        /// <param name="origin"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        protected Plane(Vector origin, Vector x, Vector y, Vector z) : base(origin, x, y, z) { }
+
         #endregion
 
         #region Methods
@@ -201,6 +211,29 @@ namespace Nucleus.Geometry
                 return new Plane(origin, ptX - origin, ptXY - origin);
             else
                 return null;
+        }
+
+        /// <summary>
+        /// Construct a cartesian coordinate system from X and Z axis vectors
+        /// </summary>
+        /// <param name="origin"></param>
+        /// <param name="xAxis"></param>
+        /// <param name="zAxis"></param>
+        /// <returns></returns>
+        public static Plane FromXAndZ(Vector origin, Vector xAxis, Vector zAxis)
+        {
+            return new Plane(origin, xAxis, zAxis.Cross(xAxis), zAxis);
+        }
+
+        /// <summary>
+        /// Construct a plane from an X axis, using the global Z axis
+        /// </summary>
+        /// <param name="origin"></param>
+        /// <param name="xAxis"></param>
+        /// <returns></returns>
+        public static Plane FromXAxis(Vector origin, Vector xAxis)
+        {
+            return FromXAndZ(origin, xAxis, Vector.UnitZ);
         }
 
         #endregion
