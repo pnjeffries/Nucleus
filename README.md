@@ -20,3 +20,5 @@ netDXF: https://github.com/haplokuon/netDxf | [LGPL 2.1](https://github.com/hapl
 OsmSharp: https://github.com/OsmSharp/core | [MIT](https://github.com/OsmSharp/core/blob/master/LICENSE.md)
 
 Nominatim.API: https://github.com/f1ana/Nominatim.API | [MIT](https://github.com/f1ana/Nominatim.API/blob/master/LICENSE)
+
+OpenTK: https://github.com/opentk/opentk | [The Open Toolkit Library License](https://github.com/opentk/opentk/blob/master/License.txt)
