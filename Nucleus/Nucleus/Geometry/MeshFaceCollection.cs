@@ -20,6 +20,7 @@
 
 using Nucleus.Base;
 using Nucleus.Extensions;
+using Nucleus.Meshing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -315,6 +316,25 @@ namespace Nucleus.Geometry
         {
             var result = ExtractAllEdges();
             result.RemoveDuplicates();
+            return result;
+        }
+
+        /// <summary>
+        /// Refine and subdivide the faces in this collection to
+        /// reduce the maximum edge length below the specified 
+        /// </summary>
+        /// <param name="maxEdgeLength"></param>
+        /// <returns></returns>
+        public MeshFaceCollection Refine(double maxEdgeLength)
+        {
+            MeshFaceCollection result = new MeshFaceCollection();
+            var edges = new MeshDivisionEdgeCollection(this);
+            edges.SubDivideAll(maxEdgeLength);
+            foreach (var face in this)
+            {
+                var faceEdges = edges.GetEdgesForFace(face);
+                face.Refine(faceEdges, result);
+            }
             return result;
         }
 

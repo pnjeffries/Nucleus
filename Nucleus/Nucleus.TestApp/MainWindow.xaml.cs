@@ -40,10 +40,11 @@ namespace Nucleus.TestApp
             Random rng = new Random();
             BoundingBox box = new BoundingBox(0, 10, -10, 0, 0, 0);
 
-            int size = 200;
+            int size = 100;
             Geometry.Vector[] points = box.RandomPointsInside(rng, size);
             VertexCollection verts = new VertexCollection(points);
             MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(verts);
+            faces.Quadrangulate();
             //Dictionary<Vertex, MeshFace> voronoi = Mesh.VoronoiFromDelaunay(verts, faces);
             //ShapeCollection geometry = new MeshFaceCollection(voronoi.Values).ExtractFaceBoundaries();
             VertexGeometryCollection geometry = new VertexGeometryCollection(faces.ExtractFaceBoundaries());

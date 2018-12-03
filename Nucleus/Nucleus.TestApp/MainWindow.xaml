@@ -22,7 +22,7 @@
                     <Border BorderBrush="Black" BorderThickness="1" Background="White" Grid.ColumnSpan="2">
                         <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
                             <Viewbox>
-                                <fb:GeometryCanvas Name="DelaunayCanvas" Width="10" Height="10"
+                                <fb:GeometryCanvas Name="DelaunayCanvas" Width="10" Height="10" PointDiameter="0.15"
                                            ></fb:GeometryCanvas>
                             </Viewbox>
                         </ScrollViewer>
@@ -39,7 +39,7 @@
                     <Border BorderBrush="Black" BorderThickness="1" Background="White">
                         <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
                             <Viewbox>
-                                <fb:GeometryCanvas Name="VoronoiCanvas" Width="10" Height="10"></fb:GeometryCanvas>
+                                <fb:GeometryCanvas Name="VoronoiCanvas" Width="10" Height="10" PointDiameter="0.1"></fb:GeometryCanvas>
                             </Viewbox>
                         </ScrollViewer>
                     </Border>

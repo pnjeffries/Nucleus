@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nucleus</RootNamespace>
     <AssemblyName>Nucleus</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -154,6 +154,11 @@
     <Compile Include="Maths\NamedDataSet.cs" />
     <Compile Include="Maths\NamedDataSetCollection.cs" />
     <Compile Include="Maths\MathsHelper.cs" />
+    <Compile Include="Meshing\HalfEdge.cs" />
+    <Compile Include="Meshing\HalfEdgeFace.cs" />
+    <Compile Include="Meshing\HalfEdgeVertex.cs" />
+    <Compile Include="Meshing\MeshDivisionEdge.cs" />
+    <Compile Include="Meshing\MeshDivisionEdgeCollection.cs" />
     <Compile Include="Model\AnalysisCase.cs" />
     <Compile Include="Model\AnalysisCaseCollection.cs" />
     <Compile Include="Model\AnalysisTask.cs" />

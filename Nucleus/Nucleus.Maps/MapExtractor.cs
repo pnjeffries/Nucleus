@@ -1,6 +1,5 @@
 ﻿using Nucleus.Base;
 using Nucleus.Geometry;
-using GoogleMaps.LocationServices;
 using OsmSharp.Streams;
 using System;
 using System.Collections.Generic;
@@ -9,6 +8,8 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using Nominatim.API.Geocoders;
+using Nominatim.API.Models;
 
 namespace Nucleus.Maps
 {
@@ -82,9 +83,25 @@ namespace Nucleus.Maps
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
-        public Vector LatitudeAndLongitudeFromAddress(string address)
+        public AnglePair LatitudeAndLongitudeFromAddress(string address)
         {
-            var gls = new GoogleLocationService();
+            var geocoder = new ForwardGeocoder();
+            var task = geocoder.Geocode(new ForwardGeocodeRequest
+            {
+                queryString = address,
+                BreakdownAddressElements = true,
+                ShowExtraTags = true,
+                ShowAlternativeNames = true,
+            });
+
+            if (task.Result.Length > 0)
+            {
+                var response = task.Result[0];
+                return AnglePair.FromDegrees(response.Latitude, response.Longitude);
+            }
+            else
+                throw new Exception("Address '" + address + "' could not be found.");
+            /*var gls = new GoogleLocationService();
             try
             {
                 var mapPt = gls.GetLatLongFromAddress(address);
@@ -94,7 +111,7 @@ namespace Nucleus.Maps
             catch
             {
                 return Vector.Unset;
-            }
+            }*/
         }
 
         /// <summary>
@@ -169,24 +186,32 @@ namespace Nucleus.Maps
             return osmAPIGet;
         }
 
-       
-
         /// <summary>
         /// Read map geometry data, automatically retrieving the 
         /// </summary>
-        /// <param name="address"></param>
+        /// <param name="address">The address to search for</param>
+        /// <param name="range">The distance around the specified location to download</param>
         /// <param name="layerNames"></param>
         /// <returns></returns>
         public GeometryLayerTable ReadMap(string address, double range = 0.005, IList<string> layerNames = null)
         {
-            Vector ll = LatitudeAndLongitudeFromAddress(address);
-            if (!ll.IsValid()) return null;
-            double latitude = ll.Y;
-            double longitude = ll.X;
-            return ReadMap(latitude, longitude, range, layerNames);
+            /*Vector ll = LatitudeAndLongitudeFromAddress(address);
+            if (!ll.IsValid()) return null;*/
+            var latLong = LatitudeAndLongitudeFromAddress(address);
+            return ReadMap(latLong, range, layerNames);
         }
 
-
+        /// <summary>
+        /// Read map geometry data, automatically retrieving map data from the OpenStreetMap servers 
+        /// </summary>
+        /// <param name="latLong">The latitude and longitude of the map origin</param>
+        /// <param name="range">The range around the specified latitude and longitude to be collected, in degrees</param>
+        /// <param name="layerNames"></param>
+        /// <returns></returns>
+        public GeometryLayerTable ReadMap(AnglePair latLong, double range = 0.005, IList<string> layerNames = null)
+        {
+            return ReadMap(latLong.Elevation.Degrees, latLong.Azimuth.Degrees, range, layerNames);
+        }
 
         /// <summary>
         /// Read map geometry data, automatically retrieving map data from the OpenStreetMap servers 
@@ -198,7 +223,7 @@ namespace Nucleus.Maps
         /// <returns></returns>
         public GeometryLayerTable ReadMap(double latitude, double longitude, double range = 0.005, IList<string> layerNames = null)
         {
-            FilePath osmFile = FilePath.Temp + "TempMap.osm";
+            //FilePath osmFile = FilePath.Temp + "TempMap.osm";
             //DownloadMap(latitude, longitude, osmFile, range);
             //return ReadMap(osmFile, latitude, longitude);
             var data = DownloadMapData(longitude - range, latitude - range, longitude + range, latitude + range);

@@ -21,6 +21,7 @@
 using Nucleus.Base;
 using Nucleus.Extensions;
 using Nucleus.Maths;
+using Nucleus.Meshing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -847,6 +848,49 @@ namespace Nucleus.Geometry
                 result[i] = this[i].Number;
             }
             return result;
+        }
+
+        /// <summary>
+        /// Refine and subdivide this face based on the specified set of pre-divided edges
+        /// </summary>
+        /// <param name="edges"></param>
+        /// <param name="addTo"></param>
+        public void Refine(IList<MeshDivisionEdge> edges, MeshFaceCollection addFaceTo)
+        {
+            Vector midPt = this.AveragePoint();
+
+            int offset = 1;
+
+            for (int i = 0; i < Count; i++)
+            {
+                // Generate corner vertices:
+                var edge1 = edges[i];
+                var edge2 = edges.GetWrapped(i);
+                var newVert = RefinementVertex(edge1, edge2, midPt, offset);
+                //TODO: Finish
+            }
+
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Generate a new vertex 
+        /// </summary>
+        /// <param name="edge1"></param>
+        /// <param name="edge2"></param>
+        /// <param name="midPt"></param>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        private Vertex RefinementVertex(MeshDivisionEdge edge1, MeshDivisionEdge edge2, Vector midPt, int offset)
+        {
+            Vertex startPt = edge1.End;
+            Vertex original1 = edge1.Vertices.FromEnd(offset);
+            Vertex original2 = edge2.Vertices[offset];
+            double t1 = offset / (edge1.Vertices.Count * 0.5);
+            double t2 = offset / (edge2.Vertices.Count * 0.5);
+            double t = (t1 + t2) / 2;
+            Vector newPt = startPt.Position.Interpolate(midPt, t);
+            return new Vertex(newPt);
         }
 
         #endregion

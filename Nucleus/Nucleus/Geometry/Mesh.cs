@@ -276,7 +276,7 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Generate a link of the links between edges in this mesh
+        /// Generate a list of the links between edges in this mesh
         /// </summary>
         /// <returns></returns>
         public IList<MeshEdgeLink> GenerateEdgeLinks()
@@ -289,7 +289,35 @@ namespace Nucleus.Geometry
             return linkDictionary.Values.ToList();
         }
 
+        /// <summary>
+        /// Generate a set of division edges for use in face subdivision
+        /// </summary>
+        /// <returns></returns>
+        public MeshDivisionEdgeCollection GenerateDivisionEdges()
+        {
+            return new MeshDivisionEdgeCollection(Faces);
+        }
 
+        /// <summary>
+        /// Returns a subdivided refinement of 
+        /// </summary>
+        /// <param name="maxEdgeLength"></param>
+        /// <returns></returns>
+        public Mesh Refined(double maxEdgeLength)
+        {
+            var newFaces = Faces.Refine(maxEdgeLength);
+            return new Mesh(newFaces.ExtractVertices(), newFaces);
+        }
+
+        /// <summary>
+        /// Get the local coordinate system of a point on the mesh
+        /// </summary>
+        /// <param name="i">The face index</param>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        /// <param name="orientation"></param>
+        /// <param name="xLimit"></param>
+        /// <returns></returns>
         public override CartesianCoordinateSystem LocalCoordinateSystem(int i, double u, double v, Angle orientation, Angle xLimit)
         {
             if (Faces != null && Faces.Count > i)
@@ -318,7 +346,7 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Write  this mesh to a string in OBJ format
+        /// Write this mesh to a string in OBJ format
         /// </summary>
         /// <returns></returns>
         public string ToOBJ()

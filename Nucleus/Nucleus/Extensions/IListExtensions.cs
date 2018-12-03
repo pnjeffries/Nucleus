@@ -68,6 +68,19 @@ namespace Nucleus.Extensions
             return list[index];
         }
 
+        /// <summary>
+        /// Get the item the specified number of places from the end of this
+        /// list.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public static T FromEnd<T>(this IList<T> list, int index)
+        {
+            return list[list.Count - 1 - index];
+        }
+
 
         /// <summary>
         /// Remove duplicate objects from this collection, leaving
