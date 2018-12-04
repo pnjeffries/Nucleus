@@ -860,15 +860,53 @@ namespace Nucleus.Geometry
             Vector midPt = this.AveragePoint();
 
             int offset = 1;
-
+            var cornerVerts = new List<Vertex>();
             for (int i = 0; i < Count; i++)
             {
                 // Generate corner vertices:
-                var edge1 = edges[i];
-                var edge2 = edges.GetWrapped(i);
+                var edge1 = edges.GetWrapped(i - 1);
+                var edge2 = edges[i];
                 var newVert = RefinementVertex(edge1, edge2, midPt, offset);
-                //TODO: Finish
+                cornerVerts.Add(newVert);
             }
+
+            var newEdges = new List<MeshDivisionEdge>();
+            for (int i = 0; i < Count; i++)
+            {
+                // Generate new edge vertices:
+                var vert1 = cornerVerts[i];
+                var vert2 = cornerVerts.GetWrapped(i + 1);
+                var newEdge = new MeshDivisionEdge(vert1, vert2);
+                var oldEdge = edges[i];
+                newEdge.SubDivide(oldEdge.Divisions - 2);
+                newEdges.Add(newEdge);
+            }
+
+            for (int i = 0; i < Count; i++)
+            {
+                // Generate new faces:
+                var outEdge0 = edges.GetWrapped(i - 1);
+                var outEdge1 = edges[i];
+                var inEdge1 = newEdges[i];
+                // Corner face:
+                var firstFace = new MeshFace(
+                    outEdge1.Start, outEdge1.Vertices[1],
+                    inEdge1.Start, outEdge0.Vertices.FromEnd(1));
+                addFaceTo.Add(firstFace);
+                for (int j = 0; j < inEdge1.Vertices.Count; j++)
+                {
+                    // Edge faces:
+                    var edgeFace = new MeshFace(
+                        outEdge1.Vertices[j + 1], outEdge1.Vertices[j + 2],
+                        inEdge1.Vertices[j + 1], inEdge1.Vertices[j]);
+                    addFaceTo.Add(edgeFace);
+                }
+            }
+
+            //TODO: 
+            // - Increase offset
+            // - Stop when edge runs out of points
+            // - Infill central gap somehow
 
             throw new NotImplementedException();
         }

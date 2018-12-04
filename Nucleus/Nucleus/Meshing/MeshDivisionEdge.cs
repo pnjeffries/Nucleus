@@ -66,6 +66,15 @@ namespace Nucleus.Meshing
             get { return _ID; }
         }
 
+        /// <summary>
+        /// The number of segments this edge has been divided
+        /// into.
+        /// </summary>
+        public int Divisions
+        {
+            get { return _Vertices.Count - 1; }
+        }
+
         #endregion
 
         #region Constructor
