@@ -194,6 +194,25 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Add a new face to this mesh.
+        /// The vertex indices provided should reference valid vertices
+        /// already added to this mesh.
+        /// </summary>
+        /// <param name="vertexIndices">The vertex indices which the 
+        /// face should join</param>
+        /// <returns>The index of the new face</returns>
+        public int AddFace(IEnumerable<int> vertexIndices)
+        {
+            var face = new MeshFace();
+            foreach (int i in vertexIndices)
+            {
+                face.Add(Vertices[i]);
+            }
+            Faces.Add(face);
+            return Faces.Count - 1;
+        }
+
+        /// <summary>
         /// Calculate the surface area of this mesh's faces.
         /// </summary>
         /// <returns></returns>

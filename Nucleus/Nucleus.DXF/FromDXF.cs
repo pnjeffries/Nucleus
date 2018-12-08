@@ -14,7 +14,7 @@ namespace Nucleus.DXF
     /// A class of static helper functions to convert from netDXF datatypes
     /// to Nucleus ones
     /// </summary>
-    public static class DXFtoFB
+    public static class FromDXF
     {
         /// <summary>
         /// Get or set the scaling factor to be used when converting DXF entities to Nucleus ones
@@ -271,6 +271,27 @@ namespace Nucleus.DXF
         }
 
         /// <summary>
+        /// Convert a netDXF mesh to a Nucleus mesh
+        /// </summary>
+        /// <param name="mesh"></param>
+        /// <returns></returns>
+        public static Mesh Convert(nDE.Mesh mesh)
+        {
+            var result = new Mesh();
+            // Vertices:
+            for (int i = 0; i < mesh.Vertexes.Count; i++)
+            {
+                result.AddVertex(Convert(mesh.Vertexes[i]));
+            }
+            // Faces:
+            for (int i = 0; i < mesh.Faces.Count; i++)
+            {
+                result.AddFace(mesh.Faces[i]);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Convert a netDXF entity to a Nucleus geometry object
         /// </summary>
         /// <param name="entity"></param>
@@ -286,6 +307,7 @@ namespace Nucleus.DXF
             else if (entity is nDE.Spline) return Convert((nDE.Spline)entity);
             else if (entity is nDE.Text) return Convert((nDE.Text)entity);
             else if (entity is nDE.MText) return Convert((nDE.MText)entity);
+            else if (entity is nDE.Mesh) return Convert((nDE.Mesh)entity);
             else return null;
         }
 

@@ -15,7 +15,7 @@ namespace Nucleus.DXF
     /// A class of static helper functions to convert from Nucleus datatypes
     /// to netDXF ones
     /// </summary>
-    public static class FBtoDXF
+    public static class ToDXF
     {
         /// <summary>
         /// Get or set the scaling factor to be used when converting DXF entities to Nucleus ones

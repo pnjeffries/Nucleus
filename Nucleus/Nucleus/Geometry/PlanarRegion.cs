@@ -293,7 +293,7 @@ namespace Nucleus.Geometry
                             newPerimeter = newPerimeter.OffsetInwards(offsets);
                         }
                     }
-                    result.Add(new PlanarRegion(newPerimeter, Attributes?.Duplicate()));
+                    if (newPerimeter != null) result.Add(new PlanarRegion(newPerimeter, Attributes?.Duplicate()));
                 }
             }
             else

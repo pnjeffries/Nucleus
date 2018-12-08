@@ -283,6 +283,16 @@ namespace Nucleus.Geometry
             return double.NaN;
         }
 
+        /// <summary>
+        /// Get the curve parameter at the vertex at the specified index
+        /// </summary>
+        /// <param name="vertexIndex"></param>
+        /// <returns></returns>
+        public override double ParameterAtVertexIndex(int vertexIndex)
+        {
+            return ParameterAt(Vertices[vertexIndex]);
+        }
+
         /*
         /// <summary>
         /// Get the curve parameter at the specified length along this curve.
@@ -620,6 +630,7 @@ namespace Nucleus.Geometry
                     else
                         j++;
                 }
+                if (!result.IsValid) return null;
             }
 
             return result;
@@ -789,7 +800,8 @@ namespace Nucleus.Geometry
                 {
                     ISimpleCurve crvB = simples.GetWrapped(j);
                     var chuck = Intersect.CurveCurveXY(crvA, crvB, 0.0001);
-                    if (chuck != null && chuck.Length > 0) return true;
+                    if (chuck != null && chuck.Length > 0)
+                        return true;
                 }
             }
             return false;

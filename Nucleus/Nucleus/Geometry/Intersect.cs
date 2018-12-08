@@ -386,11 +386,11 @@ namespace Nucleus.Geometry
                 {
                     var v0 = pLine.Vertices[i];
                     var v1 = pLine.Vertices.GetWrapped(i + 1);
-                    double tMin = domainAdjustMin + pLine.ParameterAt(v0) * (domainAdjustMax - domainAdjustMin);
-                    double tMax = domainAdjustMin + pLine.ParameterAt(v1) * (domainAdjustMax - domainAdjustMin);
+                    double tMin = domainAdjustMin + pLine.ParameterAtVertexIndex(i) * (domainAdjustMax - domainAdjustMin);
+                    double tMax = domainAdjustMin + pLine.ParameterAtVertexIndex(i+1) * (domainAdjustMax - domainAdjustMin);
                     double t0 = -1, t1 = -1;
-                    Vector sPt = pLine.Vertices[i].Position;
-                    Vector ePt = pLine.Vertices.GetWrapped(i + 1).Position;
+                    Vector sPt = v0.Position;
+                    Vector ePt = v1.Position;
                     LineLineXY(sPt, ePt - sPt, lnPt, lnDir, ref t0, ref t1);
                     if (t0 >= 0 && t0 <= 1)
                     {

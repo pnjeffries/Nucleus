@@ -19,10 +19,12 @@
 // SOFTWARE.
 
 using Nucleus.Base;
+using Nucleus.Debug;
 using Nucleus.Extensions;
 using Nucleus.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,6 +37,8 @@ namespace Nucleus.Geometry
     /// <typeparam name="TItem"></typeparam>
     [Serializable]
     [CollectionCopy(CopyBehaviour.DUPLICATE, CopyBehaviour.DUPLICATE)]
+    [DebuggerTypeProxy(typeof(VertexCollectionDebugView))]
+    [DebuggerDisplay("Count = {Count}")]
     public class VertexCollection : OwnedCollection<Vertex, VertexGeometry>
     {
         #region Properties
@@ -296,5 +300,26 @@ namespace Nucleus.Geometry
         }
 
         #endregion
+    }
+
+    public class VertexCollectionDebugView
+    { 
+        private ICollection<Vertex> _Collection;
+
+        public VertexCollectionDebugView(ICollection<Vertex> collection)
+        {
+            _Collection = collection ?? throw new ArgumentNullException("collection");
+        }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
+        public Vertex[] Items
+        {
+            get
+            {
+                var array = new Vertex[_Collection.Count];
+                _Collection.CopyTo(array, 0);
+                return array;
+            }
+        }
     }
 }

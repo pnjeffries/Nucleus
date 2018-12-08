@@ -19,8 +19,10 @@
 // SOFTWARE.
 
 using Nucleus.Base;
+using Nucleus.Debug;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,6 +35,8 @@ namespace Nucleus.Base
     /// </summary>
     /// <typeparam name="TItem">The type of uniquely identifiable item</typeparam>
     [Serializable]
+    [DebuggerTypeProxy(typeof(CollectionDebugView<>)), 
+               DebuggerDisplay("Count = {Count}")]
     public class UniquesCollection<TItem> : ObservableKeyedCollection<Guid, TItem>, IList<TItem> where TItem : class, IUnique
     {
         #region Constructors
@@ -75,4 +79,5 @@ namespace Nucleus.Base
 
         public UniquesCollection(IEnumerable<IEnumerable<IUnique>> toBeCombined) : base(toBeCombined) { }
     }
+
 }

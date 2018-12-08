@@ -192,7 +192,7 @@ namespace Nucleus.Model
         /// <returns></returns>
         public TElementCollection GetConnectedElements<TElement, TElementCollection>(TElementCollection addTo, bool undeletedOnly = true, TElement ignore = null)
             where TElement : Element
-            where TElementCollection : ElementCollection<TElement, TElementCollection>, new()
+            where TElementCollection : UniquesCollection<TElement>, new()
         {
             foreach (Vertex v in Vertices)
             {
@@ -266,6 +266,7 @@ namespace Nucleus.Model
         public void MoveTo(Vector newPosition, bool dragVertices = true, ElementCollection excludeElements = null)
         {
             Vector move = newPosition - Position;
+            Position = newPosition;
             if (dragVertices)
             {
                 foreach (Vertex v in Vertices)
@@ -274,7 +275,6 @@ namespace Nucleus.Model
                         v.Position += move;
                 }
             }
-            Position = newPosition;
         }
 
         /// <summary>

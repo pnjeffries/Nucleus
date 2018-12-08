@@ -278,7 +278,7 @@ namespace Nucleus.Geometry
         public Vertex(Vertex other)
         {
             _Position = other.Position;
-            Node = other.Node;
+            //Node = other.Node;
         }
 
         #endregion
