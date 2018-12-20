@@ -210,7 +210,7 @@ namespace Nucleus.UI
                     {
                         UIRefreshRequired = true;
 
-                        if (i < BindingChain.Count - 1 && i < BindingRefreshIndex)
+                        if (i < BindingChain.Count - 1 && (BindingRefreshIndex <0 || i < BindingRefreshIndex))
                             BindingRefreshIndex = i;
                     }
                 }
