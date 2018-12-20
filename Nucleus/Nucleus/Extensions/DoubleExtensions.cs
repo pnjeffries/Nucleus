@@ -370,6 +370,51 @@ namespace Nucleus.Extensions
             return value;
         }
 
+        /// <summary>
+        /// Multiply all of the values in this list by the specified factor and get the result.
+        /// The original set of values will not be modified.
+        /// </summary>
+        /// <param name="values"></param>
+        /// <param name="factor">The factor to multiply all values in the list by.</param>
+        /// <returns></returns>
+        public static IList<double> MultiplyAll(this IList<double> values, double factor)
+        {
+            var result = new double[values.Count];
+            for(int i = 0; i < values.Count; i++)
+            {
+                result[i] = values[i] * factor;
+            }
+            return result;
+        }
 
+        /// <summary>
+        /// Cast all of the values in this list to integers
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public static int[] ToIntegers(this IList<double> values)
+        {
+            var result = new int[values.Count];
+            for (int i = 0; i < values.Count; i++)
+            {
+                result[i] = (int)values[i];
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Cast all of the values in this list to integers, rounding up
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public static int[] ToIntegerCeilings(this IList<double> values)
+        {
+            var result = new int[values.Count];
+            for (int i = 0; i < values.Count; i++)
+            {
+                result[i] = (int)Math.Ceiling(values[i]);
+            }
+            return result;
+        }
     }
 }

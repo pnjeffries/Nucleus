@@ -197,7 +197,7 @@ namespace Nucleus.Model
         /// of its geometric definition has been altered.
         /// or has been updated
         /// </summary>
-        public void NotifyGeometryUpdated()
+        public virtual void NotifyGeometryUpdated()
         {
             NotifyPropertyChanged("Geometry");
         }

@@ -113,8 +113,8 @@ namespace Nucleus.Geometry
         /// <param name="other"></param>
         public Line(Line other) : this()
         {
-            Vertices.Add(new Vertex(other.Start));
-            Vertices.Add(new Vertex(other.End));
+            Vertices.Add(new Vertex(other.StartPoint));
+            Vertices.Add(new Vertex(other.EndPoint));
             Attributes = other.Attributes;
         }
 

@@ -105,6 +105,31 @@ namespace Nucleus.Base
         }
 
         #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Set the value of the parameter to the specified new value
+        /// </summary>
+        /// <param name="newValue"></param>
+        /// <returns>True if the value was successfully set, false if not.</returns>
+        public abstract bool SetValue(object newValue);
+
+        /// <summary>
+        /// Get the value of the parameter.
+        /// </summary>
+        /// <returns></returns>
+        public abstract object GetValue();
+
+        /// <summary>
+        /// Set the value of this parameter by copying the value of
+        /// the specified other parameter (if it is of the appropriate type).
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns>True if the value is successfully set, false if not.</returns>
+        public abstract bool SetValueFrom(Parameter other);
+
+        #endregion
     }
 
     /// <summary>
@@ -198,5 +223,43 @@ namespace Nucleus.Base
 
         #endregion
 
+        #region Methods
+
+        /// <summary>
+        /// Set the value of the parameter to the specified new value
+        /// </summary>
+        /// <param name="newValue"></param>
+        /// <returns>True if the value was successfully set, false if not.</returns>
+        public override bool SetValue(object newValue)
+        {
+            if (newValue is T)
+            {
+                Value = (T)newValue;
+                return true;
+            }
+            else return false;
+        }
+
+        /// <summary>
+        /// Set the value of this parameter by copying the value of
+        /// the specified other parameter (if it is of the appropriate type).
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns>True if the value is successfully set, false if not.</returns>
+        public override bool SetValueFrom(Parameter other)
+        {
+            return SetValue(other.GetValue());
+        }
+
+        /// <summary>
+        /// Get the value of the parameter.
+        /// </summary>
+        /// <returns></returns>
+        public override object GetValue()
+        {
+            return Value;
+        }
+
+        #endregion
     }
 }

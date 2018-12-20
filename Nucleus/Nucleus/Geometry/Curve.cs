@@ -248,6 +248,16 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Get the curve parameter at the vertex at the specified index
+        /// </summary>
+        /// <param name="vertexIndex"></param>
+        /// <returns></returns>
+        public virtual double ParameterAtVertexIndex(int vertexIndex)
+        {
+            return vertexIndex / (double)(SegmentCount);
+        }
+
+        /// <summary>
         /// Get the curve parameter at the specified length along this curve.
         /// If the returned parameter falls outside the range 0-1, the specified
         /// length does not fall within the domain of the curve.

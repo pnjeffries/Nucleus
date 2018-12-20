@@ -86,6 +86,7 @@
     <Compile Include="Base\ParameterCollection.cs" />
     <Compile Include="Base\ParameterGroup.cs" />
     <Compile Include="Base\ParameterGroupCollection.cs" />
+    <Compile Include="Debug\CollectionDebugView.cs" />
     <Compile Include="Extensions\RandomExtensions.cs" />
     <Compile Include="Geometry\AngleIntervals.cs" />
     <Compile Include="Geometry\AnglePair.cs" />

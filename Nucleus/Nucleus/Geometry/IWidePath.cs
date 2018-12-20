@@ -474,6 +474,17 @@ namespace Nucleus.Geometry
             where TPath : IWidePath
         {
             var nodes = new NodeCollection();
+            foreach (TPath path in paths)
+            {
+                Node sNode = path.Spine?.Start?.Node;
+                if (sNode != null &&
+                    !nodes.Contains(sNode.GUID))
+                    nodes.Add(sNode);
+                Node eNode = path.Spine?.End?.Node;
+                if (eNode != null &&
+                    !nodes.Contains(eNode.GUID))
+                    nodes.Add(eNode);
+            }
             var tree = new NodeDDTree(nodes);
             foreach (TPath path in paths)
             {

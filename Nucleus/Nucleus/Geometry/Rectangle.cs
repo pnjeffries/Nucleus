@@ -251,6 +251,26 @@ namespace Nucleus.Geometry
     /// </summary>
     public class Rectangle : Rectangle<double>
     {
+        #region Properties
+
+        /// <summary>
+        /// Get the width of the rectangle
+        /// </summary>
+        public double Width
+        {
+            get { return XEnd - XStart; }
+        }
+
+        /// <summary>
+        /// Get the height of the rectangle
+        /// </summary>
+        public double Height
+        {
+            get { return YEnd - YStart; }
+        }
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -269,12 +289,11 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Initialise a rectangle with both start and end values
-        /// set to the specified values in each dimension
+        /// Initialise a rectangle with the specified width and height, centred on the origin
         /// </summary>
-        /// <param name="x">The value to initialise the first dimension bounds to</param>
-        /// <param name="y">The value to initialise the second dimension bounds to</param>
-        public Rectangle(double x, double y) : base(x, y)
+        /// <param name="width">The width (dimension in X) of the rectangle</param>
+        /// <param name="height">The height (dimension in Y) of the rectangle</param>
+        public Rectangle(double width, double height) : base(-width/2, width/2, -height/2, height/2)
         {
         }
 

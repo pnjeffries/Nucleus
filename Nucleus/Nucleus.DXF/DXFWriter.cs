@@ -31,12 +31,12 @@ namespace Nucleus.DXF
 
             foreach (GeometryLayer layer in geometry)
             {
-                Layer dxfLayer = FBtoDXF.Convert(layer);
+                Layer dxfLayer = ToDXF.Convert(layer);
                 doc.Layers.Add(dxfLayer);
 
                 foreach (VertexGeometry geo in layer)
                 {
-                    foreach (EntityObject entity in FBtoDXF.Convert(geo))
+                    foreach (EntityObject entity in ToDXF.Convert(geo))
                     {
                         entity.Layer = dxfLayer;
                         doc.AddEntity(entity);

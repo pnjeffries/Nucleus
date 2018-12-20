@@ -8,8 +8,8 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using Nominatim.API.Geocoders;
-using Nominatim.API.Models;
+//using Nominatim.API.Geocoders;
+//using Nominatim.API.Models;
 
 namespace Nucleus.Maps
 {
@@ -85,7 +85,7 @@ namespace Nucleus.Maps
         /// <returns></returns>
         public AnglePair LatitudeAndLongitudeFromAddress(string address)
         {
-            var geocoder = new ForwardGeocoder();
+            /*var geocoder = new ForwardGeocoder();
             var task = geocoder.Geocode(new ForwardGeocodeRequest
             {
                 queryString = address,
@@ -101,6 +101,8 @@ namespace Nucleus.Maps
             }
             else
                 throw new Exception("Address '" + address + "' could not be found.");
+            */
+            throw new NotImplementedException();
             /*var gls = new GoogleLocationService();
             try
             {

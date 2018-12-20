@@ -47,6 +47,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binding\PropertyBindingBase.cs" />
+    <Compile Include="Extensions\NucleusVectorExtensions.cs" />
+    <Compile Include="Extensions\UnityVector3Extensions.cs" />
     <Compile Include="FromUnity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToUnity.cs" />

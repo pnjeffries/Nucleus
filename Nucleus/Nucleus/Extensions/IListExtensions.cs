@@ -323,5 +323,27 @@ namespace Nucleus.Extensions
             int i = rng.Next(0, list.Count);
             return list[i];
         }
+
+        /// <summary>
+        /// Set the value at the specified index if the list is long enough or if it is not
+        /// extend the list up to that length, populating intervening indices with the
+        /// default value of the appropriate type.
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="index"></param>
+        /// <param name="item"></param>
+        public static void SetAutoExtend<TItem>(this IList<TItem> list, int index, TItem item)
+        {
+            if (list.Count > index) list[index] = item;
+            else
+            { 
+                while (list.Count < index)
+                {
+                    list.Add(default(TItem));
+                }
+                list.Add(item);
+            }
+        }
     }
 }

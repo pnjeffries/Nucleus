@@ -50,60 +50,66 @@ namespace Nucleus.DXF
             double scale = 1.0;
             if (doc.DrawingVariables.InsUnits == netDxf.Units.DrawingUnits.Millimeters) scale = 0.001;
             else if (doc.DrawingVariables.InsUnits == netDxf.Units.DrawingUnits.Centimeters) scale = 0.01;
-            DXFtoFB.ConversionScaling = scale;
+            FromDXF.ConversionScaling = scale;
 
             // Hatches
             foreach (netDxf.Entities.Hatch hatch in doc.Hatches)
             {
-                result.AddRange(DXFtoFB.Convert(hatch));
+                result.AddRange(FromDXF.Convert(hatch));
             }
 
             // Lines
             foreach (netDxf.Entities.Line line in doc.Lines)
             {
-                result.Add(DXFtoFB.Convert(line));
+                result.Add(FromDXF.Convert(line));
             }
 
             // Polylines
             foreach (netDxf.Entities.LwPolyline pLine in doc.LwPolylines)
             {
-                result.Add(DXFtoFB.Convert(pLine));
+                result.Add(FromDXF.Convert(pLine));
             }
             foreach (netDxf.Entities.Polyline pLine in doc.Polylines)
             {
-                result.Add(DXFtoFB.Convert(pLine));
+                result.Add(FromDXF.Convert(pLine));
             }
 
             // Arcs
             foreach (netDxf.Entities.Arc arc in doc.Arcs)
             {
-                result.Add(DXFtoFB.Convert(arc));
+                result.Add(FromDXF.Convert(arc));
             }
             foreach (netDxf.Entities.Circle circle in doc.Circles)
             {
-                result.Add(DXFtoFB.Convert(circle));
+                result.Add(FromDXF.Convert(circle));
             }
 
             // Splines
             foreach (netDxf.Entities.Spline spline in doc.Splines)
             {
-                result.Add(DXFtoFB.Convert(spline));
+                result.Add(FromDXF.Convert(spline));
             }
 
             // Points
             foreach (netDxf.Entities.Point point in doc.Points)
             {
-                result.Add(DXFtoFB.Convert(point));
+                result.Add(FromDXF.Convert(point));
+            }
+
+            //TODO: Meshes
+            foreach (netDxf.Entities.Mesh mesh in doc.Meshes)
+            {
+                result.Add(FromDXF.Convert(mesh));
             }
 
             // Text
             foreach (netDxf.Entities.Text text in doc.Texts)
             {
-                result.Add(DXFtoFB.Convert(text));
+                result.Add(FromDXF.Convert(text));
             }
             foreach (netDxf.Entities.MText text in doc.MTexts)
             {
-                result.Add(DXFtoFB.Convert(text));
+                result.Add(FromDXF.Convert(text));
             }
 
 
@@ -114,12 +120,12 @@ namespace Nucleus.DXF
                 // Note: There is some commented-out code in the library to do this:
                 // see: https://netdxf.codeplex.com/SourceControl/latest#netDxf/Entities/Insert.cs
                 // TODO: Review and improve?
-                Vector translation = DXFtoFB.Convert(insert.Position);
-                Transform transform = DXFtoFB.Convert(insert.GetTransformation(netDxf.Units.DrawingUnits.Meters));
+                Vector translation = FromDXF.Convert(insert.Position);
+                Transform transform = FromDXF.Convert(insert.GetTransformation(netDxf.Units.DrawingUnits.Meters));
 
                 foreach (netDxf.Entities.EntityObject entity in insert.Block.Entities)
                 {
-                    VertexGeometry shape = DXFtoFB.Convert(entity);
+                    VertexGeometry shape = FromDXF.Convert(entity);
                     if (shape != null)
                     {
                         shape.Transform(transform);
