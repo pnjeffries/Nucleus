@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nucleus</RootNamespace>
     <AssemblyName>Nucleus</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -422,6 +422,10 @@
     <Compile Include="Model\UserCoordinateSystemReferenceTable.cs" />
     <Compile Include="Model\VertexDataStore.cs" />
     <Compile Include="Model\VertexReleases.cs" />
+    <Compile Include="Optimisation\GeneticAlgorithmSettings.cs" />
+    <Compile Include="Optimisation\IGene.cs" />
+    <Compile Include="Optimisation\IGeneticAlgorithmOption.cs" />
+    <Compile Include="Optimisation\IGeneticSolver.cs" />
     <Compile Include="Physics\IPhysicsEngineComponent.cs" />
     <Compile Include="Physics\KineticDampingComponent.cs" />
     <Compile Include="Physics\Particle.cs" />

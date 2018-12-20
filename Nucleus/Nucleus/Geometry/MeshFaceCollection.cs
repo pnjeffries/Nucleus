@@ -205,6 +205,40 @@ namespace Nucleus.Geometry
         {
             var sortedPairs = new SortedList<double, Pair<MeshFace, MeshFace>>(Count);
 
+            // Find adjacent pairs of tris and sort by resultant face 'squareness'
+            for (int i = 0; i < Count - 1; i++)
+            {
+                MeshFace faceA = this[i];
+                if (faceA.IsTri)
+                {
+                    for (int j = i + 1; j < Count; j++)
+                    {
+                        MeshFace faceB = this[j];
+                        if (faceB.IsTri)
+                        {
+                            double squareness = faceA.SharedEdgeSquareness(faceB);
+                            if (!squareness.IsNaN() && squareness.Abs() < 0.8) 
+                                sortedPairs.AddSafe(squareness, Pair.Create(faceA, faceB));
+                        }
+                    }
+                }
+            }
+
+            // Reverse through pairs and join:
+            for (int i = 0; i < sortedPairs.Count; i++)
+            {
+                var pair = sortedPairs.Values[i];
+                if (Contains(pair.First.GUID) && Contains(pair.Second.GUID))
+                {
+                    Remove(pair.First);
+                    Remove(pair.Second);
+                    Add(pair.First.MergeWith(pair.Second));
+                }
+            }
+
+            // Version 0.2: also deprecated
+
+            /*var sortedPairs = new SortedList<double, Pair<MeshFace, MeshFace>>(Count);
             // Find adjacent pairs of tris and sort by edge length
             for (int i = 0; i < Count - 1; i++)
             {
@@ -234,7 +268,9 @@ namespace Nucleus.Geometry
                     Remove(pair.Second);
                     Add(pair.First.MergeWith(pair.Second));
                 }
-            }
+            }*/
+
+            // Version 0.1: Deprecated:
 
             /*
             // Populate lists:
@@ -328,6 +364,7 @@ namespace Nucleus.Geometry
         public MeshFaceCollection Refine(double maxEdgeLength)
         {
             MeshFaceCollection result = new MeshFaceCollection();
+            ExtractVertices().AssignVertexIndices(1);
             var edges = new MeshDivisionEdgeCollection(this);
             edges.SubDivideAll(maxEdgeLength);
             foreach (var face in this)

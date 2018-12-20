@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using Nucleus.Base;
+using Nucleus.Exceptions;
 using Nucleus.Extensions;
 using Nucleus.Maths;
 using Nucleus.Meshing;
@@ -204,6 +205,17 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Get the vector describing the path along the edge
+        /// starting with the vertex at the specified index
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public Vector GetEdgeVector(int index)
+        {
+            return this.GetWrapped(index + 1).Position - this[index].Position;
+        }
+
+        /// <summary>
         /// Get the edge of this face at the specified index
         /// </summary>
         /// <param name="index"></param>
@@ -364,6 +376,16 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Get the length of the edge at the specified index
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public double EdgeLength(int index)
+        {
+            return this[index].DistanceTo(this.GetWrapped(index + 1));
+        }
+
+        /// <summary>
         /// Get the index of the longest edge of this face
         /// </summary>
         /// <returns></returns>
@@ -415,8 +437,9 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="index">The edge index</param>
         /// <param name="withFace">The face to check against</param>
+        /// <param name="otherEdgeIndex">The index of the shared edge on the other face</param>
         /// <returns></returns>
-        public bool IsSharedEdge(int index, MeshFace withFace)
+        public bool IsSharedEdge(int index, MeshFace withFace, out int otherEdgeIndex)
         {
             int i0 = withFace.IndexOf(this[index]);
             if (i0 >= 0)
@@ -425,10 +448,43 @@ namespace Nucleus.Geometry
                 if (i1 >= 0)
                 {
                     int dist = (i0 - i1).Abs();
+                    otherEdgeIndex = Math.Min(i0, i1);
                     return dist == 1 || dist == withFace.Count;
                 }
             }
+            otherEdgeIndex = -1;
             return false;
+        }
+
+        /// <summary>
+        /// Is the edge at the specified index shared with the specified other face?
+        /// </summary>
+        /// <param name="index">The edge index</param>
+        /// <param name="withFace">The face to check against</param>
+        /// <returns></returns>
+        public bool IsSharedEdge(int index, MeshFace withFace)
+        {
+            int dump;
+            return IsSharedEdge(index, withFace, out dump);
+
+        }
+
+        /// <summary>
+        /// Find the index of the edge of this face which is shared with.
+        /// If the result is -1, no shared edge could be found.
+        /// </summary>
+        /// <param name="withFace">The face to check against</param>
+        /// <param name="otherEdgeIndex">The index of the shared edge 
+        /// on the other face</param>
+        /// <returns></returns>
+        public int SharedEdgeIndex(MeshFace withFace, out int otherEdgeIndex)
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                if (IsSharedEdge(i, withFace, out otherEdgeIndex)) return i;
+            }
+            otherEdgeIndex = -1;
+            return -1;
         }
 
         /// <summary>
@@ -647,6 +703,48 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Calculate the 'squareness' of the resultant face if this
+        /// face were to be joined with another one.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public double SharedEdgeSquareness(MeshFace other)
+        {
+            int iA = SharedEdgeIndex(other, out int iB);
+            if (iA < 0) return double.NaN; //No shared edge
+
+            // Note: Currently only considering the dot product between the two(+) non-shared
+            // edges and not those between the edges which are to be joined.
+            return SumOfDotProductsOfEdgesNotIn(other) + other.SumOfDotProductsOfEdgesNotIn(this);
+        }
+
+        /// <summary>
+        /// Calculate the sum of dot products of adjacent edges of this face
+        /// which are not shared with the specified connected face.
+        /// Used in determining face 'squareness' for face quadrangulation.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        private double SumOfDotProductsOfEdgesNotIn(MeshFace other)
+        {
+            double result = 0;
+            for (int i = 0; i < Count; i++)
+            {
+                Vertex v1 = this[i];
+                if (!other.Contains(v1))
+                {
+                    Vertex v0 = this.GetWrapped(i - 1);
+                    Vertex v2 = this.GetWrapped(i + 1);
+                    Vector d1 = (v1.Position - v0.Position).Unitize();
+                    Vector d2 = (v2.Position - v1.Position).Unitize();
+                    //TODO: Unitize?
+                    result += d1.Dot(d2);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Sort the vertices of this face counter-clockwise around the specified point
         /// in plan (i.e. in the XY plane).  This will essentially align this face 'upwards'.
         /// Note that this will only work in the case of convex polygons where the ordering
@@ -857,58 +955,63 @@ namespace Nucleus.Geometry
         /// <param name="addTo"></param>
         public void Refine(IList<MeshDivisionEdge> edges, MeshFaceCollection addFaceTo)
         {
-            Vector midPt = this.AveragePoint();
+            //Vector midPt = this.AveragePoint();
+            Vector[] midPts = MedialAxisPoints();
 
-            int offset = 1;
-            var cornerVerts = new List<Vertex>();
-            for (int i = 0; i < Count; i++)
-            {
-                // Generate corner vertices:
-                var edge1 = edges.GetWrapped(i - 1);
-                var edge2 = edges[i];
-                var newVert = RefinementVertex(edge1, edge2, midPt, offset);
-                cornerVerts.Add(newVert);
-            }
+            int minDivisions = edges.MinDelegateValue(edge => edge.Divisions);
 
-            var newEdges = new List<MeshDivisionEdge>();
-            for (int i = 0; i < Count; i++)
+            for (int offset = 1; offset < (minDivisions+1)/2; offset++)
             {
-                // Generate new edge vertices:
-                var vert1 = cornerVerts[i];
-                var vert2 = cornerVerts.GetWrapped(i + 1);
-                var newEdge = new MeshDivisionEdge(vert1, vert2);
-                var oldEdge = edges[i];
-                newEdge.SubDivide(oldEdge.Divisions - 2);
-                newEdges.Add(newEdge);
-            }
-
-            for (int i = 0; i < Count; i++)
-            {
-                // Generate new faces:
-                var outEdge0 = edges.GetWrapped(i - 1);
-                var outEdge1 = edges[i];
-                var inEdge1 = newEdges[i];
-                // Corner face:
-                var firstFace = new MeshFace(
-                    outEdge1.Start, outEdge1.Vertices[1],
-                    inEdge1.Start, outEdge0.Vertices.FromEnd(1));
-                addFaceTo.Add(firstFace);
-                for (int j = 0; j < inEdge1.Vertices.Count; j++)
+                var cornerVerts = new List<Vertex>();
+                for (int i = 0; i < Count; i++)
                 {
-                    // Edge faces:
-                    var edgeFace = new MeshFace(
-                        outEdge1.Vertices[j + 1], outEdge1.Vertices[j + 2],
-                        inEdge1.Vertices[j + 1], inEdge1.Vertices[j]);
-                    addFaceTo.Add(edgeFace);
+                    // Generate corner vertices:
+                    var edge1 = edges.GetWrapped(i - 1);
+                    var edge2 = edges[i];
+                    var newVert = RefinementVertex(edge1, edge2, midPts[i], 1);
+                    cornerVerts.Add(newVert);
                 }
+
+                var newEdges = new List<MeshDivisionEdge>();
+                for (int i = 0; i < Count; i++)
+                {
+                    // Generate new edge vertices:
+                    var vert1 = cornerVerts[i];
+                    var vert2 = cornerVerts.GetWrapped(i + 1);
+                    var newEdge = new MeshDivisionEdge(vert1, vert2);
+                    var oldEdge = edges[i];
+                    newEdge.SubDivide(oldEdge.Divisions - 2);
+                    newEdges.Add(newEdge);
+                }
+
+                for (int i = 0; i < Count; i++)
+                {
+                    // Generate new faces:
+                    var outEdge0 = edges.GetWrapped(i - 1);
+                    var outEdge1 = edges[i];
+                    var inEdge1 = newEdges[i];
+                    // Corner face:
+                    var firstFace = new MeshFace(
+                        outEdge1.Start, outEdge1.Vertices[1],
+                        inEdge1.Start, outEdge0.Vertices.FromEnd(1));
+                    addFaceTo.Add(firstFace);
+                    for (int j = 0; j < inEdge1.Vertices.Count - 1; j++)
+                    {
+                        // Edge faces:
+                        var edgeFace = new MeshFace(
+                            outEdge1.Vertices[j + 1], outEdge1.Vertices[j + 2],
+                            inEdge1.Vertices[j + 1], inEdge1.Vertices[j]);
+                        addFaceTo.Add(edgeFace);
+                    }
+                }
+
+                edges = newEdges;
             }
 
             //TODO: 
-            // - Increase offset
-            // - Stop when edge runs out of points
             // - Infill central gap somehow
 
-            throw new NotImplementedException();
+            
         }
 
         /// <summary>
@@ -924,11 +1027,59 @@ namespace Nucleus.Geometry
             Vertex startPt = edge1.End;
             Vertex original1 = edge1.Vertices.FromEnd(offset);
             Vertex original2 = edge2.Vertices[offset];
-            double t1 = offset / (edge1.Vertices.Count * 0.5);
-            double t2 = offset / (edge2.Vertices.Count * 0.5);
+            double t1 = offset / ((edge1.Vertices.Count - 1) * 0.5);
+            double t2 = offset / ((edge2.Vertices.Count - 1)* 0.5);
             double t = (t1 + t2) / 2;
             Vector newPt = startPt.Position.Interpolate(midPt, t);
             return new Vertex(newPt);
+        }
+
+        /// <summary>
+        /// Calculate the branch points of the medial axis skeleton within
+        /// this face, returned as an array of points
+        /// </summary>
+        /// <returns></returns>
+        private Vector[] MedialAxisPoints()
+        {
+            if (IsQuad)
+            {
+                // Calculate edge lengths:
+                double lU0 = EdgeLength(0);
+                double lV0 = EdgeLength(1);
+                double lU1 = EdgeLength(2);
+                double lV1 = EdgeLength(3);
+                // Find length of each mid-axis:
+                double lUMid = (lU0 + lU1) * 0.5;
+                double lVMid = (lV0 + lV1) * 0.5;
+                if (lUMid > lVMid)
+                {
+                    // Longer in U-axis
+                    Vector start = this[0].Position.Interpolate(this[3].Position, 0.5);
+                    Vector end = this[1].Position.Interpolate(this[2].Position, 0.5);
+                    Vector mA0 = start.Interpolate(end, (lV1 / 2) / lUMid);
+                    Vector mA1 = end.Interpolate(start, (lV0 / 2) / lUMid);
+                    return new Vector[] { mA0, mA1, mA1, mA0 };
+                }
+                else
+                {
+                    // Longer in V-axis
+                    Vector start = this[0].Position.Interpolate(this[1].Position, 0.5);
+                    Vector end = this[2].Position.Interpolate(this[3].Position, 0.5);
+                    Vector mA0 = start.Interpolate(end, (lU0 / 2) / lVMid);
+                    Vector mA1 = end.Interpolate(start, (lU1 / 2) / lVMid);
+                    return new Vector[] { mA0, mA0, mA1, mA1 };
+                }
+            }
+            else if (IsTri)
+            {
+                Vector midPt = this.AveragePoint();
+                var result = new Vector[3];
+                for (int i = 0; i < 3; i++) result[i] = midPt;
+                return result;
+            }
+            else
+                throw new NotImplementedException(
+                    "Medial Axis generation not implemented for n-gons.");
         }
 
         #endregion

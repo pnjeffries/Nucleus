@@ -208,5 +208,27 @@ namespace Nucleus.TestApp
 
             }).Start();
         }
+
+        private void DelaunayRefineButton_Click(object sender, RoutedEventArgs e)
+        {
+            Random rng = new Random();
+            BoundingBox box = new BoundingBox(0, 10, -10, 0, 0, 0);
+
+            int size = 7;
+            Geometry.Vector[] points = box.RandomPointsInside(rng, size);
+            /*var points = new Geometry.Vector[] {
+                new Geometry.Vector(10,-5), new Geometry.Vector(0,-10),
+            new Geometry.Vector(0,0)//};
+            , new Geometry.Vector(5,-5) };*/
+            VertexCollection verts = new VertexCollection(points);
+            MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(verts);
+            faces.Quadrangulate();
+            faces = faces.Refine(0.5);
+            //Dictionary<Vertex, MeshFace> voronoi = Mesh.VoronoiFromDelaunay(verts, faces);
+            //ShapeCollection geometry = new MeshFaceCollection(voronoi.Values).ExtractFaceBoundaries();
+            VertexGeometryCollection geometry = new VertexGeometryCollection(faces.ExtractFaceBoundaries());
+            geometry.Add(new Cloud(verts.ExtractPoints()));
+            DelaunayCanvas.Geometry = geometry;
+        }
     }
 }
