@@ -90,7 +90,7 @@
     <Compile Include="Extensions\RandomExtensions.cs" />
     <Compile Include="Geometry\AngleIntervals.cs" />
     <Compile Include="Geometry\AnglePair.cs" />
-    <Compile Include="Geometry\Cell Maps\CellMapPosition.cs" />
+    <Compile Include="Geometry\Cell Maps\MapData.cs" />
     <Compile Include="Geometry\Cell Maps\CellObscurance.cs" />
     <Compile Include="Geometry\Cell Maps\PartialCellObscurance.cs" />
     <Compile Include="Geometry\CompassDirection.cs" />
@@ -453,6 +453,7 @@
     <Compile Include="Maths\Interpolation.cs" />
     <Compile Include="Rendering\ITextureLoader.cs" />
     <Compile Include="Rendering\ColourGradient.cs" />
+    <Compile Include="Rendering\PrefabStyle.cs" />
     <Compile Include="Rendering\SpriteAnimation.cs" />
     <Compile Include="Rendering\SpriteAnimationDirection.cs" />
     <Compile Include="Rendering\SpriteData.cs" />
@@ -490,6 +491,7 @@
     <Compile Include="UI\DataBinding.cs" />
     <Compile Include="UI\BindingChainLink.cs" />
     <Compile Include="UI\IAutoUIHostable.cs" />
+    <Compile Include="UI\ItemsSourceBinding.cs" />
     <Compile Include="UI\IUserInteraction.cs" />
     <Compile Include="UI\SelectionViewModel.cs" />
     <Compile Include="UI\UIOption.cs" />

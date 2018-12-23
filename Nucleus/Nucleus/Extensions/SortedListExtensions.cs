@@ -42,9 +42,10 @@ namespace Nucleus.Extensions
         /// <param name="list"></param>
         /// <param name="key">The key value for which to retrieve or interpolate a value</param>
         /// <param name="tweening">The tweening algorithm to be used for the interpolation.</param>
+        /// <param name="interpolationFunction">A custom interpolation function to use for non-standard datatypes</param>
         /// <returns></returns>
         public static TValue InterpolatedValueAt<TValue>(this SortedList<double, TValue> list, double key, 
-            Interpolation tweening = Interpolation.LINEAR)
+            Interpolation tweening = Interpolation.LINEAR, Func<TValue,TValue, double, Interpolation, TValue> interpolationFunction = null)
         {
             if (list.Count > 0)
             {
@@ -52,13 +53,18 @@ namespace Nucleus.Extensions
                 else if (list.Count == 1) return list.Values[0];
 
                 double lastKey = list.Keys[0];
-                for (int i = 1; i < list.Count - 1; i++)
+                for (int i = 1; i < list.Count; i++)
                 {
                     double thisKey = list.Keys[i];
                     if (key < thisKey || i == list.Count - 1)
                     {
                         double t = (key - lastKey) / (thisKey - lastKey);
-                        return tweening.Interpolate(list.Values[i - 1], list.Values[i], t);
+                        TValue v0 = list.Values[i - 1];
+                        TValue v1 = list.Values[i];
+                        if (interpolationFunction == null)
+                            return tweening.Interpolate(v0, list.Values[i], t);
+                        else
+                            return interpolationFunction.Invoke(v0, v1, t, tweening);
                     }
                 }
             }

@@ -13,7 +13,7 @@ namespace Nucleus.Rendering
     /// ASCII visual representation
     /// </summary>
     [Serializable]
-    public class ASCIIStyle : Unique, IElementDataComponent
+    public class ASCIIStyle : AvatarStyle, IElementDataComponent
     {
         #region Properties
 

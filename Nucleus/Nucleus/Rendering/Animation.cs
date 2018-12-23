@@ -156,6 +156,19 @@ namespace Nucleus.Rendering
             get { return _States; }
         }
 
+        private Func<TState, TState, double, Interpolation, TState> _CustomInterpolationFunction = null;
+
+        /// <summary>
+        /// A custom interpolation delegate function to be used when determining between-state values.
+        /// The function must take in a start state, end state, parameter from 0-1 between them, the
+        /// interpolation type and return the intermediate state.
+        /// </summary>
+        public Func<TState, TState, double, Interpolation, TState> CustomInterpolationFunction
+        {
+            get { return _CustomInterpolationFunction; }
+            set { _CustomInterpolationFunction = value; }
+        }
+
         /// <summary>
         /// The state value at the start of this animation
         /// </summary>
@@ -174,7 +187,7 @@ namespace Nucleus.Rendering
         {
             get
             {
-                return _States.InterpolatedValueAt(Time, Tweening);
+                return _States.InterpolatedValueAt(Time, Tweening, CustomInterpolationFunction);
             }
         }
 
@@ -198,6 +211,14 @@ namespace Nucleus.Rendering
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="startState"></param>
+        /// <param name="endState"></param>
+        /// <param name="duration"></param>
+        /// <param name="looping"></param>
         public Animation(TTarget target, TState startState, TState endState, double duration, bool looping = false)
         {
             Target = target;

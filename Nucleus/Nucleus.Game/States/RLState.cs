@@ -163,7 +163,7 @@ namespace Nucleus.Game
             foreach (Element element in Elements)
             {
                 var tC = element.GetData<TurnCounter>();
-                if (tC != null && next == null || lowest > tC.CountDown)
+                if (tC != null && (next == null || lowest > tC.CountDown))
                 {
                     next = element;
                     lowest = tC.CountDown;

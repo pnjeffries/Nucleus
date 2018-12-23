@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nucleus.Base;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,8 @@ namespace Nucleus.Rendering
     /// Abstract base class of styles which determine how a 
     /// particular object is to be represented graphically.
     /// </summary>
-    public abstract class AvatarStyle
+    [Serializable]
+    public abstract class AvatarStyle : Unique
     {
     }
 }

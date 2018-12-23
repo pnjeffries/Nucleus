@@ -547,6 +547,23 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Returns a position moving the specified distance from this point towards 
+        /// the target.  
+        /// </summary>
+        /// <param name="target">The point to move towards</param>
+        /// <param name="step">The distance to move</param>
+        /// <returns></returns>
+        public Vector MoveTowards(Vector target, double step)
+        {
+            Vector AtoB = target - this;
+            double distance = AtoB.Magnitude();
+            double factor = 0;
+            if (distance > 0) factor = step / distance;
+            if (factor > 1) factor = 1;
+            return this + (factor * AtoB);
+        }
+
+        /// <summary>
         /// Calculate the cross, or vector, product of this and another vector.
         /// Creates a new vector perpendicular to both input vectors.
         /// </summary>

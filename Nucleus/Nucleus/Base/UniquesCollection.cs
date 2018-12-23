@@ -35,8 +35,8 @@ namespace Nucleus.Base
     /// </summary>
     /// <typeparam name="TItem">The type of uniquely identifiable item</typeparam>
     [Serializable]
-    [DebuggerTypeProxy(typeof(CollectionDebugView<>)), 
-               DebuggerDisplay("Count = {Count}")]
+    //[DebuggerTypeProxy(typeof(CollectionDebugView<>))]
+    [DebuggerDisplay("Count = {Count}")]
     public class UniquesCollection<TItem> : ObservableKeyedCollection<Guid, TItem>, IList<TItem> where TItem : class, IUnique
     {
         #region Constructors

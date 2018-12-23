@@ -1,4 +1,5 @@
 ﻿using Nucleus.Extensions;
+using Nucleus.Maths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,9 @@ namespace Nucleus.Rendering
 
         #region Constructors
 
+        /// <summary>
+        /// Initialise a new PropertyAnimation
+        /// </summary>
         public PropertyAnimation() : base() { }
 
         /// <summary>
@@ -43,9 +47,16 @@ namespace Nucleus.Rendering
         /// <param name="targetPath"></param>
         /// <param name="toValue"></param>
         /// <param name="duration"></param>
-        public PropertyAnimation(object target, string targetPath, object toValue, double duration) : base()
+        /// <param name="tweening"></param>
+        /// <param name="customInterpolationFunction"></param>
+        public PropertyAnimation(object target, string targetPath, object toValue, double duration, 
+            Interpolation tweening = Interpolation.LINEAR, 
+            Func<object, object, double, Interpolation, object> customInterpolationFunction = null) : base()
         {
+            CustomInterpolationFunction = customInterpolationFunction;
+            Tweening = tweening;
             Target = target;
+            TargetPath = targetPath;
             object fromValue = null;
             if (Target != null) fromValue = Target.GetFromPath(targetPath);
 
@@ -54,6 +65,9 @@ namespace Nucleus.Rendering
 
         #endregion
 
+        /// <summary>
+        /// Apply the current state of the animation to the target property
+        /// </summary>
         public override void Apply()
         {
             if (Target != null)

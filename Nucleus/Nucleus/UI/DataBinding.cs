@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Nucleus.UI
 {
     /// <summary>
-    /// Manager class which implements basic functionality to support 
+    /// Class which implements basic functionality to support 
     /// property binding behaviour.
     /// </summary>
     public class DataBinding
@@ -175,7 +175,7 @@ namespace Nucleus.UI
         /// <summary>
         /// Rebuild the binding chain to establish property change monitoring
         /// </summary>
-        public void RefreshBinding()
+        public virtual void RefreshBinding()
         {
             BindingRefreshRequired = false;
 

@@ -23,7 +23,11 @@ namespace Nucleus.Geometry
         public MapCell MapCell
         {
             get { return _MapCell; }
-            set { ChangeProperty(ref _MapCell, value, "MapCell"); }
+            set
+            {
+                ChangeProperty(ref _MapCell, value, "MapCell");
+                NotifyPropertyChanged("Position");
+            }
         }
 
         /// <summary>
