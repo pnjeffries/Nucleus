@@ -1,5 +1,6 @@
 ﻿using Nucleus.Base;
 using Nucleus.Logs;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Nucleus.Game
     /// which has one or more effects
     /// </summary>
     [Serializable]
-    public class GameAction : Named
+    public class GameAction : Deletable, IDuplicatable
     {
         #region Properties
 
@@ -34,14 +35,28 @@ namespace Nucleus.Game
         /// <summary>
         /// Private backing member variable for the Effects property
         /// </summary>
+        [CollectionCopy(CopyBehaviour.DUPLICATE, CopyBehaviour.DUPLICATE)]
         private EffectCollection _Effects = new EffectCollection();
 
         /// <summary>
-        /// The effects of this action
+        /// The effects of this action on the target element(s)
         /// </summary>
         public EffectCollection Effects
         {
             get { return _Effects; }
+        }
+
+        /// <summary>
+        /// Private backing member variable for the Effects property
+        /// </summary>
+        private EffectCollection _SelfEffects = new EffectCollection();
+
+        /// <summary>
+        /// The effects of this action on the element performing the action
+        /// </summary>
+        public EffectCollection SelfEffects
+        {
+            get { return _SelfEffects; }
         }
 
         #endregion
@@ -87,17 +102,75 @@ namespace Nucleus.Game
         /// <returns></returns>
         public virtual bool Enact(IActionLog log, EffectContext context)
         {
-            // TODO: Populate context
+            // Populate context:
+            context = PrePopulateContext(context);
+
             if (Attempt(log, context))
             {
                 // Apply effects:
-                foreach (var effect in Effects)
-                {
-                    effect.Apply(log, context);
-                }
+                ApplyEffects(log, context);
+                ApplySelfEffects(log, context);
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Populate the context data before attempting to execute the action
+        /// </summary>
+        /// <param name="context"></param>
+        protected virtual EffectContext PrePopulateContext(EffectContext context)
+        {
+            return context;
+        }
+
+        /// <summary>
+        /// Apply the effects of the action to the target
+        /// </summary>
+        /// <param name="log"></param>
+        /// <param name="context"></param>
+        protected virtual void ApplyEffects(IActionLog log, EffectContext context)
+        {
+            foreach (var effect in Effects)
+            {
+                effect.Apply(log, context);
+            }
+        }
+
+        /// <summary>
+        /// Apply the self-effects of the action, targetting the actor performing
+        /// the action
+        /// </summary>
+        /// <param name="log"></param>
+        /// <param name="context"></param>
+        protected virtual void ApplySelfEffects(IActionLog log, EffectContext context)
+        {
+            context.Target = context.Actor;
+            foreach (var effect in SelfEffects)
+            {
+                effect.Apply(log, context);
+            }
+        }
+
+        /// <summary>
+        /// Generate a score for this action based on the specified
+        /// set of weightings
+        /// </summary>
+        /// <param name="weights"></param>
+        /// <returns></returns>
+        public virtual double AIScore(TurnContext context, ActionSelectionAI weights)
+        {
+            return 1.0;
+        }
+
+        /// <summary>
+        /// Can this action target the specified element
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public virtual bool CanTarget(Element element)
+        {
+            return true;
         }
 
         #endregion

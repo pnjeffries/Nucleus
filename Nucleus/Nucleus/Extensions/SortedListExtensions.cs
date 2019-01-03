@@ -45,7 +45,7 @@ namespace Nucleus.Extensions
         /// <param name="interpolationFunction">A custom interpolation function to use for non-standard datatypes</param>
         /// <returns></returns>
         public static TValue InterpolatedValueAt<TValue>(this SortedList<double, TValue> list, double key, 
-            Interpolation tweening = Interpolation.LINEAR, Func<TValue,TValue, double, Interpolation, TValue> interpolationFunction = null)
+            Interpolation tweening = Interpolation.Linear, Func<TValue,TValue, double, Interpolation, TValue> interpolationFunction = null)
         {
             if (list.Count > 0)
             {

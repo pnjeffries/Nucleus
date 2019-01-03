@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nucleus.Tests</RootNamespace>
     <AssemblyName>Nucleus.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -50,6 +51,7 @@
     <Compile Include="ETABS_Tests.cs" />
     <Compile Include="Excel_Tests.cs" />
     <Compile Include="GWA_Tests.cs" />
+    <Compile Include="Log_Tests.cs" />
     <Compile Include="Map_Tests.cs" />
     <Compile Include="Matrix_Tests.cs" />
     <Compile Include="Mesh_Tests.cs" />

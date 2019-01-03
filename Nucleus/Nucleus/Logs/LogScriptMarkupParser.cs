@@ -1,4 +1,5 @@
-﻿using Nucleus.Extensions;
+﻿using Nucleus.Base;
+using Nucleus.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,14 +17,28 @@ namespace Nucleus.Logs
         #region Constants
 
         /// <summary>
-        /// The character which depicts the start of a markup expression
+        /// The character which depicts the start of 
+        /// a formatting markup expression
         /// </summary>
         public const char MARKUP_OPEN = '<';
 
         /// <summary>
-        /// The character which depicts the end of a markup expression
+        /// The character which depicts the end of 
+        /// a formatting markup expression
         /// </summary>
         public const char MARKUP_CLOSE = '>';
+
+        /// <summary>
+        /// The character which depicts the start of
+        /// a function markup expression
+        /// </summary>
+        public const char FUNCTION_OPEN = '{';
+
+        /// <summary>
+        /// The character which depicts the end of
+        /// a function markup expression
+        /// </summary>
+        public const char FUNCTION_CLOSE = '}';
 
         /// <summary>
         /// The character which depicts the start of a set of function arguments
@@ -118,20 +133,23 @@ namespace Nucleus.Logs
             string expanded = ExpandMarkup(markup);
 
             int i = 0;
-            while (i < markup.Length)
+            while (i < expanded.Length)
             {
                 int iS = i;
-                string nextMarkup = markup.NextBracketed(ref i, MARKUP_OPEN, MARKUP_CLOSE);
+                string nextMarkup = expanded.NextBracketed(ref i, MARKUP_OPEN, MARKUP_CLOSE);
+                if (nextMarkup == null) i = expanded.Length;
 
                 // Write preceding text:
-                string text = markup.Substring(iS, i - iS - 1);
+                int length = i - iS;
+                string text = null;
+                if (length > 0)  text = expanded.Substring(iS, length);
                 if (!string.IsNullOrEmpty(text))
                     Log.Write(text);
 
                 if (nextMarkup != null)
                 {
                     ExecuteTag(nextMarkup, 1);
-                    i += nextMarkup.Length + 1;
+                    i += nextMarkup.Length + 2;
                 }
             }
         }
@@ -149,10 +167,11 @@ namespace Nucleus.Logs
             while (i < markup.Length)
             {
                 int iS = i;
-                string nextMarkup = markup.NextBracketed(ref i, MARKUP_OPEN, MARKUP_CLOSE);
+                string nextMarkup = markup.NextBracketed(ref i, FUNCTION_OPEN, FUNCTION_CLOSE);
+                if (nextMarkup == null) i = markup.Length;
 
                 // Write preceding text:
-                string text = markup.Substring(iS, i - iS - 1);
+                string text = markup.Substring(iS, i - iS);
                 if (!string.IsNullOrEmpty(text))
                     sb.Append(text);
 
@@ -160,7 +179,7 @@ namespace Nucleus.Logs
                 {
                     string expanded = ExecuteTag(nextMarkup, 0);
                     sb.Append(expanded);
-                    i += nextMarkup.Length + 1;
+                    i += nextMarkup.Length + 2;
                 }
 
             }
@@ -181,11 +200,11 @@ namespace Nucleus.Logs
             string functionName = markup.Substring(0, iS).ToUpper().Replace('/', '_');
 
             // First we check if any method with that name exist and if so its return type
-            MethodInfo method = GetType().GetMethod(functionName);
+            MethodInfo method = GetType().GetMethod(functionName, new Type[] { });
 
             // Don't invoke method if it is not expandable (doesn't return a string) & this is the
             // first pass.
-            if (method != null && (method.ReturnType.IsAssignableFrom(typeof(string)) || pass > 0))
+            if (method == null || (method.ReturnType.IsAssignableFrom(typeof(string)) || pass > 0))
             {
                 // Refine the function call by checking the arguments:
 
@@ -308,15 +327,43 @@ namespace Nucleus.Logs
         /// <param name="index"></param>
         /// <param name="path"></param>
         /// <returns></returns>
-        public string SUBJECT(int index, string path)
+        public string SUBJECT(string index, string path)
         {
             try
             {
-                var obj = Subjects[index];
+                int i = int.Parse(index);
+                var obj = Subjects[i];
                 return obj.GetFromPath(path).ToString();
             }
             catch { }
             return "!ERROR!"; //TODO: Review - fallback to ""?
+        }
+
+        /// <summary>
+        /// Select a variation based on the gender of a subject
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="neutral"></param>
+        /// <param name="masculine"></param>
+        /// <param name="feminine"></param>
+        /// <returns></returns>
+        public string GENDER(string index, string neutral, string masculine, string feminine)
+        {
+            try
+            {
+                int i = int.Parse(index);
+                Gender gender = Gender.Neutral;
+                if (i >= 0 && i < Subjects.Length)
+                {
+                    object subject = Subjects[i];
+                    gender = GenderHelper.GenderOf(subject);
+                }
+                if (gender == Gender.Masculine) return masculine;
+                else if (gender == Gender.Feminine) return feminine;
+            }
+            catch { }
+
+            return neutral;
         }
 
         #endregion

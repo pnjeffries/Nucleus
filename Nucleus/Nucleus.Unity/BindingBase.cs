@@ -111,9 +111,10 @@ namespace Nucleus.Unity
             // TODO: This may need some more work...
             var bindings = obj.GetComponents<BindingBase>();
             foreach (var binding in bindings) binding.DataContext = dataContext;
-            
-            // TODO: Children...?
-            // obj.transform.GetComponentsInChildren()
+
+            // Children:
+            var childBindings = obj.transform.GetComponentsInChildren<BindingBase>();
+            foreach (var binding in childBindings) binding.DataContext = dataContext;
         }
     }
 }

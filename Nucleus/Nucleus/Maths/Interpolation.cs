@@ -18,48 +18,53 @@ namespace Nucleus.Maths
         /// <summary>
         /// Linear interpolation: t/d
         /// </summary>
-        LINEAR,
+        Linear,
 
         /// <summary>
         /// Quadratic interpolation: (t/d)^2
         /// </summary>
-        QUADRATIC,
+        Quadratic,
 
         /// <summary>
         /// Cubic interpolation: (t/d)^3
         /// </summary>
-        CUBIC,
+        Cubic,
 
         /// <summary>
         /// Square root interpolation: (t/d)^0.5
         /// </summary>
-        SQUAREROOT,
+        SquareRoot,
 
         /// <summary>
         /// Cube root interpolation: (t/d)^1/3
         /// </summary>
-        CUBEROOT,
+        CubeRoot,
 
 
         /// <summary>
         /// Exponential interpolation: (exp(a*(t/d))-1)*1/(exp(a)-1)
         /// </summary>
-        EXPONENTIAL,
+        Exponential,
 
         /// <summary>
         /// Pseudo-elastic interpolation: 1/(exp(a)-1)*cos(b*(t/d)*2*PI)*exp(a*(t/d))-1/(exp(a)-1)
         /// </summary>
-        ELASTIC,
+        Elastic,
 
         /// <summary>
         /// Sine interpolation: sin(a*(t/d)*2*PI)
         /// </summary>
-        SIN,
+        Sin,
 
         /// <summary>
         /// Cosine interpolation: cos(a*(t/d)*2*PI)
         /// </summary>
-        COS
+        Cos,
+
+        /// <summary>
+        /// Step interpolation: jumps from one value to another at the mid-point
+        /// </summary>
+        Step
     }
 
     /// <summary>
@@ -85,6 +90,26 @@ namespace Nucleus.Maths
         {
             t = i.Tween(t, alpha, beta);
             return v0 + (v1 - v0) * t;
+        }
+
+        /// <summary>
+        /// Interpolate between two angles using the algorithm represented by this enumerated value.
+        /// The direction of rotation will be automatically determined as whichever is the smallest
+        /// change in angle.
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="v0">The first value to interpolate from</param>
+        /// <param name="v1">The second value to interpolate towards</param>
+        /// <param name="t">The interpolation parameter.  Typically will be between 0-1,
+        /// where 0 is v0 and 1 is v1</param>
+        /// <param name="alpha">The optional Alpha parameter used in some tweening methods</param>
+        /// <param name="beta">The optional Beta parameter used in some tweening methods</param>
+        /// <returns>The interpolated value</returns>
+        public static Angle Interpolate(this Interpolation i, Angle v0, Angle v1, double t, double alpha = DefaultAlpha, double beta = DefaultBeta)
+        {
+            t = i.Tween(t, alpha, beta);
+            Angle rotation = (v1 - v0).Normalize();
+            return v0 + rotation * t;
         }
 
         /// <summary>
@@ -160,24 +185,26 @@ namespace Nucleus.Maths
         {
             switch (i)
             {
-                case Interpolation.LINEAR:
+                case Interpolation.Linear:
                     return t;
-                case Interpolation.QUADRATIC:
+                case Interpolation.Quadratic:
                     return t.Power(2);
-                case Interpolation.CUBIC:
+                case Interpolation.Cubic:
                     return t.Power(3);
-                case Interpolation.SQUAREROOT:
+                case Interpolation.SquareRoot:
                     return t.Root();
-                case Interpolation.CUBEROOT:
+                case Interpolation.CubeRoot:
                     return t.Power(1.0 / 3);
-                case Interpolation.EXPONENTIAL: // Exponential interpolation: (e(a * (t / d)) - 1) * 1 / (e(a) - 1)
+                case Interpolation.Exponential: // Exponential interpolation: (e(a * (t / d)) - 1) * 1 / (e(a) - 1)
                     return (Math.Exp(-alpha * t) - 1) * 1 / (Math.Exp(alpha) - 1.0);
-                case Interpolation.ELASTIC: //Pseudo-elastic interpolation: 1/(exp(a)-1)*cos(b*(t/d)*2*PI)*exp(a*(t/d))-1/(exp(a)-1)
+                case Interpolation.Elastic: //Pseudo-elastic interpolation: 1/(exp(a)-1)*cos(b*(t/d)*2*PI)*exp(a*(t/d))-1/(exp(a)-1)
                     return 1 / (Math.Exp(-alpha) - 1) * Math.Cos(beta * t * 2 * Math.PI) * Math.Exp(-alpha * t) - 1 / (Math.Exp(-alpha) - 1);
-                case Interpolation.SIN:
+                case Interpolation.Sin:
                     return Math.Sin(t * 0.5 * Math.PI);
-                case Interpolation.COS:
+                case Interpolation.Cos:
                     return 1 - (Math.Cos(t * 1 * Math.PI) + 1) / 2;
+                case Interpolation.Step:
+                    return (t >= 0.5 ? 1 : 0);
             }
             return t;
         }

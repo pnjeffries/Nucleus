@@ -1,4 +1,5 @@
-﻿using Nucleus.Geometry;
+﻿using Nucleus.Base;
+using Nucleus.Geometry;
 using Nucleus.Model;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,8 @@ namespace Nucleus.Game
     /// are available to that actor
     /// </summary>
     [Serializable]
-    public class AvailableActions : IElementDataComponent, IEndOfTurn
+    public class AvailableActions : NotifyPropertyChangedBase, 
+        IElementDataComponent, IEndOfTurn
     {
         #region Properties
 

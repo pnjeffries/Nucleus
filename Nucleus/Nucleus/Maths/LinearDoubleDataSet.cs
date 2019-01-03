@@ -93,7 +93,7 @@ namespace Nucleus.Maths
 
         protected override double Interpolate(double v0, double v1, double factor)
         {
-            return Interpolation.LINEAR.Interpolate(v0, v1, factor);
+            return Interpolation.Linear.Interpolate(v0, v1, factor);
         }
 
         /// <summary>

@@ -33,29 +33,10 @@ namespace Nucleus.Model
     /// and form the top-level of data within that model.
     /// </summary>
     [Serializable]
-    public abstract class ModelObject : Named, IDeletable, IOwned<Model>
+    public abstract class ModelObject : Deletable, IOwned<Model>
     {
 
         #region Properties
-
-        /// <summary>
-        /// Private backing field for IsDeleted property
-        /// </summary>
-        private bool _IsDeleted = false;
-
-        /// <summary>
-        /// Get a boolean value indicating whether this object has been
-        /// marked for deletion.  This flag indicates that the object should be
-        /// ignored in any operation that acts only on the current state of the
-        /// model and that it should be removed during the next cleanup sweep.
-        /// </summary>
-        public bool IsDeleted
-        {
-            get
-            {
-                return _IsDeleted;
-            }
-        }
 
         /// <summary>
         /// Private backing field for Model property
@@ -144,7 +125,6 @@ namespace Nucleus.Model
         /// <param name="other"></param>
         protected ModelObject(ModelObject other) : base(other)
         {
-            _IsDeleted = other.IsDeleted;
             // Other properties not necessary to copy
         }
 
@@ -157,36 +137,6 @@ namespace Nucleus.Model
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Delete this object.
-        /// The object itself will not be immediately removed from the model
-        /// but will instead be flagged for future removal and ignored in most
-        /// operations.  Check the IsDeleted property to see whether this
-        /// object is marked for deletion.
-        /// </summary>
-        public void Delete()
-        {
-            if (!_IsDeleted)
-            {
-                _IsDeleted = true;
-                NotifyPropertyChanged("IsDeleted");
-            }
-        }
-
-        /// <summary>
-        /// Undelete this object.
-        /// If the deletion flag on this object is set it will be unset and
-        /// the object restored.
-        /// </summary>
-        public virtual void Undelete()
-        {
-            if (_IsDeleted)
-            {
-                _IsDeleted = false;
-                NotifyPropertyChanged("IsDeleted");
-            }
-        }
 
         /// <summary>
         /// Raise a PropertyChanged event for the specified property name.

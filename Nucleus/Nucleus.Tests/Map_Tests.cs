@@ -31,15 +31,15 @@ namespace Nucleus.Tests
         public static string AddressToLat(string address)
         {
             var extractor = new MapExtractor();
-            Vector pt = extractor.LatitudeAndLongitudeFromAddress(address);
-            return "Latitude and Longitude: " + pt.Y + "°, " + pt.X + "°";
+            var pt = extractor.LatitudeAndLongitudeFromAddress(address);
+            return "Latitude and Longitude: " + pt.Elevation.Degrees + "°, " + pt.Azimuth.Degrees + "°";
         }
 
         public static void DownloadAddressTest(string address)
         {
             var extractor = new MapExtractor();
-            Vector pt = extractor.LatitudeAndLongitudeFromAddress(address);
-            DownloadMapTest(pt.Y, pt.X);
+            var pt = extractor.LatitudeAndLongitudeFromAddress(address);
+            DownloadMapTest(pt.Elevation.Degrees, pt.Azimuth.Degrees);
         }
     }
 }

@@ -46,7 +46,7 @@ namespace Nucleus.Extensions
             if (setOn != null)
             {
                 PropertyInfo pInfo = setOn.GetType().GetProperty(path);
-                if (value != null && value is IConvertible && pInfo.PropertyType.IsAssignableFrom(value.GetType()))
+                if (value != null && value is IConvertible && !pInfo.PropertyType.IsAssignableFrom(value.GetType()))
                 {
                     value = Convert.ChangeType(value, pInfo.PropertyType);
                 }

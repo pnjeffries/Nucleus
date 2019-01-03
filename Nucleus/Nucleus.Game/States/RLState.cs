@@ -1,4 +1,5 @@
-﻿using Nucleus.Geometry;
+﻿using Nucleus.Base;
+using Nucleus.Geometry;
 using Nucleus.Logs;
 using Nucleus.Model;
 using System;
@@ -53,6 +54,20 @@ namespace Nucleus.Game
             }
         }
 
+        /// <summary>
+        /// The random number generator used to provide randomisation
+        /// </summary>
+        public Random RNG { get; set; } = new Random();
+
+        /// <summary>
+        /// The time delay to be used between the end of the player turn and the start of AI movement
+        /// </summary>
+        private double _AITurnDelay = 0.1;
+
+        /// <summary>
+        /// Time remaining before AI turns can begin
+        /// </summary>
+        private double _AITurnCountDown = 0;
 
         #endregion
 
@@ -74,6 +89,20 @@ namespace Nucleus.Game
             EndTurnOf(Controlled);
         }
 
+        public override void Update(UpdateInfo info)
+        {
+            base.Update(info);
+            if (_AITurnCountDown > 0)
+            {
+                _AITurnCountDown -= info.TimeStep;
+                if (_AITurnCountDown <= 0)
+                {
+                    _AITurnCountDown = 0;
+                    NextTurn();
+                }
+            }
+        }
+
         /// <summary>
         /// Called when the user releases a key or button
         /// </summary>
@@ -88,31 +117,24 @@ namespace Nucleus.Game
             {
                 var aA = controlled.GetData<AvailableActions>();
 
+                GameAction action = null;
+
                 if (direction.IsValidNonZero())
                 {
-                    //Find targetted cell:
+                    //Find targeted cell:
                     MapData mD = controlled.GetData<MapData>();
                     if (mD != null && mD.MapCell != null)
                     {
                         MapCell newCell = Stage.Map.AdjacentCell(mD.MapCell.Index, direction);
-                        var tAction = aA.ActionForInput(input, newCell.Index);
-                        if (tAction != null)
-                        {
-                            tAction.Enact(Log, new EffectContext(controlled, this, direction));
-                            EndTurnOf(controlled);
-                            return;
-                        }
-                        /*if (newCell != null && (controlled.GetData<MapCellCollider>()?.CanEnter(newCell) ?? true))
-                            newCell.PlaceInCell(controlled);
-                        EndTurnOf(controlled);*/
+                        action = aA.ActionForInput(input, newCell.Index);
                     }
                 }
 
                 // Haven't found a targeted action; fallback to:
-                var action = aA.ActionForInput(input.ToTopLevel());
+                if (action == null) action = aA.ActionForInput(input);
                 if (action != null)
                 {
-                    action.Enact(Log, new EffectContext(controlled, this));
+                    action.Enact(Log, new EffectContext(controlled, this, direction));
                     EndTurnOf(controlled);
                 }
 
@@ -125,13 +147,37 @@ namespace Nucleus.Game
         /// <param name="element"></param>
         public void StartTurnOf(Element element)
         {
-            var context = new TurnContext(this, Stage, element);
+            var context = new TurnContext(this, Stage, element, RNG);
             Active = element;
-            foreach (IElementDataComponent dC in element.Data)
+            for (int i = 0; i < element.Data.Count; i++)
             {
+                IElementDataComponent dC = element.Data[i];
                 if (dC is IStartOfTurn)
                 {
                     ((IStartOfTurn)dC).StartOfTurn(context);
+                }
+                if (dC is IDeletable && ((IDeletable)dC).IsDeleted)
+                {
+                    element.Data.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            if (element != Controlled)
+            {
+                var ai = new ActionSelectionAI(); //TEMP?
+                var actions = element.GetData<AvailableActions>();
+                GameAction tAction = ai.SelectAction(context, actions.Actions);
+
+                tAction.Enact(Log, new EffectContext(element, this));
+                EndTurnOf(element);
+            }
+            else
+            {
+                var actions = element.GetData<AvailableActions>();
+                if (actions == null || actions.Actions.Count == 0)
+                {
+                    EndTurnOf(element);
                 }
             }
         }
@@ -141,15 +187,28 @@ namespace Nucleus.Game
         /// </summary>
         public void EndTurnOf(Element element)
         {
-            var context = new TurnContext(this, Stage, element);
-            foreach (IElementDataComponent dC in element.Data)
+            var context = new TurnContext(this, Stage, element, RNG);
+            for (int i = 0; i < element.Data.Count; i++)
             {
+                IElementDataComponent dC = element.Data[i];
                 if (dC is IEndOfTurn)
                 {
                     ((IEndOfTurn)dC).EndOfTurn(context);
                 }
+                if (dC is IDeletable && ((IDeletable)dC).IsDeleted)
+                {
+                    element.Data.RemoveAt(i);
+                    i--;
+                }
             }
-            NextTurn();
+
+            // Clean up to end the turn
+            CleanUpDeleted();
+
+            if (!Controlled.IsDeleted && Controlled != element) //Pause after player's turn
+                NextTurn();
+            else
+                _AITurnCountDown = _AITurnDelay; //Reset the countdown
         }
 
         /// <summary>
@@ -157,6 +216,7 @@ namespace Nucleus.Game
         /// </summary>
         public void NextTurn()
         {
+
             // Find element with next turn:
             Element next = null;
             int lowest = 0;
@@ -182,7 +242,30 @@ namespace Nucleus.Game
 
             if (next != null)
             {
+                next.GetData<TurnCounter>().CountDown += 1000;
                 StartTurnOf(next);
+            }
+        }
+
+        /// <summary>
+        /// Clean up after any elements which have been deleted in this turn
+        /// </summary>
+        public void CleanUpDeleted()
+        {
+            for (int i = Elements.Count - 1; i >= 0; i--)
+            {
+                var element = Elements[i];
+                if (element.IsDeleted)
+                {
+                    // Remove from active elements:
+                    Elements.RemoveAt(i);
+
+                    // Remove from map:
+                    MapData mD = element.GetData<MapData>();
+                    mD?.MapCell?.RemoveFromCell(element);
+
+                    // TODO: Cleanup any other components that need it?
+                }
             }
         }
 

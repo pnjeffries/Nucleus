@@ -31,17 +31,23 @@ namespace Nucleus.Game
         /// </summary>
         public Element Element { get; set; }
 
+        /// <summary>
+        /// The random number generator used to provide randomisation
+        /// </summary>
+        public Random RNG { get; set; } = new Random();
+
         #endregion
 
         #region Constructors
 
         public TurnContext() { }
 
-        public TurnContext(GameState state, MapStage stage, Element element)
+        public TurnContext(GameState state, MapStage stage, Element element, Random rng)
         {
             State = state;
             Stage = stage;
             Element = element;
+            RNG = rng;
         }
 
         #endregion

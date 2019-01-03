@@ -1,5 +1,6 @@
 ﻿using Nucleus.Base;
 using Nucleus.Geometry;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,15 @@ namespace Nucleus.Game
     [Serializable]
     public abstract class GameState : Unique
     {
+        #region Properties
+
+        /// <summary>
+        /// The collection of currently active game elements
+        /// </summary>
+        public abstract ElementCollection Elements { get; set; }
+
+        #endregion
+
         #region Methods
 
         /// <summary>

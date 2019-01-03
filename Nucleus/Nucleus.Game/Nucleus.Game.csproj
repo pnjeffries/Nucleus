@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Nucleus.Game.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -42,9 +43,17 @@
   <ItemGroup>
     <Compile Include="Actions\ActionCellInputTrigger.cs" />
     <Compile Include="Actions\ActionInputTrigger.cs" />
+    <Compile Include="Actions\AOEAttackAction.cs" />
     <Compile Include="Actions\BumpAttackAction.cs" />
+    <Compile Include="Actions\CellTargetingAction.cs" />
+    <Compile Include="Actions\ElementTargetingAction.cs" />
     <Compile Include="Actions\GameActionCollection.cs" />
+    <Compile Include="Actions\IActionsOverride.cs" />
     <Compile Include="Actions\MoveCellAction.cs" />
+    <Compile Include="Actions\MultiCellTargetingAction.cs" />
+    <Compile Include="Actions\PickUpAction.cs" />
+    <Compile Include="Actions\WindUpAction.cs" />
+    <Compile Include="Actions\TargetedAction.cs" />
     <Compile Include="Actions\WaitAction.cs" />
     <Compile Include="Artitecture\CellGenerationType.cs" />
     <Compile Include="Artitecture\ExitPlacement.cs" />
@@ -52,24 +61,50 @@
     <Compile Include="Artitecture\RoomCollection.cs" />
     <Compile Include="Artitecture\RoomTemplateCollection.cs" />
     <Compile Include="Artitecture\RoomType.cs" />
-    <Compile Include="Components\Ability.cs" />
+    <Compile Include="Components\Abilities\Ability.cs" />
+    <Compile Include="Components\Abilities\BumpAttackAbility.cs" />
+    <Compile Include="Components\Abilities\DirectionalItemUseAbility.cs" />
+    <Compile Include="Components\DisableActions.cs" />
+    <Compile Include="Components\EquipmentSlot.cs" />
+    <Compile Include="Components\EquipmentSlotCollection.cs" />
+    <Compile Include="Components\EquippableItem.cs" />
+    <Compile Include="Components\Equipped.cs" />
     <Compile Include="Components\HitPoints.cs" />
     <Compile Include="Components\AvailableActions.cs" />
     <Compile Include="Artitecture\DungeonArtitect.cs" />
     <Compile Include="Components\IEndOfTurn.cs" />
+    <Compile Include="Components\Inertia.cs" />
+    <Compile Include="Components\Inventory.cs" />
     <Compile Include="Components\IStartOfTurn.cs" />
+    <Compile Include="Components\ItemAction.cs" />
     <Compile Include="Components\MapAwareness.cs" />
     <Compile Include="Components\Memorable.cs" />
-    <Compile Include="Components\MoveCellAbility.cs" />
+    <Compile Include="Components\Abilities\MoveCellAbility.cs" />
+    <Compile Include="Components\ActionSelectionAI.cs" />
+    <Compile Include="Components\PickUp.cs" />
+    <Compile Include="Components\Abilities\PickUpAbility.cs" />
+    <Compile Include="Components\Abilities\TemporaryAbility.cs" />
+    <Compile Include="Components\TemporaryStatus.cs" />
     <Compile Include="Components\TurnCounter.cs" />
+    <Compile Include="Components\Abilities\UseItemAbility.cs" />
     <Compile Include="Components\VisionBlocker.cs" />
-    <Compile Include="Components\WaitAbility.cs" />
+    <Compile Include="Components\Abilities\WaitAbility.cs" />
+    <Compile Include="Effects\ActorOrientationEffect.cs" />
+    <Compile Include="Effects\AddAbilityEffect.cs" />
     <Compile Include="Effects\BasicEffect.cs" />
     <Compile Include="Effects\DamageEffect.cs" />
+    <Compile Include="Effects\DamageType.cs" />
+    <Compile Include="Effects\DisableEffect.cs" />
     <Compile Include="Effects\EffectContext.cs" />
+    <Compile Include="Effects\KnockbackEffect.cs" />
+    <Compile Include="Effects\PickUpItemEffect.cs" />
+    <Compile Include="Effects\SFXImpactEffect.cs" />
+    <Compile Include="Faction.cs" />
+    <Compile Include="GameElement.cs" />
     <Compile Include="InputFunction.cs" />
     <Compile Include="InputManager.cs" />
     <Compile Include="Artitecture\RoomTemplate.cs" />
+    <Compile Include="SFXKeywords.cs" />
     <Compile Include="States\RLState.cs" />
     <Compile Include="States\BasicGameState.cs" />
     <Compile Include="Effects\EffectCollection.cs" />

@@ -90,7 +90,12 @@ namespace Nucleus.Geometry
         /// <returns></returns>
         public T this[int cellIndex]
         {
-            get { return _Cells[cellIndex]; }
+            get
+            {
+                if (cellIndex >= 0 && cellIndex < _Cells.Length)
+                    return _Cells[cellIndex];
+                else return default(T);
+            }
             set {_Cells[cellIndex] = value; }
         }
 
@@ -140,6 +145,16 @@ namespace Nucleus.Geometry
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Get the cell object at the specified index
+        /// </summary>
+        /// <param name="cellIndex"></param>
+        /// <returns></returns>
+        public object GetCell(int cellIndex)
+        {
+            return this[cellIndex];
+        }
 
         /// <summary>
         /// Does a cell exist at the specified index?

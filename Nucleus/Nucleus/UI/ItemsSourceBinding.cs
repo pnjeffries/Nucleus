@@ -115,7 +115,7 @@ namespace Nucleus.UI
             if (e.OldItems != null)
             {
                 if (RemovedItems == null) RemovedItems = new List<object>(e.OldItems.Count);
-                foreach (var item in e.NewItems) RemovedItems.Add(item);
+                foreach (var item in e.OldItems) RemovedItems.Add(item);
             }   
         }
 

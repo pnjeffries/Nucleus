@@ -1615,12 +1615,28 @@ namespace Nucleus.Geometry
         /// <param name="vectors"></param>
         /// <param name="translation"></param>
         /// <returns></returns>
-        public static Vector[] Move(this Vector[] vectors, Vector translation)
+        public static Vector[] Move(this IList<Vector> vectors, Vector translation)
         {
-            Vector[] result = new Vector[vectors.Length];
-            for (int i = 0; i < vectors.Length; i++)
+            Vector[] result = new Vector[vectors.Count];
+            for (int i = 0; i < vectors.Count; i++)
             {
                 result[i] = vectors[i] + translation;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Rotate all these vectors by an angle on the XY plane
+        /// </summary>
+        /// <param name="vectors"></param>
+        /// <param name="angle"></param>
+        /// <returns></returns>
+        public static Vector[] Rotate(this IList<Vector> vectors, Angle angle)
+        {
+            Vector[] result = new Vector[vectors.Count];
+            for (int i = 0; i < vectors.Count; i++)
+            {
+                result[i] = vectors[i].Rotate(angle);
             }
             return result;
         }

@@ -94,7 +94,7 @@ namespace Nucleus.Rendering
 
         protected override Colour Interpolate(Colour v0, Colour v1, double u)
         {
-            return Interpolation.LINEAR.Interpolate(v0, v1, u);
+            return Interpolation.Linear.Interpolate(v0, v1, u);
         }
 
         #endregion

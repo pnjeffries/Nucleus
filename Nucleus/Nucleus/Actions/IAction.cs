@@ -67,12 +67,6 @@ namespace Nucleus.Actions
         /// <returns>True if all inputs successful, false if user cancels</returns>
         bool PromptUserForInputs(bool chain = false);
 
-        /// <summary>
-        /// Get the renderable preview layer which may be displayed to provide dynamic feedback
-        /// during selection operations
-        /// </summary>
-        /// <returns></returns>
-        //DisplayLayer PreviewLayer(PreviewParameters parameters);
     }
 
     /// <summary>

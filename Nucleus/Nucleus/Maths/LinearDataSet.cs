@@ -162,7 +162,7 @@ namespace Nucleus.Maths
         /// <returns></returns>
         protected virtual TValue Interpolate(TValue v0, TValue v1, double factor)
         {
-            return Interpolation.LINEAR.Interpolate(v0, v1, factor);
+            return Interpolation.Linear.Interpolate(v0, v1, factor);
         }
 
 

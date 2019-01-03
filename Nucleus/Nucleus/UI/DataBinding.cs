@@ -153,6 +153,7 @@ namespace Nucleus.UI
         public string GetBoundValueString()
         {
             object value = GetBoundValue();
+            //if (value is string) return value.ToString();
             return string.Format(StringFormat, value);
         }
 

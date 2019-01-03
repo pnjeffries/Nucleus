@@ -36,7 +36,7 @@ namespace Nucleus.Logs
 
         void ILog.WriteText(string text)
         {
-            throw new NotImplementedException();
+            _Builder.Append(text);
         }
     }
 }

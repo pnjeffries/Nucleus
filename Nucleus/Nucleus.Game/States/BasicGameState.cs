@@ -25,7 +25,7 @@ namespace Nucleus.Game
         /// <summary>
         /// The collection of currently active game elements
         /// </summary>
-        public ElementCollection Elements
+        public override ElementCollection Elements
         {
             get { return _Elements; }
             set

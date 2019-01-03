@@ -65,7 +65,7 @@ namespace Nucleus.Rendering
         /// <summary>
         /// Private backing field for Tweening property
         /// </summary>
-        private Interpolation _Tweening = Interpolation.LINEAR;
+        private Interpolation _Tweening = Interpolation.Linear;
 
         /// <summary>
         /// The tweening algorithm to be used by this animation

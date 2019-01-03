@@ -50,7 +50,7 @@ namespace Nucleus.Rendering
         /// <param name="tweening"></param>
         /// <param name="customInterpolationFunction"></param>
         public PropertyAnimation(object target, string targetPath, object toValue, double duration, 
-            Interpolation tweening = Interpolation.LINEAR, 
+            Interpolation tweening = Interpolation.Linear, 
             Func<object, object, double, Interpolation, object> customInterpolationFunction = null) : base()
         {
             CustomInterpolationFunction = customInterpolationFunction;

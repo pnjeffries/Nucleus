@@ -52,6 +52,7 @@ namespace Nucleus.Game
                 MapData mD = mover.GetData<MapData>();
                 if (mD != null && mD.MapCell != null)
                 {
+                    context.SFX.Trigger(SFXKeywords.Dust, mD.Position);
                     MapCell newCell = context.Map[MoveTo];
                     if (newCell != null && (mover.GetData<MapCellCollider>()?.CanEnter(newCell) ?? true))
                     {

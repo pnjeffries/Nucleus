@@ -1,4 +1,5 @@
 ﻿using Nucleus.Base;
+using Nucleus.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,6 +53,11 @@ namespace Nucleus.Game
                 NotifyPropertyChanged("State");
             }
         }
+
+        /// <summary>
+        /// The special effects supervisor
+        /// </summary>
+        public SFXSupervisor SFX { get; } = new SFXSupervisor();
 
         /// <summary>
         /// Private backing member variable for the Module property

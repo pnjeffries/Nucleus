@@ -12,6 +12,7 @@ namespace Nucleus.Geometry
     /// </summary>
     public interface ICellMap : IDuplicatable
     {
+
         /// <summary>
         /// Get the number of cells in this map
         /// </summary>
@@ -23,6 +24,13 @@ namespace Nucleus.Geometry
         /// <param name="cellIndex"></param>
         /// <returns></returns>
         bool Exists(int cellIndex);
+
+        /// <summary>
+        /// Get the cell object at the specified index
+        /// </summary>
+        /// <param name="cellIndex"></param>
+        /// <returns></returns>
+        object GetCell(int cellIndex);
 
         /// <summary>
         /// Get the index of the cell at the specified location
@@ -132,6 +140,24 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Get the items in the cells at the specified locations
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="map"></param>
+        /// <param name="locations"></param>
+        /// <returns></returns>
+        public static IList<T> CellsAt<T>(this ICellMap<T> map, IList<Vector> locations)
+        {
+            var result = new List<T>(locations.Count);
+            foreach (Vector location in locations)
+            {
+                int i = map.IndexAt(location);
+                if (map.Exists(i)) result.Add(map[i]);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Get the specified adjacent cell to the specified cell
         /// </summary>
         /// <param name="cellIndex">The index of the starting cell</param>
@@ -223,6 +249,20 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Set all cells in this map to the same value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="map"></param>
+        /// <param name="value"></param>
+        public static void SetAll<T>(this ICellMap<T> map, T value)
+        {
+            for (int i = 0; i < map.CellCount; i++)
+            {
+                map[i] = value;
+            }
+        }
+
+        /// <summary>
         /// Populate this map with cells
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -300,6 +340,76 @@ namespace Nucleus.Geometry
                 }
 
             }
+        }
+
+        /// <summary>
+        /// Generate a Dijkstra Map to aid AI navigation through this map
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="map"></param>
+        /// <param name="startingValue"></param>
+        /// <param name="targetCondition"></param>
+        /// <param name="passCondition"></param>
+        /// <param name="blockedValue"></param>
+        /// <returns></returns>
+        public static ICellMap<int> GenerateDijkstraMap<T>(this ICellMap<T> map, Func<T,bool> targetCondition, Func<T,bool> passCondition, 
+            int startingValue = 1000000, int blockedValue = -1)
+        {
+            ICellMap<int> dMap = map.SpawnNewGrid<int>();
+            dMap.SetAll(startingValue);
+            for (int i = 0; i < map.CellCount; i++)
+            {
+                T cellValue = map[i];
+                if (targetCondition(cellValue))
+                {
+                    dMap[i] = 0;
+                }
+                else if (!passCondition(cellValue))
+                {
+                    dMap[i] = blockedValue;
+                }
+            }
+
+            while (IterateDijkstraMap(dMap, blockedValue))
+            {
+            }
+
+            return dMap;
+        }
+
+        /// <summary>
+        /// Run one iteration of a dijkstra map update.  Each cell is set to the lowest
+        /// adjacent value - 1.
+        /// </summary>
+        /// <param name="dMap"></param>
+        /// <param name="blockedValue"></param>
+        /// <returns></returns>
+        public static bool IterateDijkstraMap(this ICellMap<int> dMap, int blockedValue = -1)
+        {
+            bool changed = false;
+            for (int i = 0; i < dMap.CellCount; i++)
+            {
+                int cellValue = dMap[i];
+                if (cellValue != blockedValue)
+                {
+                    int lowestValue = cellValue;
+                    for (int ai = 0; ai <= dMap.AdjacencyCount(i); ai++)
+                    {
+                        int adjacentCellIndex = dMap.AdjacentCellIndex(i, ai);
+                        if (dMap.Exists(adjacentCellIndex))
+                        {
+                            int adjacentValue = dMap[adjacentCellIndex];
+                            if (adjacentValue < lowestValue) lowestValue = adjacentValue;
+                        }
+                    }
+                    if (lowestValue < cellValue - 1)
+                    {
+                        dMap[i] = lowestValue + 1;
+                        changed = true;
+                    }
+                }
+            }
+            return changed;
         }
     }
 }

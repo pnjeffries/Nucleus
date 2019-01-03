@@ -36,6 +36,7 @@ namespace Nucleus.Tests
             Console.WriteLine(" r) Wind Calc");
             Console.WriteLine(" s) Self-Intersection");
             Console.WriteLine(" t) Triangle Barycentric Coordinates");
+            Console.WriteLine(" u) Log markup");
 
             char option = Console.ReadKey(true).KeyChar;
 
@@ -164,6 +165,11 @@ namespace Nucleus.Tests
             if (option == 'a' || option == 't')
             {
                 Triangle_Tests.BarycentricCoordinates_Test();
+            }
+
+            if (option == 'a' || option == 'u')
+            {
+                Log_Tests.LogScriptTest();
             }
 
             Console.Read();

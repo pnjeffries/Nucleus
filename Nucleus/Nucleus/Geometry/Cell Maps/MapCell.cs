@@ -109,8 +109,7 @@ namespace Nucleus.Geometry
                 MapData mD = element.GetData<MapData>(true);
                 if (mD.MapCell != null && mD.MapCell.Contents.Contains(element))
                 {
-                    mD.MapCell.Contents.Remove(element);
-                    mD.MapCell.NotifyPropertyChanged("Contents"); //TEMP
+                    mD.MapCell.RemoveFromCell(element);
                 }
                 Contents.Add(element);
                 mD.MapCell = this;
@@ -118,6 +117,32 @@ namespace Nucleus.Geometry
             }
         }
 
+        public void RemoveFromCell(Element element)
+        {
+            Contents.Remove(element);
+            NotifyPropertyChanged("Contents");
+        }
+
         #endregion
+    }
+
+    /// <summary>
+    /// Extension methods for the MapCell class
+    /// </summary>
+    public static class MapCellExtensions
+    {
+        /// <summary>
+        /// Gets the adjacent cell (of the same type) in the specified direction
+        /// </summary>
+        /// <typeparam name="TMapCell"></typeparam>
+        /// <param name="cell"></param>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public static TMapCell AdjacentCellInDirection<TMapCell>(this TMapCell cell, Vector direction)
+            where TMapCell : MapCell
+        {
+            return cell?.Map.GetCell(cell.Map.AdjacentCellIndex(cell.Index, direction)) as TMapCell;
+        }
+
     }
 }

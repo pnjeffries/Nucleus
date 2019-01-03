@@ -1,4 +1,5 @@
 ﻿using Nucleus.Geometry;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,16 +9,14 @@ using System.Threading.Tasks;
 namespace Nucleus.Game
 {
     /// <summary>
-    /// An element data component which indicates that the element is
-    /// able to move between cells of its own volition and will generate
-    /// suitable actions for open spaces
+    /// Data component which confers the ability to bump-attack
     /// </summary>
     [Serializable]
-    public class MoveCellAbility : Ability
+    public class BumpAttackAbility : Ability
     {
         protected override void GenerateActions(TurnContext context, AvailableActions addTo)
         {
-            // Movement & Bump attacking:
+            // Bump attack:
             MapData mD = context.Element?.GetData<MapData>();
             if (mD != null && mD.MapCell != null)
             {
@@ -25,9 +24,15 @@ namespace Nucleus.Game
                 //TODO: Diagonal?
                 foreach (var cell in adjacent)
                 {
-                    if (context.Element.GetData<MapCellCollider>()?.CanEnter(cell) ?? true)
+                    Vector direction = cell.Position - mD.MapCell.Position;
+                    Element target = context.Element.GetData<MapCellCollider>()?.Blocker(cell);
+                    if (target != null)
                     {
-                        addTo.Actions.Add(new MoveCellAction(cell));
+                        if (context.Element?.GetData<Faction>()?.IsEnemy(target?.GetData<Faction>()) ?? false)
+                        {
+                            // Only allow bump attacks on elements of an opposing faction?
+                            addTo.Actions.Add(new BumpAttackAction(target, cell, direction));
+                        }
                     }
                 }
             }

@@ -50,8 +50,57 @@ namespace Nucleus.Game
         /// <summary>
         /// A resting action
         /// </summary>
-        Wait = 2000
-        
+        Wait = 2000,
+
+        /// <summary>
+        /// Pick up an item
+        /// </summary>
+        PickUp = 3000,
+
+        /// <summary>
+        /// Use special ability 1
+        /// </summary>
+        Ability_1 = 11000,
+
+        /// <summary>
+        /// Use special ability 2
+        /// </summary>
+        Ability_2 = 12000,
+
+        /// <summary>
+        /// Use special ability 3
+        /// </summary>
+        Ability_3 = 13000,
+
+        /// <summary>
+        /// Use special ability 4
+        /// </summary>
+        Ability_4 = 14000,
+
+        /// <summary>
+        /// Use special ability 5
+        /// </summary>
+        Ability_5 = 15000,
+
+        /// <summary>
+        /// Use special ability 6
+        /// </summary>
+        Ability_6 = 16000,
+
+        /// <summary>
+        /// Use special ability 7
+        /// </summary>
+        Ability_7 = 17000,
+
+        /// <summary>
+        /// Use special ability 8
+        /// </summary>
+        Ability_8 = 18000,
+
+        /// <summary>
+        /// Use special ability 9
+        /// </summary>
+        Ability_9 = 19000,
     }
 
     /// <summary>

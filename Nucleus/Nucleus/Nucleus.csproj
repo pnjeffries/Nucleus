@@ -75,7 +75,9 @@
     <Compile Include="Analysis\CalcVariable.cs" />
     <Compile Include="Analysis\EC3MemberChecks.cs" />
     <Compile Include="Analysis\FlatConcreteSlabChecks.cs" />
+    <Compile Include="Base\Deletable.cs" />
     <Compile Include="Base\DoubleParameter.cs" />
+    <Compile Include="Base\Gender.cs" />
     <Compile Include="Base\IFastDuplicatable.cs" />
     <Compile Include="Analysis\SolarPositioning.cs" />
     <Compile Include="Base\IntParameter.cs" />
@@ -99,6 +101,7 @@
     <Compile Include="Geometry\Solid.cs" />
     <Compile Include="Geometry\SurfaceCollection.cs" />
     <Compile Include="Geometry\Triangle.cs" />
+    <Compile Include="Logs\GrammaticalPerson.cs" />
     <Compile Include="Logs\LogScriptMarkupParser.cs" />
     <Compile Include="Logs\ICalculationLog.cs" />
     <Compile Include="Analysis\ICalculationScenario.cs" />
@@ -174,6 +177,7 @@
     <Compile Include="Model\CrossSectionClass.cs" />
     <Compile Include="Model\DesignCase.cs" />
     <Compile Include="Model\DesignCaseCollection.cs" />
+    <Compile Include="Model\ElementGender.cs" />
     <Compile Include="Model\ElementUse.cs" />
     <Compile Include="Model\FactoredLoadCase.cs" />
     <Compile Include="Model\FactoredLoadCaseCollection.cs" />
@@ -454,6 +458,8 @@
     <Compile Include="Rendering\ITextureLoader.cs" />
     <Compile Include="Rendering\ColourGradient.cs" />
     <Compile Include="Rendering\PrefabStyle.cs" />
+    <Compile Include="Rendering\SFXSupervisor.cs" />
+    <Compile Include="Rendering\SFXTrigger.cs" />
     <Compile Include="Rendering\SpriteAnimation.cs" />
     <Compile Include="Rendering\SpriteAnimationDirection.cs" />
     <Compile Include="Rendering\SpriteData.cs" />
