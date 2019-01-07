@@ -30,6 +30,31 @@ namespace Nucleus.Game
             set { _TravelTo = value; }
         }
 
+        /// <summary>
+        /// Private backing member variable for the CellIndex property
+        /// </summary>
+        private int _CellIndex = -1;
+
+        /// <summary>
+        /// The index of the cell to move to in the next stage
+        /// </summary>
+        public int CellIndex
+        {
+            get { return _CellIndex; }
+            set { _CellIndex = value; }
+        }
+
+
+        #endregion
+
+        #region Constructors
+
+        public StageExit(MapStage travelTo, int cellIndex)
+        {
+            TravelTo = travelTo;
+            CellIndex = cellIndex;
+        }
+
         #endregion
 
     }

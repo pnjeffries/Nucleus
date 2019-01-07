@@ -48,14 +48,24 @@ namespace Nucleus.Game
         Left = 1400,
 
         /// <summary>
+        /// Use an interactive object
+        /// </summary>
+        Interact = 2000,
+
+        /// <summary>
+        /// Use a level exit from one stage to another
+        /// </summary>
+        UseExit = 2500,
+
+        /// <summary>
         /// A resting action
         /// </summary>
-        Wait = 2000,
+        Wait = 3000,
 
         /// <summary>
         /// Pick up an item
         /// </summary>
-        PickUp = 3000,
+        PickUp = 4000,
 
         /// <summary>
         /// Use special ability 1

@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\ActionCellInputTrigger.cs" />
+    <Compile Include="Actions\ExitStageAction.cs" />
     <Compile Include="Actions\Factories\ActionFactory.cs" />
     <Compile Include="Actions\ActionInputTrigger.cs" />
     <Compile Include="Actions\AOEAttackAction.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="Effects\DamageType.cs" />
     <Compile Include="Effects\DisableEffect.cs" />
     <Compile Include="Effects\EffectContext.cs" />
+    <Compile Include="Effects\ExitStageEffect.cs" />
     <Compile Include="Effects\KnockbackEffect.cs" />
     <Compile Include="Effects\PickUpItemEffect.cs" />
     <Compile Include="Effects\SFXImpactEffect.cs" />

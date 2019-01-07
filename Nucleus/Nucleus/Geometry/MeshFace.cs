@@ -406,6 +406,26 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Get the index of the shortest edge of this face
+        /// </summary>
+        /// <returns></returns>
+        public int ShortetEdge()
+        {
+            int iMin = 0;
+            double lMin = double.MaxValue;
+            for (int i = 0; i < Count; i++)
+            {
+                double l = EdgeLengthSquared(i);
+                if (l < lMin)
+                {
+                    lMin = l;
+                    iMin = i;
+                }
+            }
+            return iMin;
+        }
+
+        /// <summary>
         /// Get the squared length of the longest edge of this face
         /// </summary>
         /// <returns></returns>
@@ -957,10 +977,10 @@ namespace Nucleus.Geometry
         {
             //Vector midPt = this.AveragePoint();
             Vector[] midPts = MedialAxisPoints();
-
+            int[] opposites = OppositeEdgeIndices();
             int minDivisions = edges.MinDelegateValue(edge => edge.Divisions);
-
-            for (int offset = 1; offset < (minDivisions+1)/2; offset++)
+            int divSteps = (minDivisions + 1) / 2;
+            for (int offset = 1; offset < divSteps; offset++)
             {
                 var cornerVerts = new List<Vertex>();
                 for (int i = 0; i < Count; i++)
@@ -980,7 +1000,17 @@ namespace Nucleus.Geometry
                     var vert2 = cornerVerts.GetWrapped(i + 1);
                     var newEdge = new MeshDivisionEdge(vert1, vert2);
                     var oldEdge = edges[i];
-                    newEdge.SubDivide(oldEdge.Divisions - 2);
+                    int divisions = oldEdge.Divisions - 2;
+                    MeshDivisionEdge oppositeEdge = null;
+                    if (opposites[i] >= 0)
+                    {
+                        oppositeEdge = edges[opposites[i]];
+                        // Interpolate number of divisions:
+                        divisions = (int)Interpolation.Linear.Interpolate
+                            ((double)oldEdge.Divisions, (double)oppositeEdge.Divisions,
+                            (i / (divSteps * 2.0)));
+                    }
+                    newEdge.SubDivide(divisions);
                     newEdges.Add(newEdge);
                 }
 
@@ -995,12 +1025,19 @@ namespace Nucleus.Geometry
                         outEdge1.Start, outEdge1.Vertices[1],
                         inEdge1.Start, outEdge0.Vertices.FromEnd(1));
                     addFaceTo.Add(firstFace);
-                    for (int j = 0; j < inEdge1.Vertices.Count - 1; j++)
+                    int inCount = inEdge1.Divisions;
+                    int outCount = outEdge1.Divisions - 2;
+                    int faceCount = Math.Max(inCount, outCount);
+                    for (int j = 0; j < faceCount; j++)
                     {
-                        // Edge faces:
+                        // TODO: FIX THIS!
+                        int jI0 = (int)((j/ (double)faceCount) * inCount);
+                        int jI1 = (int)(((j + 1.0)/ (double)faceCount) * inCount);
+                        int jO0 = (int)(((j + 1.0) / (double)faceCount) * outCount - 2) + 1 ;
+                        int jO1 = (int)(((j + 2.0)/(double)faceCount) * outCount - 2) + 1;
                         var edgeFace = new MeshFace(
-                            outEdge1.Vertices[j + 1], outEdge1.Vertices[j + 2],
-                            inEdge1.Vertices[j + 1], inEdge1.Vertices[j]);
+                            outEdge1.Vertices[jO0], outEdge1.Vertices[jO1],
+                            inEdge1.Vertices[jI1], inEdge1.Vertices[jI0]);
                         addFaceTo.Add(edgeFace);
                     }
                 }
@@ -1009,9 +1046,52 @@ namespace Nucleus.Geometry
             }
 
             //TODO: 
-            // - Infill central gap somehow
+            // - Infill central gap somehow 
+        }
 
-            
+        /// <summary>
+        /// Generate an array which indicates, for each edge around this
+        /// face, which is designated the 'opposite' edge.
+        /// In the case of quads and n-gons with an even number of sides,
+        /// this is the edge offset by Count/2 places.
+        /// In the case of tris or faces with odd numbers of sides, the shortest,
+        /// side is skipped and has no opposite.  This is indicated in the result
+        /// with a value of -1.
+        /// </summary>
+        /// <returns></returns>
+        private int[] OppositeEdgeIndices()
+        {
+            int[] result = new int[Count];
+            if (Count.IsEven()) // Quads and even n-gons
+            {
+                for (int i = 0; i < Count; i++)
+                {
+                    result[i] = (i + Count / 2) % Count;
+                }
+            }
+            else // Tris and odd n-gons
+            {
+                int si = ShortetEdge();
+                int offset = (Count/2);
+                for (int i = 0; i < Count; i++)
+                {
+                    if (i == si) result[i] = -1;
+                    else
+                    {
+                        int offsCount = 0;
+                        int j = i;
+                        while (offsCount < offset)
+                        {
+                            // Iterate around the face, ignoring the
+                            // shortest edge
+                            j = (j + 1) % Count;
+                            if (j != si) offsCount += 1;
+                        }
+                        result[i] = j;
+                    }
+                }
+            }
+            return result;
         }
 
         /// <summary>

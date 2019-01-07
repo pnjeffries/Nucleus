@@ -19,7 +19,7 @@
 // SOFTWARE.
 
 using Nucleus.Base;
-using Nucleus.Debug;
+using Nucleus.Debugging;
 using Nucleus.Extensions;
 using Nucleus.Model;
 using System;

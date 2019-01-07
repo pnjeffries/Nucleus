@@ -214,12 +214,19 @@ namespace Nucleus.TestApp
             Random rng = new Random();
             BoundingBox box = new BoundingBox(0, 10, -10, 0, 0, 0);
 
-            int size = 7;
-            Geometry.Vector[] points = box.RandomPointsInside(rng, size);
+            int size = 15;
+            //Geometry.Vector[] points = box.RandomPointsInside(rng, size);
             /*var points = new Geometry.Vector[] {
                 new Geometry.Vector(10,-5), new Geometry.Vector(0,-10),
             new Geometry.Vector(0,0)//};
             , new Geometry.Vector(5,-5) };*/
+            var points = new Geometry.Vector[]
+            {
+                new Geometry.Vector(10,-10),
+                new Geometry.Vector(0,-10),
+                new Geometry.Vector(2,0),
+                new Geometry.Vector(8,0)
+            };
             VertexCollection verts = new VertexCollection(points);
             MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(verts);
             faces.Quadrangulate();
