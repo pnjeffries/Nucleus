@@ -87,7 +87,7 @@ namespace Nucleus.Game
                         context.SFX.Trigger(SFXKeywords.Dust, mD.Position);
 
                         MapCell newCell = mD.MapCell.AdjacentCellInDirection(Direction);
-                        if (newCell != null && (mover.GetData<MapCellCollider>()?.CanEnter(newCell) ?? true))
+                        if (newCell != null && (mover.GetData<MapCellCollider>()?.CanEnter(newCell) ?? false))
                         {
                             newCell.PlaceInCell(mover);
                             moved = true;

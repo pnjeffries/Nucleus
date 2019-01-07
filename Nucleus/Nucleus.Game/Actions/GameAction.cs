@@ -14,7 +14,7 @@ namespace Nucleus.Game
     /// which has one or more effects
     /// </summary>
     [Serializable]
-    public class GameAction : Deletable, IDuplicatable
+    public class GameAction : Deletable, IDuplicatable, IUniqueWithModifiableGUID
     {
         #region Properties
 

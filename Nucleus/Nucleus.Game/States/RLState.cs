@@ -36,6 +36,11 @@ namespace Nucleus.Game
             }
         }
 
+        public override ElementCollection Elements
+        {
+            get { return Stage.Elements; }
+        }
+
         /// <summary>
         /// Private backing member variable for the Log property
         /// </summary>
@@ -62,7 +67,7 @@ namespace Nucleus.Game
         /// <summary>
         /// The time delay to be used between the end of the player turn and the start of AI movement
         /// </summary>
-        private double _AITurnDelay = 0.1;
+        private double _AITurnDelay = 0.15;
 
         /// <summary>
         /// Time remaining before AI turns can begin

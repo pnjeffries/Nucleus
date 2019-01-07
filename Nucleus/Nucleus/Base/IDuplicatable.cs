@@ -94,6 +94,11 @@ namespace Nucleus.Base
 #if !JS
                 // As a (potentially dangerous) fallback:
                 clone = (T)FormatterServices.GetUninitializedObject(obj.GetType());
+                //Special cludge for Uniques to avoid having all-0 GUIDs:
+                if (clone is IUniqueWithModifiableGUID)
+                {
+                    ((IUniqueWithModifiableGUID)clone).SetGUID(Guid.NewGuid());
+                }
 #else
                 throw new NotSupportedException("Class to be duplicated does not provide a parameterless constructor!");
 #endif

@@ -15,7 +15,7 @@ namespace Nucleus.Base
     /// difficult to do without due consideration - implement this interface
     /// explicitly to prevent its members showing up in intellisense.
     /// </summary>
-    interface IUniqueWithModifiableGUID : IUnique
+    public interface IUniqueWithModifiableGUID : IUnique
     {
         void SetGUID(Guid guid);
     }

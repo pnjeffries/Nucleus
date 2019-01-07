@@ -49,6 +49,21 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Get the item at the specified index, or the default value
+        /// of the relevant type if the index is outside the bounds of the array.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public static T GetOrDefault<T>(this IList<T> list, int index)
+        {
+            if (index >= list.Count) return default(T);
+            if (index < 0) return default(T);
+            return list[index];
+        }
+
+        /// <summary>
         /// Get the item at the specified index, automatically wrapping if it is outside the
         /// bounds of the collection.
         /// </summary>

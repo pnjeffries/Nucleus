@@ -42,11 +42,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\ActionCellInputTrigger.cs" />
+    <Compile Include="Actions\Factories\ActionFactory.cs" />
     <Compile Include="Actions\ActionInputTrigger.cs" />
     <Compile Include="Actions\AOEAttackAction.cs" />
     <Compile Include="Actions\BumpAttackAction.cs" />
     <Compile Include="Actions\CellTargetingAction.cs" />
     <Compile Include="Actions\ElementTargetingAction.cs" />
+    <Compile Include="Actions\Factories\AOEAttackActionFactory.cs" />
+    <Compile Include="Actions\Factories\DirectionalActionFactory.cs" />
     <Compile Include="Actions\GameActionCollection.cs" />
     <Compile Include="Actions\IActionsOverride.cs" />
     <Compile Include="Actions\MoveCellAction.cs" />
@@ -76,7 +79,7 @@
     <Compile Include="Components\Inertia.cs" />
     <Compile Include="Components\Inventory.cs" />
     <Compile Include="Components\IStartOfTurn.cs" />
-    <Compile Include="Components\ItemAction.cs" />
+    <Compile Include="Components\ItemActions.cs" />
     <Compile Include="Components\MapAwareness.cs" />
     <Compile Include="Components\Memorable.cs" />
     <Compile Include="Components\Abilities\MoveCellAbility.cs" />
@@ -84,6 +87,7 @@
     <Compile Include="Components\PickUp.cs" />
     <Compile Include="Components\Abilities\PickUpAbility.cs" />
     <Compile Include="Components\Abilities\TemporaryAbility.cs" />
+    <Compile Include="Components\StageExit.cs" />
     <Compile Include="Components\TemporaryStatus.cs" />
     <Compile Include="Components\TurnCounter.cs" />
     <Compile Include="Components\Abilities\UseItemAbility.cs" />

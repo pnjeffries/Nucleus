@@ -20,7 +20,7 @@ namespace Nucleus.Game
         /// <summary>
         /// The collection of currently active game elements
         /// </summary>
-        public abstract ElementCollection Elements { get; set; }
+        public abstract ElementCollection Elements { get; }
 
         #endregion
 

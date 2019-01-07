@@ -11,7 +11,7 @@ namespace Nucleus.Game
     /// A data component for use on items which 
     /// </summary>
     [Serializable]
-    public class ItemAction : IElementDataComponent
+    public class ItemActions : IElementDataComponent
     {
         #region Properties
 
@@ -33,9 +33,25 @@ namespace Nucleus.Game
 
         #region Constructor
 
-        public ItemAction() { }
+        /// <summary>
+        /// Creates a blank itemaction
+        /// </summary>
+        public ItemActions()
+        {
+            //Prototype = new WindUpAction();
+        }
 
-        public ItemAction(GameAction prototype)
+        /// <summary>
+        /// Creates an ItemAction using the default 
+        /// WindUpAction as a prototype followed by actions
+        /// generated using the specified action factory
+        /// </summary>
+        public ItemActions(ActionFactory actionFactory)
+        {
+            Prototype = new WindUpAction(actionFactory);
+        }
+
+        public ItemActions(GameAction prototype)
         {
             Prototype = prototype;
         }

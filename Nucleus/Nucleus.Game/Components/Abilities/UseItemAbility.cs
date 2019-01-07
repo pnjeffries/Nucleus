@@ -24,11 +24,12 @@ namespace Nucleus.Game
                 {
                     if (slot.Item != null)
                     {
-                        var iA = slot.Item.GetData<ItemAction>();
+                        var iA = slot.Item.GetData<ItemActions>();
                         if (iA?.Prototype != null)
                         {
                             var action = iA.Prototype.Duplicate();
-                            addTo.Actions.Add(new WindUpAction(slot.HotKey));
+                            action.Trigger = new ActionInputTrigger(slot.HotKey);
+                            addTo.Actions.Add(action);
                         }
                     }
                 }

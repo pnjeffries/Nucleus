@@ -10,29 +10,41 @@ namespace Nucleus.Game
 {
     public class DirectionalItemUseAbility : TemporaryAbility
     {
+        #region Properties
+
+        /// <summary>
+        /// Private backing member variable for the ActionFactory property
+        /// </summary>
+        private ActionFactory _ActionFactory;
+
+        /// <summary>
+        /// The ActionFactory used to generate actions
+        /// </summary>
+        public ActionFactory ActionFactory
+        {
+            get { return _ActionFactory; }
+            set { _ActionFactory = value; }
+        }
+
+        #endregion
+
+        #region Constructor
+
+        public DirectionalItemUseAbility(ActionFactory actionFactory)
+        {
+            ActionFactory = actionFactory;
+        }
+
+        #endregion
+
+        #region Methods
+
         protected override void GenerateActions(TurnContext context, AvailableActions addTo)
         {
-            // Bump attack:
-            MapData mD = context.Element?.GetData<MapData>();
-            if (mD != null && mD.MapCell != null)
-            {
-                IList<MapCell> adjacent = context.Stage?.Map?.AdjacentCells(mD.MapCell.Index);
-                //TODO: Diagonal?
-                foreach (var cell in adjacent)
-                {
-                    Vector direction = cell.Position - mD.MapCell.Position;
-                    IList<Vector> offsets = new Vector[]
-                    {
-                        new Vector(1,-1),
-                        new Vector(1,0),
-                        new Vector(1,1)
-                    };
-                    var pattern = offsets.Rotate(direction.Angle).Move(mD.MapCell.Position);
-                    var cells = context.Stage.Map.CellsAt(pattern);
-                    addTo.Actions.Add(new AOEAttackAction(cells, cell, direction));
-
-                }
-            }
+            if (ActionFactory != null) ActionFactory.GenerateActions(context, addTo);
+            //TODO: Always allow cancelling?
         }
+
+        #endregion
     }
 }

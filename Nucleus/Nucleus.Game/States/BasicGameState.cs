@@ -12,29 +12,10 @@ namespace Nucleus.Game
     /// of a game in a fairly general way
     /// </summary>
     [Serializable]
-    public class BasicGameState<TStage> : GameState
+    public abstract class BasicGameState<TStage> : GameState
         where TStage : GameStage
     {
         #region Properties
-
-        /// <summary>
-        /// Private backing member variable for the Elements property
-        /// </summary>
-        private ElementCollection _Elements = new ElementCollection();
-
-        /// <summary>
-        /// The collection of currently active game elements
-        /// </summary>
-        public override ElementCollection Elements
-        {
-            get { return _Elements; }
-            set
-            {
-                _Elements = value;
-                NotifyPropertyChanged("Elements");
-            }
-        }
-
 
         /// <summary>
         /// Private backing member variable for the Controlled property
@@ -68,10 +49,17 @@ namespace Nucleus.Game
             set
             {
                 _Stage = value;
-                NotifyPropertyChanged("Stage");
+                ChangeProperty(ref _Stage, value);
+                NotifyPropertyChanged("Elements");
             }
         }
 
+
+        #endregion
+
+        #region Methods
+
+        public 
 
         #endregion
     }

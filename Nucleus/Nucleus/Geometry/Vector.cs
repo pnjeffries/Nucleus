@@ -1437,6 +1437,49 @@ namespace Nucleus.Geometry
             return new Vector(x, y, z);
         }
 
+        /// <summary>
+        /// Create an array of vectors from a list of components, alternating
+        /// between X and Y.  If the entered set of components is of an odd number,
+        /// the Y coordinate of the last point will be taken as 0.
+        /// </summary>
+        /// <param name="components"></param>
+        /// <returns></returns>
+        public static Vector[] Create2D(params double[] components)
+        {
+            Vector[] result = new Vector[(int)Math.Ceiling(components.Length / 2.0)];
+            for (int i = 0; i < result.Length; i++)
+            {
+                int iX = i * 2;
+                int iY = iX + 1;
+                result[i] = new Vector(components[iX], components.GetOrDefault(iY));
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Create an array of vectors from a list of components, cycling through
+        /// X, Y and Z.  If the entered set of components is of an insufficient number
+        /// to provide the full three components of each vector, missing Y and Z values
+        /// for the final vector will be taken as zero.
+        /// </summary>
+        /// <param name="components"></param>
+        /// <returns></returns>
+        public static Vector[] Create3D(params double[] components)
+        {
+            Vector[] result = new Vector[(int)Math.Ceiling(components.Length / 3.0)];
+            for (int i = 0; i < result.Length; i++)
+            {
+                int iX = i * 3;
+                int iY = iX + 1;
+                int iZ = iY + 1;
+                result[i] = new Vector(
+                    components[iX], 
+                    components.GetOrDefault(iY), 
+                    components.GetOrDefault(iZ));
+            }
+            return result;
+        }
+
         #endregion
 
         #region Operators

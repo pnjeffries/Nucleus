@@ -15,16 +15,19 @@ namespace Nucleus.Game
     /// </summary>
     public class WindUpAction : GameAction
     {
+        #region Properties
+
+        #endregion
 
         #region Constructor
 
-        public WindUpAction()
+        public WindUpAction(ActionFactory actionFactory)
         {
             SelfEffects.Add(new DisableEffect());
-            SelfEffects.Add(new AddAbilityEffect(new DirectionalItemUseAbility()));
+            SelfEffects.Add(new AddAbilityEffect(new DirectionalItemUseAbility(actionFactory)));
         }
 
-        public WindUpAction(InputFunction input) : this()
+        public WindUpAction(ActionFactory actionFactory, InputFunction input) : this(actionFactory)
         {
             Trigger = new ActionInputTrigger(input);
         }
