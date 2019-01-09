@@ -1,4 +1,5 @@
 ﻿using Nucleus.Base;
+using Nucleus.Geometry;
 using Nucleus.Model;
 using System;
 using System.Collections.Generic;
@@ -70,6 +71,33 @@ namespace Nucleus.Game
             // TODO: Some equipment slots only hold certain types of item?
             if (item.HasData<EquippableItem>()) return true;
             else return false;
+        }
+
+        /// <summary>
+        /// Drop the item held in this slot.
+        /// This will remove the item from the slot.  If the
+        /// item is a PickUp it will be added back to the map.
+        /// </summary>
+        /// <param name="dropper">The element dropping the item</param>
+        /// <param name="context">The current context</param>
+        /// <returns></returns>
+        public bool DropItem(Element dropper, EffectContext context)
+        {
+            if (Item != null)
+            {
+                if (Item.HasData<PickUp>() && context.State is MapState) //TODO: Work for other states?
+                {
+                    MapData mD = dropper.GetData<MapData>();
+                    if (mD.MapCell != null)
+                    {
+                        mD.MapCell.PlaceInCell(Item);
+                    }
+                    context.State.Elements.Add(Item);  
+                }
+                Item = null;
+                return true;
+            }
+            return false;
         }
 
         /// <summary>

@@ -147,6 +147,17 @@ namespace Nucleus.Maths
             return rng.Next(Start, End);
         }
 
+        /// <summary>
+        /// Create a new interval with the same start value as this one
+        /// but with the new specified end value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public IntInterval WithEnd(int end)
+        {
+            return new IntInterval(Start, end);
+        }
+
         #endregion
     }
 }

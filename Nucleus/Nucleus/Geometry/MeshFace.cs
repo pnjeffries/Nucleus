@@ -978,8 +978,23 @@ namespace Nucleus.Geometry
             //Vector midPt = this.AveragePoint();
             Vector[] midPts = MedialAxisPoints();
             int[] opposites = OppositeEdgeIndices();
-            int minDivisions = edges.MinDelegateValue(edge => edge.Divisions);
-            int divSteps = (minDivisions + 1) / 2;
+            // Work out min steps
+            int divSteps = -1;//(minDivisions + 1) / 2;
+            for (int i = 0; i < opposites.Length; i++)
+            {
+                int iOpposite = opposites[i];
+                int steps;
+                if (iOpposite >= 0)
+                {
+                    steps = (edges[i].Divisions + edges[iOpposite].Divisions + 2) / 4;
+                }
+                else
+                {
+                    steps = (edges[i].Divisions + 1) / 2;
+                }
+                if (divSteps < 0 || steps < divSteps) divSteps = steps;
+            }
+
             for (int offset = 1; offset < divSteps; offset++)
             {
                 var cornerVerts = new List<Vertex>();
@@ -1008,7 +1023,7 @@ namespace Nucleus.Geometry
                         // Interpolate number of divisions:
                         divisions = (int)Interpolation.Linear.Interpolate
                             ((double)oldEdge.Divisions, (double)oppositeEdge.Divisions,
-                            (i / (divSteps * 2.0)));
+                            (i / (divSteps * 2.0))) - 2;
                     }
                     newEdge.SubDivide(divisions);
                     newEdges.Add(newEdge);
@@ -1030,20 +1045,40 @@ namespace Nucleus.Geometry
                     int faceCount = Math.Max(inCount, outCount);
                     for (int j = 0; j < faceCount; j++)
                     {
-                        // TODO: FIX THIS!
-                        int jI0 = (int)((j/ (double)faceCount) * inCount);
-                        int jI1 = (int)(((j + 1.0)/ (double)faceCount) * inCount);
-                        int jO0 = (int)(((j + 1.0) / (double)faceCount) * outCount - 2) + 1 ;
-                        int jO1 = (int)(((j + 2.0)/(double)faceCount) * outCount - 2) + 1;
-                        var edgeFace = new MeshFace(
+                        // Work out vertices to mesh:
+                        int jI0 = (int)Math.Round(((j/ (double)faceCount) * inCount));
+                        int jI1 = (int)Math.Round((((j + 1.0)/ (double)faceCount) * inCount));
+                        int jO0 = (int)Math.Round((((j) / (double)faceCount) * outCount)) + 1 ;
+                        int jO1 = (int)Math.Round((((j + 1.0)/(double)faceCount) * outCount)) + 1;
+
+                        if (jI0 == jI1)
+                        {
+                            // Tri:
+                            addFaceTo.Add(new MeshFace(
                             outEdge1.Vertices[jO0], outEdge1.Vertices[jO1],
-                            inEdge1.Vertices[jI1], inEdge1.Vertices[jI0]);
-                        addFaceTo.Add(edgeFace);
+                            inEdge1.Vertices[jI1]));
+                        }
+                        else if (jO0 == jO1)
+                        {
+                            // Tri again:
+                            addFaceTo.Add(new MeshFace(
+                                outEdge1.Vertices[jO0],
+                                inEdge1.Vertices[jI1], inEdge1.Vertices[jI0]));
+                        }
+                        else
+                        {
+                            // Quad:
+                            addFaceTo.Add(new MeshFace(
+                                outEdge1.Vertices[jO0], outEdge1.Vertices[jO1],
+                                inEdge1.Vertices[jI1], inEdge1.Vertices[jI0]));
+                        }
                     }
                 }
 
                 edges = newEdges;
             }
+
+
 
             //TODO: 
             // - Infill central gap somehow 
@@ -1109,7 +1144,7 @@ namespace Nucleus.Geometry
             Vertex original2 = edge2.Vertices[offset];
             double t1 = offset / ((edge1.Vertices.Count - 1) * 0.5);
             double t2 = offset / ((edge2.Vertices.Count - 1)* 0.5);
-            double t = (t1 + t2) / 2;
+            double t =  (t1 + t2) / 2; //Math.Max(t1, t2); //
             Vector newPt = startPt.Position.Interpolate(midPt, t);
             return new Vertex(newPt);
         }

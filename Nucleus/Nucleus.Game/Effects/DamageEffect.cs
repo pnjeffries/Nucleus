@@ -68,7 +68,13 @@ namespace Nucleus.Game
                 {
                     Vector position = context.Target.GetData<MapData>()?.Position ?? Vector.Unset;
                     context.SFX.Trigger(SFXKeywords.Bang, position);
-                    //Destroy!
+                    // Destroy!
+                    Equipped equipped = context.Target.GetData<Equipped>();
+                    if (equipped != null)
+                    {
+                        // Drop held items!
+                        equipped.DropAll(context.Target, context);
+                    }
                     context.Target.Delete();     
                 }
                 return true;

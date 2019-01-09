@@ -224,6 +224,41 @@ namespace Nucleus.Model
         }
 
         /// <summary>
+        /// Get the first encountered element approached from the specified side of the specified direction
+        /// </summary>
+        /// <typeparam name="TElement"></typeparam>
+        /// <param name="direction"></param>
+        /// <param name="side"></param>
+        /// <param name="undeletedOnly"></param>
+        /// <param name="ignore"></param>
+        /// <returns></returns>
+        public TElement GetConnectedElementOnSide<TElement>(Vector direction, HandSide side, 
+            bool undeletedOnly = true, Element ignore = null)
+            where TElement : LinearElement
+        {
+            Angle bestAngle = 0;
+            TElement best = null;
+            foreach (Vertex v in Vertices)
+            {
+                if (v.Element != null && v.Element is TElement && v.Element != ignore &&
+                    (!undeletedOnly || !v.Element.IsDeleted))
+                {
+                    TElement element = (TElement)v.Element;
+                    Vertex v2 = element.Geometry.GetOtherEnd(v);
+                    Angle angle = (v.Position.AngleTo(v2.Position) - direction.Angle).Normalize();
+                    if (best == null ||
+                        (side == HandSide.Left && angle > bestAngle) ||
+                        (side == HandSide.Right && angle < bestAngle))
+                    {
+                        bestAngle = angle;
+                        best = element;
+                    }
+                }
+            }
+            return best;
+        }
+
+        /// <summary>
         /// Get a collection of the geometric objects whose vertices are connected to this node
         /// </summary>
         /// <returns></returns>
