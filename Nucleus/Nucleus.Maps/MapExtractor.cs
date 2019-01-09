@@ -8,6 +8,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Xml.Linq;
 //using Nominatim.API.Geocoders;
 //using Nominatim.API.Models;
 
@@ -29,6 +30,11 @@ namespace Nucleus.Maps
         /// The targeted version of the OpenStreetMap API
         /// </summary>
         public const string OSMAPIVersion = "0.6";
+
+        /// <summary>
+        /// The URI of the Nominatim API search function
+        /// </summary>
+        public const string NominatimAPI = "https://nominatim.openstreetmap.org/search?";
 
         #endregion
 
@@ -85,6 +91,20 @@ namespace Nucleus.Maps
         /// <returns></returns>
         public AnglePair LatitudeAndLongitudeFromAddress(string address)
         {
+            // Nominatim requires a contact email address
+            string queryString = NominatimAPI + "q=" + address + "&format=xml&email=paul@vitruality.com";
+
+            var web = new WebClient();
+            string xml = web.DownloadString(queryString);
+            XElement xmlTree = XElement.Parse(xml);
+            var place = xmlTree.Element("place");
+            string lat = place.Attribute("lat").Value;
+            string lon = place.Attribute("lon").Value;
+            double latitude = double.Parse(lat);
+            double longitude = double.Parse(lon);
+            return AnglePair.FromDegrees(latitude, longitude);
+
+
             /*var geocoder = new ForwardGeocoder();
             var task = geocoder.Geocode(new ForwardGeocodeRequest
             {

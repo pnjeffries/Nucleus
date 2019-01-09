@@ -65,6 +65,22 @@ namespace Nucleus.Game
             return false;
         }
 
+        /// <summary>
+        /// Drop all items in this
+        /// </summary>
+        /// <param name="dropper"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public bool DropAll(Element dropper, EffectContext context)
+        {
+            bool result = false;
+            foreach (var slot in Slots)
+            {
+                if (slot.DropItem(dropper, context)) result = true;
+            }
+            return result;
+        }
+
         #endregion
 
 

@@ -14,7 +14,7 @@ namespace Nucleus.Game
     /// A game state for Roguelikes
     /// </summary>
     [Serializable]
-    public class RLState : BasicGameState<MapStage>
+    public class RLState : MapState
     {
         #region Properties
 

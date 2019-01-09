@@ -14,7 +14,6 @@ namespace Nucleus.IO
     /// </summary>
     public class ModelDocumentTextSerialiser : DocumentTextSerialiser<ModelDocument>
     {
-
         #region Constructors
 
         /// <summary>
