@@ -9,6 +9,7 @@ namespace Nucleus.Model
     /// <summary>
     /// A collection of nodal constraint elements
     /// </summary>
+    [Serializable]
     public class ConstraintElementCollection : ElementCollection<ConstraintElement, ConstraintElementCollection>
     {
     }

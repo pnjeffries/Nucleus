@@ -14,6 +14,7 @@ namespace Nucleus.Alerts
     /// <summary>
     /// A log to store alerts raised during a process
     /// </summary>
+    [Serializable]
     public class AlertLog : AlertCollection, ILog
     {
      

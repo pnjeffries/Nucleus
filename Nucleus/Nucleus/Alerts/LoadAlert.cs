@@ -11,6 +11,7 @@ namespace Nucleus.Alerts
     /// <summary>
     /// An alert relating to one of many Loads
     /// </summary>
+    [Serializable]
     public class LoadAlert : ModelObjectAlert<Load, LoadCollection>
     {
         public LoadAlert(string message, IList<Load> items, AlertLevel level = AlertLevel.Information) : base(message, items, level)

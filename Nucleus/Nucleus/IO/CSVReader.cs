@@ -11,6 +11,7 @@ namespace Nucleus.IO
     /// <summary>
     /// A class to help read CSV files
     /// </summary>
+    [Serializable]
     public class CSVReader : MessageRaiser
     {
         #region Properties

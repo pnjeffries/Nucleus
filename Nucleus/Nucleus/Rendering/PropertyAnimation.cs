@@ -12,6 +12,7 @@ namespace Nucleus.Rendering
     /// An animation which animates a property specified by a path string.
     /// Uses reflection and therefore may be less performant than other animation types.
     /// </summary>
+    [Serializable]
     public class PropertyAnimation : Animation<object, object>
     {
         #region Properties

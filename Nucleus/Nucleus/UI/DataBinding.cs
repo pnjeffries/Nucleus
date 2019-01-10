@@ -13,6 +13,7 @@ namespace Nucleus.UI
     /// Class which implements basic functionality to support 
     /// property binding behaviour.
     /// </summary>
+    [Serializable]
     public class DataBinding
     {
         #region Properties

@@ -9,6 +9,7 @@ namespace Nucleus.Rendering
     /// <summary>
     /// A class representing a 2D axis-aligned rectangle
     /// </summary>
+    [Serializable]
     public class Rectangle
     {
         #region Properties

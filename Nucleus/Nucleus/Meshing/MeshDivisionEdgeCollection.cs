@@ -11,6 +11,7 @@ namespace Nucleus.Meshing
     /// <summary>
     /// A collection of mesh division edges
     /// </summary>
+    [Serializable]
     public class MeshDivisionEdgeCollection : KeyedCollection<string, MeshDivisionEdge>
     {
         #region Constructors

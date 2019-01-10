@@ -13,6 +13,7 @@ namespace Nucleus.UI
     /// <summary>
     /// Abstract base class for ViewModel wrapper classes representing selections of unique objects
     /// </summary>
+    [Serializable]
     public abstract class SelectionViewModel : NotifyPropertyChangedBase
     {
         /// <summary>
@@ -50,6 +51,7 @@ namespace Nucleus.UI
     /// </summary>
     /// <typeparam name="TCollection"></typeparam>
     /// <typeparam name="TUnique"></typeparam>
+    [Serializable]
     public abstract class SelectionViewModel<TCollection, TUnique> : SelectionViewModel
         where TCollection : UniquesCollection<TUnique>, new() where TUnique : class, IUnique
     {

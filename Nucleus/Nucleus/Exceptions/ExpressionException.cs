@@ -10,6 +10,7 @@ namespace Nucleus.Exceptions
     /// <summary>
     /// Exception that occurs during expression evaluation
     /// </summary>
+    [Serializable]
     public class ExpressionException : Exception
     {
         public ExpressionException()

@@ -250,13 +250,14 @@ namespace Nucleus.Geometry
 
         /// <summary>
         /// Node constructor.
-        /// Initialises a new vertex at the specified node position.
+        /// Initialises a new vertex at the specified node position
+        /// and connected to the specified node.
         /// </summary>
         /// <param name="node"></param>
         public Vertex(Node node)
         {
             _Position = node.Position;
-            _Node = node;
+            Node = node;
         }
 
         /// <summary>

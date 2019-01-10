@@ -30,6 +30,7 @@ namespace Nucleus.Conversion
     /// <summary>
     /// Base class for conversion contexts - objects that contain data on the context of a conversion operation
     /// </summary>
+    [Serializable]
     public abstract class ConversionContext
     {
         /// <summary>

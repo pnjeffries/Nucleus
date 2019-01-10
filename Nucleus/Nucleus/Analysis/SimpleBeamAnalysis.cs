@@ -14,6 +14,7 @@ namespace Nucleus.Analysis
     /// Class for performing basic structural engineering calculations on 
     /// simply-supported beams under uniformly distributed loading
     /// </summary>
+    [Serializable]
     public class SimpleBeamAnalysis : BeamAnalysisBase
     {
         #region Constructors

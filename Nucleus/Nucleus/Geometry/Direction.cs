@@ -11,6 +11,7 @@ namespace Nucleus.Geometry
     /// translational dimensions and rotations about those axes.
     /// Used to determine the application of directional loads.
     /// </summary>
+    [Serializable]
     public enum Direction
     {
         X = 1,

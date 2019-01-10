@@ -13,6 +13,7 @@ namespace Nucleus.Debugging
     /// Based on https://www.codeproject.com/Articles/28405/Make-the-debugger-show-the-contents-of-your-custom
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [Serializable]
     public class CollectionDebugView<T>
     {
         private ICollection<T> _Collection;

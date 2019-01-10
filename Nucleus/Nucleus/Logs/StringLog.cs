@@ -10,6 +10,7 @@ namespace Nucleus.Logs
     /// Log class which assembles messages into a single string
     /// via an internal StringBuilder
     /// </summary>
+    [Serializable]
     public class StringLog : ILog
     {
         #region Properties

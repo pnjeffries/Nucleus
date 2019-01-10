@@ -10,6 +10,7 @@ namespace Nucleus.Physics
     /// <summary>
     /// A collection of physics engine components
     /// </summary>
+    [Serializable]
     public class PhysicsEngineComponentCollection : UniquesCollection<IPhysicsEngineComponent>
     {
     }

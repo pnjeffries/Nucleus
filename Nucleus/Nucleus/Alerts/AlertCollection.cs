@@ -10,6 +10,7 @@ namespace Nucleus.Alerts
     /// <summary>
     /// A collection of alerts
     /// </summary>
+    [Serializable]
     public class AlertCollection : ObservableKeyedCollection<string, Alert>
     {
 

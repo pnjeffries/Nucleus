@@ -37,6 +37,7 @@ namespace Nucleus.Model
     /// This is a temporary object that is created when necessary and is not persisted
     /// beyond that.
     /// </summary>
+    [Serializable]
     public class ElementVertex : IOwned<Element>
     {
         #region Properties

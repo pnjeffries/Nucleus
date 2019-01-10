@@ -10,6 +10,7 @@ namespace Nucleus.Rendering
     /// <summary>
     /// A brush which paints an area with an image texture
     /// </summary>
+    [Serializable]
     public class TextureBrush : DisplayBrush
     {
         #region Properties

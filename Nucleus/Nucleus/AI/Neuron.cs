@@ -11,6 +11,7 @@ namespace Nucleus.AI
     /// <summary>
     /// A neuron in an ANN
     /// </summary>
+    [Serializable]
     public class Neuron : Unique
     {
         #region Properties

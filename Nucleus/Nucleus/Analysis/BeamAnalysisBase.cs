@@ -10,6 +10,7 @@ namespace Nucleus.Analysis
     /// <summary>
     /// Abstract base class for beam analysis
     /// </summary>
+    [Serializable]
     public abstract class BeamAnalysisBase
     {
         #region Properties

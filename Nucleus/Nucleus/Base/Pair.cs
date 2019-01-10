@@ -11,6 +11,7 @@ namespace Nucleus.Base
     /// </summary>
     /// <typeparam name="TFirst">The type of the first object</typeparam>
     /// <typeparam name="TSecond">The type of the second object</typeparam>
+    [Serializable]
     public struct Pair<TFirst, TSecond>
     {
         #region Fields

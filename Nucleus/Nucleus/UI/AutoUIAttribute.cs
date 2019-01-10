@@ -30,6 +30,7 @@ namespace Nucleus.UI
     /// Attribute for automatic UI generation.  Add this attribute to properties
     /// for which you wish to have UI controls generated automatically.
     /// </summary>
+    [Serializable]
     public class AutoUIAttribute : Attribute
     {
         #region Properties

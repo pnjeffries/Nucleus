@@ -13,6 +13,7 @@ namespace Nucleus.IO
     /// A TokenReader is a utility class that helps with tokenising and reading
     /// out strings sequentially.
     /// </summary>
+    [Serializable]
     public class TokenReader
     {
         #region Properties

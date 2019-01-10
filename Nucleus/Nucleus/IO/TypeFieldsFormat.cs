@@ -13,6 +13,7 @@ namespace Nucleus.IO
     /// A record of a type's aliases and fields to be used during
     /// serialisation and deserialisation
     /// </summary>
+    [Serializable]
     public class TypeFieldsFormat
     {
         #region Properties

@@ -12,6 +12,7 @@ namespace Nucleus.IO
     /// Base class for text serialisers that write out documents
     /// </summary>
     /// <typeparam name="TSource"></typeparam>
+    [Serializable]
     public abstract class DocumentTextSerialiser<TSource> : TextSerialiser<TSource>
         where TSource : Document
     {

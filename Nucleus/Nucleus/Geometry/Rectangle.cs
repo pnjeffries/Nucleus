@@ -249,6 +249,7 @@ namespace Nucleus.Geometry
     /// <summary>
     /// A rectangular two-dimensional interval defined by double value bounds
     /// </summary>
+    [Serializable]
     public class Rectangle : Rectangle<double>
     {
         #region Properties
@@ -328,6 +329,7 @@ namespace Nucleus.Geometry
     /// <summary>
     /// A rectangular two-dimensional interval defined by integer value bounds
     /// </summary>
+    [Serializable]
     public class IntRectangle : Rectangle<int>
     {
         #region Constructors

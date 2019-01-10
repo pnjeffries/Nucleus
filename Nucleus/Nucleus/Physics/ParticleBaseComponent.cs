@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Physics
 {
+    [Serializable]
     public abstract class ParticleBaseComponent : Unique
     {
         #region Properties

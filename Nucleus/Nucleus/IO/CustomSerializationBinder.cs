@@ -13,6 +13,7 @@ namespace Nucleus.IO
     /// A customised serialisation binder to enable backwards compatibility with
     /// files saved from versions of the library prior to the rename.
     /// </summary>
+    [Serializable]
     public class CustomSerializationBinder : SerializationBinder
     {
         private readonly string _OldLibraryName = "FreeBuild";

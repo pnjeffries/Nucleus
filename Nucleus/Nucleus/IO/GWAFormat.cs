@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Nucleus.IO
 {
+    [Serializable]
     public class GWAFormat : TextFormat
     {
         #region Constructors

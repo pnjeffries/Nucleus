@@ -30,6 +30,7 @@ namespace Nucleus.Exceptions
     /// Represents errors that occur during geometric calculation, typically because
     /// the operation to be performed is not possible with the input data
     /// </summary>
+    [Serializable]
     public class GeometryException : Exception
     {
         public GeometryException()

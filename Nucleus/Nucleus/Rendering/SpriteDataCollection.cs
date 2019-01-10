@@ -10,6 +10,7 @@ namespace Nucleus.Rendering
     /// <summary>
     /// A collection of SpriteData
     /// </summary>
+    [Serializable]
     public class SpriteDataCollection : ObservableKeyedCollection<string, SpriteData>
     {
         protected override string GetKeyForItem(SpriteData item)

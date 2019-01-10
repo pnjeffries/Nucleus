@@ -15,6 +15,7 @@ namespace Nucleus.IO
     /// <summary>
     /// Contextual operations involved with writing out a GWA-format file
     /// </summary>
+    [Serializable]
     public class GWAContext : StringConversionContextBase
     {
         // TODO: SubComponentIndex is a single parameter which will potentially be used

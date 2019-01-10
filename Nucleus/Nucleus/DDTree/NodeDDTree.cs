@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 
 namespace Nucleus.DDTree
 {
+    [Serializable]
     public class NodeDDTree : DDTree<Node>
     {
         public NodeDDTree(NodeCollection nodes, int maxDivisions = 10, double minCellSize = 1) : base(nodes, maxDivisions, minCellSize) { }

@@ -12,6 +12,7 @@ namespace Nucleus.UI
     /// A specialised form of DataBinding which permits binding
     /// to an observable collection
     /// </summary>
+    [Serializable]
     public class ItemsSourceBinding : DataBinding
     {
         #region Properties

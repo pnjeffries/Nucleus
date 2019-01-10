@@ -12,6 +12,7 @@ namespace Nucleus.Undo
     /// <summary>
     /// A collection of undo states
     /// </summary>
+    [Serializable]
     public class UndoStageCollection : ObservableCollection<UndoStage>
     {
     }

@@ -10,7 +10,7 @@ namespace Nucleus.Calculation
     /// An attribute which may be used to tag object properties which represent 
     /// calculation output variables
     /// </summary>
-    public class CalculationOutputAttribute
+    public class CalculationOutputAttribute : Attribute
     {
     }
 }

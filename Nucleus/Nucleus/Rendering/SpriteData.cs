@@ -13,6 +13,7 @@ namespace Nucleus.Rendering
     /// <summary>
     /// Class to hold the definition of a sprite
     /// </summary>
+    [Serializable]
     public class SpriteData : Named
     {
         #region Properties

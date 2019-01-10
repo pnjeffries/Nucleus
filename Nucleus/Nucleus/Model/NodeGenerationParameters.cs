@@ -31,6 +31,7 @@ namespace Nucleus.Model
     /// <summary>
     /// A set of parameters used in the generation of nodes
     /// </summary>
+    [Serializable]
     public class NodeGenerationParameters
     {
         #region Properties

@@ -30,6 +30,7 @@ namespace Nucleus.Events
     /// <summary>
     /// Event arguments used when an object has been added to the model
     /// </summary>
+    [Serializable]
     public class ModelObjectAddedEventArgs : EventArgs
     {
         /// <summary>

@@ -10,6 +10,7 @@ namespace Nucleus.Base
     /// <summary>
     /// A named input or output parameter which holds an integer value
     /// </summary>
+    [Serializable]
     public class IntParameter : Parameter<int>
     {
         #region Constructors

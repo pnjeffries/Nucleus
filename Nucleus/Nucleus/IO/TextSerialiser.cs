@@ -15,6 +15,7 @@ namespace Nucleus.IO
     /// <summary>
     /// Class that converts objects to text strings in a customisable format
     /// </summary>
+    [Serializable]
     public abstract class TextSerialiser<TSource> : MessageRaiser
     {
         #region Fields

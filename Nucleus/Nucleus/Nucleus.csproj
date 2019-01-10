@@ -88,7 +88,9 @@
     <Compile Include="Base\ParameterCollection.cs" />
     <Compile Include="Base\ParameterGroup.cs" />
     <Compile Include="Base\ParameterGroupCollection.cs" />
+    <Compile Include="Base\StringParameter.cs" />
     <Compile Include="Debugging\CollectionDebugView.cs" />
+    <Compile Include="Extensions\AssemblyExtensions.cs" />
     <Compile Include="Extensions\RandomExtensions.cs" />
     <Compile Include="Geometry\AngleIntervals.cs" />
     <Compile Include="Geometry\AnglePair.cs" />
@@ -151,7 +153,6 @@
     <Compile Include="Analysis\SimpleBeamAnalysis.cs" />
     <Compile Include="Logs\LogScript.cs" />
     <Compile Include="Logs\LogScriptEntry.cs" />
-    <Compile Include="Logs\NonExpandableAttribute.cs" />
     <Compile Include="Logs\StringLog.cs" />
     <Compile Include="Maths\Fresnel.cs" />
     <Compile Include="Maths\INamedDataSetCollection.cs" />
@@ -511,7 +512,6 @@
     <Compile Include="Undo\UndoStageCollection.cs" />
     <Compile Include="Units\DimensionAttribute.cs" />
     <Compile Include="Units\DimensionType.cs" />
-    <Compile Include="Units\IDimension.cs" />
     <Compile Include="Units\MeasurementUnit.cs" />
   </ItemGroup>
   <ItemGroup>

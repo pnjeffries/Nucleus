@@ -36,6 +36,7 @@ namespace Nucleus.Meshing
     /// <summary>
     /// An abstract base class used to generically construct meshes in an application-specific format
     /// </summary>
+    [Serializable]
     public abstract class MeshBuilderBase
     {
         #region Properties
@@ -1128,6 +1129,7 @@ namespace Nucleus.Meshing
     /// An abstract base class used to generically construct meshes in an application-specific format
     /// </summary>
     /// <typeparam name="TMesh">The type of mesh being generated</typeparam>
+    [Serializable]
     public abstract class MeshBuilderBase<TMesh> : MeshBuilderBase
     {
         /// <summary>

@@ -10,6 +10,7 @@ namespace Nucleus.DDTree
     /// <summary>
     /// A divided dimension tree to store geometry vertices
     /// </summary>
+    [Serializable]
     public class VertexDDTree : PositionDDTree<Vertex>
     {
         #region Constructors

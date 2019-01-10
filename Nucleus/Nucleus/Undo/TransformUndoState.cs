@@ -11,6 +11,7 @@ namespace Nucleus.Undo
     /// An undo state which will reverse a transformation performed on
     /// a geometric object
     /// </summary>
+    [Serializable]
     public class TransformUndoState : UndoState
     {
         #region Properties

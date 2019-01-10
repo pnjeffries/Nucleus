@@ -20,6 +20,7 @@ namespace Nucleus.IO
     /// may be referenced by others and inlines everything else.  The data format is kept malleable and forwards-compatible
     /// by being recorded within the file itself.
     /// </summary>
+    [Serializable]
     public class UniqueFormatter
     {
         #region Constants

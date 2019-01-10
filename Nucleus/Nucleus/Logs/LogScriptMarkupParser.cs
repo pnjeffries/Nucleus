@@ -12,6 +12,7 @@ namespace Nucleus.Logs
     /// <summary>
     /// Class to parse markup tags in log script entries
     /// </summary>
+    [Serializable]
     public class LogScriptMarkupParser
     {
         #region Constants

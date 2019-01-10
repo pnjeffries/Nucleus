@@ -523,6 +523,7 @@ namespace Nucleus.Maths
     /// <summary>
     /// Type converter for the expression class
     /// </summary>
+    [Serializable]
     public class ExpressionTypeConverter : TypeConverter
     {
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)

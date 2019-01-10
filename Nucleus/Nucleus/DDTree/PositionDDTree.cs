@@ -11,6 +11,7 @@ namespace Nucleus.DDTree
     /// A DDTree adapted to store and access objects with no dimension 
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [Serializable]
     public class PositionDDTree<T> : DDTree<T>
         where T : IPosition
     {

@@ -12,6 +12,7 @@ namespace Nucleus.Actions
     /// A set of parameters used when generating geometry to be displayed
     /// during a dynamic preview
     /// </summary>
+    [Serializable]
     public class PreviewParameters
     { 
         #region Properties

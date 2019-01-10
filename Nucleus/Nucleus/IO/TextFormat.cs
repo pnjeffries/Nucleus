@@ -13,6 +13,7 @@ namespace Nucleus.IO
     /// Data about the format various types should be serialised to.
     /// For use with TextSerialiser
     /// </summary>
+    [Serializable]
     public class TextFormat : Dictionary<Type, string>
     {
         #region Constants

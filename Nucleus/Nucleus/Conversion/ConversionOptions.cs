@@ -31,6 +31,7 @@ namespace Nucleus.Conversion
     /// <summary>
     /// A basic set of options used when converting between types.
     /// </summary>
+    [Serializable]
     public class ConversionOptions : NotifyPropertyChangedBase
     {
         #region Properties

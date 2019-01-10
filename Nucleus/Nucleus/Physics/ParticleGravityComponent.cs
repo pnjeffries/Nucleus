@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Physics
 {
+    [Serializable]
     public class ParticleGravityComponent : Unique, IPhysicsEngineComponent
     {
         #region Properties

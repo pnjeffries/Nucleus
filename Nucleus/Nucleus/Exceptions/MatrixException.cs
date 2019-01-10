@@ -29,6 +29,7 @@ namespace Nucleus.Exceptions
     /// <summary>
     /// Represents errors that occur during matrix mathematics operations
     /// </summary>
+    [Serializable]
     public class MatrixException : Exception
     {
         public MatrixException()

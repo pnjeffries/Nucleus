@@ -9,6 +9,7 @@ namespace Nucleus.Rendering
     /// <summary>
     /// Manager class which applies animations to objects
     /// </summary>
+    [Serializable]
     public class Animator
     {
         #region Properties

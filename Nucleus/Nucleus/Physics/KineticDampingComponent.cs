@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Physics
 {
+    [Serializable]
     public class KineticDampingComponent : ParticleBaseComponent, IPhysicsEngineComponent
     {
         public double KE1 { get; set; } = 0;

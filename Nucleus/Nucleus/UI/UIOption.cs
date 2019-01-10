@@ -9,6 +9,7 @@ namespace Nucleus.UI
     /// <summary>
     /// Class representing an option to be displayed within a user interface
     /// </summary>
+    [Serializable]
     public class UIOption
     {
         #region Constants
@@ -64,7 +65,6 @@ namespace Nucleus.UI
         }
 
         #endregion
-
 
     }
 }

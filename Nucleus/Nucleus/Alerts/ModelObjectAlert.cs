@@ -12,6 +12,7 @@ namespace Nucleus.Alerts
     /// </summary>
     /// <typeparam name="TItem">The type of item to which this alert refers</typeparam>
     /// <typeparam name="TCollection">The collection which holds the specifed type</typeparam>
+    [Serializable]
     public abstract class ModelObjectAlert<TItem, TCollection> : Alert
         where TItem : ModelObject
         where TCollection : ModelObjectCollection<TItem>, new()

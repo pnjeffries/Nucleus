@@ -10,6 +10,7 @@ namespace Nucleus.Maths
     /// <summary>
     /// A collection of line graph data
     /// </summary>
+    [Serializable]
     public class GraphLineDataCollection : UniquesCollection<GraphLineData>
     {
         /// <summary>

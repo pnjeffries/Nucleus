@@ -10,6 +10,7 @@ namespace Nucleus.Rendering
     /// <summary>
     /// Supervisor class responsible for cacheing special effects triggers
     /// </summary>
+    [Serializable]
     public class SFXSupervisor
     {
         #region Properties

@@ -125,6 +125,7 @@ namespace Nucleus.Rendering
     /// </summary>
     /// <typeparam name="TTarget">The type of the target to which the animation is applied</typeparam>
     /// <typeparam name="TState">The type of the state value which will be modified throughout this animation</typeparam>
+    [Serializable]
     public abstract class Animation<TTarget, TState> : Animation
     {
         #region Properties
