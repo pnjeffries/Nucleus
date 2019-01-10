@@ -11,6 +11,7 @@ namespace Nucleus.Rendering
     /// A colour gradient that smoothly varies between colours keyed
     /// at different double parameters
     /// </summary>
+    [Serializable]
     public class ColourGradient : LinearDataSet<Colour>
     {
         #region Constants

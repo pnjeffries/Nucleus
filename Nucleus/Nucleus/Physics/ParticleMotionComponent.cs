@@ -12,6 +12,7 @@ namespace Nucleus.Physics
     /// <summary>
     /// A Physics Engine component that deals with resolving the motion of particles
     /// </summary>
+    [Serializable]
     public class ParticleMotionComponent : ParticleBaseComponent, IPhysicsEngineComponent
     {
         #region Properties

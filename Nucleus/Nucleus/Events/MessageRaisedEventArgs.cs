@@ -29,6 +29,7 @@ namespace Nucleus.Events
     /// <summary>
     /// Event args for a MessageRaised event
     /// </summary>
+    [Serializable]
     public class MessageRaisedEventArgs : EventArgs
     {
         /// <summary>

@@ -33,7 +33,8 @@ namespace Nucleus.Tests
         public static void PrintUnserializableTypes(Assembly assembly)
         {
             var q = from t in assembly.GetTypes()
-                    where t.IsClass && ((t.Attributes & TypeAttributes.Serializable) != TypeAttributes.Serializable)
+                    where t.IsClass && !(t.IsAbstract && t.IsSealed) &&
+                    ((t.Attributes & TypeAttributes.Serializable) != TypeAttributes.Serializable)
                     select t;
             q.ToList().ForEach(t => Core.Print(t.Name));
         }

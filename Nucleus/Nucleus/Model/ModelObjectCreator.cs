@@ -34,6 +34,7 @@ namespace Nucleus.Model
     /// A component of a model which acts as a factory class to create new objects 
     /// in the model or update previously created ones with matching execution information.
     /// </summary>
+    [Serializable]
     public class ModelObjectCreator
     {
         #region Properties

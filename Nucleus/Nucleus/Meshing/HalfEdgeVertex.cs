@@ -10,6 +10,7 @@ namespace Nucleus.Meshing
     /// <summary>
     /// A vertex in a Half-Egde mesh
     /// </summary>
+    [Serializable]
     public class HalfEdgeVertex : IPosition
     {
 

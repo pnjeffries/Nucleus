@@ -11,6 +11,7 @@ namespace Nucleus.Game
     /// <summary>
     /// An effect which reduces element hitpoints
     /// </summary>
+    [Serializable]
     public class DamageEffect : BasicEffect
     {
         #region Properties

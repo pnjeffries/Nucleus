@@ -9,6 +9,7 @@ namespace Nucleus.Meshing
     /// <summary>
     /// A face in a half-edge mesh
     /// </summary>
+    [Serializable]
     public class HalfEdgeFace
     {
         #region Properties

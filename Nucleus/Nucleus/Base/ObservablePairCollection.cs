@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Base
 {
+    [Serializable]
     public class ObservablePairCollection<TKey, TValue> : ObservableKeyedCollection<TKey, ObservablePair<TKey, TValue>>, IDictionary
     {
         object IDictionary.this[object key]

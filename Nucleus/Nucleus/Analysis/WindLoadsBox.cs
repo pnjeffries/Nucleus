@@ -9,6 +9,7 @@ namespace Nucleus.Analysis
     /// <summary>
     /// Calculation of wind loads on a simple box to Eurocode 1 EN 1991-1-4
     /// </summary>
+    [Serializable]
     public class WindLoadsBox
     {
         /// <summary>

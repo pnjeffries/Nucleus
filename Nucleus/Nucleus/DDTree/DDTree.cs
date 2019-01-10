@@ -37,6 +37,7 @@ namespace Nucleus.DDTree
     /// and the abstract functions overridden to deal with that type.
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [Serializable]
     public abstract class DDTree<T>
     {
         /// <summary>

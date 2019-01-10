@@ -10,6 +10,7 @@ namespace Nucleus.Alerts
     /// <summary>
     /// An alert relating to one or more elements
     /// </summary>
+    [Serializable]
     public class ElementAlert : ModelObjectAlert<Element, ElementCollection>
     {
         public ElementAlert(string message, IList<Element> items, AlertLevel level = AlertLevel.Information) : base(message, items, level)

@@ -59,6 +59,7 @@
     <Compile Include="Actions\WindUpAction.cs" />
     <Compile Include="Actions\TargetedAction.cs" />
     <Compile Include="Actions\WaitAction.cs" />
+    <Compile Include="Artitecture\BlueprintCell.cs" />
     <Compile Include="Artitecture\CellGenerationType.cs" />
     <Compile Include="Artitecture\ExitPlacement.cs" />
     <Compile Include="Artitecture\Room.cs" />

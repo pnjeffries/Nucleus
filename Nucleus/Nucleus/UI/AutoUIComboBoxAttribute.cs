@@ -31,6 +31,7 @@ namespace Nucleus.UI
     /// for which you wish to have UI controls generated automatically.
     /// Properties tagged with this attribute will be represented by a ComboBox.
     /// </summary>
+    [Serializable]
     public class AutoUIComboBoxAttribute : AutoUIAttribute
     {
         #region Properties

@@ -13,6 +13,7 @@ namespace Nucleus.Maths
     /// Wrapper for graph line data,
     /// used to present it in a graph
     /// </summary>
+    [Serializable]
     public class GraphLineData : Named
     {
         #region Properties

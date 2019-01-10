@@ -29,6 +29,7 @@ namespace Nucleus.Rendering
     /// <summary>
     /// Abstract base class for renderers which draw objects to the screen
     /// </summary>
+    [Serializable]
     public abstract class Renderer
     {
     }

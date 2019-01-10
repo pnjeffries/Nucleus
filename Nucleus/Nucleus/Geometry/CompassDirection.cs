@@ -9,6 +9,7 @@ namespace Nucleus.Geometry
     /// <summary>
     /// An enumerated value representing the points of the compass
     /// </summary>
+    [Serializable]
     public enum CompassDirection
     {
         North = 0,

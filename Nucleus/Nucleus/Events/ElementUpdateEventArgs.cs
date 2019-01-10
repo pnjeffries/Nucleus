@@ -29,6 +29,7 @@ namespace Nucleus.Events
     /// <summary>
     /// A set of arguments passed on during an element update event
     /// </summary>
+    [Serializable]
     public class ElementUpdateEventArgs : EventArgs
     {
     }

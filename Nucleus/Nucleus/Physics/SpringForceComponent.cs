@@ -12,6 +12,7 @@ namespace Nucleus.Physics
     /// A physics engine component that applies Hooke's law to determine forces
     /// acting on the ends of a set of springs according to the current deformation
     /// </summary>
+    [Serializable]
     public class SpringForceComponent : Unique, IPhysicsEngineComponent
     {
         #region Properties

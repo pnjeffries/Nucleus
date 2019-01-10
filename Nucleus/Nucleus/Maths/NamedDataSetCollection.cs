@@ -96,6 +96,7 @@ namespace Nucleus.Maths
     /// <summary>
     /// A collection of named data sets
     /// </summary>
+    [Serializable]
     public class NamedDataSetCollection : NamedDataSetCollection<NamedDataSet>
     { }
 }

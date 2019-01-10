@@ -11,6 +11,7 @@ namespace Nucleus.Undo
     /// from an undoable operation and which will all be reverted
     /// at once.
     /// </summary>
+    [Serializable]
     public class UndoStage : List<UndoState>
     {
         /// <summary>

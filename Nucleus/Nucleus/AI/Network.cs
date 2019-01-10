@@ -9,6 +9,7 @@ namespace Nucleus.AI
     /// <summary>
     /// An Artificial Neural Network consisting of several layers of neurons
     /// </summary>
+    [Serializable]
     public class Network
     {
 

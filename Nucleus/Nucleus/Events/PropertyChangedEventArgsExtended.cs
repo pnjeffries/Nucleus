@@ -11,6 +11,7 @@ namespace Nucleus.Events
     /// Extended version of PropertyChangedEventArgs that also includes the previous and new
     /// values of the property
     /// </summary>
+    [Serializable]
     public class PropertyChangedEventArgsExtended : PropertyChangedEventArgs
     {
         /// <summary>

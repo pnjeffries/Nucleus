@@ -11,6 +11,7 @@ namespace Nucleus.Physics
     /// A customisable physics engine that can be used to manage
     /// iterative simulations of physical and pseudo-physical forces
     /// </summary>
+    [Serializable]
     public class PhysicsEngine : MessageRaiser
     {
         #region Properties

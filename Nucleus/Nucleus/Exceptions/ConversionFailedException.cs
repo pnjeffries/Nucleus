@@ -29,6 +29,7 @@ namespace Nucleus.Exceptions
     /// <summary>
     /// Represents errors that occur during automated type conversion
     /// </summary>
+    [Serializable]
     public class ConversionFailedException : Exception
     {
         public ConversionFailedException() : base() { }

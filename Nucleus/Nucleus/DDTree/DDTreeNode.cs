@@ -32,6 +32,7 @@ namespace Nucleus.DDTree
     /// A node in a D-D Tree
     /// </summary>
     /// <typeparam name="T">The type of object contained by the tree</typeparam>
+    [Serializable]
     class DDTreeNode<T>
     {
         private double _Origin; //The origin axis position

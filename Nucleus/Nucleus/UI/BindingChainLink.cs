@@ -13,6 +13,7 @@ namespace Nucleus.UI
     /// the chain of objects which must be traversed
     /// to reach the target.
     /// </summary>
+    [Serializable]
     public class BindingChainLink
     {
         #region Properties

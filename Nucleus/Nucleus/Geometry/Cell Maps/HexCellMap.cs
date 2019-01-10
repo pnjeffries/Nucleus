@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Geometry
 {
+    [Serializable]
     public class HexCellMap<T> : RegularCellMap<T>
     {
         #region Fields

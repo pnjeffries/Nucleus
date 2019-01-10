@@ -30,6 +30,7 @@ namespace Nucleus.Meshing
     /// <summary>
     /// Builder object for Nucleus meshes
     /// </summary>
+    [Serializable]
     public class MeshBuilder : MeshBuilderBase<Mesh>
     {
         public MeshBuilder()

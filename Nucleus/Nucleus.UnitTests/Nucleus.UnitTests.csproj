@@ -55,6 +55,7 @@
     <Compile Include="CurveTests.cs" />
     <Compile Include="ExtensionsTests.cs" />
     <Compile Include="ParameterTests.cs" />
+    <Compile Include="SerializationTests.cs" />
     <Compile Include="SolarPositioningTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VectorTests.cs" />

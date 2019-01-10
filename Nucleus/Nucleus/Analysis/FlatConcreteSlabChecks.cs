@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Analysis
 {
+    [Serializable]
     public class FlatConcreteSlabChecks : NotifyPropertyChangedBase
     {
         #region Properties

@@ -10,6 +10,7 @@ namespace Nucleus.Conversion
     /// <summary>
     /// Conversion options for whole-model writing
     /// </summary>
+    [Serializable]
     public abstract class ModelConversionOptions : ConversionOptions
     {
         /// <summary>

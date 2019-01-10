@@ -12,6 +12,7 @@ namespace Nucleus.Undo
     /// <summary>
     /// An undo state which can be used to revert a collection change
     /// </summary>
+    [Serializable]
     public class CollectionUndoState : UndoState
     {
         #region Properties

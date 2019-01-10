@@ -10,6 +10,7 @@ namespace Nucleus.Rendering
     /// <summary>
     /// Datastructure to hold the information of an animation in a sprite
     /// </summary>
+    [Serializable]
     public class SpriteAnimation
     {
         #region Properties

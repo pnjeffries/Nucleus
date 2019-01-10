@@ -10,6 +10,7 @@ namespace Nucleus.Base
     /// <summary>
     /// A named input or output parameter which holds a double value
     /// </summary>
+    [Serializable]
     public class DoubleParameter : Parameter<double>
     {
         #region Properties

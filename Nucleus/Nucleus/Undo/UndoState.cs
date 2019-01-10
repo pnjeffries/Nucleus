@@ -9,6 +9,7 @@ namespace Nucleus.Undo
     /// <summary>
     /// Represents a particular state which can be returned to through an undo operation
     /// </summary>
+    [Serializable]
     public abstract class UndoState
     {
         /// <summary>

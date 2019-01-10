@@ -31,6 +31,7 @@ namespace Nucleus.Rendering
     /// A set of parameters passed in to renderable objects to allow them to be drawn.
     /// Actual implementation will be application-specific
     /// </summary>
+    [Serializable]
     public abstract class RenderingParameters
     {
         /// <summary>

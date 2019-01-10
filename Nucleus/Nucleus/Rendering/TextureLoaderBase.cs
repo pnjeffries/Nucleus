@@ -10,6 +10,7 @@ namespace Nucleus.Rendering
     /// Abstract generic base class to give a headstart on implementing an ITextureLoader
     /// </summary>
     /// <typeparam name="TTexture"></typeparam>
+    [Serializable]
     public abstract class TextureLoaderBase<TTexture> : ITextureLoader
         where TTexture : ITexture
     {

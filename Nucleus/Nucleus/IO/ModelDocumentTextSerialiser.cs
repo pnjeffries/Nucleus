@@ -12,6 +12,7 @@ namespace Nucleus.IO
     /// Serialisation class that can write out a model document to text using a defined
     /// format.
     /// </summary>
+    [Serializable]
     public class ModelDocumentTextSerialiser : DocumentTextSerialiser<ModelDocument>
     {
         #region Constructors

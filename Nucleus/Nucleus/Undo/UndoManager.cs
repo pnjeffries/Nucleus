@@ -16,6 +16,7 @@ namespace Nucleus.Undo
     /// <summary>
     /// Class for general undo/redo management
     /// </summary>
+    [Serializable]
     public class UndoManager : NotifyPropertyChangedBase
     {
         /// <summary>

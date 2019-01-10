@@ -1,5 +1,6 @@
 ﻿using Nucleus.Base;
 using Nucleus.Extensions;
+using Nucleus.Game.Artitecture;
 using Nucleus.Geometry;
 using Nucleus.Maths;
 using System;
@@ -29,20 +30,15 @@ namespace Nucleus.Game
         /// <summary>
         /// The blueprint that the generator will work on
         /// </summary>
-        private SquareCellMap<CellGenerationType> _Blueprint;
+        private SquareCellMap<BlueprintCell> _Blueprint;
 
         /// <summary>
         /// The blueprint that the generator will work on
         /// </summary>
-        public SquareCellMap<CellGenerationType> Blueprint
+        public SquareCellMap<BlueprintCell> Blueprint
         {
             get { return _Blueprint; }
         }
-
-        /// <summary>
-        /// The map of room references
-        /// </summary>
-        public SquareCellMap<Room> RoomMap { get; private set; }
 
         /// <summary>
         /// Has the level exit yet been placed?
@@ -70,12 +66,14 @@ namespace Nucleus.Game
 
         #region Constructors
 
-        public DungeonArtitect() { }
+        private DungeonArtitect() { }
 
         public DungeonArtitect(int iSize, int jSize)
         {
-            _Blueprint = new SquareCellMap<CellGenerationType>(iSize, jSize);
-            RoomMap = new SquareCellMap<Room>(iSize, jSize);
+            _Blueprint = new SquareCellMap<BlueprintCell>(iSize, jSize);
+            for (int i = 0; i < iSize; i++)
+                for (int j = 0; j < jSize; j++)
+                    _Blueprint[i, j] = new BlueprintCell();
         }
 
         #endregion
@@ -92,7 +90,7 @@ namespace Nucleus.Game
                 var snap = new SquareCellMap<CellGenerationType>(_Blueprint.SizeX, _Blueprint.SizeY);
                 for(int i = 0; i < Blueprint.CellCount; i++)
                 {
-                    snap[i] = Blueprint[i];
+                    snap[i] = Blueprint[i].GenerationType;
                 }
                 Snapshots.Add(snap);
             }
@@ -121,7 +119,7 @@ namespace Nucleus.Game
         {
             if (i < edgeOffset || i >= _Blueprint.SizeX - edgeOffset ||
                 j < edgeOffset || j >= _Blueprint.SizeY - edgeOffset) return false;
-           else return _Blueprint[i, j] == CellGenerationType.Untouched;
+           else return _Blueprint[i, j].GenerationType == CellGenerationType.Untouched;
         }
 
 
@@ -173,7 +171,7 @@ namespace Nucleus.Game
                 {
                     if (i < 0 || i >= _Blueprint.SizeX ||
                         j < 0 || j >= _Blueprint.SizeY ||
-                        _Blueprint[i, j] != type) return false;
+                        _Blueprint[i, j].GenerationType != type) return false;
                 }
             }
             return true;
@@ -379,8 +377,8 @@ namespace Nucleus.Game
         /// <param name="genType"></param>
         public void SetCell(int i, int j, CellGenerationType genType, Room room = null)
         {
-            _Blueprint[i, j] = genType;
-            RoomMap[i, j] = room;
+            _Blueprint[i, j].GenerationType = genType;
+            _Blueprint[i, j].Room = room;
         }
 
         
@@ -530,9 +528,7 @@ namespace Nucleus.Game
                     AvailableForDoorway(iDoor,jDoor, direction, template.EntryWidth))
                 {
                     // TODO: Check room connections
-                    GenerateDoorway(iDoor, jDoor, direction, template.EntryWidth);
-
-                    
+                    GenerateDoorway(iDoor, jDoor, direction, template.EntryWidth);    
                 }
             }
 

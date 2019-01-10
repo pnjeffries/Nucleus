@@ -13,6 +13,7 @@ namespace Nucleus.Analysis
     /// Used to calculate the position of the sun at a given date and time.
     /// Based on http://www.nrel.gov/docs/fy08osti/34302.pdf
     /// </summary>
+    [Serializable]
     public static class SolarPositioning
     {
         #region Constants

@@ -10,6 +10,7 @@ namespace Nucleus.Conversion
     /// Abstract base class for String conversion contexts.
     /// Implements a basic version of the required functionality.
     /// </summary>
+    [Serializable]
     public abstract class StringConversionContextBase : IStringConversionContext
     {
         /// <summary>

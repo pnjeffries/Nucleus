@@ -30,6 +30,7 @@ namespace Nucleus.Exceptions
     /// Represents errors that occur when a single geometry object is assigned to
     /// more than one element as its key set-out geometry
     /// </summary>
+    [Serializable]
     public class NonExclusiveGeometryException : Exception
     {
         public NonExclusiveGeometryException()

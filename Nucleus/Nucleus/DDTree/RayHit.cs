@@ -9,6 +9,7 @@ namespace Nucleus.DDTree
     /// <summary>
     /// Class to store the result of a ray hit test
     /// </summary>
+    [Serializable]
     public class RayHit<T>
     {
         #region Properties

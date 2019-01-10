@@ -1224,6 +1224,7 @@ namespace Nucleus.Geometry
         /// <summary>
         /// A class for storing line-line intersection events
         /// </summary>
+        [Serializable]
         private class LineLineIntersection
         {
             #region Fields

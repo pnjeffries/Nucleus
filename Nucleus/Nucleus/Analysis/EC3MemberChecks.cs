@@ -11,6 +11,7 @@ namespace Nucleus.Analysis
     /// <summary>
     /// Steel member design checks to Eurocode 3 
     /// </summary>
+    [Serializable]
     public class EC3MemberChecks : NotifyPropertyChangedBase
     {
         //TODO: Shear lag, local buckling & shear buckling to EN 1993-1-5

@@ -10,6 +10,7 @@ namespace Nucleus.Base
     /// A named object which implements the IDeletable interface to allow it to be
     /// tagged for deletion
     /// </summary>
+    [Serializable]
     public abstract class Deletable : Named, IDeletable
     {
         #region Properties

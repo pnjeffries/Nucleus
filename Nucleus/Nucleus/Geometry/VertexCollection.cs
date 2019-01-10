@@ -302,6 +302,7 @@ namespace Nucleus.Geometry
         #endregion
     }
 
+    [Serializable]
     public class VertexCollectionDebugView
     { 
         private ICollection<Vertex> _Collection;

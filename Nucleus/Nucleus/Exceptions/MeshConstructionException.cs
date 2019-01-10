@@ -29,6 +29,7 @@ namespace Nucleus.Exceptions
     /// <summary>
     /// Represents errors that occur during mesh building
     /// </summary>
+    [Serializable]
     public class MeshConstructionException : Exception
     {
         public MeshConstructionException() : base() { }

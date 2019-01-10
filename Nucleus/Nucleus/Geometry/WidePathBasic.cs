@@ -11,6 +11,7 @@ namespace Nucleus.Geometry
     /// A basic wide path object that can be used to simply generate edge curves
     /// of a path segment.
     /// </summary>
+    [Serializable]
     public class WidePathBasic : Unique, IWidePath
     {
         #region Properties

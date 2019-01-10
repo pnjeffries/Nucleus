@@ -36,6 +36,7 @@ namespace Nucleus.Conversion
     /// A library of converter routines to take one type of data and convert
     /// it into another as closely as possible.
     /// </summary>
+    [Serializable]
     public class ConversionLibrary
     {
         #region Properties

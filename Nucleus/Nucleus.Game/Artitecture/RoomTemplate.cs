@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Game
 {
+    /// <summary>
+    /// A template which is used to generate a room
+    /// </summary>
     [Serializable]
     public class RoomTemplate : Unique
     {

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Rendering
 {
+    [Serializable]
     public class AnimationBinding
     {
         /// <summary>

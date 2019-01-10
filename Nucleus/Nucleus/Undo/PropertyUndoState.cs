@@ -13,6 +13,7 @@ namespace Nucleus.Undo
     /// <summary>
     /// An undo state which can be used to revert a property value change
     /// </summary>
+    [Serializable]
     public class PropertyUndoState : UndoState
     {
         #region Properties

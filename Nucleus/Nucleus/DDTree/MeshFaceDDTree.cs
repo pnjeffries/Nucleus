@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Nucleus.DDTree
 {
+    [Serializable]
     public class MeshFaceDDTree : DDTree<MeshFace>
     {
         #region Constructor

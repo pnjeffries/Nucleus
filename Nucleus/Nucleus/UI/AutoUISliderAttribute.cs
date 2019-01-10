@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Nucleus.UI
 {
+    [Serializable]
     public class AutoUISliderAttribute : AutoUIAttribute
     {
         #region Properties
