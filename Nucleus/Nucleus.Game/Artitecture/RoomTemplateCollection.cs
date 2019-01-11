@@ -12,5 +12,23 @@ namespace Nucleus.Game
     /// </summary>
     public class RoomTemplateCollection : UniquesCollection<RoomTemplate>
     {
+        #region Methods
+
+        /// <summary>
+        /// Get all templates in this collection of the specified type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public RoomTemplateCollection GetAllOfType(RoomType type)
+        {
+            var result = new RoomTemplateCollection();
+            foreach (var room in this)
+            {
+                if (room.RoomType == type) result.Add(room);
+            }
+            return result;
+        }
+
+        #endregion
     }
 }

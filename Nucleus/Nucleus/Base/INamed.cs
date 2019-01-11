@@ -65,11 +65,12 @@ namespace Nucleus.Base
         /// <param name="collection"></param>
         /// <param name="name">The name of the item to find.  Not case sensitive.</param>
         /// <returns>The first encountered item in this collection with the given name.</returns>
-        public static TItem FindByName<TItem> (this IEnumerable<TItem> collection, string name) where TItem: class, INamed
+        public static TItem FindByName<TItem> (this IEnumerable<TItem> collection, string name, TItem ignore = null) 
+            where TItem: class, INamed
         {
             foreach (TItem item in collection)
             {
-                if (item.Name.EqualsIgnoreCase(name)) return item;
+                if (item.Name.EqualsIgnoreCase(name) && item != ignore) return item;
             }
             return null;
         }
@@ -108,6 +109,37 @@ namespace Nucleus.Base
             foreach (TItem item in collection)
                 result.Add(item.Name);
             return result;
+        }
+
+        /// <summary>
+        /// Return the next version of this name with an attached numerical postfix that
+        /// will be a unique name in this collection.
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="baseName">The base name</param>
+        /// <param name="ignore">Optional.  If specified, this object will be ignored during the search.</param>
+        /// <param name="enforcePostFix">Optional.  If set true, a postfix numeral will always be applied, even if it is 1.</param>
+        /// <param name="includeSpace">Optional.  If true (default) a space will be inserted between the name and number</param>
+        /// <returns></returns>
+        public static string NextAvailableName<TItem>(this IList<TItem> list, string baseName, TItem ignore = null, bool enforcePostFix = false, bool includeSpace = true)
+            where TItem : class, INamed
+        {
+
+            if (!enforcePostFix && list.FindByName(baseName, ignore) == null) return baseName;
+            else
+            {
+                int postFix = 2;
+                if (enforcePostFix) postFix = 1;
+                while (postFix < 100000)
+                {
+                    string nextName = baseName;
+                    if (includeSpace) nextName += " ";
+                    nextName += postFix;
+                    if (list.FindByName(nextName, ignore) == null) return nextName;
+                    postFix++;
+                }
+            }
+            return baseName;
         }
     }
 }

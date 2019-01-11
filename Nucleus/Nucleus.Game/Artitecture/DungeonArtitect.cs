@@ -68,6 +68,11 @@ namespace Nucleus.Game
 
         private DungeonArtitect() { }
 
+        /// <summary>
+        /// Creates a new dungeon artitect to work within the specified bounds
+        /// </summary>
+        /// <param name="iSize"></param>
+        /// <param name="jSize"></param>
         public DungeonArtitect(int iSize, int jSize)
         {
             _Blueprint = new SquareCellMap<BlueprintCell>(iSize, jSize);
@@ -207,6 +212,33 @@ namespace Nucleus.Game
             return CheckAvailability(rect.XMin, rect.XMax, rect.YMin, rect.YMax);
         }
 
+        /// <summary>
+        /// Count up the number of cells belonging to each room in the specified zone
+        /// </summary>
+        /// <param name="iMin"></param>
+        /// <param name="iMax"></param>
+        /// <param name="jMin"></param>
+        /// <param name="jMax"></param>
+        /// <returns></returns>
+        public Dictionary<Room, int> CountRoomCells(int iMin, int iMax, int jMin, int jMax)
+        {
+            iMin = Math.Max(iMin, 0);
+            jMin = Math.Max(jMin, 0);
+            iMax = Math.Min(iMax, Blueprint.SizeX - 1);
+            jMax = Math.Min(jMax, Blueprint.SizeY - 1);
+            var result = new Dictionary<Room, int>();
+            for (int i = iMin; i <= iMax; i++)
+            {
+                for (int j = jMin; j <= jMax; j++)
+                {
+                    Room room = Blueprint[i, j].Room;
+                    if (result.ContainsKey(room)) result[room] += 1;
+                    else result.Add(room, 1);
+                }
+            }
+            return result;
+        }
+
        /// <summary>
        /// Check whether there is a corridor running parallel to this region
        /// </summary>
@@ -217,16 +249,14 @@ namespace Nucleus.Game
        /// <returns></returns>
         public bool IsParallelToCorridor(int iMin, int iMax, int jMin, int jMax)
         {
-            /*HashMap<Room, Integer> roomCounts = countRoomCells(iMin - 1, iMax + 1, jMin - 1, jMax + 1);
-            //TreeMap<String, Integer> roomCounts = countRoomCells(iMin-1,iMax+1,jMin-1,jMax+1);
-            for (Entry<Room, Integer> entry: roomCounts.entrySet())
+            var roomCounts = CountRoomCells(iMin - 1, iMax + 1, jMin - 1, jMax + 1);
+            foreach (var kvp in roomCounts)
             {
-                if (entry.getKey().template().roomType() == RoomType.CIRCULATION && entry.getValue() > 3)
+                if (kvp.Key.Template.RoomType == RoomType.Circulation && kvp.Value > 3)
                 {
                     return true;
                 }
-            }*/ 
-            // TODO: Re-implement
+            }
             return false;
         }
 
@@ -277,20 +307,17 @@ namespace Nucleus.Game
         /// <returns></returns>
         public RoomTemplate NextRoom(RoomTemplate currentRoom)
         {
-            //By default, just return a room template at random
-            return Templates.GetRandom(_RNG);
-
-            //TODO: Re-implement:
-            /*RoomType type = RoomType.Room;
-            if (Rooms.Count > 12 && !ExitBeenPlaced())
+            RoomType type = RoomType.Room;
+            if (Rooms.Count > 12 && !ExitPlaced)
             {
-                type = RoomType.EXIT;
+                type = RoomType.Exit;
             }
-            else if ((!hasExitBeenPlaced() && _rng.nextDouble() * _rng.nextDouble() * _rng.nextDouble() < currentRoom.corridorChance()) || _rng.nextDouble() < currentRoom.corridorChance())
+            else if ((!ExitPlaced && _RNG.NextDouble() * _RNG.NextDouble() * _RNG.NextDouble() < currentRoom.CorridorChance) ||
+                _RNG.NextDouble() < currentRoom.CorridorChance)
             {
-                type = RoomType.CIRCULATION;
-            }*/
-            //return templates().get(type).getRandom(_rng);
+                type = RoomType.Circulation;
+            }
+            return Templates.GetAllOfType(type).GetRandom(_RNG);
         }
 
         /*
