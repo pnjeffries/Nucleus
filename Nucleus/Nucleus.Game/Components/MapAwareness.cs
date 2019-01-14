@@ -26,8 +26,7 @@ namespace Nucleus.Game
             get { return _FieldOfView; }
             set
             {
-                _FieldOfView = value;
-                NotifyPropertyChanged();
+                ChangeProperty(ref _FieldOfView, value, "FieldOfView", true);
             }
         }
 

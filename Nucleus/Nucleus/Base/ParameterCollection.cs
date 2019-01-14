@@ -53,13 +53,16 @@ namespace Nucleus.Base
         public IDictionary<ParameterGroup, IList<Parameter>> GetGroupedParameters()
         {
             var result = new SortedDictionary<ParameterGroup, IList<Parameter>>();
+            var nullGroup = new ParameterGroup("", 10000000);
             foreach (var para in this)
             {
-                if (!result.ContainsKey(para.Group))
+                ParameterGroup group = para.Group;
+                if (group == null) group = nullGroup;
+                if (!result.ContainsKey(group))
                 {
-                    result.Add(para.Group, new ParameterCollection());
+                    result.Add(group, new ParameterCollection());
                 }
-                result[para.Group].Add(para);
+                result[group].Add(para);
             }
             return result;
         }
