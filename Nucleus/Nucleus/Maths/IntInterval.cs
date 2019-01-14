@@ -50,6 +50,15 @@ namespace Nucleus.Maths
         }
 
         /// <summary>
+        /// Is this a singularity?  i.e. are the maximum and minimum values the same?
+        /// </summary>
+        /// <returns></returns>
+        public bool IsSingularity
+        {
+            get { return Start == End; }
+        }
+
+        /// <summary>
         /// Get the minimum value encompassed by this interval
         /// (This will be the lesser of the Start and End fields)
         /// </summary>
@@ -156,6 +165,12 @@ namespace Nucleus.Maths
         public IntInterval WithEnd(int end)
         {
             return new IntInterval(Start, end);
+        }
+
+        public override string ToString()
+        {
+            if (IsSingularity) return End.ToString();
+            else return "[" + Start.ToString() + ";" + End.ToString() + "]";
         }
 
         #endregion

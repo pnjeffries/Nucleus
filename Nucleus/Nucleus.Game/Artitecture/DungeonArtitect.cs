@@ -1,6 +1,5 @@
 ﻿using Nucleus.Base;
 using Nucleus.Extensions;
-using Nucleus.Game.Artitecture;
 using Nucleus.Geometry;
 using Nucleus.Maths;
 using System;
@@ -61,6 +60,16 @@ namespace Nucleus.Game
         /// with a suitable container snapshots will be taken as each room is added
         /// </summary>
         public IList<SquareCellMap<CellGenerationType>> Snapshots { get; set; } = null;
+
+        /// <summary>
+        /// The number of rooms typically found between the entry and exit
+        /// </summary>
+        public int PathToExit { get; set; } = 8;
+
+        /// <summary>
+        /// If set to true, parallel corridors will be detected and prevented
+        /// </summary>
+        public bool PreventParallelCorridors { get; set; } = false;
 
         #endregion
 
@@ -232,8 +241,11 @@ namespace Nucleus.Game
                 for (int j = jMin; j <= jMax; j++)
                 {
                     Room room = Blueprint[i, j].Room;
-                    if (result.ContainsKey(room)) result[room] += 1;
-                    else result.Add(room, 1);
+                    if (room != null)
+                    {
+                        if (result.ContainsKey(room)) result[room] += 1;
+                        else result.Add(room, 1);
+                    }
                 }
             }
             return result;
@@ -307,8 +319,10 @@ namespace Nucleus.Game
         /// <returns></returns>
         public RoomTemplate NextRoom(RoomTemplate currentRoom)
         {
+            //return Templates.GetRandom(_RNG);
+
             RoomType type = RoomType.Room;
-            if (Rooms.Count > 12 && !ExitPlaced)
+            if (Rooms.Count > PathToExit && !ExitPlaced)
             {
                 type = RoomType.Exit;
             }
@@ -320,10 +334,24 @@ namespace Nucleus.Game
             return Templates.GetAllOfType(type).GetRandom(_RNG);
         }
 
-        /*
-        protected void DeleteCell(int i, int j)
+        
+        /// <summary>
+        /// 'Delete' a cell in the blueprint by returning it to 
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="j"></param>
+        /// <param name="room"></param>
+        protected void DeleteCell(int i, int j, Room room)
         {
-            //TODO
+            if (Blueprint.Exists(i,j))
+            {
+                BlueprintCell cell = Blueprint[i, j];
+                if (cell.Room == room)
+                {
+                    cell.Room = null;
+                    cell.GenerationType = CellGenerationType.Untouched;
+                }
+            }
         }
      
         /// <summary>
@@ -337,15 +365,15 @@ namespace Nucleus.Game
             {
                 other.Connections.Remove(room);
             }
-            for (int i = room.Bounds.XMin - 1; i <= room.Bounds.iMax() + 1; i++)
+            for (int i = room.Bounds.XMin - 1; i <= room.Bounds.XMax + 1; i++)
             {
-                for (int j = room.jMin() - 1; j <= room.jMax() + 1; j++)
+                for (int j = room.Bounds.YMin - 1; j <= room.Bounds.YMax + 1; j++)
                 {
-                    deleteCell(i, j, room);
+                    DeleteCell(i, j, room);
                 }
             }
         }
-        */
+        
 
         /// <summary>
         /// Generate a rectangular room
@@ -376,14 +404,13 @@ namespace Nucleus.Game
         /// <returns></returns>
         protected Room GenerateRoom(int iMin, int iMax, int jMin, int jMax, RoomTemplate template)
         {
-            Room newRoom = new Room(); //template, new IntDomain(iMin, iMax), new IntDomain(jMin, jMax)); //TODO!
+            Room newRoom = new Room(template, new IntRectangle(iMin, iMax,jMin, jMax));
             for (int i = iMin - 1; i <= iMax + 1; i++)
             {
                 for (int j = jMin - 1; j <= jMax + 1; j++)
                 {
                     if (IsCellAvailable(i, j))
                     {
-
                         //Room interior
                         //MapCellTemplate cellTemplate = template.templateForCell(i, iMin, iMax, j, jMin, jMax);
                         CellGenerationType cellType = template.GenTypeForCell(i, iMin, iMax, j, jMin, jMax);
@@ -491,7 +518,11 @@ namespace Nucleus.Game
                         growDirection = ExitDirection(template.ExitPlacement, direction); //TODO: ExitPlacement from RoomTemplate?
                     }
                 }
-                if (template.RoomType == RoomType.Circulation && IsParallelToCorridor(bounds)) return false; //Abort parallel corridors
+
+                if (template.RoomType == RoomType.Circulation && 
+                    (!PreventParallelCorridors || IsParallelToCorridor(bounds)))
+                    return false; //Abort parallel corridors
+
                 if ((bounds.XSize + 1 >= template.Dimension1.Min && bounds.YSize + 1 >= template.Dimension2.Min ||
                         (bounds.XSize + 1 >= template.Dimension2.Min && bounds.YSize + 1 >= template.Dimension1.Min)))
                 {
@@ -509,6 +540,7 @@ namespace Nucleus.Game
                     if (template.RoomType == RoomType.Exit) ExitPlaced = true;
 
                     //TODO: Store room & connections
+                    if (template.RoomType != RoomType.Circulation) result = true; //Circulation rooms cannot validate chains
 
                     //Sprout new rooms:
 
@@ -547,6 +579,11 @@ namespace Nucleus.Game
                         }
                         tries -= 1;
                     }
+
+                    if (result == false)
+                    {
+                        DeleteRoom(newRoom);
+                    }
                 }   
             }
             else
@@ -558,9 +595,7 @@ namespace Nucleus.Game
                     GenerateDoorway(iDoor, jDoor, direction, template.EntryWidth);    
                 }
             }
-
-
-
+                       
             return result;
         }
 

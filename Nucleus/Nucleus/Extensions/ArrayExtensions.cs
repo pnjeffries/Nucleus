@@ -87,5 +87,23 @@ namespace Nucleus.Extensions
         {
             return array.ToString(",", startWrapper, endWrapper);
         }
+
+        /// <summary>
+        /// Get a value from this 2D array, checking if the specified indices are outside
+        /// of the bounds of the array and if so returning the default value of the specified
+        /// type.
+        /// </summary>
+        /// <typeparam name="TArray"></typeparam>
+        /// <param name="array"></param>
+        /// <param name="i"></param>
+        /// <param name="j"></param>
+        /// <returns></returns>
+        public static TArray GetSafe<TArray> (this TArray[,] array, int i, int j)
+        {
+            if (i < 0 || j < 0 || i >= array.GetLength(0) || j >= array.GetLength(1))
+                return default(TArray);
+            else
+                return array[i, j];
+        }
     }
 }

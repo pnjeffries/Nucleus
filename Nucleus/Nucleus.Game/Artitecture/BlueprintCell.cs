@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Game.Artitecture
+namespace Nucleus.Game
 {
     /// <summary>
     /// A cell in a stage map blueprint

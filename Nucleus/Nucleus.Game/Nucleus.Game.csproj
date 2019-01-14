@@ -74,6 +74,7 @@
     <Compile Include="Components\EquipmentSlotCollection.cs" />
     <Compile Include="Components\EquippableItem.cs" />
     <Compile Include="Components\Equipped.cs" />
+    <Compile Include="Components\Abilities\ExitStageAbility.cs" />
     <Compile Include="Components\HitPoints.cs" />
     <Compile Include="Components\AvailableActions.cs" />
     <Compile Include="Artitecture\DungeonArtitect.cs" />

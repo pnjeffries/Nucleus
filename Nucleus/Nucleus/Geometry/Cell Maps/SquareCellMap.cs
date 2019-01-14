@@ -167,6 +167,17 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Does a cell exist at the specified indices
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="j"></param>
+        /// <returns></returns>
+        public bool Exists(int i, int j)
+        {
+            return Exists(IndexAt(i, j));
+        }
+
+        /// <summary>
         /// Get the index of the cell at the specified location
         /// </summary>
         /// <param name="location"></param>
