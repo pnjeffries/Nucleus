@@ -52,6 +52,7 @@
     <Compile Include="Extensions\GameObjectExtensions.cs" />
     <Compile Include="Extensions\NucleusAngleExtensions.cs" />
     <Compile Include="Extensions\NucleusVectorExtensions.cs" />
+    <Compile Include="Extensions\UnityMeshExtensions.cs" />
     <Compile Include="Extensions\UnityQuaternionExtensions.cs" />
     <Compile Include="Extensions\UnityVector3Extensions.cs" />
     <Compile Include="FromUnity.cs" />

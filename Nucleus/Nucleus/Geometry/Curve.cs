@@ -21,6 +21,7 @@
 using Nucleus.Base;
 using Nucleus.Extensions;
 using Nucleus.Maths;
+using Nucleus.Model;
 using Nucleus.Units;
 using System;
 using System.Collections.Generic;
@@ -433,6 +434,25 @@ namespace Nucleus.Geometry
         {
             double t = ParameterAt(vertex);
             return TangentAt(t);
+        }
+
+        /// <summary>
+        /// Evaluate the tangent unit vector at the specified node, which is
+        /// attached to a vertex of this curve.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public Vector TangentAt(Node node)
+        {
+            var verts = Vertices;
+            foreach (Vertex v in node.Vertices)
+            {
+                if (verts.Contains(v.GUID))
+                {
+                    return TangentAt(v);
+                }
+            }
+            return Vector.Unset;
         }
 
         /// <summary>

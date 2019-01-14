@@ -1122,7 +1122,37 @@ namespace Nucleus.Meshing
             AddMesh(m2);
         }
 
-#endregion
+        /// <summary>
+        /// Generate a regular grillage quad mesh
+        /// </summary>
+        /// <param name="origin">An origin point at which to start generating the grid</param>
+        /// <param name="uAxis">A vector which descibes the displacement between each vertex 
+        /// in the mesh in the first ('u') axis</param>
+        /// <param name="vAxis">A vector which describes the displacement between each vertex
+        /// in the mesh in the second ('v') axis</param>
+        /// <param name="uCount">The number of vertices in the first ('u') direction.</param>
+        /// <param name="vCount">The number of vertices in the second ('v') direction.</param>
+        public void AddQuadGridMesh(Vector origin, Vector uAxis, Vector vAxis, int uCount, int vCount)
+        {
+            int[] lastRow = null;
+            for (int j = 0; j < vCount; j++)
+            {
+                int[] newRow = new int[uCount];
+                for (int i = 0; i < uCount; i++)
+                {
+                    // Create vertex:
+                    newRow[i] = AddVertex(origin + (i * uAxis) + (j * vAxis));
+                    if (i > 0 && j > 0)
+                    {
+                        // Create face:
+                        AddFace(newRow[i], lastRow[i], lastRow[i - 1], newRow[i - 1]);
+                    }
+                }
+                lastRow = newRow;
+            }
+        }
+
+        #endregion
     }
 
     /// <summary>
