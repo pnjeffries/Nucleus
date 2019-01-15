@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nucleus.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,15 +16,51 @@ namespace Nucleus.Unity
         /// <summary>
         /// Set the vertex colours of this mesh based on the specified fieldOfView map.
         /// For this to do anything at all reasonable, the mesh should have been generated
-        /// as a regular grid with mapXSize + 2 vertices in the first direction via a function
+        /// as a regular grid with (mapXSize + 2) * 2 + 1 vertices in the first direction via a function
         /// such as MeshBuilder.AddQuadGridMesh.
         /// </summary>
         /// <param name="mesh"></param>
         /// <param name="fieldOfView"></param>
-        /// <param name="mapUSize"></param>
-        public static void SetVertexColoursFromVisionMap(this Mesh mesh, Geometry.ICellMap<int> fieldOfView, int mapUSize)
+        public static void SetVertexColoursFromVisionMap(this Mesh mesh, Geometry.SquareCellMap<int> fieldOfView)
         {
+            int mapUSize = fieldOfView.SizeX;
             Color32[] vertexColours = new Color32[mesh.vertexCount];
+            int uSizeMesh = (mapUSize + 2) * 2 + 1;
+            for (int i = 0; i < mesh.vertexCount; i++)
+            {
+                int u = i % uSizeMesh;
+                int v = i / uSizeMesh;
+                double x = (u - 3) / 2.0;
+                double y = (v - 3) / 2.0;
+                double viewValue = 0;
+                if (x.IsWholeNumber() && y.IsWholeNumber())
+                {
+                    viewValue = fieldOfView[(int)x, (int)y];
+                }
+                else
+                {
+                    // Intermediate vertex - take the average of the adjoining cells:
+                    if (x >= 0)
+                    {
+                        if (y >= 0)
+                            viewValue += fieldOfView[(int)x.Floor(), (int)y.Floor()];
+                        if (y < fieldOfView.SizeY)
+                            viewValue += fieldOfView[(int)x.Floor(), (int)y.Ceiling()];
+                    }
+                    if (x < mapUSize)
+                    {
+                        if (y >= 0)
+                            viewValue += fieldOfView[(int)x.Ceiling(), (int)y.Floor()];
+                        if (y < fieldOfView.SizeY)
+                            viewValue += fieldOfView[(int)x.Ceiling(), (int)y.Ceiling()];
+                    }
+                    viewValue /= 4;
+                }
+                byte alpha = (byte)(255.0 / 10 * (10 - viewValue));
+                vertexColours[i] = new Color32(0, 0, 0, alpha);
+            }
+
+            /*
             int uSizeMesh = mapUSize + 2;
             for (int i = 0; i < fieldOfView.CellCount; i++)
             {
@@ -35,7 +72,8 @@ namespace Nucleus.Unity
                     byte alpha = (byte)(255.0 / 10 * (10 - fieldOfView[i]));
                     vertexColours[iMesh] = new Color32(0, 0, 0, alpha);
                 }
-            }
+            }*/
+
             mesh.colors32 = vertexColours;
         }
     }

@@ -181,7 +181,7 @@ namespace Nucleus.Base
 
 #endregion
 
-#region Static Methods
+        #region Static Methods
 
         /// <summary>
         /// Load a document from a file stored in binary format

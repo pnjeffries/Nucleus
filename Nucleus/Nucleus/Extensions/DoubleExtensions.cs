@@ -416,5 +416,15 @@ namespace Nucleus.Extensions
             }
             return result;
         }
+
+        /// <summary>
+        /// Is this value (within tolerance of) a whole number?
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool IsWholeNumber(this double value)
+        {
+            return Math.Abs(value % 1) <= (double.Epsilon * 100);
+        }
     }
 }

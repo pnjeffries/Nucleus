@@ -115,12 +115,13 @@ namespace Nucleus.Game
         /// </summary>
         /// <param name="iStart"></param>
         /// <param name="jStart"></param>
-        /// <param name="startRoom"></param>
+        /// <param name="startRoom">The room to start with</param>
+        /// <param name="startDirection">The initial direction</param>
         /// <returns></returns>
-        public bool Generate(int iStart, int jStart, RoomTemplate startRoom)
+        public bool Generate(int iStart, int jStart, RoomTemplate startRoom, CompassDirection startDirection)
         {
             //TODO: Generate negative space
-            return RecursiveGrowth(iStart, jStart, startRoom, CompassDirection.South, false, null);
+            return RecursiveGrowth(iStart, jStart, startRoom, startDirection, false, null);
         }
 
         /// <summary>

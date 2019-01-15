@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DDTreeTests.cs" />
+    <Compile Include="IntersectionTests.cs" />
     <Compile Include="LogTests.cs" />
     <Compile Include="MathsTests.cs" />
     <Compile Include="CurveTests.cs" />

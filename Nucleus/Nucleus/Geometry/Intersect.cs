@@ -847,6 +847,19 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Calculate the distance by which an offset of a line might be extended until it intersects
+        /// with another offset line at an angle to it.  
+        /// </summary>
+        /// <param name="angle">The angle between line B and line A</param>
+        /// <param name="offsetA">The offset of line A</param>
+        /// <param name="offsetB">The offset of line B</param>
+        /// <returns></returns>
+        public static double OffsetExtensionDistance(Angle angle, double offsetA, double offsetB)
+        {
+            return (offsetA - (offsetB/Math.Cos(angle))) / Math.Tan(angle);
+        }
+
+        /// <summary>
         /// Find the section(s) of a polycurve which lie(s) inside the specified polygon
         /// </summary>
         /// <param name="pLine"></param>

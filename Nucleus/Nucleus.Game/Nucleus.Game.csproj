@@ -114,6 +114,7 @@
     <Compile Include="Artitecture\RoomTemplate.cs" />
     <Compile Include="SFXKeywords.cs" />
     <Compile Include="Stages\StageCollection.cs" />
+    <Compile Include="States\GameSaveFile.cs" />
     <Compile Include="States\MapState.cs" />
     <Compile Include="States\RLState.cs" />
     <Compile Include="States\BasicGameState.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="Stages\MapStage.cs" />
     <Compile Include="Effects\MoveCellEffect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="States\RLStateSaveFile.cs" />
     <Compile Include="TurnContext.cs" />
     <Compile Include="UpdateInfo.cs" />
   </ItemGroup>
