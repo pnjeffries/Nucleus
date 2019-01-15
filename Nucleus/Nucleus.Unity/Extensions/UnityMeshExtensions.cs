@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Nucleus.Unity.Extensions
+namespace Nucleus.Unity
 {
     /// <summary>
     /// Extension methods for the Unity Mesh type
@@ -30,7 +30,11 @@ namespace Nucleus.Unity.Extensions
                 int vMesh = i / mapUSize + 1;
                 int uMesh = i % mapUSize + 1;
                 int iMesh = uSizeMesh * vMesh + uMesh;
-                vertexColours[iMesh] = new Color32(0, 0, 0, (byte)(255 * (10.0 / fieldOfView[i])));
+                if (iMesh < mesh.vertexCount)
+                {
+                    byte alpha = (byte)(255.0 / 10 * (10 - fieldOfView[i]));
+                    vertexColours[iMesh] = new Color32(0, 0, 0, alpha);
+                }
             }
             mesh.colors32 = vertexColours;
         }

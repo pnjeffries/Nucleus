@@ -319,8 +319,8 @@ namespace Nucleus.Game
         /// <returns></returns>
         public RoomTemplate NextRoom(RoomTemplate currentRoom)
         {
-            //return Templates.GetRandom(_RNG);
-
+            return Templates.GetRandom(_RNG);
+            //TODO: Make work OK!
             RoomType type = RoomType.Room;
             if (Rooms.Count > PathToExit && !ExitPlaced)
             {

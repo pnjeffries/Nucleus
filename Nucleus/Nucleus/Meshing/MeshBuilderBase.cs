@@ -1145,7 +1145,7 @@ namespace Nucleus.Meshing
                     if (i > 0 && j > 0)
                     {
                         // Create face:
-                        AddFace(newRow[i], lastRow[i], lastRow[i - 1], newRow[i - 1]);
+                        AddFace(newRow[i - 1], lastRow[i - 1], lastRow[i], newRow[i]);
                     }
                 }
                 lastRow = newRow;

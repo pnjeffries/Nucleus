@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using U = UnityEngine;
 using Nucleus.Geometry;
 
-namespace Nucleus.Unity.Extensions
+namespace Nucleus.Unity
 {
     /// <summary>
     /// Extension methods for Unity's Vector3
