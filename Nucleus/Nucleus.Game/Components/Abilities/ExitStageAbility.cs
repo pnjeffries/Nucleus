@@ -22,7 +22,6 @@ namespace Nucleus.Game
             if (mD != null && mD.MapCell != null)
             {
                 IList<MapCell> adjacent = context.Stage?.Map?.AdjacentCells(mD.MapCell.Index);
-                //TODO: Diagonal?
                 foreach (var cell in adjacent)
                 {
                     foreach (var element in cell.Contents)

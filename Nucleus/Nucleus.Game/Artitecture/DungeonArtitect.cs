@@ -413,11 +413,8 @@ namespace Nucleus.Game
                     if (IsCellAvailable(i, j))
                     {
                         //Room interior
-                        //MapCellTemplate cellTemplate = template.templateForCell(i, iMin, iMax, j, jMin, jMax);
                         CellGenerationType cellType = template.GenTypeForCell(i, iMin, iMax, j, jMin, jMax);
                         SetCell(i, j, cellType, newRoom);
-                        //setCellTemplate(i, j, cellTemplate, cellType, cellFloor);
-                        //assignCellRoom(i, j, newRoom);
                     }
                 }
             }
