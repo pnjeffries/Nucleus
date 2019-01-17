@@ -106,6 +106,7 @@
     <Compile Include="Effects\ExitStageEffect.cs" />
     <Compile Include="Effects\KnockbackEffect.cs" />
     <Compile Include="Effects\PickUpItemEffect.cs" />
+    <Compile Include="Effects\SFXEffect.cs" />
     <Compile Include="Effects\SFXImpactEffect.cs" />
     <Compile Include="Faction.cs" />
     <Compile Include="GameElement.cs" />

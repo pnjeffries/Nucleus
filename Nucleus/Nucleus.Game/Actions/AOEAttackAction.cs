@@ -22,11 +22,11 @@ namespace Nucleus.Game
             Effects.Add(new DamageEffect(2));
             Effects.Add(new KnockbackEffect(direction, 3));
             SelfEffects.Add(new ActorOrientationEffect(direction));
+            SelfEffects.Add(new SFXEffect("Slash", true, direction));
         }
 
         public override bool Enact(IActionLog log, EffectContext context)
         {
-            context.SFX.Trigger("Slash", context.Actor.GetData<MapData>().Position, context.Direction);
             return base.Enact(log, context);
         }
 

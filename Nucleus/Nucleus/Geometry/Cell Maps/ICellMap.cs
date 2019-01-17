@@ -309,7 +309,7 @@ namespace Nucleus.Geometry
                     if (!shadows.isInsideRegion(angle, tolerance))
                     {
                         //Is visible:
-                        outGrid[index] = visibleValue;
+                        if (!opaque)outGrid[index] = visibleValue;
                     }
 
                     if (opaque)
