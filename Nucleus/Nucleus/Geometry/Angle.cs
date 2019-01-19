@@ -112,6 +112,11 @@ namespace Nucleus.Geometry
         /// </summary>
         public bool IsMulti { get { return double.IsNegativeInfinity(Radians); } }
 
+        /// <summary>
+        /// Is this angle so small it can be safely treated as 0?
+        /// </summary>
+        public bool IsTiny { get { return Radians.IsTiny(); } }
+
         #endregion
 
         #region Constructors

@@ -44,7 +44,6 @@ namespace Nucleus.Game
             set { _CellIndex = value; }
         }
 
-
         #endregion
 
         #region Constructors

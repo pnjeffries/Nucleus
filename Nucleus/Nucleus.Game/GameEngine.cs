@@ -113,7 +113,21 @@ namespace Nucleus.Game
             Module = module;
         }
 
-        
+        /// <summary>
+        /// Load a state from a save file, optionally setting it as the current
+        /// state.
+        /// </summary>
+        /// <param name="filePath">The filepath of the save file to load</param>
+        /// <param name="makeCurrent">If true, the loaded state will be set as
+        /// the current one.</param>
+        /// <returns>The loaded state, or null if reading the file was unsuccessful.</returns>
+        public GameState LoadState(FilePath filePath, bool makeCurrent = true)
+        {
+            var saveFile = GameSaveFile.Load(filePath);
+            GameState state = saveFile?.RetrieveState();
+            if (state != null && makeCurrent) State = state;
+            return state;
+        }
 
         #endregion
     }

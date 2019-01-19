@@ -37,5 +37,18 @@ namespace Nucleus.Geometry
             if (side == HandSide.Left) return HandSide.Right;
             else return HandSide.Left;
         }
+
+        /// <summary>
+        /// Returns either 1 or -1 depending on whether this side
+        /// would typically require a positive or negative curve
+        /// offset value
+        /// </summary>
+        /// <param name="side"></param>
+        /// <returns></returns>
+        public static int OffsetSign(this HandSide side)
+        {
+            if (side == HandSide.Left) return 1;
+            else return -1;
+        }
     }
 }

@@ -274,6 +274,17 @@ namespace Nucleus.Game
             }
         }
 
+        /// <summary>
+        /// Save this state to the specified filepath
+        /// </summary>
+        /// <param name="filePath"></param>
+        public bool Save(FilePath filePath)
+        {
+            var saveFile = new RLStateSaveFile();
+            saveFile.State = this;
+            return saveFile.SaveAs(filePath);
+        }
+
         #endregion
     }
 }

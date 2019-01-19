@@ -1,4 +1,5 @@
 ﻿using Nucleus.Extensions;
+using Nucleus.Maths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +22,16 @@ namespace Nucleus.Unity
         /// </summary>
         /// <param name="mesh"></param>
         /// <param name="fieldOfView"></param>
-        public static void SetVertexColoursFromVisionMap(this Mesh mesh, Geometry.SquareCellMap<int> fieldOfView)
+        /// <param name="oldFieldOfView"></param>
+        /// <param name="t"></param>
+        /// <param name="tweening"></param>
+        /// <param name="power">The power to use for interpolating values in-between cells</param>
+        public static void SetVertexColoursFromVisionMap(this Mesh mesh, Geometry.SquareCellMap<int> fieldOfView,
+            Geometry.SquareCellMap<int> oldFieldOfView = null, double t = 1.0, Interpolation tweening = Interpolation.Linear,
+            double power = 1)
         {
-            int mapUSize = fieldOfView.SizeX;
             Color32[] vertexColours = new Color32[mesh.vertexCount];
-            int uSizeMesh = (mapUSize + 2) * 2 + 1;
+            int uSizeMesh = (fieldOfView.SizeX + 2) * 2 + 1;
             for (int i = 0; i < mesh.vertexCount; i++)
             {
                 int u = i % uSizeMesh;
@@ -35,26 +41,23 @@ namespace Nucleus.Unity
                 double viewValue = 0;
                 if (x.IsWholeNumber() && y.IsWholeNumber())
                 {
-                    viewValue = fieldOfView[(int)x, (int)y];
+                    int iX = (int)x;
+                    int iY = (int)y;
+                    viewValue = fieldOfView[iX, iY];
+                    if (oldFieldOfView != null)
+                    {
+                        double oldViewValue = oldFieldOfView[iX, iY];
+                        viewValue = tweening.Interpolate(oldViewValue, viewValue, t);
+                    }
                 }
                 else
                 {
-                    // Intermediate vertex - take the average of the adjoining cells:
-                    if (x >= 0)
+                    viewValue = AverageGridValue(x, y, fieldOfView, power);
+                    if (oldFieldOfView != null)
                     {
-                        if (y >= 0)
-                            viewValue += fieldOfView[(int)x.Floor(), (int)y.Floor()];
-                        if (y < fieldOfView.SizeY)
-                            viewValue += fieldOfView[(int)x.Floor(), (int)y.Ceiling()];
+                        double oldViewValue = AverageGridValue(x, y, oldFieldOfView, power);
+                        viewValue = tweening.Interpolate(oldViewValue, viewValue, t);
                     }
-                    if (x < mapUSize)
-                    {
-                        if (y >= 0)
-                            viewValue += fieldOfView[(int)x.Ceiling(), (int)y.Floor()];
-                        if (y < fieldOfView.SizeY)
-                            viewValue += fieldOfView[(int)x.Ceiling(), (int)y.Ceiling()];
-                    }
-                    viewValue /= 4;
                 }
                 byte alpha = (byte)(255.0 / 10 * (10 - viewValue));
                 vertexColours[i] = new Color32(0, 0, 0, alpha);
@@ -75,6 +78,28 @@ namespace Nucleus.Unity
             }*/
 
             mesh.colors32 = vertexColours;
+        }
+
+        private static double AverageGridValue(double x, double y, Geometry.SquareCellMap<int> fieldOfView, double power)
+        {
+            double viewValue = 0;
+            // Intermediate vertex - take the average of the adjoining cells:
+            if (x >= 0)
+            {
+                if (y >= 0)
+                    viewValue += fieldOfView[(int)x.Floor(), (int)y.Floor()];
+                if (y < fieldOfView.SizeY)
+                    viewValue += fieldOfView[(int)x.Floor(), (int)y.Ceiling()];
+            }
+            if (x < fieldOfView.SizeX)
+            {
+                if (y >= 0)
+                    viewValue += fieldOfView[(int)x.Ceiling(), (int)y.Floor()];
+                if (y < fieldOfView.SizeY)
+                    viewValue += fieldOfView[(int)x.Ceiling(), (int)y.Ceiling()];
+            }
+            viewValue /= 4;
+            return viewValue;
         }
     }
 }

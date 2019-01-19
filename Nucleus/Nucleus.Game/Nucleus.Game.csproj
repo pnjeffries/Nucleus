@@ -69,6 +69,7 @@
     <Compile Include="Components\Abilities\Ability.cs" />
     <Compile Include="Components\Abilities\BumpAttackAbility.cs" />
     <Compile Include="Components\Abilities\DirectionalItemUseAbility.cs" />
+    <Compile Include="Components\DamageVulnerabilities.cs" />
     <Compile Include="Components\DisableActions.cs" />
     <Compile Include="Components\EquipmentSlot.cs" />
     <Compile Include="Components\EquipmentSlotCollection.cs" />
