@@ -1,4 +1,5 @@
 ﻿using Nucleus.Base;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +43,18 @@ namespace Nucleus.Game
         public override int GetHashCode()
         {
             return Name.GetHashCode();
+        }
+
+        /// <summary>
+        /// Get the damage multiplier for the specified element
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public double MultiplierFor(Element element)
+        {
+            DamageVulnerabilities vulns = element?.GetData<DamageVulnerabilities>();
+            if (vulns == null) return 1.0;
+            else return vulns.VulnerabilityTo(this);
         }
 
         #endregion

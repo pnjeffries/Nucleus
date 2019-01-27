@@ -213,7 +213,17 @@ namespace Nucleus.Game
             if (!Controlled.IsDeleted && Controlled != element) //Pause after player's turn
                 NextTurn();
             else
-                _AITurnCountDown = _AITurnDelay; //Reset the countdown
+                DelayAITurn(); //Reset the countdown
+        }
+
+        /// <summary>
+        /// Reset the AI turn delay countdown to provide a slight pause before
+        /// the AI will take its turn.  Allows for player moves to be distingishable
+        /// in the user interface.
+        /// </summary>
+        public void DelayAITurn()
+        {
+            _AITurnCountDown = _AITurnDelay;
         }
 
         /// <summary>

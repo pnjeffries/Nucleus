@@ -94,6 +94,11 @@ namespace Nucleus.Game
                         }
                     }
                 }
+                if (moved && context.State is RLState)
+                {
+                    var rlState = (RLState)context.State;
+                    rlState.DelayAITurn(); // Allow for a slight pause to register the movement
+                }
                 return moved;
 
             }

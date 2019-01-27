@@ -978,6 +978,20 @@ namespace Nucleus.Geometry
             //Vector midPt = this.AveragePoint();
             Vector[] midPts = MedialAxisPoints();
             int[] opposites = OppositeEdgeIndices();
+            int[] targetDivs = new int[edges.Count];
+
+            // Work out target transitions:
+            int maxDivs = edges.MaxDelegateValue(i => i.Divisions);
+            for (int i = 0; i < opposites.Length; i++)
+            {
+                int iOpposite = opposites[i];
+
+                //TEMP:
+                targetDivs[i] = 3; // edges[iOpposite].Divisions;
+            }
+
+            var originalEdges = edges;
+
             // Work out min steps
             int divSteps = -1;//(minDivisions + 1) / 2;
             for (int i = 0; i < opposites.Length; i++)
@@ -1022,8 +1036,8 @@ namespace Nucleus.Geometry
                         oppositeEdge = edges[opposites[i]];
                         // Interpolate number of divisions:
                         divisions = (int)Interpolation.Linear.Interpolate
-                            ((double)oldEdge.Divisions, (double)oppositeEdge.Divisions,
-                            (i / (divSteps * 2.0))) - 2;
+                            ((double)originalEdges[i].Divisions, (double)targetDivs[i],//oppositeEdge.Divisions,
+                            (i / ((double)divSteps))) - 2;
                     }
                     newEdge.SubDivide(divisions);
                     newEdges.Add(newEdge);
