@@ -739,6 +739,8 @@ namespace Nucleus.Geometry
             Vector v1 = this.Unitize();
             Vector v2 = other.Unitize();
             double dot = v1.Dot(ref v2);
+            if (dot > 1) dot = 1;
+            else if (dot < -1) dot = -1;
             return Math.Acos(dot);
         }
 

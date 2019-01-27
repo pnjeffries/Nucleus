@@ -8,7 +8,7 @@ using Nucleus.Logs;
 namespace Nucleus.Game
 {
     /// <summary>
-    /// Disable all actions
+    /// Disable all actions for a turn
     /// </summary>
     [Serializable]
     public class DisableEffect : BasicEffect

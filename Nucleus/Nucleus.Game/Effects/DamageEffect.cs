@@ -64,7 +64,13 @@ namespace Nucleus.Game
             HitPoints hP = context?.Target?.GetData<HitPoints>();
             if (hP != null)
             {
-                hP.Value -= Damage;
+                // Calculate damage (taking account of target resistances/vulnerabilities)
+                double damage = Damage * DamageType.MultiplierFor(context.Target);
+                
+                // Apply damage
+                hP.Value -= damage;
+
+                // Kill the target (if applicable)
                 if (hP.Value <= 0)
                 {
                     Vector position = context.Target.GetData<MapData>()?.Position ?? Vector.Unset;

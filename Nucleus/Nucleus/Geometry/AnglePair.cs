@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 namespace Nucleus.Geometry
 {
     /// <summary>
-    /// Structure to represent pairs of angles.
+    /// Structure to represent pairs of angles, typically
+    /// used to represent angular coordinate systems such
+    /// as Latitude and Longitude, Elevation and Azimuth, etc.
     /// Immutable.
     /// </summary>
     [Serializable]
