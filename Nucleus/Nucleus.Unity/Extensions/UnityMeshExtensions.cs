@@ -22,8 +22,13 @@ namespace Nucleus.Unity
         /// </summary>
         /// <param name="mesh"></param>
         /// <param name="fieldOfView"></param>
+        /// <param name="oldFieldOfView"></param>
+        /// <param name="t"></param>
+        /// <param name="tweening"></param>
+        /// <param name="power">The power to use for interpolating values in-between cells</param>
         public static void SetVertexColoursFromVisionMap(this Mesh mesh, Geometry.SquareCellMap<int> fieldOfView,
-            Geometry.SquareCellMap<int> oldFieldOfView = null, double t = 1.0, Interpolation tweening = Interpolation.Linear)
+            Geometry.SquareCellMap<int> oldFieldOfView = null, double t = 1.0, Interpolation tweening = Interpolation.Linear,
+            double power = 1)
         {
             Color32[] vertexColours = new Color32[mesh.vertexCount];
             int uSizeMesh = (fieldOfView.SizeX + 2) * 2 + 1;
@@ -47,10 +52,10 @@ namespace Nucleus.Unity
                 }
                 else
                 {
-                    viewValue = AverageGridValue(x, y, fieldOfView);
+                    viewValue = AverageGridValue(x, y, fieldOfView, power);
                     if (oldFieldOfView != null)
                     {
-                        double oldViewValue = AverageGridValue(x, y, oldFieldOfView);
+                        double oldViewValue = AverageGridValue(x, y, oldFieldOfView, power);
                         viewValue = tweening.Interpolate(oldViewValue, viewValue, t);
                     }
                 }
@@ -75,7 +80,7 @@ namespace Nucleus.Unity
             mesh.colors32 = vertexColours;
         }
 
-        private static double AverageGridValue(double x, double y, Geometry.SquareCellMap<int> fieldOfView)
+        private static double AverageGridValue(double x, double y, Geometry.SquareCellMap<int> fieldOfView, double power)
         {
             double viewValue = 0;
             // Intermediate vertex - take the average of the adjoining cells:

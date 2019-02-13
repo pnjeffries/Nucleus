@@ -69,7 +69,7 @@ namespace Nucleus.Game
                 {
                     for (int i = 0; i < FieldOfView.CellCount; i++)
                     {
-                        if (FieldOfView[i] > 0) fov[i] = 3;
+                        if (FieldOfView[i] > 0) fov[i] = 5;
                     }
                 }
                 var mD = context.Element.GetData<MapData>();
