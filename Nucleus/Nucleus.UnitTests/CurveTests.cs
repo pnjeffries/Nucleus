@@ -146,6 +146,20 @@ namespace Nucleus.UnitTests
             Assert.AreEqual(1, intval.End);
         }
 
+        [TestMethod]
+        public void PolyCurveTangentTest()
+        {
+            var pCrv = new PolyCurve(
+                new Line(-14.670025365972 , 50 , 0, -50, 50, 0),
+                new Line(-50, 50, 0, -50, -50, 0),
+                new Line(-50, -50, 0 , -14.670025365972, -50, 0),
+                new Line(-14.670025365972, -50, 0, -14.670025365972, 50, 0)
+                );
+
+            double t = 0.342527307783402;
+            Vector tangent = pCrv.TangentAt(t);
+            Assert.AreEqual(new Vector(0, -1, 0), tangent);
+        }
         
     }
 }

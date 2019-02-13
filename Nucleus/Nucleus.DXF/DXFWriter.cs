@@ -23,7 +23,7 @@ namespace Nucleus.DXF
         /// <param name="filePath"></param>
         /// <param name="geometry"></param>
         /// <returns></returns>
-        public bool WriteDXF(FilePath filePath, GeometryLayerTable geometry)
+        public bool WriteDXF(FilePath filePath, GeometryLayerTable geometry, bool binary = false)
         {
             var header = new HeaderVariables();
             header.InsUnits = netDxf.Units.DrawingUnits.Meters;
@@ -44,7 +44,7 @@ namespace Nucleus.DXF
                 }
             }
 
-            return doc.Save(filePath, true);
+            return doc.Save(filePath, binary);
         }
     }
 }

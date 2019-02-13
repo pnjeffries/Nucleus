@@ -11,7 +11,7 @@ namespace Nucleus.Unity
     /// <summary>
     /// Base class for data binding scripts
     /// </summary>
-    public abstract class BindingBase : MonoBehaviour
+    public abstract class BindingBase : DataContextOwner, IDataContext
     {
         #region Fields
 
@@ -38,7 +38,7 @@ namespace Nucleus.Unity
         /// The data context of the binding - the object that
         /// the source data is drawn from.
         /// </summary>
-        public object DataContext
+        public override object DataContext
         {
             get { return Binding.DataContext; }
             set { Binding.DataContext = value; }
@@ -96,25 +96,5 @@ namespace Nucleus.Unity
 
     }
 
-    /// <summary>
-    /// Extension methods for and to deal with Binding components
-    /// </summary>
-    public static class BindingBaseExtensions
-    {
-        /// <summary>
-        /// Set the data context of 
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <param name="dataContext"></param>
-        public static void SetDataContext(this GameObject obj, object dataContext)
-        {
-            // TODO: This may need some more work...
-            var bindings = obj.GetComponents<BindingBase>();
-            foreach (var binding in bindings) binding.DataContext = dataContext;
-
-            // Children:
-            var childBindings = obj.transform.GetComponentsInChildren<BindingBase>();
-            foreach (var binding in childBindings) binding.DataContext = dataContext;
-        }
-    }
+    
 }

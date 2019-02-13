@@ -151,6 +151,40 @@ namespace Nucleus.Meshing
             return result;
         }
 
+        /// <summary>
+        /// Split this division edge into two pieces, being shorter
+        /// MeshDivisionEdges which together contain the division
+        /// vertices of this edge.
+        /// </summary>
+        /// <param name="atIndex">The index of the vertex in this edge's
+        /// Vertices collection at which the split will occur.  This
+        /// will be the last vertex of the first sub-edge and the first
+        /// vertex of the second.</param>
+        /// <returns>An array containing two new MeshDivisionEdges, or
+        /// null if the split failed.</returns>
+        public MeshDivisionEdge[] Split(int atIndex)
+        {
+            if (atIndex > 0 && atIndex < Vertices.Count - 1)
+            {
+                Vertex splitVert = Vertices[atIndex];
+
+                // Create sub-edges
+                MeshDivisionEdge edge1 = new MeshDivisionEdge(Start, splitVert);
+                MeshDivisionEdge edge2 = new MeshDivisionEdge(splitVert, End);
+
+                // Populate sub-edge vertices
+                for (int i = 0; i < Vertices.Count; i++)
+                {
+                    Vertex v = Vertices[i];
+                    if (i <= atIndex) edge1.Vertices.Add(v);
+                    if (i >= atIndex) edge2.Vertices.Add(v);
+                }
+
+                return new MeshDivisionEdge[] { edge1, edge2 };
+            }
+            else return null;
+        }
+
         #endregion
 
         #region Static Methods

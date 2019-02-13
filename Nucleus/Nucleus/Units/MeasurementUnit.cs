@@ -60,6 +60,11 @@ namespace Nucleus.Units
         /// </summary>
         public static readonly MeasurementUnit Celsius = new MeasurementUnit("degrees Celsius", "°C");
 
+        /// <summary>
+        /// British Pounds, the currency
+        /// </summary>
+        public static readonly MeasurementUnit BritishPounds = new MeasurementUnit("British Pounds", "GBP");
+
         #endregion
 
         #region Properties

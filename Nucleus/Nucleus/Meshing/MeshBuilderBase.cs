@@ -468,8 +468,38 @@ namespace Nucleus.Meshing
         /// with thickness.</param>
         public void AddWidePath(IWidePath path, Vector extrude = new Vector())
         {
-            //TODO: Refine - patths that bifurcate will need more than one face
-            Vector pt0 = path.LeftEdge.EndPoint;
+            //TODO: Refine - paths that bifurcate will need more than one face
+
+            Vector ptL0 = path.LeftEdge.StartPoint;
+            Vector ptL1 = path.LeftEdge.EndPoint;
+            Vector ptM0 = path.Spine.StartPoint;
+            Vector ptM1 = path.Spine.EndPoint;
+            Vector ptR0 = path.RightEdge.StartPoint;
+            Vector ptR1 = path.RightEdge.EndPoint;
+
+            AddFace(ptL1, ptL0, ptM0, ptM1); //Left side face
+            AddFace(ptR0, ptR1, ptM1, ptM0); //Right side face
+
+            if (!extrude.IsZero())
+            {
+                Vector ptL0B = ptL0 + extrude;
+                Vector ptL1B = ptL1 + extrude;
+                Vector ptM0B = ptM0 + extrude;
+                Vector ptM1B = ptM1 + extrude;
+                Vector ptR0B = ptR0 + extrude;
+                Vector ptR1B = ptR1 + extrude;
+
+                AddFace(ptL1B, ptM1B, ptM0B, ptL0B); //Bottom left face
+                AddFace(ptR0B, ptM0B, ptM1B, ptR1B); //Bottom right face
+
+                FillBetween(
+                    new Vector[] { ptR0B, ptR1B, ptM1B, ptL1B, ptL0B, ptM0B },
+                    new Vector[] { ptR0, ptR1, ptM1, ptL1, ptL0, ptM0 },
+                    false, true); //Sides
+            }
+
+            // Old one-face version:
+            /*Vector pt0 = path.LeftEdge.EndPoint;
             Vector pt1 = path.LeftEdge.StartPoint;
             Vector pt2 = path.RightEdge.StartPoint;
             Vector pt3 = path.RightEdge.EndPoint;
@@ -486,7 +516,7 @@ namespace Nucleus.Meshing
                     new Vector[] { pt0B, pt1B, pt2B, pt3B },
                     new Vector[] { pt0, pt1, pt2, pt3 },
                     false, true); //Sides
-            }
+            }*/
         }
 
         /// <summary>

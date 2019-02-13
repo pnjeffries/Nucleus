@@ -89,12 +89,27 @@ namespace Nucleus.Geometry
     public static class IWidePathExtensions
     {
         /// <summary>
+        /// Clear all of the
+        /// </summary>
+        /// <param name="path"></param>
+        public static void ClearEdges(this IWidePath path)
+        {
+            path.LeftEdge = null;
+            path.RightEdge = null;
+            path.StartCapLeft = null;
+            path.EndCapLeft = null;
+            path.StartCapRight = null;
+            path.EndCapRight = null;
+        }
+
+        /// <summary>
         /// Generate initial (untrimmed) left and right edge curves for
         /// this path.
         /// </summary>
         /// <param name="path"></param>
         public static void GenerateInitialPathEdges(this IWidePath path)
         {
+            path.ClearEdges();
             if (path.Spine != null)
             {
                 path.RightEdge = path.Spine.Offset(path.RightOffset);
@@ -469,21 +484,30 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <typeparam name="TPath"></typeparam>
         /// <param name="paths"></param>
+        /// <param name="refreshNodes">Refresh nodes by removing any existing ones before beginning</param>
         /// <returns></returns>
-        public static NodeCollection GenerateNetworkPathNodes<TPath>(this IList<TPath> paths, NodeGenerationParameters gParams)
+        public static NodeCollection GenerateNetworkPathNodes<TPath>(this IList<TPath> paths, NodeGenerationParameters gParams, bool refreshNodes = false)
             where TPath : IWidePath
         {
             var nodes = new NodeCollection();
             foreach (TPath path in paths)
             {
-                Node sNode = path.Spine?.Start?.Node;
-                if (sNode != null &&
-                    !nodes.Contains(sNode.GUID))
-                    nodes.Add(sNode);
-                Node eNode = path.Spine?.End?.Node;
-                if (eNode != null &&
-                    !nodes.Contains(eNode.GUID))
-                    nodes.Add(eNode);
+                if (refreshNodes)
+                {
+                    if (path.Spine?.Start != null) path.Spine.Start.Node = null;
+                    if (path.Spine?.End != null) path.Spine.End.Node = null;
+                }
+                else
+                { 
+                    Node sNode = path.Spine?.Start?.Node;
+                    if (sNode != null &&
+                        !nodes.Contains(sNode.GUID))
+                        nodes.Add(sNode);
+                    Node eNode = path.Spine?.End?.Node;
+                    if (eNode != null &&
+                        !nodes.Contains(eNode.GUID))
+                        nodes.Add(eNode);
+                }
             }
             var tree = new NodeDDTree(nodes);
             foreach (TPath path in paths)

@@ -303,6 +303,18 @@ namespace Nucleus.Geometry
             return new CartesianCoordinateSystem(Origin, -X, -Y, Z);
         }
 
+        /// <summary>
+        /// Mirror a point in the XY plane by flipping its position along the Z axis
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public Vector MirrorPoint(Vector point)
+        {
+            Vector local = GlobalToLocal(point);
+            local = local.WithZ(-local.Z);
+            return LocalToGlobal(local);
+        }
+
         public override string ToString()
         {
             return Origin.ToString() + "|" + X.ToString() + "|" + Y.ToString() + "|" + Z.ToString();

@@ -220,12 +220,18 @@ namespace Nucleus.TestApp
                 new Geometry.Vector(10,-5), new Geometry.Vector(0,-10),
             new Geometry.Vector(0,0)//};
             , new Geometry.Vector(5,-5) };*/
-            var points = new Geometry.Vector[]
+            /*var points = new Geometry.Vector[]
             {
-                new Geometry.Vector(10,-9.5),
+                new Geometry.Vector(10,-8.5),
                 new Geometry.Vector(0,-9.5),
                 new Geometry.Vector(2,-0.5),
-                new Geometry.Vector(8,-0.5)
+                new Geometry.Vector(8,-1.5)
+            };*/
+            var points = new Geometry.Vector[]
+            {
+                new Geometry.Vector(10, -5),
+                new Geometry.Vector(0,-4),
+                new Geometry.Vector(0, -6)
             };
             VertexCollection verts = new VertexCollection(points);
             MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(verts);

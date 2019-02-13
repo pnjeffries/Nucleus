@@ -14,7 +14,7 @@ namespace Nucleus.UI
     /// property binding behaviour.
     /// </summary>
     [Serializable]
-    public class DataBinding
+    public class DataBinding : IDataContext
     {
         #region Properties
 
@@ -155,7 +155,8 @@ namespace Nucleus.UI
         {
             object value = GetBoundValue();
             //if (value is string) return value.ToString();
-            return string.Format(StringFormat, value);
+            string result = string.Format(StringFormat, value);
+            return result;
         }
 
         /// <summary>
@@ -212,7 +213,7 @@ namespace Nucleus.UI
                     {
                         UIRefreshRequired = true;
 
-                        if (i < BindingChain.Count - 1 && (BindingRefreshIndex <0 || i < BindingRefreshIndex))
+                        if (i < BindingChain.Count && (BindingRefreshIndex <0 || i < BindingRefreshIndex))
                             BindingRefreshIndex = i;
                     }
                 }

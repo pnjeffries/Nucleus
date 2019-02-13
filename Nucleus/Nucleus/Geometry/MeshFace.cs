@@ -975,25 +975,35 @@ namespace Nucleus.Geometry
         /// <param name="addTo"></param>
         public void Refine(IList<MeshDivisionEdge> edges, MeshFaceCollection addFaceTo)
         {
+            //TODO: Split() edges in faces with poor aspect ratios?
+
             //Vector midPt = this.AveragePoint();
             Vector[] midPts = MedialAxisPoints();
             int[] opposites = OppositeEdgeIndices();
             int[] targetDivs = new int[edges.Count];
 
-            // Work out target transitions:
-            int maxDivs = edges.MaxDelegateValue(i => i.Divisions);
+            var originalEdges = edges;
+
+            // Target an averaging of the number of divisions over the transition
+            int minDivs = int.MaxValue;
             for (int i = 0; i < opposites.Length; i++)
             {
                 int iOpposite = opposites[i];
-
-                //TEMP:
-                targetDivs[i] = 3; // edges[iOpposite].Divisions;
+                if (iOpposite >= 0)
+                {
+                    IntInterval interval = new IntInterval(edges[i].Divisions, edges[iOpposite].Divisions);
+                    int target = (int)Math.Ceiling(Interpolation.Linear.Interpolate((double)interval.Min, (double)interval.Max, 0.75));
+                    //int target = (int)Math.Ceiling((edges[i].Divisions + edges[iOpposite].Divisions)*0.5);
+                    targetDivs[i] = target;
+                    if (target < minDivs) minDivs = target;
+                }
+                else targetDivs[i] = edges[i].Divisions;
             }
 
-            var originalEdges = edges;
+
 
             // Work out min steps
-            int divSteps = -1;//(minDivisions + 1) / 2;
+            /*int divSteps = -1;//(minDivisions + 1) / 2;
             for (int i = 0; i < opposites.Length; i++)
             {
                 int iOpposite = opposites[i];
@@ -1007,7 +1017,18 @@ namespace Nucleus.Geometry
                     steps = (edges[i].Divisions + 1) / 2;
                 }
                 if (divSteps < 0 || steps < divSteps) divSteps = steps;
-            }
+            }*/
+            int divSteps = (int)Math.Ceiling((minDivs) / 2.0);
+
+            // Work out target transitions:
+            /*int maxDivs = edges.MaxDelegateValue(i => i.Divisions);
+            for (int i = 0; i < opposites.Length; i++)
+            {
+                int iOpposite = opposites[i];
+
+                //TEMP:
+                targetDivs[i] = edges[iOpposite].Divisions - 2 * (divSteps-1);
+            }*/
 
             for (int offset = 1; offset < divSteps; offset++)
             {
@@ -1015,9 +1036,9 @@ namespace Nucleus.Geometry
                 for (int i = 0; i < Count; i++)
                 {
                     // Generate corner vertices:
-                    var edge1 = edges.GetWrapped(i - 1);
-                    var edge2 = edges[i];
-                    var newVert = RefinementVertex(edge1, edge2, midPts[i], 1);
+                    var edge1 = originalEdges.GetWrapped(i - 1);
+                    var edge2 = originalEdges[i];
+                    var newVert = RefinementVertex(edge1, edge2, midPts[i], offset, divSteps + 1);
                     cornerVerts.Add(newVert);
                 }
 
@@ -1034,10 +1055,20 @@ namespace Nucleus.Geometry
                     if (opposites[i] >= 0)
                     {
                         oppositeEdge = edges[opposites[i]];
-                        // Interpolate number of divisions:
-                        divisions = (int)Interpolation.Linear.Interpolate
-                            ((double)originalEdges[i].Divisions, (double)targetDivs[i],//oppositeEdge.Divisions,
-                            (i / ((double)divSteps))) - 2;
+                        double t = 1;
+                        if (divSteps > 1)
+                        {
+                            t = Math.Min(offset / ((double)divSteps - 1), 1);
+                        }
+                        else
+                        {
+                            t = 1;
+                        }
+                        // Interpolate number o
+                        divisions = (int)Interpolation.Linear.Interpolate //SquareRoot is interesting also...
+                            ((double)originalEdges[i].Divisions, 
+                            (double)targetDivs[i],//oppositeEdge.Divisions,
+                            t) - 2 * offset;
                     }
                     newEdge.SubDivide(divisions);
                     newEdges.Add(newEdge);
@@ -1092,10 +1123,96 @@ namespace Nucleus.Geometry
                 edges = newEdges;
             }
 
-
-
             //TODO: 
-            // - Infill central gap somehow 
+            // Infill central gap
+            // Find edge with most divs which is opposite another:
+            int iMostDivs = -1;
+            int mostDivs = 0;
+            for (int i = 0; i < edges.Count; i++)
+            {
+                // Only choose edges with opposites:
+                int iOpposite = opposites[i];
+                int divs = edges[i].Divisions;
+                if (divs > mostDivs && iOpposite >= 0)
+                {
+                    iMostDivs = i;
+                    mostDivs = divs;
+                }
+            }
+
+            if (iMostDivs >= 0)
+            {
+                // Find divisions in other direction
+                int iOther = -1;
+                int otherDivs = 0;
+                for (int i = 0; i < edges.Count; i++)
+                {
+                    int divs = edges[i].Divisions;
+                    if (i != iMostDivs && i != opposites[iMostDivs] && divs > otherDivs)
+                    {
+                        iOther = i;
+                        otherDivs = divs;
+                    }
+                }
+
+                // Create division edges to fill with
+                var fillEdges = new List<MeshDivisionEdge>();
+                fillEdges.Add(edges[iMostDivs]);
+
+                // Populate intermediate edges
+                if (iOther >= 0 && otherDivs > 1)
+                {
+                    // Flip as appropriate so that everything is aligned to edge1
+                    bool flip = ((iOther == iMostDivs + 1) || (iOther == 0 && iMostDivs == edges.Count - 1));
+                    MeshDivisionEdge otherEdge1 = edges[iOther];
+                    MeshDivisionEdge otherEdge2 = null;
+                    if (opposites[iOther] >= 0) otherEdge2 = edges[opposites[iOther]];
+
+                    // Create intermediate edges
+                    for (int i = 1; i < otherDivs; i++)
+                    {
+                        Vertex v1 = otherEdge1.Vertices[i];
+                        Vertex v2 = null;
+                        if (otherEdge2 != null) v2 = otherEdge2.Vertices[otherEdge2.Vertices.Count - 1 - i];
+                        else v2 = edges[iMostDivs].Start;
+
+                        MeshDivisionEdge newEdge;
+                        if (flip) newEdge = new MeshDivisionEdge(v2, v1);
+                        else newEdge = new MeshDivisionEdge(v1, v2);
+
+                        newEdge.SubDivide(mostDivs);
+                        fillEdges.Add(newEdge);
+                    }
+
+                    //TODO
+                }
+
+                fillEdges.Add(edges[opposites[iMostDivs]].Reversed());
+
+                // Run through edge list and fill in faces
+                for (int j = 0; j < fillEdges.Count - 1; j++)
+                {
+                    // Get edges:
+                    MeshDivisionEdge edge1 = fillEdges[j];
+                    MeshDivisionEdge edge2 = fillEdges[j+1];
+
+                    // Stitch edges together:
+                    int maxDivs = Math.Max(edge1.Divisions, edge2.Divisions);
+                    for (int i = 0; i < maxDivs; i++)
+                    {
+                        // Work out vertices to mesh:
+                        int jI0 = (int)Math.Round(((i / (double)maxDivs) * edge1.Divisions));
+                        int jI1 = (int)Math.Round((((i + 1.0) / (double)maxDivs) * edge1.Divisions));
+                        int jO0 = (int)Math.Round((((i) / (double)maxDivs) * edge2.Divisions));
+                        int jO1 = (int)Math.Round((((i + 1.0) / (double)maxDivs) * edge2.Divisions));
+
+                        // Quad:
+                        addFaceTo.Add(new MeshFace(
+                            edge2.Vertices[jO0], edge2.Vertices[jO1],
+                            edge1.Vertices[jI1], edge1.Vertices[jI0]));
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -1151,14 +1268,16 @@ namespace Nucleus.Geometry
         /// <param name="midPt"></param>
         /// <param name="offset"></param>
         /// <returns></returns>
-        private Vertex RefinementVertex(MeshDivisionEdge edge1, MeshDivisionEdge edge2, Vector midPt, int offset)
+        private Vertex RefinementVertex(MeshDivisionEdge edge1, MeshDivisionEdge edge2, Vector midPt, int offset, int steps)
         {
             Vertex startPt = edge1.End;
-            Vertex original1 = edge1.Vertices.FromEnd(offset);
-            Vertex original2 = edge2.Vertices[offset];
-            double t1 = offset / ((edge1.Vertices.Count - 1) * 0.5);
-            double t2 = offset / ((edge2.Vertices.Count - 1)* 0.5);
-            double t =  (t1 + t2) / 2; //Math.Max(t1, t2); //
+            //Vertex original1 = edge1.Vertices.FromEnd(offset);
+            //Vertex original2 = edge2.Vertices[offset];
+            double t1 = Math.Min(offset / ((edge1.Divisions + 0) * 0.5),1);
+            double t2 = Math.Min(offset / ((edge2.Divisions + 0) * 0.5),1);
+            double t = Math.Max(t1, t2);//(t1 + t2) / 2.0;//
+
+            //double t = ((offset) / (steps - 1.0));
             Vector newPt = startPt.Position.Interpolate(midPt, t);
             return new Vertex(newPt);
         }
@@ -1180,6 +1299,7 @@ namespace Nucleus.Geometry
                 // Find length of each mid-axis:
                 double lUMid = (lU0 + lU1) * 0.5;
                 double lVMid = (lV0 + lV1) * 0.5;
+
                 if (lUMid > lVMid)
                 {
                     // Longer in U-axis
@@ -1201,6 +1321,7 @@ namespace Nucleus.Geometry
             }
             else if (IsTri)
             {
+                //TODO: Calculate point better than this!
                 Vector midPt = this.AveragePoint();
                 var result = new Vector[3];
                 for (int i = 0; i < 3; i++) result[i] = midPt;

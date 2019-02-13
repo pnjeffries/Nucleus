@@ -290,7 +290,14 @@ namespace Nucleus.Geometry
                         {
                             var offsets = new double[newPerimeter.SegmentCount];
                             offsets[offsets.Length - 1] = splitWidth / 2;
-                            newPerimeter = newPerimeter.OffsetInwards(offsets);
+                            var newNewPerimeter = newPerimeter.OffsetInwards(offsets);
+                            // Check offset has not inverted perimeter:
+                            // TODO: Do this automatically when offsetting?
+                            if (newNewPerimeter.IsClockwiseXY() == newPerimeter.IsClockwiseXY())
+                            {
+                                newPerimeter = newNewPerimeter;
+                            }
+                            else newPerimeter = null;
                         }
                     }
                     if (newPerimeter != null) result.Add(new PlanarRegion(newPerimeter, Attributes?.Duplicate()));

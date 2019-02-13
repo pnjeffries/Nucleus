@@ -1138,6 +1138,17 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Produce a vector describing the apparent position of this
+        /// point reflected in the specified plane.
+        /// </summary>
+        /// <param name="mirrorPlane"></param>
+        /// <returns></returns>
+        public Vector Mirror(Plane mirrorPlane)
+        {
+            return mirrorPlane.MirrorPoint(this);
+        }
+
+        /// <summary>
         /// ToString override
         /// </summary>
         /// <returns></returns>

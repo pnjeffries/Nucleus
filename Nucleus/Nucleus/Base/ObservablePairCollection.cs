@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Base
 {
+    /// <summary>
+    /// A collection of pairs of objects, changes to which are observable via 
+    /// CollectionChanged events and 
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
     [Serializable]
     public class ObservablePairCollection<TKey, TValue> : ObservableKeyedCollection<TKey, ObservablePair<TKey, TValue>>, IDictionary
     {

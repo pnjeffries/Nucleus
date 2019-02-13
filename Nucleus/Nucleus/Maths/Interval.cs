@@ -395,6 +395,18 @@ namespace Nucleus.Maths
         }
 
         /// <summary>
+        /// Does this interval entirely or partially include another within the
+        /// specified tolerance distance?
+        /// </summary>
+        /// <param name="other"></param>
+        /// <param name="tolerance"></param>
+        /// <returns></returns>
+        public bool Overlaps(Interval other, double tolerance)
+        {
+            return Start <= other.End + tolerance && End >= other.Start - tolerance;
+        }
+
+        /// <summary>
         /// Find the overlap between this interval and another,
         /// if there is one.
         /// </summary>
@@ -593,12 +605,12 @@ namespace Nucleus.Maths
 
                         if (cutter.IsValid &&
                             ((interval.IsIncreasing && tNext > cutter.Start) ||
-                            (interval.IsDecreasing)))
+                            (interval.IsDecreasing && !(wrapped && interval.End < cutter.Start))))
                         {
                             // Move to the start of the next cutter:
                             tNext = cutter.Start;
                         }
-                        else if (cutter.IsValid && !wrapped && interval.IsDecreasing)
+                        else if (!wrapped && interval.IsDecreasing) //&& !cutter.IsValid?
                         {
                             // Wrap around to the start if the interval does:
                             cutter = subtractors.FindNext(double.MinValue);

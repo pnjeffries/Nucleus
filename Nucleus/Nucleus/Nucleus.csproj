@@ -499,8 +499,10 @@
     <Compile Include="UI\DataBinding.cs" />
     <Compile Include="UI\BindingChainLink.cs" />
     <Compile Include="UI\IAutoUIHostable.cs" />
+    <Compile Include="UI\IDataContext.cs" />
     <Compile Include="UI\ItemsSourceBinding.cs" />
     <Compile Include="UI\IUserInteraction.cs" />
+    <Compile Include="UI\ParameterDisplayData.cs" />
     <Compile Include="UI\SelectionViewModel.cs" />
     <Compile Include="UI\UIOption.cs" />
     <Compile Include="Undo\CollectionUndoState.cs" />

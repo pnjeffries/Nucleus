@@ -220,7 +220,8 @@ namespace Nucleus.Base
                 newItems.Add(item);
             }
             _SuppressNotifyCollectionChanged = false;
-            NotifyCollectionChangedMultiItem(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, items));
+            var args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, items);
+            NotifyCollectionChangedMultiItem(args);
         }
 
         /// <summary>

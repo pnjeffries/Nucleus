@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="AnimatorBase.cs" />
     <Compile Include="BindingBase.cs" />
+    <Compile Include="DataContextOwner.cs" />
     <Compile Include="Extensions\GameObjectExtensions.cs" />
     <Compile Include="Extensions\NucleusAngleExtensions.cs" />
     <Compile Include="Extensions\NucleusVectorExtensions.cs" />

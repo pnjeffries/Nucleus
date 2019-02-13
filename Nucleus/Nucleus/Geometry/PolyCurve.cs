@@ -348,6 +348,32 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Evaluate the tangent unit vector of a point defined by a parameter within a specified span.
+        /// </summary>
+        /// <param name="span">The index of the span.  Valid range 0 to SegmentCount - 1</param>
+        /// <param name="tSpan">A normalised parameter defining a point along this span of this curve.
+        /// Note that parameter-space is not necessarily uniform and does not equate to a normalised length.
+        /// 0 = span start, 1 = span end.
+        /// </param>
+        /// <returns>The unit vector describing the tangent of a point on the curve span at the specified parameter,
+        /// if the curve definition and parameter are valid.  Else, null.</returns>
+        /// <remarks>The base implementation treats the curve as being defined as a polyline, with straight lines
+        /// between vertices.</remarks>
+        public override Vector TangentAt(int span, double tSpan)
+        {
+            foreach (Curve subCrv in SubCurves)
+            {
+                int segCount = subCrv.SegmentCount;
+                if (segCount > span)
+                {
+                    return subCrv.TangentAt(span, tSpan);
+                }
+                span -= segCount;
+            }
+            return Vector.Unset;
+        }
+
+        /// <summary>
         /// Calculate the area enclosed by this curve, were the start and end points to be 
         /// joined by a straight line segment.
         /// A plane may optionally be specified, otherwise by default the projected area on 
