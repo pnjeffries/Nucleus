@@ -270,6 +270,22 @@ namespace Nucleus.Geometry
             get { return YEnd - YStart; }
         }
 
+        /// <summary>
+        /// The mid-point X coordinate
+        /// </summary>
+        public double XMid
+        {
+            get { return (XStart + XEnd) * 0.5; }
+        }
+
+        /// <summary>
+        /// The mid-point Y coordinate
+        /// </summary>
+        public double YMid
+        {
+            get { return (YStart + YEnd) * 0.5; }
+        }
+
         #endregion
 
         #region Constructors
@@ -321,6 +337,20 @@ namespace Nucleus.Geometry
         protected override double Subtract(double v1, double v2)
         {
             return v1 - v2;
+        }
+
+        /// <summary>
+        /// Scale this rectangle evenly in all directions about its own centroid
+        /// </summary>
+        /// <param name="scalar"></param>
+        public void Scale(double scalar)
+        {
+            double xBar = (XStart + XEnd) / 2.0;
+            double yBar = (YStart + YEnd) / 2.0;
+            XStart = xBar + (XStart - xBar) * scalar;
+            XEnd = xBar + (XEnd - xBar) * scalar;
+            YStart = yBar + (YStart - yBar) * scalar;
+            YEnd = yBar + (YEnd - yBar) * scalar;
         }
 
         #endregion

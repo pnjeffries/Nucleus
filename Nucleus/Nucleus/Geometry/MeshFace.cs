@@ -409,7 +409,7 @@ namespace Nucleus.Geometry
         /// Get the index of the shortest edge of this face
         /// </summary>
         /// <returns></returns>
-        public int ShortetEdge()
+        public int ShortestEdge()
         {
             int iMin = 0;
             double lMin = double.MaxValue;
@@ -997,7 +997,12 @@ namespace Nucleus.Geometry
                     targetDivs[i] = target;
                     if (target < minDivs) minDivs = target;
                 }
-                else targetDivs[i] = edges[i].Divisions;
+                else
+                {
+                    int target = edges[i].Divisions;
+                    targetDivs[i] = target;
+                    if (target < minDivs) minDivs = target;
+                }
             }
 
 
@@ -1174,7 +1179,7 @@ namespace Nucleus.Geometry
                         Vertex v1 = otherEdge1.Vertices[i];
                         Vertex v2 = null;
                         if (otherEdge2 != null) v2 = otherEdge2.Vertices[otherEdge2.Vertices.Count - 1 - i];
-                        else v2 = edges[iMostDivs].Start;
+                        else v2 = edges.GetWrapped(iOther + 1).End;
 
                         MeshDivisionEdge newEdge;
                         if (flip) newEdge = new MeshDivisionEdge(v2, v1);
@@ -1237,7 +1242,7 @@ namespace Nucleus.Geometry
             }
             else // Tris and odd n-gons
             {
-                int si = ShortetEdge();
+                int si = ShortestEdge();
                 int offset = (Count/2);
                 for (int i = 0; i < Count; i++)
                 {
@@ -1321,10 +1326,24 @@ namespace Nucleus.Geometry
             }
             else if (IsTri)
             {
-                //TODO: Calculate point better than this!
-                Vector midPt = this.AveragePoint();
+                int i = ShortestEdge();
+                int iS = i - 1;
+                int iE = i + 1;
+                if (iS < 0) iS = Count - 1;
+                if (iE >= Count) iE = 0;
+                double lS = EdgeLength(iS);
+                double lE = EdgeLength(iE);
+                double lSh = EdgeLength(i);
+
+                Vector v0 = this[i].Position;
+                Vector v1 = this.GetWrapped(i + 1).Position;
+                Vector vS = v0.Interpolate(v1, lS / (lS + lE));
+                Vector vE = this.GetWrapped(i + 2).Position;
+                double lSE = vS.DistanceTo(vE);
+
+                Vector midPt = vS.Interpolate(vE, (0.5*lSh) / lSE);
                 var result = new Vector[3];
-                for (int i = 0; i < 3; i++) result[i] = midPt;
+                for (int i2 = 0; i2 < 3; i2++) result[i2] = midPt;
                 return result;
             }
             else

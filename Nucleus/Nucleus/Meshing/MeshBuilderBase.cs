@@ -255,6 +255,21 @@ namespace Nucleus.Meshing
         }
 
         /// <summary>
+        /// Add vertices and faces to the mesh to represent a cuboid of the specified rectangular plan,
+        /// with its base on the XY plane of the specified coordinate system.
+        /// </summary>
+        /// <param name="rect">The rectangle base of the cuboid</param>
+        /// <param name="height">The height of the cuboid</param>
+        /// <param name="cSystem"></param>
+        public void AddCuboid(Rectangle rect, double height, CartesianCoordinateSystem cSystem)
+        {
+            CartesianCoordinateSystem cSys = 
+                new CartesianCoordinateSystem(cSystem, 
+                cSystem.LocalToGlobal(new Vector(rect.XMid, rect.YMid)));
+            AddCuboid(rect.Width, rect.Height, height);
+        }
+
+        /// <summary>
         /// Add vertices and faces to the mesh to represent a flat-topped pyramid of the specified dimensions,
         /// with its base on the XY plane of the specified coordinate system.
         /// </summary>

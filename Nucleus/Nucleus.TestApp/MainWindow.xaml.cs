@@ -215,7 +215,7 @@ namespace Nucleus.TestApp
             BoundingBox box = new BoundingBox(0, 10, -10, 0, 0, 0);
 
             int size = 15;
-            //Geometry.Vector[] points = box.RandomPointsInside(rng, size);
+            Geometry.Vector[] points = box.RandomPointsInside(rng, size);
             /*var points = new Geometry.Vector[] {
                 new Geometry.Vector(10,-5), new Geometry.Vector(0,-10),
             new Geometry.Vector(0,0)//};
@@ -227,16 +227,16 @@ namespace Nucleus.TestApp
                 new Geometry.Vector(2,-0.5),
                 new Geometry.Vector(8,-1.5)
             };*/
-            var points = new Geometry.Vector[]
+            /*var points = new Geometry.Vector[]
             {
-                new Geometry.Vector(10, -5),
-                new Geometry.Vector(0,-4),
-                new Geometry.Vector(0, -6)
-            };
+                new Geometry.Vector(10, -4),
+                new Geometry.Vector(0,-2),
+                new Geometry.Vector(0, -4)
+            };*/
             VertexCollection verts = new VertexCollection(points);
             MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(verts);
             faces.Quadrangulate();
-            faces = faces.Refine(1);
+            faces = faces.Refine(0.5);
             //Dictionary<Vertex, MeshFace> voronoi = Mesh.VoronoiFromDelaunay(verts, faces);
             //ShapeCollection geometry = new MeshFaceCollection(voronoi.Values).ExtractFaceBoundaries();
             VertexGeometryCollection geometry = new VertexGeometryCollection(faces.ExtractFaceBoundaries());
