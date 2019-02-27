@@ -60,5 +60,21 @@ namespace Nucleus.UnitTests
             var rayHit3 = ddTree.RayTrace(new Axis(new Vector(0, -30, 30), new Vector(0, 1)));
             Assert.AreEqual(null, rayHit3);
         }
+
+        [TestMethod]
+        public void RaytraceTest3()
+        {
+            var meshFace = new MeshFace(
+                new Vertex(-9.0, 0.0, 3.0),
+                new Vertex(2.0, 0.0, 3.0),
+                new Vertex(2.0, 0.0, -4.0),
+                new Vertex(-9.0, 0.0, -4.0));
+
+            MeshFaceDDTree ddTree = new MeshFaceDDTree(new MeshFace[] { meshFace });
+
+            var rayHit = ddTree.RayTrace(new Axis(new Vector(0, -36, 0), Vector.UnitY));
+
+            Assert.AreNotEqual(null, rayHit);
+        }
     }
 }

@@ -1069,7 +1069,7 @@ namespace Nucleus.Geometry
                         {
                             t = 1;
                         }
-                        // Interpolate number o
+                        // Interpolate number of divisions:
                         divisions = (int)Interpolation.Linear.Interpolate //SquareRoot is interesting also...
                             ((double)originalEdges[i].Divisions, 
                             (double)targetDivs[i],//oppositeEdge.Divisions,
@@ -1278,10 +1278,11 @@ namespace Nucleus.Geometry
             Vertex startPt = edge1.End;
             //Vertex original1 = edge1.Vertices.FromEnd(offset);
             //Vertex original2 = edge2.Vertices[offset];
-            double t1 = Math.Min(offset / ((edge1.Divisions + 0) * 0.5),1);
-            double t2 = Math.Min(offset / ((edge2.Divisions + 0) * 0.5),1);
-            double t = Math.Max(t1, t2);//(t1 + t2) / 2.0;//
-
+            double t1 = offset / Math.Max((edge1.Divisions - 1.5) * 0.5, steps - 1.5);// - 0.5/steps);
+            double t2 = offset / Math.Max((edge2.Divisions - 1.5) * 0.5, steps - 1.5);// - 0.5/steps);
+            //double t = Math.Max(t1, t2);
+            double t = (t1 + t2) / 2.0;
+            //double t = offset / ((double)steps - 1.0);
             //double t = ((offset) / (steps - 1.0));
             Vector newPt = startPt.Position.Interpolate(midPt, t);
             return new Vertex(newPt);

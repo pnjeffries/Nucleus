@@ -932,7 +932,9 @@ namespace Nucleus.Geometry
                 if (angle < angleLimit)
                 {
                     double cutBack = filletLength / (2 * Math.Sin(angle / 2));
-                    if (crvA.TrimEnd(cutBack) && crvB.TrimStart(cutBack))
+
+                    if (crvA.Length > cutBack && crvB.Length > cutBack &&
+                        crvA.TrimEnd(cutBack) && crvB.TrimStart(cutBack))
                     {
                         Line fillet = new Line(crvA.EndPoint, crvB.StartPoint);
                         SubCurves.Insert(i + 1, fillet);

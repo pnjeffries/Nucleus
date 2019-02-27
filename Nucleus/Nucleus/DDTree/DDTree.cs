@@ -137,13 +137,13 @@ namespace Nucleus.DDTree
         /// <param name="hitTest">A delegate function to determine whether an item in the
         /// tree has been hit by the ray.  Should take in the object and ray as parameters
         /// and return the ray intersection parameter on a hit or double.NaN on a miss.</param>
-        /// <param name="maxRange">The maximum range of the ray.  Beyond this range hits will
-        /// be ignored.</param>
+        /// <param name="maxRange">The maximum range of the ray, expressed as the maximum parameter
+        /// on the ray beyond which hits should be ignored.
         /// <returns></returns>
         public RayHit<T> RayTrace(Axis ray, Func<T, Axis, double> hitTest, double maxRange)
         {
-            double tEnd = ray.ParameterAt(maxRange);
-            RayHit<T> hit = _RootNode.RayTrace(ray, hitTest);
+            double tEnd = maxRange;//ray.ParameterAt(maxRange);
+            RayHit<T> hit = _RootNode.RayTrace(ray, hitTest, 0, tEnd);
             if (hit != null && hit.Parameter < tEnd) return hit;
             else return null;
         }

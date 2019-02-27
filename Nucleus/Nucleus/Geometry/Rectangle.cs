@@ -286,6 +286,14 @@ namespace Nucleus.Geometry
             get { return (YStart + YEnd) * 0.5; }
         }
 
+        /// <summary>
+        /// The area of the rectangle
+        /// </summary>
+        public double Area
+        {
+            get { return Width * Height; }
+        }
+
         #endregion
 
         #region Constructors
@@ -362,6 +370,7 @@ namespace Nucleus.Geometry
     [Serializable]
     public class IntRectangle : Rectangle<int>
     {
+
         #region Constructors
 
         /// <summary>

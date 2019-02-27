@@ -32,6 +32,20 @@ namespace Nucleus.DDTree
             return RayTrace(ray, HitTest);
         }
 
+        /// <summary>
+        /// Trace a ray through this tree, testing for intersections with item geometry.
+        /// Returns information about the first intersection encountered within the specified
+        /// range.
+        /// </summary>
+        /// <param name="ray">The ray to test</param>
+        /// <param name="maxRange">The maximum range of the ray, expressed as the maximum parameter
+        /// on the ray beyond which hits should be ignored.
+        /// <returns></returns>
+        public RayHit<MeshFace> RayTrace(Axis ray, double maxRange)
+        {
+            return RayTrace(ray, HitTest, maxRange);
+        }
+
         private double HitTest(MeshFace item, Axis ray)
         {
             return Intersect.RayFace(ray.Origin, ray.Direction, item);
