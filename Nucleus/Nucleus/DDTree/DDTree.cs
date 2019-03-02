@@ -46,7 +46,7 @@ namespace Nucleus.DDTree
 	    private DDTreeNode<T> _RootNode;
 
         /// <summary>
-        /// The maximum allowable number of divisions per tree
+        /// The maximum allowable number of divisions per tree node
         /// </summary>
         public int MaxDivisions { get; set; } = 10;
 
@@ -63,15 +63,23 @@ namespace Nucleus.DDTree
         public int MaxLeafPopulation { get; set; } = 4;
 
         /// <summary>
-        /// Constructor
+        /// Creates a new DDTree populated with the specified collection of objects
         /// </summary>
-        /// <param name="items"></param>
-        /// <param name="maxDivisions"></param>
-        /// <param name="minCellSize"></param>
-        protected DDTree(IList<T> items, int maxDivisions = 10, double minCellSize = 1)
+        /// <param name="items">The objects to include within the tree.</param>
+        /// <param name="maxDivisions">The maximum number of cells into which each 
+        /// level in the tree should be divided</param>
+        /// <param name="minCellSize">The minimum allowable size of a cell.  Once a node
+        /// reaches this size it will no longer subdivide regardless of how many items are
+        /// contained within it.</param>
+        /// <param name="maxLeafPopulation">The maximum population per leaf node.  If the
+        /// number of objects within a cell exceeds this number and the minimum cell size 
+        /// has not yet been reached, the node will subdivide</param>
+        protected DDTree(IList<T> items, int maxDivisions = 10, 
+            double minCellSize = 1, int maxLeafPopulation = 4)
         {
             MaxDivisions = maxDivisions;
             MinCellSize = minCellSize;
+            MaxLeafPopulation = maxLeafPopulation;
             _RootNode = new DDTreeNode<T>(this);
             foreach (T item in items)
             {

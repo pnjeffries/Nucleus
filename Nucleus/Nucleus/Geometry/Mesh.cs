@@ -318,13 +318,22 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Returns a subdivided refinement of 
+        /// Returns a refinement of this mesh, formed by
+        /// subdividing mesh faces to produce a quad-dominant
+        /// mesh with edge lengths of approximately the target
+        /// length or lower.  Utilises the 'Jeffries More-Trouble-
+        /// Than-It's-Worth Mesh Subdivision Algorithm.'
+        /// Note that unlike typical mesh subdivision routines 
+        /// (Cutmull-Clark, etc.) the edges of each face do not
+        /// have to each have the same number of subdivisions -
+        /// the algorithm is capable of transitioning across faces
+        /// to allow for more consistent mesh density.
         /// </summary>
-        /// <param name="maxEdgeLength"></param>
+        /// <param name="targetEdgeLength"></param>
         /// <returns></returns>
-        public Mesh Refined(double maxEdgeLength)
+        public Mesh Refined(double targetEdgeLength)
         {
-            var newFaces = Faces.Refine(maxEdgeLength);
+            var newFaces = Faces.Refine(targetEdgeLength);
             return new Mesh(newFaces.ExtractVertices(), newFaces);
         }
 

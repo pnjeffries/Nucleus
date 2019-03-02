@@ -1086,20 +1086,51 @@ namespace Nucleus.Geometry
                     var outEdge1 = edges[i];
                     var inEdge1 = newEdges[i];
                     // Corner face:
-                    var firstFace = new MeshFace(
-                        outEdge1.Start, outEdge1.Vertices[1],
-                        inEdge1.Start, outEdge0.Vertices.FromEnd(1));
-                    addFaceTo.Add(firstFace);
+                    if (outEdge0.Divisions == 1)
+                    {
+                        //TODO: check if both have 1 div?
+                        //Special case - tri
+                        var firstFace = new MeshFace(
+                            outEdge1.Start, outEdge1.Vertices[1],
+                            inEdge1.Start);
+                        addFaceTo.Add(firstFace);
+                    }
+                    else if (outEdge1.Divisions == 1)
+                    {
+                        //Special case - tri
+                        var firstFace = new MeshFace(
+                            outEdge1.Start,
+                            inEdge1.Start, outEdge0.Vertices.FromEnd(1));
+                        addFaceTo.Add(firstFace);
+                    }
+                    else
+                    {
+                        //Standard case - quad
+                        var firstFace = new MeshFace(
+                            outEdge1.Start, outEdge1.Vertices[1],
+                            inEdge1.Start, outEdge0.Vertices.FromEnd(1));
+                        addFaceTo.Add(firstFace);
+                    }
                     int inCount = inEdge1.Divisions;
                     int outCount = outEdge1.Divisions - 2;
                     int faceCount = Math.Max(inCount, outCount);
+
+                    //Adjustment to avoid flipped faces:
+                    int jOffset = 1;
+                    if (outEdge1.Divisions == 1)
+                    {
+                        jOffset = 0;
+                        outCount = 1;
+                    }
+
                     for (int j = 0; j < faceCount; j++)
                     {
+                       
                         // Work out vertices to mesh:
                         int jI0 = (int)Math.Round(((j/ (double)faceCount) * inCount));
                         int jI1 = (int)Math.Round((((j + 1.0)/ (double)faceCount) * inCount));
-                        int jO0 = (int)Math.Round((((j) / (double)faceCount) * outCount)) + 1 ;
-                        int jO1 = (int)Math.Round((((j + 1.0)/(double)faceCount) * outCount)) + 1;
+                        int jO0 = (int)Math.Round((((j) / (double)faceCount) * outCount)) + jOffset ;
+                        int jO1 = (int)Math.Round((((j + 1.0)/(double)faceCount) * outCount)) + jOffset;
 
                         if (jI0 == jI1)
                         {

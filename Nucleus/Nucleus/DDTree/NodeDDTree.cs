@@ -28,10 +28,27 @@ using System.Threading.Tasks;
 
 namespace Nucleus.DDTree
 {
+    /// <summary>
+    /// A DDTree used for the spatial partitioning of nodes
+    /// </summary>
     [Serializable]
     public class NodeDDTree : DDTree<Node>
     {
-        public NodeDDTree(NodeCollection nodes, int maxDivisions = 10, double minCellSize = 1) : base(nodes, maxDivisions, minCellSize) { }
+        /// <summary>
+        /// Creates a new DDTree populated with the specified collection of objects
+        /// </summary>
+        /// <param name="nodes">The nodes to include within the tree.</param>
+        /// <param name="maxDivisions">The maximum number of cells into which each 
+        /// level in the tree should be divided</param>
+        /// <param name="minCellSize">The minimum allowable size of a cell.  Once a node
+        /// reaches this size it will no longer subdivide regardless of how many items are
+        /// contained within it.</param>
+        /// <param name="maxLeafPopulation">The maximum population per leaf node.  If the
+        /// number of objects within a cell exceeds this number and the minimum cell size 
+        /// has not yet been reached, the node will subdivide</param>
+        public NodeDDTree(NodeCollection nodes, int maxDivisions = 10, 
+            double minCellSize = 1, int maxLeafPopulation = 4) 
+            : base(nodes, maxDivisions, minCellSize) { }
 
         /// <summary>
         /// Find the minimum bounding X-coordinate of the given entry in the tree.

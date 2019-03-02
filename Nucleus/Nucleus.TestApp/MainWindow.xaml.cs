@@ -238,10 +238,10 @@ namespace Nucleus.TestApp
                 {
                     new Geometry.Vector(10,-9.5),
                     new Geometry.Vector(0,-9.5),
-                    //new Geometry.Vector(2,-0.5),
-                    //new Geometry.Vector(8,-0.5)
-                    new Geometry.Vector(4.5,-0.5),
-                    new Geometry.Vector(5.5,-0.5)
+                    new Geometry.Vector(2,-0.5),
+                    new Geometry.Vector(8,-0.5)
+                    //new Geometry.Vector(4.5,-0.5),
+                    //new Geometry.Vector(5.5,-0.5)
                 };
             }
             else
@@ -256,7 +256,7 @@ namespace Nucleus.TestApp
             VertexCollection verts = new VertexCollection(points);
             MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(verts);
             faces.Quadrangulate();
-            faces = faces.Refine(2);
+            faces = faces.Refine(1);
             //Dictionary<Vertex, MeshFace> voronoi = Mesh.VoronoiFromDelaunay(verts, faces);
             //ShapeCollection geometry = new MeshFaceCollection(voronoi.Values).ExtractFaceBoundaries();
             CurveCollection edges = faces.ExtractFaceBoundaries();
