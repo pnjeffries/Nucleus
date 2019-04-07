@@ -28,7 +28,12 @@
                         </ScrollViewer>
                     </Border>
                     <Button Grid.Row="1" Grid.Column="0" Click="DelaunayButton_Click">Generate Delaunay Triangulation</Button>
-                    <Button Grid.Row="1" Grid.Column="1" Click="DelaunayRefineButton_Click">Refine Delaunay Triangulation</Button>
+                    <UniformGrid Grid.Row="1" Grid.Column="1" Rows="1">
+                        <Button Click="DelaunayRefineButton_Click">Refine Delaunay</Button>
+                        <Button Click="RefineQuad_Click">Refine Quad</Button>
+                        <Button Click="RefineTri_Click">Refine Tri</Button>
+                    </UniformGrid>
+                    
                 </Grid>
             </TabItem>
             <TabItem Header="Voronoi">

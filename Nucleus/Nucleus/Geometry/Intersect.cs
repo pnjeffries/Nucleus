@@ -648,7 +648,7 @@ namespace Nucleus.Geometry
         {
             double tolerance = 0.0000001;
             Vector edge1 = tri1 - tri0;
-            Vector edge2 = tri2 - tri1;
+            Vector edge2 = tri2 - tri0;
             Vector h = rayDirection.Cross(edge2);
             double a = edge1.Dot(h);
             if (a > -tolerance && a < tolerance) return double.NaN;
