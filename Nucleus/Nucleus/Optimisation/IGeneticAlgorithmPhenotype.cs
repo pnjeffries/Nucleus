@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace Nucleus.Optimisation
 {
     /// <summary>
-    /// An interface for objects which represent an option in a genetic algorithm solution
+    /// An interface for objects which represent a distinct phenotype in a genetic algorithm solution
     /// </summary>
-    public interface IGeneticAlgorithmOption
+    public interface IGeneticAlgorithmPhenotype
     {
         /// <summary>
         /// Create a new option by breeding this option with another
@@ -17,20 +17,14 @@ namespace Nucleus.Optimisation
         /// <param name="with">The other parent</param>
         /// <param name="settings">Genetic Algorithm settings</param>
         /// <returns></returns>
-        IGeneticAlgorithmOption Breed(IGeneticAlgorithmOption with, GeneticAlgorithmSettings settings);
+        IGeneticAlgorithmPhenotype Breed(IGeneticAlgorithmPhenotype with, GeneticAlgorithmSettings settings);
 
-        /// <summary>
-        /// Get the fitness score for this option
-        /// </summary>
-        /// <param name="settings"></param>
-        /// <returns></returns>
-        double GetFitness(GeneticAlgorithmSettings settings);
     }
 
     /// <summary>
     /// Extension methods for the IGeneticAlgorithmOption interface
     /// </summary>
-    public static class IGeneticAlgorithmOptionExtensions
+    public static class IGeneticAlgorithmPhenotypeExtensions
     {
         /// <summary>
         /// Create a new option by breeding this option with another
@@ -41,7 +35,7 @@ namespace Nucleus.Optimisation
         /// <param name="settings">Genetic Algorithm settings</param>
         /// <returns></returns>
         public static TOption Breed<TOption>(this TOption option, TOption with, GeneticAlgorithmSettings settings)
-            where TOption: class,IGeneticAlgorithmOption
+            where TOption: class,IGeneticAlgorithmPhenotype
         {
             return option.Breed(with, settings) as TOption;
         }

@@ -33,6 +33,9 @@ namespace Nucleus.AI
 
         #region Constructors
 
+        public Neuron()
+        { }
+
         public Neuron(int prevLayerSize)
         {
             Initialise(prevLayerSize);

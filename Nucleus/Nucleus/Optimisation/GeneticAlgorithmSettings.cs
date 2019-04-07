@@ -12,5 +12,6 @@ namespace Nucleus.Optimisation
     [Serializable]
     public class GeneticAlgorithmSettings
     {
+
     }
 }

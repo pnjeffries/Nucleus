@@ -652,7 +652,7 @@ namespace Nucleus.Geometry
             Vector h = rayDirection.Cross(edge2);
             double a = edge1.Dot(h);
             if (a > -tolerance && a < tolerance) return double.NaN;
-            double f = 1 / a;
+            double f = 1.0 / a;
             Vector s = rayOrigin - tri0;
             double u = f * s.Dot(h);
             if (u < 0.0 || u > 1.0) return double.NaN;

@@ -12,5 +12,11 @@ namespace Nucleus.Optimisation
     /// </summary>
     public interface IGeneticSolver
     {
+        /// <summary>
+        /// Initialise the genetic algorithm by generating (or sampling)
+        /// the initial solution set.
+        /// </summary>
+        /// <param name="settings"></param>
+        IList<IGeneticAlgorithmPhenotype> Initialise(GeneticAlgorithmSettings settings);
     }
 }

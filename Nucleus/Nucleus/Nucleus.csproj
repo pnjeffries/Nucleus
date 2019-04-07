@@ -62,6 +62,7 @@
     <Compile Include="Actions\IExportAction.cs" />
     <Compile Include="Actions\PreviewParameters.cs" />
     <Compile Include="AI\Network.cs" />
+    <Compile Include="AI\NeuralLayer.cs" />
     <Compile Include="AI\Neuron.cs" />
     <Compile Include="Alerts\AlertCollection.cs" />
     <Compile Include="Alerts\AlertLevel.cs" />
@@ -430,8 +431,9 @@
     <Compile Include="Model\VertexDataStore.cs" />
     <Compile Include="Model\VertexReleases.cs" />
     <Compile Include="Optimisation\GeneticAlgorithmSettings.cs" />
+    <Compile Include="Optimisation\GeneticSolverBase.cs" />
     <Compile Include="Optimisation\IGene.cs" />
-    <Compile Include="Optimisation\IGeneticAlgorithmOption.cs" />
+    <Compile Include="Optimisation\IGeneticAlgorithmPhenotype.cs" />
     <Compile Include="Optimisation\IGeneticSolver.cs" />
     <Compile Include="Physics\IPhysicsEngineComponent.cs" />
     <Compile Include="Physics\KineticDampingComponent.cs" />
