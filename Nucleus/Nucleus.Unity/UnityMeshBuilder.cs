@@ -14,13 +14,14 @@ namespace Nucleus.Unity
     /// </summary>
     public class UnityMeshBuilder : MeshBuilderBase<UnityEngine.Mesh>
     {
+        #region Properties
+
         /// <summary>
-        /// Creates a new UnityMeshBuilder
+        /// Toggle to produce double-sided faces.
+        /// Set to true to have each added face also create a second face
+        /// with inverted normal direction.
         /// </summary>
-        public UnityMeshBuilder()
-        {
-            Mesh = new UnityEngine.Mesh();
-        }
+        public bool DoubleSided { get; set; } = false;
 
         /// <summary>
         /// Temporary vertex collection
@@ -31,6 +32,22 @@ namespace Nucleus.Unity
         /// Temporary triangle indices collection
         /// </summary>
         private List<int> _Triangles = new List<int>();
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Creates a new UnityMeshBuilder
+        /// </summary>
+        public UnityMeshBuilder()
+        {
+            Mesh = new UnityEngine.Mesh();
+        }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Add a new tri face to the mesh.
@@ -45,13 +62,26 @@ namespace Nucleus.Unity
         /// clockwise rather than counter-clockwise winding, 
         /// the order of the vertices is changed to produce
         /// the same face normal.
+        /// If the DoubleSided option is set to true, this will
+        /// automatically create a second triangle with the opposite
+        /// orientation, also duplicating vertices to accomplish this
+        /// for each face.  As this will result in faces sharing
+        /// vertices on the 'outside' face but not the 'inside', this
+        /// may produce some odd effects.
         /// </remarks>
         public override int AddFace(int v1, int v2, int v3)
         {
-
             _Triangles.Add(v2);
             _Triangles.Add(v1);
             _Triangles.Add(v3);
+
+            if (DoubleSided)
+            {
+                _Triangles.Add(AddVertex(_Vertices[v1].ToNucleusVector()));
+                _Triangles.Add(AddVertex(_Vertices[v2].ToNucleusVector()));
+                _Triangles.Add(AddVertex(_Vertices[v3].ToNucleusVector()));
+            }
+
             return _Triangles.Count - 1;
         }
 
@@ -110,5 +140,7 @@ namespace Nucleus.Unity
             Mesh.RecalculateNormals();
             return base.Finalize();
         }
+
+        #endregion
     }
 }

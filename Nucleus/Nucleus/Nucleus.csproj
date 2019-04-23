@@ -82,7 +82,6 @@
     <Compile Include="Base\IFastDuplicatable.cs" />
     <Compile Include="Analysis\SolarPositioning.cs" />
     <Compile Include="Base\IntParameter.cs" />
-    <Compile Include="Base\IRefreshable.cs" />
     <Compile Include="Base\Option.cs" />
     <Compile Include="Base\OptionCollection.cs" />
     <Compile Include="Base\Parameter.cs" />
@@ -436,7 +435,11 @@
     <Compile Include="Optimisation\GeneticSolverBase.cs" />
     <Compile Include="Optimisation\IGene.cs" />
     <Compile Include="Optimisation\IGeneticAlgorithmPhenotype.cs" />
-    <Compile Include="Optimisation\IGeneticSolver.cs" />
+    <Compile Include="Optimisation\OptimisationObjective.cs" />
+    <Compile Include="Optimisation\OptimisationSettings.cs" />
+    <Compile Include="Optimisation\OptimisationSolverBase.cs" />
+    <Compile Include="Optimisation\SimulatedAnnealingSettings.cs" />
+    <Compile Include="Optimisation\AnnealingSolverBase.cs" />
     <Compile Include="Physics\IPhysicsEngineComponent.cs" />
     <Compile Include="Physics\KineticDampingComponent.cs" />
     <Compile Include="Physics\Particle.cs" />

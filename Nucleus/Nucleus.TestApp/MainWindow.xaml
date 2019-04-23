@@ -26,7 +26,9 @@
                                            ></fb:GeometryCanvas>
                             </Viewbox>
                         </ScrollViewer>
+                        
                     </Border>
+                    <TextBlock Name="MeshingTimeText">Not yet run...</TextBlock>
                     <Button Grid.Row="1" Grid.Column="0" Click="DelaunayButton_Click">Generate Delaunay Triangulation</Button>
                     <UniformGrid Grid.Row="1" Grid.Column="1" Rows="1">
                         <Button Click="DelaunayRefineButton_Click">Refine Delaunay</Button>

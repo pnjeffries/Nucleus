@@ -255,6 +255,35 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Find the item in this list which returns the minimum value of a property or method
+        /// defined by a delegate
+        /// </summary>
+        /// <typeparam name="TItem">The type of item in the list</typeparam>
+        /// <typeparam name="TProperty">The type of the property to be interrogated</typeparam>
+        /// <param name="list"></param>
+        /// <param name="propertyDelegate">Delegate function which returns the value
+        /// for each list item.</param>
+        /// <returns></returns>
+        public static TItem ItemWithMax<TItem, TProperty>(this IList<TItem> list, Func<TItem, TProperty> propertyDelegate)
+            where TProperty : IComparable<TProperty>
+        {
+            if (list.Count == 0) return default(TItem);
+            TItem result = list[0];
+            TProperty max = propertyDelegate.Invoke(list[0]);
+            for (int i = 1; i < list.Count; i++)
+            {
+                TItem item = list[i];
+                TProperty value = propertyDelegate.Invoke(item);
+                if (value.CompareTo(max) == 1)
+                {
+                    max = value;
+                    result = item;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Find the minimum value of a property or method on the items in this list
         /// </summary>
         /// <typeparam name="TItem">The type of item in the list</typeparam>
@@ -272,6 +301,35 @@ namespace Nucleus.Extensions
             {
                 TProperty value = propertyDelegate.Invoke(list[i]);
                 if (value.CompareTo(result) == -1) result = value;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Find the item in this list which returns the minimum value of a property or method
+        /// defined by a delegate
+        /// </summary>
+        /// <typeparam name="TItem">The type of item in the list</typeparam>
+        /// <typeparam name="TProperty">The type of the property to be interrogated</typeparam>
+        /// <param name="list"></param>
+        /// <param name="propertyDelegate">Delegate function which returns the value
+        /// for each list item.</param>
+        /// <returns></returns>
+        public static TItem ItemWithMin<TItem, TProperty>(this IList<TItem> list, Func<TItem, TProperty> propertyDelegate)
+            where TProperty : IComparable<TProperty>
+        {
+            if (list.Count == 0) return default(TItem);
+            TItem result = list[0];
+            TProperty min = propertyDelegate.Invoke(list[0]);
+            for (int i = 1; i < list.Count; i++)
+            {
+                TItem item = list[i];
+                TProperty value = propertyDelegate.Invoke(item);
+                if (value.CompareTo(min) == -1)
+                {
+                    min = value;
+                    result = item;
+                }
             }
             return result;
         }

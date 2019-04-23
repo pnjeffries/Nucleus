@@ -50,6 +50,7 @@
     <Compile Include="DDTree_Tests.cs" />
     <Compile Include="ETABS_Tests.cs" />
     <Compile Include="Excel_Tests.cs" />
+    <Compile Include="Optimisation_Tests.cs" />
     <Compile Include="GWA_Tests.cs" />
     <Compile Include="Log_Tests.cs" />
     <Compile Include="Map_Tests.cs" />

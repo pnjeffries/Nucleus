@@ -17,6 +17,17 @@ namespace Nucleus.UnitTests
         {
             // Checks for types not marked as serializable
             var unserializable = typeof(ModelObject).Assembly.GetUnserializableTypes();
+            if (unserializable.Count > 0)
+            {
+                Console.WriteLine("The following types are not serializable:");
+                foreach (var type in unserializable)
+                {
+                    Console.WriteLine(" - " + type.FullName);
+                }
+                Console.WriteLine(
+                    "To prevent errors during file serialization, mark these classes with the [Serializable] attribute.");
+            }
+
             Assert.AreEqual(0, unserializable.Count);
         }
     }

@@ -744,6 +744,16 @@ namespace Nucleus.Geometry
             return Math.Acos(dot);
         }
 
+        /// <summary>
+        /// Calculate the angular rotation necessary to align this angle with another on the XY plane.
+        /// In the range -PI to PI.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public Angle RotationAngleXY(Vector other)
+        {
+            return (other.Angle - this.Angle).Normalize();
+        }
 
         /// <summary>
         /// Rotate this vector by an angle around an axis,

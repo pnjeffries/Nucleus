@@ -20,6 +20,7 @@ using Nucleus.WPF;
 using Nucleus.Maths;
 using Nucleus.Rendering;
 using System.Threading;
+using System.Diagnostics;
 
 namespace Nucleus.TestApp
 {
@@ -225,10 +226,12 @@ namespace Nucleus.TestApp
 
         private void DelaunayRefine(int scenario)
         {
+            var sw = new Stopwatch();
+            sw.Start();
             Random rng = new Random();
             BoundingBox box = new BoundingBox(0, 10, -10, 0, 0, 0);
 
-            int size = 15;
+            int size = 50;
             Geometry.Vector[] points;
             if (scenario == 1)
                 points = box.RandomPointsInside(rng, size);
@@ -256,7 +259,7 @@ namespace Nucleus.TestApp
             VertexCollection verts = new VertexCollection(points);
             MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(verts);
             faces.Quadrangulate();
-            faces = faces.Refine(1);
+            faces = faces.Refine(0.2);
             //Dictionary<Vertex, MeshFace> voronoi = Mesh.VoronoiFromDelaunay(verts, faces);
             //ShapeCollection geometry = new MeshFaceCollection(voronoi.Values).ExtractFaceBoundaries();
             CurveCollection edges = faces.ExtractFaceBoundaries();
@@ -270,6 +273,8 @@ namespace Nucleus.TestApp
                 edge.Attributes = new GeometryAttributes(new Colour(64, 0, 0, 0));
             }
             geometry.Add(new Cloud(verts.ExtractPoints()));
+            sw.Stop();
+            MeshingTimeText.Text = "Completed: " + faces.Count + " faces in " + sw.Elapsed;
             DelaunayCanvas.Geometry = geometry;
         }
 

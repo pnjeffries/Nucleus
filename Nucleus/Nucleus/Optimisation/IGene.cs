@@ -21,11 +21,27 @@ namespace Nucleus.Optimisation
         /// <param name="settings"></param>
         /// <returns></returns>
         IGene Crossover(IGene other, GeneticAlgorithmSettings settings);
+    }
 
+    /// <summary>
+    /// Extension methods for the IGene interface
+    /// </summary>
+    public static class IGeneExtensions
+    {
         /// <summary>
-        /// Mutate this gene
+        /// Crossover this gene with another of the same type.
         /// </summary>
+        /// <typeparam name="TGene"></typeparam>
+        /// <param name="gene"></param>
+        /// <param name="other"></param>
         /// <param name="settings"></param>
-        void Mutate(GeneticAlgorithmSettings settings);
+        /// <returns></returns>
+        public static TGene Crossover<TGene>(this TGene gene, TGene other, GeneticAlgorithmSettings settings)
+            where TGene : IGene
+        {
+            IGene result = gene.Crossover((IGene)other, settings);
+            if (result != null && result is TGene) return (TGene)result;
+            else return default(TGene);
+        }
     }
 }

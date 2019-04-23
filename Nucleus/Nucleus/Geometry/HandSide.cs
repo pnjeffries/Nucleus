@@ -12,6 +12,11 @@ namespace Nucleus.Geometry
     public enum HandSide
     {
         /// <summary>
+        /// The side is undefined
+        /// </summary>
+        Undefined = 0,
+
+        /// <summary>
         /// The right-hand side
         /// </summary>
         Right = -1,
@@ -41,14 +46,16 @@ namespace Nucleus.Geometry
         /// <summary>
         /// Returns either 1 or -1 depending on whether this side
         /// would typically require a positive or negative curve
-        /// offset value
+        /// offset value.
+        /// If the side is undefined, returns 0.
         /// </summary>
         /// <param name="side"></param>
         /// <returns></returns>
         public static int OffsetSign(this HandSide side)
         {
             if (side == HandSide.Left) return 1;
-            else return -1;
+            else if (side == HandSide.Right) return -1;
+            else return 0;
         }
     }
 }

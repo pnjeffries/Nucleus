@@ -109,13 +109,14 @@ namespace Nucleus.Meshing
         /// end vertices
         /// </summary>
         /// <param name="divisions"></param>
-        public void SubDivide(int divisions)
+        /// <param name="lastScale">The relative size of the last division</param>
+        public void SubDivide(int divisions, double lastScale = 1.0)
         {
             _Vertices.Clear();
             Vector startPt = Start.Position;
             Vector endPt = End.Position;
             Vector trans = endPt - startPt;
-            double step = 1.0 / divisions;
+            double step = 1.0 / (divisions - 1 + lastScale);
             _Vertices.Add(Start);
             for (int i = 1; i < divisions; i++)
             {

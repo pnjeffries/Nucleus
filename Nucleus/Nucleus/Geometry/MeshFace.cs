@@ -1207,23 +1207,32 @@ namespace Nucleus.Geometry
                     // Create intermediate edges
                     for (int i = 1; i < otherDivs; i++)
                     {
+                        double lastScale = 1.0;
                         Vertex v1 = otherEdge1.Vertices[i];
                         Vertex v2 = null;
                         if (otherEdge2 != null) v2 = otherEdge2.Vertices[otherEdge2.Vertices.Count - 1 - i];
-                        else v2 = edges.GetWrapped(iOther + 1).End;
+                        else
+                        {
+                            v2 = edges.GetWrapped(iOther + 1).End;
+                            lastScale = 1.5;
+                        }
 
                         MeshDivisionEdge newEdge;
                         if (flip) newEdge = new MeshDivisionEdge(v2, v1);
                         else newEdge = new MeshDivisionEdge(v1, v2);
 
-                        newEdge.SubDivide(mostDivs);
+                        newEdge.SubDivide(mostDivs, lastScale);
                         fillEdges.Add(newEdge);
                     }
-
-                    //TODO
                 }
 
                 fillEdges.Add(edges[opposites[iMostDivs]].Reversed());
+
+                bool tri = false;
+                if (fillEdges.Count == 3 && fillEdges.First().End == fillEdges.Last().End)
+                {
+                    tri = true;
+                }
 
                 // Run through edge list and fill in faces
                 for (int j = 0; j < fillEdges.Count - 1; j++)
@@ -1234,7 +1243,9 @@ namespace Nucleus.Geometry
 
                     // Stitch edges together:
                     int maxDivs = Math.Max(edge1.Divisions, edge2.Divisions);
-                    for (int i = 0; i < maxDivs; i++)
+                    int count = maxDivs;
+                    if (tri) count -= 1;
+                    for (int i = 0; i < count; i++)
                     {
                         // Work out vertices to mesh:
                         int jI0 = (int)Math.Round(((i / (double)maxDivs) * edge1.Divisions));
@@ -1247,6 +1258,19 @@ namespace Nucleus.Geometry
                             edge2.Vertices[jO0], edge2.Vertices[jO1],
                             edge1.Vertices[jI1], edge1.Vertices[jI0]));
                     }
+                }
+
+                if (tri)
+                {
+                    var edge0 = fillEdges[0];
+                    var edge1 = fillEdges[1];
+                    var edge2 = fillEdges[2];
+                    // Fill in last quad face:
+                    addFaceTo.Add(new MeshFace(
+                        edge1.End,
+                        edge2.Vertices.FromEnd(1),
+                        edge1.Vertices.FromEnd(1),
+                        edge0.Vertices.FromEnd(1)));
                 }
             }
         }

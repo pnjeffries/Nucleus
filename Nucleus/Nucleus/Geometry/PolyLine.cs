@@ -591,6 +591,23 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Static factory method to create a polyline representing a rectangle with the specified
+        /// corner point coordinates.
+        /// </summary>
+        /// <returns>A polyline representing the specified rectangle with vertices arranged in an
+        /// anti-clockwise manner, or null is the input depth and width are invalid.</returns>
+        public static PolyLine Rectangle(double x0, double y0, double x1, double y1, ICoordinateSystem cSystem)
+        {
+            return new PolyLine(new Vector[]
+            {
+                cSystem.LocalToGlobal(new Vector(x0, y0)),
+                cSystem.LocalToGlobal(new Vector(x1, y0)),
+                cSystem.LocalToGlobal(new Vector(x1, y1)),
+                cSystem.LocalToGlobal(new Vector(x0, y1)),
+            }, true);
+        }
+
+        /// <summary>
         /// Static factory method to create a polyline representing a rectangle on the XY plane between the two specified
         /// corner points.
         /// </summary>

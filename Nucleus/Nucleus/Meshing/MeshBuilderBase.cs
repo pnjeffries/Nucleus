@@ -768,8 +768,10 @@ namespace Nucleus.Meshing
                 else
                     topMove = plane.Z * topOffset;
 
+                //topMove += offset;
+
                 vertices.Move(topMove);
-                perimeter = perimeter.Move(topMove);
+                perimeter = perimeter.Move(topMove + offset);
 
                 if (voidPerimeters != null)
                 {
@@ -782,8 +784,12 @@ namespace Nucleus.Meshing
             Mesh mesh = new Mesh(vertices, faces);
 
             if (autoFlip)
-                if (!mesh.AlignNormals(Vector.UnitZ))
+            {
+                if (!mesh.AlignNormals(Vector.UnitZ) ^ (Vector.UnitZ.Dot(path) < 0))
+                {
                     Array.Reverse(perimeter);
+                }
+            }
 
             AddMesh(mesh);
             if (thickness != 0 || usePath)
@@ -793,6 +799,7 @@ namespace Nucleus.Meshing
                     bottomMove = -path;
                 else
                     bottomMove = plane.Z * -thickness;
+
                 mesh.Move(bottomMove);
                 AddMesh(mesh);
                 Vector[] bottomPerimeter = perimeter.Move(bottomMove);
