@@ -33,6 +33,21 @@ namespace Nucleus.Game
             set { _Offsets = value; }
         }
 
+        /// <summary>
+        /// Private backing member variable for the SourceSFX property
+        /// </summary>
+        private string _SourceSFX = null;
+
+        /// <summary>
+        /// The keyword of the special effect to play at the source of the attack
+        /// </summary>
+        public string SourceSFX
+        {
+            get { return _SourceSFX; }
+            set { _SourceSFX = value; }
+        }
+
+
         #endregion
 
         #region Constructors
@@ -50,12 +65,33 @@ namespace Nucleus.Game
 
         /// <summary>
         /// Creates an AOEAttackAction factory to create an attack pattern
+        /// with the specified list offsets.
+        /// </summary>
+        public AOEAttackActionFactory(string sourceSFX, params Vector[] offsets)
+            : this(offsets)
+        {
+            SourceSFX = sourceSFX;
+        }
+
+        /// <summary>
+        /// Creates an AOEAttackAction factory to create an attack pattern
         /// with the specified list of alternating X and Y offset components.
         /// </summary>
         /// <param name="offsetComponents"></param>
         public AOEAttackActionFactory(params double[] offsetComponents)
         {
             Offsets = Vector.Create2D(offsetComponents);
+        }
+
+        /// <summary>
+        /// Creates an AOEAttackAction factory to create an attack pattern
+        /// with the specified list of alternating X and Y offset components.
+        /// </summary>
+        /// <param name="offsetComponents"></param>
+        public AOEAttackActionFactory(string sourceSFX, params double[] offsetComponents)
+            : this(offsetComponents)
+        {
+            SourceSFX = sourceSFX;
         }
 
         #endregion
@@ -66,7 +102,7 @@ namespace Nucleus.Game
         {
             var pattern = Offsets.Rotate(direction.Angle).Move(position);
             var cells = context.Stage.Map.CellsAt(pattern);
-            return new AOEAttackAction(cells, triggerCell, direction);
+            return new AOEAttackAction(cells, triggerCell, direction, SourceSFX);
         }
 
         #endregion

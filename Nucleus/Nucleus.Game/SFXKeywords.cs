@@ -25,5 +25,15 @@ namespace Nucleus.Game
         /// A dusty 'footprint' effect
         /// </summary>
         public static string Dust = "Dust";
+
+        /// <summary>
+        /// A melee-weapon slash effect
+        /// </summary>
+        public static string Slash = "Slash";
+
+        /// <summary>
+        /// A melee-weapon stab effect
+        /// </summary>
+        public static string Stab = "Stab";
     }
 }

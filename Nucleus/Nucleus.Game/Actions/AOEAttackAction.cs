@@ -13,7 +13,8 @@ namespace Nucleus.Game
     {
         #region Constructor
 
-        public AOEAttackAction(IList<MapCell> targets, MapCell triggerCell, Vector direction)
+        public AOEAttackAction(IList<MapCell> targets, MapCell triggerCell, Vector direction,
+            string sfxKeyword = null)
         {
             Target = targets;
             Trigger = new ActionCellInputTrigger(triggerCell.Index, InputFunction.Move);
@@ -22,7 +23,8 @@ namespace Nucleus.Game
             Effects.Add(new DamageEffect(2));
             Effects.Add(new KnockbackEffect(direction, 3));
             SelfEffects.Add(new ActorOrientationEffect(direction));
-            SelfEffects.Add(new SFXEffect("Slash", true, direction));
+            if (sfxKeyword != null)
+                SelfEffects.Add(new SFXEffect(sfxKeyword, true, direction));
         }
 
         public override bool Enact(IActionLog log, EffectContext context)

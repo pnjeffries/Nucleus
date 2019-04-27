@@ -320,15 +320,15 @@ namespace Nucleus.Game
         /// <returns></returns>
         public RoomTemplate NextRoom(RoomTemplate currentRoom)
         {
-            return Templates.GetRandom(_RNG);
+            //return Templates.GetRandom(_RNG);
             //TODO: Make work OK!
             RoomType type = RoomType.Room;
             if (Rooms.Count > PathToExit && !ExitPlaced)
             {
                 type = RoomType.Exit;
             }
-            else if ((!ExitPlaced && _RNG.NextDouble() * _RNG.NextDouble() * _RNG.NextDouble() < currentRoom.CorridorChance) ||
-                _RNG.NextDouble() < currentRoom.CorridorChance)
+            else if //((!ExitPlaced && _RNG.NextDouble() * _RNG.NextDouble() * _RNG.NextDouble() < currentRoom.CorridorChance) ||
+                (_RNG.NextDouble() < currentRoom.CorridorChance)
             {
                 type = RoomType.Circulation;
             }
@@ -418,6 +418,7 @@ namespace Nucleus.Game
                     }
                 }
             }
+            Rooms.Add(newRoom);
             return newRoom;
         }
 
