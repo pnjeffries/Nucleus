@@ -54,5 +54,49 @@ namespace Nucleus.UnitTests
 
             Assert.AreEqual(0.5, extension, 0.001);
         }
+
+        [TestMethod]
+        public void LineCircleIntersection()
+        {
+            var pts = Intersect.LineCircleXY(new Line(0, 0, 10, 0), new Circle(1, new Vector(5, 0)));
+
+            Assert.AreEqual(2, pts.Length);
+            Assert.AreEqual(new Vector(4, 0), pts[0]);
+            Assert.AreEqual(new Vector(6, 0), pts[1]);
+        }
+
+        [TestMethod]
+        public void LineCircleIntersection2()
+        {
+            var pts = Intersect.LineCircleXY(new Line(0, 1, 10, 1), new Circle(1, new Vector(5, 0)));
+
+            Assert.AreEqual(1, pts.Length);
+            Assert.AreEqual(new Vector(5, 1), pts[0]);
+        }
+
+        [TestMethod]
+        public void LineCircleIntersection3()
+        {
+            var pts = Intersect.LineCircleXY(new Line(0, 1, 10, 1), new Circle(2, new Vector(5, 0)));
+
+            Assert.AreEqual(2, pts.Length);
+            //Assert.AreEqual(new Vector(5, 1), pts[0]);
+        }
+
+        [TestMethod]
+        public void CircleCircleIntersection()
+        {
+            Vector[] pts = Intersect.CircleCircleXY(new Vector(-1,0), 3, new Vector(1,0), 3);
+
+            Assert.AreEqual(2, pts.Length);
+        }
+
+        [TestMethod]
+        public void CircleInsideCircleIntersection()
+        {
+            Vector[] pts = Intersect.CircleCircleXY(new Vector(), 3, new Vector(), 4);
+
+            Assert.AreEqual(0, pts.Length);
+        }
     }
 }

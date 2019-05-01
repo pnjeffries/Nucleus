@@ -167,7 +167,9 @@ namespace Nucleus.Model
         /// <returns></returns>
         public override string ToString()
         {
-            return Description;
+            var result = Description;
+            if (result != null) return result;
+            else return base.ToString();
         }
 
         /// <summary>

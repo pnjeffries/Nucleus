@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace Nucleus.DDTree
 {
-    public abstract class NDTree<T>
+    /// <summary>
+    /// An NDTree
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <remarks>Never finished.  Marked internal until complete.</remarks>
+    [Serializable]
+    internal abstract class NDTree<T>
     {
 
     }

@@ -10,7 +10,9 @@ namespace Nucleus.DDTree
     /// <summary>
     /// A node in an NDTree
     /// </summary>
-    public class NDTreeNode<T>
+    /// <remarks>Never finished.  Marked internal until complete.</remarks>
+    [Serializable]
+    internal class NDTreeNode<T>
     {
         #region Properties
 
@@ -34,7 +36,7 @@ namespace Nucleus.DDTree
             set { _Children = value; }
         }
 
-        private DDTree<T> _Tree; //The tree this node belongs to
+        private NDTree<T> _Tree; //The tree this node belongs to
 
         /// <summary>
         /// The dimensional axis along which the space in this node is divided.

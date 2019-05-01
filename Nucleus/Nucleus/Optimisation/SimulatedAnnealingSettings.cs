@@ -10,6 +10,7 @@ namespace Nucleus.Optimisation
     /// <summary>
     /// Class to contain parameters used in simulated annealing optimisation methods
     /// </summary>
+    [Serializable]
     public class SimulatedAnnealingSettings : OptimisationSettings
     {
         #region Properties

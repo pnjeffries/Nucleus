@@ -67,6 +67,27 @@ namespace Nucleus.Base
             return result;
         }
 
+        /// <summary>
+        /// Write the current values of this parameter collection
+        /// to a string in INI format
+        /// </summary>
+        /// <returns></returns>
+        public string ToINI()
+        {
+            var sb = new StringBuilder();
+            var groups = this.GetGroupedParameters();
+            foreach (var kvp in groups)
+            {
+                sb.Append("[").Append(kvp.Key).AppendLine("]");
+                foreach (var param in kvp.Value)
+                {
+                    sb.Append(param.Name).Append("=").AppendLine(param.GetValue().ToString());
+                    //TODO: Units?
+                }
+            }
+            return sb.ToString();
+        }
+
         #endregion
     }
 }

@@ -432,7 +432,7 @@ namespace Nucleus.Geometry
             double dY = pt1.Y - pt0.Y;
             double distSqd = dX * dX + dY * dY;
             double rsSqd = (r0 + r1).Squared();
-            if (distSqd > rsSqd && distSqd <= (r0 - r1).Squared()) // No intersections
+            if (distSqd > rsSqd || distSqd <= (r0 - r1).Squared()) // No intersections
                 return new Vector[] { };
             else if (distSqd == rsSqd) // One intersection
                 return new Vector[] { pt0.Interpolate(pt1, 0.5) };

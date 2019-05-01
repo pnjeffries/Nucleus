@@ -826,5 +826,7 @@ namespace Nucleus.Extensions
             return str.Substring(startIndex, index - startIndex);
         }
 
+
+
     }
 }

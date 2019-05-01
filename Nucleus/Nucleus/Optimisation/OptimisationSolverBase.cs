@@ -1,4 +1,5 @@
-﻿using Nucleus.Extensions;
+﻿using Nucleus.Base;
+using Nucleus.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Nucleus.Optimisation
     /// Abstract base class for optimisation solvers
     /// </summary>
     [Serializable]
-    public abstract class OptimisationSolverBase<TPhenotype, TSettings>
+    public abstract class OptimisationSolverBase<TPhenotype, TSettings> : NotifyPropertyChangedBase
         where TSettings : OptimisationSettings
     {
         #region Properties
