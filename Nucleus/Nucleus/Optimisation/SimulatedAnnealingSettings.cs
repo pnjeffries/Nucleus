@@ -26,6 +26,23 @@ namespace Nucleus.Optimisation
         /// </summary>
         public Random RNG { get { return _RNG; } }
 
+
+        /// <summary>
+        /// Private backing member variable for the StartingTemperature property
+        /// </summary>
+        private double _StartingTemperature = 1.0;
+
+        /// <summary>
+        /// The value of the temperature at the start of the process. 
+        /// </summary>
+        [AutoUI(1900)]
+        public double StartingTemperature
+        {
+            get { return _StartingTemperature; }
+            set { ChangeProperty(ref _StartingTemperature, value); }
+        }
+
+
         /// <summary>
         /// Private backing field for MaxGenerations property
         /// </summary>
@@ -41,6 +58,8 @@ namespace Nucleus.Optimisation
             get { return _MaxIterations; }
             set { ChangeProperty(ref _MaxIterations, value); }
         }
+
+       
 
         /// <summary>
         /// Private backing field for MaxGenerations property

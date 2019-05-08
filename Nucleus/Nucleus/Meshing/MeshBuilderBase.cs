@@ -718,98 +718,101 @@ namespace Nucleus.Meshing
             Vector offset = new Vector())
         {
             Plane plane = region.Plane;
-            Vector[] perimeter = region.Perimeter.Facet(FacetAngle);
-            Vector[] mappedPerimeter = perimeter.GlobalToLocal(plane);
-            if (autoFlip && mappedPerimeter.ClockwiseTestSum() > 0)
+            if (plane != null)
             {
-                Array.Reverse(perimeter);
-                Array.Reverse(mappedPerimeter);
-            }
-            VertexCollection vertices = new VertexCollection(mappedPerimeter);
-            List<Vector[]> voidPerimeters = null;
-            List<Vector[]> mappedVoidPerimeters = null;
-            if (region.HasVoids) //Voids if present
-            {
-                voidPerimeters = new List<Vector[]>();
-                mappedVoidPerimeters = new List<Vector[]>();
-                foreach (Curve voidCrv in region.Voids)
-                {
-                    Vector[] voidPerimeter = voidCrv.Facet(FacetAngle);
-                    voidPerimeters.Add(voidPerimeter);
-                    Vector[] mappedVoidPerimeter = voidPerimeter.GlobalToLocal(plane);
-                    mappedVoidPerimeters.Add(mappedVoidPerimeter);
-                    foreach (Vector pt in mappedVoidPerimeter) vertices.Add(new Vertex(pt));
-                }
-            }
-
-            MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(vertices);
-            faces.CullOutsideXY(mappedPerimeter);
-
-            if (mappedVoidPerimeters != null)
-            {
-                foreach (Vector[] voidPerimeter in mappedVoidPerimeters)
-                {
-                    faces.CullInsideXY(voidPerimeter);
-                }
-            }
-            
-            vertices.MoveLocalToGlobal(plane);
-            if (offset.IsValidNonZero())
-            {
-                vertices.Move(offset);
-            }
-
-            bool usePath = path.IsValid();
-            if (topOffset != 0 || usePath)
-            {
-                Vector topMove;
-                if (usePath)
-                    topMove = path;
-                else
-                    topMove = plane.Z * topOffset;
-
-                //topMove += offset;
-
-                vertices.Move(topMove);
-                perimeter = perimeter.Move(topMove + offset);
-
-                if (voidPerimeters != null)
-                {
-                    for (int i = 0; i < voidPerimeters.Count; i++)
-                    {
-                        voidPerimeters[i] = voidPerimeters[i].Move(topMove);
-                    }
-                }
-            }
-            Mesh mesh = new Mesh(vertices, faces);
-
-            if (autoFlip)
-            {
-                if (!mesh.AlignNormals(Vector.UnitZ) ^ (Vector.UnitZ.Dot(path) < 0))
+                Vector[] perimeter = region.Perimeter.Facet(FacetAngle);
+                Vector[] mappedPerimeter = perimeter.GlobalToLocal(plane);
+                if (autoFlip && mappedPerimeter.ClockwiseTestSum() > 0)
                 {
                     Array.Reverse(perimeter);
+                    Array.Reverse(mappedPerimeter);
                 }
-            }
-
-            AddMesh(mesh);
-            if (thickness != 0 || usePath)
-            {
-                Vector bottomMove;
-                if (usePath)
-                    bottomMove = -path;
-                else
-                    bottomMove = plane.Z * -thickness;
-
-                mesh.Move(bottomMove);
-                AddMesh(mesh);
-                Vector[] bottomPerimeter = perimeter.Move(bottomMove);
-                FillBetween(perimeter, bottomPerimeter, false, true);
-
-                if (voidPerimeters != null)
+                VertexCollection vertices = new VertexCollection(mappedPerimeter);
+                List<Vector[]> voidPerimeters = null;
+                List<Vector[]> mappedVoidPerimeters = null;
+                if (region.HasVoids) //Voids if present
                 {
-                    foreach (Vector[] voidPerimeter in voidPerimeters)
+                    voidPerimeters = new List<Vector[]>();
+                    mappedVoidPerimeters = new List<Vector[]>();
+                    foreach (Curve voidCrv in region.Voids)
                     {
-                        FillBetween(voidPerimeter, voidPerimeter.Move(bottomMove));
+                        Vector[] voidPerimeter = voidCrv.Facet(FacetAngle);
+                        voidPerimeters.Add(voidPerimeter);
+                        Vector[] mappedVoidPerimeter = voidPerimeter.GlobalToLocal(plane);
+                        mappedVoidPerimeters.Add(mappedVoidPerimeter);
+                        foreach (Vector pt in mappedVoidPerimeter) vertices.Add(new Vertex(pt));
+                    }
+                }
+
+                MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(vertices);
+                faces.CullOutsideXY(mappedPerimeter);
+
+                if (mappedVoidPerimeters != null)
+                {
+                    foreach (Vector[] voidPerimeter in mappedVoidPerimeters)
+                    {
+                        faces.CullInsideXY(voidPerimeter);
+                    }
+                }
+
+                vertices.MoveLocalToGlobal(plane);
+                if (offset.IsValidNonZero())
+                {
+                    vertices.Move(offset);
+                }
+
+                bool usePath = path.IsValid();
+                if (topOffset != 0 || usePath)
+                {
+                    Vector topMove;
+                    if (usePath)
+                        topMove = path;
+                    else
+                        topMove = plane.Z * topOffset;
+
+                    //topMove += offset;
+
+                    vertices.Move(topMove);
+                    perimeter = perimeter.Move(topMove + offset);
+
+                    if (voidPerimeters != null)
+                    {
+                        for (int i = 0; i < voidPerimeters.Count; i++)
+                        {
+                            voidPerimeters[i] = voidPerimeters[i].Move(topMove);
+                        }
+                    }
+                }
+                Mesh mesh = new Mesh(vertices, faces);
+
+                if (autoFlip)
+                {
+                    if (!mesh.AlignNormals(Vector.UnitZ) ^ (Vector.UnitZ.Dot(path) < 0))
+                    {
+                        Array.Reverse(perimeter);
+                    }
+                }
+
+                AddMesh(mesh);
+                if (thickness != 0 || usePath)
+                {
+                    Vector bottomMove;
+                    if (usePath)
+                        bottomMove = -path;
+                    else
+                        bottomMove = plane.Z * -thickness;
+
+                    mesh.Move(bottomMove);
+                    AddMesh(mesh);
+                    Vector[] bottomPerimeter = perimeter.Move(bottomMove);
+                    FillBetween(perimeter, bottomPerimeter, false, true);
+
+                    if (voidPerimeters != null)
+                    {
+                        foreach (Vector[] voidPerimeter in voidPerimeters)
+                        {
+                            FillBetween(voidPerimeter, voidPerimeter.Move(bottomMove));
+                        }
                     }
                 }
             }

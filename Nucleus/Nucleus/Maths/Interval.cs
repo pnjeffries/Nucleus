@@ -213,6 +213,25 @@ namespace Nucleus.Maths
             End = max;
         }
 
+        /// <summary>
+        /// Constructor creating an interval surrounding the specified set
+        /// of values.  The maximum and minimum will be automatically determined
+        /// </summary>
+        /// <param name="list"></param>
+        public Interval(IList<double> list)
+        {
+            double min = list[0];
+            double max = list[1];
+            for (int i = 0; i < list.Count; i++)
+            {
+                double val = list[i];
+                if (val < min) min = val;
+                if (val > max) max = val;
+            }
+            Start = min;
+            End = max;
+        }
+
         #endregion
 
         #region Methods

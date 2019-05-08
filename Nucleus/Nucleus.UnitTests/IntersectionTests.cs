@@ -56,6 +56,14 @@ namespace Nucleus.UnitTests
         }
 
         [TestMethod]
+        public void LineLineIntersection()
+        {
+            var pt = Intersect.LineLineXY(new Line(0, 0, 1, 0), new Line(0, 0, 1, 0), true);
+
+            Assert.AreEqual(false, pt.IsValid());
+        }
+
+        [TestMethod]
         public void LineCircleIntersection()
         {
             var pts = Intersect.LineCircleXY(new Line(0, 0, 10, 0), new Circle(1, new Vector(5, 0)));
@@ -84,6 +92,14 @@ namespace Nucleus.UnitTests
         }
 
         [TestMethod]
+        public void LineCircleIntersection4()
+        {
+            var pts = Intersect.LineCircleXY(new Line(-42, -42, -42, -29.7061), new Circle(10, new Vector(-42, -42)));
+
+            Assert.AreEqual(2, pts.Length);
+        }
+
+        [TestMethod]
         public void CircleCircleIntersection()
         {
             Vector[] pts = Intersect.CircleCircleXY(new Vector(-1,0), 3, new Vector(1,0), 3);
@@ -97,6 +113,27 @@ namespace Nucleus.UnitTests
             Vector[] pts = Intersect.CircleCircleXY(new Vector(), 3, new Vector(), 4);
 
             Assert.AreEqual(0, pts.Length);
+        }
+
+        [TestMethod]
+        public void LineInPolygon()
+        {
+            var line = new Line(new Vector(50, 34, 0), new Vector(21.1496, 34, 0));
+            var vertices = new List<Vertex>()
+            {
+                new Vertex( 17.5636795786842 , -50 , 0),
+                new Vertex( 50 , -50 , 0),
+                new Vertex( 50 , -50 , 0),
+                new Vertex( 50 , 50 , 0),
+                new Vertex( 50 , 50 , 0),
+                new Vertex( 2.57214422843186 , 50 , 0),
+                new Vertex( 2.57214422843186 , 50 , 0),
+                new Vertex( 17.5636795786842 , -50 , 0)
+            };
+            var curves = Intersect.LineInPolygonXY(line, vertices);
+
+            Assert.AreEqual(1, curves.Count);
+            Assert.AreEqual(line.Length, curves.TotalLength());
         }
     }
 }

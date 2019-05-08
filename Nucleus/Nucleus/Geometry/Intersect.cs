@@ -349,20 +349,29 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Find the intersection(s) between a curve and an infinite line on the XY plane
+        /// Find the intersection(s) between a curve and an infinite line on the XY plane.
+        /// Returns the list of intersection parameters on the curve.
         /// </summary>
-        /// <param name="curve"></param>
-        /// <param name="lnPt"></param>
-        /// <param name="lnDir"></param>
+        /// <param name="curve">The curve</param>
+        /// <param name="lnPt">The origin of the line</param>
+        /// <param name="lnDir">The direction of the line</param>
+        /// <param name="result">The collection to which results should be added.  
+        /// If null, a new collection will be instantiated and returned.</param>
+        /// <param name="domainAdjustMin">The start parameter of the curve will be adjusted
+        /// to this value in the returned parameters.</param>
+        /// <param name="domainAdjustMax">The end parameter of the curve will be adjusted 
+        /// to this value in the returned parameters.</param>
+        /// <param name="lineBounded">If true, intersections outside of the bounds of the line
+        /// running from the origin point to the end of the direction vector will be ignored.</param>
         /// <returns>The list of intersection parameters on the curve</returns>
-        public static IList<double> CurveLineXY(Curve curve, Vector lnPt, Vector lnDir, IList<double> result = null, double domainAdjustMin = 0, double domainAdjustMax = 1)
+        public static IList<double> CurveLineXY(Curve curve, Vector lnPt, Vector lnDir, IList<double> result = null, double domainAdjustMin = 0, double domainAdjustMax = 1, bool lineBounded = false)
         {
             if (result == null) result = new List<double>();
             if (curve is Line)
             {
                 double t0 = -1, t1 = -1;
                 LineLineXY(curve.StartPoint, curve.EndPoint - curve.StartPoint, lnPt, lnDir, ref t0, ref t1);
-                if (t0 >= 0 && t0 <= 1)
+                if (t0 >= 0 && t0 <= 1 && (!lineBounded || t1 >= 0 && t1 <= 1))
                 {
                     double t = (domainAdjustMin + t0 * (domainAdjustMax - domainAdjustMin));
                     result.Add(t);
@@ -371,7 +380,7 @@ namespace Nucleus.Geometry
             else if (curve is Arc)
             {
                 var arc = (Arc)curve;
-                Vector[] intPts = LineArcXY(lnPt, lnDir, arc);
+                Vector[] intPts = LineArcXY(lnPt, lnDir, arc, lineBounded);
                 foreach (var intPt in intPts)
                 {
                     double t = arc.ClosestParameter(intPt);
@@ -392,7 +401,7 @@ namespace Nucleus.Geometry
                     Vector sPt = v0.Position;
                     Vector ePt = v1.Position;
                     LineLineXY(sPt, ePt - sPt, lnPt, lnDir, ref t0, ref t1);
-                    if (t0 >= 0 && t0 <= 1)
+                    if (t0 >= 0 && t0 <= 1 && (!lineBounded || t1 >= 0 && t1 <= 1))
                     {
                         double t = (tMin + t0 * (tMax - tMin));
                         result.Add(t);
@@ -408,7 +417,7 @@ namespace Nucleus.Geometry
                     {
                         double tMin = domainAdjustMin + pCrv.ParameterAt(subCrv.Start) * (domainAdjustMax - domainAdjustMin);
                         double tMax = domainAdjustMin + pCrv.ParameterAt(subCrv.End) * (domainAdjustMax - domainAdjustMin);
-                        CurveLineXY(subCrv, lnPt, lnDir, result, tMin, tMax);
+                        CurveLineXY(subCrv, lnPt, lnDir, result, tMin, tMax, lineBounded);
                     }
                 }
             }
@@ -1027,11 +1036,28 @@ namespace Nucleus.Geometry
             if (polygon.PolygonContainmentXY(line.StartPoint))
             {
                 if (intersections.Count == 0) result.Add(line); // Input line is wholly inside polygon
-                else
+                else if (!line.StartPoint.Equals(intersections.Values[0])) //Check the start point isn't *on* the intersection
                 {
                     result.Add(new Line(line.StartPoint, intersections.Values[0]));
                     j += 1;
                 }
+                else if (intersections.Count > 1)
+                {
+                    var testPt = line.StartPoint.Interpolate(intersections.Values[1], 0.5); // Test midway to the next intersection
+                    if (!polygon.PolygonContainmentXY(testPt)) // Check if the line starts on the edge but heads outside
+                    {
+                        j += 1; //Skip to next segment
+                    }
+                }
+                else
+                {
+                    // Does the line start on the edge but then the whole of the rest of the line is outside?
+                    if (!polygon.PolygonContainmentXY(line.EndPoint))
+                    {
+                        j += 1; //Skip to end
+                    }
+                }
+                
             }
             for (int i = j; i < intersections.Count; i += 2)
             {

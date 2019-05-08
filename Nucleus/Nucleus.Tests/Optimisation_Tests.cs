@@ -20,7 +20,7 @@ namespace Nucleus.Tests
             var settings = new GeneticAlgorithmSettings()
             {
                 Objective = OptimisationObjective.Minimise,
-                MaxGenerations = 10000,
+                MaxGenerations = 1000,
                  WildcardRate = 0.1,
                  InitialBoost = 5,
             };
@@ -35,7 +35,7 @@ namespace Nucleus.Tests
             var settings = new SimulatedAnnealingSettings()
             {
                 Objective = OptimisationObjective.Minimise,
-                MaxIterations = 10000
+                MaxIterations = 50000
             };
             var solver = new TestAnnealingSolver();
             solver.Settings = settings;
@@ -162,6 +162,13 @@ namespace Nucleus.Tests
                         result[i] = current[i];
                 }
                 return result;
+            }
+
+            public override void StoreNewBest(double[] newBest)
+            {
+                base.StoreNewBest(newBest);
+                double value = CalculateValue(Best);
+                Core.Print("Iteration " + Iteration + ": " + Best[0] + " ^ " + Best[1] + " = " + value);
             }
         }
     }

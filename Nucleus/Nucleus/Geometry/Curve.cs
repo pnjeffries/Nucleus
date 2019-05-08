@@ -166,13 +166,31 @@ namespace Nucleus.Geometry
         /// between vertices.</remarks>
         public virtual Vector PointAt(double t)
         {
+            double tSpan;
+            int span = SpanAt(t, out tSpan);
+            return PointAt(span, tSpan);
+        }
+
+        /// <summary>
+        /// Returns the span index at the specified parameter along this curve
+        /// </summary>
+        /// <param name="t">A normalised parameter defining a point along this curve.
+        /// Note that parameter-space is not necessarily uniform and does not equate to a normalised length.
+        /// 0 = curve start, 1 = curve end.
+        /// For open curves, parameters outside the range 0-1 will be invalid.
+        /// For closed curves, parameters outside this range will 'wrap'.</param>
+        /// <param name="tSpan">Output.  The normalised parameter along the span.</param>
+        /// <returns></returns>
+        public int SpanAt(double t, out double tSpan)
+        {
             if (Closed) t = t % 1.0;
 
             //Calculate span
-            double tSpan = t * SegmentCount;
+            tSpan = t * SegmentCount;
             int span = (int)Math.Floor(tSpan);
             tSpan = tSpan % 1.0; //Position in span
-            return PointAt(span, tSpan);
+
+            return span;
         }
 
         /// <summary>
@@ -249,6 +267,21 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Returns the parameter at the specified position on the specified span
+        /// </summary>
+        /// <param name="span">The span index</param>
+        /// <param name="tSpan">The normalised parameter along the specified span, where
+        /// 0 = span start and 1 = span end.</param>
+        /// <returns></returns>
+        public double ParameterAt(int span, double tSpan)
+        {
+            int segCount = SegmentCount;
+            double spanDom = 1.0 / segCount;
+            if (Closed) span = span % segCount;
+            return (span + tSpan) * spanDom;
+        }
+
+        /// <summary>
         /// Get the curve parameter at the vertex at the specified index
         /// </summary>
         /// <param name="vertexIndex"></param>
@@ -263,7 +296,8 @@ namespace Nucleus.Geometry
         /// If the returned parameter falls outside the range 0-1, the specified
         /// length does not fall within the domain of the curve.
         /// </summary>
-        /// <param name="length">The distance along the curve from the start of the curve to the point in question</param>
+        /// <param name="length">The distance along the curve from the start of the curve 
+        /// to the point in question</param>
         /// <returns>A curve parameter</returns>
         public virtual double ParameterAt(double length)
         {

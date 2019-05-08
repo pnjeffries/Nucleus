@@ -229,24 +229,21 @@ namespace Nucleus.Geometry
 
         /// <summary>
         /// Calculate the surface area of this mesh's faces.
-        /// NOTE: CENTROID CALCULATION NOT CURRENTLY IMPLEMENTED
         /// </summary>
         /// <param name="centroid"></param>
         /// <returns></returns>
         public override double CalculateArea(out Vector centroid)
         {
             double result = 0;
+            centroid = new Vector();
             foreach (MeshFace face in Faces)
             {
-                double faceArea = face.CalculateArea();
+                Vector faceCentroid;
+                double faceArea = face.CalculateArea(out faceCentroid);
                 result += faceArea;
-                //TODO: Implement centroid calc
+                centroid += faceCentroid * faceArea;
             }
-
-            throw new NotImplementedException(); // Just so I don't forget!
-
-            centroid = Vector.Unset; // TEMP!
-
+            centroid /= result;
             return result;
         }
 

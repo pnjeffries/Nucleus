@@ -869,6 +869,32 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Calculate the surface area of this face using the half cross-product formula.
+        /// For quad and n-gon faces, the face will be treated as a triangle fan around the first vertex
+        /// (i.e. it is assumed to be non-reentrant).  Also calculates the face centroid.
+        /// </summary>
+        /// <returns></returns>
+        public double CalculateArea(out Vector centroid)
+        {
+            double result = 0;
+            Vertex vA = this[0];
+            if (Count == 0) centroid = Vector.Unset;
+            else centroid = new Vector();
+            for (int i = 0; i < Count - 2; i++)
+            {
+                Vertex vB = this[i + 1];
+                Vertex vC = this[i + 2];
+                Vector AB = vB.Position - vA.Position;
+                Vector AC = vC.Position - vA.Position;
+                double area = (AB.Cross(AC)).Magnitude() / 2;
+                result += area;
+                centroid += area * (vA.Position + vB.Position + vC.Position) / 3;
+            }
+            centroid /= result;
+            return result;
+        }
+
+        /// <summary>
         /// Calculate the normal vector for this face
         /// </summary>
         /// <returns></returns>

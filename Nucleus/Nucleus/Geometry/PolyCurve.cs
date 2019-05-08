@@ -65,6 +65,8 @@ namespace Nucleus.Geometry
         /// Is the definition of this shape valid?
         /// i.e. does it have the correct number of vertices, are all parameters within
         /// acceptable limits, etc.
+        /// Checks for validity of all subcurves and that the end of each curve is within tolerance
+        /// of the start of the next.
         /// </summary>
         public override bool IsValid
         {
@@ -72,9 +74,14 @@ namespace Nucleus.Geometry
             {
                 if (SubCurves.Count > 0)
                 {
+                    Vertex lastEnd = null;
                     foreach (Curve subCrv in SubCurves)
                     {
                         if (!subCrv.IsValid) return false;
+                        Vertex sVert = subCrv.Start;
+                        if (lastEnd != null && lastEnd.Position.ManhattenDistanceTo(sVert.Position) > Tolerance.Distance * 2)
+                            return false;
+                        lastEnd = subCrv.End;
                     }
                     return true;
                 }
@@ -1027,6 +1034,25 @@ namespace Nucleus.Geometry
                 result[i] = SubCurves[i].FastDuplicate();
             }
             return result;
+        }
+
+
+        /// <summary>
+        /// Walk the sub-curves of this polycurve, returning the next sub-curve along from
+        /// the specified start parameter before the specified end parameter.  This enables
+        /// sub-curves to be extracted and processed one-by-one.
+        /// </summary>
+        /// <param name="tStart">The start parameter</param>
+        /// <param name="tEnd">The end parameter</param>
+        /// <param name="subCrvDomain"></param>
+        /// <returns></returns>
+        public Curve WalkSubCurves(double tStart, double tEnd, out Interval subCrvDomain)
+        {
+            double tSpan;
+            int span = SpanAt(tStart, out tSpan);
+
+            //TODO
+            throw new NotImplementedException();
         }
 
         #endregion

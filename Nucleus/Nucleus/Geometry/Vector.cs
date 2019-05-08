@@ -984,9 +984,9 @@ namespace Nucleus.Geometry
         /// <returns></returns>
         public bool IsParallelTo(Vector other)
         {
-            return (Y * other.Z - Z * other.Y == 0 &&
-                Z * other.X - X * other.Z == 0 &&
-                X * other.Y - Y * other.X == 0);
+            return ((Y * other.Z - Z * other.Y).IsTiny() &&
+                (Z * other.X - X * other.Z).IsTiny() &&
+                (X * other.Y - Y * other.X).IsTiny());
             //double checkVal = X / other.X;
             //return (checkVal == Y / other.Y && checkVal == Z / other.Z);
         }

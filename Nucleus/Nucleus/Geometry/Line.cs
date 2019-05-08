@@ -45,11 +45,15 @@ namespace Nucleus.Geometry
         /// </summary>
         public override bool Closed { get { return false; } protected set { } }
 
+        /// <summary>
+        /// Is the definition of this line valid?
+        /// i.e. does it have the correct number of vertices, is it not zero-length, etc.
+        /// </summary>
         public override bool IsValid
         {
             get
             {
-                return Vertices.Count == 2;
+                return Vertices.Count == 2 && !StartPoint.Equals(EndPoint);
             }
         }
 

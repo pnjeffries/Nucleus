@@ -109,6 +109,9 @@ namespace Nucleus.Geometry
             }
         }
 
+        /// <summary>
+        /// Is this region valid?
+        /// </summary>
         public override bool IsValid
         {
             get
@@ -244,7 +247,7 @@ namespace Nucleus.Geometry
 
         
         /// <summary>
-        /// Does the specified point fall within this region?
+        /// Does the specified point fall within this region on the XY plane?
         /// </summary>
         /// <param name="pt">The point to test</param>
         /// <returns></returns>
@@ -275,6 +278,12 @@ namespace Nucleus.Geometry
             var outerInts = Intersect.CurveLineXY(Perimeter, splitPt, splitDir).ToList();
             outerInts.Sort();
             //TODO: void intersections
+            // Commented out as not finished:
+            /*foreach (var voidCrv in Voids)
+            {
+                IList<double> voidInts = Intersect.CurveLineXY(voidCrv, splitPt, splitDir);
+            }*/
+
             if (outerInts.Count > 1)
             {
                 for (int i = 0; i < outerInts.Count; i++)
@@ -293,7 +302,7 @@ namespace Nucleus.Geometry
                             var newNewPerimeter = newPerimeter.OffsetInwards(offsets);
                             // Check offset has not inverted perimeter:
                             // TODO: Do this automatically when offsetting?
-                            if (newNewPerimeter.IsClockwiseXY() == newPerimeter.IsClockwiseXY())
+                            if (newNewPerimeter != null && newNewPerimeter.IsClockwiseXY() == newPerimeter.IsClockwiseXY())
                             {
                                 newPerimeter = newNewPerimeter;
                             }

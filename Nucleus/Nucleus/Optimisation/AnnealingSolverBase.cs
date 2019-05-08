@@ -14,6 +14,69 @@ namespace Nucleus.Optimisation
     public abstract class AnnealingSolverBase<TPhenotype> 
         : OptimisationSolverBase<TPhenotype, SimulatedAnnealingSettings>
     {
+        #region Fields
+
+        /// <summary>
+        /// The number of iterations since the last best state was found
+        /// </summary>
+        private int _SinceLastBest = 0;
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Private backing member variable for the Current property
+        /// </summary>
+        private TPhenotype _Current = default(TPhenotype);
+
+        /// <summary>
+        /// The current stae
+        /// </summary>
+        public TPhenotype Current
+        {
+            get { return _Current; }
+            set { ChangeProperty(ref _Current, value); }
+        }
+
+        /// <summary>
+        /// Backing member variable for the Best property
+        /// </summary>
+        private TPhenotype _Best;
+
+        /// <summary>
+        /// The current best state found so far
+        /// </summary>
+        public TPhenotype Best
+        {
+            get { return _Best; }
+            set { ChangeProperty(ref _Best, value); }
+        }
+
+        /// <summary>
+        /// Private backing member variable for the Iteration property
+        /// </summary>
+        private int _Iteration = 0;
+
+        /// <summary>
+        /// The number of the latest iteration performed
+        /// </summary>
+        public int Iteration
+        {
+            get { return _Iteration; }
+            set { ChangeProperty(ref _Iteration, value); }
+        }
+
+        /// <summary>
+        /// Get a boolean value indicating whether this solver has finished
+        /// </summary>
+        public bool Finished
+        {
+            get { return _Iteration >= Settings.MaxIterations; }
+        }
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -36,58 +99,107 @@ namespace Nucleus.Optimisation
         /// <returns></returns>
         public virtual TPhenotype Run()
         {
-            double temperature = 1;
-            double coolingRate = 1.0 / Settings.MaxIterations;
+            Initialise();
 
-            // Generate the initial state:
-            TPhenotype current = GeneratePhenotype();
-            double currentFitness = OverallFitness(current);
-
-            // Store the best state (to allow returning)
-            TPhenotype best = current;
-            double bestFitness = currentFitness;
-            int sinceLastBest = 0;
-
-            while (temperature > 0)
-            {
-                sinceLastBest++;
-                TPhenotype next = GenerateNext(current, temperature);
-                double nextFitness = OverallFitness(next);
-
-                if (IsFirstBetter(nextFitness, currentFitness))
-                {
-                    // New state is better - move state
-                    current = next;
-                    currentFitness = nextFitness;
-                    if (IsFirstBetter(currentFitness, bestFitness))
-                    {
-                        // New state is best so far - store
-                        best = current;
-                        bestFitness = currentFitness;
-                        sinceLastBest = 0;
-                    }
-                }
-                else if (Settings.RNG.NextDouble() < temperature)
-                {
-                    // New state is worse - but see where it goes anyway 
-                    current = next;
-                    currentFitness = nextFitness;
-
-                    // Reset to best value if stuck
-                    if (Settings.FailsBeforeReset > 0 && 
-                        sinceLastBest > Settings.FailsBeforeReset)
-                    {
-                        // Restore best option as current
-                        current = best;
-                        currentFitness = bestFitness;
-                        sinceLastBest = 0;
-                    }
-                }
-
-                temperature -= coolingRate;
+            while (!Finished)
+            { 
+                Iterate();
             }
 
-            return best;
+            return Best;
+        }
+
+        /// <summary>
+        /// Set up the solver to begin a new optimisation run.
+        /// This should be called before any iterations are performed.
+        /// </summary>
+        public virtual void Initialise()
+        {
+            // Generate the initial state:
+            Current = GeneratePhenotype();
+            StoreNewBest(Current);
+        }
+
+        /// <summary>
+        /// Set up the solver to begin a new optimisation run.
+        /// This should be called before any iterations are performed.
+        /// </summary>
+        /// <param name="startState">The state to be used as the starting
+        /// point of the optimisation.</param>
+        public virtual void Initialise(TPhenotype startState)
+        {
+            Current = startState;
+            StoreNewBest(Current);
+        }
+
+        /// <summary>
+        /// Perform the next iteration of the solution
+        /// </summary>
+        /// <returns>The new state generated and tested during this iteration</returns>
+        public virtual TPhenotype Iterate()
+        {
+            // Calculate new temperature
+            double temperature = 1.0 - ((double)Iteration) / Settings.MaxIterations;
+
+            // Advance iteration counters
+            Iteration++;
+            _SinceLastBest++;
+
+            // Extract fitness function scores
+            double currentFitness = OverallFitness(Current);
+            double bestFitness = OverallFitness(Best);
+
+            TPhenotype next = GenerateNext(Current, temperature);
+            double nextFitness = OverallFitness(next);
+
+            if (IsFirstBetter(nextFitness, currentFitness))
+            {
+                // New state is better - move state
+                Current = next;
+                currentFitness = nextFitness;
+                if (IsFirstBetter(currentFitness, bestFitness))
+                {
+                    // New state is best so far - store
+                    StoreNewBest(Current);
+                }
+            }
+            else if (Settings.RNG.NextDouble() < temperature)
+            {
+                // New state is worse - but see where it goes anyway 
+                Current = next;
+                currentFitness = nextFitness;
+
+                // Reset to best value if stuck
+                if (Settings.FailsBeforeReset > 0 &&
+                    _SinceLastBest > Settings.FailsBeforeReset)
+                {
+                    // Restore best option as current
+                    ResetToBest();
+                }
+            }
+
+            return next;
+        }
+
+        /// <summary>
+        /// Update the best state with a newly discovered variable.
+        /// May be overridden to report on this.
+        /// </summary>
+        /// <param name="newBest"></param>
+        public virtual void StoreNewBest(TPhenotype newBest)
+        {
+            Best = newBest;
+            _SinceLastBest = 0;
+        }
+
+        /// <summary>
+        /// Reset the current state to the last best found.
+        /// May be overridden to report on this.
+        /// </summary>
+        public virtual void ResetToBest()
+        {
+            Current = Best;
+            _SinceLastBest = 0;
         }
 
         /// <summary>
