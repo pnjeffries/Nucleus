@@ -1042,30 +1042,96 @@ namespace Nucleus.Geometry
         /// the specified start parameter before the specified end parameter.  This enables
         /// sub-curves to be extracted and processed one-by-one.
         /// </summary>
-        /// <param name="tStart">The start parameter</param>
+        /// <param name="tStart">The start parameter.  This will be modified to 
+        /// jump to the end of the returned curve.</param>
         /// <param name="tEnd">The end parameter</param>
-        /// <param name="subCrvDomain"></param>
+        /// <param name="subCrvDomain">The equivalent domain of the sub-curve between tStart and tEnd
+        /// on the parent polycurve.</param>
         /// <returns></returns>
-        public Curve WalkSubCurves(double tStart, double tEnd, out Interval subCrvDomain)
+        public Curve WalkSubCurves(ref double tStart, double tEnd, out Interval subCrvDomain)
         {
             double tSpan;
             int span = SpanAt(tStart, out tSpan);
 
-            //TODO
+            double tSubStart;
+            int subSpan;
+            var nextCrv = SubCurveAt(tStart, out tSubStart, out subSpan);
+
+            if (nextCrv != null)
+            {
+                double tSubEnd = (span - subSpan + nextCrv.SegmentCount) / (double)SegmentCount;
+                // TODO
+            }
+
+            // TODO
             throw new NotImplementedException();
         }
 
-        #endregion
+        /// <summary>
+        /// Get the sub-curve at the specified parameter along this PolyCurve
+        /// </summary>
+        /// <param name="t">A normalised parameter along this PolyCurve, where
+        /// 0 = curve start and 1 = curve end.  Note that the domain in between
+        /// does not necessarily scale in proportion to length.</param>
+        /// <param name="tSub">Output.  The normalised parameter along the sub-curve.</param>
+        /// <param name="subSpan">Output.  The span index of the point on the sub-curve.</param>
+        /// <param name="tSubSpan">Output.  The normalised parameter along the sub-curve span.</param>
+        /// <returns></returns>
+        public Curve SubCurveAt(double t, out double tSub, out int subSpan, out double tSubSpan)
+        {
+            subSpan = SpanAt(t, out tSubSpan);
+            foreach (Curve subCrv in SubCurves)
+            {
+                int segCount = subCrv.SegmentCount;
+                if (segCount > subSpan)
+                {
+                    tSub = subCrv.ParameterAt(subSpan, tSubSpan);
 
-        #region Static Methods
+                    return subCrv;
+                }
+                subSpan -= segCount;
+            }
+            tSub = double.NaN;
+            return null;
+        }
 
         /// <summary>
-        /// Generates a rectangular polycurve on the XY plane centred on the origin
+        /// Get the sub-curve at the specified parameter along this PolyCurve
         /// </summary>
-        /// <param name="depth">The depth of the rectangle</param>
-        /// <param name="width">The width of the rectangle</param>
+        /// <param name="t">A normalised parameter along this PolyCurve, where
+        /// 0 = curve start and 1 = curve end.  Note that the domain in between
+        /// does not necessarily scale in proportion to length.</param>
+        /// <param name="tSub">Output.  The normalised parameter along the sub-curve.</param>
+        /// <param name="subSpan">Output.  The span index of the point on the sub-curve.</param>
         /// <returns></returns>
-        public static PolyCurve Rectangle(double depth, double width, double cornerRadius = 0.0)
+        public Curve SubCurveAt(double t, out double tSub, out int subSpan)
+        {
+            double tSubSpan;
+            return SubCurveAt(t, out tSub, out subSpan, out tSubSpan);
+        }
+
+        /// <summary>
+        /// Get the parameter domain of the specified sub-curve along this PolyCurve.
+        /// The curve in question must be a sub-curve of this PolyCurve already.
+        /// </summary>
+        /// <param name="subCurve"></param>
+        /// <returns></returns>
+        public Interval SubCurveDomain(Curve subCurve)
+        {
+
+        }
+
+            #endregion
+
+            #region Static Methods
+
+            /// <summary>
+            /// Generates a rectangular polycurve on the XY plane centred on the origin
+            /// </summary>
+            /// <param name="depth">The depth of the rectangle</param>
+            /// <param name="width">The width of the rectangle</param>
+            /// <returns></returns>
+            public static PolyCurve Rectangle(double depth, double width, double cornerRadius = 0.0)
         {
             cornerRadius = Math.Max(cornerRadius, 0.0);
             double x = width / 2;

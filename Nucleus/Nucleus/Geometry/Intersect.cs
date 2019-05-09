@@ -999,6 +999,82 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find the section(s) of a line which lie(s) inside the specified polygon,
+        /// expressed as parameter domains along the line.
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="polygon"></param>
+        /// <returns></returns>
+        public static IList<Interval> LineDomainsInPolygonXY(Line line, IList<Vertex> polygon, IList<Interval> result = null)
+        {
+            if (result == null) result = new List<Interval>();
+            double tolerance = Tolerance.Distance;
+            var intersections = new SortedList<double, Vector>();
+
+            Vector ptL = line.StartPoint;
+            Vector vL = line.EndPoint - ptL;
+
+            for (int i = 0; i < polygon.Count; i++) // Loop through polygon's edges
+            {
+                Vertex vP0 = polygon[i];
+                Vertex vP1 = polygon.GetWrapped(i + 1);
+                Vector ptP = vP0.Position;
+                Vector vP = vP1.Position - ptP;
+                if (!vP.IsZero())
+                {
+                    double t0 = 0;
+                    double t1 = 0;
+                    Vector iPt = LineLineXY(ptL, vL, ptP, vP, ref t0, ref t1); // Find infinite line intersection
+                    if (iPt.IsValid() && t0 >= -tolerance && t0 <= 1 + tolerance && t1 >= -tolerance && t1 <= 1 + tolerance)
+                    {
+                        if (intersections.ContainsKey(t0)) intersections.Remove(t0); //if we have two intersections at the same point ignore both of them!
+                        else intersections.Add(t0, iPt);
+                    }
+                }
+            }
+
+            int j = 0;
+            if (polygon.PolygonContainmentXY(line.StartPoint))
+            {
+                if (intersections.Count == 0) result.Add(new Interval(0,1)); // Input line is wholly inside polygon
+                else if (!line.StartPoint.Equals(intersections.Values[0])) //Check the start point isn't *on* the intersection
+                {
+                    result.Add(new Interval(0, intersections.Keys[0]));//new Line(line.StartPoint, intersections.Values[0]));
+                    j += 1;
+                }
+                else if (intersections.Count > 1)
+                {
+                    var testPt = line.StartPoint.Interpolate(intersections.Values[1], 0.5); // Test midway to the next intersection
+                    if (!polygon.PolygonContainmentXY(testPt)) // Check if the line starts on the edge but heads outside
+                    {
+                        j += 1; //Skip to next segment
+                    }
+                }
+                else
+                {
+                    // Does the line start on the edge but then the whole of the rest of the line is outside?
+                    if (!polygon.PolygonContainmentXY(line.EndPoint))
+                    {
+                        j += 1; //Skip to end
+                    }
+                }
+
+            }
+            for (int i = j; i < intersections.Count; i += 2)
+            {
+                double tEnd;
+                if (i + 1 < intersections.Count) tEnd = intersections.Keys[i + 1];
+                else tEnd = 1.0;
+
+                result.Add(new Interval(intersections.Keys[i], tEnd));//new Line(intersections.Values[i], endPt));
+            }
+
+            return result;
+        }
+
+
+
+        /// <summary>
         /// Find the section(s) of a line which lie(s) inside the specified polygon
         /// </summary>
         /// <param name="line"></param>

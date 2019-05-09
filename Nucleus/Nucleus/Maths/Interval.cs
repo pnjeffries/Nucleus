@@ -414,6 +414,21 @@ namespace Nucleus.Maths
         }
 
         /// <summary>
+        /// Does this interval entirely or partiall include any other 
+        /// in the specified list?
+        /// </summary>
+        /// <param name="others"></param>
+        /// <returns></returns>
+        public bool Overlaps(IList<Interval> others)
+        {
+            foreach (var interval in others)
+            {
+                if (this.Overlaps(interval)) return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Does this interval entirely or partially include another within the
         /// specified tolerance distance?
         /// </summary>
@@ -530,6 +545,25 @@ namespace Nucleus.Maths
         public double Wrap(double value)
         {
             return Start + (value - Start) % Size;
+        }
+
+        /// <summary>
+        /// Return the mid-point of this interval, accounting for the scenario
+        /// where the numeric domain 'wraps' back to 0 at a specified value and
+        /// if this interval is decreasing it is assumed that it extends over this
+        /// wrapping point.
+        /// Typical use case is finding the mid-point of domain intervals on closed
+        /// curves.
+        /// </summary>
+        /// <param name="wrapPoint">The value at which the domain wraps back to zero.</param>
+        /// <returns></returns>
+        public double MidWithWrapping(double wrapPoint = 1.0)
+        {
+            if (IsDecreasing)
+            {
+                return (End + ((wrapPoint - End) + Start) * 0.5) % wrapPoint;
+            }
+            else return Mid;
         }
 
         /// <summary>
@@ -658,7 +692,16 @@ namespace Nucleus.Maths
             }
         }
 
-       
+        /// <summary>
+        /// Remap this numeric interval from one numeric domain to another
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        public Interval Remap(Interval from, Interval to)
+        {
+            return (this - from.Start) * (to.Size / from.Size) + to.Start;
+        }
 
         #endregion
 
@@ -690,7 +733,7 @@ namespace Nucleus.Maths
         /// <param name="i2"></param>
         /// <returns></returns>
         public static Interval operator +(Interval i1, Interval i2)
-            => new Interval(i1.Start + i2.Start);
+            => new Interval(i1.Start + i2.Start, i1.End + i2.End);
 
         /// <summary>
         /// Subtraction operator override.  Subtracts a double from both
@@ -882,6 +925,20 @@ namespace Nucleus.Maths
                 }
             }
             return next;
+        }
+
+        /// <summary>
+        /// Remap all intervals in this list from one domain to another
+        /// </summary>
+        /// <param name="intervals"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        public static void RemapAll(this IList<Interval> intervals, Interval from, Interval to)
+        {
+            for (int i = 0; i < intervals.Count; i++)
+            {
+                intervals[i] = intervals[i].Remap(from, to);
+            }
         }
     }
 }
