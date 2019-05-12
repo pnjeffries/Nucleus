@@ -869,23 +869,52 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Find the section(s) of a polycurve which lie(s) inside the specified polygon
+        /// Find the section(s) of a curve which lie(s) inside the specified polygon
         /// </summary>
-        /// <param name="pLine"></param>
-        /// <param name="polygon"></param>
-        /// <param name="result"></param>
+        /// <param name="crv">The curve</param>
+        /// <param name="polygon">The vertices which define the containment polygon</param>
+        /// <param name="result">Optional.  A collection to which the results should be added.  If null,
+        /// a new collection will be instantiated and returned instead.</param>
+        /// <param name="remapStart">Optional. The start of the domain that results should be remapped into.</param>
+        /// <param name="remapEnd">Optional.  The end of the domain that results should be remapped into.</param>
         /// <returns></returns>
-        public static CurveCollection CurveInPolygonXY(Curve crv, IList<Vertex> polygon)
+        public static IList<Interval> CurveDomainInPolygonXY(Curve crv, IList<Vertex> polygon, IList<Interval> result = null,
+            double remapStart = 0, double remapEnd = 1)
         {
-            if (crv == null) return new CurveCollection();
+            if (result == null) result = new List<Interval>();
+            if (crv == null) return result;
             else if (crv is Line)
-                return LineInPolygonXY((Line)crv, polygon);
+                return LineDomainInPolygonXY((Line)crv, polygon, result, remapStart, remapEnd);
             else if (crv is Arc)
-                return ArcInPolygonXY((Arc)crv, polygon);
+                return ArcDomainInPolygonXY((Arc)crv, polygon, result, remapStart, remapEnd);
             else if (crv is PolyLine)
-                return PolyLineInPolygonXY((PolyLine)crv, polygon);
+                return PolyLineDomainInPolygonXY((PolyLine)crv, polygon, result, remapStart, remapEnd);
             else if (crv is PolyCurve)
-                return PolyCurveInPolygonXY((PolyCurve)crv, polygon);
+                return PolyCurveDomainInPolygonXY((PolyCurve)crv, polygon, result, remapStart, remapEnd);
+            else
+                throw new NotImplementedException(); //New curve types need to go here!
+        }
+
+        /// <summary>
+        /// Find the section(s) of a curve which lie(s) inside the specified polygon
+        /// </summary>
+        /// <param name="crv">The curve</param>
+        /// <param name="polygon">The vertices which define the containment polygon</param>
+        /// <param name="result">Optional.  A collection to which the results should be added.  If null,
+        /// a new collection will be instantiated and returned instead.</param>
+        /// <returns></returns>
+        public static CurveCollection CurveInPolygonXY(Curve crv, IList<Vertex> polygon, CurveCollection result = null)
+        {
+            if (result == null) result = new CurveCollection();
+            if (crv == null) return result;
+            else if (crv is Line)
+                return LineInPolygonXY((Line)crv, polygon, result);
+            else if (crv is Arc)
+                return ArcInPolygonXY((Arc)crv, polygon, result);
+            else if (crv is PolyLine)
+                return PolyLineInPolygonXY((PolyLine)crv, polygon, result);
+            else if (crv is PolyCurve)
+                return PolyCurveInPolygonXY((PolyCurve)crv, polygon, result);
             else
                 throw new NotImplementedException(); //New curve types need to go here!
         }
@@ -893,25 +922,43 @@ namespace Nucleus.Geometry
         /// <summary>
         /// Find the section(s) of a polycurve which lie(s) inside the specified polygon
         /// </summary>
-        /// <param name="pLine"></param>
-        /// <param name="polygon"></param>
-        /// <param name="result"></param>
+        /// <param name="pCurve">The polycurve</param>
+        /// <param name="polygon">The vertices which define the polygon</param>
+        /// <param name="result">Optional.  A collection to which the results should be added.  If null,
+        /// a new collection will be created and returned.</param>
+        /// <param name="remapStart">Optional. The start of the domain that results should be remapped into.</param>
+        /// <param name="remapEnd">Optional.  The end of the domain that results should be remapped into.</param>
+        /// <returns></returns>
+        public static IList<Interval> PolyCurveDomainInPolygonXY(PolyCurve pCurve, IList<Vertex> polygon, IList<Interval> result = null,
+            double remapStart = 0, double remapEnd = 1)
+        {
+            if (result == null) result = new List<Interval>();
+            int span = 0;
+            foreach (var crv in pCurve.SubCurves)
+            {
+                int endSpan = span + crv.SegmentCount;
+                double t0 = pCurve.ParameterAt(span, 0).Remap(remapStart, remapEnd);
+                double t1 = pCurve.ParameterAt(endSpan - 1, 1).Remap(remapStart, remapEnd);
+                CurveDomainInPolygonXY(crv, polygon, result, t0, t1);
+                span += crv.SegmentCount;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Find the section(s) of a polycurve which lie(s) inside the specified polygon
+        /// </summary>
+        /// <param name="pCurve">The polycurve</param>
+        /// <param name="polygon">The vertices which define the polygon</param>
+        /// <param name="result">Optional.  A collection to which the results should be added.  If null,
+        /// a new collection will be created and returned.</param>
         /// <returns></returns>
         public static CurveCollection PolyCurveInPolygonXY(PolyCurve pCurve, IList<Vertex> polygon, CurveCollection result = null)
         {
             if (result == null) result = new CurveCollection();
             foreach (var crv in pCurve.SubCurves)
             {
-                if (crv is Line)
-                    LineInPolygonXY((Line)crv, polygon, result);
-                else if (crv is Arc)
-                    ArcInPolygonXY((Arc)crv, polygon, result);
-                else if (crv is PolyLine)
-                    PolyLineInPolygonXY((PolyLine)crv, polygon, result);
-                else if (crv is PolyCurve)
-                    PolyCurveInPolygonXY((PolyCurve)crv, polygon, result);
-                else
-                    throw new NotImplementedException(); //New curve types need to go here!
+                CurveInPolygonXY(crv, polygon, result);
             }
             return result.JoinOrderedCurves();
         }
@@ -922,14 +969,20 @@ namespace Nucleus.Geometry
         /// <param name="pLine"></param>
         /// <param name="polygon"></param>
         /// <param name="result"></param>
+        /// <param name="remapStart">Optional. The start of the domain that results should be remapped into.</param>
+        /// <param name="remapEnd">Optional.  The end of the domain that results should be remapped into.</param>
         /// <returns></returns>
-        public static IList<Interval> PolyLineDomainsInPolygonXY(PolyLine pLine, IList<Vertex> polygon, IList<Interval> result = null)
+        public static IList<Interval> PolyLineDomainInPolygonXY(PolyLine pLine, IList<Vertex> polygon, IList<Interval> result = null,
+            double remapStart = 0, double remapEnd = 1)
         {
             if (result == null) result = new List<Interval>();
-            foreach (var line in pLine.ToLines())
+            var lines = pLine.ToLines();
+            for (int i = 0; i < pLine.SegmentCount; i++)
             {
-                LineDomainsInPolygonXY(line, polygon, result);
-                //TODO: Remap!
+                Line line = lines[i];
+                double t0 = pLine.ParameterAt(i, 0).Remap(remapStart, remapEnd);
+                double t1 = pLine.ParameterAt(i, 1).Remap(remapStart, remapEnd);
+                LineDomainInPolygonXY(line, polygon, result, t0,t1);
             }
             return result;
         }
@@ -956,6 +1009,8 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="arc"></param>
         /// <param name="polygon"></param>
+        /// <param name="remapStart">Optional. The start of the domain that results should be remapped into.</param>
+        /// <param name="remapEnd">Optional.  The end of the domain that results should be remapped into.</param>
         /// <returns></returns>
         public static IList<Interval> ArcDomainInPolygonXY(Arc arc, IList<Vertex> polygon, IList<Interval> result = null,
             double remapStart = 0, double remapEnd = 1)
@@ -1020,8 +1075,10 @@ namespace Nucleus.Geometry
         /// <summary>
         /// Find the section(s) of an arc which lie(s) inside the specified polygon
         /// </summary>
-        /// <param name="arc"></param>
-        /// <param name="polygon"></param>
+        /// <param name="arc">The arc</param>
+        /// <param name="polygon">The polgon vertices</param>
+        /// <param name="result">Optional.  A collection to which results should be added.  If null,
+        /// a new collection will be created and returned.</param>
         /// <returns></returns>
         public static CurveCollection ArcInPolygonXY(Arc arc, IList<Vertex> polygon, CurveCollection result = null)
         {
@@ -1088,8 +1145,11 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="line"></param>
         /// <param name="polygon"></param>
+        /// <param name="result"></param>
+        /// <param name="remapStart">Optional. The start of the domain that results should be remapped into.</param>
+        /// <param name="remapEnd">Optional.  The end of the domain that results should be remapped into.</param>
         /// <returns></returns>
-        public static IList<Interval> LineDomainsInPolygonXY(Line line, IList<Vertex> polygon, IList<Interval> result = null, double remapStart = 0, double remapEnd = 1)
+        public static IList<Interval> LineDomainInPolygonXY(Line line, IList<Vertex> polygon, IList<Interval> result = null, double remapStart = 0, double remapEnd = 1)
         {
             if (result == null) result = new List<Interval>();
             double tolerance = Tolerance.Distance;
