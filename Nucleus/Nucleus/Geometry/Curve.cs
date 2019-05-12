@@ -1266,6 +1266,19 @@ namespace Nucleus.Geometry
             else return false;
         }
 
+        /// <summary>
+        /// Collapse any segments of this curve which have a length shorter than the
+        /// value specified.  The end-points of the curve will be kept the same, but
+        /// short polyline segments and polycurve subcurves will be removed and the
+        /// adjacent curves adjusted accordingly.
+        /// </summary>
+        /// <param name="minLength">The length below which segments will be removed.</param>
+        /// <returns>True if any segments were removed.</returns>
+        public virtual bool CollapseShortSegments(double minLength)
+        {
+            return false;
+        }
+
         public override string ToString()
         {
             return "Curve";

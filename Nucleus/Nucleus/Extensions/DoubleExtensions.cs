@@ -296,12 +296,37 @@ namespace Nucleus.Extensions
         /// position in another.
         /// </summary>
         /// <param name="value"></param>
-        /// <param name="fromThis"></param>
-        /// <param name="toThis"></param>
+        /// <param name="fromThis">The reference domain</param>
+        /// <param name="toThis">The domain into which the value is to be mapped</param>
         /// <returns></returns>
         public static double Remap(this double value, Interval fromThis, Interval toThis)
         {
             return toThis.ValueAt(fromThis.ParameterOf(value));
+        }
+
+        /// <summary>
+        /// Remap this number from it's relative position in the interval 0-1 to the same relative
+        /// position in another.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="toThis">The domain into which the value is to be mapped</param>
+        /// <returns></returns>
+        public static double Remap(this double value, Interval toThis)
+        {
+            return toThis.ValueAt(value);
+        }
+
+        /// <summary>
+        /// Remap this number from the range 0-1 to the same relative position between two
+        /// other numbers.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="domain0">The value in the new domain equivalent to 0 in the starting domain.</param>
+        /// <param name="domain1">The value in the new domain equivalent to 1 in the starting domain.</param>
+        /// <returns></returns>
+        public static double Remap(this double value, double domain0, double domain1)
+        {
+            return domain0 + value / (domain1 - domain0);
         }
 
         /// <summary>

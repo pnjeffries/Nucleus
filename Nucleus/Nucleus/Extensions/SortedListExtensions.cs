@@ -190,6 +190,7 @@ namespace Nucleus.Extensions
         /// Adds an element with the specified key and value into the SortedList,
         /// automatically dealing with the case where the specified key already exists
         /// within the list by incrementing the key to the next valid value.
+        /// If the supplied key is NaN, the value will not be stored.
         /// </summary>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="list"></param>
@@ -198,9 +199,14 @@ namespace Nucleus.Extensions
         public static void AddSafe<TValue>(this SortedList<double, TValue> list, 
             double key, TValue value)
         {
-            while (list.ContainsKey(key))
-                key = key.NextValidValue();
-            list.Add(key, value);
+            if (!key.IsNaN())
+            {
+                while (list.ContainsKey(key))
+                    key = key.NextValidValue();
+                list.Add(key, value);
+            }
+            // else
+            //    throw new ArgumentException("The key cannot be NaN");
         }
     }
 }

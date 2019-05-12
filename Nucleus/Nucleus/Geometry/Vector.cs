@@ -499,6 +499,32 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find and return the object within the specified collection which is closest to this point,
+        /// with the test point for each object defined by a delegate function.
+        /// </summary>
+        /// <param name="objects">The collection of objects to test.</param>
+        /// <param name="testPointDelegate">A delegate function which will provide a test point
+        /// for each object in the collection.</param>
+        /// <returns></returns>
+        public TObject ClosestOf<TObject>(IList<TObject> objects, Func<TObject, Vector> testPointDelegate)
+            where TObject : class
+        {
+            TObject closest = null;
+            double minDistSqd = 0;
+            foreach (var obj in objects)
+            {
+                Vector testPt = testPointDelegate.Invoke(obj);
+                double distSqd = DistanceToSquared(testPt);
+                if (closest == null || distSqd < minDistSqd)
+                {
+                    closest = obj;
+                    minDistSqd = distSqd;
+                }
+            }
+            return closest;
+        }
+
+        /// <summary>
         /// Find the angle on the XY plane from this position vector to another
         /// </summary>
         /// <param name="other">The position vector to measure the angle to</param>

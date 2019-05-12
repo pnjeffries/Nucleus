@@ -144,6 +144,20 @@ namespace Nucleus.Model
             return result;
         }
 
+        /// <summary>
+        /// Find the level in this collection closest to the specified z-coordinate,
+        /// up to a maximum level difference away
+        /// </summary>
+        /// <param name="z"></param>
+        /// <param name="maxDifference"></param>
+        /// <returns></returns>
+        public TLevel NearestLevel(double z, double maxDifference)
+        {
+            var result = NearestLevel(z);
+            if ( result == null || (z - result.Z).Abs() > maxDifference) return null;
+            else return result;
+        }
+
         #endregion
     }
 

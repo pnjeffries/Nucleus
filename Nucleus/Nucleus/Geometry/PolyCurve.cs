@@ -1042,29 +1042,42 @@ namespace Nucleus.Geometry
         /// the specified start parameter before the specified end parameter.  This enables
         /// sub-curves to be extracted and processed one-by-one.
         /// </summary>
-        /// <param name="tStart">The start parameter.  This will be modified to 
-        /// jump to the end of the returned curve.</param>
+        /// <param name="tStart">The start parameter.</param>
         /// <param name="tEnd">The end parameter</param>
-        /// <param name="subCrvDomain">The equivalent domain of the sub-curve between tStart and tEnd
+        /// <param name="tSubEnd">Output.  The end of the returned sub-curve expressed as a parameter
+        /// on this polycurve.  To walk the curve, this should be used as the input value of tStart in the
+        /// next iteration.</param>
+        /// <param name="subCrvDomain"> Output.  The equivalent domain on the sub-curve between tStart and tEnd
         /// on the parent polycurve.</param>
+        /// <remarks>Will not loop in closed curves.</remarks>
         /// <returns></returns>
-        public Curve WalkSubCurves(ref double tStart, double tEnd, out Interval subCrvDomain)
+        public Curve WalkSubCurves(double tStart, double tEnd, out double tSubEnd, out Interval subCrvDomain)
         {
             double tSpan;
             int span = SpanAt(tStart, out tSpan);
 
-            double tSubStart;
+            double tStartNext;
             int subSpan;
-            var nextCrv = SubCurveAt(tStart, out tSubStart, out subSpan);
+            var nextCrv = SubCurveAt(tStart, out tStartNext, out subSpan);
 
             if (nextCrv != null)
             {
-                double tSubEnd = (span - subSpan + nextCrv.SegmentCount) / (double)SegmentCount;
-                // TODO
+                double tEndNext = 1.0;
+                double tSubStart = (span - subSpan) / (double)SegmentCount;
+                tSubEnd = (span - subSpan + nextCrv.SegmentCount) / (double)SegmentCount;
+                if (tSubEnd > tEnd)
+                {
+                    tEndNext = (tEnd = tSubStart) / (tSubEnd - tSubStart);
+                }
+                subCrvDomain = new Interval(tStartNext, tEndNext);
+            }
+            else
+            {
+                tSubEnd = double.NaN;
+                subCrvDomain = Interval.Unset;
             }
 
-            // TODO
-            throw new NotImplementedException();
+            return nextCrv;
         }
 
         /// <summary>
@@ -1114,24 +1127,84 @@ namespace Nucleus.Geometry
         /// Get the parameter domain of the specified sub-curve along this PolyCurve.
         /// The curve in question must be a sub-curve of this PolyCurve already.
         /// </summary>
-        /// <param name="subCurve"></param>
+        /// <param name="subCurve">The subcurve to extract the subdomain for</param>
         /// <returns></returns>
         public Interval SubCurveDomain(Curve subCurve)
         {
-
+            int span = 0;
+            foreach (Curve subCrv in SubCurves)
+            {
+                if (subCrv == subCurve)
+                {
+                    return new Interval(
+                        ParameterAt(span, 0),
+                        ParameterAt(span + subCrv.SegmentCount, 1));
+                }
+                span += subCrv.SegmentCount;
+            }
+            return Interval.Unset;
         }
 
-            #endregion
+        /// <summary>
+        /// Collapse any segments of this curve which have a length shorter than the
+        /// value specified.  The end-points of the curve will be kept the same, but
+        /// short polyline segments and polycurve subcurves will be removed and the
+        /// adjacent curves adjusted accordingly.
+        /// </summary>
+        /// <param name="minLength">The length below which segments will be removed.</param>
+        /// <returns>True if any segments were removed.</returns>
+        public override bool CollapseShortSegments(double minLength)
+        {
+            bool removedAny = false;
 
-            #region Static Methods
+            for (int i = 0; i < SubCurves.Count; i++)
+            {
+                if (SubCurves.Count > 1)
+                {
+                    var subCrv = SubCurves[i];
+                    double sCLength = subCrv.Length;
+                    if (sCLength < minLength)
+                    {
+                        if (!Closed && i == 0)
+                        {
+                            // Snap next to start
+                            var nextCrv = SubCurves[1];
+                            nextCrv.Start.Position = subCrv.StartPoint;
+                        }
+                        else if (!Closed && i == SubCurves.Count - 1)
+                        {
+                            // Snap prev to end
+                            var prevCrv = SubCurves[i - 1];
+                            prevCrv.End.Position = subCrv.EndPoint;
+                        }
+                        else
+                        {
+                            // Snap adjacent to mid-point
+                            var nextCrv = SubCurves.GetWrapped(i + 1);
+                            var prevCrv = SubCurves.GetWrapped(i - 1);
+                            Vector midPt = subCrv.PointAtLength(sCLength / 2);
+                        }
+                        SubCurves.RemoveAt(i);
+                        i--;
+                        removedAny = true;
+                    }
+                }
+            }
+            if (removedAny) NotifyGeometryUpdated();
+            return removedAny;
+        }
 
-            /// <summary>
-            /// Generates a rectangular polycurve on the XY plane centred on the origin
-            /// </summary>
-            /// <param name="depth">The depth of the rectangle</param>
-            /// <param name="width">The width of the rectangle</param>
-            /// <returns></returns>
-            public static PolyCurve Rectangle(double depth, double width, double cornerRadius = 0.0)
+        #endregion
+
+        #region Static Methods
+
+        /// <summary>
+        /// Generates a rectangular polycurve on the XY plane centred on the origin
+        /// </summary>
+        /// <param name="depth">The depth of the rectangle</param>
+        /// <param name="width">The width of the rectangle</param>
+        /// <returns></returns>
+        public static PolyCurve Rectangle(double depth, double width, double cornerRadius = 0.0)
         {
             cornerRadius = Math.Max(cornerRadius, 0.0);
             double x = width / 2;
