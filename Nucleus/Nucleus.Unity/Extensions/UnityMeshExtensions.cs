@@ -15,6 +15,28 @@ namespace Nucleus.Unity
     public static class UnityMeshExtensions
     {
         /// <summary>
+        /// Set the vertex colours of this mesh based on the specified array of values, one
+        /// for each vertex of the mesh, mapped to a colour gradient from a range.
+        /// </summary>
+        /// <param name="mesh"></param>
+        /// <param name="values"></param>
+        /// <param name="range"></param>
+        /// <param name="gradient"></param>
+        public static void SetVertexColoursFromGradient(this Mesh mesh, IList<double> values,
+            Interval range, Gradient gradient)
+        {
+            Color[] vertexColours = new Color[mesh.vertexCount];
+            int iCount = Math.Min(values.Count, mesh.vertexCount);
+            for (int i = 0; i < iCount; i++)
+            {
+                float value = (float)range.ParameterOf(values[i]);
+                var c = gradient.Evaluate(value);
+                vertexColours[i] = c;
+            }
+            mesh.colors = vertexColours;
+        }
+
+        /// <summary>
         /// Set the vertex colours of this mesh based on the specified fieldOfView map.
         /// For this to do anything at all reasonable, the mesh should have been generated
         /// as a regular grid with (mapXSize + 2) * 2 + 1 vertices in the first direction via a function
