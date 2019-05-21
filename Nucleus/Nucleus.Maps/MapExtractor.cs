@@ -300,7 +300,7 @@ namespace Nucleus.Maps
                     long nodeID = way.Nodes[i];
                     if (nodes.ContainsKey(nodeID))
                     {
-                        var node = nodes[nodeID];
+                        OsmSharp.Node node = nodes[nodeID];
                         pts.Add(node.Position(originLatLong));
                     }
                 }

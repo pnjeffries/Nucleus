@@ -135,5 +135,73 @@ namespace Nucleus.UnitTests
             Assert.AreEqual(1, curves.Count);
             Assert.AreEqual(line.Length, curves.TotalLength());
         }
+
+        [TestMethod]
+        public void PolyCurveDomainInPolygon()
+        {
+            var pline = new PolyLine(
+               new Vector(0, 0),
+               new Vector(0, 10),
+               new Vector(-20, 10),
+               new Vector(-20, 0));
+            pline.Close();
+            var polyCrv = pline.ToPolyCurve();
+
+            var polygon = new Vertex[]
+            {
+                new Vertex(-10,0.001),
+                new Vertex(-0.0001,0.001),
+                new Vertex(-0.0001,-10),
+                new Vertex(-10,-10)
+            };
+
+            var ints = Intersect.CurveDomainInPolygonXY(polyCrv, polygon);
+
+            Assert.AreEqual(1, ints.Count);
+            Assert.AreEqual(0.875, ints[0].Start);
+            Assert.AreEqual(0.99999875, ints[0].End);
+        }
+
+        [TestMethod]
+        public void PolyCurveDomainInPolygon2()
+        {
+            var pline = new PolyLine(
+               new Vector(0, 0),
+               new Vector(0, 10),
+               new Vector(-20, 10),
+               new Vector(-20, 0));
+            pline.Close();
+            var polyCrv = pline.ToPolyCurve();
+
+            var polygon = new Vertex[]
+            {
+                new Vertex(-10,0),
+                new Vertex(-0.0001,0),
+                new Vertex(-0.0001,-10),
+                new Vertex(-10,-10)
+            };
+
+            var ints = Intersect.CurveDomainInPolygonXY(polyCrv, polygon);
+
+            Assert.AreEqual(1, ints.Count);
+            Assert.AreEqual(0.875, ints[0].Start);
+            Assert.AreEqual(0.99999875, ints[0].End);
+        }
+
+        [TestMethod]
+        public void PolygonContainmentTest()
+        {
+            var polygon = new Vertex[]
+            {
+                new Vertex(-10,0),
+                new Vertex(-0.0001,0),
+                new Vertex(-0.0001,-10),
+                new Vertex(-10,-10)
+            };
+
+            bool inside = polygon.PolygonContainmentXY(new Vector(-20, 0, 0));
+
+            Assert.AreEqual(false, inside);
+        }
     }
 }

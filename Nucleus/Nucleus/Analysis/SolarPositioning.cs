@@ -930,8 +930,8 @@ namespace Nucleus.Analysis
 
             Angle Hdash = CalculateTopocentricLocalHourAngle(H, deltaAlpha);
 
-            Angle theta = CalculateTopocentricZenithAngle(latitude, delta, Hdash, pressure, temperature);
-            Angle azimuth = CalculateTopocentricAzimuthAngle(Hdash, latitude, delta);
+            Angle theta = Angle.Right - CalculateTopocentricZenithAngle(latitude, delta, Hdash, pressure, temperature);
+            Angle azimuth = (Angle.Right - CalculateTopocentricAzimuthAngle(Hdash, latitude, delta)).NormalizeTo2PI();
 
             return new AnglePair(theta, azimuth);
         }

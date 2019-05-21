@@ -135,6 +135,39 @@ namespace Nucleus.UnitTests
         }
 
         [TestMethod]
+        public void SubdomainByCentreTest2()
+        {
+            var polyCrv = new PolyCurve(new Line(0, 0, 10, 10));
+            polyCrv.AddArc(new Vector(10, 0));
+            polyCrv.Add(new PolyLine(new Vector(10, 0), new Vector(5, 0), new Vector(5, -5)));
+            polyCrv.Close();
+
+            var domain = polyCrv.SubdomainByCentre(0.01, 20);
+            Curve subCrv = polyCrv.Extract(domain);
+
+            Assert.AreEqual(20, subCrv.Length, 0.00001);
+
+        }
+
+        [TestMethod]
+        public void SubdomainByCentreTest3()
+        {
+            var pline = new PolyLine(
+                new Vector(0, 0),
+                new Vector(0, 2),
+                new Vector(0, 2),
+                new Vector(2, 0),
+                new Vector(0, 0));
+            pline.Close();
+            var polyCrv = pline.ToPolyCurve();
+
+            var domain = polyCrv.SubdomainByCentre(0.1, 20);
+            Curve subCrv = polyCrv.Extract(domain);
+
+            Assert.AreEqual(pline.Length, subCrv.Length, 0.00001);
+        }
+
+        [TestMethod]
         public void CurveOverlapTest()
         {
             var crv1 = new Line(0, 0, 0, 10);

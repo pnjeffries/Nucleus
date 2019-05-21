@@ -433,6 +433,50 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Break down the supplied interval into subdomains for each span contained within
+        /// that parameter space on this curve
+        /// </summary>
+        /// <param name="within"></param>
+        /// <returns></returns>
+        public IList<Interval> SpanDomains(Interval within)
+        {
+            int spanCount = SegmentCount;
+            var result = new List<Interval>(spanCount);
+
+            double tSpanStart;
+            int startSpan = SpanAt(within.Start, out tSpanStart);
+            double tSpanEnd;
+            int endSpan = SpanAt(within.End, out tSpanEnd);
+            if (tSpanEnd == 0)
+            {
+                tSpanEnd = 1;
+                endSpan -= 1;
+                if (endSpan < 0) endSpan += spanCount;
+            }
+
+            if (within.IsDecreasing && Closed)
+            {
+                endSpan += spanCount;
+            }
+
+            for (int span = startSpan; span <= endSpan; span++)
+            {
+                double tSpan0 = 0;
+                if (span == startSpan) tSpan0 = tSpanStart;
+                double tSpan1 = 1;
+                if (span == endSpan) tSpan1 = tSpanEnd;
+
+                int iSpan = span % spanCount;
+                double t0 = ParameterAt(iSpan, tSpan0);
+                double t1 = ParameterAt(iSpan, tSpan1);
+
+                result.Add(new Interval(t0, t1));
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Get a curve parameter subdomain specified by the mid-point parameter
         /// of the subdomain and the length of the subdomain along the curve.
         /// </summary>
@@ -449,6 +493,7 @@ namespace Nucleus.Geometry
             if (Closed)
             {
                 double crvLength = Length;
+                if (length > crvLength) return new Interval(0, 1);
                 startLength = startLength.WrapTo(new Interval(0,crvLength));
                 endLength = endLength.WrapTo(new Interval(0, crvLength));
             }

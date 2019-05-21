@@ -36,6 +36,11 @@ namespace Nucleus.Units
         public static readonly MeasurementUnit MetersCubed = new MeasurementUnit("meters cubed", "m³");
 
         /// <summary>
+        /// Millimeters, a length measurement
+        /// </summary>
+        public static readonly MeasurementUnit Millimeters = new MeasurementUnit("millimeters", "mm", 0.001);
+
+        /// <summary>
         /// Radians, the SI unit of angle measurement
         /// </summary>
         public static readonly MeasurementUnit Radians = new MeasurementUnit("radians", "rad");
@@ -59,6 +64,21 @@ namespace Nucleus.Units
         /// Celsius, the SI unit of measurement for temperature
         /// </summary>
         public static readonly MeasurementUnit Celsius = new MeasurementUnit("degrees Celsius", "°C");
+
+        /// <summary>
+        /// Seconds, the SI unit of measurement for time
+        /// </summary>
+        public static readonly MeasurementUnit Seconds = new MeasurementUnit("seconds", "s");
+
+        /// <summary>
+        /// Minutes, a time measurement
+        /// </summary>
+        public static readonly MeasurementUnit Minutes = new MeasurementUnit("minutes", "min", 60);
+
+        /// <summary>
+        /// Hours, a time measurement
+        /// </summary>
+        public static readonly MeasurementUnit Hours = new MeasurementUnit("hours", "hr", 3600);
 
         /// <summary>
         /// British Pounds, the currency

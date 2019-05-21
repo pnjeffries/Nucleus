@@ -386,6 +386,12 @@ namespace Nucleus.Maths
             else return (t >= Start && t < End);
         }
 
+        /// <summary>
+        /// Is the specified interval enclosed by this interval, treating decreasing
+        /// intervals as wrapping around
+        /// </summary>
+        /// <param name="contains"></param>
+        /// <returns></returns>
         public bool ContainsWrapped(Interval contains)
         {
             if (this.IsDecreasing)
@@ -478,6 +484,34 @@ namespace Nucleus.Maths
         public Interval Union(Interval other)
         {
             return new Interval(Math.Min(Start, other.Start), Math.Max(End, other.End));
+        }
+
+        /// <summary>
+        /// Find the region(s) of this interval not contained within the other.
+        /// </summary>
+        /// <param name="other">The interval to boolean subtract from this one</param>
+        /// <returns>An array containing the regions not included within the specified
+        /// other interval.  Returns null if this interval is entirely contained within
+        /// the other.</returns>
+        public Interval[] Not(Interval other)
+        {
+            if (!Overlaps(other)) return new Interval[] { this };
+            else
+            {
+                if (other.Start > Start)
+                {
+                    Interval iS = new Interval(Start, other.Start);
+                    if (other.End < End)
+                    {
+                        return new Interval[] { iS, new Interval(other.End, End) };
+                    }
+                    else return new Interval[] { iS };
+                }
+                else if (other.End < End)
+                    return new Interval[] { new Interval(other.End, End) };
+                else
+                    return null;
+            }
         }
 
         /// <summary>
@@ -615,7 +649,7 @@ namespace Nucleus.Maths
         public IList<Interval> BooleanDifference(IList<Interval> subtractors)
         {
             IList<Interval> result = new List<Interval>();
-            BooleanDifference(subtractors, result);
+            Not(subtractors, result);
             return result;
         }
 
@@ -626,7 +660,7 @@ namespace Nucleus.Maths
         /// <param name="detractors"></param>
         /// <param name="domain"></param>
         /// <returns></returns>
-        public void BooleanDifference(IList<Interval> subtractors, IList<Interval> outList)
+        public void Not(IList<Interval> subtractors, IList<Interval> outList)
         {
             Interval interval = this;
             if (subtractors.Count > 0)
@@ -939,6 +973,51 @@ namespace Nucleus.Maths
             {
                 intervals[i] = intervals[i].Remap(from, to);
             }
+        }
+
+        /// <summary>
+        /// Perform a boolean NOT operation on the contents of this list, removing
+        /// portions of any intervals (or entire intervals if contained) in this 
+        /// collection which overlap the specifed subtraction interval
+        /// </summary>
+        /// <param name="intervals"></param>
+        /// <param name="subtract"></param>
+        public static void Not(this IList<Interval> intervals, Interval subtract)
+        {
+            for (int i = intervals.Count - 1; i >= 0; i--)
+            {
+                if (intervals[i].Overlaps(subtract))
+                {
+                    Interval[] newInts = intervals[i].Not(subtract);
+                    if (newInts == null)
+                        intervals.RemoveAt(i);
+                    else
+                    {
+                        intervals[i] = newInts[0];
+                        if (newInts.Length > 1)
+                        {
+                            intervals.Insert(i, newInts[1]);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Perform a boolean difference on all intervals in this collection with all intervals in the
+        /// specified subtractors collection
+        /// </summary>
+        /// <param name="intervals"></param>
+        /// <param name="subtractors"></param>
+        /// <returns></returns>
+        public static IList<Interval> Not(this IList<Interval> intervals, IList<Interval> subtractors)
+        {
+            var result = new List<Interval>();
+            foreach (var interval in intervals)
+            {
+                interval.Not(subtractors, result);
+            }
+            return result;
         }
     }
 }

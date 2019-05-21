@@ -326,7 +326,7 @@ namespace Nucleus.Extensions
         /// <returns></returns>
         public static double Remap(this double value, double domain0, double domain1)
         {
-            return domain0 + value / (domain1 - domain0);
+            return domain0 + value * (domain1 - domain0);
         }
 
         /// <summary>
@@ -408,6 +408,23 @@ namespace Nucleus.Extensions
             for(int i = 0; i < values.Count; i++)
             {
                 result[i] = values[i] * factor;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Multiply each value in this collection by the equivalent value in a second collection
+        /// with the same number of entries.
+        /// </summary>
+        /// <param name="values"></param>
+        /// <param name="other">The values </param>
+        /// <returns></returns>
+        public static double[] Multiply(this IList<double> values, IList<double> other)
+        {
+            var result = new double[values.Count];
+            for (int i = 0; i < values.Count; i++)
+            {
+                result[i] = values[i] * other[i];
             }
             return result;
         }

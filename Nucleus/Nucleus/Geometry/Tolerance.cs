@@ -34,7 +34,7 @@ namespace Nucleus.Geometry
         /// <summary>
         /// The current geometric tolerance used to determine coincidence
         /// </summary>
-        public static double Distance { get; set; } = 0.001;
+        public static double Distance { get; set; } = 0.000001;
 
         /// <summary>
         /// The angle tolerance used for facetting arcs

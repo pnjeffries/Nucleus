@@ -687,10 +687,13 @@ namespace Nucleus.Meshing
         /// <param name="autoFlip">Automatically flip normals to make them outside/upside</param>
         /// <param name="topOffset"></param>
         /// <param name="offset"></param>
+        /// <param name="maxEdgeLength">Optional.  The maximum face edge length.  If this is non-zero, the
+        /// initial mesh will be refined to this level.</param>
+        /// <param name="extraVerts">Additional vertices to be added to the mesh.  Should lie inside the region.</param>
         public void AddPlanarRegion(PlanarRegion region, double thickness = 0, double topOffset = 0, bool autoFlip = true,
-            Vector offset = new Vector())
+            Vector offset = new Vector(), double maxEdgeLength = 0, VertexCollection extraVerts = null)
         {
-            AddPlanarRegion(region, Vector.Unset, thickness, topOffset, autoFlip, offset);
+            AddPlanarRegion(region, Vector.Unset, thickness, topOffset, autoFlip, offset, maxEdgeLength, extraVerts);
         }
 
         /// <summary>
@@ -714,8 +717,11 @@ namespace Nucleus.Meshing
         /// <param name="topOffset"></param>
         /// <param name="autoFlip">Automatically flip normals to make them outside/upside</param>
         /// <param name="offset"></param>
+        /// <param name="maxEdgeLength">Optional.  The maximum face edge length.  If this is non-zero, the
+        /// initial mesh will be refined to this level.</param>
+        /// <param name="extraVerts">Additional vertices to be added to the mesh.  Should lie inside the region.</param>
         private void AddPlanarRegion(PlanarRegion region, Vector path, double thickness, double topOffset, bool autoFlip,
-            Vector offset = new Vector())
+            Vector offset = new Vector(), double maxEdgeLength = 0, VertexCollection extraVerts = null)
         {
             Plane plane = region.Plane;
             if (plane != null)
@@ -742,6 +748,10 @@ namespace Nucleus.Meshing
                         mappedVoidPerimeters.Add(mappedVoidPerimeter);
                         foreach (Vector pt in mappedVoidPerimeter) vertices.Add(new Vertex(pt));
                     }
+                }
+                if (extraVerts != null)
+                {
+                    foreach (var vert in extraVerts) vertices.Add(new Vertex(vert));
                 }
 
                 MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(vertices);
@@ -784,6 +794,11 @@ namespace Nucleus.Meshing
                     }
                 }
                 Mesh mesh = new Mesh(vertices, faces);
+                if (maxEdgeLength > 0)
+                {
+                    mesh.Faces.Quadrangulate();
+                    mesh = mesh.Refined(maxEdgeLength);
+                }
 
                 if (autoFlip)
                 {

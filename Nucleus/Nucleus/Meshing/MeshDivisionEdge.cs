@@ -122,7 +122,7 @@ namespace Nucleus.Meshing
             {
                 _Vertices.Add(new Vertex(startPt + trans * (step * i)));
             }
-            _Vertices.Add(End);
+            if (Start != End) _Vertices.Add(End);
         }
 
         /// <summary>

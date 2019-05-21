@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -123,6 +124,34 @@ namespace Nucleus.Extensions
                 }
             }
             return iBest;
+        }
+
+        /// <summary>
+        /// 'Clamp' the integer to the specified range between
+        /// minimum and maximum values.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <param name="minimum">The minimum value</param>
+        /// <param name="maximum">The maximum value</param>
+        /// <returns></returns>
+        public static int Clamp(this int value, int minimum, int maximum)
+        {
+            if (value < minimum) return minimum;
+            else if (value > maximum) return maximum;
+            else return value;
+        }
+
+        /// <summary>
+        /// 'Clamp' this integer to only acceptable values for the indices of the
+        /// specified list
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static int ClampToIndices(this int value, IList list)
+        {
+            return value.Clamp(0, list.Count - 1);
         }
     }
 }

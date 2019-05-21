@@ -39,11 +39,24 @@ namespace Nucleus.TestApp
         private void DelaunayButton_Click(object sender, RoutedEventArgs e)
         {
             Random rng = new Random();
-            BoundingBox box = new BoundingBox(0, 10, -10, 0, 0, 0);
+            BoundingBox box = new BoundingBox(1, 9, -9, -1, 0, 0);
 
             int size = 100;
-            Geometry.Vector[] points = box.RandomPointsInside(rng, size);
-            VertexCollection verts = new VertexCollection(points);
+            //Geometry.Vector[] points = box.RandomPointsInside(rng, size);
+            //VertexCollection verts = new VertexCollection(points);
+
+            VertexCollection verts = new VertexCollection();
+            //verts.Add(new Vertex(1, -1));
+            int divs = 5;
+            for (int i = 0; i <= divs; i++)
+            {
+                for (int j = 0; j <= divs; j++)
+                {
+                    Geometry.Vector pt = new Geometry.Vector(box.X.ValueAt(((double)i) / divs), box.Y.ValueAt(((double)j) / divs));
+                    verts.Add(new Vertex(pt));
+                }
+            }
+
             MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(verts);
             faces.Quadrangulate();
             //Dictionary<Vertex, MeshFace> voronoi = Mesh.VoronoiFromDelaunay(verts, faces);
@@ -253,6 +266,7 @@ namespace Nucleus.TestApp
                 {
                     new Geometry.Vector(10, -6),
                     new Geometry.Vector(10,-2),
+                    new Geometry.Vector(0, -6),
                     new Geometry.Vector(0, -6)
                 };
             }

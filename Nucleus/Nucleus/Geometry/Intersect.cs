@@ -653,7 +653,7 @@ namespace Nucleus.Geometry
         /// <param name="tri1">The second corner of the triangle</param>
         /// <param name="tri2">The third corner of the triangle</param>
         /// <returns></returns>
-        public static double RayTriangle(Vector rayOrigin, Vector rayDirection, Vector tri0, Vector tri1, Vector tri2)
+        public static double RayTriangle(ref Vector rayOrigin, ref Vector rayDirection, ref Vector tri0, ref Vector tri1, ref Vector tri2)
         {
             double tolerance = 0.0000001;
             Vector edge1 = tri1 - tri0;
@@ -669,6 +669,37 @@ namespace Nucleus.Geometry
             double v = f * rayDirection.Dot(q);
             if (v < 0.0 || u + v > 1.0) return double.NaN;
             return f * edge2.Dot(q);
+        }
+
+        /// <summary>
+        /// Calculate the intersection between a ray and a triangle using the
+        /// Möller–Trumbore algorithm.  See:
+        /// https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm.
+        /// Returns the parameter t, being the multiplication of the rayDirection from the rayOrigin.
+        /// If there is no intersection between the ray and the triangle, double.NaN will be returned.
+        /// </summary>
+        /// <param name="rayOrigin">The origin point of the ray</param>
+        /// <param name="rayDirection">The direction of the ray.</param>
+        /// <param name="tri0">The first corner of the triangle</param>
+        /// <param name="tri1">The second corner of the triangle</param>
+        /// <param name="tri2">The third corner of the triangle</param>
+        /// <returns></returns>
+        public static double RayTriangle(Vector rayOrigin, Vector rayDirection, Vector tri0, Vector tri1, Vector tri2)
+        {
+            double tolerance = 0.0000001;
+            Vector edge1 = tri1 - tri0;
+            Vector edge2 = tri2 - tri0;
+            Vector h = rayDirection.Cross(ref edge2);
+            double a = edge1.Dot(ref h);
+            if (a > -tolerance && a < tolerance) return double.NaN;
+            double f = 1.0 / a;
+            Vector s = rayOrigin - tri0;
+            double u = f * s.Dot(ref h);
+            if (u < 0.0 || u > 1.0) return double.NaN;
+            Vector q = s.Cross(ref edge1);
+            double v = f * rayDirection.Dot(ref q);
+            if (v < 0.0 || u + v > 1.0) return double.NaN;
+            return f * edge2.Dot(ref q);
         }
 
         /// <summary>
@@ -688,7 +719,7 @@ namespace Nucleus.Geometry
             {
                 Vector vB = face[i + 1].Position;
                 Vector vC = face[i + 2].Position;
-                double t = RayTriangle(rayOrigin, rayDirection, vA, vB, vC);
+                double t = RayTriangle(ref rayOrigin, ref rayDirection, ref vA, ref vB, ref vC);
                 if (!t.IsNaN()) return t;
             }
             return double.NaN;
@@ -940,7 +971,7 @@ namespace Nucleus.Geometry
                 double t0 = pCurve.ParameterAt(span, 0).Remap(remapStart, remapEnd);
                 double t1 = pCurve.ParameterAt(endSpan - 1, 1).Remap(remapStart, remapEnd);
                 CurveDomainInPolygonXY(crv, polygon, result, t0, t1);
-                span += crv.SegmentCount;
+                span = endSpan;
             }
             return result;
         }

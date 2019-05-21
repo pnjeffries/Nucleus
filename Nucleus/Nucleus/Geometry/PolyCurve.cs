@@ -612,20 +612,23 @@ namespace Nucleus.Geometry
             // Offset sub curves:
             foreach (Curve crv in SubCurves)
             {
-                Curve offsetCrv = crv.Offset(distances.SubListFrom(distIndex));
-                distIndex += crv.SegmentCount;
-                if (distIndex > distances.Count - 1) distIndex = distances.Count - 1;
-
-                if (offsetCrv != null)
+                if (crv.Length > 0)
                 {
-                    if (result.SubCurves.Count > 0)
+                    Curve offsetCrv = crv.Offset(distances.SubListFrom(distIndex));
+                    distIndex += crv.SegmentCount;
+                    if (distIndex > distances.Count - 1) distIndex = distances.Count - 1;
+
+                    if (offsetCrv != null)
                     {
-                        // Adjust offset curve ends to node out
-                        Curve prevCrv = result.SubCurves.Last();
-                        MatchEnds(prevCrv.End, offsetCrv.Start);
+                        if (result.SubCurves.Count > 0)
+                        {
+                            // Adjust offset curve ends to node out
+                            Curve prevCrv = result.SubCurves.Last();
+                            MatchEnds(prevCrv.End, offsetCrv.Start);
+                        }
+                        result.Add(offsetCrv);
+                        if (copyAttributes && offsetCrv.Attributes == null) offsetCrv.Attributes = Attributes;
                     }
-                    result.Add(offsetCrv);
-                    if (copyAttributes && offsetCrv.Attributes == null) offsetCrv.Attributes = Attributes;
                 }
             }
 
@@ -939,14 +942,16 @@ namespace Nucleus.Geometry
                 if (angle < angleLimit)
                 {
                     double cutBack = filletLength / (2 * Math.Sin(angle / 2));
-
-                    if (crvA.Length > cutBack && crvB.Length > cutBack &&
-                        crvA.TrimEnd(cutBack) && crvB.TrimStart(cutBack))
+                    if (cutBack > 0)
                     {
-                        Line fillet = new Line(crvA.EndPoint, crvB.StartPoint);
-                        SubCurves.Insert(i + 1, fillet);
-                        i++;
-                        iMax++;
+                        if (crvA.Length > cutBack && crvB.Length > cutBack &&
+                            crvA.TrimEnd(cutBack) && crvB.TrimStart(cutBack))
+                        {
+                            Line fillet = new Line(crvA.EndPoint, crvB.StartPoint);
+                            SubCurves.Insert(i + 1, fillet);
+                            i++;
+                            iMax++;
+                        }
                     }
                     //TODO: Deal with failed trims better
                 }

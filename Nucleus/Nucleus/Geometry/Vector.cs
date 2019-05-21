@@ -199,6 +199,29 @@ namespace Nucleus.Geometry
             Z = 0;
         }
 
+        /// <summary>
+        /// Azimuth and Elevation constructor.
+        /// Create a new vector aligned with an azimuth angle on the XY plane
+        /// elevated by the specified elevation angle
+        /// </summary>
+        /// <param name="azimuth">The horizontal angle</param>
+        /// <param name="elevation">The vertical angle</param>
+        private Vector(Angle azimuth, Angle elevation)
+        {
+            double cos = Math.Cos(elevation);
+            X = Math.Cos(azimuth) * cos;
+            Y = Math.Sin(azimuth) * cos;
+            Z = Math.Sin(elevation);
+        }
+
+        /// <summary>
+        /// AnglePair constructor.
+        /// Create a new vector aligned with an azimuth angle on the XY plane
+        /// elevated by the specified elevation angle
+        /// </summary>
+        /// <param name="angles">The azimuth-elevation angle pair</param>
+        public Vector(AnglePair angles) : this(angles.Azimuth, angles.Elevation) { }
+
         /*
         /// <summary>
         /// Angle constructor.
@@ -1464,8 +1487,8 @@ namespace Nucleus.Geometry
             // TODO: Use calculus to make this more accurate?
 
             return new Vector(
-                (longitude - originLongitude) * factorX,
-                (latitude - originLatitude) * factorY);
+                (double)(longitude - originLongitude) * factorX,
+                (double)(latitude - originLatitude) * factorY);
         }
 
         /// <summary>

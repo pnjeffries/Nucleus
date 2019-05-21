@@ -273,7 +273,8 @@ namespace Nucleus.Geometry
 
         /// <summary>
         /// Initialise a new vertex copying data from the specified other
-        /// vertex
+        /// vertex.
+        /// Will copy the node position, but not any attached nodes.
         /// </summary>
         /// <param name="other"></param>
         public Vertex(Vertex other)

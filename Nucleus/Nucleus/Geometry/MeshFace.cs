@@ -1112,7 +1112,7 @@ namespace Nucleus.Geometry
                     var outEdge1 = edges[i];
                     var inEdge1 = newEdges[i];
                     // Corner face:
-                    if (outEdge0.Divisions == 1)
+                    if (outEdge0.Divisions <= 1)
                     {
                         //TODO: check if both have 1 div?
                         //Special case - tri
@@ -1121,7 +1121,7 @@ namespace Nucleus.Geometry
                             inEdge1.Start);
                         addFaceTo.Add(firstFace);
                     }
-                    else if (outEdge1.Divisions == 1)
+                    else if (outEdge1.Divisions <= 1)
                     {
                         //Special case - tri
                         var firstFace = new MeshFace(
@@ -1157,6 +1157,11 @@ namespace Nucleus.Geometry
                         int jI1 = (int)Math.Round((((j + 1.0)/ (double)faceCount) * inCount));
                         int jO0 = (int)Math.Round((((j) / (double)faceCount) * outCount)) + jOffset ;
                         int jO1 = (int)Math.Round((((j + 1.0)/(double)faceCount) * outCount)) + jOffset;
+
+                        jI0 = jI0.ClampToIndices(inEdge1.Vertices);
+                        jI1 = jI1.ClampToIndices(inEdge1.Vertices);
+                        jO0 = jO0.ClampToIndices(outEdge1.Vertices);
+                        jO1 = jO1.ClampToIndices(outEdge1.Vertices);
 
                         if (jI0 == jI1)
                         {
@@ -1236,7 +1241,7 @@ namespace Nucleus.Geometry
                         double lastScale = 1.0;
                         Vertex v1 = otherEdge1.Vertices[i];
                         Vertex v2 = null;
-                        if (otherEdge2 != null) v2 = otherEdge2.Vertices[otherEdge2.Vertices.Count - 1 - i];
+                        if (otherEdge2 != null && otherEdge2.Vertices.Count > i) v2 = otherEdge2.Vertices[otherEdge2.Vertices.Count - 1 - i];
                         else
                         {
                             v2 = edges.GetWrapped(iOther + 1).End;

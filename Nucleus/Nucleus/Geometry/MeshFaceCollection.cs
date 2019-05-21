@@ -375,6 +375,49 @@ namespace Nucleus.Geometry
             return result;
         }
 
+        /// <summary>
+        /// Replace the vertices in the faces in this collection with
+        /// new fresh copies.  Allows these faces to be added to a new
+        /// mesh.
+        /// </summary>
+        /// <returns></returns>
+        public VertexCollection FreshVertices()
+        {
+            var result = new VertexCollection();
+            var vDict = new Dictionary<Guid, Vertex>();
+            foreach (MeshFace face in this)
+            {
+                for (int i = 0; i < face.Count; i++)
+                {
+                    Vertex vOld = face[i];
+                    if (vDict.ContainsKey(vOld.GUID))
+                        face[i] = vDict[vOld.GUID];
+                    else
+                    {
+                        Vertex vNew = new Vertex(vOld);
+                        result.Add(vNew);
+                        vDict.Add(vOld.GUID, vNew);
+                        face[i] = vNew;
+                    }
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Create a simple shallow copy of these mesh faces
+        /// </summary>
+        /// <returns></returns>
+        public MeshFaceCollection FastDuplicate()
+        {
+            var result = new MeshFaceCollection();
+            foreach (MeshFace face in this)
+            {
+                result.Add(new MeshFace(face));
+            }
+            return result;
+        }
+
         #endregion
     }
 }

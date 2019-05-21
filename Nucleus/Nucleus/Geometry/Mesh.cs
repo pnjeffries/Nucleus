@@ -248,6 +248,32 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Calculate the tributary area of each vertex in this mesh,
+        /// calculated by summing an even distribution of the area of
+        /// each face to which each vertex belongs.
+        /// Returns an array of area values, one for each vertex in this
+        /// mesh, in order.
+        /// </summary>
+        /// <returns></returns>
+        public double[] VertexTributaryAreas()
+        {
+            double[] result = new double[Vertices.Count];
+            Vertices.AssignVertexIndices(0);
+            foreach (MeshFace face in Faces)
+            {
+                double area = face.CalculateArea()/face.Count;
+                foreach (Vertex v in face)
+                {
+                    if (v.Number >= 0 && v.Number < result.Length)
+                    {
+                        result[v.Number] += area;
+                    }
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Invert the direction of all the face normals in this mesh by reversing
         /// the order of vertices in all faces.
         /// </summary>
@@ -330,7 +356,9 @@ namespace Nucleus.Geometry
         /// <returns></returns>
         public Mesh Refined(double targetEdgeLength)
         {
-            var newFaces = Faces.Refine(targetEdgeLength);
+            var dupFaces = Faces.FastDuplicate();
+            dupFaces.FreshVertices();
+            var newFaces = dupFaces.Refine(targetEdgeLength);
             return new Mesh(newFaces.ExtractVertices(), newFaces);
         }
 
