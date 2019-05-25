@@ -275,18 +275,82 @@ namespace Nucleus.Geometry
         public IList<PlanarRegion> SplitByLineXY(Vector splitPt, Vector splitDir, double splitWidth = 0)
         {
             var result = new List<PlanarRegion>();
-            var outerInts = Intersect.CurveLineXY(Perimeter, splitPt, splitDir).ToList();
-            outerInts.Sort();
-            //TODO: void intersections
-            // Commented out as not finished:
-            /*foreach (var voidCrv in Voids)
-            {
-                IList<double> voidInts = Intersect.CurveLineXY(voidCrv, splitPt, splitDir);
-            }*/
+            var lineInts = new List<double>();
+            var outerInts = Intersect.CurveLineXY(Perimeter, splitPt, splitDir, null, 0, 1, false, lineInts);
 
             if (outerInts.Count > 1)
             {
+                // Sort intersections by position along curve:
+                var sortedInts = new SortedList<double, double>(outerInts.Count);
                 for (int i = 0; i < outerInts.Count; i++)
+                {
+                    sortedInts.Add(outerInts[i], lineInts[i]);
+                }
+
+                outerInts = sortedInts.Keys.ToList();
+                lineInts = sortedInts.Values.ToList();
+                int offset = lineInts.IndexOfMin();
+                outerInts.Shift(offset);
+                lineInts.Shift(offset);
+
+                // Create segments data structure
+                var segments = new List<PerimeterSegment>(outerInts.Count - 1);
+                for (int i = 0; i < outerInts.Count; i++)
+                {
+                    double t0 = outerInts[i];
+                    double t1 = outerInts.GetWrapped(i + 1);
+                    double tC0 = lineInts[i];
+                    double tC1 = lineInts.GetWrapped(i + 1);
+                    var segment = new PerimeterSegment(Perimeter, t0, t1, tC0, tC1);
+                    segments.Add(segment);
+                }
+
+                //TODO: void intersections
+
+                bool backwards = true;
+                while (segments.Count > 0)
+                {
+                    var offsets = new List<double>();
+                    PerimeterSegment segment = segments.First();
+                    
+                    PolyCurve newPerimeter = segment.Extract().ToPolyCurve();
+                    for (int i = 0; i < newPerimeter.SegmentCount; i++) offsets.Add(0);
+                    PerimeterSegment nextSegment = FindNextPerimeterSegment(segments, segment.CutterDomain.End, backwards);
+                    while (nextSegment != null && nextSegment != segment)
+                    {
+                        Curve nextCurve = nextSegment.Extract();
+                        newPerimeter.AddLine(nextCurve.StartPoint);
+                        offsets.Add(splitWidth / 2);
+                        newPerimeter.Add(nextCurve);
+                        for (int i = 0; i < nextCurve.SegmentCount; i++) offsets.Add(0);
+                        segments.Remove(nextSegment);
+                        nextSegment = FindNextPerimeterSegment(segments, nextSegment.CutterDomain.End, backwards);
+                    }
+                    segments.RemoveAt(0);
+                    if (!newPerimeter.Closed)
+                    {
+                        newPerimeter.Close();
+                        offsets.Add(splitWidth / 2);
+                    }
+                    backwards = !backwards;
+
+                    if (splitWidth > 0)
+                    {
+                        var newNewPerimeter = newPerimeter.OffsetInwards(offsets);
+                        // Check offset has not inverted perimeter:
+                        // TODO: Do this automatically when offsetting?
+                        if (newNewPerimeter != null && newNewPerimeter.IsClockwiseXY() == newPerimeter.IsClockwiseXY())
+                        {
+                            newPerimeter = newNewPerimeter.ToPolyCurve();
+                        }
+                        else newPerimeter = null;
+                    }
+
+                    if (newPerimeter != null) result.Add(new PlanarRegion(newPerimeter, Attributes?.Duplicate()));
+                }
+
+                // OLD VERSION:
+                /*for (int i = 0; i < outerInts.Count; i++)
                 {
                     double t0 = outerInts[i];
                     double t1 = outerInts.GetWrapped(i + 1);
@@ -310,7 +374,7 @@ namespace Nucleus.Geometry
                         }
                     }
                     if (newPerimeter != null) result.Add(new PlanarRegion(newPerimeter, Attributes?.Duplicate()));
-                }
+                }*/
             }
             else
             {
@@ -318,7 +382,67 @@ namespace Nucleus.Geometry
             }
             return result;
         }
-        
+
+        /// <summary>
+        /// Find the next connecting perimeter segment along the cutting curve
+        /// </summary>
+        /// <param name="segments"></param>
+        /// <param name="tFrom"></param>
+        /// <param name="backwards"></param>
+        /// <returns></returns>
+        private static PerimeterSegment FindNextPerimeterSegment(IList<PerimeterSegment> segments, double tFrom, bool backwards)
+        {
+            PerimeterSegment next = null;
+            if (backwards)
+            {
+                foreach (var pSeg in segments)
+                {
+                    if (pSeg.CutterDomain.Start < tFrom)
+                    {
+                        if (next == null || next.CutterDomain.Start < pSeg.CutterDomain.Start)
+                            next = pSeg;
+                    }
+                }
+            }
+            else
+            {
+                foreach (var pSeg in segments)
+                {
+                    if (pSeg.CutterDomain.Start > tFrom)
+                    {
+                        if (next == null || next.CutterDomain.Start > pSeg.CutterDomain.Start)
+                            next = pSeg;
+                    }
+                }
+            }
+            return next;
+        }
+
+        /// <summary>
+        /// Temporary data structure to hold segments of perimeter curve during a slicing operation
+        /// </summary>
+        private class PerimeterSegment
+        {
+            public Curve SourceCurve = null;
+            public Interval Domain = Interval.Unset;
+            public Interval CutterDomain = Interval.Unset;
+
+            public PerimeterSegment(Curve sourceCurve, Interval domain, Interval cutterDomain)
+            {
+                SourceCurve = sourceCurve;
+                Domain = domain;
+                CutterDomain = cutterDomain;
+            }
+
+            public PerimeterSegment(Curve sourceCurve, double t0, double t1, double tC0, double tC1)
+                : this(sourceCurve, new Interval(t0, t1), new Interval(tC0, tC1))
+            { }
+
+            public Curve Extract()
+            {
+                return SourceCurve?.Extract(Domain);
+            }
+        }
 
         #endregion
     }

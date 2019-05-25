@@ -363,8 +363,11 @@ namespace Nucleus.Geometry
         /// to this value in the returned parameters.</param>
         /// <param name="lineBounded">If true, intersections outside of the bounds of the line
         /// running from the origin point to the end of the direction vector will be ignored.</param>
+        /// <param name="tLine">Optional.  If supplied, this collection will be populated with the
+        /// intersection parameters on the line.</param>
         /// <returns>The list of intersection parameters on the curve</returns>
-        public static IList<double> CurveLineXY(Curve curve, Vector lnPt, Vector lnDir, IList<double> result = null, double domainAdjustMin = 0, double domainAdjustMax = 1, bool lineBounded = false)
+        public static IList<double> CurveLineXY(Curve curve, Vector lnPt, Vector lnDir, IList<double> result = null, 
+            double domainAdjustMin = 0, double domainAdjustMax = 1, bool lineBounded = false, IList<double> tLine = null)
         {
             if (result == null) result = new List<double>();
             if (curve is Line)
@@ -375,6 +378,7 @@ namespace Nucleus.Geometry
                 {
                     double t = (domainAdjustMin + t0 * (domainAdjustMax - domainAdjustMin));
                     result.Add(t);
+                    if (tLine != null) tLine.Add(t1);
                 }
             }
             else if (curve is Arc)
@@ -386,6 +390,11 @@ namespace Nucleus.Geometry
                     double t = arc.ClosestParameter(intPt);
                     t = (domainAdjustMin + t * (domainAdjustMax - domainAdjustMin));
                     result.Add(t);
+                    if (tLine != null)
+                    {
+                        double t1 = Line.ClosestParameter(lnPt, lnPt + lnDir, intPt);
+                        tLine.Add(t1);
+                    }
                 }
             }
             else if (curve is PolyLine)
@@ -405,6 +414,7 @@ namespace Nucleus.Geometry
                     {
                         double t = (tMin + t0 * (tMax - tMin));
                         result.Add(t);
+                        if (tLine != null) tLine.Add(t1);
                     }
                 }
             }
@@ -417,7 +427,7 @@ namespace Nucleus.Geometry
                     {
                         double tMin = domainAdjustMin + pCrv.ParameterAt(subCrv.Start) * (domainAdjustMax - domainAdjustMin);
                         double tMax = domainAdjustMin + pCrv.ParameterAt(subCrv.End) * (domainAdjustMax - domainAdjustMin);
-                        CurveLineXY(subCrv, lnPt, lnDir, result, tMin, tMax, lineBounded);
+                        CurveLineXY(subCrv, lnPt, lnDir, result, tMin, tMax, lineBounded, tLine);
                     }
                 }
             }

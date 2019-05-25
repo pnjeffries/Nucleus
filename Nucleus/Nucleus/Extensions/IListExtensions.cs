@@ -335,6 +335,55 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Find the index of the minimum value in this list
+        /// </summary>
+        /// <typeparam name="TItem">The type of item in the list</typeparam>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static int IndexOfMin<TItem>(this IList<TItem> list)
+            where TItem : IComparable<TItem>
+        {
+            if (list.Count == 0) return -1;
+            TItem min = list[0];
+            int result = 0;
+            for (int i = 1; i < list.Count; i++)
+            {
+                TItem value = list[i];
+                if (value.CompareTo(min) == -1)
+                {
+                    min = value;
+                    result = i;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Shift all items in this list by the specified number of places.
+        /// An items moving off the start or end of the list will 'wrap' to the other
+        /// end of the list.
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="offset">The number of places to shift the objects in this list.
+        /// +ve numbers are to the left (i.e items will move towards the start of the list)
+        /// and -ve numbers are to the right (i.e. items move towards the end).</param>
+        /// <param name="wrap">If true, items shifted off the start or end of the list
+        /// will be added to the other end of the list.  If false, they will be lost and the
+        /// size of the list will decrease.</param>
+        public static void Shift<TItem>(this IList<TItem> list, int offset)
+        {
+            // Store items that move off the start or end of the list
+            TItem[] original = list.ToArray();
+
+            // Shift the list items
+            for (int i = 0; i < list.Count; i++)
+            {
+                list[i] = original.GetWrapped(i + offset);
+            }
+        }
+
+        /// <summary>
         /// Find the average of a set of double values obtainable via a delegate function from the items
         /// in this list.
         /// </summary>

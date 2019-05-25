@@ -451,7 +451,9 @@ namespace Nucleus.Geometry
         /// <param name="autoConnect">If true, a line segment will automatically be added between
         /// the end of the last curve and the start of the newly-added one to close
         /// any gap between them, if necessary.</param>
-        public void Add(Curve subCurve, bool autoConnect)
+        /// <param name="autoExplode">If true and the added curve is itself a PolyCurve, the subcurves
+        /// of that polycurve will be added instead of the parent curve.</param>
+        public void Add(Curve subCurve, bool autoConnect, bool autoExplode = false)
         {
             if (autoConnect == true && SubCurves.Count > 0)
             {
@@ -462,7 +464,13 @@ namespace Nucleus.Geometry
                     Add(new Line(endPt, subCurve.StartPoint));
                 }
             }
-            Add(subCurve);
+            if (autoExplode && subCurve is PolyCurve)
+            {
+                PolyCurve pCurve = (PolyCurve)subCurve;
+                foreach (Curve subSubCurve in pCurve.SubCurves)
+                    Add(subSubCurve);
+            }
+            else Add(subCurve);
         }
 
         /// <summary>

@@ -153,5 +153,18 @@ namespace Nucleus.Extensions
         {
             return value.Clamp(0, list.Count - 1);
         }
+
+        /// <summary>
+        /// Gets the sign of the integer, expressed as +1 for positive numbers
+        /// and -1 for negative ones.  Zero is treated as being positive in this
+        /// instance.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static int Sign(this int value)
+        {
+            if (value >= 0) return 1;
+            else return -1;
+        }
     }
 }
