@@ -66,6 +66,10 @@
     <Compile Include="Artitecture\RoomCollection.cs" />
     <Compile Include="Artitecture\RoomTemplateCollection.cs" />
     <Compile Include="Artitecture\RoomType.cs" />
+    <Compile Include="Cards\Card.cs" />
+    <Compile Include="Cards\PlayingCard.cs" />
+    <Compile Include="Cards\PlayingCardRank.cs" />
+    <Compile Include="Cards\PlayingCardSuit.cs" />
     <Compile Include="Components\Abilities\Ability.cs" />
     <Compile Include="Components\Abilities\BumpAttackAbility.cs" />
     <Compile Include="Components\Abilities\DirectionalItemUseAbility.cs" />
