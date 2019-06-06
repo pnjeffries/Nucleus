@@ -76,6 +76,7 @@
     <Compile Include="Analysis\CalcVariable.cs" />
     <Compile Include="Analysis\EC3MemberChecks.cs" />
     <Compile Include="Analysis\FlatConcreteSlabChecks.cs" />
+    <Compile Include="Application\IHost.cs" />
     <Compile Include="Base\Deletable.cs" />
     <Compile Include="Base\DoubleParameter.cs" />
     <Compile Include="Base\Gender.cs" />
