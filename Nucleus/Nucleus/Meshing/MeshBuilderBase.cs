@@ -754,14 +754,24 @@ namespace Nucleus.Meshing
                     foreach (var vert in extraVerts) vertices.Add(new Vertex(vert));
                 }
 
-                MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(vertices);
-                faces.CullOutsideXY(mappedPerimeter);
-
-                if (mappedVoidPerimeters != null)
+                MeshFaceCollection faces;
+                if (extraVerts == null && vertices.Count.InRange(3,4))
                 {
-                    foreach (Vector[] voidPerimeter in mappedVoidPerimeters)
+                    // Shortcut delaunay triangulation step by directly creating a tri/quad
+                    faces = new MeshFaceCollection(new MeshFace(vertices));
+                }
+                else
+                {
+                    // Create a delaunay triangulation of the region
+                    faces = Mesh.DelaunayTriangulationXY(vertices);
+                    faces.CullOutsideXY(mappedPerimeter);
+
+                    if (mappedVoidPerimeters != null)
                     {
-                        faces.CullInsideXY(voidPerimeter);
+                        foreach (Vector[] voidPerimeter in mappedVoidPerimeters)
+                        {
+                            faces.CullInsideXY(voidPerimeter);
+                        }
                     }
                 }
 

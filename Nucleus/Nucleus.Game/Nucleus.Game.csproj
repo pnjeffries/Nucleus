@@ -99,6 +99,7 @@
     <Compile Include="Components\Abilities\WaitAbility.cs" />
     <Compile Include="Effects\ActorOrientationEffect.cs" />
     <Compile Include="Effects\AddAbilityEffect.cs" />
+    <Compile Include="Effects\AnimationEffect.cs" />
     <Compile Include="Effects\BasicEffect.cs" />
     <Compile Include="Effects\DamageEffect.cs" />
     <Compile Include="Effects\DamageType.cs" />

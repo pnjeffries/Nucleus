@@ -154,7 +154,7 @@ namespace Nucleus.Geometry
         {
             for (int i = Count - 1; i >= 0; i--)
             {
-                if (!boundary.PolygonContainmentXY(this[i].AveragePoint())) RemoveAt(i);
+                if (!boundary.PolygonContainmentXY(this[i].Centroid())) RemoveAt(i);
             }
         }
 

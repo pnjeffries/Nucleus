@@ -12,5 +12,14 @@ namespace Nucleus.Geometry
     /// </summary>
     public interface ISimpleCurve
     {
+        /// <summary>
+        /// Find the closest point on this curve to a test point, expressed as a
+        /// parameter value from 0-1.  This may be a position on the curve or it may
+        /// be the start (0) or end (1) of the curve depending on the relative location
+        /// of the test point.
+        /// </summary>
+        /// <param name="toPoint">The test point to find the closest point to</param>
+        /// <returns></returns>
+        double ClosestParameter(Vector toPoint);
     }
 }
