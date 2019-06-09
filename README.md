@@ -22,3 +22,5 @@ OsmSharp: https://github.com/OsmSharp/core | [MIT](https://github.com/OsmSharp/c
 Nominatim.API: https://github.com/f1ana/Nominatim.API | [MIT](https://github.com/f1ana/Nominatim.API/blob/master/LICENSE)
 
 OpenTK: https://github.com/opentk/opentk | [The Open Toolkit Library License](https://github.com/opentk/opentk/blob/master/License.txt)
+
+DotSpatial: https://github.com/DotSpatial/DotSpatial | [MIT](https://github.com/DotSpatial/DotSpatial/blob/master/LICENSE)
