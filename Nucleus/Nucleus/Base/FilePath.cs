@@ -135,6 +135,13 @@ namespace Nucleus.Base
             get { return _Path != null; }
         }
 
+        /// <summary>
+        /// Does this filepath point to a directory rather than a file?
+        /// </summary>
+        public bool IsDirectory
+        {
+            get { return (File.GetAttributes(_Path) & FileAttributes.Directory) == FileAttributes.Directory; }
+        }
 
         /// <summary>
         /// Gets the extension of this filepath.
@@ -276,6 +283,51 @@ namespace Nucleus.Base
             return new FilePath(TrimExtension() + suffix + (newExtension.StartsWith(".") ? newExtension : "." + newExtension));
         }
 
+        /// <summary>
+        /// Obtain a list of all filePaths contained within this one.
+        /// If this filePath points to a single file, a collection containing
+        /// only that file will be returned.  If this filePath points to a folder
+        /// the contents of the folder will be returned.  If the recursive option
+        /// is set to true, any subfolders will be exploded as well and their
+        /// contents included in the resulting list.
+        /// </summary>
+        /// <param name="recursive"></param>
+        /// <returns></returns>
+        public IList<FilePath> Explode(bool recursive = false, string extension = null)
+        {
+            var result = new List<FilePath>();
+            return Explode(recursive, result, extension);
+        }
+
+        /// <summary>
+        /// Obtain a list of all filePaths contained within this one.
+        /// If this filePath points to a single file, a collection containing
+        /// only that file will be returned.  If this filePath points to a folder
+        /// the contents of the folder will be returned.  If the recursive option
+        /// is set to true, any subfolders will be exploded as well and their
+        /// contents included in the resulting list.
+        /// </summary>
+        /// <param name="recursive"></param>
+        /// <param name="addTo">Collection to which results are to be added.
+        /// Should not be null.</param>
+        /// <returns></returns>
+        public IList<FilePath> Explode(bool recursive, IList<FilePath> addTo, string extension = null)
+        {
+            if (IsDirectory)
+            {
+                foreach (var file in FilesInFolder(this))
+                {
+                    FilePath filePath = file;
+                    if (recursive)
+                        filePath.Explode(recursive, addTo, extension);
+                    else if (extension == null || file.EndsWith(extension, true, null))
+                        addTo.Add(filePath);
+                }
+            }
+            else if (extension == null || _Path.EndsWith(extension, true, null))
+                addTo.Add(this);
+            return addTo;
+        }
 #endif
 
 #endregion
@@ -312,9 +364,20 @@ namespace Nucleus.Base
 
 #endif
 
-#endregion
 
-#region Operators
+        /// <summary>
+        /// Get all of the files in the specified folder
+        /// </summary>
+        /// <param name="folderPath"></param>
+        /// <returns></returns>
+        private static IList<string> FilesInFolder(FilePath folderPath)
+        {
+            return System.IO.Directory.GetFiles(folderPath);
+        }
+
+        #endregion
+
+        #region Operators
 
         /// <summary>
         /// Implicit to string conversion operator

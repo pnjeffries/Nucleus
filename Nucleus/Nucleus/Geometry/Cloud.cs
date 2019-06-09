@@ -69,7 +69,7 @@ namespace Nucleus.Geometry
         /// Initialise a point cloud using the specified point locations
         /// </summary>
         /// <param name="points"></param>
-        public Cloud(IEnumerable<Vector> points, GeometryAttributes attributes = null) : this(attributes)
+        public Cloud(IList<Vector> points, GeometryAttributes attributes = null) : this(attributes)
         {
             foreach (Vector point in points)
             {

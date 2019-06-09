@@ -51,6 +51,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.Unity", "Nucleus.Un
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.xBIM", "Nucleus.xBIM\Nucleus.xBIM.csproj", "{31D6174C-FFCD-490E-8E52-2F6C286A03B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.Shapefile", "Nucleus.Shapefile\Nucleus.Shapefile.csproj", "{610D77AE-1137-4A4A-969F-10664C6B0AB5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,10 @@ Global
 		{31D6174C-FFCD-490E-8E52-2F6C286A03B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31D6174C-FFCD-490E-8E52-2F6C286A03B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31D6174C-FFCD-490E-8E52-2F6C286A03B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{610D77AE-1137-4A4A-969F-10664C6B0AB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{610D77AE-1137-4A4A-969F-10664C6B0AB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{610D77AE-1137-4A4A-969F-10664C6B0AB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{610D77AE-1137-4A4A-969F-10664C6B0AB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
