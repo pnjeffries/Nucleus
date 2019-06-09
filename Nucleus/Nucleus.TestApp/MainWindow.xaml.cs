@@ -75,6 +75,45 @@ namespace Nucleus.TestApp
             DelaunayCanvas.Geometry = geometry;
         }
 
+        private void AnalysisMeshButton_Click(object sender, RoutedEventArgs e)
+        {
+            Random rng = new Random();
+            BoundingBox box = new BoundingBox(1, 9, -9, -1, 0, 0);
+
+            int size = 100;
+            //Geometry.Vector[] points = box.RandomPointsInside(rng, size);
+            //VertexCollection verts = new VertexCollection(points);
+
+            VertexCollection verts = new VertexCollection();
+            //verts.Add(new Vertex(1, -1));
+            int divs = 5;
+            for (int i = 0; i <= divs; i++)
+            {
+                for (int j = 0; j <= divs; j++)
+                {
+                    Geometry.Vector pt = new Geometry.Vector(box.X.ValueAt(((double)i) / divs), box.Y.ValueAt(((double)j) / divs));
+                    verts.Add(new Vertex(pt));
+                }
+            }
+
+            MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(verts);
+            faces.Quadrangulate();
+            //Dictionary<Vertex, MeshFace> voronoi = Mesh.VoronoiFromDelaunay(verts, faces);
+            //ShapeCollection geometry = new MeshFaceCollection(voronoi.Values).ExtractFaceBoundaries();
+            CurveCollection edges = faces.ExtractFaceBoundaries();
+            VertexGeometryCollection geometry = new VertexGeometryCollection();
+            foreach (var edge in edges)
+            {
+                var region = new PlanarRegion(edge);
+                geometry.Add(region);
+                region.Attributes = new GeometryAttributes(new Colour(128, 0, 255, 128));
+                geometry.Add(edge);
+                edge.Attributes = new GeometryAttributes(new Colour(64, 0, 0, 0));
+            }
+            geometry.Add(new Cloud(verts.ExtractPoints()));
+            DelaunayCanvas.Geometry = geometry;
+        }
+
         private void VoronoiButton_Click(object sender, RoutedEventArgs e)
         {
             Random rng = null;

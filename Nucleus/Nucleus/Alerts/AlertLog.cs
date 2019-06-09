@@ -37,6 +37,28 @@ namespace Nucleus.Alerts
         }
 
         /// <summary>
+        /// Raise a unique alert based on an exception
+        /// </summary>
+        /// <param name="ex">The exception to raise an alert based on</param>
+        public void RaiseAlert(Exception ex, AlertLevel level = AlertLevel.Error)
+        {
+            RaiseAlert(ex.Message, level);
+        }
+
+        /// <summary>
+        /// Raise an alert based on an exception, merging it with any 
+        /// previous alerts with the same ID
+        /// </summary>
+        /// <param name="alertID">The identifier for the alert type.  
+        /// Multiple alerts with the same ID will be merged.</param>
+        /// <param name="ex">The exception to raise an alert based on</param>
+        /// <param name="level">The level of the alert</param>
+        public void RaiseAlert(string alertID, Exception ex, AlertLevel level = AlertLevel.Error)
+        {
+            RaiseAlert(alertID, ex.Message, level);
+        }
+
+        /// <summary>
         /// Raise a unique alert
         /// </summary>
         /// <param name="message">The message to display</param>

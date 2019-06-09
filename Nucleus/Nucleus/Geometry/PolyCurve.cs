@@ -417,6 +417,13 @@ namespace Nucleus.Geometry
             return result;
         }
 
+        /// <summary>
+        /// Produce a set of points which represents a facetted version of this curve
+        /// </summary>
+        /// <param name="tolerance">The maximum angular deviation between the curve and the 
+        /// facetted geometry.  If zero, the tolerance is taken as infinite and curves will
+        /// not be facetted between kinks.</param>
+        /// <returns></returns>
         public override Vector[] Facet(Angle tolerance)
         {
             var result = new List<Vector>();
@@ -851,6 +858,44 @@ namespace Nucleus.Geometry
             return false;
         }
 
+
+        /// <summary>
+        /// Find the self-intersection parameters of this polycurve
+        /// on the XY plane.
+        /// </summary>
+        /// <returns></returns>
+        public IList<double> SelfIntersectionsXY()
+        {
+            var result = new List<double>();
+
+            IList<ISimpleCurve> simples = ToSimpleCurves();
+            int max = simples.Count;
+            if (Closed) max++;
+            // Walk along the curve forwards to find the next intersection
+            for (int i = 0; i < max - 1; i++)
+            {
+                ISimpleCurve crvA = simples[i];
+                for (int j = i + 1; j < max; j++)
+                {
+                    ISimpleCurve crvB = simples.GetWrapped(j);
+                    Vector[] chuck = Intersect.CurveCurveXY(crvA, crvB, 0.0001);
+                    if (chuck != null && chuck.Length > 0)
+                    {
+                        foreach (Vector pt in chuck)
+                        {
+                            // Work out intersection parameters and add to result
+                            double t0 = crvA.ClosestParameter(pt);
+                            result.Add(ParameterAt(i, t0));
+                            double t1 = crvB.ClosestParameter(pt);
+                            result.Add(ParameterAt(j, t1));
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
         public override string ToString()
         {
             return "PolyCurve";
@@ -924,6 +969,85 @@ namespace Nucleus.Geometry
                 }
             }
 
+            return result;
+        }
+
+        /// <summary>
+        /// Calculate the angle between the tangents at the end of one curve and the start of another
+        /// </summary>
+        /// <param name="endOf"></param>
+        /// <param name="startOf"></param>
+        /// <returns></returns>
+        private static Angle AngleBetweenEnds(Curve endOf, Curve startOf)
+        {
+            if (endOf != null && startOf != null)
+            {
+                Vector eV = endOf.TangentAt(1);
+                Vector sV = startOf.TangentAt(0);
+                return eV.AngleBetween(sV);
+            }
+            else return Angle.Undefined;
+        }
+
+        /// <summary>
+        /// Remove from this polycurve any subcurves at the start or end of the curve
+        /// whose length is below the specified limit.  Returns true if any segments have been removed.
+        /// Note that this will only remove short segments at the very ends of the curve - to ensure
+        /// that no end curve exists below the specified limit this should be called repeatedly.
+        /// If the end curve is itself a PolyCurve then this function will be called recursively to remove
+        /// any below-tolerance curve at the relevant end of that curve.  An angle tolerance may be specified
+        /// so that end curves which are short cut have continuity with the adjacent curve may be excluded from
+        /// being trimmed.
+        /// </summary>
+        /// <param name="minLength">The minimum value of length.  And subcurves below this length at the ends
+        /// of the curve will be removed.</param>
+        /// <param name="angleTolerance">If the angle between the end curve and the adjacent curve is
+        /// less than this tolerance value, it will not be removed.</param>
+        /// <param name="atStart">If true, the curve at the start will be tested for removal.</param>
+        /// <param name="atEnd">If true, the curve at the end will be tested for removal.</param>
+        /// <returns></returns>
+        /// <remarks>A curve pair which is below angle tolerance will not be removed even if that pairing itself
+        /// has a combined length less than the minimum.</remarks>
+        public bool TrimShortEndCurves(double minLength, Angle angleTolerance = new Angle(), bool atStart = true, bool atEnd = true)
+        {
+            bool result = false;
+            if (!Closed)
+            {
+                if (atStart)
+                {
+                    var startCrv = SubCurves.FirstOrDefault();
+                    if (startCrv != null && startCrv.Length < minLength)
+                    {
+                        if (angleTolerance <= 0 || AngleBetweenEnds(startCrv, SubCurves.GetOrDefault(1)) >= angleTolerance)
+                        {
+                            SubCurves.RemoveFirst();
+                            result = true;
+                        }
+                    }
+                    else if (startCrv is PolyCurve && ((PolyCurve)startCrv).TrimShortEndCurves(minLength, angleTolerance, atStart, false))
+                    {
+                        result = true;
+                        if (!startCrv.IsValid) SubCurves.RemoveFirst();
+                    }
+                }
+                if (atEnd)
+                {
+                    var endCrv = SubCurves.LastOrDefault();
+                    if (endCrv != null && endCrv.Length < minLength)
+                    {
+                        if (angleTolerance <= 0 || AngleBetweenEnds(SubCurves.GetOrDefault(SubCurves.Count - 2), endCrv) >= angleTolerance)
+                        {
+                            SubCurves.RemoveLast();
+                            result = true;
+                        }
+                    }
+                    else if (endCrv is PolyCurve && ((PolyCurve)endCrv).TrimShortEndCurves(minLength, angleTolerance, false, atEnd))
+                    {
+                        result = true;
+                        if (!endCrv.IsValid) SubCurves.RemoveLast();
+                    }
+                }
+            }
             return result;
         }
 

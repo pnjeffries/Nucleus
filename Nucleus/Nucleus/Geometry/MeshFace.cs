@@ -895,6 +895,24 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Calculate the centroid of this face.
+        /// </summary>
+        /// <returns></returns>
+        public Vector Centroid()
+        {
+            if (Count == 3)
+            {
+                // Shortcut in the case of Tris
+                return this.AveragePoint();
+            }
+            else
+            {
+                CalculateArea(out Vector centroid);
+                return centroid;
+            }
+        }
+
+        /// <summary>
         /// Calculate the normal vector for this face
         /// </summary>
         /// <returns></returns>
