@@ -95,9 +95,14 @@ namespace Nucleus.Geometry
         /// <returns>The XY intersection point, if one exists.  Else (the lines are null or parallel) Vector.Unset</returns>
         public static Vector LineLineXY(Vector pt0, Vector v0, Vector pt1, Vector v1, ref double t0, ref double t1)
         {
-            if (v0.X.Abs() <= 0.0000001)
+            const double tolerance = 0.0000001;
+            if (v0.X.Abs() <= tolerance)
             {
-                if (v1.X.Abs() <= 0.0000001) return Vector.Unset;
+                if (v1.X.Abs() <= tolerance)
+                {
+                    // Lines are parallel, but may still touch/overlap...
+                    return Vector.Unset;
+                }
                 else
                 {
                     double m2 = v1.Y / v1.X;
@@ -106,7 +111,7 @@ namespace Nucleus.Geometry
                     double y = m2 * x + c2;
                     t0 = (y - pt0.Y) / v0.Y;
                     t1 = (x - pt1.X) / v1.X;
-                    return new Vector(x,y,pt0.Z);
+                    return new Vector(x, y, pt0.Z);
                 }
             }
             else if (v1.X.Abs() <= 0.0000001)
@@ -894,6 +899,20 @@ namespace Nucleus.Geometry
                 return true;
             }
             else return false;
+        }
+
+        /// <summary>
+        /// Find the self-intersection parameters of a polycurve
+        /// on the XY plane.
+        /// Returns a sorted list where the keys are the intersection
+        /// parameters along this curve and the values are their matching
+        /// parameters.
+        /// </summary>
+        /// <param name="polyCurve"></param>
+        /// <returns></returns>
+        public static SortedList<double, double> SelfXY(PolyCurve polyCurve)
+        {
+            return polyCurve.SelfIntersectionsXY();
         }
 
         /// <summary>

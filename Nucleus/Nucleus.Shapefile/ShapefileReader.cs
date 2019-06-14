@@ -30,7 +30,7 @@ namespace Nucleus.Shapefile
         /// <param name="extension">The extension of the shapefiles to be read.  If null, all files
         /// of any type will be read.</param>
         /// <returns></returns>
-        public GeometryLayerTable ReadShapeFiles(FilePath filePath, bool includeSubFolders = false, string extension = ".shp")
+        public GeometryLayerTable ReadShapefiles(FilePath filePath, bool includeSubFolders = false, string extension = ".shp")
         {
             var subFiles = filePath.Explode(includeSubFolders, extension);
             return ReadShapeFiles(subFiles);

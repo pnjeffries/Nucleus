@@ -418,9 +418,14 @@ namespace Nucleus.Geometry
             return next;
         }
 
+        #endregion
+
+        #region Classes
+
         /// <summary>
         /// Temporary data structure to hold segments of perimeter curve during a slicing operation
         /// </summary>
+        [Serializable]
         private class PerimeterSegment
         {
             public Curve SourceCurve = null;
@@ -445,5 +450,6 @@ namespace Nucleus.Geometry
         }
 
         #endregion
+
     }
 }

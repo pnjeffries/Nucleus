@@ -858,15 +858,39 @@ namespace Nucleus.Geometry
             return false;
         }
 
+        /// <summary>
+        /// Break down 
+        /// </summary>
+        /// <returns></returns>
+        public IList<Curve> SelfIntersectionXYLoops()
+        {
+            var result = new List<Curve>();
+            SortedList<double, double> chucks = SelfIntersectionsXY();
+            double tStart = 0;
+            if (chucks.Count > 0)
+            {
+                while (chucks.Count > 0)
+                {
+                    double tEnd = chucks.Keys.First();
+                    Curve crv = Extract(tStart, tEnd);
+                }
+            }
+            else result.Add(this);
+            return result;
+        }
 
         /// <summary>
         /// Find the self-intersection parameters of this polycurve
         /// on the XY plane.
+        /// Returns a sorted list where the keys are the intersection
+        /// parameters along this curve and the values are their matching
+        /// parameters.
         /// </summary>
         /// <returns></returns>
-        public IList<double> SelfIntersectionsXY()
+        public SortedList<double, double> SelfIntersectionsXY()
         {
-            var result = new List<double>();
+            // Intersection parameters
+            var result = new SortedList<double, double>();
 
             IList<ISimpleCurve> simples = ToSimpleCurves();
             int max = simples.Count;
@@ -884,10 +908,12 @@ namespace Nucleus.Geometry
                         foreach (Vector pt in chuck)
                         {
                             // Work out intersection parameters and add to result
-                            double t0 = crvA.ClosestParameter(pt);
-                            result.Add(ParameterAt(i, t0));
-                            double t1 = crvB.ClosestParameter(pt);
-                            result.Add(ParameterAt(j, t1));
+                            double st0 = crvA.ClosestParameter(pt);
+                            double st1 = crvB.ClosestParameter(pt);
+                            double t0 = ParameterAt(i, st0);
+                            double t1 = ParameterAt(j, st1);
+                            result.Add(t0, t1);
+                            result.Add(t1, t0);
                         }
                     }
                 }

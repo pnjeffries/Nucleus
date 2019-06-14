@@ -1242,6 +1242,18 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Extract a subset of this curve between the specified start and end parameters
+        /// as a new curve.
+        /// </summary>
+        /// <param name="tStart">The start parameter of the subdomain of this curve to be extracted</param>
+        /// <param name="tEnd">The end parameter of the subdomain of this curve to be extracted</param>
+        /// <returns></returns>
+        public Curve Extract(double tStart, double tEnd)
+        {
+            return Extract(new Interval(tStart, tEnd));
+        }
+
+        /// <summary>
         /// Extract a subset of this curve within the specified domain
         /// as a new curve.
         /// </summary>

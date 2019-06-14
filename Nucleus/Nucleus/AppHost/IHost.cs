@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Application
+namespace Nucleus.AppHost
 {
     /// <summary>
     /// Interface for application hosts.

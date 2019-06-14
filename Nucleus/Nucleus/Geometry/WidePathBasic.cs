@@ -223,7 +223,7 @@ namespace Nucleus.Geometry
             var result = new List<WidePathBasic>();
             foreach (Curve curve in curves)
             {
-                result.Add(new Geometry.WidePathBasic(curve.Duplicate(), leftOffset, rightOffset));
+                result.Add(new WidePathBasic(curve.Duplicate(), leftOffset, rightOffset));
             }
             if (generateEdges)
             {
