@@ -34,6 +34,9 @@ namespace Nucleus.TestApp
             InitializeComponent();
 
             GenerateSpider();
+
+            VertexGeometry line = new Geometry.Line(0, 0, 10, 10);
+            GeometryVisualiserDialog.Show(line);
         }
 
         private void DelaunayButton_Click(object sender, RoutedEventArgs e)

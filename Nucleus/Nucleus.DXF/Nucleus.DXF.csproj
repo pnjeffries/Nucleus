@@ -39,6 +39,9 @@
     <AssemblyOriginatorKeyFile>NucleusKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="netDxf">
+      <HintPath>..\References\netDxf.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -59,10 +62,6 @@
     <None Include="NucleusKey.snk" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\netDxf\netDxf\netDxf.csproj">
-      <Project>{785380e0-ceb9-4c34-82e5-60d0e33e848e}</Project>
-      <Name>netDxf</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Nucleus\Nucleus.csproj">
       <Project>{756018c1-57a3-4cd4-98a8-404264e74cf1}</Project>
       <Name>Nucleus</Name>

@@ -132,6 +132,9 @@
     <Compile Include="EnumBindingSourceExtension.cs" />
     <Compile Include="Extensions\GridExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="GeometryVisualiserDialog.xaml.cs">
+      <DependentUpon>GeometryVisualiserDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ToWPF.cs" />
     <Compile Include="Field Controls\Bool6DFieldControl.xaml.cs">
       <DependentUpon>Bool6DFieldControl.xaml</DependentUpon>
@@ -279,6 +282,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Field Controls\SliderFieldControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GeometryVisualiserDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -134,7 +134,7 @@ namespace Nucleus.WPF
         ///// <summary>
         ///// Should the canvas be scaled to fit it's contents?
         ///// </summary>
-        //public bool ScaleToFit { get; set; } = true;
+        public bool ScaleToFit { get; set; } = false;
 
         ///// <summary>
         ///// Scale the thickness of curves and the diameter of points to
@@ -353,7 +353,7 @@ namespace Nucleus.WPF
             Children.Clear();
 
             VertexGeometryCollection geometry = Geometry;
-            //BoundingBox bBox = new BoundingBox(geometry);
+            
 
             //if (ProportionalThickness) scaleFactor = bBox.MaxSize;
             
@@ -366,12 +366,13 @@ namespace Nucleus.WPF
                 }
             }
 
-            /*if (ScaleToFit)
+            if (ScaleToFit)
             {
-                //Width = bBox.SizeX;
-                //Height = bBox.SizeY;
-                //RenderTransform = new TranslateTransform(-bBox.MinX, bBox.MaxY);
-            }*/
+                BoundingBox bBox = new BoundingBox(geometry);
+                Width = bBox.SizeX;
+                Height = bBox.SizeY;
+                RenderTransform = new TranslateTransform(-bBox.MinX, bBox.MaxY);
+            }
         }
     }
 }
