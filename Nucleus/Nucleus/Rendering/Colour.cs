@@ -376,6 +376,15 @@ namespace Nucleus.Rendering
         }
 
         /// <summary>
+        /// Convert this colour to an ARGB hex string
+        /// </summary>
+        /// <returns></returns>
+        public string ToHex()
+        {
+            return A.ToString("X2") + R.ToString("X2") + G.ToString("X2") + B.ToString("X2");
+        }
+
+        /// <summary>
         /// Multiply all components of this colour by a scalar factor.
         /// Components will be clamped to 0-255 to prevent overflow.
         /// </summary>

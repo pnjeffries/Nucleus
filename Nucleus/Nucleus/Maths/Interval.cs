@@ -675,7 +675,7 @@ namespace Nucleus.Maths
                     if (cutterCount > subtractors.Count) return;
                     if (cutter.IsValid)
                     {
-                        if (cutter.IsDecreasing && t >= cutter.Start) wrapped = true; //
+                        if (cutter.IsDecreasing && t >= cutter.Start) wrapped = true;
 
                         // Move to the end of the current cutter:
                         t = cutter.End;
@@ -1018,6 +1018,28 @@ namespace Nucleus.Maths
                 interval.Not(subtractors, result);
             }
             return result;
+        }
+
+        /// <summary>
+        /// Join any intervals in this collection that start at 0 and end at the loop point
+        /// </summary>
+        /// <param name="intervals"></param>
+        /// <param name="endLoop"></param>
+        /// <returns></returns>
+        public static void JoinLoop(this IList<Interval> intervals, double endLoop = 1.0, double tolerance = 0.000001)
+        {
+            if (intervals.Count > 1)
+            {
+                Interval start = intervals[0];
+                Interval end = intervals.Last();
+
+                if (start.Start <= tolerance && end.End >= endLoop - tolerance)
+                {
+                    intervals.RemoveAt(0);
+                    intervals.RemoveLast();
+                    intervals.Add(new Interval(end.Start, start.End));
+                }
+            }
         }
     }
 }
