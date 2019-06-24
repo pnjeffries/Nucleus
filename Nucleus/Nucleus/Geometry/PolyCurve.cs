@@ -342,6 +342,12 @@ namespace Nucleus.Geometry
         /// between vertices.</remarks>
         public override Vector PointAt(int span, double tSpan)
         {
+            if (tSpan == 0 && span > 0)
+            {
+                // Fix end-point in non-existent segement problem
+                span--;
+                tSpan = 1;
+            }
             foreach (Curve subCrv in SubCurves)
             {
                 int segCount = subCrv.SegmentCount;

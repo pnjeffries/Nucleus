@@ -39,5 +39,20 @@ namespace Nucleus.UnitTests
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(new Interval(0.784400005286198, 0.290137140140111), result[0]);
         }
+
+        [TestMethod]
+        public void IntervalLoopNotTest()
+        {
+            var subtractors = new List<Interval>()
+            {
+                new Interval(0.75, 0.8)
+            };
+            var test = new Interval(0, 1);
+            var result = new List<Interval>();
+            test.Not(subtractors, result);
+            result.JoinLoop();
+
+            Assert.AreEqual(new Interval(0.8, 0.75), result[0]);
+        }
     }
 }

@@ -22,6 +22,7 @@ using Nucleus.Base;
 using Nucleus.Extensions;
 using Nucleus.Maths;
 using Nucleus.Model;
+using Nucleus.Rendering;
 using Nucleus.Units;
 using System;
 using System.Collections.Generic;
@@ -189,6 +190,12 @@ namespace Nucleus.Geometry
             tSpan = t * SegmentCount;
             int span = (int)Math.Floor(tSpan);
             tSpan = tSpan % 1.0; //Position in span
+            // Adjust end-points to still lie in their span
+            if (tSpan == 0 && span > 0)
+            {
+                span--;
+                tSpan = 1;
+            }
 
             return span;
         }
@@ -483,8 +490,11 @@ namespace Nucleus.Geometry
         /// <param name="tMid">The curve parameter at the mid-point of the specified subdomain</param>
         /// <param name="length">The length of the subdomain (i.e. the domain will start and end
         /// half of this distance from tMid) </param>
+        /// <param name="shuntToFit">If true, this curve is open and tMid lies within length/2 of one
+        /// end, the subdomain will be 'shunted' along so that as much as possible of the specified
+        /// length can still be obtained, albeit not centred on tMid anymore.</param>
         /// <returns></returns>
-        public virtual Interval SubdomainByCentre(double tMid, double length)
+        public virtual Interval SubdomainByCentre(double tMid, double length, bool shuntToFit = false)
         {
             double midLength = LengthAt(tMid);
             double startLength = midLength - length / 2.0;
@@ -496,6 +506,25 @@ namespace Nucleus.Geometry
                 if (length > crvLength) return new Interval(0, 1);
                 startLength = startLength.WrapTo(new Interval(0,crvLength));
                 endLength = endLength.WrapTo(new Interval(0, crvLength));
+            }
+            else if (shuntToFit)
+            {
+                // Check if the domain falls off one end or the other and if so
+                // 'shunt' it's full length back into the curve domain
+                if (startLength < 0)
+                {
+                    startLength = 0;
+                    endLength = length;
+                }
+                else
+                {
+                    double crvLength = Length;
+                    if (endLength > crvLength)
+                    {
+                        startLength = crvLength - length;
+                        endLength = length;
+                    }
+                }
             }
             var result = new Interval(ParameterAt(startLength), ParameterAt(endLength));
             if (!Closed) return result.Overlap(new Interval(0, 1));
@@ -1339,6 +1368,39 @@ namespace Nucleus.Geometry
         public override string ToString()
         {
             return "Curve";
+        }
+
+        /// <summary>
+        /// Convert this curve to an SVG HTML polygon definition.
+        /// </summary>
+        /// <param name="stroke">The colour of the line</param>
+        /// <param name="fill">The colour of the filled region within the curve</param>
+        /// <param name="strokeThickness">The width of the drawn line</param>
+        /// <returns></returns>
+        public string ToSVG(Colour stroke, Colour fill, double strokeThickness = 1.0)
+        {
+            var sb = new StringBuilder();
+            sb.Append("<polygon ");
+            sb.Append("points=\"");
+            Vertex lastVert = null;
+            foreach (Vertex vert in Vertices)
+            {
+                if (lastVert != null) sb.Append(" ");
+                sb.Append(vert.X);
+                sb.Append(",");
+                sb.Append(vert.Y);
+                lastVert = vert;
+            }
+            sb.Append("\" style:\"");
+            sb.Append("fill:#");
+            sb.Append(fill.ToHex());
+            sb.Append(";stroke:#");
+            sb.Append(stroke.ToHex());
+            sb.Append(";stroke-width:");
+            sb.Append(strokeThickness);
+            sb.Append("\" />");
+
+            return sb.ToString();
         }
 
         /// <summary>

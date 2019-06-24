@@ -168,6 +168,42 @@ namespace Nucleus.UnitTests
         }
 
         [TestMethod]
+        public void SubdomainByCentreNoShuntTest()
+        {
+            var pline = new PolyLine(
+                new Vector(0, 0),
+                new Vector(0, 2),
+                new Vector(0, 2),
+                new Vector(2, 0));
+
+            var polyCrv = pline.ToPolyCurve();
+
+            double length = 3.0;
+            var domain = polyCrv.SubdomainByCentre(0, length);
+            Curve subCrv = polyCrv.Extract(domain);
+
+            Assert.AreEqual(length/2, subCrv.Length, 0.00001);
+        }
+
+        [TestMethod]
+        public void SubdomainByCentreShuntTest()
+        {
+            var pline = new PolyLine(
+                new Vector(0, 0),
+                new Vector(0, 2),
+                new Vector(0, 2),
+                new Vector(2, 0));
+
+            var polyCrv = pline.ToPolyCurve();
+
+            double length = 3.0;
+            var domain = polyCrv.SubdomainByCentre(0, length, true);
+            Curve subCrv = polyCrv.Extract(domain);
+
+            Assert.AreEqual(length, subCrv.Length, 0.00001);
+        }
+
+        [TestMethod]
         public void CurveOverlapTest()
         {
             var crv1 = new Line(0, 0, 0, 10);

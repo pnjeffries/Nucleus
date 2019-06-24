@@ -97,6 +97,11 @@ namespace Nucleus.Geometry
         /// </summary>
         public Vector Direction { get { return (EndPoint - StartPoint).Unitize(); } }
 
+        /// <summary>
+        /// ISimpleCurve Curve implementation
+        /// </summary>
+        Curve ISimpleCurve.Curve => this;
+
         #endregion
 
         #region Construtors
@@ -426,6 +431,11 @@ namespace Nucleus.Geometry
             if (t < 0) return 0;
             else if (t > 1.0) return 1;
             else return t;
+        }
+
+        double ISimpleCurve.ClosestParameter(Vector toPoint)
+        {
+            throw new NotImplementedException();
         }
 
 

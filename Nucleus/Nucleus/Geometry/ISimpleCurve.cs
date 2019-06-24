@@ -13,6 +13,11 @@ namespace Nucleus.Geometry
     public interface ISimpleCurve
     {
         /// <summary>
+        /// Get the curve representation of this SimpleCurve
+        /// </summary>
+        Curve Curve { get; }
+
+        /// <summary>
         /// Find the closest point on this curve to a test point, expressed as a
         /// parameter value from 0-1.  This may be a position on the curve or it may
         /// be the start (0) or end (1) of the curve depending on the relative location

@@ -163,6 +163,11 @@ namespace Nucleus.Geometry
             }
         }
 
+        /// <summary>
+        /// ISimpleCurve Curve implementation
+        /// </summary>
+        Curve ISimpleCurve.Curve => this;
+
         #endregion
 
         #region Constructors
