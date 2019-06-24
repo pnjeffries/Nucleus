@@ -893,7 +893,8 @@ namespace Nucleus.Geometry
             }
             //Segment is to the right of ray start
             else if ((segStart.Y >= rayStart.Y && segEnd.Y < rayStart.Y)
-                || (segStart.Y <= rayStart.Y && segEnd.Y > rayStart.Y))
+                || (segStart.Y <= rayStart.Y && segEnd.Y > rayStart.Y)
+                || (rayStart.Y == segStart.Y && rayStart.Y == segEnd.Y))
             {
                 //if (segStart.X == rayStart.X && segEnd.X == rayStart.X) onLine = true;
                 return true;

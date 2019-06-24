@@ -43,10 +43,10 @@ namespace Nucleus.WPF
 
         #region Static Methods
 
-        public static void Show(object visualise)
+        public static void ShowDialog(object visualise)
         {
             var dialog = new GeometryVisualiserDialog(visualise);
-            dialog.Show();
+            dialog.ShowDialog();
         }
 
         #endregion

@@ -29,7 +29,7 @@ namespace Nucleus.Visualiser
         {
             try
             { 
-                GeometryVisualiserDialog.Show(objectProvider.GetObject());
+                GeometryVisualiserDialog.ShowDialog(objectProvider.GetObject());
             }
             catch
             {
