@@ -35,8 +35,13 @@ namespace Nucleus.TestApp
 
             GenerateSpider();
 
-            VertexGeometry line = new Geometry.Line(0, 0, 10, 10);
-            GeometryVisualiserDialog.ShowDialog(line);
+            Geometry.Line line = new Geometry.Line(0, 0, 1000, 1000);
+            //GeometryVisualiserDialog.ShowDialog(line);
+            VertexGeometry arc = new Geometry.Arc(new Circle(30, new Geometry.Vector(-50, -50)));
+            //GeometryVisualiserDialog.ShowDialog(arc);
+            
+            VertexGeometryCollection coll = new VertexGeometryCollection(line, arc);
+            //GeometryVisualiserDialog.ShowDialog(coll);
         }
 
         private void DelaunayButton_Click(object sender, RoutedEventArgs e)
