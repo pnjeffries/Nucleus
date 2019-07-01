@@ -1021,6 +1021,7 @@ namespace Nucleus.Geometry
         {
             //TODO: Split() edges in faces with poor aspect ratios?
 
+
             //Vector midPt = this.AveragePoint();
             Vector[] midPts = MedialAxisPoints();
             int[] opposites = OppositeEdgeIndices();

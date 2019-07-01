@@ -41,7 +41,7 @@ namespace Nucleus.UnitTests
         }
 
         [TestMethod]
-        public void IntervalLoopNotTest()
+        public void IntervalLoopJoinTest()
         {
             var subtractors = new List<Interval>()
             {

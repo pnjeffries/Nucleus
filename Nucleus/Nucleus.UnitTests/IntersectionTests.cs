@@ -68,7 +68,9 @@ namespace Nucleus.UnitTests
         {
             var pt = Intersect.LineLineXY(new Line(0, 0, 1, 0), new Line(1, 0, 2, 0), true);
 
-            Assert.AreEqual(true, pt.IsValid());
+            // This is technically not an intersection *point*, rather an overlap.
+            // So... expected behaviour, but possibly an oversight...
+            Assert.AreEqual(false, pt.IsValid());
         }
 
         [TestMethod]

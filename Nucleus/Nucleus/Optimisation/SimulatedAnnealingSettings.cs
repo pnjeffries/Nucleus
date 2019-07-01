@@ -43,23 +43,46 @@ namespace Nucleus.Optimisation
         }
 
 
-        /// <summary>
-        /// Private backing field for MaxGenerations property
-        /// </summary>
-        private int _MaxIterations = 1000;
 
         /// <summary>
         /// The maximum number of iterations which may be performed before termination.
-        /// This will control the rate of cooling of the simulation.
         /// </summary>
-        [AutoUI(2000)]
         public int MaxIterations
         {
-            get { return _MaxIterations; }
-            set { ChangeProperty(ref _MaxIterations, value); }
+            get { return _CoolingCycles * _IterationsPerCoolingCycle; }
         }
 
-       
+        /// <summary>
+        /// Private backing member variable for the CoolingCycles property
+        /// </summary>
+        private int _CoolingCycles = 5;
+
+        /// <summary>
+        /// The number of cooling cycles to be run through
+        /// </summary>
+        [AutoUI(2000)]
+        public int CoolingCycles
+        {
+            get { return _CoolingCycles; }
+            set { ChangeProperty(ref _CoolingCycles, value); }
+        }
+
+
+        /// <summary>
+        /// Private backing member variable for the IterationsPerCoolingCycle property
+        /// </summary>
+        private int _IterationsPerCoolingCycle = 200;
+
+        /// <summary>
+        /// The number of iterations per cooling cycle.  The temperature will reduce to zero over this number of iterations before resetting to the initial temperature and starting again
+        /// </summary>
+        [AutoUI(2050)]
+        public int IterationsPerCoolingCycle
+        {
+            get { return _IterationsPerCoolingCycle; }
+            set { ChangeProperty(ref _IterationsPerCoolingCycle, value); }
+        }
+
 
         /// <summary>
         /// Private backing field for MaxGenerations property

@@ -139,7 +139,8 @@ namespace Nucleus.Optimisation
         public virtual TPhenotype Iterate()
         {
             // Calculate new temperature
-            double temperature = 1.0 - ((double)Iteration) / Settings.MaxIterations;
+            int cycleIts = Math.Min(Settings.IterationsPerCoolingCycle, Settings.MaxIterations);
+            double temperature = Settings.StartingTemperature * ((double)(Iteration % cycleIts)) / cycleIts;
 
             // Advance iteration counters
             Iteration++;
