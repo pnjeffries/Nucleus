@@ -122,6 +122,11 @@ namespace Nucleus.Geometry
             Add(geometry);
         }
 
+        public VertexGeometryCollection(params VertexGeometry[] geometry)
+        {
+            AddRange(geometry);
+        }
+
         #endregion
 
         #region Methods

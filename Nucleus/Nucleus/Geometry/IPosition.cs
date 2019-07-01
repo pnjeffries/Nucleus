@@ -329,5 +329,22 @@ namespace Nucleus.Geometry
             return v.GetWrapped(index).Position - v[index].Position;
         }
 
+        /// <summary>
+        /// Get the position vectors of all items in this collection
+        /// </summary>
+        /// <typeparam name="TPosition"></typeparam>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static Vector[] GetPositions<TPosition>(this IList<TPosition> v)
+            where TPosition : IPosition
+        {
+            var result = new Vector[v.Count];
+            for (int i = 0; i < v.Count; i++)
+            {
+                result[i] = v[i].Position;
+            }
+            return result;
+        }
+
     }
 }
