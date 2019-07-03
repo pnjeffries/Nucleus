@@ -39,7 +39,8 @@
     <AssemblyOriginatorKeyFile>NucleusKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="netDxf">
+    <Reference Include="netDxf, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\References\netDxf.dll</HintPath>
     </Reference>
     <Reference Include="System" />

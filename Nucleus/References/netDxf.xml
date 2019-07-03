@@ -189,34 +189,12 @@
             only the entities contained in ModelSpace will make part of the block.
             </remarks>
         </member>
-        <member name="M:netDxf.Blocks.Block.Load(System.String,System.Collections.Generic.IEnumerable{System.String})">
-            <summary>
-            Creates a block from an external dxf file.
-            </summary>
-            <param name="file">Dxf file name.</param>
-            <param name="supportFolders">List of the document support folders.</param>
-            <returns>The block build from the dxf file content. It will return null if the file has not been able to load.</returns>
-            <remarks>
-            The name of the block will be the file name without extension, and
-            only the entities contained in ModelSpace will make part of the block.
-            </remarks>
-        </member>
         <member name="M:netDxf.Blocks.Block.Load(System.String,System.String)">
             <summary>
             Creates a block from an external dxf file.
             </summary>
             <param name="file">Dxf file name.</param>
             <param name="name">Name of the new block.</param>
-            <returns>The block build from the dxf file content. It will return null if the file has not been able to load.</returns>
-            <remarks>Only the entities contained in ModelSpace will make part of the block.</remarks>
-        </member>
-        <member name="M:netDxf.Blocks.Block.Load(System.String,System.String,System.Collections.Generic.IEnumerable{System.String})">
-            <summary>
-            Creates a block from an external dxf file.
-            </summary>
-            <param name="file">Dxf file name.</param>
-            <param name="name">Name of the new block.</param>
-            <param name="supportFolders">List of the document support folders.</param>
             <returns>The block build from the dxf file content. It will return null if the file has not been able to load.</returns>
             <remarks>Only the entities contained in ModelSpace will make part of the block.</remarks>
         </member>
@@ -4524,10 +4502,6 @@
             </summary>
             <param name="transformation">Transformation matrix.</param>
             <param name="translation">Translation vector.</param>
-            <remarks>
-            Non-uniform and zero scaling local to the dimension entity are not supported.<br />
-            The transformation will not be applied if the resulting reference lines are parallel.
-            </remarks>
         </member>
         <member name="M:netDxf.Entities.Angular3PointDimension.CalculteReferencePoints">
             <summary>
@@ -4673,10 +4647,6 @@
             </summary>
             <param name="transformation">Transformation matrix.</param>
             <param name="translation">Translation vector.</param>
-            <remarks>
-            Non-uniform and zero scaling local to the dimension entity are not supported.<br />
-            The transformation will not be applied if the resulting reference lines are parallel.
-            </remarks>
         </member>
         <member name="M:netDxf.Entities.Angular2LineDimension.CalculteReferencePoints">
             <summary>
@@ -4784,10 +4754,6 @@
             </summary>
             <param name="transformation">Transformation matrix.</param>
             <param name="translation">Translation vector.</param>
-            <remarks>
-            Non-uniform and zero scaling local to the dimension entity are not supported.<br />
-            The transformation will not be applied if the resulting center and reference points are the same.
-            </remarks>
         </member>
         <member name="M:netDxf.Entities.DiametricDimension.CalculteReferencePoints">
             <summary>
@@ -5483,8 +5449,7 @@
             <param name="transformation">Transformation matrix.</param>
             <param name="translation">Translation vector.</param>
             <remarks>
-            Non-uniform and zero scaling local to the dimension entity are not supported.<br />
-            The transformation will not be applied if the resulting center and reference points are the same.
+            Non-uniform scaling is not supported.
             </remarks>
         </member>
         <member name="M:netDxf.Entities.RadialDimension.BuildBlock(System.String)">
@@ -7632,14 +7597,14 @@
             <summary>
             Converts the ellipse in a list of vertexes.
             </summary>
-            <param name="precision">Number of vertexes generated.</param>
+            <param name="precision">Number of divisions.</param>
             <returns>A list vertexes that represents the ellipse expressed in object coordinate system.</returns>
         </member>
         <member name="M:netDxf.Entities.Ellipse.ToPolyline(System.Int32)">
             <summary>
             Converts the ellipse in a Polyline.
             </summary>
-            <param name="precision">Number of vertexes generated.</param>
+            <param name="precision">Number of divisions.</param>
             <returns>A new instance of <see cref="T:netDxf.Entities.LwPolyline">LightWeightPolyline</see> that represents the ellipse.</returns>
         </member>
         <member name="M:netDxf.Entities.Ellipse.TransformBy(netDxf.Matrix3,netDxf.Vector3)">
@@ -7648,6 +7613,7 @@
             </summary>
             <param name="transformation">Transformation matrix.</param>
             <param name="translation">Translation vector.</param>
+            <remarks>When a non-uniform scaling is applied to a rotated ellipses the result it is not correct.</remarks>
         </member>
         <member name="M:netDxf.Entities.Ellipse.Clone">
             <summary>
@@ -8042,14 +8008,6 @@
             </summary>
             <param name="transformation">Transformation matrix.</param>
             <param name="translation">Translation vector.</param>
-            <remarks>Matrix3 adopts the convention of using column vectors to represent a transformation matrix.</remarks>
-        </member>
-        <member name="M:netDxf.Entities.Attribute.TransformBy(netDxf.Matrix4)">
-            <summary>
-            Moves, scales, and/or rotates the current entity given a 4x4 transformation matrix.
-            </summary>
-            <param name="transformation">Transformation matrix.</param>
-            <remarks>Matrix4 adopts the convention of using column vectors to represent a transformation matrix.</remarks>
         </member>
         <member name="M:netDxf.Entities.Attribute.Clone">
             <summary>
@@ -8227,14 +8185,6 @@
             </summary>
             <param name="transformation">Transformation matrix.</param>
             <param name="translation">Translation vector.</param>
-            <remarks>Matrix3 adopts the convention of using column vectors to represent a transformation matrix.</remarks>
-        </member>
-        <member name="M:netDxf.Entities.AttributeDefinition.TransformBy(netDxf.Matrix4)">
-            <summary>
-            Moves, scales, and/or rotates the current entity given a 4x4 transformation matrix.
-            </summary>
-            <param name="transformation">Transformation matrix.</param>
-            <remarks>Matrix4 adopts the convention of using column vectors to represent a transformation matrix.</remarks>
         </member>
         <member name="M:netDxf.Entities.AttributeDefinition.Clone">
             <summary>
@@ -8698,15 +8648,6 @@
             </summary>
             <param name="transformation">Transformation matrix.</param>
             <param name="translation">Translation vector.</param>
-            <remarks>The transformation matrix is column major.</remarks>
-            <remarks>Matrix3 adopts the convention of using column vectors to represent a transformation matrix.</remarks>
-        </member>
-        <member name="M:netDxf.Entities.EntityObject.TransformBy(netDxf.Matrix4)">
-            <summary>
-            Moves, scales, and/or rotates the current entity given a 4x4 transformation matrix.
-            </summary>
-            <param name="transformation">Transformation matrix.</param>
-            <remarks>Matrix4 adopts the convention of using column vectors to represent a transformation matrix.</remarks>
         </member>
         <member name="M:netDxf.Entities.EntityObject.ToString">
             <summary>
@@ -8776,7 +8717,7 @@
             <summary>
             Gets or sets the insert <see cref="T:netDxf.Vector3">scale</see>.
             </summary>
-            <remarks>None of the vector scale components can be zero.</remarks>
+            <remarks>Any of the vector scale components cannot be zero.</remarks>
         </member>
         <member name="P:netDxf.Entities.Insert.Rotation">
             <summary>
@@ -8827,6 +8768,9 @@
             Explodes the current insert.
             </summary>
             <returns>A list of entities.</returns>
+            <remarks>
+            Non-uniform scaling is not supported by all entities. Read the documentation of the entities TransformBy method.
+            </remarks>
         </member>
         <member name="M:netDxf.Entities.Insert.TransformBy(netDxf.Matrix3,netDxf.Vector3)">
             <summary>
@@ -9436,637 +9380,6 @@
             Writes a new user coordinate system to the table section.
             </summary>
             <param name="ucs">UCS.</param>
-        </member>
-        <member name="T:netDxf.Matrix2">
-            <summary>
-            Represents a 2x2 double precision matrix.
-            </summary>
-        </member>
-        <member name="M:netDxf.Matrix2.#ctor(System.Double,System.Double,System.Double,System.Double)">
-            <summary>
-            Initializes a new instance of Matrix2.
-            </summary>
-            <param name="m11">Element [0,0].</param>
-            <param name="m12">Element [0,1].</param>
-            <param name="m21">Element [1,0].</param>
-            <param name="m22">Element [1,1].</param>
-        </member>
-        <member name="P:netDxf.Matrix2.Zero">
-            <summary>
-            Gets the zero matrix.
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix2.Identity">
-            <summary>
-            Gets the identity matrix.
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix2.M11">
-            <summary>
-            Gets or sets the matrix element [0,0].
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix2.M12">
-            <summary>
-            Gets or sets the matrix element [0,1].
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix2.M21">
-            <summary>
-            Gets or sets the matrix element [1,0].
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix2.M22">
-            <summary>
-            Gets or sets the matrix element [1,1].
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix2.Item(System.Int32,System.Int32)">
-            <summary>Gets or sets the component at the given row and column index in the matrix.</summary>
-            <param name="row">The row index of the matrix.</param>
-            <param name="column">The column index of the matrix.</param>
-            <returns>The component at the given row and column index in the matrix.</returns>
-        </member>
-        <member name="P:netDxf.Matrix2.IsIdentity">
-            <summary>
-            Gets if the actual matrix is the identity.
-            </summary>
-            <remarks>
-            The checks to see if the matrix is the identity uses the MathHelper.Epsilon as a the threshold for testing values close to one and zero.
-            </remarks>
-        </member>
-        <member name="M:netDxf.Matrix2.op_Addition(netDxf.Matrix2,netDxf.Matrix2)">
-            <summary>
-            Matrix addition.
-            </summary>
-            <param name="a">Matrix2.</param>
-            <param name="b">Matrix2.</param>
-            <returns>Matrix2.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.Add(netDxf.Matrix2,netDxf.Matrix2)">
-            <summary>
-            Matrix addition.
-            </summary>
-            <param name="a">Matrix2.</param>
-            <param name="b">Matrix2.</param>
-            <returns>Matrix2.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.op_Subtraction(netDxf.Matrix2,netDxf.Matrix2)">
-            <summary>
-            Matrix subtraction.
-            </summary>
-            <param name="a">Matrix2.</param>
-            <param name="b">Matrix2.</param>
-            <returns>Matrix2.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.Subtract(netDxf.Matrix2,netDxf.Matrix2)">
-            <summary>
-            Matrix subtraction.
-            </summary>
-            <param name="a">Matrix2.</param>
-            <param name="b">Matrix2.</param>
-            <returns>Matrix2.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.op_Multiply(netDxf.Matrix2,netDxf.Matrix2)">
-            <summary>
-            Product of two matrices.
-            </summary>
-            <param name="a">Matrix2.</param>
-            <param name="b">Matrix2.</param>
-            <returns>Matrix2.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.Multiply(netDxf.Matrix2,netDxf.Matrix2)">
-            <summary>
-            Product of two matrices.
-            </summary>
-            <param name="a">Matrix2.</param>
-            <param name="b">Matrix2.</param>
-            <returns>Matrix2.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.op_Multiply(netDxf.Matrix2,netDxf.Vector2)">
-            <summary>
-            Product of a matrix with a vector.
-            </summary>
-            <param name="a">Matrix2.</param>
-            <param name="u">Vector2.</param>
-            <returns>Matrix2.</returns>
-            <remarks>Matrix2 adopts the convention of using column vectors.</remarks>
-        </member>
-        <member name="M:netDxf.Matrix2.Multiply(netDxf.Matrix2,netDxf.Vector2)">
-            <summary>
-            Product of a matrix with a vector.
-            </summary>
-            <param name="a">Matrix2.</param>
-            <param name="u">Vector2.</param>
-            <returns>Matrix2.</returns>
-            <remarks>Matrix2 adopts the convention of using column vectors.</remarks>
-        </member>
-        <member name="M:netDxf.Matrix2.op_Multiply(netDxf.Matrix2,System.Double)">
-            <summary>
-            Product of a matrix with a scalar.
-            </summary>
-            <param name="m">Matrix2.</param>
-            <param name="a">Scalar.</param>
-            <returns>Matrix2.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.Multiply(netDxf.Matrix2,System.Double)">
-            <summary>
-            Product of a matrix with a scalar.
-            </summary>
-            <param name="m">Matrix2.</param>
-            <param name="a">Scalar.</param>
-            <returns>Matrix2.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.op_Equality(netDxf.Matrix2,netDxf.Matrix2)">
-            <summary>
-            Check if the components of two matrices are equal.
-            </summary>
-            <param name="u">Matrix2.</param>
-            <param name="v">Matrix2.</param>
-            <returns>True if the matrix components are equal or false in any other case.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.op_Inequality(netDxf.Matrix2,netDxf.Matrix2)">
-            <summary>
-            Check if the components of two matrices are different.
-            </summary>
-            <param name="u">Matrix2.</param>
-            <param name="v">Matrix2.</param>
-            <returns>True if the matrix components are different or false in any other case.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.Determinant">
-            <summary>
-            Calculate the determinant of the actual matrix.
-            </summary>
-            <returns>Determinant.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.Inverse">
-            <summary>
-            Calculates the inverse matrix.
-            </summary>
-            <returns>Inverse Matrix2.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.Transpose">
-            <summary>
-            Obtains the transpose matrix.
-            </summary>
-            <returns>Transpose matrix.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.Rotation(System.Double)">
-            <summary>
-            Builds a rotation matrix for a rotation.
-            </summary>
-            <param name="angle">The counter-clockwise angle in radians.</param>
-            <returns>The resulting Matrix2 instance.</returns>
-            <remarks>Matrix2 adopts the convention of using column vectors to represent a transformation matrix.</remarks>
-        </member>
-        <member name="M:netDxf.Matrix2.Scale(System.Double)">
-            <summary>
-            Build a scaling matrix.
-            </summary>
-            <param name="value">Single scale factor for x and y axis.</param>
-            <returns>A scaling matrix.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.Scale(netDxf.Vector2)">
-            <summary>
-            Build a scaling matrix.
-            </summary>
-            <param name="value">Scale factors for x and y axis.</param>
-            <returns>A scaling matrix.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.Scale(System.Double,System.Double)">
-            <summary>
-            Build a scaling matrix.
-            </summary>
-            <param name="x">Scale factor for x-axis.</param>
-            <param name="y">Scale factor for y-axis.</param>
-            <returns>A scaling matrix.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.Equals(netDxf.Matrix2,netDxf.Matrix2)">
-            <summary>
-            Check if the components of two matrices are approximate equal.
-            </summary>
-            <param name="a">Matrix2.</param>
-            <param name="b">Matrix2.</param>
-            <returns>True if the matrix components are almost equal or false in any other case.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.Equals(netDxf.Matrix2,netDxf.Matrix2,System.Double)">
-            <summary>
-            Check if the components of two matrices are approximate equal.
-            </summary>
-            <param name="a">Matrix2.</param>
-            <param name="b">Matrix2.</param>
-            <param name="threshold">Maximum tolerance.</param>
-            <returns>True if the matrix components are almost equal or false in any other case.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.Equals(netDxf.Matrix2)">
-            <summary>
-            Check if the components of two matrices are approximate equal.
-            </summary>
-            <param name="other">Matrix2.</param>
-            <returns>True if the matrix components are almost equal or false in any other case.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.Equals(netDxf.Matrix2,System.Double)">
-            <summary>
-            Check if the components of two matrices are approximate equal.
-            </summary>
-            <param name="obj">Matrix2.</param>
-            <param name="threshold">Maximum tolerance.</param>
-            <returns>True if the matrix components are almost equal or false in any other case.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.Equals(System.Object)">
-            <summary>
-            Indicates whether this instance and a specified object are equal.
-            </summary>
-            <param name="obj">Another object to compare to.</param>
-            <returns>True if obj and this instance are the same type and represent the same value; otherwise, false.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.GetHashCode">
-            <summary>
-            Returns the hash code for this instance.
-            </summary>
-            <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.ToString">
-            <summary>
-            Obtains a string that represents the matrix.
-            </summary>
-            <returns>A string text.</returns>
-        </member>
-        <member name="M:netDxf.Matrix2.ToString(System.IFormatProvider)">
-            <summary>
-            Obtains a string that represents the matrix.
-            </summary>
-            <param name="provider">An IFormatProvider interface implementation that supplies culture-specific formatting information. </param>
-            <returns>A string text.</returns>
-        </member>
-        <member name="T:netDxf.Matrix4">
-            <summary>
-            Represents a 4x4 double precision matrix.
-            </summary>
-        </member>
-        <member name="M:netDxf.Matrix4.#ctor(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
-            <summary>
-            Initializes a new instance of Matrix4.
-            </summary>
-            <param name="m11">Element [0,0].</param>
-            <param name="m12">Element [0,1].</param>
-            <param name="m13">Element [0,2].</param>
-            <param name="m14">Element [0,3].</param>
-            <param name="m21">Element [1,0].</param>
-            <param name="m22">Element [1,1].</param>
-            <param name="m23">Element [1,2].</param>
-            <param name="m24">Element [1,3].</param>
-            <param name="m31">Element [2,0].</param>
-            <param name="m32">Element [2,1].</param>
-            <param name="m33">Element [2,2].</param>
-            <param name="m34">Element [2,3].</param>
-            <param name="m41">Element [3,0].</param>
-            <param name="m42">Element [3,1].</param>
-            <param name="m43">Element [3,2].</param>
-            <param name="m44">Element [3,3].</param>
-        </member>
-        <member name="P:netDxf.Matrix4.Zero">
-            <summary>
-            Gets the zero matrix.
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix4.Identity">
-            <summary>
-            Gets the identity matrix.
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix4.M11">
-            <summary>
-            Gets or sets the matrix element [0,0].
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix4.M12">
-            <summary>
-            Gets or sets the matrix element [0,1].
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix4.M13">
-            <summary>
-            Gets or sets the matrix element [0,2].
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix4.M14">
-            <summary>
-            Gets or sets the matrix element [0,3].
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix4.M21">
-            <summary>
-            Gets or sets the matrix element [1,0].
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix4.M22">
-            <summary>
-            Gets or sets the matrix element [1,1].
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix4.M23">
-            <summary>
-            Gets or sets the matrix element [1,2].
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix4.M24">
-            <summary>
-            Gets or sets the matrix element [1,3].
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix4.M31">
-            <summary>
-            Gets or sets the matrix element [2,0].
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix4.M32">
-            <summary>
-            Gets or sets the matrix element [2,1].
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix4.M33">
-            <summary>
-            Gets or sets the matrix element [2,2].
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix4.M34">
-            <summary>
-            Gets or sets the matrix element [2,3].
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix4.M41">
-            <summary>
-            Gets or sets the matrix element [3,0].
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix4.M42">
-            <summary>
-            Gets or sets the matrix element [3,1].
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix4.M43">
-            <summary>
-            Gets or sets the matrix element [3,2].
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix4.M44">
-            <summary>
-            Gets or sets the matrix element [3,3].
-            </summary>
-        </member>
-        <member name="P:netDxf.Matrix4.Item(System.Int32,System.Int32)">
-            <summary>Gets or sets the component at the given row and column index in the matrix.</summary>
-            <param name="row">The row index of the matrix.</param>
-            <param name="column">The column index of the matrix.</param>
-            <returns>The component at the given row and column index in the matrix.</returns>
-        </member>
-        <member name="P:netDxf.Matrix4.IsIdentity">
-            <summary>
-            Gets if the actual matrix is the identity.
-            </summary>
-            <remarks>
-            The checks to see if the matrix is the identity uses the MathHelper.Epsilon as a the threshold for testing values close to one and zero.
-            </remarks>
-        </member>
-        <member name="M:netDxf.Matrix4.op_Addition(netDxf.Matrix4,netDxf.Matrix4)">
-            <summary>
-            Matrix addition.
-            </summary>
-            <param name="a">Matrix4.</param>
-            <param name="b">Matrix4.</param>
-            <returns>Matrix4.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.Add(netDxf.Matrix4,netDxf.Matrix4)">
-            <summary>
-            Matrix addition.
-            </summary>
-            <param name="a">Matrix4.</param>
-            <param name="b">Matrix4.</param>
-            <returns>Matrix4.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.op_Subtraction(netDxf.Matrix4,netDxf.Matrix4)">
-            <summary>
-            Matrix subtraction.
-            </summary>
-            <param name="a">Matrix4.</param>
-            <param name="b">Matrix4.</param>
-            <returns>Matrix4.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.Subtract(netDxf.Matrix4,netDxf.Matrix4)">
-            <summary>
-            Matrix subtraction.
-            </summary>
-            <param name="a">Matrix4.</param>
-            <param name="b">Matrix4.</param>
-            <returns>Matrix4.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.op_Multiply(netDxf.Matrix4,netDxf.Matrix4)">
-            <summary>
-            Product of two matrices.
-            </summary>
-            <param name="a">Matrix4.</param>
-            <param name="b">Matrix4.</param>
-            <returns>Matrix3.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.Multiply(netDxf.Matrix4,netDxf.Matrix4)">
-            <summary>
-            Product of two matrices.
-            </summary>
-            <param name="a">Matrix4.</param>
-            <param name="b">Matrix4.</param>
-            <returns>Matrix4.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.op_Multiply(netDxf.Matrix4,netDxf.Vector4)">
-            <summary>
-            Product of a matrix with a vector.
-            </summary>
-            <param name="a">Matrix4.</param>
-            <param name="u">Vector4.</param>
-            <returns>Matrix4.</returns>
-            <remarks>Matrix4 adopts the convention of using column vectors.</remarks>
-        </member>
-        <member name="M:netDxf.Matrix4.Multiply(netDxf.Matrix4,netDxf.Vector4)">
-            <summary>
-            Product of a matrix with a vector.
-            </summary>
-            <param name="a">Matrix4.</param>
-            <param name="u">Vector4.</param>
-            <returns>Matrix4.</returns>
-            <remarks>Matrix4 adopts the convention of using column vectors to represent three dimensional points.</remarks>
-        </member>
-        <member name="M:netDxf.Matrix4.op_Multiply(netDxf.Matrix4,System.Double)">
-            <summary>
-            Product of a matrix with a scalar.
-            </summary>
-            <param name="m">Matrix4.</param>
-            <param name="a">Scalar.</param>
-            <returns>Matrix3.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.Multiply(netDxf.Matrix4,System.Double)">
-            <summary>
-            Product of a matrix with a scalar.
-            </summary>
-            <param name="m">Matrix4.</param>
-            <param name="a">Scalar.</param>
-            <returns>Matrix4.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.op_Equality(netDxf.Matrix4,netDxf.Matrix4)">
-            <summary>
-            Check if the components of two matrices are equal.
-            </summary>
-            <param name="u">Matrix4.</param>
-            <param name="v">Matrix4.</param>
-            <returns>True if the matrix components are equal or false in any other case.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.op_Inequality(netDxf.Matrix4,netDxf.Matrix4)">
-            <summary>
-            Check if the components of two matrices are different.
-            </summary>
-            <param name="u">Matrix4.</param>
-            <param name="v">Matrix4.</param>
-            <returns>True if the matrix components are different or false in any other case.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.Determinant">
-            <summary>
-            Calculate the determinant of the actual matrix.
-            </summary>
-            <returns>Determinant.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.Inverse">
-            <summary>
-            Calculates the inverse matrix.
-            </summary>
-            <returns>Inverse Matrix3.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.Transpose">
-            <summary>
-            Obtains the transpose matrix.
-            </summary>
-            <returns>Transpose matrix.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.RotationX(System.Double)">
-            <summary>
-            Builds a rotation matrix for a rotation around the x-axis.
-            </summary>
-            <param name="angle">The counter-clockwise angle in radians.</param>
-            <returns>The resulting Matrix4 instance.</returns>
-            <remarks>Matrix4 adopts the convention of using column vectors to represent a transformation matrix.</remarks>
-        </member>
-        <member name="M:netDxf.Matrix4.RotationY(System.Double)">
-            <summary>
-            Builds a rotation matrix for a rotation around the y-axis.
-            </summary>
-            <param name="angle">The counter-clockwise angle in radians.</param>
-            <returns>The resulting Matrix4 instance.</returns>
-            <remarks>Matrix4 adopts the convention of using column vectors to represent a transformation matrix.</remarks>
-        </member>
-        <member name="M:netDxf.Matrix4.RotationZ(System.Double)">
-            <summary>
-            Builds a rotation matrix for a rotation around the z-axis.
-            </summary>
-            <param name="angle">The counter-clockwise angle in radians.</param>
-            <returns>The resulting Matrix4 instance.</returns>
-            <remarks>Matrix4 adopts the convention of using column vectors to represent a transformation matrix.</remarks>
-        </member>
-        <member name="M:netDxf.Matrix4.Scale(System.Double)">
-            <summary>
-            Build a scaling matrix.
-            </summary>
-            <param name="value">Single scale factor for x, y, and z axis.</param>
-            <returns>A scaling matrix.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.Scale(netDxf.Vector3)">
-            <summary>
-            Build a scaling matrix.
-            </summary>
-            <param name="value">Scale factors for x, y, and z axis.</param>
-            <returns>A scaling matrix.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.Scale(System.Double,System.Double,System.Double)">
-            <summary>
-            Build a scaling matrix.
-            </summary>
-            <param name="x">Scale factor for x-axis.</param>
-            <param name="y">Scale factor for y-axis.</param>
-            <param name="z">Scale factor for z-axis.</param>
-            <returns>A scaling matrix.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.Translation(netDxf.Vector3)">
-            <summary>
-            Build a translation matrix.
-            </summary>
-            <param name="vector">Translation vector along the X, Y, and Z axis.</param>
-            <returns>A translation matrix.</returns>
-            <remarks>Matrix4 adopts the convention of using column vectors to represent a transformation matrix.</remarks>
-        </member>
-        <member name="M:netDxf.Matrix4.Translation(System.Double,System.Double,System.Double)">
-            <summary>
-            Build a translation matrix.
-            </summary>
-            <param name="x">Translation along the X axis.</param>
-            <param name="y">Translation along the Y axis.</param>
-            <param name="z">Translation along the Z axis.</param>
-            <returns>A translation matrix.</returns>
-            <remarks>Matrix4 adopts the convention of using column vectors to represent a transformation matrix.</remarks>
-        </member>
-        <member name="M:netDxf.Matrix4.Equals(netDxf.Matrix4,netDxf.Matrix4)">
-            <summary>
-            Check if the components of two matrices are approximate equal.
-            </summary>
-            <param name="a">Matrix4.</param>
-            <param name="b">Matrix4.</param>
-            <returns>True if the matrix components are almost equal or false in any other case.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.Equals(netDxf.Matrix4,netDxf.Matrix4,System.Double)">
-            <summary>
-            Check if the components of two matrices are approximate equal.
-            </summary>
-            <param name="a">Matrix4.</param>
-            <param name="b">Matrix4.</param>
-            <param name="threshold">Maximum tolerance.</param>
-            <returns>True if the matrix components are almost equal or false in any other case.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.Equals(netDxf.Matrix4)">
-            <summary>
-            Check if the components of two matrices are approximate equal.
-            </summary>
-            <param name="other">Matrix4.</param>
-            <returns>True if the matrix components are almost equal or false in any other case.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.Equals(netDxf.Matrix4,System.Double)">
-            <summary>
-            Check if the components of two matrices are approximate equal.
-            </summary>
-            <param name="obj">Matrix4.</param>
-            <param name="threshold">Maximum tolerance.</param>
-            <returns>True if the matrix components are almost equal or false in any other case.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.Equals(System.Object)">
-            <summary>
-            Indicates whether this instance and a specified object are equal.
-            </summary>
-            <param name="obj">Another object to compare to.</param>
-            <returns>True if obj and this instance are the same type and represent the same value; otherwise, false.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.GetHashCode">
-            <summary>
-            Returns the hash code for this instance.
-            </summary>
-            <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.ToString">
-            <summary>
-            Obtains a string that represents the matrix.
-            </summary>
-            <returns>A string text.</returns>
-        </member>
-        <member name="M:netDxf.Matrix4.ToString(System.IFormatProvider)">
-            <summary>
-            Obtains a string that represents the matrix.
-            </summary>
-            <param name="provider">An IFormatProvider interface implementation that supplies culture-specific formatting information. </param>
-            <returns>A string text.</returns>
         </member>
         <member name="T:netDxf.Objects.PaperMargin">
             <summary>
@@ -10687,6 +10000,12 @@
             <summary>
             Defines if this layout is a paper space.
             </summary>
+        </member>
+        <member name="P:netDxf.Objects.Layout.Viewport">
+            <summary>
+            Gets the viewport associated with this layout. This is the viewport with Id 1 that represents the paper space itself, it has no graphical representation, and does not show the model.
+            </summary>
+            <remarks>The ModelSpace layout does not require a viewport and it will always return null.</remarks>
         </member>
         <member name="P:netDxf.Objects.Layout.Owner">
             <summary>
@@ -13848,12 +13167,10 @@
         </member>
         <member name="M:netDxf.Tables.TextStyle.#ctor(System.String)">
             <summary>
-            Initializes a new instance of the <c>TextStyle</c> class.
+            Initializes a new instance of the <c>TextStyle</c> class. The font file name, without the extension, will be used as the TextStyle name.
             </summary>
             <param name="font">Text style font file name with full or relative path.</param>
-            <remarks>
-            The font file name, without the extension, will also be used as the name of the text style.
-            </remarks>
+            <remarks>If the font file is a true type and is not found in the specified path, the constructor will try to find it in the system font folder.</remarks>
         </member>
         <member name="M:netDxf.Tables.TextStyle.#ctor(System.String,System.String)">
             <summary>
@@ -13861,6 +13178,7 @@
             </summary>
             <param name="name">Text style name.</param>
             <param name="font">Text style font file name with full or relative path.</param>
+            <remarks>If the font file is a true type and is not found in the specified path, the constructor will try to find it in the system font folder.</remarks>
         </member>
         <member name="M:netDxf.Tables.TextStyle.#ctor(System.String,System.String,System.Boolean)">
             <summary>
@@ -13869,6 +13187,7 @@
             <param name="name">Text style name.</param>
             <param name="font">Text style font file name with full or relative path.</param>
             <param name="checkName">Specifies if the style name has to be checked.</param>
+            <remarks>If the font file is a true type and is not found in the specified path, the constructor will try to find it in the system font folder.</remarks>
         </member>
         <member name="M:netDxf.Tables.TextStyle.#ctor(System.String,netDxf.Tables.FontStyle)">
             <summary>
@@ -13921,9 +13240,8 @@
             Gets or sets the true type font family name.
             </summary>
             <remarks>
-            When the font family name is manually specified the file font will not be used and it will be set to empty,
-            the font style will also we set to FontStyle.Regular.
-            In this case the font information will be stored in the style extended data when saved to a DXF.<br />
+            When the font family name is manually specified the file font will not be used and it will be set to empty.
+            In this case the font information will be stored in the style extended data when saved to a DXF.
             This value is only applicable for true type fonts.
             </remarks>
         </member>
@@ -13932,8 +13250,17 @@
             Gets or sets the true type font style.
             </summary>
             <remarks>
-            The font style value is ignored and will always return FontStyle.Regular when a font file has been specified.<br />
+            The font style value is ignored when a font file has been specified.<br />
             All styles might or might not be available for the current font family.
+            </remarks>
+        </member>
+        <member name="P:netDxf.Tables.TextStyle.IsTrueType">
+            <summary>
+            Gets if the font used is a true type.
+            </summary>
+            <remarks>
+            It will not only return false for SHX fonts but also if the font file has not been found,
+            this is applicable to true type fonts not registered in the system.
             </remarks>
         </member>
         <member name="P:netDxf.Tables.TextStyle.Height">
@@ -13973,14 +13300,6 @@
             <summary>
             Gets the owner of the actual text style.
             </summary>
-        </member>
-        <member name="M:netDxf.Tables.TextStyle.TrueTypeFontFamilyName(System.String)">
-            <summary>
-            Find the font family name of an specified TTF font file.
-            </summary>
-            <param name="ttfFont">TTF font file.</param>
-            <returns>The font family name of the specified TTF font file.</returns>
-            <remarks>This method will return an empty string if the specified font is not found in its path or the system font folder or if it is not a valid TTF font.</remarks>
         </member>
         <member name="M:netDxf.Tables.TextStyle.Clone(System.String)">
             <summary>
@@ -15071,7 +14390,7 @@
         </member>
         <member name="T:netDxf.Header.HeaderVariables">
             <summary>
-            Represents the header variables of a DXF document.
+            Represents the header variables of a dxf document.
             </summary>
         </member>
         <member name="M:netDxf.Header.HeaderVariables.#ctor">
@@ -15358,25 +14677,25 @@
         </member>
         <member name="M:netDxf.Header.HeaderVariables.KnownValues">
             <summary>
-            Gets a collection of the known header variables.
+            Gets the collection of the known header variables.
             </summary>
             <returns>A list with the known header variables.</returns>
         </member>
         <member name="M:netDxf.Header.HeaderVariables.KnownNames">
             <summary>
-            Gets a collection of the known header variables names.
+            Gets the collection of the known header variables names.
             </summary>
             <returns>A list with the known header variables names.</returns>
         </member>
         <member name="M:netDxf.Header.HeaderVariables.CustomValues">
             <summary>
-            Gets a collection of the custom header variables.
+            Gets the collection of the custom header variables.
             </summary>
             <returns>A list with the custom header variables.</returns>
         </member>
         <member name="M:netDxf.Header.HeaderVariables.CustomNames">
             <summary>
-            Gets a collection of the custom header variables names.
+            Gets the collection of the custom header variables names.
             </summary>
             <returns>A list with the custom header variables names.</returns>
         </member>
@@ -15385,10 +14704,6 @@
             Adds a custom <see cref="T:netDxf.Header.HeaderVariable">HeaderVariable</see> to the list.
             </summary>
             <param name="variable">Header variable to add to the list.</param>
-            <remarks>
-            All header variable names must start with the character '$'.<br />
-            Header variable names that already exists in the known list cannot be added.
-            </remarks>
         </member>
         <member name="M:netDxf.Header.HeaderVariables.ContainsCustomVariable(System.String)">
             <summary>
@@ -16122,14 +15437,6 @@
             <param name="angle">Angle in radians.</param>
             <returns>The polar point of the specified point.</returns>
         </member>
-        <member name="M:netDxf.Vector2.SquareDistance(netDxf.Vector2,netDxf.Vector2)">
-            <summary>
-            Obtains the square distance between two points.
-            </summary>
-            <param name="u">Vector2.</param>
-            <param name="v">Vector2.</param>
-            <returns>Square distance.</returns>
-        </member>
         <member name="M:netDxf.Vector2.Distance(netDxf.Vector2,netDxf.Vector2)">
             <summary>
             Obtains the distance between two points.
@@ -16137,6 +15444,14 @@
             <param name="u">Vector2.</param>
             <param name="v">Vector2.</param>
             <returns>Distance.</returns>
+        </member>
+        <member name="M:netDxf.Vector2.SquareDistance(netDxf.Vector2,netDxf.Vector2)">
+            <summary>
+            Obtains the square distance between two points.
+            </summary>
+            <param name="u">Vector2.</param>
+            <param name="v">Vector2.</param>
+            <returns>Square distance.</returns>
         </member>
         <member name="M:netDxf.Vector2.Angle(netDxf.Vector2)">
             <summary>
@@ -16328,6 +15643,22 @@
             <param name="v">Vector2.</param>
             <returns>The multiplication of u times v.</returns>
         </member>
+        <member name="M:netDxf.Vector2.op_Division(System.Double,netDxf.Vector2)">
+            <summary>
+            Divides a scalar with a vector.
+            </summary>
+            <param name="a">Scalar.</param>
+            <param name="u">Vector2.</param>
+            <returns>The division of u times a.</returns>
+        </member>
+        <member name="M:netDxf.Vector2.Divide(System.Double,netDxf.Vector2)">
+            <summary>
+            Divides a scalar with a vector.
+            </summary>
+            <param name="a">Scalar.</param>
+            <param name="u">Vector2.</param>
+            <returns>The division of u times a.</returns>
+        </member>
         <member name="M:netDxf.Vector2.op_Division(netDxf.Vector2,System.Double)">
             <summary>
             Divides a vector with an scalar.
@@ -16429,350 +15760,6 @@
             <returns>A string text.</returns>
         </member>
         <member name="M:netDxf.Vector2.ToString(System.IFormatProvider)">
-            <summary>
-            Obtains a string that represents the vector.
-            </summary>
-            <param name="provider">An IFormatProvider interface implementation that supplies culture-specific formatting information. </param>
-            <returns>A string text.</returns>
-        </member>
-        <member name="T:netDxf.Vector4">
-            <summary>
-            Represent a four component vector of double precision.
-            </summary>
-        </member>
-        <member name="M:netDxf.Vector4.#ctor(System.Double,System.Double,System.Double,System.Double)">
-            <summary>
-            Initializes a new instance of Vector3.
-            </summary>
-            <param name="x">X component.</param>
-            <param name="y">Y component.</param>
-            <param name="z">Z component.</param>
-            <param name="w">W component.</param>
-        </member>
-        <member name="M:netDxf.Vector4.#ctor(System.Double[])">
-            <summary>
-            Initializes a new instance of Vector4.
-            </summary>
-            <param name="array">Array of four elements that represents the vector.</param>
-        </member>
-        <member name="P:netDxf.Vector4.Zero">
-            <summary>
-            Zero vector.
-            </summary>
-        </member>
-        <member name="P:netDxf.Vector4.UnitX">
-            <summary>
-            Unit X vector.
-            </summary>
-        </member>
-        <member name="P:netDxf.Vector4.UnitY">
-            <summary>
-            Unit Y vector.
-            </summary>
-        </member>
-        <member name="P:netDxf.Vector4.UnitZ">
-            <summary>
-            Unit Z vector.
-            </summary>
-        </member>
-        <member name="P:netDxf.Vector4.UnitW">
-            <summary>
-            Unit W vector.
-            </summary>
-        </member>
-        <member name="P:netDxf.Vector4.NaN">
-            <summary>
-            Represents a vector with not a number components.
-            </summary>
-        </member>
-        <member name="P:netDxf.Vector4.X">
-            <summary>
-            Gets or sets the X component.
-            </summary>
-        </member>
-        <member name="P:netDxf.Vector4.Y">
-            <summary>
-            Gets or sets the Y component.
-            </summary>
-        </member>
-        <member name="P:netDxf.Vector4.Z">
-            <summary>
-            Gets or sets the Z component.
-            </summary>
-        </member>
-        <member name="P:netDxf.Vector4.W">
-            <summary>
-            Gets or sets the W component.
-            </summary>
-        </member>
-        <member name="P:netDxf.Vector4.Item(System.Int32)">
-            <summary>
-            Gets or sets a vector element defined by its index.
-            </summary>
-            <param name="index">Index of the element.</param>
-        </member>
-        <member name="P:netDxf.Vector4.IsNormalized">
-            <summary>
-            Gets if the vector has been normalized.
-            </summary>
-        </member>
-        <member name="M:netDxf.Vector4.IsNaN(netDxf.Vector4)">
-            <summary>
-             Returns a value indicating if any component of the specified vector evaluates to a value that is not a number <see cref="F:System.Double.NaN"/>.
-            </summary>
-            <param name="u">Vector3.</param>
-            <returns>Returns true if any component of the specified vector evaluates to <see cref="F:System.Double.NaN"/>; otherwise, false.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.DotProduct(netDxf.Vector4,netDxf.Vector4)">
-            <summary>
-            Obtains the dot product of two vectors.
-            </summary>
-            <param name="u">Vector4.</param>
-            <param name="v">Vector4.</param>
-            <returns>The dot product.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.Distance(netDxf.Vector4,netDxf.Vector4)">
-            <summary>
-            Obtains the distance between two points.
-            </summary>
-            <param name="u">Vector4.</param>
-            <param name="v">Vector4.</param>
-            <returns>Distance.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.SquareDistance(netDxf.Vector4,netDxf.Vector4)">
-            <summary>
-            Obtains the square distance between two points.
-            </summary>
-            <param name="u">Vector4.</param>
-            <param name="v">Vector4.</param>
-            <returns>Square distance.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.Round(netDxf.Vector4,System.Int32)">
-            <summary>
-            Rounds the components of a vector.
-            </summary>
-            <param name="u">Vector to round.</param>
-            <param name="numDigits">Number of decimal places in the return value.</param>
-            <returns>The rounded vector.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.Normalize(netDxf.Vector4)">
-            <summary>
-            Normalizes the vector.
-            </summary>
-            <param name="u">Vector to normalize</param>
-            <returns>A normalized vector.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.op_Equality(netDxf.Vector4,netDxf.Vector4)">
-            <summary>
-            Check if the components of two vectors are equal.
-            </summary>
-            <param name="u">Vector4.</param>
-            <param name="v">Vector4.</param>
-            <returns>True if the three components are equal or false in any other case.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.op_Inequality(netDxf.Vector4,netDxf.Vector4)">
-            <summary>
-            Check if the components of two vectors are different.
-            </summary>
-            <param name="u">Vector4.</param>
-            <param name="v">Vector4.</param>
-            <returns>True if the three components are different or false in any other case.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.op_Addition(netDxf.Vector4,netDxf.Vector4)">
-            <summary>
-            Adds two vectors.
-            </summary>
-            <param name="u">Vector4.</param>
-            <param name="v">Vector4.</param>
-            <returns>The addition of u plus v.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.Add(netDxf.Vector4,netDxf.Vector4)">
-            <summary>
-            Adds two vectors.
-            </summary>
-            <param name="u">Vector4.</param>
-            <param name="v">Vector4.</param>
-            <returns>The addition of u plus v.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.op_Subtraction(netDxf.Vector4,netDxf.Vector4)">
-            <summary>
-            Subtracts two vectors.
-            </summary>
-            <param name="u">Vector4.</param>
-            <param name="v">Vector4.</param>
-            <returns>The subtraction of u minus v.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.Subtract(netDxf.Vector4,netDxf.Vector4)">
-            <summary>
-            Subtracts two vectors.
-            </summary>
-            <param name="u">Vector4.</param>
-            <param name="v">Vector4.</param>
-            <returns>The subtraction of u minus v.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.op_UnaryNegation(netDxf.Vector4)">
-            <summary>
-            Negates a vector.
-            </summary>
-            <param name="u">Vector4.</param>
-            <returns>The negative vector of u.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.Negate(netDxf.Vector4)">
-            <summary>
-            Negates a vector.
-            </summary>
-            <param name="u">Vector4.</param>
-            <returns>The negative vector of u.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.op_Multiply(netDxf.Vector4,System.Double)">
-            <summary>
-            Multiplies a vector with an scalar (same as a*u, commutative property).
-            </summary>
-            <param name="u">Vector4.</param>
-            <param name="a">Scalar.</param>
-            <returns>The multiplication of u times a.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.Multiply(netDxf.Vector4,System.Double)">
-            <summary>
-            Multiplies a vector with an scalar (same as a*u, commutative property).
-            </summary>
-            <param name="u">Vector4.</param>
-            <param name="a">Scalar.</param>
-            <returns>The multiplication of u times a.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.op_Multiply(System.Double,netDxf.Vector4)">
-            <summary>
-            Multiplies a scalar with a vector (same as u*a, commutative property).
-            </summary>
-            <param name="a">Scalar.</param>
-            <param name="u">Vector4.</param>
-            <returns>The multiplication of u times a.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.Multiply(System.Double,netDxf.Vector4)">
-            <summary>
-            Multiplies a scalar with a vector (same as u*a, commutative property).
-            </summary>
-            <param name="a">Scalar.</param>
-            <param name="u">Vector4.</param>
-            <returns>The multiplication of u times a.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.op_Multiply(netDxf.Vector4,netDxf.Vector4)">
-            <summary>
-            Multiplies two vectors component by component.
-            </summary>
-            <param name="u">Vector4.</param>
-            <param name="v">Vector4.</param>
-            <returns>The multiplication of u times v.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.Multiply(netDxf.Vector4,netDxf.Vector4)">
-            <summary>
-            Multiplies two vectors component by component.
-            </summary>
-            <param name="u">Vector4.</param>
-            <param name="v">Vector4.</param>
-            <returns>The multiplication of u times v.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.op_Division(netDxf.Vector4,System.Double)">
-            <summary>
-            Divides an scalar with a vector.
-            </summary>
-            <param name="a">Scalar.</param>
-            <param name="u">Vector4.</param>
-            <returns>The division of u times a.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.Divide(netDxf.Vector4,System.Double)">
-            <summary>
-            Divides a vector with an scalar.
-            </summary>
-            <param name="u">Vector4.</param>
-            <param name="a">Scalar.</param>
-            <returns>The division of u times a.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.op_Division(netDxf.Vector4,netDxf.Vector4)">
-            <summary>
-            Divides two vectors component by component.
-            </summary>
-            <param name="u">Vector4.</param>
-            <param name="v">Vector4.</param>
-            <returns>The multiplication of u times v.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.Divide(netDxf.Vector4,netDxf.Vector4)">
-            <summary>
-            Divides two vectors component by component.
-            </summary>
-            <param name="u">Vector4.</param>
-            <param name="v">Vector4.</param>
-            <returns>The multiplication of u times v.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.Normalize">
-            <summary>
-            Normalizes the current vector.
-            </summary>
-        </member>
-        <member name="M:netDxf.Vector4.Modulus">
-            <summary>
-            Obtains the modulus of the vector.
-            </summary>
-            <returns>Vector modulus.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.ToArray">
-            <summary>
-            Returns an array that represents the vector.
-            </summary>
-            <returns>Array.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.Equals(netDxf.Vector4,netDxf.Vector4)">
-            <summary>
-            Check if the components of two vectors are approximate equal.
-            </summary>
-            <param name="a">Vector4.</param>
-            <param name="b">Vector4.</param>
-            <returns>True if the four components are almost equal or false in any other case.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.Equals(netDxf.Vector4,netDxf.Vector4,System.Double)">
-            <summary>
-            Check if the components of two vectors are approximate equal.
-            </summary>
-            <param name="a">Vector4.</param>
-            <param name="b">Vector4.</param>
-            <param name="threshold">Maximum tolerance.</param>
-            <returns>True if the four components are almost equal or false in any other case.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.Equals(netDxf.Vector4)">
-            <summary>
-            Check if the components of two vectors are approximate equal.
-            </summary>
-            <param name="other">Vector4.</param>
-            <returns>True if the four components are almost equal or false in any other case.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.Equals(netDxf.Vector4,System.Double)">
-            <summary>
-            Check if the components of two vectors are approximate equal.
-            </summary>
-            <param name="other">Vector4.</param>
-            <param name="threshold">Maximum tolerance.</param>
-            <returns>True if the four components are almost equal or false in any other case.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.Equals(System.Object)">
-            <summary>
-            Indicates whether this instance and a specified object are equal.
-            </summary>
-            <param name="other">Another object to compare to.</param>
-            <returns>True if obj and this instance are the same type and represent the same value; otherwise, false.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.GetHashCode">
-            <summary>
-            Returns the hash code for this instance.
-            </summary>
-            <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.ToString">
-            <summary>
-            Obtains a string that represents the vector.
-            </summary>
-            <returns>A string text.</returns>
-        </member>
-        <member name="M:netDxf.Vector4.ToString(System.IFormatProvider)">
             <summary>
             Obtains a string that represents the vector.
             </summary>
@@ -17065,9 +16052,25 @@
             <summary>
             Multiplies two vectors component by component.
             </summary>
-            <param name="u">Vector3.</param>
-            <param name="v">Vector3.</param>
+            <param name="u">Vector2.</param>
+            <param name="v">Vector2.</param>
             <returns>The multiplication of u times v.</returns>
+        </member>
+        <member name="M:netDxf.Vector3.op_Division(System.Double,netDxf.Vector3)">
+            <summary>
+            Divides a vector with an scalar.
+            </summary>
+            <param name="u">Vector3.</param>
+            <param name="a">Scalar.</param>
+            <returns>The division of u times a.</returns>
+        </member>
+        <member name="M:netDxf.Vector3.Divide(System.Double,netDxf.Vector3)">
+            <summary>
+            Divides a scalar with a vector.
+            </summary>
+            <param name="a">Scalar.</param>
+            <param name="u">Vector3.</param>
+            <returns>The division of u times a.</returns>
         </member>
         <member name="M:netDxf.Vector3.op_Division(netDxf.Vector3,System.Double)">
             <summary>
@@ -17097,8 +16100,8 @@
             <summary>
             Divides two vectors component by component.
             </summary>
-            <param name="u">Vector3.</param>
-            <param name="v">Vector3.</param>
+            <param name="u">Vector2.</param>
+            <param name="v">Vector2.</param>
             <returns>The multiplication of u times v.</returns>
         </member>
         <member name="M:netDxf.Vector3.Normalize">
@@ -17187,13 +16190,19 @@
             </summary>
             <param name="m11">Element [0,0].</param>
             <param name="m12">Element [0,1].</param>
-            <param name="m13">Element [0,2].</param>
+            <param name="m13">Element [0,1].</param>
             <param name="m21">Element [1,0].</param>
             <param name="m22">Element [1,1].</param>
             <param name="m23">Element [1,2].</param>
             <param name="m31">Element [2,0].</param>
             <param name="m32">Element [2,1].</param>
             <param name="m33">Element [2,2].</param>
+        </member>
+        <member name="M:netDxf.Matrix3.#ctor(System.Double[])">
+            <summary>
+            Initializes a new instance of Matrix3.
+            </summary>
+            <param name="array">Array of nine components.</param>
         </member>
         <member name="P:netDxf.Matrix3.Zero">
             <summary>
@@ -17258,11 +16267,8 @@
         </member>
         <member name="P:netDxf.Matrix3.IsIdentity">
             <summary>
-            Gets if the actual matrix is the identity.
+            Gets if the actual matrix has been initialized as the identity.
             </summary>
-            <remarks>
-            The checks to see if the matrix is the identity uses the MathHelper.Epsilon as a the threshold for testing values close to one and zero.
-            </remarks>
         </member>
         <member name="M:netDxf.Matrix3.op_Addition(netDxf.Matrix3,netDxf.Matrix3)">
             <summary>
@@ -17317,18 +16323,18 @@
             Product of a matrix with a vector.
             </summary>
             <param name="a">Matrix3.</param>
-            <param name="u">Vector3.</param>
+            <param name="u">Vector3d.</param>
             <returns>Matrix3.</returns>
-            <remarks>Matrix3 adopts the convention of using column vectors.</remarks>
+            <remarks>Matrix3 adopts the convention of using column vectors to represent three dimensional points.</remarks>
         </member>
         <member name="M:netDxf.Matrix3.Multiply(netDxf.Matrix3,netDxf.Vector3)">
             <summary>
             Product of a matrix with a vector.
             </summary>
             <param name="a">Matrix3.</param>
-            <param name="u">Vector3.</param>
+            <param name="u">Vector3d.</param>
             <returns>Matrix3.</returns>
-            <remarks>Matrix3 adopts the convention of using column vectors.</remarks>
+            <remarks>Matrix3 adopts the convention of using column vectors to represent three dimensional points.</remarks>
         </member>
         <member name="M:netDxf.Matrix3.op_Multiply(netDxf.Matrix3,System.Double)">
             <summary>
@@ -17386,7 +16392,7 @@
             </summary>
             <param name="angle">The counter-clockwise angle in radians.</param>
             <returns>The resulting Matrix3 instance.</returns>
-            <remarks>Matrix3 adopts the convention of using column vectors to represent a transformation matrix.</remarks>
+            <remarks>Matrix3 adopts the convention of using column vectors to represent three dimensional points.</remarks>
         </member>
         <member name="M:netDxf.Matrix3.RotationY(System.Double)">
             <summary>
@@ -17394,7 +16400,7 @@
             </summary>
             <param name="angle">The counter-clockwise angle in radians.</param>
             <returns>The resulting Matrix3 instance.</returns>
-            <remarks>Matrix3 adopts the convention of using column vectors to represent a transformation matrix.</remarks>
+            <remarks>Matrix3 adopts the convention of using column vectors to represent three dimensional points.</remarks>
         </member>
         <member name="M:netDxf.Matrix3.RotationZ(System.Double)">
             <summary>
@@ -17402,7 +16408,7 @@
             </summary>
             <param name="angle">The counter-clockwise angle in radians.</param>
             <returns>The resulting Matrix3 instance.</returns>
-            <remarks>Matrix3 adopts the convention of using column vectors to represent a transformation matrix.</remarks>
+            <remarks>Matrix3 adopts the convention of using column vectors to represent three dimensional points.</remarks>
         </member>
         <member name="M:netDxf.Matrix3.Scale(System.Double)">
             <summary>
@@ -18681,35 +17687,6 @@
             <remarks>
             The epsilon value must be a positive number greater than zero.
             </remarks>
-        </member>
-        <member name="M:netDxf.MathHelper.Sign(System.Double)">
-            <summary>
-            Returns a value indicating the sign of a double-precision floating-point number.
-            </summary>
-            <param name="number">Double precision number.
-            </param>
-            <returns>
-            A number that indicates the sign of value.
-            Return value Meaning -1 value is less than zero.
-            0 value is equal to zero.
-            1 value is greater than zero.
-            </returns>
-            <remarks>This method will test for values of numbers very close to zero.</remarks>
-        </member>
-        <member name="M:netDxf.MathHelper.Sign(System.Double,System.Double)">
-            <summary>
-            Returns a value indicating the sign of a double-precision floating-point number.
-            </summary>
-            <param name="number">Double precision number.
-            <param name="threshold">Tolerance.</param>
-            </param>
-            <returns>
-            A number that indicates the sign of value.
-            Return value Meaning -1 value is less than zero.
-            0 value is equal to zero.
-            1 value is greater than zero.
-            </returns>
-            <remarks>This method will test for values of numbers very close to zero.</remarks>
         </member>
         <member name="M:netDxf.MathHelper.IsOne(System.Double)">
             <summary>
