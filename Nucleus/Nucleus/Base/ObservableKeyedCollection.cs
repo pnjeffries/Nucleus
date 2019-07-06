@@ -159,12 +159,9 @@ namespace Nucleus.Base
             {
                 foreach (NotifyCollectionChangedEventHandler handler in handlers.GetInvocationList())
                 {
-
-#if !JS
-                    if (handler.Target is ICollectionView)// is CollectionView)
-                        ((ICollectionView)handler.Target).Refresh();
+                    if (IsCollectionView(handler.Target)) //is ICollectionView)
+                        handler(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));//((ICollectionView)handler.Target).Refresh();
                     else
-#endif
                         handler(this, e);
                 }
             }
@@ -362,6 +359,23 @@ namespace Nucleus.Base
                 Add(item);
         }
 
-#endregion
+        #endregion
+
+        #region Static Methods
+
+        /// <summary>
+        /// Is the specified object potentially a collectionview?
+        /// Used to enable a workaround for CollectionView crashing
+        /// on multiple update.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        private static bool IsCollectionView(object obj)
+        {
+            if (obj is INotifyCollectionChanged) return true; //TODO: Get more specific
+            return false;
+        }
+
+        #endregion
     }
 }

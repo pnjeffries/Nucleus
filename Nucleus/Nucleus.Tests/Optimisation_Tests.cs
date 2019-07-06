@@ -35,7 +35,7 @@ namespace Nucleus.Tests
             var settings = new SimulatedAnnealingSettings()
             {
                 Objective = OptimisationObjective.Minimise,
-                MaxIterations = 50000
+                //MaxIterations = 50000
             };
             var solver = new TestAnnealingSolver();
             solver.Settings = settings;

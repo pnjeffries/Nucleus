@@ -213,5 +213,21 @@ namespace Nucleus.UnitTests
 
             Assert.AreEqual(false, inside);
         }
+
+        [TestMethod]
+        public void PolygonContainmentTest2()
+        {
+            var polygon = new Vertex[]
+            {
+                new Vertex(0,0),
+                new Vertex(10,0),
+                new Vertex(10,10),
+                new Vertex(0,10)
+            };
+
+            bool inside = polygon.PolygonContainmentXY(new Vector(0, -5, 0));
+
+            Assert.AreEqual(false, inside);
+        }
     }
 }
