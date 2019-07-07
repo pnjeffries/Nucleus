@@ -314,13 +314,13 @@ namespace Nucleus.TestApp
                     new Geometry.Vector(10, -6),
                     new Geometry.Vector(10,-2),
                     new Geometry.Vector(0, -6),
-                    new Geometry.Vector(0, -6)
+                    //new Geometry.Vector(0, -6)
                 };
             }
             VertexCollection verts = new VertexCollection(points);
             MeshFaceCollection faces = Mesh.DelaunayTriangulationXY(verts);
             faces.Quadrangulate();
-            faces = faces.Refine(0.2);
+            faces = faces.Refine(0.5);
             //Dictionary<Vertex, MeshFace> voronoi = Mesh.VoronoiFromDelaunay(verts, faces);
             //ShapeCollection geometry = new MeshFaceCollection(voronoi.Values).ExtractFaceBoundaries();
             CurveCollection edges = faces.ExtractFaceBoundaries();

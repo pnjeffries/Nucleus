@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.DebuggerVisualizers;
 using Nucleus.Geometry;
+using Nucleus.Meshing;
 using Nucleus.WPF;
 using System;
 using System.Collections.Generic;
@@ -56,6 +57,18 @@ Description = ".NUCLEUS Geometry Visualiser")]
 typeof(Nucleus.Visualiser.DebuggerSide),
 typeof(VisualizerObjectSource),
 Target = typeof(Vector[]),
+Description = ".NUCLEUS Geometry Visualiser")]
+
+[assembly: System.Diagnostics.DebuggerVisualizer(
+typeof(Nucleus.Visualiser.DebuggerSide),
+typeof(VisualizerObjectSource),
+Target = typeof(MeshDivisionEdge),
+Description = ".NUCLEUS Geometry Visualiser")]
+
+[assembly: System.Diagnostics.DebuggerVisualizer(
+typeof(Nucleus.Visualiser.DebuggerSide),
+typeof(VisualizerObjectSource),
+Target = typeof(MeshDivisionEdgeCollection),
 Description = ".NUCLEUS Geometry Visualiser")]
 
 namespace Nucleus.Visualiser

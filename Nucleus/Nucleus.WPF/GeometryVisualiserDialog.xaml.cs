@@ -50,7 +50,7 @@ namespace Nucleus.WPF
         {
             VertexGeometryCollection geometry = new VertexGeometryCollection();
 
-            
+
             if (_StorePath.Exists)
             {
                 try
@@ -69,7 +69,8 @@ namespace Nucleus.WPF
                     if (storedGeo != null) geometry.AddRange(storedGeo);
                 }
                 catch { }
-                }
+            }
+        
             if (visualise is MeshFace) visualise = new MeshFaceCollection((MeshFace)visualise);
             //else if (visualise is Mesh) visualise = ((Mesh)visualise).Faces;
 
@@ -110,6 +111,20 @@ namespace Nucleus.WPF
                 {
                     var cloud = new Cloud(mDE.Vertices.GetPositions());
                     geometry.Add(cloud);
+                }
+            }
+            else if (visualise is IList<MeshDivisionEdge>)
+            {
+                foreach (var mDC in (IList<MeshDivisionEdge>)visualise)
+                {
+                    var mDE = (MeshDivisionEdge)visualise;
+                    var line = new Geometry.Line(mDE.Start, mDE.End);
+                    geometry.Add(line);
+                    if (mDE.Vertices != null && mDE.Vertices.Count > 0)
+                    {
+                        var cloud = new Cloud(mDE.Vertices.GetPositions());
+                        geometry.Add(cloud);
+                    }
                 }
             }
             // TODO: Convert other types to vertexgeometry
