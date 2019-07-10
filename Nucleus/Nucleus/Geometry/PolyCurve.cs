@@ -622,6 +622,8 @@ namespace Nucleus.Geometry
         /// Positive numbers will result in the offset curve being to the right-hand 
         /// side, looking along the curve.  Negative numbers to the left.</param>
         /// <param name="tidy">If true (default) collapsed segments will be removed.</param>
+        /// <param name="copyAttributes">If true, the attributes of the original subcurves will be
+        /// copied to their new offset equivalents.</param>
         /// <returns></returns>
         public override Curve Offset(IList<double> distances, bool tidy = true, bool copyAttributes = true)
         {
@@ -659,7 +661,11 @@ namespace Nucleus.Geometry
 
             if (tidy)
             {
-                List<Curve> originals = new List<Curve>();
+                // Return the largest non-inverted loop
+                var loops = result.SelfIntersectionXYLoops();
+                loops.RemoveInvertedCurvesXY(this);
+                return loops.ItemWithMax(i => i.Length);
+                /*List<Curve> originals = new List<Curve>();
                 originals.AddRange(SubCurves);
 
                 // Removed flipped segments
@@ -687,10 +693,43 @@ namespace Nucleus.Geometry
                     else
                         j++;
                 }
-                if (!result.IsValid) return null;
+                if (!result.IsValid) return null;*/
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Store the original domain(s) of each subcurve on that subcurve
+        /// as an OriginalDomainGeometryAttrubutes.  A new attributes object will
+        /// be generated for each subcurve, copying over data from the original.
+        /// Note that only base type properties will be copied and this may result
+        /// in a loss of data if other specialised GeometryAttributes subtypes
+        /// are already attached to each curve.
+        /// </summary>
+        public void AttachOriginalDomainsToSubCurves()
+        {
+            double segCount = SegmentCount;
+            double domStart = 0;
+            foreach (var subCrv in SubCurves)
+            {
+                double domLength = subCrv.SegmentCount / segCount;
+                double domEnd = domStart + domLength;
+                subCrv.Attributes = new OriginalDomainGeometryAttributes(subCrv.Attributes,
+                    new Interval(domStart, domEnd));
+            }
+        }
+
+        /// <summary>
+        /// Interpolate between this polycurve and another.  If this curve's subcurves
+        /// have attached OriginalDomainGeometryAttributes then the stored domains may
+        /// optionally be used to guide the interpolation.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public PolyCurve Interpolate(PolyCurve other, double proportion = 0.5, bool useStoredDomains = false)
+        {
+            throw new NotImplementedException();
         }
 
         private bool IsOffsetCurveFlipped(Curve original, Curve offset)
@@ -746,7 +785,7 @@ namespace Nucleus.Geometry
                 double subSC = subCrv.SegmentCount;
                 double segEnd = segStart + subSC;
                 Interval crvDom = new Interval(segStart / segCount, segEnd / segCount);
-                if (subDomain.Contains(crvDom)) result.Add(subCrv.Duplicate());
+                if (subDomain.Contains(crvDom)) result.Add(subCrv.FastDuplicate());
                 else if (subDomain.Overlaps(crvDom))
                 {
                     Curve subSubCrv = subCrv.Extract(crvDom.ParameterOf(subDomain.Overlap(crvDom)));
@@ -865,20 +904,50 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Break down 
+        /// Break down this polycurve into several loops, broken at intersections
         /// </summary>
         /// <returns></returns>
         public IList<Curve> SelfIntersectionXYLoops()
         {
             var result = new List<Curve>();
+
             SortedList<double, double> chucks = SelfIntersectionsXY();
-            double tStart = 0;
+            
             if (chucks.Count > 0)
             {
-                while (chucks.Count > 0)
-                {
-                    double tEnd = chucks.Keys.First();
+                double tLoopStart = 0;
+                double tStart = 0;
+                double tNextLoopStart = 0;
+                PolyCurve current = null;
+                for (int i = 0; i < chucks.Count + 1; i++)
+                { 
+                    double tEnd;
+                    bool found;
+                    double tNext = chucks.NextAfter(tStart, out found, out tEnd, false);
+                    if (!found) // Last segment
+                    {
+                        tEnd = 1;
+                        tNext = 0;
+                    }
                     Curve crv = Extract(tStart, tEnd);
+                    if (current == null)
+                    {
+                        // Start a new loop
+                        current = new PolyCurve(Attributes);
+                        result.Add(current);
+                        tNextLoopStart = tEnd; //Where we should hop back to
+                    }
+                    current.Add(crv, false, true);
+                    if (tNext == tLoopStart || !found)
+                    {
+                        current = null;
+                        // End the loop
+                        // Jump back to the start of the next one:
+                        tNext = tNextLoopStart;
+                        tLoopStart = tNextLoopStart;
+                    }
+                    tStart = tNext; //Hop over to the other side of the intersection to continue the loop
+                    //chucks.Remove(tNext);
                 }
             }
             else result.Add(this);
@@ -900,7 +969,7 @@ namespace Nucleus.Geometry
 
             IList<ISimpleCurve> simples = ToSimpleCurves();
             int max = simples.Count;
-            if (Closed) max++;
+            //if (Closed) max++;
             // Walk along the curve forwards to find the next intersection
             for (int i = 0; i < max - 1; i++)
             {
@@ -1362,6 +1431,8 @@ namespace Nucleus.Geometry
             if (removedAny) NotifyGeometryUpdated();
             return removedAny;
         }
+
+
 
         #endregion
 

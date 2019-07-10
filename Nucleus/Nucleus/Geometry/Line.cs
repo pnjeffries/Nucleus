@@ -433,10 +433,6 @@ namespace Nucleus.Geometry
             else return t;
         }
 
-        double ISimpleCurve.ClosestParameter(Vector toPoint)
-        {
-            throw new NotImplementedException();
-        }
 
 
         #endregion

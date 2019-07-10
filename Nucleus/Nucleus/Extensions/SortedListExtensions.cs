@@ -84,16 +84,39 @@ namespace Nucleus.Extensions
         /// <param name="wrap">If true, the list is treated as wrapping - i.e. if no item with a key greater
         /// than that specified can be found the first item will be returned instead.</param>
         /// <returns></returns>
-        public static TValue NextAfter<TKey, TValue>(this SortedList<TKey,TValue> list, 
+        public static TValue NextAfter<TKey, TValue>(this SortedList<TKey, TValue> list,
             TKey key, out TKey nextKey, bool wrap = false)
             where TKey : IComparable
-            where TValue : class
+        {
+            bool found = false;
+            return list.NextAfter(key, out found, out nextKey, wrap);
+        }
+
+        /// <summary>
+        /// Get the stored value with the key after the specified key value.
+        /// Returns the first item in this list with a key that compared greater than
+        /// that specified.  If none can be found, returns null.
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="key">The key value to search for</param>
+        /// <param name="found">OUTPUT.  Boolean which returns true if a value was found either
+        /// after the specified value or at the start of the list in the case where 'wrap' is set to true.</param>
+        /// <param name="nextKey">OUTPUT.  The key of the next value.</param>
+        /// <param name="wrap">If true, the list is treated as wrapping - i.e. if no item with a key greater
+        /// than that specified can be found the first item will be returned instead.</param>
+        /// <returns></returns>
+        public static TValue NextAfter<TKey, TValue>(this SortedList<TKey,TValue> list, 
+            TKey key, out bool found, out TKey nextKey, bool wrap = false)
+            where TKey : IComparable
         {
             foreach (KeyValuePair<TKey,TValue> kvp in list)
             {
                 if (kvp.Key.CompareTo(key) > 0)
                 {
                     nextKey = kvp.Key;
+                    found = true;
                     return kvp.Value;
                 }
             }
@@ -101,10 +124,12 @@ namespace Nucleus.Extensions
             {
                 var kvp = list.First();
                 nextKey = kvp.Key;
+                found = true;
                 return kvp.Value;
             }
+            found = false;
             nextKey = default(TKey);
-            return null;
+            return default(TValue);
         }
 
         /// <summary>
@@ -126,6 +151,38 @@ namespace Nucleus.Extensions
         {
             TKey outKey;
             return list.NextAfter(key, out outKey, wrap);
+        }
+
+        /// <summary>
+        /// Get the stored value with the key after the specified key value.
+        /// Returns the first item in this list with a key that compared greater than
+        /// that specified.  If none can be found, returns null.
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="key">The key value to search for</param>
+        /// <param name="nextKey">OUTPUT.  The key of the next value.</param>
+        /// <param name="wrap">If true, the list is treated as wrapping - i.e. if no item with a key greater
+        /// than that specified can be found the first item will be returned instead.</param>
+        /// <returns></returns>
+        public static KeyValuePair<TKey,TValue> NextKVPAfter<TKey, TValue>(this SortedList<TKey, TValue> list,
+            TKey key, bool wrap = false)
+            where TKey : IComparable
+        {
+            foreach (KeyValuePair<TKey, TValue> kvp in list)
+            {
+                if (kvp.Key.CompareTo(key) > 0)
+                {
+                    return kvp;
+                }
+            }
+            if (wrap && list.Count > 0)
+            {
+                var kvp = list.First();
+                return kvp;
+            }
+            return new KeyValuePair<TKey, TValue>();
         }
 
         /// <summary>

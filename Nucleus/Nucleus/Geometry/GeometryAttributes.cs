@@ -74,7 +74,7 @@ namespace Nucleus.Geometry
             get { return _Interactive; }
             set { ChangeProperty(ref _Interactive, value, "Interactive"); }
         }
-        
+ 
         #endregion
 
         #region Constructors
@@ -83,6 +83,23 @@ namespace Nucleus.Geometry
         /// Default constructor
         /// </summary>
         public GeometryAttributes() { }
+
+        /// <summary>
+        /// Initialise an attributes object copying properties from another
+        /// </summary>
+        /// <param name="other">Another set of geometry attributes.  This may be null,
+        /// in which case default values will be retained.</param>
+        public GeometryAttributes(GeometryAttributes other)
+        {
+            if (other != null)
+            {
+                _SourceID = other.SourceID;
+                _LayerName = other.LayerName;
+                Brush = other.Brush;
+                Weight = other.Weight;
+                _Interactive = other.Interactive;
+            }
+        }
 
         /// <summary>
         /// Initialise an attributes object with the specified data

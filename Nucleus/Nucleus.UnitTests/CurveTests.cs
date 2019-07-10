@@ -229,6 +229,89 @@ namespace Nucleus.UnitTests
             Vector tangent = pCrv.TangentAt(t);
             Assert.AreEqual(new Vector(0, -1, 0), tangent);
         }
-        
+
+        [TestMethod]
+        public void PolyCurveOffsetWithChinkFailsIfNotNull()
+        {
+            var pLine = new PolyLine(true,
+                new Vector(3, 52),
+                new Vector(57, 58),
+                new Vector(66, 4),
+                new Vector(21, 24),
+                new Vector(31, 34),
+                new Vector(15, 30)
+            );
+            var pCrv = pLine.ToPolyCurve();
+            var offsetCrv = pCrv.Offset(16.0);
+            var polygon = pLine.Vertices.ExtractPoints();
+                Assert.AreEqual(null, offsetCrv);
+            
+        }
+
+        [TestMethod]
+        public void PolyCurveOffsetWithChinkFailsIfOutsideInitial2()
+        {
+            var pLine = new PolyLine(true,
+                new Vector(7, 63),
+                new Vector(45, 74),
+                new Vector(83, 12),
+                new Vector(31, 19),
+                new Vector(35, 35),
+                new Vector(21, 30),
+                new Vector(7, 63)
+            );
+            var pCrv = pLine.ToPolyCurve();
+            var offsetCrv = pCrv.Offset(16.0);
+            var polygon = pLine.Vertices.ExtractPoints();
+            foreach (var v in offsetCrv.Vertices)
+            {
+                bool inside = polygon.PolygonContainmentXY(v.Position);
+                Assert.AreEqual(true, inside);
+            }
+        }
+
+        [TestMethod]
+        public void PolyCurveOffsetWithChinkFailsIfOutsideInitial3()
+        {
+            var pLine = new PolyLine(true,
+                new Vector(15, 56),
+                new Vector(72, 36),
+                new Vector(72, 29),
+                new Vector(15, 12),
+                new Vector(11, 31),
+                new Vector(2, 13),
+                new Vector(-5, 24),
+                new Vector(15, 56)
+            );
+            var pCrv = pLine.ToPolyCurve();
+            PolyCurve offsetCrv = pCrv.Offset(16.0, true) as PolyCurve;
+            var tempLoops = offsetCrv.SelfIntersectionXYLoops();
+            var loops = new CurveCollection();
+                loops.AddRange(tempLoops);
+            var polygon = pLine.Vertices.ExtractPoints();
+            foreach (var v in offsetCrv.Vertices)
+            {
+                bool inside = polygon.PolygonContainmentXY(v.Position);
+                Assert.AreEqual(true, inside);
+            }
+        }
+
+        [TestMethod]
+        public void PolyCurveOffsetHourglassFailsIfNotNull()
+        {
+            var pLine = new PolyLine(true,
+                new Vector(16.0990763671286, 15.9585221874058),
+                new Vector(34, 16),
+                new Vector(59.4083740969327, 14.9302153041428),
+                new Vector(62.8591637874557, 3),
+                new Vector(36, 8),
+                new Vector(13, 2)
+            );
+            var pCrv = pLine.ToPolyCurve();
+            var offsetCrv = pCrv.Offset(16.0);
+            Assert.AreEqual(null, offsetCrv);
+
+        }
+
     }
 }

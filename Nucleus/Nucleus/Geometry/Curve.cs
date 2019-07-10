@@ -987,7 +987,7 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Calculate the area enclosed by this curve, were the start and end points to be 
+        /// Calculate the (signed) area enclosed by this curve, were the start and end points to be 
         /// joined by a straight line segment.
         /// A plane may optionally be specified, otherwise by default the projected area on 
         /// the XY plane will be used.
@@ -1003,7 +1003,7 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Calculate the area enclosed by this curve, were the start and end points to be 
+        /// Calculate the (signed) area enclosed by this curve, were the start and end points to be 
         /// joined by a straight line segment.
         /// A plane may optionally be specified, otherwise by default the projected area on 
         /// the XY plane will be used.
@@ -1033,7 +1033,7 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Calculate the combined area enclosed by this curve, were the start and end points to be
+        /// Calculate the combined (signed) area enclosed by this curve, were the start and end points to be
         /// joined by a straight line segment, but excluding areas bounded by a specified set of void curves.
         /// A plane may optionally be specified, otherwise by default the projected area on the XY plane will
         /// be used.
@@ -1871,6 +1871,36 @@ namespace Nucleus.Geometry
             crv.Reverse();
             return crv;
         }
+
+        /// <summary>
+        /// Remove from this collection any curves which do not have the same winding
+        /// direction on the XY plane as the specified winding direction
+        /// </summary>
+        /// <typeparam name="TCurve"></typeparam>
+        /// <param name="curves"></param>
+        /// <param name="isClockwise">If true, anti-clockwise curves will be removed.  If false,
+        /// clockwise curves will be removed.</param>
+        public static void RemoveInvertedCurvesXY<TCurve>(this IList<TCurve> curves, bool isClockwise)
+            where TCurve : Curve
+        {
+            for (int i = curves.Count - 1; i >= 0; i--)
+            {
+                if (curves[i].IsClockwiseXY() != isClockwise)
+                    curves.RemoveAt(i);
+            }
+        }
         
+        /// <summary>
+        /// Remove from this collection any curves which do not have the same winding direction
+        /// on the XY plane as the specified base curve
+        /// </summary>
+        /// <typeparam name="TCurve"></typeparam>
+        /// <param name="curves"></param>
+        /// <param name="original"></param>
+        public static void RemoveInvertedCurvesXY<TCurve>(this IList<TCurve> curves, Curve original)
+            where TCurve : Curve
+        {
+            curves.RemoveInvertedCurvesXY(original.IsClockwiseXY());
+        }
     }
 }
