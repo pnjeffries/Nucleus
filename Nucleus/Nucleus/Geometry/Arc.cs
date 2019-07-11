@@ -705,6 +705,24 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find the self-intersection parameters of this curve
+        /// on the XY plane.
+        /// Returns a sorted list where the keys are the intersection
+        /// parameters along this curve and the values are their matching
+        /// parameters.
+        /// As an arc of constant radius cannot intersect itself, this override of
+        /// the function will always return an empty SortedList.
+        /// </summary>
+        /// <returns></returns>
+        public override SortedList<double, double> SelfIntersectionsXY()
+        {
+            // Shortcut - a line cannot intersect itself
+            var result = new SortedList<double, double>();
+            return result;
+        }
+
+
+        /// <summary>
         /// Decompose this curve down to simple primitive curve types such
         /// as line and arc segments.  Arcs are already 'simple' and so this
         /// will just return a list containing this arc.

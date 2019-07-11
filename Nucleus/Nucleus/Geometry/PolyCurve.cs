@@ -903,99 +903,7 @@ namespace Nucleus.Geometry
             return false;
         }
 
-        /// <summary>
-        /// Break down this polycurve into several loops, broken at intersections
-        /// </summary>
-        /// <returns></returns>
-        public IList<Curve> SelfIntersectionXYLoops()
-        {
-            var result = new List<Curve>();
-
-            SortedList<double, double> chucks = SelfIntersectionsXY();
-            
-            if (chucks.Count > 0)
-            {
-                double tLoopStart = 0;
-                double tStart = 0;
-                double tNextLoopStart = 0;
-                PolyCurve current = null;
-                for (int i = 0; i < chucks.Count + 1; i++)
-                { 
-                    double tEnd;
-                    bool found;
-                    double tNext = chucks.NextAfter(tStart, out found, out tEnd, false);
-                    if (!found) // Last segment
-                    {
-                        tEnd = 1;
-                        tNext = 0;
-                    }
-                    Curve crv = Extract(tStart, tEnd);
-                    if (current == null)
-                    {
-                        // Start a new loop
-                        current = new PolyCurve(Attributes);
-                        result.Add(current);
-                        tNextLoopStart = tEnd; //Where we should hop back to
-                    }
-                    current.Add(crv, false, true);
-                    if (tNext == tLoopStart || !found)
-                    {
-                        current = null;
-                        // End the loop
-                        // Jump back to the start of the next one:
-                        tNext = tNextLoopStart;
-                        tLoopStart = tNextLoopStart;
-                    }
-                    tStart = tNext; //Hop over to the other side of the intersection to continue the loop
-                    //chucks.Remove(tNext);
-                }
-            }
-            else result.Add(this);
-            return result;
-        }
-
-        /// <summary>
-        /// Find the self-intersection parameters of this polycurve
-        /// on the XY plane.
-        /// Returns a sorted list where the keys are the intersection
-        /// parameters along this curve and the values are their matching
-        /// parameters.
-        /// </summary>
-        /// <returns></returns>
-        public SortedList<double, double> SelfIntersectionsXY()
-        {
-            // Intersection parameters
-            var result = new SortedList<double, double>();
-
-            IList<ISimpleCurve> simples = ToSimpleCurves();
-            int max = simples.Count;
-            //if (Closed) max++;
-            // Walk along the curve forwards to find the next intersection
-            for (int i = 0; i < max - 1; i++)
-            {
-                ISimpleCurve crvA = simples[i];
-                for (int j = i + 1; j < max; j++)
-                {
-                    ISimpleCurve crvB = simples.GetWrapped(j);
-                    Vector[] chuck = Intersect.CurveCurveXY(crvA, crvB, 0.0001);
-                    if (chuck != null && chuck.Length > 0)
-                    {
-                        foreach (Vector pt in chuck)
-                        {
-                            // Work out intersection parameters and add to result
-                            double st0 = crvA.ClosestParameter(pt);
-                            double st1 = crvB.ClosestParameter(pt);
-                            double t0 = ParameterAt(i, st0);
-                            double t1 = ParameterAt(j, st1);
-                            result.Add(t0, t1);
-                            result.Add(t1, t0);
-                        }
-                    }
-                }
-            }
-
-            return result;
-        }
+        
 
         public override string ToString()
         {
@@ -1432,7 +1340,90 @@ namespace Nucleus.Geometry
             return removedAny;
         }
 
+        /// <summary>
+        /// Reduce this polycurve by removing line subcurves where
+        /// they can be adequately represented within tolerance by
+        /// adjusting an adjoining line curve to replace them.
+        /// </summary>
+        /// <param name="tolerance">The tolerance distance.
+        /// Line ends which fall within this distance
+        /// of the replacement straight line will be removed.</param>
+        /// <returns>The number of sub-curves removed by this operation.</returns>
+        public int Reduce(double tolerance)
+        {
+            return Reduce(new Interval(-tolerance, tolerance));
+        }
 
+        /// <summary>
+        /// Reduce this polycurve by removing line subcurves where
+        /// they can be adequately represented within tolerance by
+        /// adjusting an adjoining line curve to replace them.
+        /// </summary>
+        /// <param name="tolerance">The tolerance range.
+        /// Line ends which fall within this range of signed distance
+        /// of the replacement straight line will be removed.  Positive
+        /// values are to the left of the curve and negative values are to
+        /// the right, meaning that this range allows you to specify different
+        /// tolerances to each side of the curve.</param>
+        /// <returns>The number of sub-curves removed by this operation.</returns>
+        public int Reduce(Interval tolerance)
+        {
+            int result = 0;
+            int modifier = 0;
+            if (!Closed) modifier = -1;
+            var previouslyRemoved = new List<Vector>();
+            for (int i = 0; i < SubCurves.Count + modifier; i++)
+            {
+                Curve crvA = SubCurves[i];
+                Curve crvB = SubCurves.GetWrapped(i + 1);
+                if (crvA is Line && crvB is Line)
+                {
+                    // Check perp distance of removal candidate to
+                    // potential new line segment
+                    Vector toEnd = crvB.EndPoint - crvA.StartPoint;
+                    Vector perp = toEnd.PerpendicularXY().Unitize();
+                    Vector toMidPt = crvB.StartPoint - crvA.StartPoint;
+                    double dot = toMidPt.Dot(perp);
+                    // Is the mid-point (and any previous) within tolerance to
+                    // allow removal?
+                    if (tolerance.Contains(dot) &&
+                        AllInToleranceForReduction(previouslyRemoved, perp, tolerance))
+                    {
+                        crvA.End.Position = crvB.EndPoint;
+                        SubCurves.Remove(crvB);
+                        i--;
+                        result++;
+                        // Store to check any subsequent reductions involving
+                        // crvA do not take the removed point out of tolerance
+                        previouslyRemoved.Add(toMidPt);
+                    }
+                    else
+                    {
+                        // Staring afresh, no longer need to check against olds
+                        previouslyRemoved.Clear();
+                    }
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Test all offset vectors in the specified collection to see whether they lie within tolerance
+        /// for curve reduction.
+        /// </summary>
+        /// <param name="offsets"></param>
+        /// <param name="perp"></param>
+        /// <param name="tolerance"></param>
+        /// <returns></returns>
+        private bool AllInToleranceForReduction(List<Vector> offsets, Vector perp, Interval tolerance)
+        {
+            foreach (Vector offset in offsets)
+            {
+                double dot = offset.Dot(perp);
+                if (!tolerance.Contains(dot)) return false;
+            }
+            return true;
+        }
 
         #endregion
 

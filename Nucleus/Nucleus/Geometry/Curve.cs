@@ -658,7 +658,7 @@ namespace Nucleus.Geometry
         /// the x-axis lies within a certain angular limit of z, in which case the global X axis
         /// will be used instead.
         /// </summary>
-        /// <param name="tSpan">A normalised parameter defining a point along this curve.
+        /// <param name="t">A normalised parameter defining a point along this curve.
         /// Note that parameter-space is not necessarily uniform and does not equate to a normalised length.
         /// 0 = span start, 1 = span end.</param>
         /// <param name="orientation">The orientation angle.  The rotation of the Y and Z axes of the coordinate 
@@ -689,6 +689,7 @@ namespace Nucleus.Geometry
         /// the x-axis lies within one degree of z, in which case the global X axis
         /// will be used instead.
         /// </summary>
+        /// <param name="span">The index of the span to evaluate.</param>
         /// <param name="tSpan">A normalised parameter defining a point along this span of this curve.
         /// Note that parameter-space is not necessarily uniform and does not equate to a normalised length.
         /// 0 = span start, 1 = span end.</param>
@@ -1154,9 +1155,11 @@ namespace Nucleus.Geometry
         /// <summary>
         /// Offset this curve on the XY plane.
         /// </summary>
-        /// <param name="distances">The offset distance.
+        /// <param name="distance">The offset distance.
         /// Positive numbers will result in the offset curve being to the right-hand 
         /// side, looking along the curve.  Negative numbers to the left.</param>
+        /// <param name="tidy">If true, automatic post-processing operations to 'tidy'
+        /// the offset curve by removing collapsed regions will be performed.</param>
         /// <returns></returns>
         public virtual Curve Offset(double distance, bool tidy = true, bool copyAttributes = true)
         {
@@ -1181,7 +1184,7 @@ namespace Nucleus.Geometry
         /// the direction of offset which will result in the curve being offset within itself.
         /// Note that it will not be possible to accurately predict this for all curves.
         /// </summary>
-        /// <param name="distances">The offset distance.
+        /// <param name="distance">The offset distance.
         /// Positive numbers will result in the offset curve being to the right-hand 
         /// side, looking along the curve.  Negative numbers to the left.  This will be
         /// automatically inverted (in-place) if the curve is anticlockwise so that
@@ -1365,6 +1368,124 @@ namespace Nucleus.Geometry
             return false;
         }
 
+        /// <summary>
+        /// Find the self-intersection parameters of this curve
+        /// on the XY plane.
+        /// Returns a sorted list where the keys are the intersection
+        /// parameters along this curve and the values are their matching
+        /// parameters.
+        /// </summary>
+        /// <returns></returns>
+        public virtual SortedList<double, double> SelfIntersectionsXY()
+        {
+            // Intersection parameters
+            var result = new SortedList<double, double>();
+
+            IList<ISimpleCurve> simples = ToSimpleCurves();
+            int max = simples.Count;
+            //if (Closed) max++;
+            // Walk along the curve forwards to find the next intersection
+            for (int i = 0; i < max - 1; i++)
+            {
+                ISimpleCurve crvA = simples[i];
+                for (int j = i + 1; j < max; j++)
+                {
+                    ISimpleCurve crvB = simples.GetWrapped(j);
+                    Vector[] chuck = Intersect.CurveCurveXY(crvA, crvB, 0.0001);
+                    if (chuck != null && chuck.Length > 0)
+                    {
+                        foreach (Vector pt in chuck)
+                        {
+                            // Work out intersection parameters and add to result
+                            double st0 = crvA.ClosestParameter(pt);
+                            double st1 = crvB.ClosestParameter(pt);
+                            double t0 = ParameterAt(i, st0);
+                            double t1 = ParameterAt(j, st1);
+                            result.Add(t0, t1);
+                            result.Add(t1, t0);
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Break down this curve into loops, delineated by the positions
+        /// where the curve intersects itself and in so doing produces
+        /// one or more closed regions.  The returned loops may be thought
+        /// of as the perimeter of each region.
+        /// This may be used (and is) as part of a post-processing step once
+        /// a curve has been offset in order to eliminate regions where the
+        /// offset curve has collapsed.  Any produced loops which have the
+        /// inverse winding direction to the original curve will denote regions
+        /// where the offset curve has collapsed on itself and may be removed
+        /// to create a 'tidied' set of offset curves.
+        /// </summary>
+        /// <returns></returns>
+        public IList<Curve> SelfIntersectionXYLoops()
+        {
+            var result = new List<Curve>();
+
+            SortedList<double, double> chucks = SelfIntersectionsXY();
+
+            if (chucks.Count > 0)
+            {
+                double tLoopStart = 0;
+                double tStart = 0;
+                double tNextLoopStart = 0;
+                var tGoBackTo = new List<double>();
+                PolyCurve current = null;
+                for (int i = 0; i < chucks.Count + 1; i++)
+                {
+                    double tEnd;
+                    bool found;
+                    double tNext = chucks.NextAfter(tStart, out found, out tEnd, false);
+                    if (!found) // Last segment
+                    {
+                        tEnd = 1;
+                        if (Closed) tNext = 0;
+                    }
+                    Curve crv = Extract(tStart, tEnd);
+                    if (current == null) //TODO: Deal with open curves - don't join ends
+                    {
+                        // Start a new loop
+                        current = new PolyCurve(Attributes);
+                        result.Add(current);
+                    }
+                    
+                    current.Add(crv, false, true);
+                    if (tNext == tLoopStart || !found)
+                    {
+                        current = null;
+                        // End the loop
+                        // Jump back to the start of the next one:
+                        if (tGoBackTo.Count > 0)
+                        {
+                            tNextLoopStart = tGoBackTo.Last();
+                            tGoBackTo.RemoveLast();
+                        }
+                        tNext = tNextLoopStart;
+                        tLoopStart = tNextLoopStart;
+                    }
+                    else
+                    {
+                        tNextLoopStart = tEnd; //Where we should hop back to
+                        tGoBackTo.Add(tNextLoopStart);
+                    }
+                    tStart = tNext; //Hop over to the other side of the intersection to continue the loop
+                    //chucks.Remove(tNext);
+                }
+            }
+            else result.Add(this);
+            return result;
+        }
+
+        /// <summary>
+        /// Convert this curve to a string representation
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return "Curve";

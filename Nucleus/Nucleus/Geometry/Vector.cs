@@ -1110,7 +1110,8 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Get a vector perpendicular to this vector on the XY plane
+        /// Get a vector perpendicular to this vector on the XY plane.
+        /// The resulting vector will point to the left of the original.
         /// </summary>
         /// <returns></returns>
         public Vector PerpendicularXY()
