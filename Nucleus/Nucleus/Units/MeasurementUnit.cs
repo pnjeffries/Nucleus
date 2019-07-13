@@ -41,6 +41,11 @@ namespace Nucleus.Units
         public static readonly MeasurementUnit Millimeters = new MeasurementUnit("millimeters", "mm", 0.001);
 
         /// <summary>
+        /// Centimeters, a length measurement
+        /// </summary>
+        public static readonly MeasurementUnit Centimeters = new MeasurementUnit("centimeters", "cm", 0.01);
+
+        /// <summary>
         /// Radians, the SI unit of angle measurement
         /// </summary>
         public static readonly MeasurementUnit Radians = new MeasurementUnit("radians", "rad");
@@ -54,6 +59,11 @@ namespace Nucleus.Units
         /// Newtons, the SI unit of force measurement
         /// </summary>
         public static readonly MeasurementUnit Newtons = new MeasurementUnit("newtons", "N");
+
+        /// <summary>
+        /// Kilonewtons, a force measurement
+        /// </summary>
+        public static readonly MeasurementUnit KiloNewtons = new MeasurementUnit("kilonewtons", "kN", 1000);
 
         /// <summary>
         /// Kilograms, the SI unit of measurement for mass
@@ -81,9 +91,51 @@ namespace Nucleus.Units
         public static readonly MeasurementUnit Hours = new MeasurementUnit("hours", "hr", 3600);
 
         /// <summary>
-        /// British Pounds, the currency
+        /// British Pounds, a currency
         /// </summary>
         public static readonly MeasurementUnit BritishPounds = new MeasurementUnit("British Pounds", "GBP");
+
+        /// <summary>
+        /// United States Dollars, a currency
+        /// </summary>
+        public static readonly MeasurementUnit USDollars = new MeasurementUnit("United States Dollars", "USD");
+
+        /// <summary>
+        /// Euros, a currency
+        /// </summary>
+        public static readonly MeasurementUnit Euros = new MeasurementUnit("Euros", "€");
+
+        /// <summary>
+        /// Gets an array of all predefined length units
+        /// </summary>
+        public static MeasurementUnit[] LengthUnits
+        {
+            get
+            {
+                return new MeasurementUnit[]
+                {
+                    Meters,
+                    Millimeters,
+                    Centimeters
+                };
+            }
+        }
+
+        /// <summary>
+        /// Gets an array of all predefined currency units
+        /// </summary>
+        public static MeasurementUnit[] CurrencyUnits
+        {
+            get
+            {
+                return new MeasurementUnit[]
+                {
+                    USDollars,
+                    BritishPounds,
+                    Euros
+                };
+            }
+        }
 
         #endregion
 

@@ -1407,24 +1407,6 @@ namespace Nucleus.Geometry
             return result;
         }
 
-        /// <summary>
-        /// Test all offset vectors in the specified collection to see whether they lie within tolerance
-        /// for curve reduction.
-        /// </summary>
-        /// <param name="offsets"></param>
-        /// <param name="perp"></param>
-        /// <param name="tolerance"></param>
-        /// <returns></returns>
-        private bool AllInToleranceForReduction(List<Vector> offsets, Vector perp, Interval tolerance)
-        {
-            foreach (Vector offset in offsets)
-            {
-                double dot = offset.Dot(perp);
-                if (!tolerance.Contains(dot)) return false;
-            }
-            return true;
-        }
-
         #endregion
 
         #region Static Methods

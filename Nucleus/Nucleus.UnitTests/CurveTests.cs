@@ -311,6 +311,17 @@ namespace Nucleus.UnitTests
 
         }
 
+        [TestMethod]
+        public void PolyCurveTriangleDoubleInversion()
+        {
+            var pLine = new PolyLine(true,
+                new Vector(0, 40),
+                new Vector(0, 0),
+                new Vector(15, 0));
+            var pCrv = pLine.ToPolyCurve();
+            var offsetCrv = pCrv.Offset(-16.0);
+            Assert.AreEqual(null, offsetCrv);
+        }
 
         [TestMethod]
         public void PolyCurveLongBigOffsetFailsIfNonNull()

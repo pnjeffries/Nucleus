@@ -1649,6 +1649,25 @@ namespace Nucleus.Geometry
         /// performed and only matches where both ends are extended or both ends are trimmed
         /// will be permitted.</param>
         /// <returns>True if the curve ends could be successfully matched, else false.</returns>
+        /*public static bool MatchEnds(Vertex crvEnd0, Vertex crvEnd1, bool detectMismatches = false, bool canTrim0 = true, bool canTrim1 = true)
+        {
+            double crv0Int, crv1Int;
+            return MatchEnds(crvEnd0, crvEnd1, out crv0Int, out crv1Int, detectMismatches, canTrim0, canTrim1);
+        }*/
+
+        /// <summary>
+        /// Match the end positions of two curves by repositioning vertices
+        /// to either extend or trim the curve ends to a common intersection
+        /// point, if possible.
+        /// The input vertices must be the first or last vertices of curves, else
+        /// the matching will fail.
+        /// </summary>
+        /// <param name="crvEnd0">The end vertex of the first curve to be modified.</param>
+        /// <param name="crvEnd1">The end vertex of the second curve to be modified.</param>
+        /// <param name="detectMismatches">Optional.  If true, additional checking will be
+        /// performed and only matches where both ends are extended or both ends are trimmed
+        /// will be permitted.</param>
+        /// <returns>True if the curve ends could be successfully matched, else false.</returns>
         public static bool MatchEnds(Vertex crvEnd0, Vertex crvEnd1, bool detectMismatches = false, bool canTrim0 = true, bool canTrim1 = true)
         {
             Curve crv0 = crvEnd0.Owner as Curve;
@@ -1660,6 +1679,7 @@ namespace Nucleus.Geometry
                     if (crv1 is Arc)
                     {
                         //  TODO!
+                        throw new NotImplementedException("Arc-Arc end matching not yet implemented.");
                     }
                     else
                     {
@@ -1674,7 +1694,8 @@ namespace Nucleus.Geometry
                     }
                     else
                     {
-                        return MatchEnds(crvEnd0, crv0.TangentAt(crvEnd0), crvEnd1, crv1.TangentAt(crvEnd1), detectMismatches, canTrim0, canTrim1);
+                        double crv0Int, crv1Int;
+                        return MatchEnds(crvEnd0, crv0.TangentAt(crvEnd0), crvEnd1, crv1.TangentAt(crvEnd1), out crv0Int, out crv1Int, detectMismatches, canTrim0, canTrim1);
                     }
                 }
             }
@@ -1689,13 +1710,21 @@ namespace Nucleus.Geometry
         /// <param name="tan0">The end tangency of the first curve</param>
         /// <param name="crvEnd1">The curve end vertex of the second curve</param>
         /// <param name="tan1">The end tangency of the second curve</param>
+        /// <param name="detectMismatches">Optional.  If true, additional checking will be
+        /// performed and only matches where both ends are extended or both ends are trimmed
+        /// will be permitted.</param>
+        /// <param name="canTrim0"></param>
+        /// <param name="canTrim1"></param>
         /// <returns></returns>
-        private static bool MatchEnds(Vertex crvEnd0, Vector tan0, Vertex crvEnd1, Vector tan1, bool detectMismatches = false, bool canTrim0 = true, bool canTrim1 = true)
+        private static bool MatchEnds(Vertex crvEnd0, Vector tan0, Vertex crvEnd1, Vector tan1, 
+            out double t0, out double t1,
+            bool detectMismatches = false, bool canTrim0 = true, bool canTrim1 = true)
         {
+            t0 = double.NaN;
+            t1 = double.NaN;
             if (tan0.Z.IsTiny() && tan1.Z.IsTiny()) // 2D intersection:
             {
-                double t0 = 0;
-                double t1 = 0;
+               
                 Vector intPt = Intersect.LineLineXY(crvEnd0.Position, tan0, crvEnd1.Position, tan1, ref t0, ref t1);
                 if (intPt.IsValid())
                 {
@@ -1802,12 +1831,30 @@ namespace Nucleus.Geometry
         /// Is the specified parameter change at the specified end vertex an extension
         /// or a contraction of the curve?
         /// </summary>
-        /// <param name="t"></param>
+        /// <param name="deltaT"></param>
         /// <param name="v"></param>
         /// <returns></returns>
         private static bool IsExtension(double deltaT, Vertex v)
         {
             return (v.IsEnd && deltaT > 0) || (v.IsStart && deltaT < 0);
+        }
+
+        /// <summary>
+        /// Test all offset vectors in the specified collection to see whether they lie within tolerance
+        /// for curve reduction.
+        /// </summary>
+        /// <param name="offsets"></param>
+        /// <param name="perp"></param>
+        /// <param name="tolerance"></param>
+        /// <returns></returns>
+        protected bool AllInToleranceForReduction(List<Vector> offsets, Vector perp, Interval tolerance)
+        {
+            foreach (Vector offset in offsets)
+            {
+                double dot = offset.Dot(perp);
+                if (!tolerance.Contains(dot)) return false;
+            }
+            return true;
         }
 
         #endregion
