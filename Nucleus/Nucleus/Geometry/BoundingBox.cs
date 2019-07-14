@@ -419,19 +419,22 @@ namespace Nucleus.Geometry
         /// <param name="geometry"></param>
         public void Fit(IEnumerable<VertexGeometry> geometry)
         {
-            bool first = true;
-            foreach (VertexGeometry shape in geometry)
+            if (geometry != null)
             {
-                if (first)
+                bool first = true;
+                foreach (VertexGeometry shape in geometry)
                 {
-                    //Initialise to first element:
-                    Fit(shape);
-                    first = false;
-                }
-                else
-                {
-                    //Scale to subsequent elements:
-                    Include(shape);
+                    if (first)
+                    {
+                        //Initialise to first element:
+                        Fit(shape);
+                        first = false;
+                    }
+                    else
+                    {
+                        //Scale to subsequent elements:
+                        Include(shape);
+                    }
                 }
             }
         }

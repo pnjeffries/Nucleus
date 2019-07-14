@@ -41,7 +41,7 @@ namespace Nucleus.TestApp
             //GeometryVisualiserDialog.ShowDialog(arc);
             
             VertexGeometryCollection coll = new VertexGeometryCollection(line, arc);
-            //GeometryVisualiserDialog.ShowDialog(coll);
+            GeometryVisualiserDialog.ShowDialog(coll);
         }
 
         private void DelaunayButton_Click(object sender, RoutedEventArgs e)

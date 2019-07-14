@@ -6,11 +6,16 @@
         xmlns:local="clr-namespace:Nucleus.WPF"
         mc:Ignorable="d"
         Title=".NUCLEUS Geometry Visualizer" Height="450" Width="450"
-        WindowStyle="ToolWindow" MouseMove="Canvas_MouseMove">
+        WindowStyle="ToolWindow" 
+        MouseMove="Canvas_MouseMove" 
+        WindowStartupLocation="CenterOwner">
     <Window.ContextMenu>
         <ContextMenu>
             <MenuItem Name="StoreMI" Click="StoreMI_Click" Header="Store"/>
             <MenuItem Name="ClearStoreMI" Click="ClearStoreMI_Click" Header="Clear Store"/>
+            <Separator/>
+            <MenuItem Name="CopyVertsMI" Click="CopyVertsMI_Click" Header="Copy Verts"/>
+            <MenuItem Name="ShowVertsMI" Click="ShowVertsMI_Click" Header="Show Verts"/>
         </ContextMenu>
     </Window.ContextMenu>
     <Grid>
@@ -27,7 +32,6 @@
                 <Viewbox Margin="20">
                 <local:GeometryCanvas x:Name="Canvas" Width="0" Height="0" 
                                           ScaleToFit="True" PointDiameter="0.15"
-                                      
                                       >
                    
                 </local:GeometryCanvas>

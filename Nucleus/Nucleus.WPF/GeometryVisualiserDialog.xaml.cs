@@ -66,7 +66,10 @@ namespace Nucleus.WPF
                     var storedGeo = formatter.Deserialize(stream) as VertexGeometryCollection;
                     stream.Close();
 
-                    if (storedGeo != null) geometry.AddRange(storedGeo);
+                    if (storedGeo != null)
+                    {
+                        geometry.AddRange(storedGeo);
+                    }
                 }
                 catch { }
             }
@@ -137,7 +140,9 @@ namespace Nucleus.WPF
             MaxY.Text = bBox.MaxY.ToString();*/
 
             Canvas.CurveThickness = 0.005 * bBox.SizeVector.Magnitude();
-
+            Canvas.PointDiameter = 0.01 * bBox.SizeVector.Magnitude();
+            Canvas.DefaultBrush = new SolidColorBrush(Color.FromArgb(128, 0, 0, 0));
+            //Canvas.FillBrush = new SolidColorBrush(Color.FromArgb(64, 0, 0, 0));
             Canvas.Geometry = geometry;
             /*var xDivs = bBox.X.ReasonableDivisions(10);
             var yDivs = bBox.Y.ReasonableDivisions(10);
@@ -192,6 +197,37 @@ namespace Nucleus.WPF
         private void ClearStoreMI_Click(object sender, RoutedEventArgs e)
         {
             File.Delete(_StorePath);
+        }
+
+        private void ShowVertsMI_Click(object sender, RoutedEventArgs e)
+        {
+            var verts = new List<Vertex>();
+            foreach (var geo in Canvas.Geometry)
+            {
+                if (!(geo is Geometry.Point))
+                {
+                    verts.AddRange(geo.Vertices);
+                }
+            }
+            var cloud = new Cloud(verts.GetPositions());
+            Canvas.Geometry.Add(cloud);
+            //Canvas.Geometry = Canvas.Geometry;
+        }
+
+        private void CopyVertsMI_Click(object sender, RoutedEventArgs e)
+        {
+            var sb = new StringBuilder();
+            var verts = new List<Vertex>();
+            foreach (var geo in Canvas.Geometry)
+            {
+                sb.AppendLine(geo.ToString());
+                foreach (var v in geo.Vertices)
+                {
+                    sb.Append(v.X).Append(", ").Append(v.Y).Append(", ").Append(v.Z);
+                    sb.AppendLine();
+                }
+            }
+            Clipboard.SetText(sb.ToString());
         }
     }
 }
