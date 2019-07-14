@@ -98,6 +98,11 @@ namespace Nucleus.Geometry
         public Vector Direction { get { return (EndPoint - StartPoint).Unitize(); } }
 
         /// <summary>
+        /// Get the vector from the start of the line to the end
+        /// </summary>
+        public Vector LineVector { get { return EndPoint - StartPoint; } }
+
+        /// <summary>
         /// ISimpleCurve Curve implementation
         /// </summary>
         Curve ISimpleCurve.Curve => this;

@@ -647,7 +647,12 @@ namespace Nucleus.Geometry
                         {
                             // Adjust offset curve ends to node out
                             Curve prevCrv = result.SubCurves.Last();
-                            MatchEnds(prevCrv.End, offsetCrv.Start);
+                            if (!MatchEnds(prevCrv.End, offsetCrv.Start, true, true, true, prevCrv.Length, offsetCrv.Length))
+                            {
+                                // If there is a extension/trim mismatch between the curves
+                                // we instead just join them with a chamfer temporarily
+                                result.Add(new Line(prevCrv.EndPoint, offsetCrv.StartPoint));
+                            }
                         }
                         result.Add(offsetCrv);
                         if (copyAttributes && offsetCrv.Attributes == null) offsetCrv.Attributes = Attributes;
@@ -657,7 +662,14 @@ namespace Nucleus.Geometry
 
             // Match end to start
             if (Closed && result.SubCurves.Count > 1)
-                MatchEnds(result.SubCurves.Last().End, result.SubCurves.First().Start);
+            {
+                Curve lastCrv = result.SubCurves.Last();
+                Curve firstCrv = result.SubCurves.First();
+                if (!MatchEnds(lastCrv.End, firstCrv.Start, true, true, true, lastCrv.Length, firstCrv.Length))
+                {
+                    result.Close();
+                }
+            }
 
             if (tidy)
             {

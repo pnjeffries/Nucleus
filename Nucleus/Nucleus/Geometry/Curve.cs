@@ -1636,6 +1636,40 @@ namespace Nucleus.Geometry
             return false;
         }
 
+        
+
+        private static Vector MatchEndsPoint(Line line0, Line line1, Vertex crvEnd0,
+            Vertex crvEnd1, out double t0, out double t1)
+        {
+            t0 = double.NaN;
+            t1 = double.NaN;
+            Vector tan0 = line0.LineVector;
+            Vector tan1 = line1.LineVector;
+            if (tan0.Z.IsTiny() && tan1.Z.IsTiny()) // 2D intersection:
+            {
+                Vector intPt = Intersect.LineLineXY(crvEnd0.Position, tan0, crvEnd1.Position, tan1, ref t0, ref t1);
+                return intPt;
+            }
+            return Vector.Unset;
+        }
+
+        private static Vector MatchEndsPoint(Vertex lineEnd, Vertex arcEnd, Vector lineTan, Arc arc)
+        {
+            // Solve intersection on plane of arc:
+            Plane plane = arc.Plane();
+            Vector linePt = plane.GlobalToLocal(lineEnd.Position).WithZ(0);
+            Vector lineDir = plane.GlobalToLocal(lineTan, true).WithZ(0);
+            // TODO: Deal with special case where line is perpendicular to plane? (i.e. lineDir is (0,0,0))
+            double[] intersects = Intersect.LineCircleXY(linePt, lineDir, plane.GlobalToLocal(arc.Circle.Origin), arc.Circle.Radius);
+            // Translate to intersection points in global space:
+            Vector[] intPts = new Vector[intersects.Length];
+            for (int i = 0; i < intersects.Length; i++)
+                intPts[i] = plane.LocalToGlobal(linePt + lineDir * intersects[i]);
+            // Select point closest to current arc end:
+            Vector intPt = intPts.FindClosest(arcEnd.Position);
+            return intPt;
+        }
+
         /// <summary>
         /// Match the end positions of two curves by repositioning vertices
         /// to either extend or trim the curve ends to a common intersection
@@ -1668,8 +1702,12 @@ namespace Nucleus.Geometry
         /// performed and only matches where both ends are extended or both ends are trimmed
         /// will be permitted.</param>
         /// <returns>True if the curve ends could be successfully matched, else false.</returns>
-        public static bool MatchEnds(Vertex crvEnd0, Vertex crvEnd1, bool detectMismatches = false, bool canTrim0 = true, bool canTrim1 = true)
+        public static bool MatchEnds(Vertex crvEnd0, Vertex crvEnd1, bool detectMismatches = false,
+            bool canTrim0 = true, bool canTrim1 = true,
+            double maxTrim0 = double.MaxValue, double maxTrim1 = double.MaxValue)
         {
+            //TODO: Remove canTrims and just use maxTrims?
+
             Curve crv0 = crvEnd0.Owner as Curve;
             Curve crv1 = crvEnd1.Owner as Curve;
             if (crv0 != null && crv1 != null)
@@ -1694,8 +1732,8 @@ namespace Nucleus.Geometry
                     }
                     else
                     {
-                        double crv0Int, crv1Int;
-                        return MatchEnds(crvEnd0, crv0.TangentAt(crvEnd0), crvEnd1, crv1.TangentAt(crvEnd1), out crv0Int, out crv1Int, detectMismatches, canTrim0, canTrim1);
+                        return MatchEnds(crvEnd0, crv0.TangentAt(crvEnd0), 
+                            crvEnd1, crv1.TangentAt(crvEnd1), detectMismatches, canTrim0, canTrim1, maxTrim0, maxTrim1);
                     }
                 }
             }
@@ -1713,21 +1751,22 @@ namespace Nucleus.Geometry
         /// <param name="detectMismatches">Optional.  If true, additional checking will be
         /// performed and only matches where both ends are extended or both ends are trimmed
         /// will be permitted.</param>
-        /// <param name="canTrim0"></param>
-        /// <param name="canTrim1"></param>
+        /// <param name="maxTrim0">The maximum length of trim-back on curve 1</param>
+        /// <param name="maxTrim1">The maximum length of trim-back on curve 2</param>
         /// <returns></returns>
         private static bool MatchEnds(Vertex crvEnd0, Vector tan0, Vertex crvEnd1, Vector tan1, 
-            out double t0, out double t1,
-            bool detectMismatches = false, bool canTrim0 = true, bool canTrim1 = true)
+            bool detectMismatches = false, bool canTrim0 = true, bool canTrim1 = true,
+            double maxTrim0 = double.MaxValue, double maxTrim1 = double.MaxValue)
         {
-            t0 = double.NaN;
-            t1 = double.NaN;
+            double t0 = double.NaN;
+            double t1 = double.NaN;
             if (tan0.Z.IsTiny() && tan1.Z.IsTiny()) // 2D intersection:
             {
-               
                 Vector intPt = Intersect.LineLineXY(crvEnd0.Position, tan0, crvEnd1.Position, tan1, ref t0, ref t1);
                 if (intPt.IsValid())
                 {
+                    if (-ExtensionLength(t0, crvEnd0) > maxTrim0 || -ExtensionLength(t1, crvEnd1) > maxTrim1) return false;
+
                     if (detectMismatches)
                     {
                         bool ext0 = IsExtension(t0, crvEnd0);
@@ -1837,6 +1876,20 @@ namespace Nucleus.Geometry
         private static bool IsExtension(double deltaT, Vertex v)
         {
             return (v.IsEnd && deltaT > 0) || (v.IsStart && deltaT < 0);
+        }
+
+        /// <summary>
+        /// Get the length (in equivalent parameter space) of the extension
+        /// (positive) or trim (negative) of the specified value at the specified
+        /// vertex.
+        /// </summary>
+        /// <param name="deltaT"></param>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        private static double ExtensionLength(double deltaT, Vertex v)
+        {
+            if (v.IsEnd) return deltaT;
+            else return -deltaT;
         }
 
         /// <summary>
