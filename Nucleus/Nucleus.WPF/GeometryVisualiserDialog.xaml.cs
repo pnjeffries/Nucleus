@@ -229,5 +229,22 @@ namespace Nucleus.WPF
             }
             Clipboard.SetText(sb.ToString());
         }
+
+        private void CopyVertVectorsMI_Click(object sender, RoutedEventArgs e)
+        {
+            var sb = new StringBuilder();
+            var verts = new List<Vertex>();
+            foreach (var geo in Canvas.Geometry)
+            {
+                sb.AppendLine(geo.ToString());
+                foreach (var v in geo.Vertices)
+                {
+                    sb.Append("new Vector(");
+                    sb.Append(v.X).Append(", ").Append(v.Y).Append(", ").Append(v.Z);
+                    sb.AppendLine("),");
+                }
+            }
+            Clipboard.SetText(sb.ToString());
+        }
     }
 }

@@ -355,6 +355,35 @@ namespace Nucleus.Geometry
 
         /// <summary>
         /// Find the intersection(s) between a curve and an infinite line on the XY plane.
+        /// Returns a list of intersection instance objects which store key data about each
+        /// intersection event.
+        /// </summary>
+        /// <param name="curve">The curve</param>
+        /// <param name="lnPt">The origin of the line</param>
+        /// <param name="lnDir">The direction of the line</param>
+        /// <param name="domainAdjustMin">The start parameter of the curve will be adjusted
+        /// to this value in the returned parameters.</param>
+        /// <param name="domainAdjustMax">The end parameter of the curve will be adjusted 
+        /// to this value in the returned parameters.</param>
+        /// <param name="lineBounded">If true, intersections outside of the bounds of the line
+        /// running from the origin point to the end of the direction vector will be ignored.</param>
+        /// <returns>The list of intersections on the curve</returns>
+        public static IList<CurveLineIntersection> CurveLineXYIntersections(Curve curve, Vector lnPt, Vector lnDir,
+            double domainAdjustMin = 0, double domainAdjustMax = 1, bool lineBounded = false)
+        {
+            var tLine = new List<double>();
+            var tCrv = CurveLineXY(curve, lnPt, lnDir, null, domainAdjustMin, domainAdjustMax, lineBounded, tLine);
+            var result = new List<CurveLineIntersection>();
+            for (int i = 0; i < tCrv.Count; i++)
+            {
+                var cLInt = new CurveLineIntersection(curve, tCrv[i], tLine[i]);
+                result.Add(cLInt);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Find the intersection(s) between a curve and an infinite line on the XY plane.
         /// Returns the list of intersection parameters on the curve.
         /// </summary>
         /// <param name="curve">The curve</param>

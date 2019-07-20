@@ -359,6 +359,66 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Find the item in this list which returns the next highest value of a property or method
+        /// defined by a delegate after the specified value
+        /// </summary>
+        /// <typeparam name="TItem">The type of item in the list</typeparam>
+        /// <typeparam name="TProperty">The type of the property to be interrogated</typeparam>
+        /// <param name="list"></param>
+        /// <param name="propertyDelegate">Delegate function which returns the value
+        /// for each list item.</param>
+        /// <param name="after">The value for which the subsequent value in order is being sought</param>
+        /// <returns></returns>
+        public static TItem ItemWithNext<TItem, TProperty>(this IList<TItem> list, 
+            Func<TItem, TProperty> propertyDelegate, TProperty after)
+            where TProperty : IComparable<TProperty>
+        {
+            TItem result = default(TItem);
+            TProperty min = default(TProperty);
+            for (int i = 1; i < list.Count; i++)
+            {
+                TItem item = list[i];
+                TProperty value = propertyDelegate.Invoke(item);
+                if (value.CompareTo(after) == 1 && value.CompareTo(min) == -1)
+                {
+                    min = value;
+                    result = item;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Find the item in this list which returns the highest value of a property or method
+        /// defined by a delegate before the specified value
+        /// </summary>
+        /// <typeparam name="TItem">The type of item in the list</typeparam>
+        /// <typeparam name="TProperty">The type of the property to be interrogated</typeparam>
+        /// <param name="list"></param>
+        /// <param name="propertyDelegate">Delegate function which returns the value
+        /// for each list item.</param>
+        /// <param name="before">The value for which the subsequent value in order is being sought</param>
+        /// <returns></returns>
+        public static TItem ItemWithPrevious<TItem, TProperty>(this IList<TItem> list,
+            Func<TItem, TProperty> propertyDelegate, TProperty before)
+            where TProperty : IComparable<TProperty>
+        {
+            TItem result = default(TItem);
+            TProperty max = default(TProperty);
+            for (int i = 1; i < list.Count; i++)
+            {
+                TItem item = list[i];
+                TProperty value = propertyDelegate.Invoke(item);
+                if (value.CompareTo(before) == -1 && value.CompareTo(max) == 1)
+                {
+                    max = value;
+                    result = item;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Shift all items in this list by the specified number of places.
         /// An items moving off the start or end of the list will 'wrap' to the other
         /// end of the list.

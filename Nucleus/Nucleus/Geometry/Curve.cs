@@ -1401,8 +1401,8 @@ namespace Nucleus.Geometry
                             double st1 = crvB.ClosestParameter(pt);
                             double t0 = ParameterAt(i, st0);
                             double t1 = ParameterAt(j, st1);
-                            result.Add(t0, t1);
-                            result.Add(t1, t0);
+                            result.AddSafe(t0, t1);
+                            result.AddSafe(t1, t0);
                         }
                     }
                 }
@@ -1480,6 +1480,60 @@ namespace Nucleus.Geometry
             }
             else result.Add(this);
             return result;
+        }
+
+        /// <summary>
+        /// Reduce this polycurve by removing line segments where
+        /// they can be adequately represented within tolerance 
+        /// and without stepping outside the boundary of the curve by
+        /// adjusting an adjoining line segment to replace them.
+        /// </summary>
+        /// <param name="tolerance">The tolerance distance.
+        /// Line ends which fall within this distance
+        /// of the replacement straight line will be removed.</param>
+        /// <returns>The number of sub-curves removed by this operation.</returns>
+        public int ReduceInside(double tolerance)
+        {
+            if (this.IsClockwiseXY())
+            {
+                return Reduce(new Interval(-tolerance, 0));
+            }
+            else
+            {
+                return Reduce(new Interval(0, tolerance));
+            }
+        }
+
+        /// <summary>
+        /// Reduce this curve by removing line segments where
+        /// they can be adequately represented within tolerance by
+        /// adjusting an adjoining line segment to replace them.
+        /// </summary>
+        /// <param name="tolerance">The tolerance distance.
+        /// Line ends which fall within this distance
+        /// of the replacement straight line will be removed.</param>
+        /// <returns>The number of sub-curves removed by this operation.</returns>
+        public int Reduce(double tolerance)
+        {
+            return Reduce(new Interval(-tolerance, tolerance));
+        }
+
+        /// <summary>
+        /// Reduce this curve by removing vertices or segments where
+        /// they can be adequately represented within tolerance by
+        /// the line between the two adjoining vertices.
+        /// </summary>
+        /// <param name="tolerance">The tolerance range.
+        /// Line ends which fall within this range of signed distance
+        /// of the replacement straight line will be removed.  Positive
+        /// values are to the left of the curve and negative values are to
+        /// the right, meaning that this range allows you to specify different
+        /// tolerances to each side of the curve.</param>
+        /// <returns>The number of sub-curves removed by this operation.</returns>
+        public virtual int Reduce(Interval tolerance)
+        {
+            // Most curve types cannot be reduceda
+            return 0;
         }
 
         /// <summary>

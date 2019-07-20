@@ -1513,7 +1513,8 @@ namespace Nucleus.Geometry
         /// <summary>
         /// Create an array of vectors from a list of components, alternating
         /// between X and Y.  If the entered set of components is of an odd number,
-        /// the Y coordinate of the last point will be taken as 0.
+        /// the Y coordinate of the last point will be taken as 0.  The Z coordinate
+        /// of all created vectors will be 0.
         /// </summary>
         /// <param name="components"></param>
         /// <returns></returns>

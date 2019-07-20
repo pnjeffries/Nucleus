@@ -440,6 +440,58 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Reduce this polyline by removing vertices where
+        /// they can be adequately represented within tolerance by
+        /// the line between the two adjoining vertices.
+        /// </summary>
+        /// <param name="tolerance">The tolerance range.
+        /// Line ends which fall within this range of signed distance
+        /// of the replacement straight line will be removed.  Positive
+        /// values are to the left of the curve and negative values are to
+        /// the right, meaning that this range allows you to specify different
+        /// tolerances to each side of the curve.</param>
+        /// <returns>The number of sub-curves removed by this operation.</returns>
+        public override int Reduce(Interval tolerance)
+        {
+            int result = 0;
+            int modifier = 0;
+            if (!Closed) modifier = -1;
+            var previouslyRemoved = new List<Vector>();
+            for (int i = 0; i < Vertices.Count + modifier; i++)
+            {
+                Vertex vA = Vertices[i];
+                Vertex vB = Vertices.GetWrapped(i + 1);
+                Vertex vC = Vertices.GetWrapped(i + 2);
+
+                // Check perp distance of removal candidate to
+                // potential new line segment
+                Vector toEnd = vC.Position - vA.Position;
+                Vector perp = toEnd.PerpendicularXY().Unitize();
+                Vector toMidPt = vB.Position - vA.Position;
+                double dot = toMidPt.Dot(perp);
+                // Is the mid-point (and any previous) within tolerance to
+                // allow removal?
+                if (tolerance.Contains(dot) &&
+                    AllInToleranceForReduction(previouslyRemoved, perp, tolerance))
+                {
+                    Vertices.RemoveAt(i + 1);
+                    i--;
+                    result++;
+                    // Store to check any subsequent reductions involving
+                    // crvA do not take the removed point out of tolerance
+                    previouslyRemoved.Add(toMidPt);
+                }
+                else
+                {
+                    // Staring afresh, no longer need to check against olds
+                    previouslyRemoved.Clear();
+                }
+
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Reduce the length of this curve from the start
         /// by the specified value
         /// </summary>

@@ -637,7 +637,7 @@ namespace Nucleus.Geometry
             {
                 if (crv.Length > 0)
                 {
-                    Curve offsetCrv = crv.Offset(distances.SubListFrom(distIndex));
+                    Curve offsetCrv = crv.Offset(distances.SubListFrom(distIndex), false);
                     distIndex += crv.SegmentCount;
                     if (distIndex > distances.Count - 1) distIndex = distances.Count - 1;
 
@@ -1357,20 +1357,6 @@ namespace Nucleus.Geometry
         /// they can be adequately represented within tolerance by
         /// adjusting an adjoining line curve to replace them.
         /// </summary>
-        /// <param name="tolerance">The tolerance distance.
-        /// Line ends which fall within this distance
-        /// of the replacement straight line will be removed.</param>
-        /// <returns>The number of sub-curves removed by this operation.</returns>
-        public int Reduce(double tolerance)
-        {
-            return Reduce(new Interval(-tolerance, tolerance));
-        }
-
-        /// <summary>
-        /// Reduce this polycurve by removing line subcurves where
-        /// they can be adequately represented within tolerance by
-        /// adjusting an adjoining line curve to replace them.
-        /// </summary>
         /// <param name="tolerance">The tolerance range.
         /// Line ends which fall within this range of signed distance
         /// of the replacement straight line will be removed.  Positive
@@ -1378,7 +1364,7 @@ namespace Nucleus.Geometry
         /// the right, meaning that this range allows you to specify different
         /// tolerances to each side of the curve.</param>
         /// <returns>The number of sub-curves removed by this operation.</returns>
-        public int Reduce(Interval tolerance)
+        public override int Reduce(Interval tolerance)
         {
             int result = 0;
             int modifier = 0;
@@ -1418,6 +1404,7 @@ namespace Nucleus.Geometry
             }
             return result;
         }
+
 
         #endregion
 

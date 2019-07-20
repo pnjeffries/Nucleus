@@ -244,7 +244,6 @@ namespace Nucleus.Geometry
             Angle toOrient = result.X.AngleBetween(alignX);
             return result.Rotate(toOrient + orientation);
         }
-
         
         /// <summary>
         /// Does the specified point fall within this region on the XY plane?
@@ -272,7 +271,75 @@ namespace Nucleus.Geometry
         /// <returns>The resultant list of regions.  If the line does not bisect
         /// this region and the region could not be split, this collection will contain
         /// only the original region.</returns>
-        public IList<PlanarRegion> SplitByLineXY(Vector splitPt, Vector splitDir, double splitWidth = 0)
+        public IList<PlanarRegion> SplitByLineXY2(Vector splitPt, Vector splitDir, double splitWidth = 0)
+        {
+            var result = new List<PlanarRegion>();
+
+            // Offset splitting line by half splitWidth in each direction:
+            Vector offsetDir = splitDir.PerpendicularXY().Unitize() * splitWidth/2;
+            Vector leftPt = splitPt + offsetDir;
+            Vector rightPt = splitPt - offsetDir;
+
+            // Find intersection points on perimeter:
+            var perimeterInts = new SortedList<double, CurveLineIntersection>();
+
+            // Left side:
+            IList<CurveLineIntersection> leftInts = Intersect.CurveLineXYIntersections(Perimeter, leftPt, splitDir);
+
+            foreach (var cLInt in leftInts)
+                perimeterInts.AddSafe(cLInt.CurveParameter, cLInt);
+
+            IList<CurveLineIntersection> rightInts;
+            // Shortcut: If the split has no width, left and right intersections will be the same
+            if (splitWidth == 0) rightInts = leftInts;
+            else
+            {
+                rightInts = Intersect.CurveLineXYIntersections(Perimeter, rightPt, splitDir);
+                foreach (var cLInt in rightInts)
+                    perimeterInts.AddSafe(cLInt.CurveParameter, cLInt);
+            }
+
+            // If no intersections on the perimeter, the region does not need to be split:
+            if (leftInts.Count == 0 && rightInts.Count == 0)
+            {
+                result.Add(this);
+                return result;
+            }
+
+            // Voids which do not intersect but will need to be placed:
+            CurveCollection freeVoids = new CurveCollection();
+            // Find intersection points on voids:
+            foreach (var voidCrv in Voids)
+            {
+                // Left side:
+                var leftVoidInts = Intersect.CurveLineXYIntersections(voidCrv, leftPt, splitDir);
+
+                IList<CurveLineIntersection> rightVoidInts;
+                // Shortcut: If the split has no width, left and right intersections will be the same
+                if (splitWidth == 0) rightVoidInts = leftVoidInts;
+                else rightVoidInts = Intersect.CurveLineXYIntersections(voidCrv, rightPt, splitDir);
+                
+
+                if (leftVoidInts.Count == 0 && rightVoidInts.Count == 0)
+                {
+                    // Void is wholly to one side or the other...
+                    freeVoids.Add(voidCrv);
+                }
+            }
+
+            throw new NotImplementedException();
+        }
+
+            /// <summary>
+            /// Split this region into two (or more) sub-regions along a straight line
+            /// </summary>
+            /// <param name="splitPt">A point on the splitting line</param>
+            /// <param name="splitDir">The direction of the line</param>
+            /// <param name="splitWidth">Optional.  The width of the split.</param>
+            /// <returns>The resultant list of regions.  If the line does not bisect
+            /// this region and the region could not be split, this collection will contain
+            /// only the original region.</returns>
+            public IList<PlanarRegion> SplitByLineXY(Vector splitPt, Vector splitDir, double splitWidth = 0)
         {
             var result = new List<PlanarRegion>();
             var lineInts = new List<double>();
@@ -329,8 +396,25 @@ namespace Nucleus.Geometry
                     segments.RemoveAt(0);
                     if (!newPerimeter.Closed)
                     {
-                        newPerimeter.Close();
-                        offsets.Add(splitWidth / 2);
+                        /*if (splitWidth > 0)
+                        {
+                            // Temporary bodge to get rid of 'blades' at ends of split
+                            Vector endToEnd = (newPerimeter.StartPoint - newPerimeter.EndPoint).Unitize();
+                            var line = new Line(
+                                newPerimeter.EndPoint - endToEnd * splitWidth / 4,
+                                newPerimeter.StartPoint + endToEnd * splitWidth / 4);
+                            newPerimeter.AddLine(line.StartPoint);
+                            offsets.Add(0);
+                            newPerimeter.Add(line);
+                            offsets.Add(splitWidth / 2);
+                            newPerimeter.Close();
+                            offsets.Add(0);
+                        }
+                        else
+                        {*/
+                            newPerimeter.Close();
+                            offsets.Add(splitWidth / 2);
+                        //}
                     }
                     backwards = !backwards;
 
@@ -452,4 +536,21 @@ namespace Nucleus.Geometry
         #endregion
 
     }
+
+    /// <summary>
+    /// Extension methods for the PlanarRegion class and collections thereof
+    /// </summary>
+    public static class PlanarRegionExtensions
+    {
+        /// <summary>
+        /// Calculate the total (unsigned) area of all regions in this collection
+        /// </summary>
+        /// <param name="regions"></param>
+        /// <returns></returns>
+        public static double CalculateTotalArea(this IList<PlanarRegion> regions)
+        {
+            return regions.Sum(region => region.CalculateArea().Abs());
+        }
+    }
+
 }

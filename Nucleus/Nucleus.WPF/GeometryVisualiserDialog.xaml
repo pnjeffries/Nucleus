@@ -14,8 +14,12 @@
             <MenuItem Name="StoreMI" Click="StoreMI_Click" Header="Store"/>
             <MenuItem Name="ClearStoreMI" Click="ClearStoreMI_Click" Header="Clear Store"/>
             <Separator/>
-            <MenuItem Name="CopyVertsMI" Click="CopyVertsMI_Click" Header="Copy Verts"/>
             <MenuItem Name="ShowVertsMI" Click="ShowVertsMI_Click" Header="Show Verts"/>
+            <MenuItem Header="Copy Verts">
+                <MenuItem Name="CopyVertsMI" Click="CopyVertsMI_Click" Header="Coordinates"/>
+                <MenuItem Name="CopyVertVectorsMI" Click="CopyVertVectorsMI_Click" Header="Vectors"/>
+            </MenuItem>
+            
         </ContextMenu>
     </Window.ContextMenu>
     <Grid>
