@@ -739,6 +739,20 @@ namespace Nucleus.Maths
 
         #endregion
 
+        #region Static Methods
+
+        /// <summary>
+        /// Create an interval enclosing the specified set of values
+        /// </summary>
+        /// <param name="values">Values to be enclosed by the resulting interval</param>
+        /// <returns></returns>
+        public static Interval Enclosing(params double[] values)
+        {
+            return new Interval(values);
+        }
+
+        #endregion
+
         #region Operators
 
         /// <summary>

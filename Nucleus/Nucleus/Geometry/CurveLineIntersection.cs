@@ -54,6 +54,21 @@ namespace Nucleus.Geometry
             get { return _LineParameter; }
         }
 
+        /// <summary>
+        /// Private backing field for the Side property
+        /// </summary>
+        private HandSide _Side = HandSide.Undefined;
+
+        /// <summary>
+        /// Tag to determine which side of a cut the intersection lies
+        /// on.  Used during certain advanced operations.
+        /// </summary>
+        public HandSide Side
+        {
+            get { return _Side; }
+            set { _Side = value; }
+        }
+
         #endregion
 
         #region Constructors

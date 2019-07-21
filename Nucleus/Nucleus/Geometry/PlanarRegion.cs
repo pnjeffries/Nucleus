@@ -263,6 +263,51 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Determine which side of a splitting line a given point lies.
+        /// Used during region splitting.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="leftPt"></param>
+        /// <param name="rightPt"></param>
+        /// <param name="leftDir"></param>
+        /// <returns></returns>
+        private static HandSide SideOfSplit(Vector point,Vector leftPt, Vector rightPt, Vector leftDir)
+        {
+            double ptDot = point.Dot(leftDir);
+            double lDot = leftPt.Dot(leftDir);
+            double rDot = rightPt.Dot(leftDir);
+            if (ptDot > lDot) return HandSide.Left;
+            else if (ptDot < rDot) return HandSide.Right;
+            else return HandSide.Undefined;
+        }
+
+        /// <summary>
+        /// Work out the direction of travel that should be taken along the right splitting line
+        /// in order to close split off subregions.
+        /// The inverse will apply on the left splitting line.
+        /// </summary>
+        /// <returns></returns>
+        private static int RightCutterDirectionOfTravel(IList<CurveLineIntersection> perimeterInts)
+        {
+            int result = 1;
+            CurveLineIntersection firstInt = perimeterInts.ItemWithMin(pInt => pInt.CurveParameter);
+            CurveLineIntersection lastInt = perimeterInts.ItemWithMax(pInt => pInt.CurveParameter);
+            if (firstInt.Side == lastInt.Side)
+            {
+                // Special case: Start point is between cutting lines
+                CurveLineIntersection nextInt = perimeterInts.ItemWithNext(pInt => pInt.CurveParameter, firstInt.CurveParameter);
+                if (firstInt.Side == HandSide.Left) result *= -1;
+                if (nextInt.LineParameter < firstInt.LineParameter) result *= -1;
+            }
+            else
+            {
+                //TODO: Other condition?
+                if (lastInt.LineParameter < firstInt.LineParameter) result *= 1;
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Split this region into two (or more) sub-regions along a straight line
         /// </summary>
         /// <param name="splitPt">A point on the splitting line</param>
@@ -276,18 +321,17 @@ namespace Nucleus.Geometry
             var result = new List<PlanarRegion>();
 
             // Offset splitting line by half splitWidth in each direction:
-            Vector offsetDir = splitDir.PerpendicularXY().Unitize() * splitWidth/2;
+            Vector offsetDir = splitDir.PerpendicularXY().Unitize();
+            Vector offset = offsetDir * splitWidth / 2;
             Vector leftPt = splitPt + offsetDir;
             Vector rightPt = splitPt - offsetDir;
 
             // Find intersection points on perimeter:
-            var perimeterInts = new SortedList<double, CurveLineIntersection>();
+            var perimeterInts = new List<CurveLineIntersection>();
 
             // Left side:
             IList<CurveLineIntersection> leftInts = Intersect.CurveLineXYIntersections(Perimeter, leftPt, splitDir);
-
-            foreach (var cLInt in leftInts)
-                perimeterInts.AddSafe(cLInt.CurveParameter, cLInt);
+            perimeterInts.AddRange(leftInts);
 
             IList<CurveLineIntersection> rightInts;
             // Shortcut: If the split has no width, left and right intersections will be the same
@@ -295,12 +339,11 @@ namespace Nucleus.Geometry
             else
             {
                 rightInts = Intersect.CurveLineXYIntersections(Perimeter, rightPt, splitDir);
-                foreach (var cLInt in rightInts)
-                    perimeterInts.AddSafe(cLInt.CurveParameter, cLInt);
+                perimeterInts.AddRange(rightInts);
             }
 
             // If no intersections on the perimeter, the region does not need to be split:
-            if (leftInts.Count == 0 && rightInts.Count == 0)
+            if (leftInts.Count <= 1 && rightInts.Count <= 1)
             {
                 result.Add(this);
                 return result;
@@ -313,19 +356,62 @@ namespace Nucleus.Geometry
             {
                 // Left side:
                 var leftVoidInts = Intersect.CurveLineXYIntersections(voidCrv, leftPt, splitDir);
+                foreach (var vI in leftVoidInts) leftInts.Add(vI);
 
                 IList<CurveLineIntersection> rightVoidInts;
                 // Shortcut: If the split has no width, left and right intersections will be the same
                 if (splitWidth == 0) rightVoidInts = leftVoidInts;
                 else rightVoidInts = Intersect.CurveLineXYIntersections(voidCrv, rightPt, splitDir);
-                
+                foreach (var vI in rightVoidInts) rightInts.Add(vI);
 
-                if (leftVoidInts.Count == 0 && rightVoidInts.Count == 0)
+                if (leftVoidInts.Count <= 1 && rightVoidInts.Count <= 1)
                 {
                     // Void is wholly to one side or the other...
                     freeVoids.Add(voidCrv);
                 }
             }
+
+            // Tag left and right intersections
+            foreach (var lI in leftInts) lI.Side = HandSide.Left;
+            foreach (var rI in rightInts) rI.Side = HandSide.Right;
+
+            // Determine direction of travel along cutting lines:
+            int rightDir = RightCutterDirectionOfTravel(perimeterInts);
+
+            // 'Fake' intersection to represent perimeter start:
+            CurveLineIntersection startInt = new CurveLineIntersection(Perimeter, 0, double.NaN);
+            CurveLineIntersection currentInt = startInt;
+            CurveLineIntersection nextInt;
+            PolyCurve newPerimeter = null;
+            PlanarRegion newRegion = null;
+
+            //Travel to next intersection on perimeter
+            nextInt = perimeterInts.ItemWithNext(cLI => cLI.CurveParameter, currentInt.CurveParameter);
+            // 'Fake' intersection to represent perimeter end:
+            if (nextInt == null) nextInt = new CurveLineIntersection(Perimeter, 1, double.NaN);
+
+            if (currentInt.Curve == nextInt.Curve) // Check both ints on same curve
+            {
+                Curve curve = nextInt?.Curve ?? currentInt?.Curve;
+                Interval subDomain = new Interval(currentInt.CurveParameter, nextInt.CurveParameter);
+                Vector crvPt = curve.PointAt(subDomain.Mid);
+                HandSide side = SideOfSplit(crvPt, leftPt, rightPt, offsetDir);
+                if (side != HandSide.Undefined)
+                {
+                    // TODO: Adjust void curve direction
+
+                    // Add perimeter to outputs
+                    Curve subCrv = curve.Extract(subDomain);
+                    if (newPerimeter == null)
+                    {
+                        newPerimeter = new PolyCurve(subCrv.Explode());
+                        newRegion = new PlanarRegion(newPerimeter);
+                    }
+                    else newPerimeter.Add(subCrv, true, true);
+                }
+            }
+            
+
 
             throw new NotImplementedException();
         }
