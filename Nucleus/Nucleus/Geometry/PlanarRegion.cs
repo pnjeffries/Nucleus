@@ -410,8 +410,9 @@ namespace Nucleus.Geometry
                     else newPerimeter.Add(subCrv, true, true);
                 }
             }
+            currentInt = nextInt;
             
-
+            //TODO: loop
 
             throw new NotImplementedException();
         }
