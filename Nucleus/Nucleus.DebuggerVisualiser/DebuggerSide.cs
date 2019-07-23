@@ -20,6 +20,18 @@ Description = ".NUCLEUS Geometry Visualiser")]
 [assembly: System.Diagnostics.DebuggerVisualizer(
 typeof(Nucleus.Visualiser.DebuggerSide),
 typeof(VisualizerObjectSource),
+Target = typeof(IList<Curve>),
+Description = ".NUCLEUS Geometry Visualiser")]
+
+[assembly: System.Diagnostics.DebuggerVisualizer(
+typeof(Nucleus.Visualiser.DebuggerSide),
+typeof(VisualizerObjectSource),
+Target = typeof(IList<PlanarRegion>),
+Description = ".NUCLEUS Geometry Visualiser")]
+
+[assembly: System.Diagnostics.DebuggerVisualizer(
+typeof(Nucleus.Visualiser.DebuggerSide),
+typeof(VisualizerObjectSource),
 Target = typeof(VertexGeometryCollection),
 Description = ".NUCLEUS Geometry Visualiser")]
 
@@ -45,6 +57,12 @@ Description = ".NUCLEUS Geometry Visualiser")]
 typeof(Nucleus.Visualiser.DebuggerSide),
 typeof(VisualizerObjectSource),
 Target = typeof(VertexCollection),
+Description = ".NUCLEUS Geometry Visualiser")]
+
+[assembly: System.Diagnostics.DebuggerVisualizer(
+typeof(Nucleus.Visualiser.DebuggerSide),
+typeof(VisualizerObjectSource),
+Target = typeof(Vector),
 Description = ".NUCLEUS Geometry Visualiser")]
 
 [assembly: System.Diagnostics.DebuggerVisualizer(

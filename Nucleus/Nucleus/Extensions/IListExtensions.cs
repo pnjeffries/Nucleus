@@ -346,7 +346,7 @@ namespace Nucleus.Extensions
             if (list.Count == 0) return -1;
             TItem min = list[0];
             int result = 0;
-            for (int i = 1; i < list.Count; i++)
+            for (int i = 0; i < list.Count; i++)
             {
                 TItem value = list[i];
                 if (value.CompareTo(min) == -1)
@@ -372,14 +372,16 @@ namespace Nucleus.Extensions
         public static TItem ItemWithNext<TItem, TProperty>(this IList<TItem> list, 
             Func<TItem, TProperty> propertyDelegate, TProperty after)
             where TProperty : IComparable<TProperty>
+            where TItem : class
         {
-            TItem result = default(TItem);
+            TItem result = null;
             TProperty min = default(TProperty);
-            for (int i = 1; i < list.Count; i++)
+            for (int i = 0; i < list.Count; i++)
             {
                 TItem item = list[i];
                 TProperty value = propertyDelegate.Invoke(item);
-                if (value.CompareTo(after) == 1 && value.CompareTo(min) == -1)
+                if (value.CompareTo(after) == 1 && 
+                    (result == null ||value.CompareTo(min) == -1))
                 {
                     min = value;
                     result = item;
@@ -402,14 +404,16 @@ namespace Nucleus.Extensions
         public static TItem ItemWithPrevious<TItem, TProperty>(this IList<TItem> list,
             Func<TItem, TProperty> propertyDelegate, TProperty before)
             where TProperty : IComparable<TProperty>
+            where TItem : class
         {
-            TItem result = default(TItem);
+            TItem result = null;
             TProperty max = default(TProperty);
             for (int i = 1; i < list.Count; i++)
             {
                 TItem item = list[i];
                 TProperty value = propertyDelegate.Invoke(item);
-                if (value.CompareTo(before) == -1 && value.CompareTo(max) == 1)
+                if (value.CompareTo(before) == -1 && 
+                    (result == null || value.CompareTo(max) == 1))
                 {
                     max = value;
                     result = item;
