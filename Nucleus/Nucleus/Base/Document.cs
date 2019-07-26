@@ -216,6 +216,35 @@ namespace Nucleus.Base
         }
 
         /// <summary>
+        /// Load a document from a remote strean in binary format
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="stream">Stream Object with file contents</param>
+        /// <returns>The loaded document, if a document could indeed be loaded.
+        /// Else, null.</returns>
+        public static T Load<T>(Stream stream, DocumentSaveFileType type = DocumentSaveFileType.Binary) where T : Document
+        {
+            T obj = null;
+#if !JS
+            obj = default(T);
+            stream.Seek(0L, SeekOrigin.Begin);
+
+            switch (type)
+            {
+                case DocumentSaveFileType.Binary:
+                    var formatter = (IFormatter)new BinaryFormatter();
+                    formatter.Binder = new CustomSerializationBinder();
+                    obj = formatter.Deserialize(stream) as T;
+                    break;
+                case DocumentSaveFileType.Text:
+                    obj = new UniqueFormatter().Deserialize(stream, null) as T;
+                    break;
+            }
+            stream.Close();
+#endif
+            return obj;
+        }
+        /// <summary>
         /// Deserialize a document of the specified type from binary data
         /// </summary>
         /// <typeparam name="T"></typeparam>
