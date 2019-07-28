@@ -163,9 +163,7 @@ namespace Nucleus.Maths
         }
 
         /// <summary>
-        /// Constructor creating an interval from maximum and minimum values.
-        /// The minimum value should be lower than or equal to the maximum, or else
-        /// this interval will not be valid.
+        /// Constructor creating an interval from start and end values.
         /// </summary>
         /// <param name="start"></param>
         /// <param name="end"></param>
@@ -235,6 +233,16 @@ namespace Nucleus.Maths
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Return a new interval which is the inverse of this one -
+        /// i.e. where the start and end values have been swapped.
+        /// </summary>
+        /// <returns></returns>
+        public Interval Invert()
+        {
+            return new Interval(End, Start);
+        }
 
         /// <summary>
         /// Is this interval equal to another?

@@ -102,6 +102,7 @@
     <Compile Include="Geometry\Cell Maps\CellObscurance.cs" />
     <Compile Include="Geometry\Cell Maps\PartialCellObscurance.cs" />
     <Compile Include="Geometry\CompassDirection.cs" />
+    <Compile Include="Geometry\CurveCurveIntersection.cs" />
     <Compile Include="Geometry\CurveLineIntersection.cs" />
     <Compile Include="Geometry\Extrusion.cs" />
     <Compile Include="Geometry\HandSide.cs" />

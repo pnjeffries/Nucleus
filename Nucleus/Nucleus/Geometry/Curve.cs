@@ -379,6 +379,40 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Returns the parameter at the mid-point of the specified domain.
+        /// If this curve is closed and the start of the domain is higher than
+        /// the end, it is assumed that the domain describes the region between
+        /// these values passing over the endpoint of the curve.
+        /// Note that this is the mid-point in parameter-space and does not necessarily
+        /// correspond to the position equidistant along the curve from the interval ends.
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
+        public virtual double ParameterAtMid(Interval domain)
+        {
+            if (Closed && domain.IsDecreasing)
+            {
+                double domLength = domain.End + (1 - domain.Start);
+                return (domain.Start + domLength / 2) % 1;
+            }
+            else return domain.Mid;
+        }
+
+        /// <summary>
+        /// Returns the parameter of the position position equidistant along 
+        /// the curve from the interval ends.
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
+        /*public virtual double ParameterAtMidLength(Interval domain)
+        {
+            double startLength = LengthAt(domain.Start);
+            double domLength = LengthOf(domain);
+            return ParameterAt(startLength + domLength / 2);
+            // Disabled as does not currently wrap.  TODO: Fix
+        }*/
+
+        /// <summary>
         /// Calculate the length along the curve of the specified parameter
         /// </summary>
         /// <param name="t"></param>
@@ -482,7 +516,7 @@ namespace Nucleus.Geometry
 
             return result;
         }
-
+        
         /// <summary>
         /// Get a curve parameter subdomain specified by the mid-point parameter
         /// of the subdomain and the length of the subdomain along the curve.

@@ -79,6 +79,7 @@ namespace Nucleus.WPF
 
             if (visualise is IList<VertexGeometry>) geometry.TryAddRange((IList<VertexGeometry>)visualise);
             else if (visualise is IList<Curve>) geometry.TryAddRange((IList<Curve>)visualise);
+            else if (visualise is IList<PlanarRegion>) geometry.TryAddRange((IList<PlanarRegion>)visualise);
             else if (visualise is VertexGeometry) geometry.TryAdd((VertexGeometry)visualise);
             else if (visualise is MeshFaceCollection)
             {

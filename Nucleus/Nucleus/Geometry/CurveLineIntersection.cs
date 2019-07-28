@@ -69,6 +69,20 @@ namespace Nucleus.Geometry
             set { _Side = value; }
         }
 
+        /// <summary>
+        /// Private backing member variable for the ProcessCounter property
+        /// </summary>
+        private int _ProcessCounter = 0;
+
+        /// <summary>
+        /// A counter tag used during certain advanced operations to store the number of processing operations performed using this intersection.
+        /// </summary>
+        public int ProcessCounter
+        {
+            get { return _ProcessCounter; }
+            set { _ProcessCounter = value; }
+        }
+
         #endregion
 
         #region Constructors

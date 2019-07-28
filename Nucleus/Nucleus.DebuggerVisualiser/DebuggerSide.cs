@@ -32,6 +32,12 @@ Description = ".NUCLEUS Geometry Visualiser")]
 [assembly: System.Diagnostics.DebuggerVisualizer(
 typeof(Nucleus.Visualiser.DebuggerSide),
 typeof(VisualizerObjectSource),
+Target = typeof(List<PlanarRegion>),
+Description = ".NUCLEUS Geometry Visualiser")]
+
+[assembly: System.Diagnostics.DebuggerVisualizer(
+typeof(Nucleus.Visualiser.DebuggerSide),
+typeof(VisualizerObjectSource),
 Target = typeof(VertexGeometryCollection),
 Description = ".NUCLEUS Geometry Visualiser")]
 

@@ -49,6 +49,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BoundingBoxTests.cs" />
     <Compile Include="ColourTests.cs" />
     <Compile Include="DDTreeTests.cs" />
     <Compile Include="IListExtensionsTests.cs" />
