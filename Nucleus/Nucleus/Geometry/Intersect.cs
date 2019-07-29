@@ -182,6 +182,28 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find the intersection point, if one exists, for two lines on the XY plane.
+        /// By default, the lines will be treated as extending to infinity, but may optionally
+        /// be bounded to not return intersections outside the extents of the lines themselves.
+        /// </summary>
+        /// <param name="lineA">The first line</param>
+        /// <param name="lineB">The second line</param>
+        /// <param name="bounds">The parameter-space range on each line where intersections are valid</param>
+        /// <param name="t0">Output.  The parameter on the first line.</param>
+        /// <param name="t1">Output.  The parameter on the second line.</param>
+        /// <returns></returns>
+        public static Vector LineLineXY(Line lineA, Line lineB, Interval bounds, ref double t0, ref double t1)
+        {
+            Vector pt0 = lineA.StartPoint;
+            Vector v0 = lineA.EndPoint - pt0;
+            Vector pt1 = lineB.StartPoint;
+            Vector v1 = lineB.EndPoint - pt1;
+            Vector result = LineLineXY(pt0, v0, pt1, v1, ref t0, ref t1);
+            if (!bounds.IsValid || (result.IsValid() && t0 >= bounds.Min && t0 <= bounds.Max && t1 >= bounds.Min && t1 <= bounds.Max)) return result;
+            else return Vector.Unset;
+        }
+
+        /// <summary>
         /// Find the intersection points, if any exist, for an infinite line and a circle on the XY plane,
         /// given as an array of doubles representing multiplication factors which should be applied to the
         /// line direction vector.  There may be one, two or zero intersection points.
@@ -351,6 +373,36 @@ namespace Nucleus.Geometry
         public static Vector[] LineArcXY(Line line, Arc arc, Interval lineBounds)
         {
             return LineArcXY(line.StartPoint, line.EndPoint - line.StartPoint, arc, lineBounds);
+        }
+
+        /// <summary>
+        /// Find the intersection points, if any exist, for a portion of a line and an arc on the XY plane
+        /// </summary>
+        /// <param name="line">The line</param>
+        /// <param name="arc">The arc</param>
+        /// <param name="lineBounds">The range on the line, as a proportion of the line length, where intersections
+        /// will be valid.  0 will represent the start of the line and 1 its end.</param>
+        /// /// <param name="result">The list of points to which the resulting intersection points should be added.
+        /// If this is null a new list will be initialised and returned instead.</param>
+        /// <param name="tLine">The list of curve parameters to which intersection parameters on the first curve
+        /// should be added.</param>
+        /// <param name="tArc">The list of curve parameters to which intersection parameters on the second curve
+        /// should be added.</param>
+        /// <param name="remapLine">The subdomain into which curve parameters on the first curve will be remapped.</param>
+        /// <param name="remapArc">The subdomain into which curve parameters on the second curve will be remapped.</param>
+        /// <returns></returns>
+        public static IList<Vector> LineArcXY(Line line, Arc arc, Interval lineBounds, IList<Vector> result,
+            IList<double> tLine, IList<double> tArc, Interval remapLine, Interval remapArc)
+        {
+            if (result == null) result = new List<Vector>();
+            Vector[] lAXY = LineArcXY(line, arc, lineBounds);
+            foreach (Vector pt in lAXY)
+            {
+                tLine.Add(remapLine.ValueAt(line.ClosestParameter(pt)));
+                tArc.Add(remapArc.ValueAt(arc.ClosestParameter(pt)));
+                result.Add(pt);
+            }
+            return result;
         }
 
         /// <summary>
@@ -554,6 +606,157 @@ namespace Nucleus.Geometry
             else if (v1Valid)
                 return new Vector[] { v[1] };
             else return new Vector[] { };
+        }
+
+        /// <summary>
+        /// Find the intersection instances between two curves on the XY plane
+        /// </summary>
+        /// <param name="crv0">The first curve</param>
+        /// <param name="crv1">The second curve</param>
+        /// <returns></returns>
+        public static IList<CurveCurveIntersection> CurveCurveXYIntersections(Curve crv0, Curve crv1)
+        {
+            var result = new List<CurveCurveIntersection>();
+            var tCrv0 = new List<double>();
+            var tCrv1 = new List<double>();
+            var pts = CurveCurveXY(crv0, crv1, null, tCrv0, tCrv1);
+            for (int i = 0; i < pts.Count; i++)
+            {
+                result.Add(new CurveCurveIntersection(crv0, crv1, tCrv0[i], tCrv1[i]));
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Find the intersection points of two curves on the XY plane
+        /// </summary>
+        /// <param name="crv0">The first curve</param>
+        /// <param name="crv1">The second curve</param>
+        /// <returns></returns>
+        public static IList<Vector> CurveCurveXY(Curve crv0, Curve crv1)
+        {
+            return CurveCurveXY(crv0, crv1, null, new List<double>(), new List<double>());
+        }
+
+        /// <summary>
+        /// Find the intersection points of two curves on the XY plane
+        /// </summary>
+        /// <param name="crv0">The first curve</param>
+        /// <param name="crv1">The second curve</param>
+        /// <param name="result">The list of points to which the resulting intersection points should be added.
+        /// If this is null a new list will be initialised and returned instead.</param>
+        /// <param name="tCrv0">The list of curve parameters to which intersection parameters on the first curve
+        /// should be added.</param>
+        /// <param name="tCrv1">The list of curve parameters to which intersection parameters on the second curve
+        /// should be added.</param>
+        /// <returns></returns>
+        public static IList<Vector> CurveCurveXY(Curve crv0, Curve crv1, IList<Vector> result,
+            IList<double> tCrv0, IList<double> tCrv1)
+        {
+
+            // Currenly no tolerence - this may result in intersections exactly on points 
+            // between segments being double-counted?  But otherwise might cause intersections to be missed...
+            double endStartTolerance = 0;
+
+            if (result == null) result = new List<Vector>();
+
+            var segments0 = crv0.ToSimpleCurves();
+            var segments1 = crv1.ToSimpleCurves();
+
+            // Perform pairwise intersection checking of curve segments
+            for (int i = 0; i < segments0.Count; i++)
+            {
+                ISimpleCurve seg0 = segments0[i];
+                for (int j = 0; j < segments1.Count; j++)
+                {
+                    ISimpleCurve seg1 = segments1[j];
+                    CurveCurveXY(seg0, seg1, result, tCrv0, tCrv1, crv0.SpanDomain(i), crv1.SpanDomain(j), endStartTolerance);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Find the intersections between two simple curves on the XY plane.
+        /// </summary>
+        /// <param name="crv0">The first curve</param>
+        /// <param name="crv1">The second curve</param>
+        /// <param name="result">The list of points to which the resulting intersection points should be added.
+        /// If this is null a new list will be initialised and returned instead.</param>
+        /// <param name="tCrv0">The list of curve parameters to which intersection parameters on the first curve
+        /// should be added.</param>
+        /// <param name="tCrv1">The list of curve parameters to which intersection parameters on the second curve
+        /// should be added.</param>
+        /// <param name="endStartTolerance">The tolerance distance from the end of the first curve 
+        /// within which intersections with the second will be ignored.  Enables self-intersection checks without
+        /// false positives from matching curve ends.</param>
+        /// <returns>An array of intersection points, which may contain 0, 1 or 2 points.</returns>
+        public static IList<Vector> CurveCurveXY(ISimpleCurve crv0, ISimpleCurve crv1, IList<Vector> result,
+            IList<double> tCrv0, IList<double> tCrv1, double endStartTolerance = 0)
+        {
+            return CurveCurveXY(crv0, crv1, result, tCrv0, tCrv1, new Interval(0, 1), new Interval(0, 1), endStartTolerance);
+        }
+
+        /// <summary>
+        /// Find the intersections between two simple curves on the XY plane.
+        /// </summary>
+        /// <param name="crv0">The first curve</param>
+        /// <param name="crv1">The second curve</param>
+        /// <param name="result">The list of points to which the resulting intersection points should be added.
+        /// If this is null a new list will be initialised and returned instead.</param>
+        /// <param name="tCrv0">The list of curve parameters to which intersection parameters on the first curve
+        /// should be added.</param>
+        /// <param name="tCrv1">The list of curve parameters to which intersection parameters on the second curve
+        /// should be added.</param>
+        /// <param name="remap0">The subdomain into which curve parameters on the first curve will be remapped.</param>
+        /// <param name="remap1">The subdomain into which curve parameters on the second curve will be remapped.</param>
+        /// <param name="endStartTolerance">The tolerance distance from the end of the first curve 
+        /// within which intersections with the second will be ignored.  Enables self-intersection checks without
+        /// false positives from matching curve ends.</param>
+        /// <returns>An array of intersection points, which may contain 0, 1 or 2 points.</returns>
+        public static IList<Vector> CurveCurveXY(ISimpleCurve crv0, ISimpleCurve crv1, IList<Vector> result,
+            IList<double> tCrv0, IList<double> tCrv1, Interval remap0, Interval remap1, double endStartTolerance = 0)
+        {
+            if (result == null) result = new List<Vector>();
+            if (crv0 is Line)
+            {
+                if (crv1 is Line)
+                {
+                    double t0 = 0, t1 = 0;
+                    Vector pt = LineLineXY((Line)crv0, (Line)crv1, new Interval(0, 1 - endStartTolerance), ref t0, ref t1);
+                    if (pt.IsValid())
+                    {
+                        tCrv0.Add(remap0.ValueAt(t0));
+                        tCrv1.Add(remap1.ValueAt(t1));
+                        result.Add(pt);
+                    }
+                    return result;
+                }
+                else if (crv1 is Arc)
+                {
+                    return LineArcXY((Line)crv0, (Arc)crv1, new Interval(0, 1 - endStartTolerance),
+                        result, tCrv0, tCrv1, remap0, remap1);
+                }
+            }
+            else if (crv0 is Arc)
+            {
+                if (crv1 is Line) return LineArcXY((Line)crv1, (Arc)crv0, new Interval(endStartTolerance, 1),
+                    result, tCrv1, tCrv0, remap1, remap0);
+                else if (crv1 is Arc)
+                {
+                    var intPts = ArcArcXY((Arc)crv0, (Arc)crv1, new Interval(0, 1 - endStartTolerance));
+                    foreach (Vector pt in intPts)
+                    {
+                        tCrv0.Add(remap0.ValueAt(crv0.ClosestParameter(pt)));
+                        tCrv1.Add(remap0.ValueAt(crv1.ClosestParameter(pt)));
+                        result.Add(pt);
+                    }
+                    return result;
+                }
+            }
+            throw new NotImplementedException("Intersection between curve types '" + crv0.GetType().Name +
+                "' and '" + crv1.GetType().Name + "' cannot be resolved.");
         }
 
         /// <summary>

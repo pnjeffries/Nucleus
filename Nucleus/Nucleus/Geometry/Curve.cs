@@ -474,6 +474,17 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Get the subdomain of this curve occupied by the specified span
+        /// </summary>
+        /// <param name="iSpan">The span index</param>
+        /// <returns></returns>
+        public Interval SpanDomain(int iSpan)
+        {
+            double spans = SegmentCount;
+            return new Interval(iSpan / spans, (iSpan + 1.0) / spans);
+        }
+
+        /// <summary>
         /// Break down the supplied interval into subdomains for each span contained within
         /// that parameter space on this curve
         /// </summary>
@@ -1265,8 +1276,9 @@ namespace Nucleus.Geometry
 
         /// <summary>
         /// Decompose this curve down to simple primitive curve types such
-        /// as line and arc segments.  This may return a list containing only
-        /// itself if the curve is already a simple type
+        /// as line and arc segments, one for each span in this curve.
+        /// This may return a list containing only
+        /// itself if the curve is already a simple type.
         /// </summary>
         /// <returns></returns>
         public abstract IList<ISimpleCurve> ToSimpleCurves();
