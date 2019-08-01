@@ -267,10 +267,110 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="cutter"></param>
         /// <returns></returns>
-        /*public IList<PlanarRegion> Not(PlanarRegion cutter)
+        private IList<PlanarRegion> Not(PlanarRegion cutter)
         {
             var result = new List<PlanarRegion>();
-        }*/
+
+            IList<CurveCurveIntersection> perimeterInts = Intersect.CurveCurveXYIntersections(Perimeter, cutter.Perimeter);
+            IList<CurveCurveIntersection> cutterInts = new List<CurveCurveIntersection>();
+            foreach (var cCI in perimeterInts)
+            {
+                cCI.ProcessCounter = 1;
+                cutterInts.Add(cCI);
+            }
+            // TODO: cutter void intersection
+
+            CurveCollection freeVoids = new CurveCollection(); //Un-cut voids
+            // Find intersection points on voids:
+            foreach (var voidCrv in Voids)
+            {
+                var voidInts = Intersect.CurveCurveXYIntersections(voidCrv, cutter.Perimeter);
+                foreach (var cCI in voidInts)
+                {
+                    cCI.ProcessCounter = 1;
+                    cutterInts.Add(cCI);
+                }
+                // TODO: cutter void intersection
+
+                if (voidInts.Count < 2)
+                {
+                    freeVoids.Add(voidCrv);
+                }
+            }
+
+            // Determine direction of travel around cutter:
+            int cutterDir = 1; // TODO: Determine
+
+            //'Fake' intersection to represent perimeter start:
+            CurveCurveIntersection startInt = new CurveCurveIntersection(Perimeter, null, 0, double.NaN)
+            { ProcessCounter = 1 };
+            // ...and end:
+            CurveCurveIntersection endInt = startInt;
+
+            CurveCurveIntersection currentInt = startInt;
+            IList<CurveCurveIntersection> nextStartInts = new List<CurveCurveIntersection>();
+            PolyCurve newPerimeter = null;
+            PlanarRegion newRegion = null;
+            Curve travelOn = Perimeter;
+            // Loop through intersections and build up new sub-regions by traversing connected
+            // intersections along the perimeter, cutter and void curves
+            int segmentCount = (int)Math.Floor(cutterInts.Count * 1.5);
+            for (int i = 0; i < segmentCount; i++)
+            {
+                CurveCurveIntersection nextInt;
+
+                // Travel to the next intersection, along he cutters or perimeter
+                if (travelOn == Perimeter)
+                {
+                    // Travel along perimeter
+                    nextInt = perimeterInts.ItemWithNext(cCI => cCI.ParameterA, currentInt.ParameterA);
+                    // 'Fake' intersection to represent perimeter end:
+                    if (nextInt == null) nextInt = endInt;
+                    else nextStartInts.Add(nextInt);
+                }
+                else
+                {
+                    // Travel along cutter:
+                    if (cutterDir == 1)
+                    {
+                        nextInt = cutterInts.ItemWithNext(cCI => cCI.ParameterB, currentInt.ParameterB);
+                        if (nextInt == null) // Wrap
+                            nextInt = cutterInts.ItemWithMin(cCI => cCI.ParameterB);
+                    }
+                    else
+                    {
+                        nextInt = cutterInts.ItemWithPrevious(cCI => cCI.ParameterB, currentInt.ParameterB);
+                        if (nextInt == null) // Wrap
+                            nextInt = cutterInts.ItemWithMax(cCI => cCI.ParameterB);
+                    }
+                }
+
+                if (nextInt != null
+                    && (currentInt.ProcessCounter > 0 || nextInt.ProcessCounter > 0))
+                {
+                    Curve curve;
+                    if (travelOn == Perimeter)
+                    {
+                        // Perimeter segment
+                        curve = Perimeter;
+                    }
+                    else if (currentInt.CurveA == nextInt.CurveA && currentInt.CurveA != Perimeter)
+                    {
+                        // Void segment
+                        curve = currentInt.CurveA;
+                    }
+                    else
+                    {
+                        // Cutter segment
+                        curve = currentInt.CurveB;
+                    }
+                    //TODO: Check if inside
+                }
+                // TODO
+            }
+
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Determine which side of a splitting line a given point lies.
@@ -405,7 +505,6 @@ namespace Nucleus.Geometry
             }
 
             // Tag left and right intersections
-            foreach (var lI in leftInts) lI.Side = HandSide.Left;
             foreach (var rI in rightInts) rI.Side = HandSide.Right;
 
             // Determine direction of travel along cutting lines:
@@ -455,15 +554,12 @@ namespace Nucleus.Geometry
                         nextInt = rightInts.ItemWithPrevious(cLI => cLI.LineParameter, currentInt.LineParameter);
                 }
                 else
-                { 
+                {
                     // Travel to next intersection on perimeter
                     nextInt = perimeterInts.ItemWithNext(cLI => cLI.CurveParameter, currentInt.CurveParameter);
                     // 'Fake' intersection to represent perimeter end:
                     if (nextInt == null) nextInt = endInt;
-                    else
-                    {
-                        nextStartInts.Add(nextInt);
-                    }
+                    else nextStartInts.Add(nextInt);
                 }
 
                 if (nextInt != null && currentInt.Curve == nextInt.Curve &&  // Check both ints on same curve
