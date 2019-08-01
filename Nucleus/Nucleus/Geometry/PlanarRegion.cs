@@ -437,7 +437,7 @@ namespace Nucleus.Geometry
         /// <returns>The resultant list of regions.  If the line does not bisect
         /// this region and the region could not be split, this collection will contain
         /// only the original region.</returns>
-        public IList<PlanarRegion> SplitByLineXY2(Vector splitPt, Vector splitDir, double splitWidth = 0)
+        public IList<PlanarRegion> SplitByLineXY(Vector splitPt, Vector splitDir, double splitWidth = 0)
         {
             var result = new List<PlanarRegion>();
 
@@ -505,6 +505,7 @@ namespace Nucleus.Geometry
             }
 
             // Tag left and right intersections
+            foreach (var lI in leftInts) lI.Side = HandSide.Left;
             foreach (var rI in rightInts) rI.Side = HandSide.Right;
 
             // Determine direction of travel along cutting lines:
@@ -669,16 +670,16 @@ namespace Nucleus.Geometry
 
         }
 
-            /// <summary>
-            /// Split this region into two (or more) sub-regions along a straight line
-            /// </summary>
-            /// <param name="splitPt">A point on the splitting line</param>
-            /// <param name="splitDir">The direction of the line</param>
-            /// <param name="splitWidth">Optional.  The width of the split.</param>
-            /// <returns>The resultant list of regions.  If the line does not bisect
-            /// this region and the region could not be split, this collection will contain
-            /// only the original region.</returns>
-            public IList<PlanarRegion> SplitByLineXY(Vector splitPt, Vector splitDir, double splitWidth = 0)
+        /// <summary>
+        /// Split this region into two (or more) sub-regions along a straight line
+        /// </summary>
+        /// <param name="splitPt">A point on the splitting line</param>
+        /// <param name="splitDir">The direction of the line</param>
+        /// <param name="splitWidth">Optional.  The width of the split.</param>
+        /// <returns>The resultant list of regions.  If the line does not bisect
+        /// this region and the region could not be split, this collection will contain
+        /// only the original region.</returns>
+        private IList<PlanarRegion> SplitByLineXY_OLD(Vector splitPt, Vector splitDir, double splitWidth = 0)
         {
             var result = new List<PlanarRegion>();
             var lineInts = new List<double>();
