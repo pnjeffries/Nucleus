@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nucleus.Base;
 using Nucleus.Extensions;
 using Nucleus.Model;
 using System;
@@ -29,6 +30,20 @@ namespace Nucleus.UnitTests
             }
 
             Assert.AreEqual(0, unserializable.Count);
+        }
+
+        [TestMethod]
+        public void SerializeModelDocumentAndDeserialize()
+        {
+            FilePath path = "C:/TEMP/SerializeModelDocumentAndDeserializeTest.test";
+
+            var model = new Model.Model();
+            model.Add(new LinearElement(0, 0, 0, 10, 0, 0));
+            var doc = new ModelDocument(model);
+            doc.SaveAs(path);
+
+            var doc2 = ModelDocument.Load(path);
+            Assert.AreEqual(1, doc2.Model.Elements.Count);
         }
     }
 }

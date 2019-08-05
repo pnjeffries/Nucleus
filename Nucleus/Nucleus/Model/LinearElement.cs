@@ -152,6 +152,15 @@ namespace Nucleus.Model
         /// Creates an element set-out along a straight line between
         /// the start and end points.
         /// </summary>
+        public LinearElement(double startX, double startY, double startZ, double endX, double endY, double endZ)
+            : this(new Vector(startX, startY, startZ), new Vector(endX, endY, endZ))
+        { }
+
+        /// <summary>
+        /// Start and end point constructor
+        /// Creates an element set-out along a straight line between
+        /// the start and end points.
+        /// </summary>
         /// <param name="startPoint"></param>
         /// <param name="endPoint"></param>
         /// <param name="property"></param>
