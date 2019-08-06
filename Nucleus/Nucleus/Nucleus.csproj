@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nucleus</RootNamespace>
     <AssemblyName>Nucleus</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -104,6 +104,7 @@
     <Compile Include="Geometry\CompassDirection.cs" />
     <Compile Include="Geometry\CurveCurveIntersection.cs" />
     <Compile Include="Geometry\CurveLineIntersection.cs" />
+    <Compile Include="Geometry\CurveParameterMapper.cs" />
     <Compile Include="Geometry\Extrusion.cs" />
     <Compile Include="Geometry\HandSide.cs" />
     <Compile Include="Geometry\OriginalDomainGeometryAttributes.cs" />

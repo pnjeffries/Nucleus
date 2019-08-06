@@ -180,6 +180,17 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Curve constructor.  Initialises a polycurve starting with the specifed curve,
+        /// optionally exploding it into its constituant parts
+        /// </summary>
+        /// <param name="curve"></param>
+        public PolyCurve(Curve curve, bool autoExplode, GeometryAttributes attributes = null)
+            :this(attributes)
+        {
+            Add(curve, autoExplode);
+        }
+
+        /// <summary>
         /// Initialises a new polycurve 
         /// </summary>
         /// <param name="curves"></param>
@@ -477,10 +488,10 @@ namespace Nucleus.Geometry
                     Add(new Line(endPt, subCurve.StartPoint));
                 }
             }
-            if (autoExplode && subCurve is PolyCurve)
+            if (autoExplode && !(subCurve is ISimpleCurve))
             {
-                PolyCurve pCurve = (PolyCurve)subCurve;
-                foreach (Curve subSubCurve in pCurve.SubCurves)
+                var exploded = subCurve.Explode();
+                foreach (Curve subSubCurve in exploded)
                     Add(subSubCurve);
             }
             else Add(subCurve);
@@ -887,7 +898,7 @@ namespace Nucleus.Geometry
         /// already a polycurve, this simply returns a self-reference.
         /// </summary>
         /// <returns></returns>
-        public override PolyCurve ToPolyCurve()
+        public override PolyCurve ToPolyCurve(bool autoExplode = false)
         {
             return this;
         }

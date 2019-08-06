@@ -452,7 +452,7 @@ namespace Nucleus.Geometry
         public double LengthOf(Interval t)
         {
             if (t.IsDecreasing && Closed)
-                return (Length - LengthAt(t.End) + LengthAt(t.Start));
+                return (Length - LengthAt(t.Start) + LengthAt(t.End));
             else return LengthAt(t.End) - LengthAt(t.Start);
         }
 
@@ -527,6 +527,25 @@ namespace Nucleus.Geometry
 
             return result;
         }
+
+        /// <summary>
+        /// Find the indices of spans contained within the specified domain
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
+        public IntInterval SpansOverlapping(Interval domain)
+        {
+            double tSpanStart;
+            int startSpan = SpanAt(domain.Start, out tSpanStart);
+            double tSpanEnd;
+            int endSpan = SpanAt(domain.End, out tSpanEnd);
+            if (Closed && domain.IsDecreasing && startSpan == endSpan)
+            {
+                return new IntInterval(0, SegmentCount - 1);
+            }
+            return new IntInterval(startSpan, endSpan);
+        }
+
         
         /// <summary>
         /// Get a curve parameter subdomain specified by the mid-point parameter
@@ -1266,6 +1285,29 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Create a list of double values to be used as per-span offset distances, where the
+        /// spans which overlap the specified domain are given one value, and those which do
+        /// not overlap are given another.
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <param name="offsetInDomain"></param>
+        /// <param name="elseOffset"></param>
+        /// <returns></returns>
+        public IList<double> CreateOffsetValuesForSpansInDomain(Interval domain, double offsetInDomain, 
+            double elseOffset = 0)
+        {
+            var result = new List<double>();
+            int segCount = SegmentCount;
+            for (int span = 0; span < segCount; span++)
+            {
+                Interval spanDomain = SpanDomain(span);
+                if (spanDomain.Overlaps(domain, Closed)) result.Add(offsetInDomain);
+                else result.Add(elseOffset);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Is this curve clockwise in the XY plane?
         /// </summary>
         /// <returns></returns>
@@ -1289,10 +1331,12 @@ namespace Nucleus.Geometry
         /// otherwise a new polycurve will be created that contains the original
         /// curve.
         /// </summary>
+        /// <param name="autoExplode">If true, the curve will be exploded down to its
+        /// consituant parts.</param>
         /// <returns></returns>
-        public virtual PolyCurve ToPolyCurve()
+        public virtual PolyCurve ToPolyCurve(bool autoExplode = false)
         {
-            return new PolyCurve(this, Attributes?.Duplicate());
+            return new PolyCurve(this, autoExplode, Attributes?.Duplicate());
         }
 
         /// <summary>
@@ -1578,8 +1622,54 @@ namespace Nucleus.Geometry
         /// <returns>The number of sub-curves removed by this operation.</returns>
         public virtual int Reduce(Interval tolerance)
         {
-            // Most curve types cannot be reduceda
+            // Most curve types cannot be reduced
             return 0;
+        }
+
+        /// <summary>
+        /// Get the region of this curve which it is necessary to traverse to
+        /// move along the curve from one position to another.
+        /// </summary>
+        /// <param name="tFrom"></param>
+        /// <param name="tTo"></param>
+        /// <returns></returns>
+        public virtual Interval ShortestPath(double tFrom, double tTo)
+        {
+            if (Closed)
+            {
+                // Need to compare multiple paths to find the shortest:
+                Interval iA = new Interval(tFrom, tTo);
+                Interval iB = new Interval(tTo, tFrom);
+                if (LengthOf(iA) > LengthOf(iB)) return iB;
+                else return iA;
+            }
+            else return Interval.Enclosing(tFrom, tTo);
+        }
+
+        /// <summary>
+        /// Get the region of this curve which it is necessary to traverse to
+        /// move along the curve from one position to reach the closest part of
+        /// a target domain.
+        /// </summary>
+        /// <param name="tFrom"></param>
+        /// <param name="tTo"></param>
+        /// <returns></returns>
+        public virtual Interval ShortestPath(double tFrom, Interval tTo)
+        {
+            if (Closed)
+            {
+                if (tTo.ContainsOpenEndWrapped(tFrom)) return new Interval(tFrom, tFrom);
+                Interval iA = new Interval(tFrom, tTo.Start);
+                Interval iB = new Interval(tTo.End, tFrom);
+                if (LengthOf(iA) > LengthOf(iB)) return iB;
+                else return iA;
+            }
+            else
+            {
+                if (tTo.Contains(tFrom)) return new Interval(tFrom, tFrom);
+                if (tFrom < tTo.Start) return new Interval(tFrom, tTo.Start);
+                else return new Interval(tTo.End, tFrom);
+            }
         }
 
         /// <summary>

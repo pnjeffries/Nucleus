@@ -428,6 +428,40 @@ namespace Nucleus.Maths
         }
 
         /// <summary>
+        /// Does this interval entirely or partially include another?
+        /// Optionally, this may treat the other interval as 'wrapping'
+        /// over the range 0-1 if the start point is greater than
+        /// the end point.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <param name="wrap"></param>
+        /// <returns></returns>
+        public bool Overlaps(Interval other, bool wrap)
+        {
+            return Overlaps(other, wrap, new Interval(0, 1));
+        }
+
+        /// <summary>
+        /// Does this interval entirely or partially include another?
+        /// Optionally, this may treat the other interval as 'wrapping'
+        /// around a specified domain if the start point is greater than
+        /// the end point.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <param name="wrap"></param>
+        /// <param name="wrapDomain"></param>
+        /// <returns></returns>
+        public bool Overlaps(Interval other, bool wrap, Interval wrapDomain)
+        {
+            if (wrap && other.IsDecreasing)
+            {
+                return Overlaps(new Interval(wrapDomain.Start, other.End)) ||
+                    Overlaps(new Interval(other.Start, wrapDomain.End));
+            }
+            else return Overlaps(other);
+        }
+
+        /// <summary>
         /// Does this interval entirely or partiall include any other 
         /// in the specified list?
         /// </summary>

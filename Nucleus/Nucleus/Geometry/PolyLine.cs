@@ -340,7 +340,7 @@ namespace Nucleus.Geometry
         /// line objects representing the same geometry
         /// </summary>
         /// <returns></returns>
-        public override PolyCurve ToPolyCurve()
+        public override PolyCurve ToPolyCurve(bool autoExplode = false)
         {
             return new PolyCurve(ToLines(), Attributes);
         }

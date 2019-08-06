@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,23 +28,43 @@ namespace Nucleus.IO
             assemblyName = assemblyName.Replace(_OldLibraryName, _NewLibraryName);
             typeName = typeName.Replace(_OldLibraryName, _NewLibraryName);
             Type type;
+            string fullName = string.Format("{0}, {1}", typeName, assemblyName);
             try
             {
-                type = Type.GetType(string.Format("{0}, {1}", typeName, assemblyName));
+                type = Type.GetType(fullName, true);
             }
             catch (FileNotFoundException ex)
             {
-                type = Type.GetType(typeName, AssemblyResolver, null);
+                try
+                {
+                    type = Type.GetType(fullName, AssemblyResolver, null, true);
+                }
+                catch (FileNotFoundException ex2)
+                {
+                    type = Type.GetType(typeName, AssemblyResolver, TypeResolver, true);
+                }
             }
             return type;
             //}
             //return null;
         }
 
-        private static System.Reflection.Assembly AssemblyResolver(System.Reflection.AssemblyName assemblyName)
+        private static Assembly AssemblyResolver(System.Reflection.AssemblyName assemblyName)
         {
-            assemblyName.Version = null;
-            return System.Reflection.Assembly.Load(assemblyName);
+            if (assemblyName.Name == "System.Collections")
+            {
+                // Horrible hack!
+                // If loading something on Framework, doesn't currently have anything beyond v4.0,
+                // but stuff saved in Standard or Core could be later...
+                assemblyName.Version = new Version(4,0,0,0);
+            }
+            return Assembly.Load(assemblyName);
+        }
+
+        private static Type TypeResolver(Assembly assembly, string typeName, bool throwOnError)
+        {
+            if (assembly!= null) return assembly.GetType(typeName);
+            else return Type.GetType(typeName, throwOnError);
         }
     }
 }

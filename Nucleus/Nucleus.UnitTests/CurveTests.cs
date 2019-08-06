@@ -784,5 +784,37 @@ namespace Nucleus.UnitTests
 
             Assert.AreEqual(91, reduced);
         }
+
+        [TestMethod]
+        public void ShortestPath_Line()
+        {
+            var line = new Line(0, 0, 10, 0);
+            var path = line.ShortestPath(0.25, 0.75);
+            Assert.AreEqual(new Interval(0.25, 0.75), path);
+        }
+
+        [TestMethod]
+        public void ShortestPath_CircleWrap()
+        {
+            var circ = new Arc(new Circle(10));
+            var path = circ.ShortestPath(0.1, 0.9);
+            Assert.AreEqual(new Interval(0.9, 0.1), path);
+        }
+
+        [TestMethod]
+        public void ShortestPath_CircleIntervalWrap()
+        {
+            var circ = new Arc(new Circle(10));
+            var path = circ.ShortestPath(0.1, new Interval(0.5, 0.9));
+            Assert.AreEqual(new Interval(0.9, 0.1), path);
+        }
+
+        [TestMethod]
+        public void ShortestPath_CircleIntervalNotWrap()
+        {
+            var circ = new Arc(new Circle(10));
+            var path = circ.ShortestPath(0.1, new Interval(0.2, 0.9));
+            Assert.AreEqual(new Interval(0.1, 0.2), path);
+        }
     }
 }
