@@ -816,5 +816,7 @@ namespace Nucleus.UnitTests
             var path = circ.ShortestPath(0.1, new Interval(0.2, 0.9));
             Assert.AreEqual(new Interval(0.1, 0.2), path);
         }
+
+
     }
 }

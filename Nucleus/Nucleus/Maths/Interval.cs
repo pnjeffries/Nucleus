@@ -1097,5 +1097,35 @@ namespace Nucleus.Maths
                 }
             }
         }
+
+        /// <summary>
+        /// Find the interval in this collection which has the greatest size.
+        /// Optionally, the intervals may be treated as wrapping around at a
+        /// specified value and any interval which is decreasing from the start
+        /// to the end is assumed to increase from its starting value and wrap
+        /// around to zero at this point.
+        /// </summary>
+        /// <param name="intervals"></param>
+        /// <param name="wrap"></param>
+        /// <param name="wrapAt"></param>
+        /// <returns></returns>
+        public static Interval Largest(this IList<Interval> intervals, bool wrap = false, double wrapAt = 1.0)
+        {
+            double maxSize = double.MinValue;
+            Interval largest = Interval.Unset;
+            foreach (Interval interval in intervals)
+            {
+                double size;
+                if (wrap && interval.IsDecreasing) size = (1 - interval.Start) + interval.End;
+                else size = interval.Size;
+
+                if (size > maxSize)
+                {
+                    maxSize = size;
+                    largest = interval;
+                }
+            }
+            return largest;
+        }
     }
 }

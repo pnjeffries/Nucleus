@@ -474,7 +474,8 @@ namespace Nucleus.Geometry
                 if (tolerance.Contains(dot) &&
                     AllInToleranceForReduction(previouslyRemoved, perp, tolerance))
                 {
-                    Vertices.RemoveAt(i + 1);
+                    int iRemove = (i + 1) % Vertices.Count;
+                    Vertices.RemoveAt(iRemove);
                     i--;
                     result++;
                     // Store to check any subsequent reductions involving

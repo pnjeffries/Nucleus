@@ -457,6 +457,38 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Convert an interval expressed in terms of curve parameter values
+        /// into an equivalent interval describing the same region of the curve in terms
+        /// of length along the curve.
+        /// </summary>
+        /// <param name="parameterDomain"></param>
+        /// <returns></returns>
+        public Interval ToLengthDomain(Interval parameterDomain)
+        {
+            return new Interval(
+                LengthAt(parameterDomain.Start),
+                LengthAt(parameterDomain.End));
+        }
+
+        /// <summary>
+        /// Convert an interval expressed in terms of curve parameter values
+        /// into an equivalent interval describing the same region of the curve in terms
+        /// of length along the curve.
+        /// </summary>
+        /// <param name="parameterDomain"></param>
+        /// <returns></returns>
+        public IList<Interval> ToLengthDomains(IList<Interval> parameterDomains)
+        {
+            var result = new Interval[parameterDomains.Count];
+            for (int i = 0; i < parameterDomains.Count; i++)
+            {
+                Interval tI = parameterDomains[i];
+                result[i] = ToLengthDomain(tI);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Filter out from the specified list of domain intervals on this curve any which have a length
         /// lower than the specified limit.
         /// </summary>
@@ -1670,6 +1702,66 @@ namespace Nucleus.Geometry
                 if (tFrom < tTo.Start) return new Interval(tFrom, tTo.Start);
                 else return new Interval(tTo.End, tFrom);
             }
+        }
+
+        /// <summary>
+        /// Get a list of the subdomains of this curve which are formed of contiguous segments without sharp corners
+        /// beyond the specified tolerance value.
+        /// </summary>
+        /// <param name="cornerTolerance"></param>
+        /// <returns></returns>
+        public virtual IList<Interval> ContiguousEdges(Angle cornerTolerance)
+        {
+            var result = new List<Interval>();
+            int spanCount = SegmentCount;
+            bool closed = Closed;
+            if (!closed) spanCount -= 1;
+            double tStart = 0;
+            for (int i = 0; i < spanCount; i++)
+            {
+                Vector tan0 = TangentAt(i, 1.0);
+                int iNext = i + 1;
+                Vector tan1 = TangentAt((i + 1) % spanCount, 0.0);
+                if (tan0.AngleBetween(tan1) > cornerTolerance || (!closed && i == spanCount - 1))
+                {
+                    // Angle at corner too great - split
+                    double tEnd = ParameterAt(i, 1.0);
+                    result.Add(new Interval(tStart, tEnd));
+                    tStart = tEnd;
+                }
+                else if (closed)
+                {
+                    // Wrap around for closed curves
+                    if (result.Count > 0)
+                    {
+                        result[0] = result[0].WithStart(tStart);
+                    }
+                    else result.Add(new Interval(0, 1));
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Find the longest length along the curve from a list of curve subDomains
+        /// </summary>
+        /// <param name="subDomains"></param>
+        /// <param name="maxLength"></param>
+        /// <returns></returns>
+        public virtual Interval LongestSubDomain(IList<Interval> subDomains, out double maxLength)
+        {
+            maxLength = 0;
+            Interval longest = Interval.Unset;
+            foreach (Interval subDomain in subDomains)
+            {
+                double length = LengthOf(subDomain);
+                if (length > maxLength)
+                {
+                    maxLength = length;
+                    longest = subDomain;
+                }
+            }
+            return longest;
         }
 
         /// <summary>
