@@ -102,7 +102,7 @@ namespace Nucleus.Model
         }
 
 #if !JS
-        [OnDeserialized()]
+        [OnDeserialized]
         public void OnDeserialized(StreamingContext context)
         {
             foreach (TData item in this)

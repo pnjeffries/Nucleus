@@ -793,6 +793,16 @@ namespace Nucleus.Maths
             return new Interval(values);
         }
 
+        /// <summary>
+        /// Create an interval enclosing the specified set of values
+        /// </summary>
+        /// <param name="values">Values to be enclosed by the resulting interval</param>
+        /// <returns></returns>
+        public static Interval Enclosing(IList<double> values)
+        {
+            return new Interval(values);
+        }
+
         #endregion
 
         #region Operators

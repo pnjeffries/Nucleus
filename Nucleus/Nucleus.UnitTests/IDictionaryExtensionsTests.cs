@@ -9,7 +9,7 @@ using Nucleus.Extensions;
 namespace Nucleus.UnitTests
 {
     [TestClass]
-    public class ExtensionsTests
+    public class IDictionaryExtensionsTests
     {
         [TestMethod]
         public void GetValueFromPathDictionaryTest()

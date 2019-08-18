@@ -187,9 +187,23 @@ namespace Nucleus.Base
         /// Load a document from a file stored in binary format
         /// </summary>
         /// <param name="filePath">The path of the file to be loaded.</param>
+        /// <param name="type">The format of the document to load.</param>
         /// <returns>The loaded document, if a document could indeed be loaded.
         /// Else, null.</returns>
         public static T Load<T>(FilePath filePath, DocumentSaveFileType type = DocumentSaveFileType.Binary) where T : Document
+        {
+            return Load<T>(filePath, new DocumentDeserializationOptions() { DocumentType = type });
+        }
+
+        /// <summary>
+        /// Load a document from a file stored in binary format
+        /// </summary>
+        /// <param name="filePath">The path of the file to be loaded.</param>
+        /// <param name="options">A set of options describing how the file
+        /// should be deserialized.</param>
+        /// <returns>The loaded document, if a document could indeed be loaded.
+        /// Else, null.</returns>
+        public static T Load<T>(FilePath filePath, DocumentDeserializationOptions options) where T : Document
         {
             T result = null;
 #if !JS
@@ -198,13 +212,13 @@ namespace Nucleus.Base
                                       FileAccess.Read,
                                       FileShare.Read);
             stream.Seek(0, SeekOrigin.Begin);
-            if (type == DocumentSaveFileType.Binary)
+            if (options.DocumentType == DocumentSaveFileType.Binary)
             {
                 IFormatter formatter = new BinaryFormatter();
-                formatter.Binder = new CustomSerializationBinder();
+                formatter.Binder = options.Binder;
                 result = formatter.Deserialize(stream) as T;
             }
-            else if (type == DocumentSaveFileType.Text)
+            else if (options.DocumentType == DocumentSaveFileType.Text)
             {
                 var formatter = new UniqueFormatter();
                 result = formatter.Deserialize(stream) as T;

@@ -24,6 +24,7 @@ using Nucleus.Maths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -160,12 +161,15 @@ namespace Nucleus.Geometry
         /// <summary>
         /// Default constructor
         /// </summary>
-        public PolyCurve() { }
+        public PolyCurve()
+        {
+            ListenToSubCurves();
+        }
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        public PolyCurve(GeometryAttributes attributes = null)
+        public PolyCurve(GeometryAttributes attributes = null) : this()
         {
             Attributes = attributes;
         }
@@ -219,6 +223,23 @@ namespace Nucleus.Geometry
         #endregion
 
         #region Methods
+
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext context)
+        {
+            ListenToSubCurves();
+        }
+
+        private void ListenToSubCurves()
+        {
+            _SubCurves.CollectionChanged += _SubCurves_CollectionChanged;
+        }
+
+        private void _SubCurves_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            InvalidateCachedGeometry();
+        }
+
 
         /// <summary>
         /// Calculate the total length of this polycurve
@@ -638,6 +659,45 @@ namespace Nucleus.Geometry
         /// <returns></returns>
         public override Curve Offset(IList<double> distances, bool tidy = true, bool copyAttributes = true)
         {
+            return Offset(distances, new CurveOffsetParameters(tidy, copyAttributes));
+        }
+
+        /// <summary>
+        /// Resolve a discontinuity between a curve and the curve preceeding it in an offset operation
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="offsetCrv"></param>
+        /// <param name="options"></param>
+        private void ResolveOffsetDiscontinuity(PolyCurve result, Curve offsetCrv, CurveOffsetParameters options)
+        {
+            if (result.SubCurves.Count > 0)
+            {
+                // Adjust offset curve ends to node out
+                Curve prevCrv = result.SubCurves.Last();
+                // Sharp corner:
+                if (MatchEnds(prevCrv.End, offsetCrv.Start, true, true, true, prevCrv.Length, offsetCrv.Length)) return;
+
+                if (prevCrv.EndPoint != offsetCrv.StartPoint)
+                {
+                    // If there is a extension/trim mismatch between the curves
+                    // we instead just join them with a chamfer temporarily
+                    result.Add(new Line(prevCrv.EndPoint, offsetCrv.StartPoint));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Offset this curve on the XY plane by varying distances for
+        /// each span.
+        /// </summary>
+        /// <param name="distances">The offset distance.
+        /// Positive numbers will result in the offset curve being to the right-hand 
+        /// side, looking along the curve.  Negative numbers to the left.</param>
+        /// <param name="options">The parameters used to define optional aspects
+        /// of the way in which curves should be offset.</param>
+        /// <returns></returns>
+        public Curve Offset(IList<double> distances, CurveOffsetParameters options)
+        {
             //TODO: Implement collapsed segments tidying
 
             var result = new PolyCurve();
@@ -654,19 +714,9 @@ namespace Nucleus.Geometry
 
                     if (offsetCrv != null)
                     {
-                        if (result.SubCurves.Count > 0)
-                        {
-                            // Adjust offset curve ends to node out
-                            Curve prevCrv = result.SubCurves.Last();
-                            if (!MatchEnds(prevCrv.End, offsetCrv.Start, true, true, true, prevCrv.Length, offsetCrv.Length))
-                            {
-                                // If there is a extension/trim mismatch between the curves
-                                // we instead just join them with a chamfer temporarily
-                                result.Add(new Line(prevCrv.EndPoint, offsetCrv.StartPoint));
-                            }
-                        }
+                        ResolveOffsetDiscontinuity(result, offsetCrv, options);
                         result.Add(offsetCrv);
-                        if (copyAttributes && offsetCrv.Attributes == null) offsetCrv.Attributes = Attributes;
+                        if (options.CopyAttributes && offsetCrv.Attributes == null) offsetCrv.Attributes = Attributes;
                     }
                 }
             }
@@ -674,49 +724,15 @@ namespace Nucleus.Geometry
             // Match end to start
             if (Closed && result.SubCurves.Count > 1)
             {
-                Curve lastCrv = result.SubCurves.Last();
                 Curve firstCrv = result.SubCurves.First();
-                if (!MatchEnds(lastCrv.End, firstCrv.Start, true, true, true, lastCrv.Length, firstCrv.Length))
-                {
-                    result.Close();
-                }
+                ResolveOffsetDiscontinuity(result, firstCrv, options);
             }
 
-            if (tidy)
+            if (options.Tidy)
             {
                 // Return the largest non-inverted loop
-                var loops = result.SelfIntersectionXYLoops();
-                loops.RemoveInvertedCurvesXY(this);
+                var loops = result.SelfIntersectionXYLoopsAlignedWith(this);
                 return loops.ItemWithMax(i => i.Length);
-                /*List<Curve> originals = new List<Curve>();
-                originals.AddRange(SubCurves);
-
-                // Removed flipped segments
-                int j = 0;
-                while (j < result.SubCurves.Count)
-                {
-                    Curve offset = result.SubCurves[j];
-                    Curve original = originals[j];
-
-                    if (IsOffsetCurveFlipped(original, offset))
-                    {
-                        if (result.SubCurves.Count > 0)
-                        {
-                            Curve previous = result.SubCurves.GetWrapped(j - 1);
-                            Curve subsequent = result.SubCurves.GetWrapped(j + 1);
-                            bool worked = MatchEnds(previous.End, subsequent.Start);
-                            //TODO: Deal with failed matches (for e.g. when adjacent edges are parallel)
-                            //if (!worked)
-                                //return null; //TEMP: prevents invalid offsets, but a bit overkilly!
-                        }
-                        result.SubCurves.RemoveAt(j);
-                        originals.RemoveAt(j);
-                        //j--;
-                    }
-                    else
-                        j++;
-                }
-                if (!result.IsValid) return null;*/
             }
 
             return result;

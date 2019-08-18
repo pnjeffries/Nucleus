@@ -12,7 +12,7 @@ namespace Nucleus.UnitTests
     public class IListExtensionsTests
     {
         [TestMethod]
-        public void FindNextShouldReturnNextHighest()
+        public void FindNext_ShouldReturnNextHighest()
         {
             var values = new List<Tuple<double>>()
             {

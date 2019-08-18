@@ -56,6 +56,11 @@ namespace Nucleus.Logs
         /// </summary>
         public const char ARGUMENT_SEPARATOR = '|';
 
+        /// <summary>
+        /// The string that will be used to record an error in parsing a log script function
+        /// </summary>
+        public const string ERROR = "!ERROR!";
+
         #endregion
 
         #region Properties
@@ -328,6 +333,24 @@ namespace Nucleus.Logs
         /// <param name="index"></param>
         /// <param name="path"></param>
         /// <returns></returns>
+        public string SUBJECT(string index)
+        {
+            try
+            {
+                int i = int.Parse(index);
+                var obj = Subjects[i];
+                return obj.ToString();
+            }
+            catch { }
+            return ERROR; //TODO: Review - fallback to ""?
+        }
+
+        /// <summary>
+        /// Retrieve a value from the specified subject
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public string SUBJECT(string index, string path)
         {
             try
@@ -337,7 +360,7 @@ namespace Nucleus.Logs
                 return obj.GetFromPath(path).ToString();
             }
             catch { }
-            return "!ERROR!"; //TODO: Review - fallback to ""?
+            return ERROR; //TODO: Review - fallback to ""?
         }
 
         /// <summary>

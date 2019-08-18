@@ -96,24 +96,33 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// The cached value of RadianMeasure
+        /// </summary>
+        private Angle _RadianMeasure = Angle.Undefined;
+
+        /// <summary>
         /// The angle subtended by this arc
         /// </summary>
         public Angle RadianMeasure
         {
             get
             {
-                if (Circle != null)
+                if (_RadianMeasure.IsUndefined)
                 {
-                    if (Closed) return Angle.Complete;
+                    if (Circle != null)
+                    {
+                        if (Closed) return Angle.Complete;
 
-                    Angle toStart = Circle.Azimuth(Vertices.First().Position);
-                    Angle toEnd = Circle.Azimuth(Vertices.Last().Position) - toStart;
-                    Angle toMid = Circle.Azimuth(Vertices[1].Position) - toStart;
-                    
-                    if (toMid > toEnd) return -toEnd.Explement();
-                    else return toEnd;
+                        Angle toStart = Circle.Azimuth(Vertices.First().Position);
+                        Angle toEnd = Circle.Azimuth(Vertices.Last().Position) - toStart;
+                        Angle toMid = Circle.Azimuth(Vertices[1].Position) - toStart;
+
+                        if (toMid > toEnd) _RadianMeasure = -toEnd.Explement();
+                        else _RadianMeasure = toEnd;
+                    }
+                    else return Angle.Zero;
                 }
-                return Angle.Zero;
+                return _RadianMeasure;
             }
         } 
 
@@ -364,6 +373,7 @@ namespace Nucleus.Geometry
             {
                 //TODO; Update circle!
             }
+            _RadianMeasure = Angle.Undefined;
             base.InvalidateCachedGeometry();
         }
 

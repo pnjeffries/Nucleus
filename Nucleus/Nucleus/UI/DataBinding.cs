@@ -16,6 +16,7 @@ namespace Nucleus.UI
     [Serializable]
     public class DataBinding : IDataContext
     {
+
         #region Properties
 
         /// <summary>

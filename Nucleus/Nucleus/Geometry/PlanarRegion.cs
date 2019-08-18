@@ -34,7 +34,7 @@ namespace Nucleus.Geometry
     /// a set of 'cut out' perimeter voids.
     /// </summary>
     [Serializable]
-    public class PlanarRegion : Surface
+    public class PlanarRegion : Surface, IFastDuplicatable
     {
         #region Properties
 
@@ -195,6 +195,24 @@ namespace Nucleus.Geometry
         public PlanarRegion(Curve perimeter, CurveCollection voids, GeometryAttributes attributes = null) : this(perimeter, attributes)
         {
             _Voids = voids;
+        }
+
+        /// <summary>
+        /// Initialises a new PlanarRegion, copying properties from another.
+        /// Internally this uses FastDuplicate methods, making it faster than
+        /// calling the ordinary Duplicate() function.
+        /// </summary>
+        /// <param name="other"></param>
+        public PlanarRegion(PlanarRegion other) : this()
+        {
+            _Perimeter = other.Perimeter.FastDuplicate();
+            if (other.HasVoids)
+            {
+                _Voids = new CurveCollection();
+                foreach (var voidCrv in other.Voids)
+                    _Voids.Add(voidCrv.FastDuplicate());
+            }
+            Attributes = other.Attributes;
         }
 
         #endregion
@@ -397,7 +415,31 @@ namespace Nucleus.Geometry
         /// The inverse will apply on the left splitting line.
         /// </summary>
         /// <returns></returns>
-        private static int RightCutterDirectionOfTravel(IList<CurveLineIntersection> perimeterInts, Vector rightDir, bool hasWidth = true)
+        private static int RightCutterDirectionOfTravel(IList<CurveLineIntersection> rightInts, IList<CurveLineIntersection> leftInts)
+        {
+            int result = 1;
+            IList<CurveLineIntersection> testInts = rightInts;
+            if (rightInts == null || rightInts.Count == 0)
+            {
+                testInts = leftInts;
+                result *= -1;
+            }
+            CurveLineIntersection firstInt = testInts.ItemWithMin(pInt => pInt.LineParameter);
+            CurveLineIntersection nextInt = testInts.ItemWithNext(pInt => pInt.LineParameter, firstInt.LineParameter);
+
+            if (firstInt.CurveParameter < nextInt.CurveParameter) result *= -1;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Work out the direction of travel that should be taken along the right splitting line
+        /// in order to close split off subregions.
+        /// The inverse will apply on the left splitting line.
+        /// </summary>
+        /// <returns></returns>
+        private static int RightCutterDirectionOfTravel(IList<CurveLineIntersection> perimeterInts, IList<CurveLineIntersection> rightInts, 
+            IList<CurveLineIntersection> leftInts, Vector rightDir, HandSide startSide, bool hasWidth = true)
         {
             int result = -1;
             CurveLineIntersection firstInt = perimeterInts.ItemWithMin(pInt => pInt.CurveParameter);
@@ -406,10 +448,17 @@ namespace Nucleus.Geometry
             {
                 if (firstInt.Side != lastInt.Side)
                 {
-                    // Special case: Start point is between cutting lines
-                    CurveLineIntersection nextInt = perimeterInts.ItemWithNext(pInt => pInt.CurveParameter, firstInt.CurveParameter);
+                    return RightCutterDirectionOfTravel(rightInts, leftInts);
+                    // Special case: Start point is on segment bridging between cutting lines
+                    /*CurveLineIntersection nextInt = perimeterInts.ItemWithNext(pInt => pInt.CurveParameter, firstInt.CurveParameter);
                     if (firstInt.Side == HandSide.Left) result *= -1;
-                    if (nextInt.LineParameter < firstInt.LineParameter) result *= -1;
+                    if (nextInt.LineParameter < firstInt.LineParameter) result *= -1;*/
+                }
+                else if (startSide == HandSide.Undefined)
+                {
+                    // Start point is on segment that is dipping into the cut region
+                    if (firstInt.Side == HandSide.Left) result *= -1;
+                    if (lastInt.LineParameter < firstInt.LineParameter) result *= -1;
                 }
                 else
                 {
@@ -508,17 +557,19 @@ namespace Nucleus.Geometry
             foreach (var lI in leftInts) lI.Side = HandSide.Left;
             foreach (var rI in rightInts) rI.Side = HandSide.Right;
 
+            HandSide startSide = SideOfSplit(Perimeter.StartPoint, leftPt, rightPt, offsetDir);
             // Determine direction of travel along cutting lines:
-            int rightDir = RightCutterDirectionOfTravel(perimeterInts, offsetDir, splitWidth != 0);
+            //int rightDir = RightCutterDirectionOfTravel(rightInts, leftInts);
+            int rightDir = RightCutterDirectionOfTravel(perimeterInts, rightInts, leftInts, offsetDir, startSide, splitWidth != 0);
 
             // 'Fake' intersection to represent perimeter start:
             CurveLineIntersection startInt = new CurveLineIntersection(Perimeter, 0, double.NaN)
             { ProcessCounter = 1 };
             // ...and end:
             CurveLineIntersection endInt = startInt;
-                //new CurveLineIntersection(Perimeter, 1, double.NaN)
+            //new CurveLineIntersection(Perimeter, 1, double.NaN)
             //{ ProcessCounter = 1 };
-
+            //rightDir *= -1; //TEMP!
             // Loop through intersections and build up new sub-regions by traversing connected
             // intersections along the perimeter, cutting lines and void curves
             CurveLineIntersection currentInt = startInt;
@@ -840,6 +891,11 @@ namespace Nucleus.Geometry
                 }
             }
             return next;
+        }
+
+        IFastDuplicatable IFastDuplicatable.FastDuplicate_Internal()
+        {
+            return new PlanarRegion(this);
         }
 
         #endregion

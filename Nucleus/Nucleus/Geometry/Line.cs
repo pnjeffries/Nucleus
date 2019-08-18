@@ -26,6 +26,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Nucleus.Maths;
 using Nucleus.Base;
+using Nucleus.Units;
 
 namespace Nucleus.Geometry
 {
@@ -82,8 +83,9 @@ namespace Nucleus.Geometry
         {
             get
             {
-                if (IsValid) return 1;
-                else return 0;
+                return 1;
+                //if (IsValid) return 1;
+                //else return 0;
             }
         }
 
@@ -101,6 +103,24 @@ namespace Nucleus.Geometry
         /// Get the vector from the start of the line to the end
         /// </summary>
         public Vector LineVector { get { return EndPoint - StartPoint; } }
+
+        /// <summary>
+        /// The cached length value.  Will be reset by calls to
+        /// InvalidateCachedGeometry.
+        /// </summary>
+        private double _Length = double.NaN;
+
+        /// <summary>
+        /// Get the length of this curve
+        /// </summary>
+        public override double Length
+        {
+            get
+            {
+                if (double.IsNaN(_Length)) _Length = CalculateLength();
+                return _Length;
+            }
+        }
 
         /// <summary>
         /// ISimpleCurve Curve implementation
@@ -191,6 +211,16 @@ namespace Nucleus.Geometry
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Invalidate any temporarily cached geometric data in this shape, forcing
+        /// it to be recalculated the next time it is needed
+        /// </summary>
+        protected override void InvalidateCachedGeometry()
+        {
+            base.InvalidateCachedGeometry();
+            _Length = double.NaN;
+        }
 
         /// <summary>
         /// Get the vertex (if any) which defines the end of the specified segment.

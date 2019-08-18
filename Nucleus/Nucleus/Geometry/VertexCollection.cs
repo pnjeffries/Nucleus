@@ -299,6 +299,12 @@ namespace Nucleus.Geometry
             return result;
         }
 
+        protected override void OnCollectionChanged()
+        {
+            if (Owner != null) Owner.NotifyGeometryUpdated();
+            base.OnCollectionChanged();
+        }
+
         #endregion
     }
 

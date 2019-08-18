@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nucleus.Base;
+using Nucleus.Extensions;
 using Nucleus.Geometry;
 using Nucleus.Maths;
 using System;
@@ -210,7 +211,7 @@ namespace Nucleus.UnitTests
 
             var crv2 = new Line(1, 5, 1, 15);
 
-            Interval intval = crv1.OverlapWith(crv2);
+            Interval intval = crv1.ProjectionOf(crv2);
             Assert.AreEqual(0.5, intval.Start);
             Assert.AreEqual(1, intval.End);
         }
@@ -249,7 +250,7 @@ namespace Nucleus.UnitTests
         }
 
         [TestMethod]
-        public void PolyCurveOffsetWithChinkFailsIfOutsideInitial()
+        public void PolyCurveOffsetWithChink_ShouldBeLargestLoopInsideInitial()
         {
             var pLine = new PolyLine(true,
                 new Vector(7, 63),
@@ -263,10 +264,40 @@ namespace Nucleus.UnitTests
             var pCrv = pLine.ToPolyCurve();
             var offsetCrv = pCrv.Offset(16.0);
             var polygon = pLine.Vertices.ExtractPoints();
+            double area = offsetCrv.CalculateEnclosedArea();
+            Assert.AreEqual(22.858, area, 0.01);
             foreach (var v in offsetCrv.Vertices)
             {
                 bool inside = polygon.PolygonContainmentXY(v.Position);
                 Assert.AreEqual(true, inside);
+            }
+        }
+
+        [TestMethod]
+        public void PolyCurveOffsetsWithChink_ShouldBeInsideInitial()
+        {
+            var pLine = new PolyLine(true,
+                new Vector(7, 63),
+                new Vector(45, 74),
+                new Vector(83, 12),
+                new Vector(31, 19),
+                new Vector(35, 35),
+                new Vector(21, 30),
+                new Vector(7, 63)
+            );
+            var pCrv = pLine.ToPolyCurve();
+            var offsetCrv = pCrv.Offset(16.0, false);
+            var offsetCrvs = offsetCrv.SelfIntersectionXYLoopsAlignedWith(pCrv);
+            var polygon = pLine.Vertices.ExtractPoints();
+            double area = offsetCrvs.Sum(i => i.CalculateEnclosedArea().Abs());
+            Assert.AreEqual(23.305, area, 0.01);
+            foreach (var subCrv in offsetCrvs)
+            {
+                foreach (var v in subCrv.Vertices)
+                {
+                    bool inside = polygon.PolygonContainmentXY(v.Position);
+                    Assert.AreEqual(true, inside);
+                }
             }
         }
 
@@ -817,6 +848,138 @@ namespace Nucleus.UnitTests
             Assert.AreEqual(new Interval(0.1, 0.2), path);
         }
 
+        [TestMethod]
+        public void Reduce_PolylineStartEndFlat_ShouldNotCrash()
+        {
+            var pline = new PolyLine(Vector.Create2D(
+                5, 0,
+                10, 0,
+                10, 10,
+                0, 10,
+                0, 0), true);
+            int reduced = pline.Reduce(1);
+            Assert.AreEqual(1, reduced);
+        }
 
+        [TestMethod]
+        public void ContiguousEdges_PolylineSquareWithExtraVerts_ShouldReturn4Sides()
+        {
+            var pline = new PolyLine(Vector.Create2D(
+                5, 0,
+                10, 0,
+                10, 10,
+                0, 10,
+                0, 0), true);
+            var edges = pline.ContinuousSubDomains(Angle.FromDegrees(1));
+            Assert.AreEqual(4, edges.Count);
+        }
+
+        [TestMethod]
+        public void ContiguousEdges_PolylineSquareWithExtraVertsHighTolerance_ShouldReturn1Side()
+        {
+            var pline = new PolyLine(Vector.Create2D(
+                5, 0,
+                10, 0,
+                10, 10,
+                0, 10,
+                0, 0), true);
+            var edges = pline.ContinuousSubDomains(Angle.FromDegrees(91));
+            Assert.AreEqual(1, edges.Count);
+        }
+
+        [TestMethod]
+        public void ContiguousEdges_CircleArc_ShouldReturn1Side()
+        {
+            var circ = new Arc(new Circle(5));
+            var edges = circ.ContinuousSubDomains(Angle.FromDegrees(1));
+            Assert.AreEqual(1, edges.Count);
+            Assert.AreEqual(new Interval(0, 1), edges[0]);
+        }
+
+        [TestMethod]
+        public void Offset_PolylineWithKinkAndShortSegment()
+        {
+            var pline = new PolyLine(Vector.Create2D(
+                0, 0,
+                5, 0,
+                6, 0,
+                10, 4));
+            var offs1 = pline.Offset(3);
+            var offs2 = pline.Offset(-3);
+            //TODO: Check lengths
+        }
+
+        [TestMethod]
+        public void Offset_PolyCurveWithKinkAndShortSegment()
+        {
+            var pline = new PolyLine(Vector.Create2D(
+                0, 0,
+                5, 0,
+                6, 0,
+                10, 4)).ToPolyCurve(true);
+            var offs1 = pline.Offset(3);
+            var offs2 = pline.Offset(-3);
+            double length1 = offs1.Length;
+            double length2 = offs2.Length;
+            Assert.AreEqual(14.1421, length1, 0.0001);
+            Assert.AreEqual(9.17157, length2, 0.0001);
+        }
+
+        [TestMethod]
+        public void VariableOffset_PolylineWithKinkAndShortSegment()
+        {
+            var pline = new PolyLine(Vector.Create2D(
+                0, 0,
+                5, 0,
+                6, 0,
+                10, 4));
+            var offs1 = pline.Offset(new double[] { 3, 0, 3 });
+            var offs2 = pline.Offset(-3);
+            // TODO: Check lengths
+        }
+
+        [TestMethod]
+        public void Line_CachedDataUpdatedOnChange()
+        {
+            var line = new Line(0, 0, 10, 5);
+            var bBox = line.BoundingBox;
+            Assert.AreEqual(10, bBox.SizeX);
+            Assert.AreEqual(5, bBox.SizeY);
+            Assert.AreEqual(11.18033, line.Length, 0.0001);
+
+            line.End.Position = new Vector(8, 10);
+            var bBox2 = line.BoundingBox;
+            Assert.AreEqual(8, bBox2.SizeX);
+            Assert.AreEqual(10, bBox2.SizeY);
+            Assert.AreEqual(12.80624, line.Length, 0.0001);
+        }
+
+        [TestMethod]
+        public void PolyCurve_CachedDataUpdatedOnChange()
+        {
+            var pCrv = new PolyCurve(new Line(0, 0, 10, 5));
+            var bBox = pCrv.BoundingBox;
+            Assert.AreEqual(10, bBox.SizeX);
+            Assert.AreEqual(5, bBox.SizeY);
+            Assert.AreEqual(11.18033, pCrv.Length, 0.0001);
+
+            pCrv.AddLine(new Vector(10, 10));
+            var bBox2 = pCrv.BoundingBox;
+            Assert.AreEqual(10, bBox2.SizeX);
+            Assert.AreEqual(10, bBox2.SizeY);
+            Assert.AreEqual(16.18033, pCrv.Length, 0.0001);
+        }
+
+        [TestMethod]
+        public void SmallTriangle_OffsetShouldBeNull()
+        {
+            var pLine = new PolyLine(true,
+                new Vector(134.151583327481, 3.97679246051294, 0),
+                new Vector(135.867899311823, 2.08059785037767, 0),
+                new Vector(132.551152617239, 2.18588798217887, 0));
+            var pCrv = pLine.ToPolyCurve(true);
+            var offset = pCrv.Offset(16);
+            Assert.AreEqual(null, offset);
+        }
     }
 }

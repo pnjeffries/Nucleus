@@ -1551,7 +1551,7 @@ namespace Nucleus.Geometry
             if (polygon.PolygonContainmentXY(line.StartPoint))
             {
                 if (intersections.Count == 0) result.Add(line); // Input line is wholly inside polygon
-                else if (!line.StartPoint.Equals(intersections.Values[0])) //Check the start point isn't *on* the intersection
+                else if (!line.StartPoint.Equals(intersections.Values[0], 0.00001)) //Check the start point isn't *on* the intersection
                 {
                     result.Add(new Line(line.StartPoint, intersections.Values[0]));
                     j += 1;

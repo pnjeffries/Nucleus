@@ -102,4 +102,12 @@ namespace Nucleus.Geometry
 
         #endregion
     }
+
+    /// <summary>
+    /// Extension methods for the CurveLineIntersection class and collections thereof
+    /// </summary>
+    public static class CurveLineIntersectionExtensions
+    {
+
+    }
 }

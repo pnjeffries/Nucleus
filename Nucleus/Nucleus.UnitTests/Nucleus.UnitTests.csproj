@@ -58,7 +58,7 @@
     <Compile Include="LogTests.cs" />
     <Compile Include="MathsTests.cs" />
     <Compile Include="CurveTests.cs" />
-    <Compile Include="ExtensionsTests.cs" />
+    <Compile Include="IDictionaryExtensionsTests.cs" />
     <Compile Include="ParameterTests.cs" />
     <Compile Include="PlanarRegionTests.cs" />
     <Compile Include="SerializationTests.cs" />

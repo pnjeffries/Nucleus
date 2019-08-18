@@ -147,6 +147,30 @@ namespace Nucleus.UnitTests
         }
 
         [TestMethod]
+        public void CurveInPolygon_StartOnEdge()
+        {
+            var pline = new PolyLine(
+                new Vector(38.780081968429, 96.0087129493624, 0),
+                new Vector(9.49388910671621, 117.597502650573, 0)
+                ).ToPolyCurve();
+            var vertices = new VertexCollection(new List<Vector>()
+            {
+                new Vector(29.2861928617128, 83.1298127777882, 0),
+                new Vector(0, 104.718602478999, 0),
+                new Vector(0, 104.718602478999, 0),
+                new Vector(11.9912322411546, 105.197225880402, 0),
+                new Vector(11.9912322411546, 105.197225880402, 0),
+                new Vector(39.7366632043587, 97.3063596887607, 0),
+                new Vector(39.7366632043587, 97.3063596887607, 0),
+                new Vector(29.2861928617128, 83.1298127777882, 0)
+            });
+            var curves = Intersect.CurveInPolygonXY(pline, vertices);
+
+            Assert.AreEqual(1, curves.Count);
+            Assert.AreEqual(4.307114218, curves.TotalLength(), 0.00001);
+        }
+
+        [TestMethod]
         public void PolyCurveDomainInPolygon()
         {
             var pline = new PolyLine(

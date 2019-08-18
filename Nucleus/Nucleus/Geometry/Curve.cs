@@ -58,7 +58,7 @@ namespace Nucleus.Geometry
         /// Get the number of segments that this curve posesses.
         /// Segments are stretches of the curve that can be evaluated independantly 
         /// of the rest of the curve.
-        /// </summary
+        /// </summary>
         public virtual int SegmentCount
         {
             get
@@ -141,7 +141,7 @@ namespace Nucleus.Geometry
         /// Get the length of this curve
         /// </summary>
         [Dimension(DimensionType.Distance)]
-        public double Length
+        public virtual double Length
         {
             get
             {
@@ -875,12 +875,24 @@ namespace Nucleus.Geometry
         /// <param name="other">Another curve.  For the most meaningful results,
         /// should run roughly parallel to this one.</param>
         /// <returns></returns>
-        public Interval OverlapWith(Curve other)
+        public Interval ProjectionOf(Curve other)
         {
-            //TODO: More sophisticated method for closed curves?
-            return new Interval(
-                ClosestParameter(other.StartPoint),
-                ClosestParameter(other.EndPoint));
+            return ProjectionOf(other, new Interval(0, 1), Angle.Right);
+        }
+
+        /// <summary>
+        /// Find the region of this curve (expressed as a parameter interval) which
+        /// overlaps with another curve, determined by projecting the start and end 
+        /// points of said curve onto this one.
+        /// </summary>
+        /// <param name="other">Another curve.  For the most meaningful results,
+        /// should run roughly parallel to this one.</param>
+        /// <param name="arcTolerance">The angle tolerance to be used when obtaining
+        /// sample points on curved segments.</param>
+        /// <returns></returns>
+        public Interval ProjectionOf(Curve other, Angle arcTolerance)
+        {
+            return ProjectionOf(other, new Interval(0, 1), arcTolerance);
         }
 
         /// <summary>
@@ -893,11 +905,38 @@ namespace Nucleus.Geometry
         /// <param name="domainOnOther">The region of the other curve to overlap
         /// with this curve.</param>
         /// <returns></returns>
-        public Interval OverlapWith(Curve other, Interval domainOnOther)
+        public Interval ProjectionOf(Curve other, Interval domainOnOther)
         {
-            return new Interval(
-                ClosestParameter(other.PointAt(domainOnOther.Start)),
-                ClosestParameter(other.PointAt(domainOnOther.End)));
+            return ProjectionOf(other, domainOnOther, Angle.Right);
+        }
+
+        /// <summary>
+        /// Find the region of this curve (expressed as a parameter interval) which
+        /// overlaps with a region of another curve, determined by projecting the
+        /// start and end of the specified domain on the other curve onto this one.
+        /// </summary>
+        /// <param name="other">Another curve.  For the most meaningful results,
+        /// should run roughly parallel to this one.</param>
+        /// <param name="domainOnOther">The region of the other curve to overlap
+        /// with this curve.</param>
+        /// <param name="arcTolerance">The angle tolerance to be used when obtaining
+        /// sample points on curved segments.</param>
+        /// <returns></returns>
+        public Interval ProjectionOf(Curve other, Interval domainOnOther, Angle arcTolerance)
+        {
+            Vector[] testPts = other.Facet(arcTolerance);
+            double[] tProjected = new double[testPts.Length];
+            for (int i = 0; i < testPts.Length; i++)
+            {
+                tProjected[i] = ClosestParameter(testPts[i]);
+            }
+
+            Interval result = Interval.Enclosing(tProjected);
+            if (Closed)
+            {
+                // TODO: Account for periodic curves
+            }
+            return result;
         }
 
         /// <summary>
@@ -1247,6 +1286,54 @@ namespace Nucleus.Geometry
         {
             return Closed && Vertices.PolygonContainmentXY(point);
         }
+
+        /// <summary>
+        /// Offset the specified subDomain region of this curve, returning
+        /// a new curve where that region has been modified but the rest of
+        /// the curve is a straightforward copy of the original.
+        /// </summary>
+        /// <param name="subDomain">The region of the curve to be offset, expressed
+        /// as an interval of normalised curve parameters</param>
+        /// <param name="offsetDistance">The offset distance.
+        /// Positive numbers will result in the offset curve being to the right-hand 
+        /// side, looking along the curve.  Negative numbers to the left.</param>
+        /// <param name="tidy">If true, automatic post-processing operations to 'tidy'
+        /// the offset curve by removing collapsed regions will be performed.</param>
+        /// <param name="copyAttributes">If true, the offset curve segments will attempt
+        /// to copy the attributes of the original curve segments on which they are based</param>
+        /// <returns></returns>
+        public virtual Curve OffsetSubDomain(Interval subDomain, double offsetDistance, bool tidy = true, bool copyAttributes = true)
+        {
+            // If entire domain specified:
+            if (subDomain.Start == 0 && subDomain.End == 1) return Offset(offsetDistance, tidy, copyAttributes);
+
+            // Otherwise, extract subdomain, offset it and glue everything back together:
+            PolyCurve result = new PolyCurve();
+            Curve segmentToOffset = Extract(subDomain);
+            Curve offsetSegment = segmentToOffset.Offset(offsetDistance, tidy, copyAttributes);
+            if (Closed)
+            {
+                Curve restOfCurve = Extract(subDomain.Invert());
+                result.Add(restOfCurve, false, true);
+                result.Add(offsetSegment, true, true);
+                result.Close();
+            }
+            else
+            {
+                if (subDomain.Start > 0)
+                {
+                    Curve startOfCurve = Extract(new Interval(0, subDomain.Start));
+                    result.Add(startOfCurve, false, true);
+                }
+                result.Add(offsetSegment, true, true);
+                if (subDomain.End < 1)
+                {
+                    Curve endOfCurve = Extract(new Interval(subDomain.End, 1));
+                    result.Add(endOfCurve, true, true);
+                }
+            }
+            return result;
+        }
         
         /// <summary>
         /// Offset this curve on the XY plane.
@@ -1256,6 +1343,8 @@ namespace Nucleus.Geometry
         /// side, looking along the curve.  Negative numbers to the left.</param>
         /// <param name="tidy">If true, automatic post-processing operations to 'tidy'
         /// the offset curve by removing collapsed regions will be performed.</param>
+        /// <param name="copyAttributes">If true, the offset curve segments will attempt
+        /// to copy the attributes of the original curve segments on which they are based</param>
         /// <returns></returns>
         public virtual Curve Offset(double distance, bool tidy = true, bool copyAttributes = true)
         {
@@ -1291,6 +1380,23 @@ namespace Nucleus.Geometry
             double cTS = Vertices.ClockwiseTestSum();
             if (cTS < 0) distance *= -1;
             return Offset(distance, tidy, copyAttributes);
+        }
+
+        /// <summary>
+        /// Determine the sign which offset values should have when applied
+        /// to this curve in order to result in an 'inwards' offset.
+        /// This is most meaningful when applied to closed curves - open
+        /// curves will still return a result based on what is judged to be 
+        /// the most 'inwards' direction, but as these curves will lack a
+        /// true 'inside' this value may not always result in the desired
+        /// effect for complex curves.
+        /// </summary>
+        /// <returns>1 for positive offset values, -1 for negative ones.</returns>
+        public int InwardOffsetSign()
+        {
+            double cTS = Vertices.ClockwiseTestSum();
+            if (cTS < 0) return -1;
+            else return 1;
         }
 
         /// <summary>
@@ -1416,6 +1522,25 @@ namespace Nucleus.Geometry
         public abstract Curve Extract(Interval subDomain);
 
         /// <summary>
+        /// Extract all vertices that fall within the specified subDomain on this curve
+        /// </summary>
+        /// <param name="subDomain"></param>
+        /// <returns></returns>
+        public VertexCollection ExtractVertices(Interval subDomain)
+        {
+            var result = new VertexCollection();
+            var verts = Vertices;
+            bool closed = Closed;
+            for (int i = 0; i < verts.Count; i++)
+            {
+                double t = ParameterAtVertexIndex(i);
+                if (subDomain.ContainsOpenEndWrapped(t))
+                    result.Add(verts[i]);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// On entering either the start or end vertex of this curve,
         /// the other will be returned.
         /// </summary>
@@ -1531,6 +1656,26 @@ namespace Nucleus.Geometry
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Break down this curve into loops, delineated by the positions
+        /// where the curve intersects itself and in so doing produces
+        /// one or more closed regions.  The returned loops may be thought
+        /// of as the perimeter of each region.
+        /// This may be used (and is) as part of a post-processing step once
+        /// a curve has been offset in order to eliminate regions where the
+        /// offset curve has collapsed.  Any produced loops which have the
+        /// inverse winding direction to the specified curve will denote regions
+        /// where the offset curve has collapsed on itself and will be removed
+        /// to create a 'tidied' set of offset curves.
+        /// </summary>
+        /// <returns></returns>
+        public IList<Curve> SelfIntersectionXYLoopsAlignedWith(Curve alignedWith)
+        {
+            var loops = SelfIntersectionXYLoops();
+            loops.RemoveInvertedCurvesXY(alignedWith);
+            return loops;
         }
 
         /// <summary>
@@ -1705,12 +1850,14 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Get a list of the subdomains of this curve which are formed of contiguous segments without sharp corners
-        /// beyond the specified tolerance value.
+        /// Get a list of the subdomains of this curve which are formed of contiguous segments without 
+        /// sharp corners beyond the specified tolerance value.
         /// </summary>
-        /// <param name="cornerTolerance"></param>
+        /// <param name="cornerTolerance">The angle tolerance value.  The angle between span
+        /// end tangents must be lower than this value in order for those spans to count
+        /// as contiguous.</param>
         /// <returns></returns>
-        public virtual IList<Interval> ContiguousEdges(Angle cornerTolerance)
+        public virtual IList<Interval> ContinuousSubDomains(Angle cornerTolerance)
         {
             var result = new List<Interval>();
             int spanCount = SegmentCount;
@@ -1722,14 +1869,14 @@ namespace Nucleus.Geometry
                 Vector tan0 = TangentAt(i, 1.0);
                 int iNext = i + 1;
                 Vector tan1 = TangentAt((i + 1) % spanCount, 0.0);
-                if (tan0.AngleBetween(tan1) > cornerTolerance || (!closed && i == spanCount - 1))
+                if (tan0.AngleBetween(tan1) >= cornerTolerance || (!closed && i == spanCount - 1))
                 {
                     // Angle at corner too great - split
                     double tEnd = ParameterAt(i, 1.0);
                     result.Add(new Interval(tStart, tEnd));
                     tStart = tEnd;
                 }
-                else if (closed)
+                else if (closed && i == spanCount - 1)
                 {
                     // Wrap around for closed curves
                     if (result.Count > 0)

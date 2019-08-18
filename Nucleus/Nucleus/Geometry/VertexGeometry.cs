@@ -36,8 +36,6 @@ namespace Nucleus.Geometry
     /// and will interpret them in different ways, however the basic data structure is 
     /// always the same.
     /// </summary>
-    /// <typeparam name="TVertex">The type of vertex used to define this shape</typeparam>
-    /// <typeparam name="TParameter">The type of the parameter used to indicate a 
     /// specific position </typeparam>
     [Serializable]
     [Copy(CopyBehaviour.DUPLICATE)]

@@ -104,6 +104,8 @@
     <Compile Include="Geometry\CompassDirection.cs" />
     <Compile Include="Geometry\CurveCurveIntersection.cs" />
     <Compile Include="Geometry\CurveLineIntersection.cs" />
+    <Compile Include="Geometry\CurveOffsetCornerType.cs" />
+    <Compile Include="Geometry\CurveOffsetParameters.cs" />
     <Compile Include="Geometry\CurveParameterMapper.cs" />
     <Compile Include="Geometry\Extrusion.cs" />
     <Compile Include="Geometry\HandSide.cs" />
@@ -112,6 +114,7 @@
     <Compile Include="Geometry\Solid.cs" />
     <Compile Include="Geometry\SurfaceCollection.cs" />
     <Compile Include="Geometry\Triangle.cs" />
+    <Compile Include="IO\DocumentDeserializationOptions.cs" />
     <Compile Include="Logs\GrammaticalPerson.cs" />
     <Compile Include="Logs\LogScriptMarkupParser.cs" />
     <Compile Include="Logs\ICalculationLog.cs" />
