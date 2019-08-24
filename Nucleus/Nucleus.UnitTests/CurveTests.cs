@@ -978,7 +978,11 @@ namespace Nucleus.UnitTests
                 new Vector(135.867899311823, 2.08059785037767, 0),
                 new Vector(132.551152617239, 2.18588798217887, 0));
             var pCrv = pLine.ToPolyCurve(true);
-            var offset = pCrv.Offset(16);
+            var cOP = new CurveOffsetParameters()
+            {
+                //CollapseInvertedSegments = true
+            };
+            var offset = pCrv.Offset(16, cOP);
             Assert.AreEqual(null, offset);
         }
     }

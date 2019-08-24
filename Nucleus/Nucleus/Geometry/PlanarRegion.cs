@@ -425,9 +425,10 @@ namespace Nucleus.Geometry
                 result *= -1;
             }
             CurveLineIntersection firstInt = testInts.ItemWithMin(pInt => pInt.LineParameter);
-            CurveLineIntersection nextInt = testInts.ItemWithNext(pInt => pInt.LineParameter, firstInt.LineParameter);
+            CurveLineIntersection lastInt = testInts.ItemWithMax(pInt => pInt.LineParameter);
+            //CurveLineIntersection nextInt = testInts.ItemWithNext(pInt => pInt.LineParameter, firstInt.LineParameter);
 
-            if (firstInt.CurveParameter < nextInt.CurveParameter) result *= -1;
+            if (firstInt.CurveParameter < lastInt.CurveParameter) result *= -1;
 
             return result;
         }
@@ -462,9 +463,37 @@ namespace Nucleus.Geometry
                 }
                 else
                 {
+                    IList<CurveLineIntersection> lineInts;
+                    if (firstInt.Side == HandSide.Right)
+                    {
+                        result *= -1;
+                        lineInts = rightInts;
+                    }
+                    else lineInts = leftInts;
+
+                    bool indeterminate = false;
+                    var sList = new SortedList<double, CurveLineIntersection>();
+                    foreach (var cLI in lineInts)
+                    {
+                        if (sList.ContainsKey(cLI.LineParameter) && 
+                            firstInt.LineParameter == cLI.LineParameter) indeterminate = true;
+                        sList.AddSafe(cLI.LineParameter, cLI);
+                    }
+                    int firstIndex = sList.IndexOfValue(firstInt);
+                    if (firstIndex.IsOdd()) result *= -1;
+
+                    if (indeterminate) return 0; //TODO: Use fallback method?
+
+
+                    //CurveLineIntersection firstLineInt = lineInts.ItemWithMin(pInt => pInt.LineParameter);
+                    //CurveLineIntersection nextLineInt = 
+                    //CurveLineIntersection nextLineInt = lineInts.ItemWithNext(pInt => pInt.LineParameter, firstInt.LineParameter);
+                    //if (nextLineInt == null || firstInt.CurveParameter < nextLineInt.CurveParameter) result *= -1;
+                    //if (nextLineInt != lastInt) result *= -1;
+
                     //TODO: Other condition?
-                    if (lastInt.LineParameter < firstInt.LineParameter) result *= -1;
-                    if (firstInt.Side == HandSide.Right) result *= -1;
+                    //if (lastInt.LineParameter < firstInt.LineParameter) result *= -1;
+                    
                 }
             }
             else
@@ -483,10 +512,14 @@ namespace Nucleus.Geometry
         /// <param name="splitPt">A point on the splitting line</param>
         /// <param name="splitDir">The direction of the line</param>
         /// <param name="splitWidth">Optional.  The width of the split.</param>
+        /// <param name="perimeterMappers">Option.  A collection to contain a set of CurveParameterMapper
+        /// objects which can be used to map between the parameter space of the original region's perimeter
+        /// and </param>
         /// <returns>The resultant list of regions.  If the line does not bisect
         /// this region and the region could not be split, this collection will contain
         /// only the original region.</returns>
-        public IList<PlanarRegion> SplitByLineXY(Vector splitPt, Vector splitDir, double splitWidth = 0)
+        public IList<PlanarRegion> SplitByLineXY(Vector splitPt, Vector splitDir, 
+            double splitWidth = 0, IList<CurveParameterMapper> perimeterMappers = null)
         {
             var result = new List<PlanarRegion>();
 
@@ -562,6 +595,8 @@ namespace Nucleus.Geometry
             //int rightDir = RightCutterDirectionOfTravel(rightInts, leftInts);
             int rightDir = RightCutterDirectionOfTravel(perimeterInts, rightInts, leftInts, offsetDir, startSide, splitWidth != 0);
 
+            if (rightDir == 0) return result; // Indeterminate direction of travel - abort!
+
             // 'Fake' intersection to represent perimeter start:
             CurveLineIntersection startInt = new CurveLineIntersection(Perimeter, 0, double.NaN)
             { ProcessCounter = 1 };
@@ -576,6 +611,7 @@ namespace Nucleus.Geometry
             IList<CurveLineIntersection> nextStartInts = new List<CurveLineIntersection>();
             PolyCurve newPerimeter = null;
             PlanarRegion newRegion = null;
+            CurveParameterMapper newMapper = null;
             // The cutter to travel along (Undefined is perimeter or void cuve):
             HandSide travelSide = HandSide.Undefined;
             HandSide lastSide = HandSide.Undefined; // The last side a curve was extracted from
@@ -648,6 +684,11 @@ namespace Nucleus.Geometry
                             newPerimeter = new PolyCurve(subCrv.Explode());
                             newRegion = new PlanarRegion(newPerimeter);
                             result.Add(newRegion);
+                            if (perimeterMappers != null)
+                            {
+                                newMapper = new CurveParameterMapper(Perimeter, newPerimeter);
+                                perimeterMappers.Add(newMapper);
+                            }
                         }
                         else newPerimeter.Add(subCrv, true, true);
                     }

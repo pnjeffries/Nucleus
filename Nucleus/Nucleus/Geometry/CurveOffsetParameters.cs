@@ -86,10 +86,12 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="tidy"></param>
         /// <param name="copyAttributes"></param>
-        public CurveOffsetParameters(bool tidy = true, bool copyAttributes = true)
+        /// <param name="collapseInvertedSegments"></param>
+        public CurveOffsetParameters(bool tidy = true, bool copyAttributes = true, bool collapseInvertedSegments = false)
         {
             _Tidy = tidy;
             _CopyAttributes = copyAttributes;
+            _CollapseInvertedSegments = collapseInvertedSegments;
         }
 
         #endregion

@@ -383,6 +383,7 @@ namespace Nucleus.Maths
 
         /// <summary>
         /// Is the parameter t enclosed by this interval?
+        /// Treats decreasing intervals as wrapping around.
         /// The start value is inclusive, the end is exclusive
         /// </summary>
         /// <param name="interval"></param>

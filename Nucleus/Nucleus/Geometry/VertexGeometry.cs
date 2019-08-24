@@ -281,4 +281,25 @@ namespace Nucleus.Geometry
 
 
     }
+
+    /// <summary>
+    /// Extension methods for the VertexGeometry class and collections thereof
+    /// </summary>
+    public static class VertexGeometryExtensions
+    {
+        /// <summary>
+        /// Do all pieces of geometry in this collection have the specified attributes object?
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="geometry"></param>
+        /// <param name="attributes"></param>
+        /// <returns></returns>
+        public static bool AllHaveAttributes<T>(this IList<T> geometry, GeometryAttributes attributes)
+            where T:VertexGeometry
+        {
+            foreach (var vG in geometry) if (vG.Attributes != attributes) return false;
+            return true;
+        }
+    }
+
 }

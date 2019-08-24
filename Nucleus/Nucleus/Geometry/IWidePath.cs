@@ -368,6 +368,7 @@ namespace Nucleus.Geometry
                                 offsL2 = pathL.LeftOffset;
                             }
 
+                            bool detectMismatches = false;
                             bool canTrimR = true;
                             bool canTrimR2 = true;
                             if (aR.IsReflex)
@@ -376,7 +377,7 @@ namespace Nucleus.Geometry
                                 else if (offsR2 > offsR) canTrimR2 = false;
                             }
 
-                            if (!Curve.MatchEnds(edgeVR, edgeVR2, true, canTrimR, canTrimR2))
+                            if (!Curve.MatchEnds(edgeVR, edgeVR2, detectMismatches, canTrimR, canTrimR2))
                             {
                                 if (offsR > offsR2)
                                 {
@@ -405,7 +406,7 @@ namespace Nucleus.Geometry
                                 else if (offsL2 > offsL) canTrimL2 = false;
                             }
 
-                            if (!Curve.MatchEnds(edgeVL, edgeVL2, true, canTrimL, canTrimL2))
+                            if (!Curve.MatchEnds(edgeVL, edgeVL2, detectMismatches, canTrimL, canTrimL2))
                             {
                                 if (offsL > offsL2)
                                 {
@@ -543,6 +544,29 @@ namespace Nucleus.Geometry
         {
             var result = new CurveCollection();
             foreach (TPath path in paths) result.Add(path.RightEdge);
+            return result;
+        }
+
+        /// <summary>
+        /// Extract all edges and end caps from the path segments in this collection
+        /// </summary>
+        /// <typeparam name="TPath"></typeparam>
+        /// <param name="paths"></param>
+        /// <returns></returns>
+        public static CurveCollection ExtractAllEdges<TPath>(this IList<TPath> paths)
+            where TPath : IWidePath
+        {
+            var result = new CurveCollection();
+            foreach (TPath path in paths)
+            {
+                //if (path.Spine != null) result.Add(path.Spine);
+                if (path.RightEdge != null) result.Add(path.RightEdge);
+                if (path.LeftEdge != null) result.Add(path.LeftEdge);
+                if (path.StartCapRight != null) result.Add(path.StartCapRight);
+                if (path.StartCapLeft != null) result.Add(path.StartCapLeft);
+                if (path.EndCapRight != null) result.Add(path.EndCapRight);
+                if (path.EndCapLeft != null) result.Add(path.EndCapLeft);
+            }
             return result;
         }
 

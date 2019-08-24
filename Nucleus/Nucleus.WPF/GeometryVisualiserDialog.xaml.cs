@@ -131,6 +131,18 @@ namespace Nucleus.WPF
                     }
                 }
             }
+            else if (visualise is IWidePath)
+            {
+                IWidePath path = (IWidePath)visualise;
+                AddWidePath(geometry, path);
+            }
+            else if (visualise is IList<IWidePath>)
+            {
+                foreach (var path in (IList<IWidePath>)visualise)
+                {
+                    AddWidePath(geometry, path);
+                }
+            }
             // TODO: Convert other types to vertexgeometry
 
 
@@ -167,6 +179,17 @@ namespace Nucleus.WPF
         }
 
         #endregion
+
+        private void AddWidePath(VertexGeometryCollection geometry, IWidePath path)
+        {
+            if (path.Spine != null) geometry.Add(path.Spine);
+            if (path.RightEdge != null) geometry.Add(path.RightEdge);
+            if (path.LeftEdge != null) geometry.Add(path.LeftEdge);
+            if (path.StartCapRight != null) geometry.Add(path.StartCapRight);
+            if (path.StartCapLeft != null) geometry.Add(path.StartCapLeft);
+            if (path.EndCapRight != null) geometry.Add(path.EndCapRight);
+            if (path.EndCapLeft != null) geometry.Add(path.EndCapLeft);
+        }
 
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {

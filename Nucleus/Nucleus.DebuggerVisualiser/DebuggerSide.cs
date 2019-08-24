@@ -95,6 +95,19 @@ typeof(VisualizerObjectSource),
 Target = typeof(MeshDivisionEdgeCollection),
 Description = ".NUCLEUS Geometry Visualiser")]
 
+[assembly: System.Diagnostics.DebuggerVisualizer(
+typeof(Nucleus.Visualiser.DebuggerSide),
+typeof(VisualizerObjectSource),
+Target = typeof(IList<IWidePath>),
+Description = ".NUCLEUS Geometry Visualiser")]
+
+[assembly: System.Diagnostics.DebuggerVisualizer(
+typeof(Nucleus.Visualiser.DebuggerSide),
+typeof(VisualizerObjectSource),
+Target = typeof(IWidePath),
+Description = ".NUCLEUS Geometry Visualiser")]
+
+
 namespace Nucleus.Visualiser
 {
    

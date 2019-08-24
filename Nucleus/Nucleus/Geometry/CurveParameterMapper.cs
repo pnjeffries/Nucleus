@@ -62,6 +62,17 @@ namespace Nucleus.Geometry
 
         #region Constructors
 
+        public CurveParameterMapper()
+        {
+
+        }
+
+        public CurveParameterMapper(Curve curveA, Curve curveB)
+        {
+            _CurveA = curveA;
+            _CurveB = curveB;
+        }
+
         #endregion
 
         #region Methods

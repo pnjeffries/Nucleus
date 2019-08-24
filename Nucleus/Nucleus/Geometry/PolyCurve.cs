@@ -647,6 +647,39 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Resolve a discontinuity between a curve and the curve preceeding it in an offset operation
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="offsetCrv"></param>
+        /// <param name="options"></param>
+        private bool ResolveOffsetDiscontinuity(PolyCurve result, Curve offsetCrv, CurveOffsetParameters options,
+            GeometryAttributes chamferAttributes)
+        {
+            if (result.SubCurves.Count == 0) return false;
+
+            // Adjust offset curve ends to node out
+            Curve prevCrv = result.SubCurves.Last();
+            // Sharp corner:
+            if (MatchEnds(prevCrv.End, offsetCrv.Start, true, true, true, prevCrv.Length, offsetCrv.Length))
+                return true;
+
+            if (options.CollapseInvertedSegments)
+            {
+                result.SubCurves.RemoveLast(); //Remove last curve
+                return ResolveOffsetDiscontinuity(result, offsetCrv, options, chamferAttributes); //Recuse to next
+            }
+
+            if (prevCrv.EndPoint != offsetCrv.StartPoint)
+            {
+                // If there is a extension/trim mismatch between the curves
+                // we instead just join them with a chamfer temporarily
+                result.Add(new Line(prevCrv.EndPoint, offsetCrv.StartPoint, chamferAttributes));
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Offset this curve on the XY plane by varying distances for
         /// each span.
         /// </summary>
@@ -663,27 +696,17 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Resolve a discontinuity between a curve and the curve preceeding it in an offset operation
+        /// Offset this curve on the XY plane by a constant distance.
         /// </summary>
-        /// <param name="result"></param>
-        /// <param name="offsetCrv"></param>
-        /// <param name="options"></param>
-        private void ResolveOffsetDiscontinuity(PolyCurve result, Curve offsetCrv, CurveOffsetParameters options)
+        /// <param name="distances">The offset distance.
+        /// Positive numbers will result in the offset curve being to the right-hand 
+        /// side, looking along the curve.  Negative numbers to the left.</param>
+        /// <param name="options">The parameters used to define optional aspects
+        /// of the way in which curves should be offset.</param>
+        /// <returns></returns>
+        public override Curve Offset(double distance, CurveOffsetParameters options)
         {
-            if (result.SubCurves.Count > 0)
-            {
-                // Adjust offset curve ends to node out
-                Curve prevCrv = result.SubCurves.Last();
-                // Sharp corner:
-                if (MatchEnds(prevCrv.End, offsetCrv.Start, true, true, true, prevCrv.Length, offsetCrv.Length)) return;
-
-                if (prevCrv.EndPoint != offsetCrv.StartPoint)
-                {
-                    // If there is a extension/trim mismatch between the curves
-                    // we instead just join them with a chamfer temporarily
-                    result.Add(new Line(prevCrv.EndPoint, offsetCrv.StartPoint));
-                }
-            }
+            return Offset(new double[]{ distance }, options);
         }
 
         /// <summary>
@@ -699,6 +722,7 @@ namespace Nucleus.Geometry
         public Curve Offset(IList<double> distances, CurveOffsetParameters options)
         {
             //TODO: Implement collapsed segments tidying
+            var dummyAttributes = new GeometryAttributes("DUMMY");
 
             var result = new PolyCurve();
             int distIndex = 0;
@@ -714,7 +738,7 @@ namespace Nucleus.Geometry
 
                     if (offsetCrv != null)
                     {
-                        ResolveOffsetDiscontinuity(result, offsetCrv, options);
+                        ResolveOffsetDiscontinuity(result, offsetCrv, options, dummyAttributes);
                         result.Add(offsetCrv);
                         if (options.CopyAttributes && offsetCrv.Attributes == null) offsetCrv.Attributes = Attributes;
                     }
@@ -725,14 +749,23 @@ namespace Nucleus.Geometry
             if (Closed && result.SubCurves.Count > 1)
             {
                 Curve firstCrv = result.SubCurves.First();
-                ResolveOffsetDiscontinuity(result, firstCrv, options);
+                if (!ResolveOffsetDiscontinuity(result, firstCrv, options, dummyAttributes)
+                    && options.CollapseInvertedSegments)
+                {
+                    return null;
+                }
             }
 
             if (options.Tidy)
             {
                 // Return the largest non-inverted loop
                 var loops = result.SelfIntersectionXYLoopsAlignedWith(this);
-                return loops.ItemWithMax(i => i.Length);
+                var biggest = loops.ItemWithMax(i => i.Length);
+                if (biggest != null && biggest is PolyCurve &&
+                    ((PolyCurve)biggest).SubCurves.AllHaveAttributes(dummyAttributes))
+                    return null; // Eliminate if entirely composed of temporary chamfers
+                else
+                    return biggest;
             }
 
             return result;

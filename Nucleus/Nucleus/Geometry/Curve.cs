@@ -931,12 +931,62 @@ namespace Nucleus.Geometry
                 tProjected[i] = ClosestParameter(testPts[i]);
             }
 
-            Interval result = Interval.Enclosing(tProjected);
-            if (Closed)
+            if (Closed && tProjected.Length > 0)
             {
-                // TODO: Account for periodic curves
+                int lastDir = 0;
+                Interval result = new Interval(tProjected.First());
+                // Grow projection step-by-step, checking for possible loops and
+                // changes in direction
+                for (int i = 1; i < tProjected.Length; i++)
+                {
+                    double t = tProjected[i];
+                    if (!result.ContainsOpenEndWrapped(t))
+                    {
+                        if (t >= result.End)
+                        {
+                            if (lastDir > 0) result = result.WithEnd(t);
+                            else // Change in direction - check we've not looped!
+                            {
+                                Vector midPt = (testPts[i - 1] + testPts[i]) / 2;
+                                double tMid = ClosestParameter(midPt);
+                                if (tMid >= result.Start && tMid <= t)
+                                {
+                                    result = result.WithEnd(t);
+                                    lastDir = 1;
+                                }
+                                else if (!result.IsDecreasing || t < result.Start)
+                                {
+                                    //That's a wrap!
+                                    result = result.WithStart(t);
+                                    lastDir = -1;
+                                }
+                            }
+                        }
+                        else if (t < result.Start)
+                        {
+                            if (lastDir < 0) result.WithStart(t);
+                            else // Change in direction - check we've not looped!
+                            {
+                                Vector midPt = (testPts[i - 1] + testPts[i]) / 2;
+                                double tMid = ClosestParameter(midPt);
+                                if (tMid >= t && tMid <= result.End)
+                                {
+                                    result = result.WithStart(t);
+                                    lastDir = -1;
+                                }
+                                else if (!result.IsDecreasing || t > result.End)
+                                {
+                                    //That's a wrap!
+                                    result = result.WithEnd(t);
+                                    lastDir = 1;
+                                }
+                            }
+                        }
+                    }
+                }
+                return result;
             }
-            return result;
+            return Interval.Enclosing(tProjected);
         }
 
         /// <summary>
@@ -1311,30 +1361,23 @@ namespace Nucleus.Geometry
             PolyCurve result = new PolyCurve();
             Curve segmentToOffset = Extract(subDomain);
             Curve offsetSegment = segmentToOffset.Offset(offsetDistance, tidy, copyAttributes);
-            if (Closed)
+
+            if (subDomain.Start > 0)
             {
-                Curve restOfCurve = Extract(subDomain.Invert());
-                result.Add(restOfCurve, false, true);
-                result.Add(offsetSegment, true, true);
-                result.Close();
+                Curve startOfCurve = Extract(new Interval(0, subDomain.Start));
+                result.Add(startOfCurve, false, true);
             }
-            else
+            result.Add(offsetSegment, true, true);
+            if (subDomain.End < 1)
             {
-                if (subDomain.Start > 0)
-                {
-                    Curve startOfCurve = Extract(new Interval(0, subDomain.Start));
-                    result.Add(startOfCurve, false, true);
-                }
-                result.Add(offsetSegment, true, true);
-                if (subDomain.End < 1)
-                {
-                    Curve endOfCurve = Extract(new Interval(subDomain.End, 1));
-                    result.Add(endOfCurve, true, true);
-                }
+                Curve endOfCurve = Extract(new Interval(subDomain.End, 1));
+                result.Add(endOfCurve, true, true);
             }
+            if (Closed) result.Close();
+
             return result;
         }
-        
+
         /// <summary>
         /// Offset this curve on the XY plane.
         /// </summary>
@@ -1349,6 +1392,20 @@ namespace Nucleus.Geometry
         public virtual Curve Offset(double distance, bool tidy = true, bool copyAttributes = true)
         {
             return Offset(new double[] { distance }, tidy, copyAttributes);
+        }
+
+        /// <summary>
+        /// Offset this curve on the XY plane.
+        /// </summary>
+        /// <param name="distance">The offset distance.
+        /// Positive numbers will result in the offset curve being to the right-hand 
+        /// side, looking along the curve.  Negative numbers to the left.</param>
+        /// <param name="options">The set of options to use to determine various offsetting
+        /// parameters.</param>
+        /// <returns></returns>
+        public virtual Curve Offset(double distance, CurveOffsetParameters options)
+        {
+            return Offset(distance, options.Tidy, options.CopyAttributes);
         }
 
         /// <summary>
@@ -1380,6 +1437,25 @@ namespace Nucleus.Geometry
             double cTS = Vertices.ClockwiseTestSum();
             if (cTS < 0) distance *= -1;
             return Offset(distance, tidy, copyAttributes);
+        }
+
+        /// <summary>
+        /// Offset this curve on the XY plane, automatically determining (where possible)
+        /// the direction of offset which will result in the curve being offset within itself.
+        /// Note that it will not be possible to accurately predict this for all curves.
+        /// </summary>
+        /// <param name="distance">The offset distance.
+        /// Positive numbers will result in the offset curve being to the right-hand 
+        /// side, looking along the curve.  Negative numbers to the left.  This will be
+        /// automatically inverted (in-place) if the curve is anticlockwise so that
+        /// positive numbers entered will result in an offset inwards and negative numbers outwards.</param>
+        /// <param name="options">The options set used to determine curve offsetting optional parameters</param>
+        /// <returns></returns>
+        public virtual Curve OffsetInwards(ref double distance, CurveOffsetParameters options)
+        {
+            double cTS = Vertices.ClockwiseTestSum();
+            if (cTS < 0) distance *= -1;
+            return Offset(distance, options);
         }
 
         /// <summary>
