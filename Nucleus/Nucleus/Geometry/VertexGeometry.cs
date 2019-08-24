@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using Nucleus.Base;
+using Nucleus.Events;
 using Nucleus.Model;
 using Nucleus.Rendering;
 using System;
@@ -41,6 +42,17 @@ namespace Nucleus.Geometry
     [Copy(CopyBehaviour.DUPLICATE)]
     public abstract class VertexGeometry : Unique, IOwned<Element>
     {
+        #region Events
+
+        /// <summary>
+        /// Event raised when any defining data of this geometry is changed
+        /// </summary>
+        [field: NonSerialized]
+        [Copy(CopyBehaviour.DO_NOT_COPY)]
+        public event EventHandler<GeometryUpdateEventArgs> GeometryChanged;
+
+        #endregion
+
         #region Fields
 
         /// <summary>
@@ -221,6 +233,7 @@ namespace Nucleus.Geometry
                 {
                     Element.NotifyGeometryUpdated();
                 }
+                GeometryChanged?.Invoke(this, new GeometryUpdateEventArgs());
             }
         }
 

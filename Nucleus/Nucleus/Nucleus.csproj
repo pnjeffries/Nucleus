@@ -93,6 +93,7 @@
     <Compile Include="DDTree\NDTree.cs" />
     <Compile Include="DDTree\NDTreeNode.cs" />
     <Compile Include="Debugging\CollectionDebugView.cs" />
+    <Compile Include="Events\GeometryUpdateEventArgs.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
     <Compile Include="Extensions\IComparableExtensions.cs" />
     <Compile Include="Extensions\RandomExtensions.cs" />
