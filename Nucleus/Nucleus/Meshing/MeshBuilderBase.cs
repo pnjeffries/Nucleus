@@ -1232,6 +1232,82 @@ namespace Nucleus.Meshing
             }
         }
 
+        /// <summary>
+        /// Add a meshed representation of the specified object.
+        /// This will automatically select from available meshing methods
+        /// to create the representation based on the object type but it
+        /// is recommended to use more specific 'Add___' methods to gain
+        /// more control over how specific objects will be dealt with.
+        /// Types supported: Mesh, MeshFace, PlanarRegion, Extrusion, 
+        /// VertexGeometryCollection, Element, ElementCollection, Load, 
+        /// LoadCollection, Model and IWidePath.
+        /// </summary>
+        /// <param name="obj">The object to (attempt to) mesh</param>
+        /// <returns>True if the type was supported and a mesh representation
+        /// added.  False otherwise.</returns>
+        public virtual bool Add(object obj)
+        {
+            if (obj is Mesh)
+            {
+                AddMesh((Mesh)obj);
+                return true;
+            }
+            else if (obj is MeshFace)
+            {
+                AddFace((MeshFace)obj);
+                return true;
+            }
+            else if (obj is PlanarRegion)
+            {
+                AddPlanarRegion((PlanarRegion)obj);
+                return true;
+            }
+            else if (obj is Extrusion)
+            {
+                AddExtrusion((Extrusion)obj);
+                return true;
+            }
+            else if (obj is VertexGeometryCollection)
+            {
+                foreach (var subObj in ((VertexGeometryCollection)obj))
+                    Add(subObj);
+                return true;
+            }
+            else if (obj is Element)
+            {
+                AddFamilyPreview((Element)obj);
+                return true;
+            }
+            else if (obj is ElementCollection)
+            {
+                foreach (var el in ((ElementCollection)obj))
+                    AddFamilyPreview(el);
+                return true;
+            }
+            else if (obj is Load)
+            {
+                AddLoad((Load)obj);
+                return true;
+            }
+            else if (obj is LoadCollection)
+            {
+                foreach (var load in ((LoadCollection)obj))
+                    AddLoad(load);
+                return true;
+            }
+            else if (obj is Model.Model)
+            {
+                AddModel((Model.Model)obj);
+                return true;
+            }
+            else if (obj is IWidePath)
+            {
+                AddWidePath((IWidePath)obj);
+                return true;
+            }
+            else return false;
+        }
+
         #endregion
     }
 

@@ -30,5 +30,30 @@ namespace Nucleus.Extensions
             q.ToList().ForEach(t => result.Add(t));
             return result;
         }
+
+        /// <summary>
+        /// Get a list of all unique namespaces in this assembly
+        /// </summary>
+        /// <param name="assembly"></param>
+        /// <returns></returns>
+        public static IEnumerable<string> GetNamespaces(this Assembly assembly)
+        {
+            Type[] types = assembly.GetTypes();
+
+            return types.Select(type => type.Namespace)
+                        .Distinct()
+                        .Where(name => name != null);
+        }
+
+        /// <summary>
+        /// Get all types in the specified namespace in this assembly
+        /// </summary>
+        /// <param name="assembly"></param>
+        /// <param name="namespace">The namespace to search for</param>
+        /// <returns></returns>
+        public static IEnumerable<Type> GetTypesInNamespace(this Assembly assembly, string @namespace)
+        {
+            return assembly.GetTypes().Where(type => type.Namespace.EqualsIgnoreCase(@namespace));
+        }
     }
 }
