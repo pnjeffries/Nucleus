@@ -1088,6 +1088,7 @@ namespace Nucleus.Geometry
         /// <param name="rayStart"></param>
         /// <param name="segStart"></param>
         /// <param name="segEnd"></param>
+        /// <param name="onLine"></param>
         /// <returns></returns>
         public static bool XRayLineSegmentXYCheck(ref Vector rayStart, ref Vector segStart, ref Vector segEnd, out bool onLine)
         {

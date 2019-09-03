@@ -1,4 +1,5 @@
-﻿using Nucleus.Geometry;
+﻿using Nucleus.Extensions;
+using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,12 +61,6 @@ namespace Nucleus.Actions
         /// </summary>
         /// <returns></returns>
         IList<PropertyInfo> OutputParameters();
-
-        /// <summary>
-        /// Use the current input manager to prompt the user for all necessary inputs to this action
-        /// </summary>
-        /// <returns>True if all inputs successful, false if user cancels</returns>
-        bool PromptUserForInputs(bool chain = false);
 
     }
 
@@ -138,6 +133,50 @@ namespace Nucleus.Actions
                 result.Add(pInfo.Name, pInfo.GetValue(result));
             }
             return result;
+        }
+
+        /// <summary>
+        /// Helper function to extract all properties from the given type with the specified type of
+        /// ActionParameter annotation.
+        /// </summary>
+        /// <param name="type">The type from which to extract parameters</param>
+        /// <param name="parameterType">The subtype of ActionParameter annotation to be searched for</param>
+        /// <returns></returns>
+        public static IList<PropertyInfo> ExtractActionParameters(this IAction action, Type parameterType)
+        {
+            Type type = action.GetType();
+            SortedList<double, PropertyInfo> result = new SortedList<double, PropertyInfo>();
+            PropertyInfo[] pInfos = type.GetProperties();
+            foreach (PropertyInfo pInfo in pInfos)
+            {
+                object[] attributes = pInfo.GetCustomAttributes(parameterType, true);
+                if (attributes.Count() > 0)
+                {
+                    ActionParameterAttribute aInput = (ActionParameterAttribute)attributes[0];
+                    result.AddSafe(aInput.Order, pInfo);
+                }
+            }
+            return result.Values.ToList();
+        }
+
+        /// <summary>
+        /// Extract a list of all properties annotated as ActionInputs from the specified action
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static IList<PropertyInfo> ExtractInputParameters(this IAction action)
+        {
+            return action.ExtractActionParameters(typeof(ActionInputAttribute));
+        }
+
+        /// <summary>
+        /// Extract a list of all properties annotated as ActionOutputs from the specififed action
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static IList<PropertyInfo> ExtractOutputParameters(this IAction action)
+        {
+            return action.ExtractActionParameters(typeof(ActionOutputAttribute));
         }
     }
 }
