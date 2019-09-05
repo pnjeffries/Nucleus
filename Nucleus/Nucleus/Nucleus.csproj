@@ -53,9 +53,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\ActionAttribute.cs" />
+    <Compile Include="Actions\IImportAction.cs" />
+    <Compile Include="Actions\ImportActionAttribute.cs" />
+    <Compile Include="Actions\ParametricAction.cs" />
+    <Compile Include="Actions\ActionFilePathInputAttribute.cs" />
     <Compile Include="Actions\ActionInputAttribute.cs" />
+    <Compile Include="Actions\ActionOutputAttribute.cs" />
     <Compile Include="Actions\ActionParameterAttribute.cs" />
     <Compile Include="Actions\ExecutionInfo.cs" />
+    <Compile Include="Actions\ExportActionAttribute.cs" />
     <Compile Include="Actions\IAction.cs" />
     <Compile Include="Actions\IContextualAction.cs" />
     <Compile Include="Actions\IExportAction.cs" />
@@ -172,6 +178,7 @@
     <Compile Include="Maths\NamedDataSet.cs" />
     <Compile Include="Maths\NamedDataSetCollection.cs" />
     <Compile Include="Maths\MathsHelper.cs" />
+    <Compile Include="Maths\PerlinNoise.cs" />
     <Compile Include="Meshing\HalfEdge.cs" />
     <Compile Include="Meshing\HalfEdgeFace.cs" />
     <Compile Include="Meshing\HalfEdgeVertex.cs" />

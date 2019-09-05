@@ -1233,6 +1233,33 @@ namespace Nucleus.Meshing
         }
 
         /// <summary>
+        /// Add a grillage of quads connecting the points in the provided 2D array of position
+        /// vectors.
+        /// </summary>
+        /// <param name="points"></param>
+        public void AddQuads(Vector[,] points)
+        {
+            int uCount = points.GetLength(0);
+            int vCount = points.GetLength(1);
+            int[] lastRow = null;
+            for (int j = 0; j < vCount; j++)
+            {
+                int[] newRow = new int[uCount];
+                for (int i = 0; i < uCount; i++)
+                {
+                    // Create vertex:
+                    newRow[i] = AddVertex(points[i,j]);
+                    if (i > 0 && j > 0)
+                    {
+                        // Create face:
+                        AddFace(newRow[i - 1], lastRow[i - 1], lastRow[i], newRow[i]);
+                    }
+                }
+                lastRow = newRow;
+            }
+        }
+
+        /// <summary>
         /// Add a meshed representation of the specified object.
         /// This will automatically select from available meshing methods
         /// to create the representation based on the object type but it

@@ -1743,7 +1743,8 @@ namespace Nucleus.Geometry
             => new Vector(v.X / d, v.Y / d, v.Z / d);
 
         /// <summary>
-        /// % operator override.  Perform
+        /// % operator override.  Perform a modulo opration on each component
+        /// of the vector.
         /// </summary>
         /// <param name="v"></param>
         /// <param name="d"></param>
