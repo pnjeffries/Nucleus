@@ -290,6 +290,18 @@ namespace Nucleus.Geometry
             box.Include(Vertices);
         }
 
+        /// <summary>
+        /// Determine the side of an infinite line on which this geometry lies.
+        /// Will return right, left, or undefined if the geometry lies across the line.
+        /// </summary>
+        /// <param name="lineOrigin">A point which lies on the line</param>
+        /// <param name="lineDir">The direction vector of the line</param>
+        /// <returns></returns>
+        public HandSide SideOf(Vector lineOrigin, Vector lineDir, double tolerance = 0)
+        {
+            return Vertices.SideOf(lineOrigin, lineDir, tolerance);
+        }
+
         #endregion
 
 

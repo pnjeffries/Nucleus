@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="BoundingBoxTests.cs" />
     <Compile Include="ColourTests.cs" />
+    <Compile Include="CurveParameterMapperTests.cs" />
     <Compile Include="DDTreeTests.cs" />
     <Compile Include="IListExtensionsTests.cs" />
     <Compile Include="IntersectionTests.cs" />

@@ -985,5 +985,33 @@ namespace Nucleus.UnitTests
             var offset = pCrv.Offset(16, cOP);
             Assert.AreEqual(null, offset);
         }
+
+        [TestMethod]
+        public void Projection_2Lines_ShouldMapToEquivalentDomain()
+        {
+            var l1 = new Line(0, 0, 10, 0);
+            var l2 = new Line(1, 1, 4, 1);
+            Interval projection = l1.ProjectionOf(l2);
+            Assert.AreEqual(new Interval(0.1, 0.4), projection);
+        }
+
+        [TestMethod]
+        public void Projection_LineOntoPolyLine_ShouldMapToEquivalentDomain()
+        {
+            var l1 = new PolyLine(Vector.Create2D(0, 0, 10, 0, 10, 1));
+            var l2 = new Line(1, 1, 4, 1);
+            Interval projection = l1.ProjectionOf(l2);
+            Assert.AreEqual(new Interval(0.05, 0.2), projection);
+        }
+
+        [TestMethod]
+        public void Projection_LineOntoPolyLineClosed_ShouldMapToWrappingDomain()
+        {
+            var l1 = new PolyLine(true, Vector.Create2D(5, 0, 10, 0, 10, 10, 0, 10, 0,0));
+            var l2 = new Line(1, 0, 9, 0);
+            Interval projection = l1.ProjectionOf(l2);
+            Assert.AreEqual(0.84, projection.Start, 0.000001);
+            Assert.AreEqual(0.16, projection.End, 0.0000001);
+        }
     }
 }

@@ -320,6 +320,21 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Get the curve parameter at the specified length along this curve from
+        /// the specified start point
+        /// If the returned parameter falls outside the range 0-1, the specified
+        /// length does not fall within the domain of the curve.
+        /// </summary>
+        /// <param name="tStart">The position along the curve at which to start</param>
+        /// <param name="length">The distance along the curve from the start of the curve 
+        /// to the point in question</param>
+        /// <returns>A curve parameter</returns>
+        public virtual double ParameterAtLengthFrom(double tStart, double length)
+        {
+            return ParameterAt(LengthAt(tStart) + length);
+        }
+
+        /// <summary>
         /// Returns a set of parameters evenly spaced along the curve with a specified spacing
         /// </summary>
         /// <param name="spacing">The distance between points</param>
@@ -531,16 +546,17 @@ namespace Nucleus.Geometry
             int startSpan = SpanAt(within.Start, out tSpanStart);
             double tSpanEnd;
             int endSpan = SpanAt(within.End, out tSpanEnd);
+
+            if (within.IsDecreasing && Closed)
+            {
+                endSpan += spanCount;
+            }
+
             if (tSpanEnd == 0)
             {
                 tSpanEnd = 1;
                 endSpan -= 1;
                 if (endSpan < 0) endSpan += spanCount;
-            }
-
-            if (within.IsDecreasing && Closed)
-            {
-                endSpan += spanCount;
             }
 
             for (int span = startSpan; span <= endSpan; span++)
@@ -986,7 +1002,7 @@ namespace Nucleus.Geometry
                 }
                 return result;
             }
-            return Interval.Enclosing(tProjected);
+            else return Interval.Enclosing(tProjected);
         }
 
         /// <summary>
@@ -1347,12 +1363,16 @@ namespace Nucleus.Geometry
         /// <param name="offsetDistance">The offset distance.
         /// Positive numbers will result in the offset curve being to the right-hand 
         /// side, looking along the curve.  Negative numbers to the left.</param>
+        /// <param name="mapper">Optional.  May be null.  If provided, the parameter mapper
+        /// which will be populated with data to allow the mapping of parameter space on
+        /// the original curve to that on the offset one.</param>
         /// <param name="tidy">If true, automatic post-processing operations to 'tidy'
         /// the offset curve by removing collapsed regions will be performed.</param>
         /// <param name="copyAttributes">If true, the offset curve segments will attempt
         /// to copy the attributes of the original curve segments on which they are based</param>
         /// <returns></returns>
-        public virtual Curve OffsetSubDomain(Interval subDomain, double offsetDistance, bool tidy = true, bool copyAttributes = true)
+        public virtual Curve OffsetSubDomain(Interval subDomain, double offsetDistance,
+            bool tidy = true, bool copyAttributes = true)
         {
             // If entire domain specified:
             if (subDomain.Start == 0 && subDomain.End == 1) return Offset(offsetDistance, tidy, copyAttributes);
@@ -1376,6 +1396,65 @@ namespace Nucleus.Geometry
             if (Closed) result.Close();
 
             return result;
+        }
+
+        /// <summary>
+        /// Offset the specified subDomain region of this curve, returning
+        /// a new curve where that region has been modified but the rest of
+        /// the curve is a straightforward copy of the original.
+        /// </summary>
+        /// <param name="subDomain">The region of the curve to be offset, expressed
+        /// as an interval of normalised curve parameters</param>
+        /// <param name="offsetDistance">The offset distance.
+        /// Positive numbers will result in the offset curve being to the right-hand 
+        /// side, looking along the curve.  Negative numbers to the left.</param>
+        /// <param name="mapper">Optional.  May be null.  If provided, the parameter mapper
+        /// which will be populated with data to allow the mapping of parameter space on
+        /// the original curve to that on the offset one.</param>
+        /// <param name="tidy">If true, automatic post-processing operations to 'tidy'
+        /// the offset curve by removing collapsed regions will be performed.</param>
+        /// <param name="copyAttributes">If true, the offset curve segments will attempt
+        /// to copy the attributes of the original curve segments on which they are based</param>
+        /// <returns></returns>
+        public virtual Curve OffsetSubDomains(IList<Interval> subDomains, double offsetDistance,
+            bool tidy = true, bool copyAttributes = true)
+        {
+            PolyCurve result = new PolyCurve();
+
+            // Rationalise subdomains:
+            subDomains = subDomains.SplitWrapping();
+            subDomains = subDomains.SortAndMerge();
+
+            double t = 0;
+            for (int i = 0; i < subDomains.Count; i++)
+            {
+                var subDomain = subDomains[i];
+                if (t < subDomain.Start)
+                {
+                    // Fill gap with un-offset curve:
+                    Curve infillCurve = Extract(new Interval(t, subDomain.Start));
+                    result.Add(infillCurve, true, true);
+                }
+                // Offset specified segment:
+                Curve segmentToOffset = Extract(subDomain);
+                Curve offsetSegment = segmentToOffset.Offset(offsetDistance, tidy, copyAttributes);
+                result.Add(offsetSegment, true, true);
+                t = subDomain.End;
+            }
+            
+            if (t < 1)
+            {
+                Curve endOfCurve = Extract(new Interval(t, 1));
+                result.Add(endOfCurve, true, true);
+            }
+            if (Closed) result.Close();
+
+            if (!(this is ISimpleCurve))
+            {
+                var loops = result.SelfIntersectionXYLoopsAlignedWith(this);
+                return loops.ItemWithMax(i => i.Length);
+            }
+            else return result;
         }
 
         /// <summary>
@@ -1596,6 +1675,22 @@ namespace Nucleus.Geometry
         /// <param name="subDomain">The subdomain of this curve to be extracted</param>
         /// <returns></returns>
         public abstract Curve Extract(Interval subDomain);
+
+        /// <summary>
+        /// Extract a list of subsets of this curve within the specified domains
+        /// as new curves
+        /// </summary>
+        /// <param name="subDomains">The subdomains of this curve to be extracted</param>
+        /// <returns></returns>
+        public IList<Curve> Extract(IList<Interval> subDomains)
+        {
+            var result = new List<Curve>(subDomains.Count);
+            foreach (var subDomain in subDomains)
+            {
+                result.Add(Extract(subDomain));
+            }
+            return result;
+        }
 
         /// <summary>
         /// Extract all vertices that fall within the specified subDomain on this curve
@@ -1904,24 +1999,54 @@ namespace Nucleus.Geometry
         /// move along the curve from one position to reach the closest part of
         /// a target domain.
         /// </summary>
-        /// <param name="tFrom"></param>
-        /// <param name="tTo"></param>
+        /// <param name="tFrom">The point to travel from</param>
+        /// <param name="tTo">The curve subdomain to travel to</param>
+        /// <param name="overlapLength">Optional.  The length of the path
+        /// that should be assumed to overlap the target domain.  If the point does not
+        /// lie within the target domain the path will be extended by this
+        /// distance along the curve at the end of the interval.</param>
         /// <returns></returns>
-        public virtual Interval ShortestPath(double tFrom, Interval tTo)
+        public virtual Interval ShortestPath(double tFrom, Interval tTo, double overlapLength = 0)
         {
             if (Closed)
             {
                 if (tTo.ContainsOpenEndWrapped(tFrom)) return new Interval(tFrom, tFrom);
                 Interval iA = new Interval(tFrom, tTo.Start);
                 Interval iB = new Interval(tTo.End, tFrom);
-                if (LengthOf(iA) > LengthOf(iB)) return iB;
-                else return iA;
+                if (LengthOf(iA) > LengthOf(iB))
+                {
+                    if (overlapLength != 0)
+                        return iB.WithStart(ParameterAtLengthFrom(iB.Start, -overlapLength));
+                    else
+                        return iB;
+                }
+                else
+                {
+                    if (overlapLength != 0)
+                        return iA.WithEnd(ParameterAtLengthFrom(iA.End, overlapLength));
+                    else
+                        return iA;
+                }
             }
             else
             {
                 if (tTo.Contains(tFrom)) return new Interval(tFrom, tFrom);
-                if (tFrom < tTo.Start) return new Interval(tFrom, tTo.Start);
-                else return new Interval(tTo.End, tFrom);
+                if (tFrom < tTo.Start)
+                {
+                    var iA = new Interval(tFrom, tTo.Start);
+                    if (overlapLength != 0)
+                        return iA.WithEnd(ParameterAtLengthFrom(iA.End, overlapLength));
+                    else
+                        return iA;
+                }
+                else
+                {
+                    var iB = new Interval(tTo.End, tFrom);
+                    if (overlapLength != 0)
+                        return iB.WithStart(ParameterAtLengthFrom(iB.Start, -overlapLength));
+                    else
+                        return iB;
+                }
             }
         }
 

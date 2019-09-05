@@ -778,10 +778,10 @@ namespace Nucleus.Geometry
 
         /// <summary>
         /// Calculate the (smallest, non-directional) angle between this vector and another.
-        /// In the range -PI/2 to PI/2.
+        /// In the range 0 to PI.
         /// </summary>
-        /// <param name="other"></param>
-        /// <returns>The smallest angle between this vector and another,
+        /// <param name="other">The vector to measure the angle to</param>
+        /// <returns>The angle between this vector and another,
         /// in Radians.</returns>
         public Angle AngleBetween(Vector other)
         {
@@ -1206,6 +1206,70 @@ namespace Nucleus.Geometry
         public Vector Mirror(Plane mirrorPlane)
         {
             return mirrorPlane.MirrorPoint(this);
+        }
+
+        /// <summary>
+        /// The side of a line that this point lies on the XY plane.
+        /// Returns either left, right or undefined if the point lies
+        /// on the line.
+        /// </summary>
+        /// <param name="lineOrigin">The origin point of the line.</param>
+        /// <param name="lineDir">The direction vector along the line.</param>
+        /// <returns></returns>
+        public HandSide SideOf(Vector lineOrigin, Vector lineDir)
+        {
+            Vector toThis = this - lineOrigin;
+            return toThis.SideOf(lineDir);
+        }
+
+        /// <summary>
+        /// The side of a line that this point lies on the XY plane.
+        /// Returns either left, right or a mid-value if the point lies
+        /// on the line.
+        /// </summary>
+        /// <param name="lineOrigin">The origin point of the line.</param>
+        /// <param name="lineDir">The direction vector along the line.</param>
+        /// <param name="tolerance">The tolerance either side for determining whether the vector
+        /// lies along the direction</param>
+        /// <param name="midValue">The value to be returned if this vector lises along the direction</param>
+        /// <returns></returns>
+        public HandSide SideOf(Vector lineOrigin, Vector lineDir, double tolerance, HandSide midValue = HandSide.Undefined)
+        {
+            Vector toThis = this - lineOrigin;
+            return toThis.SideOf(lineDir, tolerance, midValue);
+        }
+
+        /// <summary>
+        /// The side of a direction that this vector lies on the XY plane.
+        /// Returns either left, right or undefined if the vector lies
+        /// along the direction.
+        /// </summary>
+        /// <param name="direction">The direction to determine side with respect to.</param>
+        /// <returns></returns>
+        public HandSide SideOf(Vector direction)
+        {
+            double dot = this.Dot(direction.PerpendicularXY());
+            if (dot > 0) return HandSide.Left;
+            else if (dot < 0) return HandSide.Right;
+            else return HandSide.Undefined;
+        }
+
+        /// <summary>
+        /// The side of a direction that this vector lies on the XY plane.
+        /// Returns either left, right or a specified mid-value if the vector lies
+        /// along the direction.
+        /// </summary>
+        /// <param name="direction">The direction to determine side with respect to.</param>
+        /// <param name="tolerance">The tolerance either side for determining whether the vector
+        /// lies along the direction</param>
+        /// <param name="midValue">The value to be returned if this vector lises along the direction</param>
+        /// <returns></returns>
+        public HandSide SideOf(Vector direction, double tolerance, HandSide midValue = HandSide.Undefined)
+        {
+            double dot = this.Dot(direction.PerpendicularXY());
+            if (dot > tolerance) return HandSide.Left;
+            else if (dot < -tolerance) return HandSide.Right;
+            else return midValue;
         }
 
         /// <summary>

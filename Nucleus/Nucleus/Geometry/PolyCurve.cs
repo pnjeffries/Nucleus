@@ -500,6 +500,8 @@ namespace Nucleus.Geometry
         /// of that polycurve will be added instead of the parent curve.</param>
         public void Add(Curve subCurve, bool autoConnect, bool autoExplode = false)
         {
+            if (subCurve == null) return;
+
             if (autoConnect == true && SubCurves.Count > 0)
             {
                 Vector endPt = SubCurves.Last().EndPoint;
@@ -761,8 +763,10 @@ namespace Nucleus.Geometry
                 // Return the largest non-inverted loop
                 var loops = result.SelfIntersectionXYLoopsAlignedWith(this);
                 var biggest = loops.ItemWithMax(i => i.Length);
-                if (biggest != null && biggest is PolyCurve &&
-                    ((PolyCurve)biggest).SubCurves.AllHaveAttributes(dummyAttributes))
+                if (biggest != null && 
+                    ((biggest is PolyCurve &&
+                    ((PolyCurve)biggest).SubCurves.AllHaveAttributes(dummyAttributes)) ))//||
+                    //(Closed && !biggest.Closed)))
                     return null; // Eliminate if entirely composed of temporary chamfers
                 else
                     return biggest;
@@ -834,7 +838,7 @@ namespace Nucleus.Geometry
             PopulateWithSubCurves(subDomainAdj, result);
 
             // If looping, do a second pass:
-            if (Closed && subDomain.IsDecreasing)
+            if (Closed && subDomain.IsDecreasing && subDomain.End > 0)
             {
                 PopulateWithSubCurves(new Maths.Interval(0.0, subDomain.End), result);
             }
@@ -850,6 +854,8 @@ namespace Nucleus.Geometry
         /// <param name="result"></param>
         private void PopulateWithSubCurves(Interval subDomain, PolyCurve result)
         {
+            if (!subDomain.IsValid || subDomain.Size == 0) return;
+
             double segCount = SegmentCount;
             double segStart = 0;
             foreach (Curve subCrv in SubCurves)
@@ -1086,10 +1092,12 @@ namespace Nucleus.Geometry
         /// less than this tolerance value, it will not be removed.</param>
         /// <param name="atStart">If true, the curve at the start will be tested for removal.</param>
         /// <param name="atEnd">If true, the curve at the end will be tested for removal.</param>
+        /// <param name="absoluteMinLength">Optional.  The absolute minimum length under which end curves
+        /// will be removed even if they are within the angle tolerance</param>
         /// <returns></returns>
         /// <remarks>A curve pair which is below angle tolerance will not be removed even if that pairing itself
         /// has a combined length less than the minimum.</remarks>
-        public bool TrimShortEndCurves(double minLength, Angle angleTolerance = new Angle(), bool atStart = true, bool atEnd = true)
+        public bool TrimShortEndCurves(double minLength, Angle angleTolerance = new Angle(), bool atStart = true, bool atEnd = true, double absoluteMinLength = 0)
         {
             bool result = false;
             if (!Closed)
@@ -1097,9 +1105,10 @@ namespace Nucleus.Geometry
                 if (atStart)
                 {
                     var startCrv = SubCurves.FirstOrDefault();
-                    if (startCrv != null && startCrv.Length < minLength)
+                    var startLength = startCrv.Length;
+                    if (startCrv != null && startLength < minLength)
                     {
-                        if (angleTolerance <= 0 || AngleBetweenEnds(startCrv, SubCurves.GetOrDefault(1)) >= angleTolerance)
+                        if (startLength < absoluteMinLength || angleTolerance <= 0 || AngleBetweenEnds(startCrv, SubCurves.GetOrDefault(1)) >= angleTolerance)
                         {
                             SubCurves.RemoveFirst();
                             result = true;
@@ -1114,9 +1123,10 @@ namespace Nucleus.Geometry
                 if (atEnd)
                 {
                     var endCrv = SubCurves.LastOrDefault();
-                    if (endCrv != null && endCrv.Length < minLength)
+                    var endLength = endCrv.Length;
+                    if (endCrv != null && endLength < minLength)
                     {
-                        if (angleTolerance <= 0 || AngleBetweenEnds(SubCurves.GetOrDefault(SubCurves.Count - 2), endCrv) >= angleTolerance)
+                        if (endLength < absoluteMinLength || angleTolerance <= 0 || AngleBetweenEnds(SubCurves.GetOrDefault(SubCurves.Count - 2), endCrv) >= angleTolerance)
                         {
                             SubCurves.RemoveLast();
                             result = true;
@@ -1463,6 +1473,11 @@ namespace Nucleus.Geometry
                 }
             }
             return result;
+        }
+
+        protected override IFastDuplicatable CurveFastDuplicate()
+        {
+            return new PolyCurve(this);
         }
 
 

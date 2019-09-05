@@ -457,9 +457,32 @@ namespace Nucleus.Geometry
                 }
                 else if (startSide == HandSide.Undefined)
                 {
+                    result *= -1;
+
+                    IList<CurveLineIntersection> lineInts;
+                    if (firstInt.Side == HandSide.Right)
+                    {
+                        result *= -1;
+                        lineInts = rightInts;
+                    }
+                    else lineInts = leftInts;
+
+                    bool indeterminate = false;
+                    var sList = new SortedList<double, CurveLineIntersection>();
+                    foreach (var cLI in lineInts)
+                    {
+                        if (sList.ContainsKey(cLI.LineParameter) &&
+                            firstInt.LineParameter == cLI.LineParameter) indeterminate = true;
+                        sList.AddSafe(cLI.LineParameter, cLI);
+                    }
+                    int firstIndex = sList.IndexOfValue(firstInt);
+                    if (firstIndex.IsOdd()) result *= -1;
+
+                    if (indeterminate) return 0; //TODO: Use fallback method?
+
                     // Start point is on segment that is dipping into the cut region
-                    if (firstInt.Side == HandSide.Left) result *= -1;
-                    if (lastInt.LineParameter < firstInt.LineParameter) result *= -1;
+                    //if (firstInt.Side == HandSide.Left) result *= -1;
+                    // if (lastInt.LineParameter < firstInt.LineParameter) result *= -1;
                 }
                 else
                 {
@@ -688,9 +711,26 @@ namespace Nucleus.Geometry
                             {
                                 newMapper = new CurveParameterMapper(Perimeter, newPerimeter);
                                 perimeterMappers.Add(newMapper);
+                                newMapper.AddSpanDomains(curve.SpanDomains(subDomain));
                             }
                         }
-                        else newPerimeter.Add(subCrv, true, true);
+                        else
+                        {
+                            //Connect up:
+                            Vector endPt = newPerimeter.EndPoint;
+                            if (endPt.DistanceToSquared(subCrv.StartPoint) > (Tolerance.Distance * Tolerance.Distance))
+                            {
+                                //Out of tolerance; create a line:
+                                newPerimeter.Add(new Line(endPt, subCrv.StartPoint));
+                                if (newMapper != null) newMapper.AddSpanDomain(Interval.Unset);
+                            }
+                            newPerimeter.Add(subCrv, false, true);
+                            if (newMapper != null)
+                            {
+                                if (curve == Perimeter) newMapper.AddSpanDomains(curve.SpanDomains(subDomain));
+                                else newMapper.AddNullSpanDomains(curve.SpanDomains(subDomain));
+                            }
+                        }
                     }
                     else
                     {
@@ -710,9 +750,14 @@ namespace Nucleus.Geometry
                     nextStartInts.RemoveFirst();
                     startInt = nextInt;
 
-                    if (newPerimeter != null) newPerimeter.Close();
+                    if (newPerimeter != null && !newPerimeter.Closed)
+                    {
+                        newPerimeter.Close();
+                        if (newMapper != null) newMapper.AddNullSpanDomain();
+                    }
                     newPerimeter = null;
                     newRegion = null;
+                    newMapper = null;
 
                     travelSide = HandSide.Undefined;
                 }
@@ -742,7 +787,12 @@ namespace Nucleus.Geometry
                 //if (currentInt != null) currentInt.ProcessCounter -= 1;
                 currentInt = nextInt;
             }
-            if (newPerimeter != null) newPerimeter.Close();
+            // Check last perimeter is closed:
+            if (newPerimeter != null && !newPerimeter.Closed)
+            {
+                newPerimeter.Close();
+                if (newMapper != null) newMapper.AddNullSpanDomain();
+            }
 
             //TODO: Assign un-intersected voids
             foreach (var voidCrv in freeVoids)

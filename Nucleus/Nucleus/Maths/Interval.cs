@@ -93,7 +93,7 @@ namespace Nucleus.Maths
         public double Mid { get { return (Start + End) / 2; } }
 
         /// <summary>
-        /// The size, or length, of this interval
+        /// The size, or length, of this interval.  Signed.
         /// </summary>
         public double Size { get { return (End - Start); } }
 
@@ -199,16 +199,24 @@ namespace Nucleus.Maths
         /// <param name="list"></param>
         public Interval(params double[] list)
         {
-            double min = list[0];
-            double max = list[1];
-            for (int i = 0; i < list.Length; i++)
+            if (list.Length == 0)
             {
-                double val = list[i];
-                if (val < min) min = val;
-                if (val > max) max = val;
+                Start = double.NaN;
+                End = double.NaN;
             }
-            Start = min;
-            End = max;
+            else
+            {
+                double min = list[0];
+                double max = min;
+                for (int i = 1; i < list.Length; i++)
+                {
+                    double val = list[i];
+                    if (val < min) min = val;
+                    if (val > max) max = val;
+                }
+                Start = min;
+                End = max;
+            }
         }
 
         /// <summary>
@@ -316,6 +324,8 @@ namespace Nucleus.Maths
         /// <returns></returns>
         public int CompareTo(Interval other)
         {
+            // Start is the dominant sorting criteria,
+            // with the End as a tiebreak.
             if (Start < other.Start)
                 return -1;
             if (Start > other.Start)
@@ -335,6 +345,21 @@ namespace Nucleus.Maths
         public override int GetHashCode()
         {
             return Start.GetHashCode() ^ End.GetHashCode();
+        }
+
+        /// <summary>
+        /// Calculate the size of this interval, optionally treating decreasing intervals
+        /// as wrapping around at the given limit and giving the size from the start to the 
+        /// end wrapping over this limit.
+        /// </summary>
+        /// <param name="wrap">If true, will take account of wrapping.  Otherwise, will return the same
+        /// as the Size property.</param>
+        /// <param name="wrapAt">The limit at which to wrap back around to 0.</param>
+        /// <returns></returns>
+        public double GetSize(bool wrap = false, double wrapAt = 1.0)
+        {
+            if (wrap && IsDecreasing) return (wrapAt - Start) + End;
+            else return Size;
         }
 
         /// <summary>
@@ -420,6 +445,7 @@ namespace Nucleus.Maths
 
         /// <summary>
         /// Does this interval entirely or partially include another?
+        /// Both ends are inclusive.
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
@@ -804,6 +830,26 @@ namespace Nucleus.Maths
             return new Interval(values);
         }
 
+        /// <summary>
+        /// Create intervals between alternating pairs in the specified set of parameters.
+        /// For example, if the set of input values is 1,2,3,4 (and the start offset is 0)
+        /// this function would return [1;2],[3;4].
+        /// </summary>
+        /// <param name="startOffset">The index at which to start creating intervals.  If 0,
+        /// the first interval will run between the first and second value, if 1 it will run
+        /// between the second and third and so on.</param>
+        /// <param name="values">The values to create intervals between.</param>
+        /// <returns></returns>
+        public static IList<Interval> CreateAlternating(int startOffset, IList<double> values)
+        {
+            var result = new List<Interval>();
+            for (int i = startOffset; i < values.Count - 1; i+= 2)
+            {
+                result.Add(new Interval(values[i], values[i+1]));
+            }
+            return result;
+        }
+
         #endregion
 
         #region Operators
@@ -989,6 +1035,9 @@ namespace Nucleus.Maths
         #endregion
     }
 
+    /// <summary>
+    /// Extension methods for the Interval struct and collections thereof
+    /// </summary>
     public static class IntervalExtensions
     {
         /// <summary>
@@ -1127,7 +1176,7 @@ namespace Nucleus.Maths
             foreach (Interval interval in intervals)
             {
                 double size;
-                if (wrap && interval.IsDecreasing) size = (1 - interval.Start) + interval.End;
+                if (wrap && interval.IsDecreasing) size = (wrapAt - interval.Start) + interval.End;
                 else size = interval.Size;
 
                 if (size > maxSize)
@@ -1137,6 +1186,80 @@ namespace Nucleus.Maths
                 }
             }
             return largest;
+        }
+
+
+        /// <summary>
+        /// Split any 'wrapping' (decreasing) intervals in this collection into two
+        /// non-wrapping intervals over the wrapping domain of 0-1
+        /// </summary>
+        /// <param name="intervals"></param>
+        public static IList<Interval> SplitWrapping(this IList<Interval> intervals)
+        {
+            return intervals.SplitWrapping(new Interval(0, 1));
+        }
+
+        /// <summary>
+        /// Split any 'wrapping' (decreasing) intervals in this collection into two
+        /// non-wrapping intervals
+        /// </summary>
+        /// <param name="intervals"></param>
+        /// <param name="wrapDomain">The domain over which to wrap</param>
+        public static IList<Interval> SplitWrapping(this IList<Interval> intervals, Interval wrapDomain)
+        {
+            var result = new List<Interval>();
+            for (int i = 0; i < intervals.Count; i++)
+            {
+                Interval interval = intervals[i];
+                if (interval.IsDecreasing)
+                {
+                    result.Add(interval.WithStart(wrapDomain.Start));
+                    result.Add(interval.WithEnd(wrapDomain.End));
+                }
+                else result.Add(interval);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Sort this list of intervals in order to their start values and merge
+        /// any which overlap
+        /// </summary>
+        /// <param name="intervals"></param>
+        /// <returns></returns>
+        public static IList<Interval> SortAndMerge(this IList<Interval> intervals)
+        {
+            var sorted = intervals.ToList();
+            sorted.Sort();
+            // Run backwards through list, merging and removing as we go
+            for (int i = sorted.Count - 1; i > 0; i--)
+            {
+                var int0 = sorted[i - 1];
+                var int1 = sorted[i];
+                if (int0.Overlaps(int1))
+                {
+                    sorted[i - 1] = int0.Union(int1);
+                    sorted.RemoveAt(i);
+                }
+            }
+            return sorted;
+        }
+
+        /// <summary>
+        /// Returns all intervals in this list which are longer than a specified tolerance value
+        /// </summary>
+        /// <param name="intervals"></param>
+        /// <param name="tolerance">The tolerance length.  Any intervals smaller than this value will
+        /// not be returned.</param>
+        /// <returns></returns>
+        public static IList<Interval> LargerThan(this IList<Interval> intervals, double tolerance)
+        {
+            var result = new List<Interval>(intervals.Count);
+            foreach (Interval interval in intervals)
+            {
+                if (interval.Size.Abs() >= tolerance) result.Add(interval);
+            }
+            return result;
         }
     }
 }

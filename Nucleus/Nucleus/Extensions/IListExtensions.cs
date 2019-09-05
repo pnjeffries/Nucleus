@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Nucleus.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -408,7 +409,7 @@ namespace Nucleus.Extensions
         {
             TItem result = null;
             TProperty max = default(TProperty);
-            for (int i = 1; i < list.Count; i++)
+            for (int i = 0; i < list.Count; i++)
             {
                 TItem item = list[i];
                 TProperty value = propertyDelegate.Invoke(item);
@@ -565,6 +566,87 @@ namespace Nucleus.Extensions
                 list[k] = list[n];
                 list[n] = value;
             }
+        }
+
+        /// <summary>
+        /// Adds the elements of the specified collection to the end of this list.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="items"></param>
+        public static void AddRange<T>(this IList<T> list, IEnumerable<T> items)
+        {
+            if (items == null) return;
+
+            if (list is List<T>) ((List<T>)list).AddRange(items);
+            else
+            {
+                foreach (var item in items)
+                {
+                    list.Add(item);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Construct a sorted list using this list as the items and another list of related items in the same
+        /// order as the keys.
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="items"></param>
+        /// <param name="keys"></param>
+        /// <returns></returns>
+        public static SortedList<TKey,TValue> SortedBy<TKey,TValue>(this IList<TValue> items, IList<TKey> keys)
+        {
+            var result = new SortedList<TKey,TValue>(items.Count);
+            int count = Math.Min(items.Count, keys.Count);
+            for (int i = 0; i < items.Count; i++)
+            {
+                result.Add(keys[i], items[i]);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Construct a sorted list using this list as the items and another list of related items in the same
+        /// order as the keys.  This override for doubles uses the AddSafe extension method to enable duplicate
+        /// keys to be dealt with without throwing an exception.
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="items"></param>
+        /// <param name="keys"></param>
+        /// <returns></returns>
+        public static SortedList<double, TValue> SortedBy<TValue>(this IList<TValue> items, IList<double> keys)
+        {
+            var result = new SortedList<double, TValue>(items.Count);
+            int count = Math.Min(items.Count, keys.Count);
+            for (int i = 0; i < items.Count; i++)
+            {
+                result.AddSafe(keys[i], items[i]);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Remove all items from this collection for which the specified delegate function returns true
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="items"></param>
+        /// <param name="removeIfTrue"></param>
+        /// <returns></returns>
+        public static int RemoveIf<T>(this IList<T> items, Func<T, bool> removeIfTrue)
+        {
+            int count = 0;
+            for (int i = items.Count - 1; i >= 0; i--)
+            {
+                if (removeIfTrue(items[i]))
+                {
+                    items.RemoveAt(i);
+                    count++;
+                }
+            }
+            return count;
         }
     }
 }

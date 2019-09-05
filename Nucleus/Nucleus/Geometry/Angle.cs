@@ -213,6 +213,25 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Get the supplementary angle which together with this one will add up to a straight line
+        /// </summary>
+        /// <returns></returns>
+        public Angle Supplement()
+        {
+            return Straight - this;
+        }
+
+        /// <summary>
+        /// Returns the either this angle or its supplementary angle, whichever is the smallest
+        /// </summary>
+        /// <returns></returns>
+        public Angle SmallestToStraight()
+        {
+            if (this < Right) return this;
+            else return Supplement();
+        }
+
+        /// <summary>
         /// Get the sine of this angle
         /// </summary>
         /// <returns></returns>

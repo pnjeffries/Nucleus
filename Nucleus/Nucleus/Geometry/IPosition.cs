@@ -346,5 +346,35 @@ namespace Nucleus.Geometry
             return result;
         }
 
+        /// <summary>
+        /// Determine the side of an infinite line on which the positions of the objects in this
+        /// collection lie.
+        /// Will return right, left, or undefined if the positions lie across the line.
+        /// </summary>
+        /// <typeparam name="TPosition"></typeparam>
+        /// <param name="v"></param>
+        /// <param name="lineOrigin">A point which lies on the line</param>
+        /// <param name="lineDir">The direction vector of the line</param>
+        /// <param name="tolerance">A tolerance distance (as a multiple of the
+        /// magnitude of the line direction) to either side of the line within
+        /// which the point is taken to lie on the line.</param>
+        /// <returns></returns>
+        public static HandSide SideOf<TPosition>(this IList<TPosition> v, Vector lineOrigin, Vector lineDir, double tolerance = 0)
+            where TPosition : IPosition
+        {
+            HandSide result = HandSide.Undefined;
+            for (int i = 0; i < v.Count; i++)
+            {
+                Vector position = v[i].Position;
+                HandSide side = position.SideOf(lineOrigin, lineDir, tolerance, result);
+                if (side != result)
+                {
+                    if (result == HandSide.Undefined) result = side;
+                    else return HandSide.Undefined;
+                }
+            }
+            return result;
+        }
+
     }
 }

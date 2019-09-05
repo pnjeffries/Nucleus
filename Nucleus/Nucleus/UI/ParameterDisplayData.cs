@@ -10,10 +10,10 @@ namespace Nucleus.UI
 {
     /// <summary>
     /// Class to store data about the display names and tooltips
-    /// associated with a set of named parameters
+    /// associated with a set of named parameters or tools
     /// </summary>
     [Serializable]
-    public class ParameterDisplayData
+    public class TextDisplayData
     {
         #region Properties
 
@@ -30,7 +30,6 @@ namespace Nucleus.UI
             get { return _Delimiter; }
             set { _Delimiter = value; }
         }
-
 
         /// <summary>
         /// Private backing member variable for the DisplayNames property
