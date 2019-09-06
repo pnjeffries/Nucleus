@@ -580,5 +580,29 @@ namespace Nucleus.Extensions
             if (mInfo != null) return mInfo.ReturnType;
             else return null;
         }
+
+        /// <summary>
+        /// Get the name of this type including any generic parameters
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static string NameWithGenericParameters(this Type t)
+        {
+            if (!t.IsGenericType)
+                return t.Name;
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(t.Name.Substring(0, t.Name.IndexOf('`')));
+            sb.Append('<');
+            bool appendComma = false;
+            foreach (Type arg in t.GetGenericArguments())
+            {
+                if (appendComma) sb.Append(',');
+                sb.Append(NameWithGenericParameters(arg));
+                appendComma = true;
+            }
+            sb.Append('>');
+            return sb.ToString();
+        }
     }
 }

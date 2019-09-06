@@ -529,6 +529,7 @@
     <Compile Include="UI\ParameterDisplayData.cs" />
     <Compile Include="UI\SelectionViewModel.cs" />
     <Compile Include="UI\UIOption.cs" />
+    <Compile Include="UI\UserInputProvider.cs" />
     <Compile Include="Undo\CollectionUndoState.cs" />
     <Compile Include="Undo\PropertyUndoState.cs" />
     <Compile Include="Undo\TransformUndoState.cs" />
