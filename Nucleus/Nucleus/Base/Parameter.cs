@@ -165,7 +165,7 @@ namespace Nucleus.Base
         /// As all parameters require an immutable name, this should not be
         /// used unless you know what you're doing.
         /// </summary>
-        internal Parameter() { }
+        protected Parameter() { }
 
         /// <summary>
         /// Creates a new parameter with the specified name.

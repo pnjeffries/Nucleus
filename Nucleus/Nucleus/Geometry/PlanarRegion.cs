@@ -447,15 +447,16 @@ namespace Nucleus.Geometry
             CurveLineIntersection lastInt = perimeterInts.ItemWithMax(pInt => pInt.CurveParameter);
             if (hasWidth)
             {
-                if (firstInt.Side != lastInt.Side)
+                /*if (firstInt.Side != lastInt.Side)
                 {
                     return RightCutterDirectionOfTravel(rightInts, leftInts);
                     // Special case: Start point is on segment bridging between cutting lines
-                    /*CurveLineIntersection nextInt = perimeterInts.ItemWithNext(pInt => pInt.CurveParameter, firstInt.CurveParameter);
-                    if (firstInt.Side == HandSide.Left) result *= -1;
-                    if (nextInt.LineParameter < firstInt.LineParameter) result *= -1;*/
+                    //CurveLineIntersection nextInt = perimeterInts.ItemWithNext(pInt => pInt.CurveParameter, firstInt.CurveParameter);
+                    //if (firstInt.Side == HandSide.Left) result *= -1;
+                    //if (nextInt.LineParameter < firstInt.LineParameter) result *= -1;
                 }
-                else if (startSide == HandSide.Undefined)
+                else */
+                if (startSide == HandSide.Undefined)
                 {
                     result *= -1;
 
@@ -545,6 +546,8 @@ namespace Nucleus.Geometry
             double splitWidth = 0, IList<CurveParameterMapper> perimeterMappers = null)
         {
             var result = new List<PlanarRegion>();
+
+            if (Perimeter == null) return result;
 
             // Offset splitting line by half splitWidth in each direction:
             Vector offsetDir = splitDir.PerpendicularXY().Unitize();
@@ -701,34 +704,40 @@ namespace Nucleus.Geometry
 
                         // Add perimeter to outputs
                         Curve subCrv = curve.Extract(subDomain);
-                        if (reverse) subCrv.Reverse();
-                        if (newPerimeter == null)
+                        if (subCrv != null)
                         {
-                            newPerimeter = new PolyCurve(subCrv.Explode());
-                            newRegion = new PlanarRegion(newPerimeter);
-                            result.Add(newRegion);
-                            if (perimeterMappers != null)
+                            if (reverse) subCrv.Reverse();
+                            if (newPerimeter == null)
                             {
-                                newMapper = new CurveParameterMapper(Perimeter, newPerimeter);
-                                perimeterMappers.Add(newMapper);
-                                newMapper.AddSpanDomains(curve.SpanDomains(subDomain));
+                                newPerimeter = new PolyCurve(subCrv.Explode());
+                                if (newPerimeter != null)
+                                {
+                                    newRegion = new PlanarRegion(newPerimeter);
+                                    result.Add(newRegion);
+                                    if (perimeterMappers != null)
+                                    {
+                                        newMapper = new CurveParameterMapper(Perimeter, newPerimeter);
+                                        perimeterMappers.Add(newMapper);
+                                        newMapper.AddSpanDomains(curve.SpanDomains(subDomain));
+                                    }
+                                }
                             }
-                        }
-                        else
-                        {
-                            //Connect up:
-                            Vector endPt = newPerimeter.EndPoint;
-                            if (endPt.DistanceToSquared(subCrv.StartPoint) > (Tolerance.Distance * Tolerance.Distance))
+                            else
                             {
-                                //Out of tolerance; create a line:
-                                newPerimeter.Add(new Line(endPt, subCrv.StartPoint));
-                                if (newMapper != null) newMapper.AddSpanDomain(Interval.Unset);
-                            }
-                            newPerimeter.Add(subCrv, false, true);
-                            if (newMapper != null)
-                            {
-                                if (curve == Perimeter) newMapper.AddSpanDomains(curve.SpanDomains(subDomain));
-                                else newMapper.AddNullSpanDomains(curve.SpanDomains(subDomain));
+                                //Connect up:
+                                Vector endPt = newPerimeter.EndPoint;
+                                if (endPt.DistanceToSquared(subCrv.StartPoint) > (Tolerance.Distance * Tolerance.Distance))
+                                {
+                                    //Out of tolerance; create a line:
+                                    newPerimeter.Add(new Line(endPt, subCrv.StartPoint));
+                                    if (newMapper != null) newMapper.AddSpanDomain(Interval.Unset);
+                                }
+                                newPerimeter.Add(subCrv, false, true);
+                                if (newMapper != null)
+                                {
+                                    if (curve == Perimeter) newMapper.AddSpanDomains(curve.SpanDomains(subDomain));
+                                    else newMapper.AddNullSpanDomains(curve.SpanDomains(subDomain));
+                                }
                             }
                         }
                     }

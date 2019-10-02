@@ -13,6 +13,7 @@ namespace Nucleus.UI
     /// <summary>
     /// Class which prompts the user to provide input of specified types
     /// </summary>
+    [Serializable]
     public abstract class UserInputProvider
     {
         #region Methods

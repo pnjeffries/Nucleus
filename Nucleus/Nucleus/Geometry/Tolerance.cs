@@ -27,7 +27,8 @@ using System.Threading.Tasks;
 namespace Nucleus.Geometry
 {
     /// <summary>
-    /// Static class containing mutable tolerance values
+    /// Static class containing mutable tolerance values used during geometric operations
+    /// where no overriding tolerance value is specified.
     /// </summary>
     public static class Tolerance
     {
@@ -35,6 +36,11 @@ namespace Nucleus.Geometry
         /// The current geometric tolerance used to determine coincidence
         /// </summary>
         public static double Distance { get; set; } = 0.000001;
+
+        /// <summary>
+        /// The square of the current geometric tolerance used to determine coincidence
+        /// </summary>
+        public static double DistanceSquared { get { return Distance * Distance; } }
 
         /// <summary>
         /// The angle tolerance used for facetting arcs

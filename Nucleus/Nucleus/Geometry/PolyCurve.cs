@@ -649,6 +649,18 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Get the maximum trim allowed for the specified subcurve during the resolution of offset discontinuity
+        /// </summary>
+        /// <param name="subCrv"></param>
+        /// <returns></returns>
+        private double TrimLimitFor(Curve subCrv, bool isOpenEnd)
+        {
+            if (isOpenEnd) return double.MaxValue;
+
+            return subCrv.Length;
+        }
+
+        /// <summary>
         /// Resolve a discontinuity between a curve and the curve preceeding it in an offset operation
         /// </summary>
         /// <param name="result"></param>
@@ -661,24 +673,23 @@ namespace Nucleus.Geometry
 
             // Adjust offset curve ends to node out
             Curve prevCrv = result.SubCurves.Last();
+
+            if (prevCrv.EndPoint == offsetCrv.StartPoint) return true;
+
             // Sharp corner:
-            if (MatchEnds(prevCrv.End, offsetCrv.Start, true, true, true, prevCrv.Length, offsetCrv.Length))
-                return true;
+            if (MatchEnds(prevCrv.End, offsetCrv.Start, true, true, true,prevCrv.Length,offsetCrv.Length)) return true;
 
             if (options.CollapseInvertedSegments)
             {
                 result.SubCurves.RemoveLast(); //Remove last curve
-                return ResolveOffsetDiscontinuity(result, offsetCrv, options, chamferAttributes); //Recuse to next
+                return ResolveOffsetDiscontinuity(result, offsetCrv, options, chamferAttributes); //Recurse to next
             }
 
-            if (prevCrv.EndPoint != offsetCrv.StartPoint)
-            {
-                // If there is a extension/trim mismatch between the curves
-                // we instead just join them with a chamfer temporarily
-                result.Add(new Line(prevCrv.EndPoint, offsetCrv.StartPoint, chamferAttributes));
-            }
+            // If there is a extension/trim mismatch between the curves
+            // we instead just join them with a chamfer temporarily
+            result.Add(new Line(prevCrv.EndPoint, offsetCrv.StartPoint, chamferAttributes));
 
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -729,9 +740,15 @@ namespace Nucleus.Geometry
             var result = new PolyCurve();
             int distIndex = 0;
 
+            bool closed = Closed;
+            bool startOK = true;
+            bool endOK = true;
+
             // Offset sub curves:
-            foreach (Curve crv in SubCurves)
+            for (int i = 0; i < SubCurves.Count; i++)
             {
+                Curve crv = SubCurves[i];
+            
                 if (crv.Length > 0)
                 {
                     Curve offsetCrv = crv.Offset(distances.SubListFrom(distIndex), false);
@@ -740,29 +757,44 @@ namespace Nucleus.Geometry
 
                     if (offsetCrv != null)
                     {
-                        ResolveOffsetDiscontinuity(result, offsetCrv, options, dummyAttributes);
+                        bool resolved = ResolveOffsetDiscontinuity(result, offsetCrv, options, dummyAttributes);
+
+                        if (!closed)
+                        {
+                            // Test for need to correct open ends later
+                            if (result.SubCurves.Count == 1) startOK = resolved;
+                            if (i == SubCurves.Count - 1) endOK = resolved;
+                        }
+
                         result.Add(offsetCrv);
+
                         if (options.CopyAttributes && offsetCrv.Attributes == null) offsetCrv.Attributes = Attributes;
                     }
                 }
             }
 
             // Match end to start
-            if (Closed && result.SubCurves.Count > 1)
+            if (closed && result.SubCurves.Count > 1)
             {
                 Curve firstCrv = result.SubCurves.First();
-                if (!ResolveOffsetDiscontinuity(result, firstCrv, options, dummyAttributes)
-                    && options.CollapseInvertedSegments)
-                {
-                    return null;
-                }
+                ResolveOffsetDiscontinuity(result, firstCrv, options, dummyAttributes);
             }
 
             if (options.Tidy)
             {
+
+                if (!closed)
+                {
+                    // Open ends that failed to resolve should be closed off 
+                    // to create closed loops to cull
+                    double overlap = 0.01; //Extra extension - bit of a hack to ensure self-intersection...
+                    if (!startOK) result.ExtendStartToSelfIntersection(overlap);
+                    if (!endOK) result.ExtendEndToSelfIntersection(overlap);
+                }
+
                 // Return the largest non-inverted loop
                 var loops = result.SelfIntersectionXYLoopsAlignedWith(this);
-                var biggest = loops.ItemWithMax(i => i.Length);
+                Curve biggest = loops.ItemWithMaxWhere(i => i.Length, i => i.Closed == closed);
                 if (biggest != null && 
                     ((biggest is PolyCurve &&
                     ((PolyCurve)biggest).SubCurves.AllHaveAttributes(dummyAttributes)) ))//||
@@ -1467,12 +1499,52 @@ namespace Nucleus.Geometry
                     }
                     else
                     {
-                        // Staring afresh, no longer need to check against olds
+                        // Starting afresh, no longer need to check against olds
                         previouslyRemoved.Clear();
                     }
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Add a line segment to the start of this curve to touch another point on the curve, if possible
+        /// </summary>
+        /// <param name="extra">Optional. The extra distance to extend beyond the intersection point.</param>
+        /// <returns></returns>
+        public bool ExtendStartToSelfIntersection(double extra = 0)
+        {
+            Vector pt = StartPoint;
+            Vector tangent = TangentAt(0).Reverse();
+
+            var chucks = Intersect.CurveLineXYIntersections(this, pt, tangent);
+            var chuck = chucks.ItemWithNext(i => i.LineParameter, 0);
+
+            if (chuck == null) return false; // No intersection found
+
+            Vector endPt = pt + (chuck.LineParameter + extra) * tangent;
+            SubCurves.Insert(0, new Line(endPt, StartPoint));
+            return true;
+        }
+
+        /// <summary>
+        /// Add a line segment to the start of this curve to touch another point on the curve, if possible
+        /// </summary>
+        /// <param name="extra">Optional. The extra distance to extend beyond the intersection point.</param>
+        /// <returns></returns>
+        public bool ExtendEndToSelfIntersection(double extra = 0)
+        {
+            Vector pt = EndPoint;
+            Vector tangent = TangentAt(1);
+
+            var chucks = Intersect.CurveLineXYIntersections(this, pt, tangent);
+            var chuck = chucks.ItemWithNext(i => i.LineParameter, 0);
+
+            if (chuck == null) return false; // No intersection found
+
+            Vector endPt = pt + (chuck.LineParameter + extra) * tangent;
+            AddLine(endPt);
+            return true;
         }
 
         protected override IFastDuplicatable CurveFastDuplicate()

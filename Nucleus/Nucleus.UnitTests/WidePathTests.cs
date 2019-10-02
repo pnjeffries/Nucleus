@@ -72,5 +72,21 @@ namespace Nucleus.UnitTests
             var edges = paths.ExtractAllEdges();
             Assert.AreEqual(34.142, edges.TotalLength(), 0.001);
         }
+
+        [TestMethod]
+        public void StraightPath_EndExtensionsShouldGenerate()
+        {
+            var path = new WidePathBasic(new Line(0, 0, 10, 0), 4);
+            path.StartOffset = 1;
+            path.EndOffset = 1;
+
+            IList<IWidePath> paths = new List<IWidePath>() { path };
+            paths.GenerateNetworkPathNodes(new Model.NodeGenerationParameters());
+            paths.GenerateNetworkPathEdges();
+            var leftSides = paths.ExtractNetworkPathLeftEdges();
+            var rightSides = paths.ExtractNetworkPathRightEdges();
+            var edges = paths.ExtractAllEdges();
+            Assert.AreEqual(32, edges.TotalLength(), 0.001);
+        }
     }
 }

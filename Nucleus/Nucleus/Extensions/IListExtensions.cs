@@ -20,6 +20,7 @@
 
 using Nucleus.Base;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -279,6 +280,42 @@ namespace Nucleus.Extensions
                 {
                     max = value;
                     result = item;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Find the item in this list which returns the minimum value of a property or method
+        /// defined by a delegate and where a specified condition is true.
+        /// </summary>
+        /// <typeparam name="TItem">The type of item in the list</typeparam>
+        /// <typeparam name="TProperty">The type of the property to be interrogated</typeparam>
+        /// <param name="list"></param>
+        /// <param name="propertyDelegate">Delegate function which returns the value
+        /// for each list item.</param>
+        /// <param name="ifDelegate">Delegate function which returns true if the item
+        /// should be considered</param>
+        /// <returns></returns>
+        public static TItem ItemWithMaxWhere<TItem, TProperty>(this IList<TItem> list, 
+            Func<TItem, TProperty> propertyDelegate,
+            Func<TItem, bool> ifDelegate)
+            where TProperty : IComparable<TProperty>
+        {
+            if (list.Count == 0) return default(TItem);
+            TItem result = list[0];
+            TProperty max = propertyDelegate.Invoke(list[0]);
+            for (int i = 1; i < list.Count; i++)
+            {
+                TItem item = list[i];
+                if (ifDelegate.Invoke(item))
+                {
+                    TProperty value = propertyDelegate.Invoke(item);
+                    if (value.CompareTo(max) == 1)
+                    {
+                        max = value;
+                        result = item;
+                    }
                 }
             }
             return result;
@@ -647,6 +684,37 @@ namespace Nucleus.Extensions
                 }
             }
             return count;
+        }
+
+        /// <summary>
+        /// Find and return the first object of the specified type in this list of items
+        /// </summary>
+        /// <typeparam name="T1"></typeparam>
+        /// <param name="items"></param>
+        /// <returns></returns>
+        public static T1 FirstOfType<T1>(this IList items)
+        {
+            foreach (var obj in items)
+            {
+                if (obj is T1) return (T1)obj;
+            }
+            return default(T1);
+        }
+
+        /// <summary>
+        /// Find and return the first object of the specified type in this list of items
+        /// </summary>
+        /// <typeparam name="T1"></typeparam>
+        /// <param name="items"></param>
+        /// <returns></returns>
+        public static T1 FirstOfType<T1, T2>(this IList<T2> items)
+            where T1:T2
+        {
+            foreach (var obj in items)
+            {
+                if (obj is T1) return (T1)obj;
+            }
+            return default(T1);
         }
     }
 }

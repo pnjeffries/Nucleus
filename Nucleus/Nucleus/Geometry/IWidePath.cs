@@ -47,6 +47,18 @@ namespace Nucleus.Geometry
         double RightOffset { get; }
 
         /// <summary>
+        /// The offset of the start edge from the start of the spine
+        /// curve.  Only used when the path start does not connect into any others.
+        /// </summary>
+        double StartOffset { get; }
+
+        /// <summary>
+        /// The offset of the end edge from the end of the spine curve.
+        /// Only used when the path end does not connect into any others
+        /// </summary>
+        double EndOffset { get; }
+
+        /// <summary>
         /// The 'pinch' distance applied to the left-hand edge ends
         /// in order to induce curvature in the left-hand edge curve
         /// </summary>
@@ -434,10 +446,24 @@ namespace Nucleus.Geometry
                         TPath path = pathMap[v.Owner.GUID];
                         if (v.IsStart)
                         {
+                            //Extend to offset:
+                            if (path.StartOffset != 0)
+                            {
+                                path.LeftEdge.ExtendStart(path.StartOffset);
+                                path.RightEdge.ExtendStart(path.StartOffset);
+                            }
+
                             path.StartCapLeft = new Line(path.LeftEdge.StartPoint, path.RightEdge.StartPoint);
                         }
                         else
                         {
+                            //Extend to offset:
+                            if (path.EndOffset != 0)
+                            {
+                                path.LeftEdge.ExtendEnd(path.EndOffset);
+                                path.RightEdge.ExtendEnd(path.EndOffset);
+                            }
+
                             path.EndCapLeft = new Line(path.LeftEdge.EndPoint, path.RightEdge.EndPoint);
                         }
                     }

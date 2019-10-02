@@ -191,6 +191,18 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Change the sign of this angle to be relative to the specified side.
+        /// Left-side angles will be flipped.
+        /// </summary>
+        /// <param name="side"></param>
+        /// <returns></returns>
+        public Angle RelativeToSide(HandSide side)
+        {
+            if (side == HandSide.Left) return -this;
+            else return this;
+        }
+
+        /// <summary>
         /// Get a unit vector describing the direction of this angle on the
         /// XY plane.
         /// </summary>

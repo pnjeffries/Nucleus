@@ -232,11 +232,29 @@ namespace Nucleus.Model
         /// <param name="undeletedOnly"></param>
         /// <param name="ignore"></param>
         /// <returns></returns>
-        public TElement GetConnectedElementOnSide<TElement>(Vector direction, HandSide side, 
+        public TElement GetConnectedElementOnSide<TElement>(Vector direction, HandSide side,
             bool undeletedOnly = true, Element ignore = null)
             where TElement : LinearElement
         {
-            Angle bestAngle = 0;
+            return GetConnectedElementOnSide<TElement>(direction, side, undeletedOnly, ignore, out Angle bestAngle);
+        }
+
+        /// <summary>
+        /// Get the first encountered element approached from the specified side of the specified direction
+        /// </summary>
+        /// <typeparam name="TElement"></typeparam>
+        /// <param name="direction"></param>
+        /// <param name="side"></param>
+        /// <param name="undeletedOnly"></param>
+        /// <param name="ignore"></param>
+        /// <param name="bestAngle">Output.  The angle of the returned element relative to the specified
+        /// direction.</param>
+        /// <returns></returns>
+        public TElement GetConnectedElementOnSide<TElement>(Vector direction, HandSide side,
+        bool undeletedOnly, Element ignore, out Angle bestAngle)
+        where TElement : LinearElement
+        {
+            bestAngle = 0;
             TElement best = null;
             foreach (Vertex v in Vertices)
             {

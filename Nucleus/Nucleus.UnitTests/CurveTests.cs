@@ -926,6 +926,39 @@ namespace Nucleus.UnitTests
         }
 
         [TestMethod]
+        public void Offset_PolyCurveWithKinkAndShortSegment2()
+        {
+            var pline = new PolyLine(
+                new Vector(58.201900000684, 83.1562000009872, 0),
+                new Vector(57.6990000000224, 65.5513000003994, 0),
+                new Vector(54.854400000535, 65.6013000010862, 0),
+                new Vector(54.1088444438218, 36.5608046584474, 0)
+                ).ToPolyCurve(true);
+            var offs1 = pline.Offset(16);
+            
+            double length1 = offs1.Length;
+            
+            Assert.AreEqual(49.59881, length1, 0.0001);
+            
+        }
+
+        [TestMethod]
+        public void Offset_PolyCurveWithKinkAndShortSegment3()
+        {
+            var pline = new PolyLine(
+                new Vector(18.434077003462, 24.6821823006518, 0),
+                new Vector(20.2657449943471, 39.8535286418336, 0),
+                new Vector(19.9433512320896, 40.934691052402, 0)
+                ).ToPolyCurve(true);
+            var offs1 = pline.Offset(-8, new CurveOffsetParameters(true,true,false));
+
+            double length1 = offs1.Length;
+
+            Assert.AreEqual(13.6283689, length1, 0.0001);
+
+        }
+
+        [TestMethod]
         public void VariableOffset_PolylineWithKinkAndShortSegment()
         {
             var pline = new PolyLine(Vector.Create2D(

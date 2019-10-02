@@ -452,28 +452,31 @@ namespace Nucleus.Geometry
             return CurveLineXY(curve, lnPt, lnDir, null, 0, 1, lineBounded, tLine);
         }
 
-            /// <summary>
-            /// Find the intersection(s) between a curve and an infinite line on the XY plane.
-            /// Returns the list of intersection parameters on the curve.
-            /// </summary>
-            /// <param name="curve">The curve</param>
-            /// <param name="lnPt">The origin of the line</param>
-            /// <param name="lnDir">The direction of the line</param>
-            /// <param name="result">The collection to which results should be added.  
-            /// If null, a new collection will be instantiated and returned.</param>
-            /// <param name="domainAdjustMin">The start parameter of the curve will be adjusted
-            /// to this value in the returned parameters.</param>
-            /// <param name="domainAdjustMax">The end parameter of the curve will be adjusted 
-            /// to this value in the returned parameters.</param>
-            /// <param name="lineBounded">If true, intersections outside of the bounds of the line
-            /// running from the origin point to the end of the direction vector will be ignored.</param>
-            /// <param name="tLine">Optional.  If supplied, this collection will be populated with the
-            /// intersection parameters on the line.</param>
-            /// <returns>The list of intersection parameters on the curve</returns>
-            public static IList<double> CurveLineXY(Curve curve, Vector lnPt, Vector lnDir, IList<double> result = null, 
-            double domainAdjustMin = 0, double domainAdjustMax = 1, bool lineBounded = false, IList<double> tLine = null)
+        /// <summary>
+        /// Find the intersection(s) between a curve and an infinite line on the XY plane.
+        /// Returns the list of intersection parameters on the curve.
+        /// </summary>
+        /// <param name="curve">The curve</param>
+        /// <param name="lnPt">The origin of the line</param>
+        /// <param name="lnDir">The direction of the line</param>
+        /// <param name="result">The collection to which results should be added.  
+        /// If null, a new collection will be instantiated and returned.</param>
+        /// <param name="domainAdjustMin">The start parameter of the curve will be adjusted
+        /// to this value in the returned parameters.</param>
+        /// <param name="domainAdjustMax">The end parameter of the curve will be adjusted 
+        /// to this value in the returned parameters.</param>
+        /// <param name="lineBounded">If true, intersections outside of the bounds of the line
+        /// running from the origin point to the end of the direction vector will be ignored.</param>
+        /// <param name="tLine">Optional.  If supplied, this collection will be populated with the
+        /// intersection parameters on the line.</param>
+        /// <returns>The list of intersection parameters on the curve</returns>
+        public static IList<double> CurveLineXY(Curve curve, Vector lnPt, Vector lnDir, IList<double> result = null,
+        double domainAdjustMin = 0, double domainAdjustMax = 1, bool lineBounded = false, IList<double> tLine = null)
         {
             if (result == null) result = new List<double>();
+
+            if (curve == null) return result;
+
             if (curve is Line)
             {
                 double t0 = -1, t1 = -1;

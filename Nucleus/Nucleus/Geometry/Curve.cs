@@ -235,7 +235,7 @@ namespace Nucleus.Geometry
         /// between vertices.</remarks>
         public virtual Vector PointAt(int span, double tSpan)
         {
-            if (!IsValid) return Vector.Unset; //No spans!
+            //if (!IsValid) return Vector.Unset; //No spans!
             Vertex start = SegmentStart(span); //Find the span start vertex
             if (start == null) return Vector.Unset; //If the start vertex doesn't exist, abort
             if (tSpan == 0) return start.Position;  //If tSpan is at the start of the span, just return the start position
@@ -1764,7 +1764,47 @@ namespace Nucleus.Geometry
         /// <returns>True if successful, false if not.</returns>
         public virtual bool TrimEnd(double length)
         {
+            if (length == 0) return true;
+
             Vector pt = PointAtLength(length, true);
+            if (pt.IsValid())
+            {
+                End.Position = pt;
+                return true;
+            }
+            else return false;
+        }
+
+        /// <summary>
+        /// Extend this curve at the start by the specified length
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public virtual bool ExtendStart(double length)
+        {
+            if (length < 0) return TrimStart(-length);
+
+            Vector tan = TangentAt(0);
+            Vector pt = StartPoint - tan * length;
+            if (pt.IsValid())
+            {
+                Start.Position = pt;
+                return true;
+            }
+            else return false;
+        }
+
+        /// <summary>
+        /// Extend this curve at the start by the specified length
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public virtual bool ExtendEnd(double length)
+        {
+            if (length < 0) return TrimEnd(-length);
+
+            Vector tan = TangentAt(1);
+            Vector pt = EndPoint + tan * length;
             if (pt.IsValid())
             {
                 End.Position = pt;
@@ -1809,7 +1849,7 @@ namespace Nucleus.Geometry
                 for (int j = i + 1; j < max; j++)
                 {
                     ISimpleCurve crvB = simples.GetWrapped(j);
-                    Vector[] chuck = Intersect.CurveCurveXY(crvA, crvB, 0.0001);
+                    Vector[] chuck = Intersect.CurveCurveXY(crvA, crvB, Tolerance.Distance);
                     if (chuck != null && chuck.Length > 0)
                     {
                         foreach (Vector pt in chuck)
@@ -2617,13 +2657,13 @@ namespace Nucleus.Geometry
                 bool found = false;
                 foreach (var matchedSet in matched)
                 {
-                    if (crv.StartPoint.DistanceToSquared(matchedSet.Last().EndPoint).IsTiny())
+                    if (crv.StartPoint.DistanceToSquared(matchedSet.Last().EndPoint) <= Tolerance.DistanceSquared)
                     {
                         matchedSet.Add(crv);
                         found = true;
                         break;
                     }
-                    else if (crv.EndPoint.DistanceToSquared(matchedSet.First().StartPoint).IsTiny())
+                    else if (crv.EndPoint.DistanceToSquared(matchedSet.First().StartPoint) <= Tolerance.DistanceSquared)
                     {
                         matchedSet.Insert(0, crv);
                         found = true;
@@ -2724,25 +2764,32 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Remove from this collection any curves which do not have the same winding
+        /// Remove from this collection any closed curves which do not have the same winding
         /// direction on the XY plane as the specified winding direction
         /// </summary>
         /// <typeparam name="TCurve"></typeparam>
         /// <param name="curves"></param>
         /// <param name="isClockwise">If true, anti-clockwise curves will be removed.  If false,
         /// clockwise curves will be removed.</param>
-        public static void RemoveInvertedCurvesXY<TCurve>(this IList<TCurve> curves, bool isClockwise)
+        public static void RemoveInvertedCurvesXY<TCurve>(this IList<TCurve> curves, bool isClockwise, bool mustBeClosed = false)
             where TCurve : Curve
         {
             for (int i = curves.Count - 1; i >= 0; i--)
             {
-                if (curves[i].IsClockwiseXY() != isClockwise)
-                    curves.RemoveAt(i);
+                var curve = curves[i];
+                if (curve.Closed)
+                {
+                    if (curves[i].IsClockwiseXY() != isClockwise)
+                    {
+                        curves.RemoveAt(i);
+                    }
+                }
+                else if (mustBeClosed) curves.RemoveAt(i);
             }
         }
         
         /// <summary>
-        /// Remove from this collection any curves which do not have the same winding direction
+        /// Remove from this collection any closed curves which do not have the same winding direction
         /// on the XY plane as the specified base curve
         /// </summary>
         /// <typeparam name="TCurve"></typeparam>
@@ -2751,7 +2798,7 @@ namespace Nucleus.Geometry
         public static void RemoveInvertedCurvesXY<TCurve>(this IList<TCurve> curves, Curve original)
             where TCurve : Curve
         {
-            curves.RemoveInvertedCurvesXY(original.IsClockwiseXY());
+            curves.RemoveInvertedCurvesXY(original.IsClockwiseXY(), original.Closed);
         }
     }
 }

@@ -87,6 +87,34 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Private backing member variable for the StartOffset property
+        /// </summary>
+        private double _StartOffset = 0;
+
+        /// <summary>
+        /// The offset of the start edge from the start of the spine curve.  Only used when the path start does not connect into any other path segments.
+        /// </summary>
+        public double StartOffset
+        {
+            get { return _StartOffset; }
+            set { ChangeProperty(ref _StartOffset, value); }
+        }
+
+        /// <summary>
+        /// Private backing member variable for the EndOffset property
+        /// </summary>
+        private double _EndOffset = 0;
+
+        /// <summary>
+        /// The offset of the start edge from the end of the spine curve.  Only used when the path end does not connect into any other path segments.
+        /// </summary>
+        public double EndOffset
+        {
+            get { return _EndOffset; }
+            set { ChangeProperty(ref _EndOffset, value); }
+        }
+
+        /// <summary>
         /// Private backing field for StartCapLeft property
         /// </summary>
         private Curve _StartCapLeft = null;

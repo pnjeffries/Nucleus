@@ -39,6 +39,9 @@ namespace Nucleus.Base
         TOwner Owner { get; }
     }
 
+    /// <summary>
+    /// Extension methods for the IOwned interface and collections thereof
+    /// </summary>
     public static class IOwnedExtensions
     {
         /// <summary>

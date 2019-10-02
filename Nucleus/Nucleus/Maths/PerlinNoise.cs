@@ -11,7 +11,7 @@ namespace Nucleus.Maths
     /// A perlin noise generator, based on Ken Perlin's 2002 Improved algorithm
     /// https://mrl.nyu.edu/~perlin/noise/
     /// </summary>
-    public class PerlinNoise
+    public static class PerlinNoise
     {
         #region Constants
 
@@ -47,7 +47,7 @@ namespace Nucleus.Maths
         #endregion
 
         /// <summary>
-        /// Improved Perlin noise function.  Returns a Perline noise value
+        /// Improved Perlin noise function.  Returns a Perlin noise value
         /// for the specified location
         /// </summary>
         /// <param name="v"></param>
