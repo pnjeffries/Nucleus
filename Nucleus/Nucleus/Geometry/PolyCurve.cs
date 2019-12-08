@@ -1131,6 +1131,8 @@ namespace Nucleus.Geometry
         /// has a combined length less than the minimum.</remarks>
         public bool TrimShortEndCurves(double minLength, Angle angleTolerance = new Angle(), bool atStart = true, bool atEnd = true, double absoluteMinLength = 0)
         {
+            if (SubCurves.Count == 0) return false;
+
             bool result = false;
             if (!Closed)
             {
@@ -1152,7 +1154,7 @@ namespace Nucleus.Geometry
                         if (!startCrv.IsValid) SubCurves.RemoveFirst();
                     }
                 }
-                if (atEnd)
+                if (atEnd && SubCurves.Count > 0)
                 {
                     var endCrv = SubCurves.LastOrDefault();
                     var endLength = endCrv.Length;
@@ -1178,9 +1180,14 @@ namespace Nucleus.Geometry
         /// Automatically fillet any sharp corners between segments in the PolyCurve
         /// </summary>
         /// <param name="angleLimit">The smallest permissible angle</param>
-        /// <param name="filletLength">The smallest permissible length of the added fillet curve</param>
-        public void FilletSharpCorners(Angle angleLimit, double filletLength)
+        /// <param name="filletLength">The target length of the added fillet curve.  
+        /// Fillet curves smaller than this may be produced if the segments between which the fillet is being added are too short to
+        /// permit </param>
+        /// <returns>True if the filleting succeeded, false if sharp corners were encountered but they could
+        /// not be successfully filleted</returns>
+        public bool FilletSharpCorners(Angle angleLimit, double filletLength)
         {
+            bool result = true;
             int iMax = SubCurves.Count - 1;
             if (Closed) iMax += 1;
             for (int i = 0; i < iMax; i++)
@@ -1197,21 +1204,40 @@ namespace Nucleus.Geometry
                 if (angle < angleLimit)
                 {
                     double cutBack = filletLength / (2 * Math.Sin(angle / 2));
-                    if (cutBack > 0)
+                    cutBack = Math.Min(cutBack, Math.Min(crvA.Length, crvB.Length));
+
+                    if (cutBack > 0 &&
+                            crvA.TrimEnd(cutBack) &&
+                            crvB.TrimStart(cutBack))
                     {
-                        if (crvA.Length > cutBack && crvB.Length > cutBack &&
-                            crvA.TrimEnd(cutBack) && crvB.TrimStart(cutBack))
+                        Line fillet = new Line(crvA.EndPoint, crvB.StartPoint);
+                        SubCurves.Insert(i + 1, fillet);
+                        i++;
+                        iMax++;
+
+                        // Remove any zero-length curves:
+                        if (crvA.Length.IsTiny())
                         {
-                            Line fillet = new Line(crvA.EndPoint, crvB.StartPoint);
-                            SubCurves.Insert(i + 1, fillet);
-                            i++;
-                            iMax++;
+                            SubCurves.Remove(crvA);
+                            i--;
+                            iMax--;
+                        }
+                        if (crvB.Length.IsTiny())
+                        {
+                            SubCurves.Remove(crvB);
+                            iMax--;
                         }
                     }
+                    else
+                    {
+                        result = false;
+                    }
+                    
                     //TODO: Deal with failed trims better
                 }
 
             }
+            return result;
         }
 
         /// <summary>

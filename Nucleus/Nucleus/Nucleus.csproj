@@ -76,6 +76,7 @@
     <Compile Include="Alerts\LoadAlert.cs" />
     <Compile Include="Alerts\ModelObjectAlert.cs" />
     <Compile Include="Alerts\NodeAlert.cs" />
+    <Compile Include="Alerts\PredefinedAlert.cs" />
     <Compile Include="Alerts\ProgressAlert.cs" />
     <Compile Include="Analysis\BeamAnalysisBase.cs" />
     <Compile Include="Analysis\CalcVariable.cs" />
@@ -84,10 +85,12 @@
     <Compile Include="AppHost\IHost.cs" />
     <Compile Include="Base\Deletable.cs" />
     <Compile Include="Base\DoubleParameter.cs" />
+    <Compile Include="Base\FilePathParameter.cs" />
     <Compile Include="Base\Gender.cs" />
     <Compile Include="Base\IFastDuplicatable.cs" />
     <Compile Include="Analysis\SolarPositioning.cs" />
     <Compile Include="Base\IntParameter.cs" />
+    <Compile Include="Base\ISelectable.cs" />
     <Compile Include="Base\Option.cs" />
     <Compile Include="Base\OptionCollection.cs" />
     <Compile Include="Base\Parameter.cs" />
@@ -98,6 +101,7 @@
     <Compile Include="Base\StringParameter.cs" />
     <Compile Include="DDTree\NDTree.cs" />
     <Compile Include="DDTree\NDTreeNode.cs" />
+    <Compile Include="DDTree\VertexGeometryDDTree.cs" />
     <Compile Include="Debugging\CollectionDebugView.cs" />
     <Compile Include="Events\GeometryUpdateEventArgs.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />

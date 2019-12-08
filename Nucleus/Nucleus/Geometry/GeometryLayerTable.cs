@@ -101,6 +101,33 @@ namespace Nucleus.Geometry
             }
         }
 
+        /// <summary>
+        /// Remove any instances of the geometry with the specified
+        /// key from any layer in this table
+        /// </summary>
+        /// <param name="key">The GUID of the geometry to be removed</param>
+        /// <returns>True if any geometry was removed, else false.</returns>
+        public bool RemoveGeometry(Guid key)
+        {
+            bool found = false;
+            foreach (var layer in this)
+            {
+                if (layer.Remove(key)) found = true;
+            }
+            return found;
+        }
+
+        /// <summary>
+        /// Remove any instances of the geometry with the specified
+        /// key from any layer in this table
+        /// </summary>
+        /// <param name="geometry">The geometry to remove</param>
+        /// <returns>True if any geometry was removed, else false.</returns>
+        public bool RemoveGeometry(VertexGeometry geometry)
+        {
+            return RemoveGeometry(geometry.GUID);
+        }
+
         #endregion
 
         #region Methods

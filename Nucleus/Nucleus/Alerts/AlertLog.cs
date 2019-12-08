@@ -19,19 +19,19 @@ namespace Nucleus.Alerts
 
         #region Properties
 
-        /// <summary>
-        /// Private backing member variable for the PredefinedMessages property
-        /// </summary>
-        private IDictionary<string, string> _PredefinedMessages;
+        ///// <summary>
+        ///// Private backing member variable for the PredefinedMessages property
+        ///// </summary>
+        //private IDictionary<string, string> _PredefinedMessages;
 
-        /// <summary>
-        /// The dictionary of predefined alert messages
-        /// </summary>
-        public IDictionary<string, string> PredefinedMessages
-        {
-            get { return _PredefinedMessages; }
-            set { _PredefinedMessages = value; }
-        }
+        ///// <summary>
+        ///// The dictionary of predefined alert messages
+        ///// </summary>
+        //public IDictionary<string, string> PredefinedMessages
+        //{
+        //    get { return _PredefinedMessages; }
+        //    set { _PredefinedMessages = value; }
+        //}
 
         bool ILog.IsBold { get { return false; }  set { } }
         bool ILog.IsItalicised { get { return false; } set { } }
@@ -45,6 +45,7 @@ namespace Nucleus.Alerts
         /// </summary>
         public AlertLog() { }
 
+        /*
         /// <summary>
         /// Create a new AlertLog set up to use the specified dictionary of predefined
         /// message formats
@@ -54,6 +55,7 @@ namespace Nucleus.Alerts
         {
             _PredefinedMessages = predefinedMessages;
         }
+        */
 
         #endregion
 
@@ -161,6 +163,7 @@ namespace Nucleus.Alerts
             RaiseAlert(new LoadAlert(alertID, load, message, level));
         }
 
+        /*
         /// <summary>
         /// Get a predefined message from the predefined messages dictionary, if one has been predefined.
         /// </summary>
@@ -244,6 +247,7 @@ namespace Nucleus.Alerts
             string message = GetPredefinedMessage(predefKey);
             RaiseAlert(alertID, message, level);
         }
+        */
 
         /// <summary>
         /// ILog WriteText implementation

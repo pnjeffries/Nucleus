@@ -167,6 +167,31 @@ namespace Nucleus.Base
                 item.Undelete();
             }
         }
+
+        /// <summary>
+        /// Delete any objects in this collection which meet the specified delegate criteria
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="deleteIfTrue">The delegate function which returns true if the given object is to be deleted</param>
+        /// <param name="removeDeleted">Optional, default false.  If true, the objects which are deleted will also be removed
+        /// from the collection.</param>
+        public static void DeleteIf<T>(this IList<T> list, Func<T, bool> deleteIfTrue, bool removeDeleted = false)
+            where T:IDeletable
+        {
+            if (list != null)
+            {
+                for (int i = list.Count - 1; i >= 0; i--)
+                {
+                    var obj = list[i];
+                    if (deleteIfTrue.Invoke(obj))
+                    {
+                        obj.Delete();
+                        if (removeDeleted) list.RemoveAt(i);
+                    }
+                }
+            }
+        }
     }
 
 }

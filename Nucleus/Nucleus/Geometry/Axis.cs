@@ -152,6 +152,31 @@ namespace Nucleus.Geometry
         /// other axis.
         /// Expressed as a multiplication factor of the direction vector from the origin.
         /// </summary>
+        /// <param name="origin">The origin point of the other axis</param>
+        /// <param name="direction">The direction of the other axis</param>
+        /// <param name="t">OUTPUT.  The parameter on the other axis.</param>
+        /// <returns>The parameter on this axis describing the closest point to the other axis.
+        /// Use PointAt to resolve this into a vector if required.</returns>
+        /// <remarks>Algorithm based on http://geomalgorithms.com/a07-_distance.html </remarks>
+        /// <returns></returns>
+        public double ClosestParameter(Vector origin, Vector direction, out double t)
+        {
+            Vector w0 = Origin - origin; //w0 = P0 - Q0
+            double a = Direction.Dot(direction); //a = u*u
+            double b = Direction.Dot(direction); //b = u*v
+            double c = direction.Dot(direction); //c = v*v
+            double d = Direction.Dot(w0); //d = u*w0
+            double e = direction.Dot(w0); //e = v*w0
+            double s = (b * e - c * d) / (a * c - b * b); //sc = be-cd/(ac - b^2)
+            t = (a * e - b * d) / (a * c - b * b);//tc = ae-bd/(a*c - b^2)
+            return s;
+        }
+
+        /// <summary>
+        /// Find the position along this axis that is closest to the specified
+        /// other axis.
+        /// Expressed as a multiplication factor of the direction vector from the origin.
+        /// </summary>
         /// <param name="other"></param>
         /// <returns>The parameter on this axis describing the closest point to the other axis.
         /// Use PointAt to resolve this into a vector if required.</returns>

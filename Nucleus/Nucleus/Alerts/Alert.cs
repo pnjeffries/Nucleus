@@ -127,6 +127,20 @@ namespace Nucleus.Alerts
             return DisplayText;
         }
 
+        /// <summary>
+        /// Get the display message for this alert, adjusting to predefined alerts as necessary.
+        /// </summary>
+        /// <param name="predefinedMessages">A dictionary of predefined messages.  The set
+        /// message of this alert will be used as a key in this dictionary to create the
+        /// final message.  The stored objects of this alert will be used to populate
+        /// the string in the event that it is a format string.  Only some alert types will
+        /// make use of this; most will use the raw message.</param>
+        /// <returns></returns>
+        public virtual string GetDisplayText(IDictionary<string, string> predefinedMessages)
+        {
+            return DisplayText;
+        }
+
         #endregion
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,5 +25,20 @@ namespace Nucleus.Actions
         /// if false a Save file dialog will be used instead.
         /// </summary>
         public bool Open { get; set; } = false;
+
+        /// <summary>
+        /// Helper function to get the (first) ActionInput attribute from the specified PropertyInfo
+        /// </summary>
+        /// <param name="pInfo"></param>
+        /// <returns></returns>
+        public static ActionFilePathInputAttribute ExtractFrom(PropertyInfo pInfo)
+        {
+            object[] actionAtts = pInfo.GetCustomAttributes(typeof(ActionFilePathInputAttribute), false);
+            if (actionAtts.Count() > 0)
+            {
+                return (ActionFilePathInputAttribute)actionAtts[0];
+            }
+            return null;
+        }
     }
 }

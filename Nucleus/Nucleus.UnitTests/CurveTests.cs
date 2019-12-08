@@ -1046,5 +1046,17 @@ namespace Nucleus.UnitTests
             Assert.AreEqual(0.84, projection.Start, 0.000001);
             Assert.AreEqual(0.16, projection.End, 0.0000001);
         }
+
+        [TestMethod]
+        public void TrimShortEndCurves_Recursive_ShouldRunWithoutNullReferenceException()
+        {
+            var poly = new PolyLine(false, Vector.Create2D(
+                211.49032676342119, 268.80234289863893,
+                218.46615310393312, 256.00881070963936,
+                222.87921107027509, 256.36447725350456,
+                222.87085974340667, 256.34361844231978));
+            var pCrv = poly.ToPolyCurve();
+            while (pCrv.TrimShortEndCurves(16, Angle.FromDegrees(45), true, true, 16 / 3)) { }
+        }
     }
 }

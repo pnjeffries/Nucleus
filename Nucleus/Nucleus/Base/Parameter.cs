@@ -86,6 +86,11 @@ namespace Nucleus.Base
             set { ChangeProperty(ref _Visible, value); }
         }
 
+        /// <summary>
+        /// Get the type of the value held by this parameter
+        /// </summary>
+        public abstract Type ValueType { get; }
+
         #endregion
 
         #region Constructor
@@ -156,6 +161,14 @@ namespace Nucleus.Base
             set { ChangeProperty(ref _Value, value); }
         }
 
+        /// <summary>
+        /// Get the type of the value held by this parameter
+        /// </summary>
+        public override Type ValueType
+        {
+            get { return typeof(T); }
+        }
+
         #endregion
 
         #region Constructors
@@ -171,8 +184,14 @@ namespace Nucleus.Base
         /// Creates a new parameter with the specified name.
         /// </summary>
         /// <param name="name">The name of the parameter</param>
+        public Parameter(string name) : base(name) { }
+
+        /// <summary>
+        /// Creates a new parameter with the specified name.
+        /// </summary>
+        /// <param name="name">The name of the parameter</param>
         /// <param name="units">The units in which the parameter is expressed</param>
-        public Parameter(string name, MeasurementUnit units = null) : base(name)
+        public Parameter(string name, MeasurementUnit units) : base(name)
         {
             Units = units;
         }
@@ -226,7 +245,9 @@ namespace Nucleus.Base
         #region Methods
 
         /// <summary>
-        /// Set the value of the parameter to the specified new value
+        /// Set the value of the parameter to the specified new value.
+        /// If the types do not match but newValue implements the IConvertible 
+        /// interface then automatic conversion will be attempted.
         /// </summary>
         /// <param name="newValue"></param>
         /// <returns>True if the value was successfully set, false if not.</returns>
@@ -237,7 +258,18 @@ namespace Nucleus.Base
                 Value = (T)newValue;
                 return true;
             }
-            else return false;
+            if (newValue is IConvertible)
+            {
+                try
+                {
+                    Value = (T)Convert.ChangeType(newValue, typeof(T));
+                }
+                catch
+                {
+                }
+            }
+
+            return false;
         }
 
         /// <summary>

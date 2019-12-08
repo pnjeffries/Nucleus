@@ -9,6 +9,7 @@ using ETABS2016;
 using Nucleus.Conversion;
 using Nucleus.Model;
 using Nucleus.Geometry;
+using Nucleus.Model.Loading;
 
 namespace Nucleus.ETABS
 {
@@ -161,7 +162,6 @@ namespace Nucleus.ETABS
                     RaiseMessage("Writing levels...");
                     WriteStoreys(levels, context);
                 }
-
             }
 
             if (context.Options.Nodes)
@@ -202,6 +202,17 @@ namespace Nucleus.ETABS
                 //if (context.Options.Update) sets = //TODO?
                 if (sets.Count > 0) RaiseMessage("Writing Groups...");
                 WriteSets(sets, context);
+            }
+
+            if (context.Options.Loading)
+            {
+                var cases = model.LoadCases;
+                if (cases.Count > 0) RaiseMessage("Writing Load Cases...");
+                WriteLoadCases(cases, context);
+
+                var loads = model.Loads;
+                if (loads.Count > 0) RaiseMessage("Writing Loads...");
+                WriteLoads(loads, context);
             }
 
             return true;
@@ -408,32 +419,72 @@ namespace Nucleus.ETABS
             }
         }
 
+        /// <summary>
+        /// Write the specified node set to the ETABS group with the specified name
+        /// </summary>
+        /// <param name="groupName"></param>
+        /// <param name="nS"></param>
+        /// <param name="context"></param>
+        public void WriteSet(string groupName, NodeSet nS, ETABSConversionContext context)
+        {
+            var items = nS.Items;
+            foreach (var item in items)
+            {
+                string id = context.IDMap.GetSecondID(item);
+                if (id != null) SapModel.FrameObj.SetGroupAssign(id, groupName);
+            }
+        }
 
+        /// <summary>
+        /// Write the specified linear element set to the ETABS group with the specified name
+        /// </summary>
+        /// <param name="groupName"></param>
+        /// <param name="lES"></param>
+        /// <param name="context"></param>
+        public void WriteSet(string groupName, LinearElementSet lES, ETABSConversionContext context)
+        {
+            var items = lES.Items;
+            foreach (var item in items)
+            {
+                string id = context.IDMap.GetSecondID(item);
+                if (id != null) SapModel.FrameObj.SetGroupAssign(id, groupName);
+            }
+        }
+
+        /// <summary>
+        /// Write the specified panel element set to the ETABS group with the specified name.
+        /// </summary>
+        /// <param name="groupName"></param>
+        /// <param name="pES"></param>
+        /// <param name="context"></param>
+        public void WriteSet(string groupName, PanelElementSet pES, ETABSConversionContext context)
+        {
+            var items = pES.Items;
+            foreach (var item in items)
+            {
+                string id = context.IDMap.GetSecondID(item);
+                if (id != null) SapModel.AreaObj.SetGroupAssign(id, groupName);
+            }
+        }
+
+        /// <summary>
+        /// Write the sets in the model to ETABS groups
+        /// </summary>
+        /// <param name="sets"></param>
+        /// <param name="context"></param>
         public void WriteSets(ModelObjectSetCollection sets, ETABSConversionContext context)
         {
             foreach (var set in sets)
             { 
                 string setName = set.Name;
                 SapModel.GroupDef.SetGroup(setName);
-                if (set is LinearElementSet)
+                if (set is LinearElementSet lES)
                 {
-                    var lES = (LinearElementSet)set;
-                    var items = lES.Items;
-                    foreach (var item in items)
-                    {
-                        string id = context.IDMap.GetSecondID(item);
-                        if (id != null) SapModel.FrameObj.SetGroupAssign(id, setName);
-                    }
+                    WriteSet(setName, lES, context);
                 }
-                else if (set is PanelElementSet)
+                else if (set is PanelElementSet pES)
                 {
-                    var lES = (PanelElementSet)set;
-                    var items = lES.Items;
-                    foreach (var item in items)
-                    {
-                        string id = context.IDMap.GetSecondID(item);
-                        if (id != null) SapModel.AreaObj.SetGroupAssign(id, setName);
-                    }
+                    WriteSet(setName, pES, context);
                 }
             }
         }
@@ -453,13 +504,68 @@ namespace Nucleus.ETABS
         }
 
         /// <summary>
+        /// Write a node load
+        /// </summary>
+        /// <param name="load"></param>
+        /// <param name="context"></param>
+        public void WriteLoad(NodeLoad load, ETABSConversionContext context)
+        {
+            string groupID = load.GUID.ToString();
+            // Currently nodes are not all written unless restrained:
+            //WriteSet(groupID, load.AppliedTo, context);
+
+            // TODO
+        }
+
+        /// <summary>
+        /// Write an element load
+        /// </summary>
+        /// <param name="load"></param>
+        /// <param name="context"></param>
+        public void WriteLoad(LinearElementLoad load, ETABSConversionContext context)
+        {
+            string groupID = load.GUID.ToString();
+            WriteSet(groupID, load.AppliedTo, context);
+
+            int loadType = load.IsMoment ? 2 : 1;
+            //SapModel.FrameObj.SetLoadDistributed(groupID, load.Case?.Name, loadType)
+            // TODO
+        }
+
+        /// <summary>
+        /// Write a panel load
+        /// </summary>
+        /// <param name="load"></param>
+        /// <param name="context"></param>
+        public void WriteLoad(PanelLoad load, ETABSConversionContext context)
+        {
+            string groupID = load.GUID.ToString();
+            WriteSet(groupID, load.AppliedTo, context);
+            string axes = "Local";
+            if (load.Axes.IsGlobal) axes = "Global";
+            int dir = 2;
+            if (load.Direction == Direction.X) dir = 0;
+            else if (load.Direction == Direction.Y) dir = 1;
+            else if (load.Direction == Direction.Z) dir = 2;
+            // TODO: Deal with moment directions
+            SapModel.AreaObj.SetLoadUniform(groupID, load.Case?.Name, load.Value.Evaluate<double>(), dir, false, axes, eItemType.Group);
+        }
+
+        /// <summary>
         /// Write loads to ETABS
         /// </summary>
         /// <param name="loads"></param>
         /// <param name="context"></param>
         public void WriteLoads(LoadCollection loads, ETABSConversionContext context)
         {
+            foreach (var load in loads)
+            {
+                if (load is NodeLoad nL) WriteLoad(nL, context);
+                else if (load is LinearElementLoad lEL) WriteLoad(lEL, context);
+                else if (load is PanelLoad pEL) WriteLoad(pEL, context);
+            }
             // ?
+            
             // SapModel.LoadCases.StaticNonlinear.SetLoads()
         }
 

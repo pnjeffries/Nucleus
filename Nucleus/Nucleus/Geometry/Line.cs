@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using Nucleus.Model;
+using Nucleus.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -331,6 +332,19 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find the closest point on this line to a ray, expressed as a parameter
+        /// from 0-1 (Start-End)
+        /// </summary>
+        /// <param name="ray"></param>
+        /// <returns></returns>
+        public override double ClosestParameter(Axis ray, out double tRay)
+        {
+            tRay = ray.ClosestParameter(StartPoint, EndPoint - StartPoint, out double t);
+            t = t.Limit(0, 1);
+            return t;
+        }
+
+        /// <summary>
         /// Find the closest point on this line to a test point
         /// </summary>
         /// <param name="toPoint">The test point</param>
@@ -484,8 +498,6 @@ namespace Nucleus.Geometry
             else if (t > 1.0) return 1;
             else return t;
         }
-
-
 
         #endregion
     }

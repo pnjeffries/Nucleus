@@ -342,9 +342,11 @@ namespace Nucleus.Geometry
         /// <param name="countLimit">Optional.  The maximum number of parameters to be produced.
         /// If set to 0 or below, the number of possible returned parameters is unlimited.</param>
         /// <returns></returns>
-        public virtual IList<double> ParametersAtSpacing(double spacing, double firstOffset = 0, int countLimit = 0)
+        public virtual IList<double> ParametersAtSpacing(double spacing, double firstOffset = 0, int countLimit = -1)
         {
             var result = new List<double>();
+            if (countLimit == 0) return result;
+
             if (spacing > 0.00001)
             {
                 double l0 = 0;
@@ -864,6 +866,57 @@ namespace Nucleus.Geometry
                 {
                     minDistSqd = distSqd;
                     result = ((double)i) / SegmentCount + t * 1.0 / SegmentCount;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Find the closest point on this curve to a test ray, expressed as a
+        /// parameter value from 0-1.  This may be a position on the curve or it may
+        /// be the start (0) or end (1) of the curve depending on the relative location
+        /// of the test point.
+        /// </summary>
+        /// <param name="toRay">The ray to test</param>
+        /// <param name="tRay">Output.  The closest parameter on the ray</param>
+        /// <param name="minDistSqd">Output.  The minimum distance between the curve and the ray,
+        /// squared.</param>
+        /// <returns></returns>
+        public virtual double ClosestParameter(Axis toRay, out double tRay)
+        {
+            return ClosestParameter(toRay, out tRay, out double minDistSqd);
+        }
+
+        /// <summary>
+        /// Find the closest point on this curve to a test ray, expressed as a
+        /// parameter value from 0-1.  This may be a position on the curve or it may
+        /// be the start (0) or end (1) of the curve depending on the relative location
+        /// of the test point.
+        /// </summary>
+        /// <param name="toRay">The ray to test</param>
+        /// <param name="tRay">Output.  The closest parameter on the ray</param>
+        /// <param name="minDistSqd">Output.  The minimum distance between the curve and the ray,
+        /// squared.</param>
+        /// <returns></returns>
+        public virtual double ClosestParameter(Axis toRay, out double tRay, out double minDistSqd)
+        {
+            double result = double.NaN;
+            tRay = double.NaN;
+            minDistSqd = 0;
+            for (int i = 0; i < SegmentCount; i++)
+            {
+                Vector start = SegmentStart(i).Position;
+                Vector end = SegmentEnd(i).Position;
+                double tRayTemp = toRay.ClosestParameter(start, end - start, out double t);
+                t = t.Limit(0, 1);
+                Vector v = start.Interpolate(end, t);
+                Vector rV = toRay.PointAt(tRayTemp);
+                double distSqd = v.DistanceToSquared(rV);
+                if (double.IsNaN(result) || distSqd < minDistSqd)
+                {
+                    minDistSqd = distSqd;
+                    result = ((double)i) / SegmentCount + t * 1.0 / SegmentCount;
+                    tRay = tRayTemp;
                 }
             }
             return result;
@@ -2799,6 +2852,40 @@ namespace Nucleus.Geometry
             where TCurve : Curve
         {
             curves.RemoveInvertedCurvesXY(original.IsClockwiseXY(), original.Closed);
+        }
+
+        /// <summary>
+        /// Raycast through the curve collection and return the first curve that the ray
+        /// passes within tolerance of.  The tolerance factor may optionally be scaled
+        /// up as the distance along the ray of the intersection increases to allow for
+        /// perspective scaling.
+        /// </summary>
+        /// <typeparam name="TCurve"></typeparam>
+        /// <param name="curves"></param>
+        /// <param name="ray">The ray to trace through</param>
+        /// <param name="tolerance">The base value of the tolerance distance.</param>
+        /// <param name="distanceFactor">The rate at which the tolerance distance increases
+        /// with distance along the ray.  This is expressed as the factor by which the tolerance
+        /// should be increased for each multiple of the axis direction vector magnitude.</param>
+        /// <returns></returns>
+        public static TCurve FirstCurveIntersected<TCurve>(this IList<TCurve> curves, Axis ray, double tolerance, double distanceFactor = 0)
+            where TCurve : Curve
+        {
+            TCurve closest = null;
+            double tRayMin = double.NaN;
+            foreach (var crv in curves)
+            {
+                crv.ClosestParameter(ray, out double tRay, out double minDistSqd);
+                // Adjust tolerance for distance
+                double tol = tolerance * (1 + distanceFactor * tRay);
+                tol *= tol;
+                if (minDistSqd <= tol && tRay >= 0 && (closest == null || tRay < tRayMin))
+                {
+                    closest = crv;
+                    tRayMin = tRay;
+                }
+            }
+            return closest;
         }
     }
 }
