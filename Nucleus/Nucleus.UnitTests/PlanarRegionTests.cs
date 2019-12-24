@@ -2433,5 +2433,27 @@ namespace Nucleus.UnitTests
             Assert.AreEqual(12522.667926643599, area, 0.1);
         }
 
+        [TestMethod]
+        public void Not_OverlappingSquares_ShouldCreateL()
+        {
+            var plineA = new PolyLine(true, Vector.Create2D(0, 0, 10, 0, 10, 10, 0, 10));
+            var plineB = new PolyLine(true, Vector.Create2D(5, 5, 15, 5, 15, 15, 5, 15));
+            var regionA = new PlanarRegion(plineA);
+            var regionB = new PlanarRegion(plineB);
+            var result = regionA.Not(regionB);
+            Assert.AreEqual(75, result.CalculateTotalArea());
+        }
+
+        [TestMethod]
+        public void Not_OverlappingSquaresStartInside_ShouldCreateInverseL()
+        {
+            var plineA = new PolyLine(true, Vector.Create2D(0, 0, 10, 0, 10, 10, 0, 10));
+            var plineB = new PolyLine(true, Vector.Create2D(-5, -5, 5, -5, 5, 5, -5, 5));
+            var regionA = new PlanarRegion(plineA);
+            var regionB = new PlanarRegion(plineB);
+            var result = regionA.Not(regionB);
+            Assert.AreEqual(75, result.CalculateTotalArea());
+        }
+
     }
 }

@@ -92,12 +92,40 @@ namespace Nucleus.Geometry
         /// <param name="curveB"></param>
         /// <param name="parameterA"></param>
         /// <param name="parameterB"></param>
-        public CurveCurveIntersection(Curve curveA, Curve curveB, double parameterA, double parameterB)
+        public CurveCurveIntersection(Curve curveA, Curve curveB, double parameterA, double parameterB, int processCounter = 0)
         {
             _CurveA = curveA;
             _CurveB = curveB;
             _ParameterA = parameterA;
             _ParameterB = parameterB;
+            _ProcessCounter = processCounter;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Get the intersection parameter on the specified curve
+        /// </summary>
+        /// <param name="curve">One of CurveA or CurveB</param>
+        /// <returns></returns>
+        public double ParameterOn(Curve curve)
+        {
+            if (curve == CurveA) return ParameterA;
+            else return ParameterB;
+        }
+
+        /// <summary>
+        /// Return the alternate curve involved in this
+        /// itersection from the one specified.
+        /// </summary>
+        /// <param name="curve"></param>
+        /// <returns></returns>
+        public Curve OtherCurve(Curve curve)
+        {
+            if (curve == CurveA) return CurveB;
+            else return CurveA;
         }
 
         #endregion

@@ -9,6 +9,7 @@ namespace Nucleus.Base
     /// <summary>
     /// A named input or output parameter which holds a file path
     /// </summary>
+    [Serializable]
     public class FilePathParameter : Parameter<FilePath>
     {
         #region Properties

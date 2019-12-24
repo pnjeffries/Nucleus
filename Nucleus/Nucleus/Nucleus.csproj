@@ -83,6 +83,7 @@
     <Compile Include="Analysis\EC3MemberChecks.cs" />
     <Compile Include="Analysis\FlatConcreteSlabChecks.cs" />
     <Compile Include="AppHost\IHost.cs" />
+    <Compile Include="Base\ComparisonComparer.cs" />
     <Compile Include="Base\Deletable.cs" />
     <Compile Include="Base\DoubleParameter.cs" />
     <Compile Include="Base\FilePathParameter.cs" />

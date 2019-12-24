@@ -397,6 +397,38 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Find the index of the item in this list which returns the next highest value of a property or method
+        /// defined by a delegate after the specified value
+        /// </summary>
+        /// <typeparam name="TItem">The type of item in the list</typeparam>
+        /// <typeparam name="TProperty">The type of the property to be interrogated</typeparam>
+        /// <param name="list"></param>
+        /// <param name="propertyDelegate">Delegate function which returns the value
+        /// for each list item.</param>
+        /// <param name="after">The value for which the subsequent value in order is being sought</param>
+        /// <returns></returns>
+        public static int IndexOfNext<TItem, TProperty>(this IList<TItem> list,
+            Func<TItem, TProperty> propertyDelegate, TProperty after)
+            where TProperty : IComparable<TProperty>
+            where TItem : class
+        {
+            int result = -1;
+            TProperty min = default(TProperty);
+            for (int i = 0; i < list.Count; i++)
+            {
+                TItem item = list[i];
+                TProperty value = propertyDelegate.Invoke(item);
+                if (value.CompareTo(after) == 1 &&
+                    (result == -1 || value.CompareTo(min) == -1))
+                {
+                    min = value;
+                    result = i;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Find the item in this list which returns the next highest value of a property or method
         /// defined by a delegate after the specified value
         /// </summary>
@@ -423,6 +455,38 @@ namespace Nucleus.Extensions
                 {
                     min = value;
                     result = item;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Find the index of the item in this list which returns the highest value of a property or method
+        /// defined by a delegate before the specified value
+        /// </summary>
+        /// <typeparam name="TItem">The type of item in the list</typeparam>
+        /// <typeparam name="TProperty">The type of the property to be interrogated</typeparam>
+        /// <param name="list"></param>
+        /// <param name="propertyDelegate">Delegate function which returns the value
+        /// for each list item.</param>
+        /// <param name="before">The value for which the subsequent value in order is being sought</param>
+        /// <returns></returns>
+        public static int IndexOfPrevious<TItem, TProperty>(this IList<TItem> list,
+            Func<TItem, TProperty> propertyDelegate, TProperty before)
+            where TProperty : IComparable<TProperty>
+            where TItem : class
+        {
+            int result = -1;
+            TProperty max = default(TProperty);
+            for (int i = 0; i < list.Count; i++)
+            {
+                TItem item = list[i];
+                TProperty value = propertyDelegate.Invoke(item);
+                if (value.CompareTo(before) == -1 &&
+                    (result == -1 || value.CompareTo(max) == 1))
+                {
+                    max = value;
+                    result = i;
                 }
             }
             return result;
@@ -715,6 +779,58 @@ namespace Nucleus.Extensions
                 if (obj is T1) return (T1)obj;
             }
             return default(T1);
+        }
+
+        /// <summary>
+        /// Sort the IList in-place.
+        /// Note: to work this list must implement the non-generic IList
+        /// interface.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        public static void Sort<T>(this IList<T> list)
+        {
+            ArrayList.Adapter((IList)list).Sort();
+        }
+
+        /// <summary>
+        /// Sort the IList in-place using the specified comparer.
+        /// Note: to work this list must implement the non-generic IList
+        /// interface.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="comparer"></param>
+        public static void Sort<T>(this IList<T> list, IComparer comparer)
+        {
+            ArrayList.Adapter((IList)list).Sort(comparer);
+        }
+
+        /// <summary>
+        /// Sort the IList in-place using the specified comparison delegate.
+        /// Note: to work this list must implement the non-generic IList
+        /// interface.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="comparison"></param>
+        public static void Sort<T>(this IList<T> list, Comparison<T> comparison)
+        {
+            ArrayList.Adapter((IList)list).Sort(new ComparisonComparer<T>(comparison));
+        }
+
+        /// <summary>
+        /// Both remove and return the object at the specified index in the list
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public static T GetAndRemove<T>(this IList<T> list, int index)
+        {
+            T result = list[index];
+            list.RemoveAt(index);
+            return result;
         }
     }
 }
