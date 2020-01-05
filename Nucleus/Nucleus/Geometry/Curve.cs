@@ -1398,7 +1398,7 @@ namespace Nucleus.Geometry
         /// Check whether the specified point lies within the area enclosed by this curve
         /// on the XY plane
         /// </summary>
-        /// <param name="point"></param>
+        /// <param name="point">The test point</param>
         /// <returns></returns>
         /// <remarks>TODO: Implement more refined checks on arcs</remarks>
         public virtual bool EnclosesXY(Vector point)
@@ -2701,40 +2701,110 @@ namespace Nucleus.Geometry
         /// into PolyCurves.  Returns the collection of curves post joining.
         /// </summary>
         /// <param name="curves"></param>
+        /// <param name="allowReverse">If true, curves may be reversed when
+        /// adding so that start points may join to start points etc.</param>
         /// <returns></returns>
-        public static CurveCollection JoinCurves(this IList<Curve> curves)
+        public static CurveCollection JoinCurves(this IList<Curve> curves, bool allowReverse = true)
         {
             var matched = new List<List<Curve>>();
+            double tolSqd = Tolerance.DistanceSquared;
             foreach (var crv in curves)
             {
-                bool found = false;
-                foreach (var matchedSet in matched)
+                Vector crvStart = crv.StartPoint;
+                Vector crvEnd = crv.EndPoint;
+                List<Curve> found = null;
+                int iFound = -1;
+                // Check for any sets the curve may be joined with:
+                // Once found, will continue to search to find
+                // other sets it may bridge between and join them
+                // together:
+                for (int i = matched.Count - 1; i >= 0; i--)
                 {
-                    if (crv.StartPoint.DistanceToSquared(matchedSet.Last().EndPoint) <= Tolerance.DistanceSquared)
+                    var matchedSet = matched[i];
+                    Vector setStart = matchedSet.First().StartPoint;
+                    Vector setEnd = matchedSet.Last().EndPoint;
+                    if ((found == null || crvStart.IsValid()) && 
+                        crvStart.DistanceToSquared(setEnd) <= tolSqd)
                     {
-                        matchedSet.Add(crv);
-                        found = true;
-                        break;
+                        // Start to end
+
+                        if (found != null) // Merge sets
+                        {
+                            matchedSet.AddRange(found);
+                            matched.RemoveAt(iFound);
+                            break;
+                        }
+                        else matchedSet.Add(crv.FastDuplicate());
+
+                        found = matchedSet;
+                        iFound = i;
+                        crvStart = Vector.Unset;
                     }
-                    else if (crv.EndPoint.DistanceToSquared(matchedSet.First().StartPoint) <= Tolerance.DistanceSquared)
+                    else if ((found == null || crvEnd.IsValid()) && 
+                            crvEnd.DistanceToSquared(setStart) <= tolSqd)
                     {
-                        matchedSet.Insert(0, crv);
-                        found = true;
-                        break;
+                        // End to start
+                         
+                        if (found != null) // Merge sets
+                        {
+                            matchedSet.InsertRange(0, found);
+                            matched.RemoveAt(iFound);
+                            break;
+                        }
+                        else matchedSet.Insert(0, crv.FastDuplicate());
+
+                        found = matchedSet;
+                        iFound = i;
+                        crvEnd = Vector.Unset;
+                    }
+                    else if (allowReverse && (found == null || crvEnd.IsValid()) &&
+                        crvEnd.DistanceToSquared(setEnd) <= tolSqd)
+                    {
+                        // End to end
+
+                        if (found != null)
+                        {
+                            matchedSet.AddRange(found.Reversed());
+                            matched.RemoveAt(iFound);
+                            break;
+                        }
+                        else matchedSet.Add(crv.Reversed());
+
+                        found = matchedSet;
+                        iFound = i;
+                        crvEnd = Vector.Unset;
+                    }
+                    else if (allowReverse && (found == null || crvStart.IsValid()) &&
+                        crvStart.DistanceToSquared(setStart) <= tolSqd)
+                    {
+                        // Start to start
+
+                        if (found != null)
+                        {
+                            matchedSet.InsertRange(0, found.Reversed());
+                            matched.RemoveAt(iFound);
+                            break;
+                        }
+                        else matchedSet.Insert(0, crv.Reversed());
+
+                        found = matchedSet;
+                        iFound = i;
+                        crvStart = Vector.Unset;
                     }
                 }
-                if (!found)
+                if (found == null)
                 {
                     matched.Add(new List<Curve>() { crv });
                 }
             }
+            // Construct new curves
             var result = new CurveCollection();
             foreach (var matchedSet in matched)
             {
                 var pCrv = new PolyCurve(matchedSet);
                 result.Add(pCrv);
             }
-            //TODO: Recursive joining for unordered curve sets
+
             return result;
         }
 
@@ -2814,6 +2884,23 @@ namespace Nucleus.Geometry
             var crv = curve.FastDuplicate();
             crv.Reverse();
             return crv;
+        }
+
+        /// <summary>
+        /// Returns a reversed list of reversed curves
+        /// </summary>
+        /// <typeparam name="TCurve"></typeparam>
+        /// <param name="curves"></param>
+        /// <returns></returns>
+        public static List<TCurve> Reversed<TCurve>(this List<TCurve> curves)
+            where TCurve : Curve
+        {
+            var result = new List<TCurve>(curves.Count);
+            for (int i = curves.Count - 1; i >= 0; i--)
+            {
+                result.Add(curves[i].Reversed());
+            }
+            return result;
         }
 
         /// <summary>

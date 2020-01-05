@@ -1058,5 +1058,41 @@ namespace Nucleus.UnitTests
             var pCrv = poly.ToPolyCurve();
             while (pCrv.TrimShortEndCurves(16, Angle.FromDegrees(45), true, true, 16 / 3)) { }
         }
+
+        [TestMethod]
+        public void PointInside_CircleOrigin_ShouldBeInside()
+        {
+            var circle = new Arc(new Circle(10));
+            bool enclosed = circle.EnclosesXY(new Vector());
+            Assert.AreEqual(true, enclosed);
+        }
+
+        [TestMethod]
+        public void PointInside_CirclePoint_ShouldBeInside()
+        {
+            var circle = new Arc(new Circle(10));
+            bool enclosed = circle.EnclosesXY(new Vector(0,1));
+            Assert.AreEqual(true, enclosed);
+        }
+
+        [TestMethod]
+        public void PointInside_CirclePoint_ShouldBeOutside()
+        {
+            var circle = new Arc(new Circle(10));
+            bool enclosed = circle.EnclosesXY(new Vector(15, 0));
+            Assert.AreEqual(false, enclosed);
+        }
+
+        [TestMethod]
+        public void Join_UnorderedCurves_ShouldBeOneCurve()
+        {
+            var curves = new CurveCollection(
+                new Line(0, 0, 10, 0),
+                new Line(0, 10, 10, 10),
+                new Line(0, 0, 0, 10),
+                new Line(10, 10, 10, 0));
+            var joined = curves.JoinCurves();
+            Assert.AreEqual(1, joined.Count);
+        }
     }
 }

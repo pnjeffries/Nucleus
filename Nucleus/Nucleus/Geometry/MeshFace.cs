@@ -1326,6 +1326,31 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find the line of intersection between this mesh face
+        /// and a plane aligned with the global XY plane
+        /// </summary>
+        /// <param name="zLevel"></param>
+        /// <returns></returns>
+        public Line IntersectPlane(double zLevel)
+        {
+            Vector ptA = Vector.Unset;
+            for (int i = 0; i < Count; i++)
+            {
+                var v0 = this[i];
+                var v1 = this.GetWrapped(i + 1);
+                var interval = new Interval(v0.Z, v1.Z);
+                double t = interval.ParameterOf(zLevel);
+                if (t >= 0 && t < 1)
+                {
+                    Vector pt = v0.Position.Interpolate(v1.Position, t);
+                    if (ptA.IsValid()) return new Line(ptA, pt);
+                    else ptA = pt;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Generate an array which indicates, for each edge around this
         /// face, which is designated the 'opposite' edge.
         /// In the case of quads and n-gons with an even number of sides,

@@ -12,6 +12,7 @@ namespace Nucleus.Base
     /// to use a lambda expression for methods that take an IComparer or IComparer
     /// </summary>
     /// <typeparam name="T">The type to be compared.</typeparam>
+    [Serializable]
     public class ComparisonComparer<T> : IComparer<T>, IComparer
     {
         /// <summary>

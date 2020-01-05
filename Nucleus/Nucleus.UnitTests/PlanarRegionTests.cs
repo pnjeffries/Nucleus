@@ -2445,6 +2445,66 @@ namespace Nucleus.UnitTests
         }
 
         [TestMethod]
+        public void Not_OverlappingSquaresWithVoid_ShouldCreateL()
+        {
+            var plineA = new PolyLine(true, Vector.Create2D(0, 0, 10, 0, 10, 10, 0, 10));
+            var plineB = new PolyLine(true, Vector.Create2D(5, 5, 15, 5, 15, 15, 5, 15));
+            var plineV = new PolyLine(true, Vector.Create2D(1, 1, 9, 1, 9, 9, 1, 9));
+            var regionA = new PlanarRegion(plineA, plineV);
+            var regionB = new PlanarRegion(plineB);
+            var result = regionA.Not(regionB);
+            Assert.AreEqual(27, result.CalculateTotalArea());
+        }
+
+        [TestMethod]
+        public void Not_ContainingSquare_ShouldCreateL()
+        {
+            var plineA = new PolyLine(true, Vector.Create2D(0, 0, 10, 0, 10, 10, 0, 10));
+            //var plineB = new PolyLine(true, Vector.Create2D(5, 5, 15, 5, 15, 15, 5, 15));
+            var plineV = new PolyLine(true, Vector.Create2D(1, 1, 9, 1, 9, 9, 1, 9));
+            var regionA = new PlanarRegion(plineA);
+            var regionB = new PlanarRegion(plineV);
+            var result = regionA.Not(regionB);
+            Assert.AreEqual(36, result.CalculateTotalArea());
+        }
+
+        [TestMethod]
+        public void Not_ContainingSquareOverlappingVoid_ShouldCreateO()
+        {
+            var plineA = new PolyLine(true, Vector.Create2D(0, 0, 10, 0, 10, 10, 0, 10));
+            var plineB = new PolyLine(true, Vector.Create2D(4, 4, 9, 4, 9, 9, 4, 9));
+            var plineV = new PolyLine(true, Vector.Create2D(1, 1, 6, 1, 6, 6, 1, 6));
+            var regionA = new PlanarRegion(plineA, plineV);
+            var regionB = new PlanarRegion(plineB);
+            var result = regionA.Not(regionB);
+            Assert.AreEqual(54, result.CalculateTotalArea());
+        }
+
+        [TestMethod]
+        public void Not_OverlappingSquareWithVoidL_ShouldCreate2Ls()
+        {
+            var plineA = new PolyLine(true, Vector.Create2D(0, 0, 10, 0, 10, 10, 0, 10));
+            var plineB = new PolyLine(true, Vector.Create2D(5, 5, 15, 5, 15, 6, 6, 6, 6,15, 5,15));
+            var plineV = new PolyLine(true, Vector.Create2D(1, 1, 9, 1, 9, 9, 1, 9));
+            var regionA = new PlanarRegion(plineA, plineV);
+            var regionB = new PlanarRegion(plineB);
+            var result = regionA.Not(regionB);
+            Assert.AreEqual(34, result.CalculateTotalArea());
+        }
+
+        [TestMethod]
+        public void Not_OverlappingSquaresInnerVoid_ShouldCreateLWithVoid()
+        {
+            var plineA = new PolyLine(true, Vector.Create2D(0, 0, 10, 0, 10, 10, 0, 10));
+            var plineB = new PolyLine(true, Vector.Create2D(5, 5, 15, 5, 15, 15, 5, 15));
+            var plineV = new PolyLine(true, Vector.Create2D(1, 1, 4, 1, 4, 4, 1, 4));
+            var regionA = new PlanarRegion(plineA, plineV);
+            var regionB = new PlanarRegion(plineB);
+            var result = regionA.Not(regionB);
+            Assert.AreEqual(66, result.CalculateTotalArea());
+        }
+
+        [TestMethod]
         public void Not_OverlappingSquaresStartInside_ShouldCreateInverseL()
         {
             var plineA = new PolyLine(true, Vector.Create2D(0, 0, 10, 0, 10, 10, 0, 10));
@@ -2453,6 +2513,18 @@ namespace Nucleus.UnitTests
             var regionB = new PlanarRegion(plineB);
             var result = regionA.Not(regionB);
             Assert.AreEqual(75, result.CalculateTotalArea());
+        }
+
+        [TestMethod]
+        public void Not_OverlappingCircles_ShouldTakeBite()
+        {
+            var circleA = new Arc(new Circle(5, new Vector(-2, 0)));
+            var circleB = new Arc(new Circle(5, new Vector(2, 0)));
+            var regionA = new PlanarRegion(circleA);
+            var regionB = new PlanarRegion(circleB);
+            var result = regionA.Not(regionB);
+            double area = result.CalculateTotalArea();
+            Assert.AreEqual(38.906, area, 0.001);
         }
 
     }

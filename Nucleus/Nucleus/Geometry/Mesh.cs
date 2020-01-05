@@ -542,6 +542,27 @@ namespace Nucleus.Geometry
             }
         }
 
+        /// <summary>
+        /// Find the set of curves which represent the intersections between
+        /// the faces in this mesh and a plane aligned with the global XY plane
+        /// at the specified z-level
+        /// </summary>
+        /// <param name="zLevel">The z-coordinate of the flat plane</param>
+        /// <param name="join">If true, the resultant curves will be automatically
+        /// joined together into as few polycurves as possible.</param>
+        /// <returns></returns>
+        public CurveCollection IntersectPlane(double zLevel, bool join = false)
+        {
+            var result = new CurveCollection();
+            foreach (var face in Faces)
+            {
+                var line = face.IntersectPlane(zLevel);
+                if (line != null) result.Add(line);
+            }
+            if (join) result = result.JoinCurves(true);
+            return result;
+        }
+
         #endregion
 
         #region Static Methods

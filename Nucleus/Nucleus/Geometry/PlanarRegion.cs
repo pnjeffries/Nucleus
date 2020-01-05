@@ -188,14 +188,25 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Initialises a new PlanarSurface with the specified perimeter and void curves.
+        /// Initialises a new PlanarRegion with the specified perimeter and void curves.
         /// </summary>
         /// <param name="perimeter"></param>
         /// <param name="voids"></param>
-        public PlanarRegion(Curve perimeter, CurveCollection voids, GeometryAttributes attributes = null) : this(perimeter, attributes)
+        public PlanarRegion(Curve perimeter, CurveCollection voids, GeometryAttributes attributes = null) 
+            : this(perimeter, attributes)
         {
             _Voids = voids;
         }
+
+        /// <summary>
+        /// Initialise a new PlanarRegion with the specified perimeter and void curves
+        /// </summary>
+        /// <param name="perimeter"></param>
+        /// <param name="voidCrv"></param>
+        /// <param name="attributes"></param>
+        public PlanarRegion(Curve perimeter, Curve voidCrv, GeometryAttributes attributes = null)
+            : this(perimeter, new CurveCollection(voidCrv), attributes)
+        { }
 
         /// <summary>
         /// Initialises a new PlanarRegion, copying properties from another.
@@ -282,17 +293,29 @@ namespace Nucleus.Geometry
 
         /// <summary>
         /// Determine whether the first segment of the specified curve falls inside the specified other curve.
-        /// Used during boolean operations to determine the 
+        /// Used during boolean operations to determine the alternating inclusion pattern between intersections.
         /// </summary>
         /// <param name="forCrv"></param>
         /// <param name="inCrv"></param>
         /// <param name="intersections"></param>
-        /// <param name="flip"></param>
         /// <returns></returns>
         private bool FirstSegmentInside(Curve forCrv, Curve inCrv, IList<CurveCurveIntersection> intersections)
         {
             // TODO: deal with start point being coincident with first intersections
             return inCrv.EnclosesXY(forCrv.StartPoint);
+        }
+
+        /// <summary>
+        /// Determine whether the first segment of the specified curve falls inside the specified other curve.
+        /// Used during boolean operations to determine the alternating inclusion pattern between intersections.
+        /// </summary>
+        /// <param name="forCrv"></param>
+        /// <param name="inCrv"></param>
+        /// <param name="intersections"></param>
+        /// <returns></returns>
+        private bool FirstSegmentInside(Curve forCrv, PlanarRegion inRegion, IList<CurveCurveIntersection> intersections)
+        {
+            return inRegion.ContainsXY(forCrv.StartPoint);
         }
 
         /// <summary>
@@ -325,6 +348,7 @@ namespace Nucleus.Geometry
             // TODO: cutter void intersection
 
             CurveCollection freeVoids = new CurveCollection(); //Un-cut voids
+            var voidDatas = new List<CurveBooleanData>();
             // Find intersection points on voids:
             foreach (var voidCrv in Voids)
             {
@@ -338,7 +362,10 @@ namespace Nucleus.Geometry
 
                 if (voidInts.Count < 2)
                 {
-                    freeVoids.Add(voidCrv);
+                    if (!FirstSegmentInside(voidCrv, cutter.Perimeter, voidInts))
+                    {
+                        freeVoids.Add(voidCrv);
+                    }
                 }
                 else
                 {
@@ -346,17 +373,18 @@ namespace Nucleus.Geometry
                     var voidData = new CurveBooleanData(voidCrv, voidInts);
                     voidData.IncludeFirst = !FirstSegmentInside(voidCrv, cutter.Perimeter, voidInts);
                     curveData.Add(voidCrv, voidData);
+                    voidDatas.Add(voidData);
                 }
             }
 
             // Determine direction of travel around cutter:
             cutterInts.Sort((i1, i2) => i1.ParameterB.CompareTo(i2.ParameterB));
             var cutterData = new CurveBooleanData(cutter.Perimeter, cutterInts, true);
-            cutterData.IncludeFirst = FirstSegmentInside(cutter.Perimeter, Perimeter, cutterInts);
+            cutterData.IncludeFirst = FirstSegmentInside(cutter.Perimeter, this, cutterInts);
             curveData.Add(cutter.Perimeter, cutterData);
 
             //'Fake' intersection to represent perimeter start:
-            if (perimeterData.IncludeFirst)
+            if (perimeterData.IncludeFirst && perimeterData.Intersections.Count > 0)
             {
                 var startInt = new CurveCurveIntersection(Perimeter, null, 0, double.NaN, 1);
                 perimeterData.Intersections.Insert(0, startInt);
@@ -366,12 +394,45 @@ namespace Nucleus.Geometry
                 perimeterData.Intersections.Add(endInt);
             }
 
-            CurveCurveIntersection currentInt = perimeterData.Intersections[0];
             IList<CurveCurveIntersection> nextStartInts = new List<CurveCurveIntersection>();
             PolyCurve newPerimeter = null;
             PlanarRegion newRegion = null;
             Curve travelOn = Perimeter;
-            bool hopping = false;
+            CurveCurveIntersection currentInt;
+
+            if (perimeterData.Intersections.Count == 0)
+            {
+                // No perimeter intersections
+                if (!perimeterData.IncludeFirst) return result; //Region fully enclosed
+
+                if (voidDatas.Count == 0)
+                {
+                    // No void intersections
+
+                    // Copy region, add new void:
+                    newRegion = new PlanarRegion(Perimeter);
+
+                    foreach (var voidCrv in freeVoids)
+                        newRegion.Voids.Add(voidCrv.Duplicate());
+
+                    if (cutterData.IncludeFirst)
+                        newRegion.Voids.Add(cutter.Perimeter.Duplicate());
+
+                    result.Add(newRegion);
+                    return result;
+                }
+
+                newRegion = new PlanarRegion(Perimeter.Duplicate());
+                newPerimeter = new PolyCurve();
+                newRegion.Voids.Add(newPerimeter);
+                currentInt = voidDatas[0].Intersections[0];
+                travelOn = voidDatas[0].Curve;
+                result.Add(newRegion);
+            }
+            else
+            {
+                currentInt = perimeterData.Intersections[0];
+            }
 
             //TODO: Deal with inner void intersections only
 
@@ -386,7 +447,9 @@ namespace Nucleus.Geometry
                 int iCurrent = data.Intersections.IndexOf(currentInt);
                 int iNext;
                 bool reverse = false;
-                if (data.IncludeFirst ^ iCurrent.IsEven() ^ hopping)
+               
+                // Determine direction of travel:
+                if (data.IncludeFirst ^ iCurrent.IsEven())
                 {
                     iNext = iCurrent + 1;
                     if (iNext >= data.Intersections.Count) iNext = 0;
@@ -398,9 +461,7 @@ namespace Nucleus.Geometry
                     reverse = true;
                 }
 
-                CurveCurveIntersection nextInt;
-                if (iNext == -1) nextInt = new CurveCurveIntersection(travelOn, null, 1, double.NaN, 1);
-                else nextInt = data.Intersections[iNext];
+                CurveCurveIntersection nextInt = data.Intersections[iNext];
 
                 if (currentInt.ProcessCounter > 0)
                 {
@@ -435,12 +496,18 @@ namespace Nucleus.Geometry
                 }
 
                 var travelOnNext = nextInt.OtherCurve(travelOn);
-                nextStartInts.Add(nextInt);
+                if (data.IsCutter == false && reverse == false && travelOnNext != null)
+                {
+                    var nextStartInt = data.Intersections.GetWrapped(iNext + 1);
+                    if (nextStartInt.ProcessCounter > 0)
+                        nextStartInts.Add(nextStartInt);
+                }
 
                 if (travelOnNext == null || nextInt.ProcessCounter <= 0)
                 {
                     if (newPerimeter != null)
                     {
+                        // Close loop
                         newPerimeter.Close();
 
                         newPerimeter = null;
@@ -450,68 +517,23 @@ namespace Nucleus.Geometry
                     {
                         currentInt = nextStartInts.GetAndRemove(0);
                     }
+                    else break;
                 }
                 else travelOn = travelOnNext;
-
-                /*CurveCurveIntersection nextInt;
-
-                // Travel to the next intersection, along the cutters or perimeter
-                if (travelOn == Perimeter)
-                {
-                    // Travel along perimeter
-                    nextInt = perimeterInts.ItemWithNext(cCI => cCI.ParameterA, currentInt.ParameterA);
-                    // 'Fake' intersection to represent perimeter end:
-                    if (nextInt == null) nextInt = endInt;
-                    else nextStartInts.Add(nextInt);
-                }
-                else if (travelOn == cutter.Perimeter)
-                {
-                    // Travel along cutter:
-                    if (cutterDir == 1)
-                    {
-                        nextInt = cutterInts.ItemWithNext(cCI => cCI.ParameterB, currentInt.ParameterB);
-                        if (nextInt == null) // Wrap
-                            nextInt = cutterInts.ItemWithMin(cCI => cCI.ParameterB);
-                    }
-                    else
-                    {
-                        nextInt = cutterInts.ItemWithPrevious(cCI => cCI.ParameterB, currentInt.ParameterB);
-                        if (nextInt == null) // Wrap
-                            nextInt = cutterInts.ItemWithMax(cCI => cCI.ParameterB);
-                    }
-                }
-                else
-                {
-                    // TODO:
-                    // Travel around void:
-                }
-
-                if (nextInt != null
-                    && (currentInt.ProcessCounter > 0 || nextInt.ProcessCounter > 0))
-                {
-                    Curve curve;
-                    if (travelOn == Perimeter)
-                    {
-                        // Perimeter segment
-                        curve = Perimeter;
-                    }
-                    else if (currentInt.CurveA == nextInt.CurveA && currentInt.CurveA != Perimeter)
-                    {
-                        // Void segment
-                        curve = currentInt.CurveA;
-                    }
-                    else
-                    {
-                        // Cutter segment
-                        curve = currentInt.CurveB;
-                    }
-                    //TODO: Check if inside
-                }
-                */
-                // TODO
             }
 
-            //TODO: Re-add voids
+            //Re-add voids:
+            foreach (var voidCrv in freeVoids)
+            {
+                foreach (var subRegion in result)
+                {
+                    if (subRegion.ContainsXY(voidCrv.StartPoint))
+                    {
+                        subRegion.Voids.Add(voidCrv);
+                        break;
+                    }
+                }
+            }
 
             return result;
         }
@@ -1131,6 +1153,7 @@ namespace Nucleus.Geometry
         /// <summary>
         /// Temporary data structure to hold data about curves during booleaning operations
         /// </summary>
+        [Serializable]
         private class CurveBooleanData
         {
             public Curve Curve = null;

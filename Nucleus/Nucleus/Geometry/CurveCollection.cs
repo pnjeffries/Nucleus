@@ -33,6 +33,44 @@ namespace Nucleus.Geometry
     [Serializable]
     public class CurveCollection : VertexGeometryCollection<Curve>
     {
+        private Line line1;
+        private Line line2;
+        private Line line3;
+        private Line line4;
+        #region Constructors
+
+        /// <summary>
+        /// Initialise a new empty CurveCollection
+        /// </summary>
+        public CurveCollection() : base() { }
+        
+        /// <summary>
+        /// Initialise a new CurveCollection containing the specified curve
+        /// </summary>
+        /// <param name="curve"></param>
+        public CurveCollection(Curve curve) : this()
+        {
+            Add(curve);
+        }
+
+        /// <summary>
+        /// Initialise a new CurveCollection containing the specified curves
+        /// </summary>
+        /// <param name="curves"></param>
+        public CurveCollection(IList<Curve> curves) : this()
+        {
+            foreach (var crv in curves) Add(crv);
+        }
+
+        /// <summary>
+        /// Initialise a new CurveCollection containing the specifed curves 
+        /// </summary>
+        /// <param name="curves"></param>
+        public CurveCollection(params Curve[] curves) : this((IList<Curve>)curves)
+        { }
+
+        #endregion
+
         #region Methods
 
         /// <summary>

@@ -750,6 +750,18 @@ namespace Nucleus.Geometry
             return new Arc(this);
         }
 
+        /// <summary>
+        /// Check whether the specified point lies within the area enclosed by this curve
+        /// on the XY plane
+        /// </summary>
+        /// <param name="point">The test point</param>
+        /// <returns></returns>
+        public override bool EnclosesXY(Vector point)
+        {
+            if (!Closed) return false;
+            return Circle.IsInside(point);
+        }
+
         #endregion
 
         #region Static Methods

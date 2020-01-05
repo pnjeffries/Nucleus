@@ -60,6 +60,7 @@
     <Compile Include="MathsTests.cs" />
     <Compile Include="CurveTests.cs" />
     <Compile Include="IDictionaryExtensionsTests.cs" />
+    <Compile Include="MeshTests.cs" />
     <Compile Include="ParameterTests.cs" />
     <Compile Include="PerlinNoiseTests.cs" />
     <Compile Include="PlanarRegionTests.cs" />

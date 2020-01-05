@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nucleus.Geometry;
+using Nucleus.Meshing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -252,6 +253,18 @@ namespace Nucleus.UnitTests
             bool inside = polygon.PolygonContainmentXY(new Vector(0, -5, 0));
 
             Assert.AreEqual(false, inside);
+        }
+
+        [TestMethod]
+        public void MeshPlane_CubeSplitAtMid()
+        {
+            var mb = new MeshBuilder();
+            mb.AddCuboid(10, 10, 10);
+            mb.Finalize();
+            var mesh = mb.Mesh;
+            var curves = mesh.IntersectPlane(5, true);
+            Assert.AreEqual(1, curves.Count);
+            Assert.AreEqual(40, curves.TotalLength());
         }
     }
 }
