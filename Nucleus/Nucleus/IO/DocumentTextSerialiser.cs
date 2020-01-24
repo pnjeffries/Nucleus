@@ -53,7 +53,7 @@ namespace Nucleus.IO
 
         #endregion
 
-        #region constructors
+        #region Constructors
 
         /// <summary>
         /// Default constructor

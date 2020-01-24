@@ -42,7 +42,19 @@ namespace Nucleus.Optimisation
             set { ChangeProperty(ref _StartingTemperature, value); }
         }
 
+        /// <summary>
+        /// Private backing member variable for the ExplorationStage property
+        /// </summary>
+        private double _ExplorationStage = 0.5;
 
+        /// <summary>
+        /// The proportion of the optimisation which is to be focussed on exploring the global space, indicated as a proportion from 0-1.  For this proportion of the optimisation the best option in the current cycle will be used as a restore point rather than the best overall option.  This can help to avoid the optimisation becoming stuck at a single local minima.
+        /// </summary>
+        public double ExplorationStage
+        {
+            get { return _ExplorationStage; }
+            set { _ExplorationStage = value; }
+        }
 
         /// <summary>
         /// The maximum number of iterations which may be performed before termination.

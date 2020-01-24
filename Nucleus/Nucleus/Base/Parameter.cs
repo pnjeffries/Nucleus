@@ -10,9 +10,11 @@ namespace Nucleus.Base
     /// <summary>
     /// Abstract base class for named input or output parameters 
     /// associated with a design option.
+    /// Note: Sub-classes of Parameter should override the FastDuplicate
+    /// function to  return a parameter of the requisite type.
     /// </summary>
     [Serializable]
-    public abstract class Parameter : Unique
+    public abstract class Parameter : Unique, IFastDuplicatable
     {
         #region Properties
 
@@ -134,6 +136,22 @@ namespace Nucleus.Base
         /// <returns>True if the value is successfully set, false if not.</returns>
         public abstract bool SetValueFrom(Parameter other);
 
+        /// <summary>
+        /// FastDuplicate implementation
+        /// </summary>
+        /// <returns></returns>
+        IFastDuplicatable IFastDuplicatable.FastDuplicate_Internal()
+        {
+            return FastDuplicate_Implementation();
+        }
+
+        /// <summary>
+        /// Protected abstract function to implement FastDuplicate
+        /// </summary>
+        /// <returns></returns>
+        protected abstract IFastDuplicatable FastDuplicate_Implementation();
+
+
         #endregion
     }
 
@@ -150,6 +168,7 @@ namespace Nucleus.Base
         /// <summary>
         /// Private backing member variable for the Value property
         /// </summary>
+        [Copy(CopyBehaviour.DUPLICATE)]
         private T _Value;
 
         /// <summary>
@@ -179,6 +198,22 @@ namespace Nucleus.Base
         /// used unless you know what you're doing.
         /// </summary>
         protected Parameter() { }
+
+        /// <summary>
+        /// Creates a new parameter as a copy of another one
+        /// </summary>
+        /// <param name="other"></param>
+        public Parameter(Parameter<T> other) : this()
+        {
+            _Name = other.Name;
+            if (other.Value is IFastDuplicatable) _Value = (T)((IFastDuplicatable)other.Value).Duplicate();
+            else if (other.Value is IDuplicatable) _Value = (T)((IDuplicatable)other.Value).Duplicate();
+            else _Value = other.Value;
+            Group = other.Group;
+            Units = other.Units;
+            Description = other.Description;
+            Visible = other.Visible;
+        }
 
         /// <summary>
         /// Creates a new parameter with the specified name.
@@ -290,6 +325,15 @@ namespace Nucleus.Base
         public override object GetValue()
         {
             return Value;
+        }
+
+        /// <summary>
+        /// FastDuplicate Implementation
+        /// </summary>
+        /// <returns></returns>
+        protected override IFastDuplicatable FastDuplicate_Implementation()
+        {
+            return new Parameter<T>(this);
         }
 
         #endregion

@@ -9,10 +9,30 @@ using System.Threading.Tasks;
 namespace Nucleus.Optimisation
 {
     /// <summary>
-    /// Abstract base class for optimisation solvers
+    /// Abstract base class for optimisation solvers for a particular phenotype
+    /// </summary>
+    /// <typeparam name="TPhenotype"></typeparam>
+    public abstract class OptimisationSolverBase<TPhenotype> : NotifyPropertyChangedBase
+    {
+
+        /// <summary>
+        /// Generate a new Phenotype with randomised genes
+        /// </summary>
+        /// <returns></returns>
+        public abstract TPhenotype GeneratePhenotype();
+
+        /// <summary>
+        /// Calculate or retrieve the overall fitness heuristic of a phenotype
+        /// </summary>
+        /// <param name="phenotype"></param>
+        public abstract double OverallFitness(TPhenotype phenotype);
+    }
+
+    /// <summary>
+    /// Abstract base class for optimisation solvers with settings
     /// </summary>
     [Serializable]
-    public abstract class OptimisationSolverBase<TPhenotype, TSettings> : NotifyPropertyChangedBase
+    public abstract class OptimisationSolverBase<TPhenotype, TSettings> : OptimisationSolverBase<TPhenotype>
         where TSettings : OptimisationSettings
     {
         #region Properties
@@ -47,18 +67,6 @@ namespace Nucleus.Optimisation
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Generate a new Phenotype with randomised genes
-        /// </summary>
-        /// <returns></returns>
-        public abstract TPhenotype GeneratePhenotype();
-
-        /// <summary>
-        /// Calculate or retrieve the overall fitness heuristic of a phenotype
-        /// </summary>
-        /// <param name="phenotype"></param>
-        public abstract double OverallFitness(TPhenotype phenotype);
 
         /// <summary>
         /// Retrieve the single phenotype with the highest overall fitness from the specified population
@@ -130,6 +138,22 @@ namespace Nucleus.Optimisation
                 return firstFitness > secondFitness;
             else
                 return firstFitness < secondFitness;
+        }
+
+        /// <summary>
+        /// Is the first fitness score preferable to the second, according to the
+        /// current objective setting?
+        /// </summary>
+        /// <param name="firstFitness">The fitness of the first phenotype</param>
+        /// <param name="secondFitness">The fitness of the second phenotype</param>
+        /// <param name="leeway">Leeway afforded to the first fitness.  This should reduce with temperature.</param>
+        /// <returns></returns>
+        public bool IsFirstBetter(double firstFitness, double secondFitness, double leeway)
+        {
+            if (Settings.Objective == OptimisationObjective.Maximise)
+                return firstFitness * (1 + leeway) > secondFitness;
+            else
+                return firstFitness < secondFitness * (1 + leeway);
         }
 
         #endregion

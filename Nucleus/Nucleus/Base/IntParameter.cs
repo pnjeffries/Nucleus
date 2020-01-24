@@ -16,6 +16,15 @@ namespace Nucleus.Base
         #region Constructors
 
         /// <summary>
+        /// Creates a copy of another IntParameter
+        /// </summary>
+        /// <param name="other"></param>
+        public IntParameter(IntParameter other) : base(other)
+        {
+
+        }
+
+        /// <summary>
         /// Creates a new parameter with the specified name.
         /// </summary>
         /// <param name="name">The name of the parameter</param>
@@ -69,6 +78,15 @@ namespace Nucleus.Base
         /// <param name="units">The units in which the parameter is expressed.</param>
         public IntParameter(string name, ParameterGroup group, int value, string description, MeasurementUnit units = null) : base(name, group, value, description, units)
         {
+        }
+
+        #endregion
+
+        #region Methods
+
+        protected override IFastDuplicatable FastDuplicate_Implementation()
+        {
+            return new IntParameter(this);
         }
 
         #endregion

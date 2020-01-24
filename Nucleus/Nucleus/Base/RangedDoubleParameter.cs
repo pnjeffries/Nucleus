@@ -36,6 +36,39 @@ namespace Nucleus.Base
         /// </summary>
         private double _Min = double.NaN;
 
+
+        /// <summary>
+        /// The minimum value of the standard range for this parameter
+        /// </summary>
+        public double Min
+        {
+            get { return _Min; }
+            set { ChangeProperty(ref _Min, value); }
+        }
+
+        /// <summary>
+        /// The range of this parameter
+        /// </summary>
+        public Interval Range
+        {
+            get { return new Interval(_Min, _Max); }
+            set
+            {
+                Min = value.Min;
+                Max = value.Max;
+            }
+        }
+
+        #endregion
+
+        #region Constructors
+
+        public RangedDoubleParameter(RangedDoubleParameter other) : base(other)
+        {
+            _Min = other.Min;
+            _Max = other.Max;
+        }
+
         public RangedDoubleParameter(string name, MeasurementUnit units = null) : base(name, units)
         {
         }
@@ -63,26 +96,13 @@ namespace Nucleus.Base
         {
         }
 
-        /// <summary>
-        /// The minimum value of the standard range for this parameter
-        /// </summary>
-        public double Min
-        {
-            get { return _Min; }
-            set { ChangeProperty(ref _Min, value); }
-        }
+        #endregion
 
-        /// <summary>
-        /// The range of this parameter
-        /// </summary>
-        public Interval Range
+        #region Methods
+
+        protected override IFastDuplicatable FastDuplicate_Implementation()
         {
-            get { return new Interval(_Min, _Max); }
-            set
-            {
-                Min = value.Min;
-                Max = value.Max;
-            }
+            return new RangedDoubleParameter(this);
         }
 
         #endregion

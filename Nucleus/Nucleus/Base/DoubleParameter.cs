@@ -42,6 +42,15 @@ namespace Nucleus.Base
         #region Constructors
 
         /// <summary>
+        /// Creates a copy of another DoubleParameter
+        /// </summary>
+        /// <param name="other"></param>
+        public DoubleParameter(DoubleParameter other) : base(other)
+        {
+
+        }
+
+        /// <summary>
         /// Creates a new parameter with the specified name.
         /// </summary>
         /// <param name="name">The name of the parameter</param>
@@ -114,6 +123,11 @@ namespace Nucleus.Base
             if (Units != null) toSI = Units.SIFactor;
             if (units != null) fromSI = units.SIFactor;
             return Value * toSI / fromSI;
+        }
+
+        protected override IFastDuplicatable FastDuplicate_Implementation()
+        {
+            return new DoubleParameter(this);
         }
 
         #endregion

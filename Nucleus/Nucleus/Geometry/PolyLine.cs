@@ -185,6 +185,33 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Set the positions and number of the vertices in this polyline to the
+        /// specified set of positions
+        /// </summary>
+        /// <param name="pts"></param>
+        public void SetPoints(IList<Vector> pts)
+        {
+            for (int i = 0; i < pts.Count; i++)
+            {
+                if (Vertices.Count > i)
+                {
+                    // Update
+                    Vertices[i].Position = pts[i];
+                }
+                else
+                {
+                    // Create
+                    Add(pts[i]);
+                }
+            }
+            // Remove extraneous vertices:
+            for (int i = Vertices.Count - 1; i >= pts.Count; i--)
+            {
+                Vertices.RemoveAt(i);
+            }
+        }
+
+        /// <summary>
         /// Offset this curve on the XY plane by varying distances for
         /// each span.
         /// </summary>

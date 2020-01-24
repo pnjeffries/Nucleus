@@ -12,7 +12,9 @@ namespace Nucleus.Optimisation
     /// <typeparam name="TPhenotype"></typeparam>
     [Serializable]
     public abstract class AnnealingSolverBase<TPhenotype> 
-        : OptimisationSolverBase<TPhenotype, SimulatedAnnealingSettings>
+        : OptimisationSolverBase<TPhenotype, SimulatedAnnealingSettings>,
+        IOptimisationSolver<TPhenotype>
+        where TPhenotype : class
     {
         #region Fields
 
@@ -31,7 +33,7 @@ namespace Nucleus.Optimisation
         private TPhenotype _Current = default(TPhenotype);
 
         /// <summary>
-        /// The current stae
+        /// The current state
         /// </summary>
         public TPhenotype Current
         {
@@ -116,7 +118,7 @@ namespace Nucleus.Optimisation
         public virtual void Initialise()
         {
             // Generate the initial state:
-            Current = GeneratePhenotype();
+            if (Current == null) Current = GeneratePhenotype();
             StoreNewBest(Current);
         }
 
@@ -150,10 +152,16 @@ namespace Nucleus.Optimisation
             double currentFitness = OverallFitness(Current);
             double bestFitness = OverallFitness(Best);
 
-            TPhenotype next = GenerateNext(Current, temperature);
+            TPhenotype next;
+            if (temperature > 0.8)
+            {
+                next = GeneratePhenotype();
+            }
+            else next = GenerateNext(Current, temperature);
+
             double nextFitness = OverallFitness(next);
 
-            if (IsFirstBetter(nextFitness, currentFitness))
+            if (IsFirstBetter(nextFitness, currentFitness, temperature * Settings.RNG.NextDouble()))
             {
                 // New state is better - move state
                 Current = next;
@@ -164,12 +172,8 @@ namespace Nucleus.Optimisation
                     StoreNewBest(Current);
                 }
             }
-            else if (Settings.RNG.NextDouble() < temperature)
-            {
-                // New state is worse - but see where it goes anyway 
-                Current = next;
-                currentFitness = nextFitness;
-
+            else
+            { 
                 // Reset to best value if stuck
                 if (Settings.FailsBeforeReset > 0 &&
                     _SinceLastBest > Settings.FailsBeforeReset)

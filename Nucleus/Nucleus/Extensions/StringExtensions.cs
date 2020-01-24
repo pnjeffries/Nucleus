@@ -18,8 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Nucleus.Base;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -826,7 +828,19 @@ namespace Nucleus.Extensions
             return str.Substring(startIndex, index - startIndex);
         }
 
-
+        /// <summary>
+        /// Save this string to a text file
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="filePath">The path of the file to write to.
+        /// If a file already exists at this location, it will be overwritten.</param>
+        /// <param name="encoding">The file encoding to use</param>
+        /// <returns></returns>
+        public static void SaveToFile(this string str, FilePath filePath, Encoding encoding = null)
+        {
+            if (encoding == null) File.WriteAllText(filePath, str);
+            else File.WriteAllText(filePath, str, encoding);
+        }
 
     }
 }

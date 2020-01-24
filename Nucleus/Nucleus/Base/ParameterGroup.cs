@@ -29,6 +29,20 @@ namespace Nucleus.Base
             set { ChangeProperty(ref _Order, value); }
         }
 
+        /// <summary>
+        /// Private backing member variable for the Tag property
+        /// </summary>
+        private string _Tag = null;
+
+        /// <summary>
+        /// An optional tag string which may be used to store additional data
+        /// </summary>
+        public string Tag
+        {
+            get { return _Tag; }
+            set { ChangeProperty(ref _Tag, value); }
+        }
+
         #endregion
 
         #region Constructors
@@ -58,9 +72,10 @@ namespace Nucleus.Base
         /// </summary>
         /// <param name="name"></param>
         /// <param name="order"></param>
-        public ParameterGroup(string name, double order) : this(name)
+        public ParameterGroup(string name, double order, string tag = null) : this(name)
         {
             _Order = order;
+            _Tag = tag;
         }
 
         #endregion

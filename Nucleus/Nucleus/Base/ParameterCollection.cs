@@ -29,6 +29,15 @@ namespace Nucleus.Base
             AddRange(paras);
         }
 
+        /// <summary>
+        /// Creates a new ParameterCollection containing the parameters contained within another
+        /// </summary>
+        /// <param name="other"></param>
+        public ParameterCollection(ParameterCollection other)
+        {
+            AddRange(other);
+        }
+
         #endregion
 
         #region Methods
@@ -86,6 +95,25 @@ namespace Nucleus.Base
                 }
             }
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Add all parameter names in this collection to the specified collection of strings
+        /// </summary>
+        /// <param name="populate"></param>
+        public void ExtractAllParameterNames(ICollection<string> populate, ICollection<string> units = null)
+        {
+            foreach (var parameter in this)
+            {
+                if (!populate.Contains(parameter.Name))
+                {
+                    populate.Add(parameter.Name);
+                    if (units != null)
+                    {
+                        units.Add(parameter.Units?.Symbol);
+                    }
+                }
+            }
         }
 
         #endregion
