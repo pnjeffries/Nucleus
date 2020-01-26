@@ -21,7 +21,7 @@ namespace Nucleus.Alerts
         /// <summary>
         /// Private backing member variable for the AlertID property
         /// </summary>
-        private string _AlertID = new Guid().ToString();
+        private string _AlertID = Guid.NewGuid().ToString();
 
         /// <summary>
         /// The ID of the alert type - multiple alerts with the same ID will be merged together

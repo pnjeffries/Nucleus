@@ -782,6 +782,41 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Extract all objects of the specified type from this collection
+        /// </summary>
+        /// <typeparam name="T1"></typeparam>
+        /// <typeparam name="T2"></typeparam>
+        /// <param name="items"></param>
+        /// <returns></returns>
+        public static IList<T1> AllOfType<T1, T2>(this IList<T2> items)
+            where T1:T2
+        {
+            var result = new List<T1>();
+            foreach (var obj in items)
+            {
+                if (obj is T1 t1) result.Add(t1);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Extract all objects of the specified type from this collection
+        /// </summary>
+        /// <typeparam name="T1"></typeparam>
+        /// <typeparam name="T2"></typeparam>
+        /// <param name="items"></param>
+        /// <returns></returns>
+        public static IList<T1> AllOfType<T1>(this IList items)
+        {
+            var result = new List<T1>();
+            foreach (var obj in items)
+            {
+                if (obj is T1 t1) result.Add(t1);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Sort the IList in-place.
         /// Note: to work this list must implement the non-generic IList
         /// interface.

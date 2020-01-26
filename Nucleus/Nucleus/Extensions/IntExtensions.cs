@@ -76,7 +76,7 @@ namespace Nucleus.Extensions
 
         /// <summary>
         /// Is this value within the specified range?
-        /// i.e. is it >= min and <= max
+        /// i.e. is it >= min and &lt;= max
         /// </summary>
         /// <param name="value"></param>
         /// <param name="min"></param>

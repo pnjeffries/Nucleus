@@ -131,6 +131,12 @@ namespace Nucleus.Geometry
             return "Point{" + Vertex.ToString() + "}";
         }
 
+        protected override void InvalidateCachedGeometry()
+        {
+            base.InvalidateCachedGeometry();
+            NotifyPropertyChanged(nameof(Position));
+        }
+
         #endregion
     }
 }
