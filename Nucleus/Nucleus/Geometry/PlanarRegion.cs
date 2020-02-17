@@ -332,7 +332,7 @@ namespace Nucleus.Geometry
 
             var curveData = new Dictionary<Curve, CurveBooleanData>();
 
-            /// Find intersection points on perimeter:
+            // Find intersection points on perimeter:
             IList<CurveCurveIntersection> perimeterInts = Intersect.CurveCurveXYIntersections(Perimeter, cutter.Perimeter);
             IList<CurveCurveIntersection> cutterInts = new List<CurveCurveIntersection>();
             foreach (var cCI in perimeterInts)
@@ -341,7 +341,7 @@ namespace Nucleus.Geometry
                 cutterInts.Add(cCI);
             }
 
-            perimeterInts.Sort((i1, i2) => i1.ParameterA.CompareTo(i2.ParameterB));
+            perimeterInts.Sort((i1, i2) => i1.ParameterA.CompareTo(i2.ParameterA));
             var perimeterData = new CurveBooleanData(Perimeter, perimeterInts);
             perimeterData.IncludeFirst = !FirstSegmentInside(Perimeter, cutter.Perimeter, perimeterInts);
             curveData.Add(Perimeter, perimeterData);

@@ -173,6 +173,27 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Evaluate a point 'inside' this curve (if it is closed) defined
+        /// by a parameter on the curve and an offset distance from the curve.
+        /// The point will be automatically placed on whichever side of the
+        /// curve considered to be most enclosed.
+        /// Note that there is no guarantee that the point will actually lie
+        /// within any area enclosed by the curve (if the offset value is big 
+        /// enough that it overshoots, for example)
+        /// </summary>
+        /// <param name="t">The parameter on the curve</param>
+        /// <param name="offset">The offset distance to move the point off the curve</param>
+        /// <returns></returns>
+        public virtual Vector PointOffsetInwards(double t, double offset)
+        {
+            Vector basePt = PointAt(t);
+            if (offset == 0) return basePt;
+
+            Vector offsVect = InwardNormalAt(t);
+            return basePt + offsVect * offset;
+        }
+
+        /// <summary>
         /// Returns the span index at the specified parameter along this curve
         /// </summary>
         /// <param name="t">A normalised parameter defining a point along this curve.
@@ -727,6 +748,34 @@ namespace Nucleus.Geometry
             
             Vertex end = SegmentEnd(span); //Find the span end vertex
             return (end.Position - start.Position).Unitize(); //Interpolate position
+        }
+
+        /// <summary>
+        /// Get the normal vector to this curve on (or close to) the XY plane at
+        /// the specified parameter.
+        /// Equates to the Y axis of the LocalCoordinateSystem output at that position.
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public virtual Vector NormalAt(double t)
+        {
+            return LocalCoordinateSystem(t, 0).Y;
+        }
+
+        /// <summary>
+        /// Get the normal vector to this curve on (or close to) the XY plane
+        /// at the specified parameter and which points towards the inside of the
+        /// bounded region if this curve is closed or towards the 'most enclosed'
+        /// side of the curve if it is open.
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public virtual Vector InwardNormalAt(double t)
+        {
+            Vector result = NormalAt(t);
+            double cTS = Vertices.ClockwiseTestSum();
+            if (cTS > 0) result *= -1;
+            return result;
         }
 
         /// <summary>

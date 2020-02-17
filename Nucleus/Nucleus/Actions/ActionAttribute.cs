@@ -28,6 +28,11 @@ namespace Nucleus.Actions
         public string IconForeground { get; set; } = null;
 
         /// <summary>
+        /// The scale factor of the icon foreground overlay.  This may not be used in all applications.
+        /// </summary>
+        public double ForegroundScale { get; set; } = 1.0;
+
+        /// <summary>
         /// The URI string that identifies the image resource to be used as the background of the icon for this action
         /// on button and grasshopper components.
         /// </summary>

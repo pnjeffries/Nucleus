@@ -12,6 +12,7 @@ namespace Nucleus.Optimisation
     /// Abstract base class for optimisation solvers for a particular phenotype
     /// </summary>
     /// <typeparam name="TPhenotype"></typeparam>
+    [Serializable]
     public abstract class OptimisationSolverBase<TPhenotype> : NotifyPropertyChangedBase
     {
 

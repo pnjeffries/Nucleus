@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nucleus.Rendering;
+using Nucleus.Extensions;
 using nDE = netDxf.Entities;
 
 namespace Nucleus.DXF
@@ -286,7 +287,33 @@ namespace Nucleus.DXF
             // Faces:
             for (int i = 0; i < mesh.Faces.Count; i++)
             {
-                result.AddFace(mesh.Faces[i]);
+                var indices = mesh.Faces[i];
+                indices.AddToAll(-1); // Make zero-indexed
+                result.AddFace(indices);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Convert a netDXF polyface mesh to a Nucleus mesh
+        /// </summary>
+        /// <param name="mesh"></param>
+        /// <returns></returns>
+        public static Mesh Convert(nDE.PolyfaceMesh mesh)
+        {
+            var result = new Mesh();
+            // Vertices:
+            for (int i = 0; i < mesh.Vertexes.Count; i++)
+            {
+                result.AddVertex(Convert(mesh.Vertexes[i].Position));
+            }
+            // Faces:
+            for (int i = 0; i < mesh.Faces.Count; i++)
+            {
+                var face = mesh.Faces[i];
+                var indices = face.VertexIndexes.ToInts();
+                indices.AddToAll(-1); // Make zero-indexed
+                result.AddFace(indices);
             }
             return result;
         }
@@ -308,6 +335,7 @@ namespace Nucleus.DXF
             else if (entity is nDE.Text) return Convert((nDE.Text)entity);
             else if (entity is nDE.MText) return Convert((nDE.MText)entity);
             else if (entity is nDE.Mesh) return Convert((nDE.Mesh)entity);
+            else if (entity is nDE.PolyfaceMesh) return Convert((nDE.PolyfaceMesh)entity);
             else return null;
         }
 

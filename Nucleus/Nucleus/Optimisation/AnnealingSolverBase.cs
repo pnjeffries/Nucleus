@@ -12,8 +12,7 @@ namespace Nucleus.Optimisation
     /// <typeparam name="TPhenotype"></typeparam>
     [Serializable]
     public abstract class AnnealingSolverBase<TPhenotype> 
-        : OptimisationSolverBase<TPhenotype, SimulatedAnnealingSettings>,
-        IOptimisationSolver<TPhenotype>
+        : OptimisationSolverBase<TPhenotype, SimulatedAnnealingSettings>
         where TPhenotype : class
     {
         #region Fields

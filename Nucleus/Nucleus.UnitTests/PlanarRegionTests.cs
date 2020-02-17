@@ -2527,5 +2527,21 @@ namespace Nucleus.UnitTests
             Assert.AreEqual(38.906, area, 0.001);
         }
 
+        [TestMethod]
+        public void Not_SliceThroughSquare_ShouldCutIn2()
+        {
+            var square = PolyLine.Rectangle(100, 100);
+            var pSquare = square.ToPolyCurve();
+            var line = new Line(-60, 5, 60, -5);
+            double width = 16;
+            var perimeter = new PolyCurve(line.Offset(width / 2), true);
+            perimeter.Add(line.Offset(-width / 2).Reversed(), true, true);
+            perimeter.Close();
+            var cutter = new PlanarRegion(perimeter);
+            var region = new PlanarRegion(pSquare);
+            var result = region.Not(cutter);
+            Assert.AreEqual(2, result.Count);
+        }
+
     }
 }

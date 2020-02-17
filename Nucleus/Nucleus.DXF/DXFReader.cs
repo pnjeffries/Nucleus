@@ -96,8 +96,14 @@ namespace Nucleus.DXF
                 result.Add(FromDXF.Convert(point));
             }
 
-            //TODO: Meshes
+            // Meshes
             foreach (netDxf.Entities.Mesh mesh in doc.Meshes)
+            {
+                result.Add(FromDXF.Convert(mesh));
+            }
+
+            // Polyface meshes
+            foreach (var mesh in doc.PolyfaceMeshes)
             {
                 result.Add(FromDXF.Convert(mesh));
             }

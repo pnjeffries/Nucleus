@@ -33,10 +33,6 @@ namespace Nucleus.Geometry
     [Serializable]
     public class CurveCollection : VertexGeometryCollection<Curve>
     {
-        private Line line1;
-        private Line line2;
-        private Line line3;
-        private Line line4;
         #region Constructors
 
         /// <summary>

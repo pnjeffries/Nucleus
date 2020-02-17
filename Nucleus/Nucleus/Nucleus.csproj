@@ -32,6 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Release\Nucleus.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -91,6 +92,7 @@
     <Compile Include="Base\IFastDuplicatable.cs" />
     <Compile Include="Analysis\SolarPositioning.cs" />
     <Compile Include="Base\IntParameter.cs" />
+    <Compile Include="Base\IntWithPercentParameter.cs" />
     <Compile Include="Base\ISelectable.cs" />
     <Compile Include="Base\Option.cs" />
     <Compile Include="Base\OptionCollection.cs" />
@@ -106,6 +108,7 @@
     <Compile Include="Debugging\CollectionDebugView.cs" />
     <Compile Include="Events\GeometryUpdateEventArgs.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
+    <Compile Include="Extensions\ShortExtensions.cs" />
     <Compile Include="Extensions\IComparableExtensions.cs" />
     <Compile Include="Extensions\RandomExtensions.cs" />
     <Compile Include="Geometry\AngleIntervals.cs" />
@@ -121,6 +124,7 @@
     <Compile Include="Geometry\CurveParameterMapper.cs" />
     <Compile Include="Geometry\Extrusion.cs" />
     <Compile Include="Geometry\HandSide.cs" />
+    <Compile Include="Geometry\MeshCollection.cs" />
     <Compile Include="Geometry\OriginalDomainGeometryAttributes.cs" />
     <Compile Include="Geometry\Rectangle.cs" />
     <Compile Include="Geometry\Solid.cs" />
@@ -457,6 +461,7 @@
     <Compile Include="Optimisation\GeneticSolverBase.cs" />
     <Compile Include="Optimisation\IGene.cs" />
     <Compile Include="Optimisation\IGeneticAlgorithmPhenotype.cs" />
+    <Compile Include="Optimisation\IOptimisationSolver.cs" />
     <Compile Include="Optimisation\OptimisationObjective.cs" />
     <Compile Include="Optimisation\OptimisationSettings.cs" />
     <Compile Include="Optimisation\OptimisationSolverBase.cs" />

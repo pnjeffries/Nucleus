@@ -168,7 +168,7 @@ namespace Nucleus.Base
         /// <summary>
         /// Private backing member variable for the Value property
         /// </summary>
-        [Copy(CopyBehaviour.DUPLICATE)]
+        [CollectionCopy(CopyBehaviour.DUPLICATE, CopyBehaviour.MAP_OR_DUPLICATE)]
         private T _Value;
 
         /// <summary>
@@ -206,8 +206,8 @@ namespace Nucleus.Base
         public Parameter(Parameter<T> other) : this()
         {
             _Name = other.Name;
-            if (other.Value is IFastDuplicatable) _Value = (T)((IFastDuplicatable)other.Value).Duplicate();
-            else if (other.Value is IDuplicatable) _Value = (T)((IDuplicatable)other.Value).Duplicate();
+            if (other.Value is IFastDuplicatable) _Value = (T)((IFastDuplicatable)other.Value).FastDuplicate();
+            else if (other.Value is IDuplicatable) _Value = (T)((IDuplicatable)other.Value).Duplicate(CopyBehaviour.MAP_OR_DUPLICATE);
             else _Value = other.Value;
             Group = other.Group;
             Units = other.Units;

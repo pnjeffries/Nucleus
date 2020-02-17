@@ -166,5 +166,19 @@ namespace Nucleus.Extensions
             if (value >= 0) return 1;
             else return -1;
         }
+
+        /// <summary>
+        /// Modify this list of ints in-place by adding the specified value
+        /// to all entries in the list
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="addThis"></param>
+        public static void AddToAll(this IList<int> list, int addThis)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                list[i] += addThis;
+            }
+        }
     }
 }

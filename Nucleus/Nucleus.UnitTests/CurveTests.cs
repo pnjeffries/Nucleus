@@ -1094,5 +1094,14 @@ namespace Nucleus.UnitTests
             var joined = curves.JoinCurves();
             Assert.AreEqual(1, joined.Count);
         }
+
+        [TestMethod]
+        public void PointOffsetInwards_Square_ShouldBeInside()
+        {
+            var rect = PolyLine.Rectangle(10, 5);
+            Vector pt = rect.PointOffsetInwards(0.1, 1);
+            bool inside = rect.EnclosesXY(pt);
+            Assert.AreEqual(true, inside);
+        }
     }
 }
