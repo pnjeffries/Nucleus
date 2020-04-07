@@ -1103,5 +1103,15 @@ namespace Nucleus.UnitTests
             bool inside = rect.EnclosesXY(pt);
             Assert.AreEqual(true, inside);
         }
+
+        [TestMethod]
+        public void Interpolate_LineLine_MidLine()
+        {
+            var crv0 = new Line(0, 0, 10, 0);
+            var crv2 = new Line(0, 10, 10, 10);
+            var iCrv = crv0.Interpolate(crv2, 0.5);
+            Assert.AreEqual(new Vector(0, 5), iCrv.StartPoint);
+            Assert.AreEqual(new Vector(10, 5), iCrv.EndPoint);
+        }
     }
 }

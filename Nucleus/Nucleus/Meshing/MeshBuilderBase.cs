@@ -26,6 +26,7 @@ using Nucleus.Maths;
 using Nucleus.Model;
 using Nucleus.Model.Loading;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -1330,6 +1331,14 @@ namespace Nucleus.Meshing
             else if (obj is IWidePath)
             {
                 AddWidePath((IWidePath)obj);
+                return true;
+            }
+            else if (obj is IList list)
+            {
+                foreach (var subObj in list)
+                {
+                    Add(subObj);
+                }
                 return true;
             }
             else return false;

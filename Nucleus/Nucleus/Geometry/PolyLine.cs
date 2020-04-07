@@ -141,7 +141,9 @@ namespace Nucleus.Geometry
 
         /// <summary>
         /// Points constructor.
-        /// Creates a polyline between the specified set of points
+        /// Creates a polyline between the specified set of points.
+        /// Automatically closes the polyline (and removes the final point) if
+        /// the last point at the first point are coincident.
         /// </summary>
         /// <param name="points"></param>
         /// <param name="close"></param>
