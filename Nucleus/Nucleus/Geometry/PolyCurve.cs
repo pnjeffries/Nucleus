@@ -828,6 +828,7 @@ namespace Nucleus.Geometry
             }
         }
 
+        /*
         /// <summary>
         /// Interpolate between this polycurve and another.  If this curve's subcurves
         /// have attached OriginalDomainGeometryAttributes then the stored domains may
@@ -839,6 +840,19 @@ namespace Nucleus.Geometry
         {
             throw new NotImplementedException();
         }
+
+
+        /// <summary>
+        /// Interpolate between this curve and another formed as an offset of it
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        public PolyCurve InterpolateWithOffset(PolyCurve offset, double proportion = 0.5)
+        {
+            throw new NotImplementedException();
+        }
+        */
+
 
         private bool IsOffsetCurveFlipped(Curve original, Curve offset)
         {

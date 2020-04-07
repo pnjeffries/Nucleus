@@ -174,7 +174,7 @@ namespace Nucleus.Base
         /// <summary>
         /// The parameter value
         /// </summary>
-        public T Value
+        public virtual T Value
         {
             get { return _Value; }
             set { ChangeProperty(ref _Value, value); }

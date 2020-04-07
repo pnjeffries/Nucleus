@@ -100,6 +100,15 @@ namespace Nucleus.Geometry
         /// Initialise a new vertex collection, containing the specified set of vertices
         /// </summary>
         /// <param name="points"></param>
+        public VertexCollection(params Vertex[] vertices) : this((IEnumerable<Vertex>)vertices)
+        {
+
+        }
+
+        /// <summary>
+        /// Initialise a new vertex collection, containing the specified set of vertices
+        /// </summary>
+        /// <param name="points"></param>
         public VertexCollection(IEnumerable<Vertex> vertices, VertexGeometry owner = null) : this(owner)
         {
             foreach (Vertex v in vertices)

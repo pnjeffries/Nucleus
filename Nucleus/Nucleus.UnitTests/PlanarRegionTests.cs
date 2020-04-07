@@ -2543,5 +2543,20 @@ namespace Nucleus.UnitTests
             Assert.AreEqual(2, result.Count);
         }
 
+        [TestMethod]
+        public void ContainsXY_PointInside_ShouldBeTrue()
+        {
+            var pLine = new PolyLine(
+                new Vector(-58.0235137939453, 60.5225067138672, 0),
+                new Vector(58.9555130004883, 63.0466690063477, 0),
+                new Vector(54.3530426025391, -57.5168228149414, 0),
+                new Vector(-54.6571044921875, -53.6499099731445, 0)
+                );
+            var region = new PlanarRegion(pLine);
+            var testPt = new Vector(-42, -50, 0);
+            var result = region.ContainsXY(testPt);
+            Assert.AreEqual(true, result);
+        }
+
     }
 }

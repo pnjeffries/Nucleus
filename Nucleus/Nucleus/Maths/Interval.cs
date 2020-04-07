@@ -851,6 +851,25 @@ namespace Nucleus.Maths
             return result;
         }
 
+        /// <summary>
+        /// Create a set of intervals between ascending unique values in the specified
+        /// (unordered) list.
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public static IList<Interval> IntervalsBetween(IList<double> values)
+        {
+            var sorted = new List<double>(values);
+            sorted.Sort();
+            var result = new List<Interval>(values.Count - 1);
+            for (int i = 0; i < sorted.Count -1; i++)
+            {
+                var interval = new Interval(sorted[i], sorted[i + 1]);
+                if (interval.Size > 0) result.Add(interval);
+            }
+            return result;
+        }
+
         #endregion
 
         #region Operators

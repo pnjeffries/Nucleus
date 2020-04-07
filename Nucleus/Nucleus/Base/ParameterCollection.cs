@@ -131,13 +131,46 @@ namespace Nucleus.Base
                 var pType = typeof(Parameter<>);
                 var gType = pType.MakeGenericType(new Type[] { prop.PropertyType });
                 Parameter parameter = (Parameter)Activator.CreateInstance(
-                    gType, 
+                    gType,
                     new object[] { namePrefix + prop.Name });
                 object value = prop.GetValue(source);
                 parameter.SetValue(value);
-                //TODO: Units
+
                 Add(parameter);
             }
+        }
+
+        /// Get a parameter of a generic type from these settings, if it exists.
+        /// If it does not, will return null.
+        /// </summary>
+        /// <typeparam name="TParameter"></typeparam>
+        /// <param name="key">The name of the parameter</param>
+        /// <returns></returns>
+        public virtual TParameter GetParameter<TParameter>(string key)
+            where TParameter : Parameter
+        {
+            if (this.Contains(key)) return this[key] as TParameter;
+            else return null;
+        }
+
+        /// <summary>
+        /// Get the value of the parameter with the specified key name and holding a value of
+        /// the specified type, if it exists.  Otherwise will return the default value of the
+        /// value type.
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public virtual TValue GetParameterValue<TValue>(string key)
+        {
+            var parameter = GetParameter<Parameter>(key);
+
+            if (parameter == null) return default(TValue);
+
+            var result = parameter.GetValue();
+
+            if (result is TValue) return (TValue)result;
+            else return default(TValue);
         }
 
         #endregion

@@ -2682,6 +2682,95 @@ namespace Nucleus.Geometry
             return true;
         }
 
+        /// <summary>
+        /// Create a new curve which is an interpolation between this curve and another
+        /// </summary>
+        /// <param name="towards">The curve to interpolate towards</param>
+        /// <param name="factor">The proportional distance from this curve to
+        /// the other at which the interpolated curve should be created.  From
+        /// 0 to 1.</param>
+        /// <returns></returns>
+        public virtual Curve Interpolate(Curve towards, double factor = 0.5)
+        {
+            var pts = InterpolationPoints(towards, factor);
+            
+            if (pts.Count == 2)
+            {
+                // Line version
+                return new Line(pts[0], pts[1]);
+            }
+
+            // Standard -> polyline
+            var crv =  new PolyLine(pts);
+            if (Closed) crv.Close();
+            return crv;
+        }
+
+        /// <summary>
+        /// Create a set of points describing the vertices of a curve which is a proportional
+        /// interpolation between this curve and another
+        /// </summary>
+        /// <param name="towards">The curve to interpolate towards</param>
+        /// <param name="factor">The proportional distance from this curve to
+        /// the other at which the interpolated curve should be created.  From
+        /// 0 to 1.</param>
+        /// <returns></returns>
+        public virtual IList<Vector> InterpolationPoints(Curve towards, double factor = 0.5)
+        {
+            var sorted = new SortedList<double, Vector>();
+            double tolSqd = Tolerance.DistanceSquared;
+            Vertex lastVertex = null;
+            // Project this curve to the other:
+            foreach (var vertex in Vertices)
+            {
+                if (lastVertex != null && 
+                    lastVertex.Position.DistanceToSquared(vertex.Position) < tolSqd)
+                {
+                    // Ignore vertices identical to last (such as in a polycurve)
+                    continue;
+                }
+
+                var t0 = ParameterAt(vertex);
+                //var t1 = towards.ClosestParameter(vertex.Position);
+                var pt0 = vertex.Position;
+                var pt1 = towards.ClosestPoint(pt0);
+                sorted.Add(t0, pt0.Interpolate(pt1, factor));
+                lastVertex = vertex;
+            }
+            lastVertex = null;
+            // Project other curve to this:
+            foreach (var vertex in towards.Vertices)
+            {
+                if (lastVertex != null &&
+                    lastVertex.Position.DistanceToSquared(vertex.Position) < tolSqd)
+                {
+                    // Ignore vertices identical to last (such as in a polycurve)
+                    continue;
+                }
+
+                var t1 = towards.ParameterAt(vertex);
+                var pt1 = vertex.Position;
+                var t0 = ClosestParameter(pt1);
+                var pt0 = PointAt(t0);
+                sorted.AddSafe(t0, pt0.Interpolate(pt1, factor));
+
+                lastVertex = vertex;
+            }
+            // Only output non-duplicate points:
+            var points = new List<Vector>(sorted.Count);
+            foreach (var iPt in sorted.Values)
+            {
+                if (points.Count == 0 ||
+                    points.Last().DistanceToSquared(iPt) >= tolSqd)
+                {
+                    // Add non-duplicated points
+                    points.Add(iPt);
+                }
+            }
+            return points;
+        }
+
+
         #endregion
     }
 

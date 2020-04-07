@@ -337,6 +337,7 @@ namespace Nucleus.Maps
                                 break;
                             }
                         }
+                        // Building extrusions
                         if (ExtrudeBuildings)
                         {
                             if (geometry is Curve && way.Tags.ContainsKey("height"))
@@ -365,6 +366,13 @@ namespace Nucleus.Maps
                                 // No indication of height supplied - fall back to default:
                                 geometry = new Extrusion((Curve)geometry, new Vector(0, 0, DefaultBuildingHeight));
                             }
+                        }
+                        // Building names/addresses
+                        if (way.Tags.ContainsKey("name"))
+                        {
+                            // TODO: Custom attributes type?
+                            var attributes = new GeometryAttributes(way.Tags["name"], layerName);
+                            geometry.Attributes = attributes;
                         }
                     }
                     var layer = result.GetOrCreate(layerName);
