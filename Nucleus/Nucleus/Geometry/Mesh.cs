@@ -587,6 +587,7 @@ namespace Nucleus.Geometry
             MeshFaceCollection faces = null, BoundingBox bounds = null, bool clean = true, VertexCollection outerVerts = null)
         {
             List<Vertex> vertexList = vertices.ToList();
+            // Sort by X-coordinate:
             vertexList.Sort();
 
             if (faces == null) faces = new MeshFaceCollection();
@@ -606,15 +607,6 @@ namespace Nucleus.Geometry
             // Include each vertex in the meshing one at a time
             foreach (Vertex v in vertexList)
             {
-
-            //for (int k = 0; k < 8; k++)
-            //{
-            //    Vertex v = vertexList[k];
-            //    if (k == 7)
-            //    {
-            //        bool bum = true;
-            //    }
-
                 IList<MeshEdge> edges = new List<MeshEdge>(); //The edges of replaced triangles
 
                 for (int i = faces.Count - 1; i >= 0; i--)
@@ -634,9 +626,6 @@ namespace Nucleus.Geometry
                 }
 
                 //Remove duplicate edges to retain only the convex hull of edges.
-                //edges.RemoveDuplicates();
-
-                //Replaced with bespoke version 
                 for (int i = edges.Count - 2; i >= 0; i--)
                 {
                     MeshEdge itemA = edges[i];
