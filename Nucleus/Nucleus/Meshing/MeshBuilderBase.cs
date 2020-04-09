@@ -475,6 +475,16 @@ namespace Nucleus.Meshing
             }
         }
 
+        public void AddButterflyWidePath(
+            Vector spineStart, Vector spineEnd, 
+            Vector leftStart, Vector leftEnd, 
+            Vector rightStart, Vector rightEnd,
+            Vector leftStartExtension, Vector leftEndExtension,
+            Vector rightStartExtension, Vector rightEndExtension)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Create faces to represent a path with width
         /// </summary>
@@ -484,8 +494,6 @@ namespace Nucleus.Meshing
         /// with thickness.</param>
         public void AddWidePath(IWidePath path, Vector extrude = new Vector())
         {
-            //TODO: Refine - paths that bifurcate will need more than one face
-
             Vector ptL0 = path.LeftEdge.StartPoint;
             Vector ptL1 = path.LeftEdge.EndPoint;
             Vector ptM0 = path.Spine.StartPoint;

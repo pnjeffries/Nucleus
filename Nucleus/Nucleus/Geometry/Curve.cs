@@ -1108,6 +1108,19 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Work out which side of this curve a point lies on
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public virtual HandSide Side(Vector point)
+        {
+            var t = ClosestParameter(point);
+            var tangent = TangentAt(t);
+            var pointOn = PointAt(t);
+            return point.SideOf(pointOn, tangent);
+        }
+
+        /// <summary>
         /// Calculate the shortest distance squared from this curve to the specified point
         /// </summary>
         /// <param name="point">The test point to find the distance to</param>

@@ -461,6 +461,16 @@ namespace Nucleus.Geometry
             return new Line(this);
         }
 
+        /// <summary>
+        /// Work out which side of this curve a point lies on
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public override HandSide Side(Vector point)
+        {
+            return point.SideOf(StartPoint, Direction);
+        }
+
         #endregion
 
         #region Static Methods

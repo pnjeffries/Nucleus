@@ -94,5 +94,21 @@ namespace Nucleus.Extensions
             return combinedValue;
         }
 
+        /// <summary>
+        /// Returns true if the specified condition is true for any item in this set
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <param name="enumerable"></param>
+        /// <param name="condition"></param>
+        /// <returns></returns>
+        public static bool TrueForAny<TItem>(this IEnumerable<TItem> enumerable, Predicate<TItem> condition)
+        {
+            foreach (var item in enumerable)
+            {
+                if (condition.Invoke(item)) return true;
+            }
+            return false;
+        }
+
     }
 }
