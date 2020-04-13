@@ -475,14 +475,60 @@ namespace Nucleus.Meshing
             }
         }
 
-        public void AddButterflyWidePath(
-            Vector spineStart, Vector spineEnd, 
-            Vector leftStart, Vector leftEnd, 
-            Vector rightStart, Vector rightEnd,
+        /// <summary>
+        /// Add a 'butterfly' of mesh faces with two middle vertices and two
+        /// to four vertices on each side.  The resultant mesh faces will consist
+        /// of two quads and four optional triangles connecting to the extension points.
+        /// Used for certain specific meshing operations.<br/>
+        /// -----<br/>
+        /// \| |/<br/>
+        ///  ---<br/>
+        /// /| |\<br/>
+        /// -----<br/>
+        /// </summary>
+        /// <param name="ptM0">The start of the central 'spine'</param>
+        /// <param name="ptM1">The end of the central 'spine'</param>
+        /// <param name="ptL0">The left side start</param>
+        /// <param name="ptL1">The left side end</param>
+        /// <param name="ptR0">The right side start</param>
+        /// <param name="ptR1">The right side end</param>
+        /// <param name="leftStartExtension">May be unset.  A point on a triangle extending from the left start quad edge.</param>
+        /// <param name="leftEndExtension">May be unset.  A point on a triangle extending from the left end quad edge.</param>
+        /// <param name="rightStartExtension">May be unset.  A point on a triangle extending from the right start quad edge.</param>
+        /// <param name="rightEndExtension">May be unset.  A point on a triangle extending from the right end quad edge.</param>
+        public void AddButterfly(
+            Vector ptM0, Vector ptM1, 
+            Vector ptL0, Vector ptL1, 
+            Vector ptR0, Vector ptR1,
             Vector leftStartExtension, Vector leftEndExtension,
             Vector rightStartExtension, Vector rightEndExtension)
         {
-            throw new NotImplementedException();
+
+            AddFace(ptL1, ptL0, ptM0, ptM1); //Left side face
+            AddFace(ptR0, ptR1, ptM1, ptM0); //Right side face
+            if (leftStartExtension.IsValid()) AddFace(ptL0, leftStartExtension, ptM0);
+            if (rightStartExtension.IsValid()) AddFace(ptM0, rightStartExtension, ptR0);
+            if (leftEndExtension.IsValid()) AddFace(ptM1, leftEndExtension, ptL1);
+            if (rightEndExtension.IsValid()) AddFace(ptR1, rightEndExtension, ptM1);
+
+            // TODO: Reintroduce extrusion?
+            /*if (!extrude.IsZero())
+            {
+                Vector ptL0B = ptL0 + extrude;
+                Vector ptL1B = ptL1 + extrude;
+                Vector ptM0B = ptM0 + extrude;
+                Vector ptM1B = ptM1 + extrude;
+                Vector ptR0B = ptR0 + extrude;
+                Vector ptR1B = ptR1 + extrude;
+
+                AddFace(ptL1B, ptM1B, ptM0B, ptL0B); //Bottom left face
+                AddFace(ptR0B, ptM0B, ptM1B, ptR1B); //Bottom right face
+
+                FillBetween(
+                    new Vector[] { ptR0B, ptR1B, ptM1B, ptL1B, ptL0B, ptM0B },
+                    new Vector[] { ptR0, ptR1, ptM1, ptL1, ptL0, ptM0 },
+                    false, true); //Sides
+            }*/
         }
 
         /// <summary>

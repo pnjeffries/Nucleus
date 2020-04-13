@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nucleus.Units;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -135,6 +136,12 @@ namespace Nucleus.Base
                     new object[] { namePrefix + prop.Name });
                 object value = prop.GetValue(source);
                 parameter.SetValue(value);
+
+                var dimAtt = DimensionAttribute.ExtractFrom(prop);
+                if (dimAtt != null)
+                {
+                    parameter.Units = dimAtt.Type.SIUnit();
+                }
 
                 Add(parameter);
             }
