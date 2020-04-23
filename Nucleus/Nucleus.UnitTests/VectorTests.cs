@@ -63,5 +63,17 @@ namespace Nucleus.UnitTests
 
             Assert.AreEqual(false, parallel);
         }
+
+        [TestMethod]
+        public void Side_ShouldBeRight()
+        {
+            Vector v = new Vector(1, 0, 0);
+            Vector o = new Vector(0, 0, 0);
+
+            Vector pt = new Vector(0, 1, 0);
+            var side = pt.SideOf(o, v);
+
+            Assert.AreEqual(HandSide.Right, side);
+        }
     }
 }

@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml.Linq;
+using Nucleus.Alerts;
+using System.Globalization;
 //using Nominatim.API.Geocoders;
 //using Nominatim.API.Models;
 
@@ -89,7 +91,7 @@ namespace Nucleus.Maps
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
-        public AnglePair LatitudeAndLongitudeFromAddress(string address)
+        public AnglePair LatitudeAndLongitudeFromAddress(string address, AlertLog log = null)
         {
             // Nominatim requires a contact email address
             string queryString = NominatimAPI + "q=" + address + "&format=xml&email=paul@vitruality.com";
@@ -100,8 +102,13 @@ namespace Nucleus.Maps
             var place = xmlTree.Element("place");
             string lat = place.Attribute("lat").Value;
             string lon = place.Attribute("lon").Value;
-            double latitude = double.Parse(lat);
-            double longitude = double.Parse(lon);
+
+            double latitude;
+            double.TryParse(lat, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out latitude);
+
+            double longitude;
+            double.TryParse(lon, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out longitude);
+
             return AnglePair.FromDegrees(latitude, longitude);
 
 
@@ -122,7 +129,7 @@ namespace Nucleus.Maps
             else
                 throw new Exception("Address '" + address + "' could not be found.");
             */
-            throw new NotImplementedException();
+            
             /*var gls = new GoogleLocationService();
             try
             {
@@ -135,7 +142,6 @@ namespace Nucleus.Maps
                 return Vector.Unset;
             }*/
         }
-
         /// <summary>
         /// Download a map showing a range around the specified latitude 
         /// and longitude and save it to the given file path.
@@ -157,7 +163,7 @@ namespace Nucleus.Maps
         /// <param name="right">The upper-bound longitude</param>
         /// <param name="top">The upper-bound latitude</param>
         /// <param name="saveTo">The filepath to save the map file to</param>
-        public bool DownloadMap(double left, double bottom, double right, double top, FilePath saveTo)
+        public bool DownloadMap(double left, double bottom, double right, double top, FilePath saveTo, AlertLog log = null)
         {
             //Compile the OpenStreetMap API URL:
             string osmAPIGet = BuildGetURL(left, bottom, right, top);
@@ -169,6 +175,7 @@ namespace Nucleus.Maps
                 }
                 catch(Exception ex)
                 {
+                    log?.RaiseAlert("Error downloading map " + ex.Message, AlertLevel.Warning);
                     return false;
                 }
             }
@@ -183,12 +190,20 @@ namespace Nucleus.Maps
         /// <param name="right"></param>
         /// <param name="top"></param>
         /// <returns></returns>
-        public byte[] DownloadMapData(double left, double bottom, double right, double top)
+        public byte[] DownloadMapData(double left, double bottom, double right, double top, AlertLog log = null)
         {
             string osmAPIGet = BuildGetURL(left, bottom, right, top);
             using (var client = new WebClient())
             {
-                return client.DownloadData(osmAPIGet);
+                try
+                {
+                    return client.DownloadData(osmAPIGet);
+                }
+                catch (Exception ex)
+                {
+                    log?.RaiseAlert("Error downloading map data " + ex.Message, AlertLevel.Warning);
+                    return new byte[] { };
+                }
             }
         }
 
@@ -204,8 +219,22 @@ namespace Nucleus.Maps
         {
             //Compile the OpenStreetMap API URL:
             string osmAPIGet = OSMAPI + OSMAPIVersion + "/map?bbox=" +
-                left + "," + bottom + "," + right + "," + top;
+                SanitiseDouble(left) + "," +
+                SanitiseDouble(bottom) + "," +
+                SanitiseDouble(right) + "," +
+                SanitiseDouble(top);
             return osmAPIGet;
+        }
+
+        /// <summary>
+        /// Convert a double to a string such that it is compatible
+        /// with the OpenStreetMap API (i.e. no comma-separated decimals)
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>The double to sanitise</returns>
+        private string SanitiseDouble(double input)
+        {
+            return input.ToString().Replace(',', '.');
         }
 
         /// <summary>
@@ -215,12 +244,13 @@ namespace Nucleus.Maps
         /// <param name="range">The distance around the specified location to download</param>
         /// <param name="layerNames"></param>
         /// <returns></returns>
-        public GeometryLayerTable ReadMap(string address, double range = 0.005, IList<string> layerNames = null)
+        public GeometryLayerTable ReadMap(string address, double range = 0.005, IList<string> layerNames = null,
+            AlertLog log = null)
         {
             /*Vector ll = LatitudeAndLongitudeFromAddress(address);
             if (!ll.IsValid()) return null;*/
             var latLong = LatitudeAndLongitudeFromAddress(address);
-            return ReadMap(latLong, range, layerNames);
+            return ReadMap(latLong, range, layerNames, log);
         }
 
         /// <summary>
@@ -230,9 +260,10 @@ namespace Nucleus.Maps
         /// <param name="range">The range around the specified latitude and longitude to be collected, in degrees</param>
         /// <param name="layerNames"></param>
         /// <returns></returns>
-        public GeometryLayerTable ReadMap(AnglePair latLong, double range = 0.005, IList<string> layerNames = null)
+        public GeometryLayerTable ReadMap(AnglePair latLong, double range = 0.005, IList<string> layerNames = null,
+            AlertLog log = null)
         {
-            return ReadMap(latLong.Elevation.Degrees, latLong.Azimuth.Degrees, range, layerNames);
+            return ReadMap(latLong.Elevation.Degrees, latLong.Azimuth.Degrees, range, layerNames, log);
         }
 
         /// <summary>
@@ -243,15 +274,24 @@ namespace Nucleus.Maps
         /// <param name="range">The range around the specified latitude and longitude to be collected, in degrees</param>
         /// <param name="layerNames"></param>
         /// <returns></returns>
-        public GeometryLayerTable ReadMap(double latitude, double longitude, double range = 0.005, IList<string> layerNames = null)
+        public GeometryLayerTable ReadMap(double latitude, double longitude, double range = 0.005, IList<string> layerNames = null,
+            AlertLog log = null)
         {
             //FilePath osmFile = FilePath.Temp + "TempMap.osm";
             //DownloadMap(latitude, longitude, osmFile, range);
             //return ReadMap(osmFile, latitude, longitude);
             var data = DownloadMapData(longitude - range, latitude - range, longitude + range, latitude + range);
-            using (var stream = new MemoryStream(data))
+            try
             {
-                return ReadMap(stream, AnglePair.FromDegrees(latitude, longitude), layerNames);
+                using (var stream = new MemoryStream(data))
+                {
+                    return ReadMap(stream, AnglePair.FromDegrees(latitude, longitude), layerNames);
+                }
+            }
+            catch (Exception ex)
+            {
+                log?.RaiseAlert("Error reading map " + ex.Message, AlertLevel.Information);
+                return null;
             }
         }
         
@@ -337,7 +377,6 @@ namespace Nucleus.Maps
                                 break;
                             }
                         }
-                        // Building extrusions
                         if (ExtrudeBuildings)
                         {
                             if (geometry is Curve && way.Tags.ContainsKey("height"))
@@ -366,13 +405,6 @@ namespace Nucleus.Maps
                                 // No indication of height supplied - fall back to default:
                                 geometry = new Extrusion((Curve)geometry, new Vector(0, 0, DefaultBuildingHeight));
                             }
-                        }
-                        // Building names/addresses
-                        if (way.Tags.ContainsKey("name"))
-                        {
-                            // TODO: Custom attributes type?
-                            var attributes = new GeometryAttributes(way.Tags["name"], layerName);
-                            geometry.Attributes = attributes;
                         }
                     }
                     var layer = result.GetOrCreate(layerName);

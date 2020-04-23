@@ -132,7 +132,7 @@ namespace Nucleus.Geometry
         {
             get
             {
-                if (Voids != null && Voids.Count > 0)
+                if (HasVoids)
                 {
                     VertexCollection combined = new VertexCollection();
                     combined.AddRange(Perimeter.Vertices);
@@ -283,12 +283,22 @@ namespace Nucleus.Geometry
         {
             if (Perimeter.EnclosesXY(pt))
             {
-                if (_Voids != null)
+                if (HasVoids)
                     foreach (var voidCrv in _Voids)
                         if (voidCrv.EnclosesXY(pt)) return false;
                 return true;
             }
             return false;
+        }
+
+        public bool Overlaps(PlanarRegion other)
+        {
+            // Shortcut; test start points
+            if (ContainsXY(other.Perimeter.StartPoint) || ContainsXY(other.Perimeter.EndPoint)) return true;
+
+            // At least one part of the perimeter is outside: 
+
+            // TODO
         }
 
         /// <summary>

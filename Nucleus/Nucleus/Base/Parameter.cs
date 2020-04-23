@@ -14,7 +14,7 @@ namespace Nucleus.Base
     /// function to  return a parameter of the requisite type.
     /// </summary>
     [Serializable]
-    public abstract class Parameter : Unique, IFastDuplicatable
+    public abstract class Parameter : Unique, IFastDuplicatable, INamed
     {
         #region Properties
 
