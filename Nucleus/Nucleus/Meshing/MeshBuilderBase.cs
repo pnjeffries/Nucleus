@@ -868,9 +868,9 @@ namespace Nucleus.Meshing
                 if (autoFlip)
                 {
                     if (!mesh.AlignNormals(Vector.UnitZ) ^ (Vector.UnitZ.Dot(path) < 0))
-                    {
                         Array.Reverse(perimeter);
-                    }
+                    else
+                        mesh.FlipNormals();
                 }
 
                 AddMesh(mesh);
@@ -883,6 +883,7 @@ namespace Nucleus.Meshing
                         bottomMove = plane.Z * -thickness;
 
                     mesh.Move(bottomMove);
+                    if (autoFlip) mesh.FlipNormals();
                     AddMesh(mesh);
                     Vector[] bottomPerimeter = perimeter.Move(bottomMove);
                     FillBetween(perimeter, bottomPerimeter, false, true);

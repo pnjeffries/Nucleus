@@ -295,7 +295,7 @@ namespace Nucleus.Geometry
         {
             // Shortcut; test start points
             if (ContainsXY(other.Perimeter.StartPoint) || ContainsXY(other.Perimeter.EndPoint)) return true;
-
+            else return false;
             // At least one part of the perimeter is outside: 
 
             // TODO
