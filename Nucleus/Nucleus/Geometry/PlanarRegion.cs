@@ -294,8 +294,7 @@ namespace Nucleus.Geometry
         public bool Overlaps(PlanarRegion other)
         {
             // Shortcut; test start points
-            if (ContainsXY(other.Perimeter.StartPoint) || ContainsXY(other.Perimeter.EndPoint)) return true;
-            else return false;
+            return (ContainsXY(other.Perimeter.StartPoint) || ContainsXY(other.Perimeter.EndPoint));
             // At least one part of the perimeter is outside: 
 
             // TODO
