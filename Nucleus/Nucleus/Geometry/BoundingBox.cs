@@ -684,6 +684,20 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Check whether the specified rectangular region overlaps this box on the XY plane.
+        /// </summary>
+        /// <param name="minX"></param>
+        /// <param name="maxX"></param>
+        /// <param name="minY"></param>
+        /// <param name="maxY"></param>
+        /// <returns></returns>
+        public bool OverlapsXY(double minX, double maxX, double minY, double maxY)
+        {
+            return (maxX >= MinX && minX <= MaxX &&
+                maxY >= MinY && minY <= MaxY);
+        }
+
+        /// <summary>
         /// Check whether the specified other bounding box overlaps this one
         /// </summary>
         /// <param name="other"></param>
@@ -691,6 +705,16 @@ namespace Nucleus.Geometry
         public bool Overlaps(BoundingBox other)
         {
             return Overlaps(other.MinX, other.MaxX, other.MinY, other.MaxY, other.MinZ, other.MaxZ);
+        }
+
+        /// <summary>
+        /// Check whether the specified other bounding box overlaps this one, ignoring the Z-axis
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool OverlapsXY(BoundingBox other)
+        {
+            return OverlapsXY(other.MinX, other.MaxX, other.MinY, other.MaxY);
         }
 
         /// <summary>

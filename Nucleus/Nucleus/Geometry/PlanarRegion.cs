@@ -291,14 +291,26 @@ namespace Nucleus.Geometry
             return false;
         }
 
-        public bool Overlaps(PlanarRegion other)
+        /// <summary>
+        /// Does this PlanarRegion overlap the other on the XY plane?
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        /// <remarks>Currently implemented in a 'quick and dirty' way that will not consider voids.  To be improved.</remarks>
+        public bool OverlapsXY(PlanarRegion other)
         {
-            // Shortcut; test start points
-            if (ContainsXY(other.Perimeter.StartPoint) || ContainsXY(other.Perimeter.EndPoint)) return true;
+            // Initial bounding box check:
+            if (!BoundingBox.OverlapsXY(other.BoundingBox)) return false;
 
-            // At least one part of the perimeter is outside: 
+            // Test other for containment in this:
+            if (ContainsXY(other.Perimeter.StartPoint)) return true;
 
-            // TODO
+            // Test this for containment in other:
+            if (other.ContainsXY(Perimeter.StartPoint)) return true;
+
+            // Test boundary intersections
+            return Intersect.CurveCurveXY(Perimeter, other.Perimeter).Count > 0;
+
         }
 
         /// <summary>
