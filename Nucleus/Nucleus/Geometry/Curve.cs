@@ -1839,6 +1839,71 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Trim this curve by removing segments inside of the specified region
+        /// </summary>
+        /// <param name="region"></param>
+        /// <returns></returns>
+        public virtual IList<Curve> Trim(PlanarRegion region)
+        {
+            var result = new List<Curve>();
+            Trim(region, result);
+            return result;
+        }
+
+        /// <summary>
+        /// Trim this curve by removing segments inside of the specified region on the XY plane
+        /// </summary>
+        /// <param name="region"></param>
+        /// <param name="addTo"></param>
+        /// <returns></returns>
+        public virtual bool Trim(PlanarRegion region, IList<Curve> addTo)
+        {
+            var crvInts = Intersect.CurveCurveXYIntersections(this, region.Perimeter);
+            if (region.HasVoids)
+            {
+                foreach (var voidCrv in region.Voids)
+                {
+                    var voidInts = Intersect.CurveCurveXYIntersections(this, voidCrv);
+                    crvInts.AddRange(voidInts);
+                }
+            }
+
+            if (crvInts.Count == 0)
+            {
+                addTo.Add(this);
+                return false;
+            }
+
+            crvInts.Sort((i1, i2) => i1.ParameterA.CompareTo(i2.ParameterA));
+            bool inside = region.ContainsXY(StartPoint);
+            double tStart = 0;
+            for (int i = 0; i < crvInts.Count + 1; i++)
+            {
+                if (inside && !(i == 0 && Closed))
+                {
+                    double tEnd = 1;
+                    if (i < crvInts.Count)
+                    {
+                        tEnd = crvInts[i].ParameterA;
+                    }
+                    else if (Closed)
+                    {
+                        // Loop round to first intersection
+                        tEnd = crvInts[0].ParameterA;
+                    }
+                    var subCrv = Extract(tStart, tEnd);
+                    if (subCrv.IsValid)
+                    {
+                        addTo.Add(subCrv);
+                    }
+                }
+                inside = !inside;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Reduce the length of this curve, trimming from the specifed end vertex
         /// by the specified value
         /// </summary>
