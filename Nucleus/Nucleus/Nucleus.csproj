@@ -124,6 +124,7 @@
     <Compile Include="Geometry\CurveParameterMapper.cs" />
     <Compile Include="Geometry\Extrusion.cs" />
     <Compile Include="Geometry\HandSide.cs" />
+    <Compile Include="Geometry\IBoxBoundable.cs" />
     <Compile Include="Geometry\MeshCollection.cs" />
     <Compile Include="Geometry\OriginalDomainGeometryAttributes.cs" />
     <Compile Include="Geometry\Rectangle.cs" />

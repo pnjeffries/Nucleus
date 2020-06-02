@@ -40,7 +40,7 @@ namespace Nucleus.Geometry
     /// specific position </typeparam>
     [Serializable]
     [Copy(CopyBehaviour.DUPLICATE)]
-    public abstract class VertexGeometry : Unique, IOwned<Element>
+    public abstract class VertexGeometry : Unique, IOwned<Element>, IBoxBoundable
     {
         #region Events
 

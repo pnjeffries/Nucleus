@@ -1839,24 +1839,49 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Trim this curve by removing segments outside of the specified region
+        /// </summary>
+        /// <param name="region">The trimming region</param>
+        /// <returns></returns>
+        public IList<Curve> TrimOutside(PlanarRegion region)
+        {
+            return Trim(region, true);
+        }
+
+        /// <summary>
+        /// Trim this curve by removing segments outside of the specified region on the XY plane
+        /// </summary>
+        /// <param name="region">The trimming region</param>
+        /// <param name="addTo">A list of curves to which the resultant trimmed curves are to be added</param>
+        /// <returns></returns>
+        public virtual bool TrimOutside(PlanarRegion region, IList<Curve> addTo)
+        {
+            return Trim(region, addTo, true);
+        }
+
+        /// <summary>
         /// Trim this curve by removing segments inside of the specified region
         /// </summary>
-        /// <param name="region"></param>
+        /// <param name="region">The trimming region</param>
+        /// <param name="outside">If true, the portions of the curve outside of the region will be trimmed 
+        /// (by default, those inside will be trimmed)</param>
         /// <returns></returns>
-        public virtual IList<Curve> Trim(PlanarRegion region)
+        public IList<Curve> Trim(PlanarRegion region, bool outside = false)
         {
             var result = new List<Curve>();
-            Trim(region, result);
+            Trim(region, result, outside);
             return result;
         }
 
         /// <summary>
         /// Trim this curve by removing segments inside of the specified region on the XY plane
         /// </summary>
-        /// <param name="region"></param>
-        /// <param name="addTo"></param>
+        /// <param name="region">The trimming region</param>
+        /// <param name="addTo">A list of curves to which the resultant trimmed curves are to be added</param>
+        /// <param name="outside">If true, the portions of the curve outside of the region will be trimmed 
+        /// (by default, those inside will be trimmed)</param>
         /// <returns></returns>
-        public virtual bool Trim(PlanarRegion region, IList<Curve> addTo)
+        public virtual bool Trim(PlanarRegion region, IList<Curve> addTo, bool outside = false)
         {
             var crvInts = Intersect.CurveCurveXYIntersections(this, region.Perimeter);
             if (region.HasVoids)
@@ -1868,35 +1893,42 @@ namespace Nucleus.Geometry
                 }
             }
 
+            bool inside = region.ContainsXY(StartPoint) ^ outside; // Is the curve start inside the region to be trimmed?
+
             if (crvInts.Count == 0)
             {
-                addTo.Add(this);
-                return false;
+                if (!inside)
+                {
+                    addTo.Add(this);
+                    return false;
+                }
+                else return true;
             }
 
             crvInts.Sort((i1, i2) => i1.ParameterA.CompareTo(i2.ParameterA));
-            bool inside = region.ContainsXY(StartPoint);
+            
             double tStart = 0;
             for (int i = 0; i < crvInts.Count + 1; i++)
             {
-                if (inside && !(i == 0 && Closed))
+                double tEnd = 1;
+                if (i < crvInts.Count)
                 {
-                    double tEnd = 1;
-                    if (i < crvInts.Count)
-                    {
-                        tEnd = crvInts[i].ParameterA;
-                    }
-                    else if (Closed)
-                    {
-                        // Loop round to first intersection
-                        tEnd = crvInts[0].ParameterA;
-                    }
+                    tEnd = crvInts[i].ParameterA;
+                }
+                else if (Closed)
+                {
+                    // Loop round to first intersection
+                    tEnd = crvInts[0].ParameterA;
+                }
+                if (!inside && !(i == 0 && Closed))
+                {
                     var subCrv = Extract(tStart, tEnd);
                     if (subCrv.IsValid)
                     {
                         addTo.Add(subCrv);
                     }
                 }
+                tStart = tEnd;
                 inside = !inside;
             }
 
@@ -3189,6 +3221,26 @@ namespace Nucleus.Geometry
                 }
             }
             return closest;
+        }
+
+        /// <summary>
+        /// Trim all curves in this collection inside (or optionally, outside) the specified region
+        /// </summary>
+        /// <typeparam name="TCurve"></typeparam>
+        /// <param name="curves"></param>
+        /// <param name="region">The trimming region</param>
+        /// <param name="outside">If true, the portions of the curve outside of the region will be trimmed 
+        /// (by default, those inside will be trimmed)</param>
+        /// <returns></returns>
+        public static IList<Curve> TrimAll<TCurve>(this IList<TCurve> curves, PlanarRegion region, bool outside = false)
+            where TCurve : Curve
+        {
+            var result = new List<Curve>();
+            foreach (var crv in curves)
+            {
+                crv.Trim(region, result, outside);
+            }
+            return result;
         }
     }
 }
