@@ -184,22 +184,22 @@ namespace Nucleus.Maths
         /// <param name="values">The integer values to construct intervals between</param>
         /// <param name="overlap">If false, intermediate values will be excluded from the
         /// intervals before them so that there is no overlap between intervals.</param>
+        /// <param name="allowSingularity">If true, allow intervals with equal start and end values.</param>
         /// <returns></returns>
-        public static IList<IntInterval> IntervalsBetween(IList<int> values, bool overlap = false)
+        public static IList<IntInterval> IntervalsBetween(IList<int> values, bool overlap = false, bool allowSingularity = false)
         {
             var sorted = new List<int>(values);
             sorted.Sort();
             var result = new List<IntInterval>(values.Count - 1);
             for (int i = 0; i < sorted.Count - 1; i++)
             {
-                int adjustEnd = 0;
-                if (overlap && i < sorted.Count - 2) adjustEnd = -1;
-                var interval = new IntInterval(sorted[i], sorted[i + 1] + adjustEnd);
-                if (interval.Size > 0) result.Add(interval);
+                int adjustStart = 0;
+                if (!overlap && i > 0) adjustStart = 1;
+                var interval = new IntInterval(sorted[i] + adjustStart, sorted[i + 1]);
+                if (interval.Size > 0 || (allowSingularity && interval.Size >= 0)) result.Add(interval);
             }
             return result;
         }
-
         #endregion
     }
 }
