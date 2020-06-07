@@ -153,10 +153,10 @@ namespace Nucleus.Maps
             string lon = place.Attribute("lon").Value;
 
             double latitude;
-            double.TryParse(lat, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out latitude);
+            double.TryParse(lat, NumberStyles.Any, CultureInfo.InvariantCulture, out latitude);
 
             double longitude;
-            double.TryParse(lon, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out longitude);
+            double.TryParse(lon, NumberStyles.Any, CultureInfo.InvariantCulture, out longitude);
 
             return AnglePair.FromDegrees(latitude, longitude);
 
