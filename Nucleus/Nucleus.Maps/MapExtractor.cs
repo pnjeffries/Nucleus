@@ -73,6 +73,55 @@ namespace Nucleus.Maps
         /// </summary>
         public bool ExtrudeBuildings { get; set; } = true;
 
+        /// <summary>
+        /// Get or set whether roads should be imported as surfaces
+        /// </summary>
+        public bool RoadsAsSurfaces { get; set; } = true;
+
+        /// <summary>
+        /// The default width to be used for roads which do not define
+        /// a width or lane count and are not one of the standard road types
+        /// </summary>
+        public double DefaultRoadWidth { get; set; } = 5.5;
+
+        /// <summary>
+        /// The default width to be assumed for each lane in a road.
+        /// Used when number of lanes is specified but the overall road
+        /// width is not.
+        /// </summary>
+        public double DefaultRoadLaneWidth { get; set; } = 3.65;
+
+        private IDictionary<string, double> _RoadWidths = null;
+
+        /// <summary>
+        /// The preset assumed widths for different types of roads,
+        /// stored as a dictionary of width values in m, keyed by
+        /// the value of the 'highway' tag in lower case.
+        /// </summary>
+        public IDictionary<string, double> RoadWidths
+        {
+            get
+            {
+                if (_RoadWidths == null)
+                {
+                    //Defaults:
+                    _RoadWidths = new Dictionary<string, double>();
+                    _RoadWidths.Add("motorway", 22);
+                    _RoadWidths.Add("trunk", 16);
+                    _RoadWidths.Add("primary", 7.3);
+                    _RoadWidths.Add("secondary", 7.3);
+                    _RoadWidths.Add("tertiary", 7.3);
+                    _RoadWidths.Add("unclassified", 5.5);
+                    _RoadWidths.Add("residential", 5.5);
+                }
+                return _RoadWidths;
+            }
+            set
+            {
+                _RoadWidths = value;
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -309,6 +358,7 @@ namespace Nucleus.Maps
 
             var nodes = new Dictionary<long, OsmSharp.Node>();
             var ways = new Dictionary<long, OsmSharp.Way>();
+            var roadNetwork = new List<PathSurface>();
 
             if (layerNames == null)
             {
@@ -382,9 +432,7 @@ namespace Nucleus.Maps
                             if (geometry is Curve && way.Tags.ContainsKey("height"))
                             {
                                 string heightTag = way.Tags["height"];
-                                heightTag = heightTag.TrimEnd('m').Trim();
-                                double height;
-                                if (double.TryParse(heightTag, out height))
+                                if (ParseDistance(heightTag, out double height))
                                 {
                                     // TODO: Deal with tags with different units on the end!
                                     geometry = new Extrusion((Curve)geometry, new Vector(0, 0, height));
@@ -394,8 +442,7 @@ namespace Nucleus.Maps
                             {
                                 // Height not supplied - fall back to storeys:
                                 string levelsTag = way.Tags["building:levels"];
-                                double levels;
-                                if (double.TryParse(levelsTag, out levels))
+                                if (double.TryParse(levelsTag, out double levels))
                                 {
                                     geometry = new Extrusion((Curve)geometry, new Vector(0, 0, levels * StoreyHeight + ByStoreysExtraHeight));
                                 }
@@ -406,13 +453,71 @@ namespace Nucleus.Maps
                                 geometry = new Extrusion((Curve)geometry, new Vector(0, 0, DefaultBuildingHeight));
                             }
                         }
+                        if (RoadsAsSurfaces)
+                        {
+                            if (geometry is Curve && way.Tags.ContainsKey("highway"))
+                            {
+                                if (way.Tags.ContainsKey("width"))
+                                {
+                                    var widthTag = way.Tags["width"];
+                                    if (ParseDistance(widthTag, out double width))
+                                    {
+                                        geometry = new PathSurface((Curve)geometry, width);
+                                    }
+                                }
+                                if (geometry is Curve && way.Tags.ContainsKey("lanes"))
+                                {
+                                    var lanesTag = way.Tags["lanes"];
+                                    if (double.TryParse(lanesTag, out double lanes))
+                                    {
+                                        geometry = new PathSurface((Curve)geometry, DefaultRoadLaneWidth * lanes);
+                                    }
+                                }
+                                if (geometry is Curve)
+                                {
+                                    var typeTag = way.Tags["highway"];
+                                    if (RoadWidths.ContainsKey(typeTag))
+                                    {
+                                        double width = RoadWidths[typeTag];
+                                        geometry = new PathSurface((Curve)geometry, width);
+                                    }
+                                }
+                                if (geometry is Curve)
+                                {
+                                    geometry = new PathSurface((Curve)geometry, DefaultRoadWidth);
+                                }
+
+                                // Build network:
+                                if (geometry is PathSurface path) roadNetwork.Add(path);
+                            }
+                        }
                     }
                     var layer = result.GetOrCreate(layerName);
                     layer.Add(geometry);
+
+                    if (roadNetwork.Count > 0)
+                    {
+                        roadNetwork.GenerateNetworkPathNodes(new Model.NodeGenerationParameters(1.0));
+                        roadNetwork.GenerateNetworkPathEdges();
+                    }
                 }
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Parse width and height values from OpenStreetMap tags and return
+        /// them as a double value expressed in m
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        private bool ParseDistance(string value, out double result)
+        {
+            // TODO: Detect and deal with different unit types
+            value = value.TrimEnd('m').Trim();
+            return double.TryParse(value, out result);
         }
 
         /// <summary>

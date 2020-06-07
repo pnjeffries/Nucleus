@@ -127,6 +127,7 @@
     <Compile Include="Geometry\IBoxBoundable.cs" />
     <Compile Include="Geometry\MeshCollection.cs" />
     <Compile Include="Geometry\OriginalDomainGeometryAttributes.cs" />
+    <Compile Include="Geometry\PathSurface.cs" />
     <Compile Include="Geometry\Rectangle.cs" />
     <Compile Include="Geometry\Solid.cs" />
     <Compile Include="Geometry\SurfaceCollection.cs" />
