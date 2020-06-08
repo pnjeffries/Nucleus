@@ -204,6 +204,7 @@ namespace Nucleus.Geometry
             {
                 SubCurves.Add(crv);
             }
+            EnsureSegmentConnectivity();
         }
 
         /// <summary>
@@ -1592,6 +1593,22 @@ namespace Nucleus.Geometry
             return new PolyCurve(this);
         }
 
+        /// <summary>
+        /// Snap subcurve end vertices together to avoid gaps between segments
+        /// </summary>
+        /// <returns></returns>
+        public void EnsureSegmentConnectivity()
+        {
+            for (int i = 0; i < SubCurves.Count; i++)
+            {
+                var crv0 = SubCurves[i];
+                if (i < SubCurves.Count - 1 || Closed)
+                {
+                    var crv1 = SubCurves.GetWrapped(i + 1);
+                    crv1.Start.Position = crv0.End.Position;
+                }
+            }
+        }
 
         #endregion
 
