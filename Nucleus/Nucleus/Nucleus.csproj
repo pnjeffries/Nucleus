@@ -464,6 +464,7 @@
     <Compile Include="Optimisation\IGene.cs" />
     <Compile Include="Optimisation\IGeneticAlgorithmPhenotype.cs" />
     <Compile Include="Optimisation\IOptimisationSolver.cs" />
+    <Compile Include="Optimisation\IOptimisationMove.cs" />
     <Compile Include="Optimisation\OptimisationObjective.cs" />
     <Compile Include="Optimisation\OptimisationSettings.cs" />
     <Compile Include="Optimisation\OptimisationSolverBase.cs" />
