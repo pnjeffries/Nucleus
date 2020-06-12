@@ -540,32 +540,48 @@ namespace Nucleus.Meshing
         /// with thickness.</param>
         public void AddWidePath(IWidePath path, Vector extrude = new Vector())
         {
-            Vector ptL0 = path.LeftEdge.StartPoint;
-            Vector ptL1 = path.LeftEdge.EndPoint;
-            Vector ptM0 = path.Spine.StartPoint;
-            Vector ptM1 = path.Spine.EndPoint;
-            Vector ptR0 = path.RightEdge.StartPoint;
-            Vector ptR1 = path.RightEdge.EndPoint;
+            if (path.LeftEdge == null) return;
+            if (path.RightEdge == null) return;
 
-            AddFace(ptL1, ptL0, ptM0, ptM1); //Left side face
-            AddFace(ptR0, ptR1, ptM1, ptM0); //Right side face
-
-            if (!extrude.IsZero())
+            if (path.Spine is Line)
             {
-                Vector ptL0B = ptL0 + extrude;
-                Vector ptL1B = ptL1 + extrude;
-                Vector ptM0B = ptM0 + extrude;
-                Vector ptM1B = ptM1 + extrude;
-                Vector ptR0B = ptR0 + extrude;
-                Vector ptR1B = ptR1 + extrude;
+                Vector ptL0 = path.LeftEdge.StartPoint;
+                Vector ptL1 = path.LeftEdge.EndPoint;
+                Vector ptM0 = path.Spine.StartPoint;
+                Vector ptM1 = path.Spine.EndPoint;
+                Vector ptR0 = path.RightEdge.StartPoint;
+                Vector ptR1 = path.RightEdge.EndPoint;
 
-                AddFace(ptL1B, ptM1B, ptM0B, ptL0B); //Bottom left face
-                AddFace(ptR0B, ptM0B, ptM1B, ptR1B); //Bottom right face
+                AddFace(ptL1, ptL0, ptM0, ptM1); //Left side face
+                AddFace(ptR0, ptR1, ptM1, ptM0); //Right side face
 
-                FillBetween(
-                    new Vector[] { ptR0B, ptR1B, ptM1B, ptL1B, ptL0B, ptM0B },
-                    new Vector[] { ptR0, ptR1, ptM1, ptL1, ptL0, ptM0 },
-                    false, true); //Sides
+                if (!extrude.IsZero())
+                {
+                    Vector ptL0B = ptL0 + extrude;
+                    Vector ptL1B = ptL1 + extrude;
+                    Vector ptM0B = ptM0 + extrude;
+                    Vector ptM1B = ptM1 + extrude;
+                    Vector ptR0B = ptR0 + extrude;
+                    Vector ptR1B = ptR1 + extrude;
+
+                    AddFace(ptL1B, ptM1B, ptM0B, ptL0B); //Bottom left face
+                    AddFace(ptR0B, ptM0B, ptM1B, ptR1B); //Bottom right face
+
+                    FillBetween(
+                        new Vector[] { ptR0B, ptR1B, ptM1B, ptL1B, ptL0B, ptM0B },
+                        new Vector[] { ptR0, ptR1, ptM1, ptL1, ptL0, ptM0 },
+                        false, true); //Sides
+                }
+            }
+            else
+            {
+                var leftPts = path.LeftEdge?.Facet(FacetAngle);
+                var spinePts = path.Spine?.Facet(FacetAngle);
+                var rightPts = path.RightEdge?.Facet(FacetAngle);
+                FillBetween(leftPts, spinePts);
+                FillBetween(spinePts, rightPts);
+
+                //TODO: Depth
             }
 
             // Old one-face version:

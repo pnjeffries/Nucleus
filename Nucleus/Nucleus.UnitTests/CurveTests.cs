@@ -1113,5 +1113,20 @@ namespace Nucleus.UnitTests
             Assert.AreEqual(new Vector(0, 5), iCrv.StartPoint);
             Assert.AreEqual(new Vector(10, 5), iCrv.EndPoint);
         }
+
+        [TestMethod]
+        public void Trim_Line_GappyRegion()
+        {
+            var line = new Line(32, -11.3158203225343, 32, 50);
+            var perimeter = new PolyCurve(
+                new Line(50, 50, 49.3447512009852, 50),
+                new Line(49.3447512009852, 49.9999999999998, 49.1356772978403, -11.3637154066063),
+                new Line(49.1356772978403, -11.3637154066084, 50, -11.3158203225343),
+                new Line(50, -11.3158203225343, 50, 50));
+            var region = new PlanarRegion(perimeter);
+
+            var trimmed = line.TrimOutside(region);
+            Assert.AreEqual(0, trimmed.Count);
+        }
     }
 }

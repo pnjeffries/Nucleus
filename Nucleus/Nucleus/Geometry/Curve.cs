@@ -1893,7 +1893,9 @@ namespace Nucleus.Geometry
                 }
             }
 
-            bool inside = region.ContainsXY(StartPoint) ^ outside; // Is the curve start inside the region to be trimmed?
+            double tFirst = 1;
+            if (crvInts.Count > 0) tFirst = crvInts.MinDelegateValue(i => i.ParameterA);
+            bool inside = region.ContainsXY(PointAt(tFirst/2)) ^ outside; // Is the curve start inside the region to be trimmed?
 
             if (crvInts.Count == 0)
             {
