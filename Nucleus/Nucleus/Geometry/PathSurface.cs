@@ -10,6 +10,7 @@ namespace Nucleus.Geometry
     /// A planar surface which is defined as a 2D region surrounding a spine curve
     /// which may form part of a network of paths
     /// </summary>
+    [Serializable]
     public class PathSurface : Surface, IWidePath
     {
         #region Properties
