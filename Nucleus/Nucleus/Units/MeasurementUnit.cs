@@ -131,6 +131,16 @@ namespace Nucleus.Units
         public static readonly MeasurementUnit NorwegianKrone = new MeasurementUnit("Norwegian Kroner", "kr", 1, DimensionType.Currency);
 
         /// <summary>
+        /// Kilograms of CO2 equivalent, a measurement of global warming potential
+        /// </summary>
+        public static readonly MeasurementUnit CarbonEquivalent = new MeasurementUnit("kilograms CO₂ equivalent", "kgCO₂e", 1, DimensionType.Mass);
+
+        /// <summary>
+        /// Kilograms of CO2 equivalent per meters squared, a measurement of global warming potential
+        /// </summary>
+        public static readonly MeasurementUnit CarbonEquivalentPerSqm = new MeasurementUnit("kilograms CO₂ equivalent per m²", "kgCO₂e/m²", 1, DimensionType.Mass);
+
+        /// <summary>
         /// Gets an array of all predefined length units
         /// </summary>
         public static MeasurementUnit[] LengthUnits
