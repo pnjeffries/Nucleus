@@ -831,7 +831,7 @@ namespace Nucleus.Meshing
                     // Shortcut delaunay triangulation step by directly creating a tri/quad
                     faces = new MeshFaceCollection(new MeshFace(vertices));
                 }
-                else
+                else if (region.HasVoids)
                 {
                     // Create a delaunay triangulation of the region
                     faces = Mesh.DelaunayTriangulationXY(vertices);
@@ -844,6 +844,11 @@ namespace Nucleus.Meshing
                             faces.CullInsideXY(voidPerimeter);
                         }
                     }
+                }
+                else
+                {
+                    //Ear clipping approach
+                    faces = Mesh.EarClippingXY(vertices);
                 }
 
                 vertices.MoveLocalToGlobal(plane);

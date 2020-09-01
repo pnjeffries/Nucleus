@@ -55,6 +55,8 @@ namespace Nucleus.IO
             _TypeNameReplacements.Add("SiteSolve.CoreSizer+", "SiteSolve.CorePacking.");
             _TypeNameReplacements.Add("SiteSolve.CorePacking.CoreLayout", "SiteSolve.CoreLayout");
             _TypeNameReplacements.Add("SiteSolve.CorePacking.ShaftType", "SiteSolve.ShaftType");
+            _TypeNameReplacements.Add("System.Collections.Generic.List`1[[SiteSolve.InternalSpace,", "System.Collections.Generic.List`1[[SiteSolve.LayoutSpace,");
+            _TypeNameReplacements.Add("SiteSolve.InternalSpace", "SiteSolve.LayoutSpace");
         }
 
         #endregion

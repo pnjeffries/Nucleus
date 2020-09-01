@@ -914,7 +914,7 @@ namespace Nucleus.Geometry
                 else if (subDomain.Overlaps(crvDom))
                 {
                     Curve subSubCrv = subCrv.Extract(crvDom.ParameterOf(subDomain.Overlap(crvDom)));
-                    if (subSubCrv != null) result.Add(subSubCrv);
+                    if (subSubCrv != null && subSubCrv.IsValid) result.Add(subSubCrv);
                 }
                 segStart = segEnd;
             }
@@ -1608,6 +1608,21 @@ namespace Nucleus.Geometry
                     crv1.Start.Position = crv0.End.Position;
                 }
             }
+        }
+
+        /// <summary>
+        /// Remove any invalid subcurves from this polycurve
+        /// </summary>
+        /// <returns></returns>
+        public override bool Clean()
+        {
+            bool result = false;
+            for (int i = SubCurves.Count - 1; i >= 0; i--)
+            {
+                var subCrv = SubCurves[i];
+                if (!subCrv.IsValid) SubCurves.RemoveAt(i);
+            }
+            return result;
         }
 
         #endregion

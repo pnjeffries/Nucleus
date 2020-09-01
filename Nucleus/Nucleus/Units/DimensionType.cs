@@ -50,12 +50,12 @@ namespace Nucleus.Units
         Angle = 2,
 
         /// <summary>
-        /// An area measurement
+        /// An area measurement.
         /// </summary>
         Area = 10,
 
         /// <summary>
-        /// A volume measurement
+        /// A volume measurement.
         /// </summary>
         Volume = 11,
 
@@ -66,7 +66,7 @@ namespace Nucleus.Units
         Force = 100,
 
         /// <summary>
-        /// A measurement of moments
+        /// A measurement of moments.
         /// Default unit: Nm
         /// </summary>
         Moment = 101,
@@ -76,6 +76,21 @@ namespace Nucleus.Units
         /// Default unit: kg
         /// </summary>
         Mass = 200,
+
+        /// <summary>
+        /// A measurement of mass per unit length
+        /// </summary>
+        LinearDensity = 250,
+
+        /// <summary>
+        /// A measurement of mass per unit area
+        /// </summary>
+        AreaDensity = 251,
+
+        /// <summary>
+        /// A measurement of mass per unit volume
+        /// </summary>
+        Density = 252,
 
         /// <summary>
         /// A measurement of time.

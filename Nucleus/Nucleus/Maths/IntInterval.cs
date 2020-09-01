@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nucleus.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -202,4 +203,49 @@ namespace Nucleus.Maths
         }
         #endregion
     }
+
+    /// <summary>
+    /// Extension methods for IntIntervals and collections thereof
+    /// </summary>
+    public static class IntIntervalExtensions
+    { 
+        /// <summary>
+        /// Get the total size of all intervals in this collection
+        /// </summary>
+        /// <param name="intervals"></param>
+        /// <returns></returns>
+        public static int TotalSize(this IList<IntInterval> intervals)
+        {
+            return intervals.TotalDelegateValue(i => i.Size);
+        }
+
+        /// <summary>
+        /// Distribute split points as evenly as possible within the specified index
+        /// ranges
+        /// </summary>
+        /// <param name="intervals"></param>
+        /// <param name="splits">The number of split points to be accommodated</param>
+        /// <returns>A list of indices at which the splits should occur</returns>
+        public static IList<int> DistributeSplits(this IList<IntInterval> intervals, int splits)
+        {
+            var result = new List<int>();
+            if (splits <= 0) return result;
+
+            double splitLength = intervals.TotalSize() / (double)splits;
+
+            double nextSplit = splitLength;
+            foreach(var interval in intervals)
+            {
+                while (nextSplit < interval.Size && result.Count < splits)
+                {
+                    int splitPt = interval.Start + (int)Math.Floor(nextSplit);
+                    result.Add(splitPt);
+                    nextSplit += splitLength;
+                }
+                nextSplit -= interval.Size;
+            }
+            return result;
+        }
+    }
+
 }
