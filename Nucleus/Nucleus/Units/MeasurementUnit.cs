@@ -138,7 +138,7 @@ namespace Nucleus.Units
         /// <summary>
         /// Kilograms of CO2 equivalent per meters squared, a measurement of global warming potential
         /// </summary>
-        public static readonly MeasurementUnit CarbonEquivalentPerSqm = new MeasurementUnit("kilograms CO₂ equivalent per m²", "kgCO₂e/m²", 1, DimensionType.Mass);
+        public static readonly MeasurementUnit CarbonEquivalentPerSqm = new MeasurementUnit("kilograms CO₂ equivalent per m²", "kgCO₂e/m²", 1, DimensionType.AreaDensity);
 
         /// <summary>
         /// Gets an array of all predefined length units

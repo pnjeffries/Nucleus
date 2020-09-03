@@ -568,6 +568,59 @@ namespace Nucleus.Geometry
         #region Static Methods
 
         /// <summary>
+        /// Generate a set of triangular mesh faces that fill a simple polygon via an 'Ear Clipping' process.
+        /// Based loosely on https://www.geometrictools.com/Documentation/TriangulationByEarClipping.pdf
+        /// </summary>
+        /// <param name="polygon"></param>
+        /// <param name="faces"></param>
+        /// <returns></returns>
+        public static MeshFaceCollection EarClippingXY(IList<Vertex> polygon, MeshFaceCollection faces = null)
+        {
+            if (faces == null) faces = new MeshFaceCollection();
+
+            VertexCollection verts = new VertexCollection(polygon);
+            verts.RemoveSequentialCoincident();
+            int angleSign = verts.ClockwiseTestSum().Sign();
+            int maxTries = verts.Count * 10;
+
+            for (int i = 0; i < maxTries && verts.Count > 2; i++)
+            {
+                Vertex v0 = verts.GetWrapped(i);
+                Vertex v1 = verts.GetWrapped(i + 1);
+                Vertex v2 = verts.GetWrapped(i + 2);
+                Vector dir0 = v1.Position - v0.Position;
+                Vector dir1 = v2.Position - v1.Position;
+                Angle a1 = dir0.RotationAngleXY(dir1);
+
+                if (a1 * angleSign >= 0) continue; //Reflex
+
+                bool isEar = true;
+
+                // TODO: Cache reflex as a pre-step and and only check those?
+                for (int j = i + 3; j < i + verts.Count; j++)
+                {
+                    Vertex vT = verts.GetWrapped(j);
+                    if (Triangle.XYContainment(vT,v0,v1,v2))
+                    {
+                        isEar = false;
+                        break;
+                    }
+                }
+
+                if (isEar)
+                {
+                    // Is an ear:
+                    var face = new MeshFace(v0, v1, v2);
+                    faces.Add(face);
+                    verts.Remove(v1.GUID);
+                    i--; // Step back and try next
+                }
+            }
+
+            return faces;
+        }
+
+        /// <summary>
         /// Generate a set of mesh faces that represent a delaunay triangulation in the XY plane of the
         /// specified set of vertices.
         /// Based on the algorithm described here: http://paulbourke.net/papers/triangulate/

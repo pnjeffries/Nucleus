@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using Nucleus.Base;
+using Nucleus.Maths;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -489,6 +490,48 @@ namespace Nucleus.Extensions
                     result = i;
                 }
             }
+            return result;
+        }
+
+        /// <summary>
+        /// Get a list of ranges of indices in this list where the specifed condition
+        /// delegate will return true.
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="condition"></param>
+        /// <returns></returns>
+        public static IList<IntInterval> IndexRangesWhere<TItem>(this IList<TItem> list,
+            Func<TItem, bool> condition)
+        {
+            var result = new List<IntInterval>();
+            bool intervalStarted = false;
+            IntInterval current = new IntInterval();
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (condition.Invoke(list[i])) // Test condition
+                {
+                    if (intervalStarted) current = current.WithEnd(i); // Extend current
+                    else
+                    {
+                        current = new IntInterval(i); // Start a new interval
+                        intervalStarted = true;
+                    }
+                }
+                else
+                {
+                    if (intervalStarted)
+                    {
+                        // Close current interval
+                        result.Add(current);
+                        intervalStarted = false;
+                    }
+                }
+            }
+
+            //Add last one:
+            if (intervalStarted) result.Add(current);
+
             return result;
         }
 

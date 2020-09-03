@@ -21,6 +21,7 @@ using Nucleus.Maths;
 using Nucleus.Rendering;
 using System.Threading;
 using System.Diagnostics;
+using NG = Nucleus.Geometry;
 
 namespace Nucleus.TestApp
 {
@@ -323,8 +324,18 @@ namespace Nucleus.TestApp
             faces = faces.Refine(0.5);
             //Dictionary<Vertex, MeshFace> voronoi = Mesh.VoronoiFromDelaunay(verts, faces);
             //ShapeCollection geometry = new MeshFaceCollection(voronoi.Values).ExtractFaceBoundaries();
-            CurveCollection edges = faces.ExtractFaceBoundaries();
+            
             VertexGeometryCollection geometry = new VertexGeometryCollection();
+            RenderMesh(faces, geometry);
+            geometry.Add(new Cloud(verts.ExtractPoints()));
+            sw.Stop();
+            MeshingTimeText.Text = "Completed: " + faces.Count + " faces in " + sw.Elapsed;
+            DelaunayCanvas.Geometry = geometry;
+        }
+
+        private void RenderMesh(MeshFaceCollection faces, VertexGeometryCollection geometry)
+        {
+            CurveCollection edges = faces.ExtractFaceBoundaries();
             foreach (var edge in edges)
             {
                 var region = new PlanarRegion(edge);
@@ -333,10 +344,6 @@ namespace Nucleus.TestApp
                 geometry.Add(edge);
                 edge.Attributes = new GeometryAttributes(new Colour(64, 0, 0, 0));
             }
-            geometry.Add(new Cloud(verts.ExtractPoints()));
-            sw.Stop();
-            MeshingTimeText.Text = "Completed: " + faces.Count + " faces in " + sw.Elapsed;
-            DelaunayCanvas.Geometry = geometry;
         }
 
         private void RefineQuad_Click(object sender, RoutedEventArgs e)
@@ -347,6 +354,29 @@ namespace Nucleus.TestApp
         private void RefineTri_Click(object sender, RoutedEventArgs e)
         {
             DelaunayRefine(3);
+        }
+
+        private void EarClippingButton_Click(object sender, RoutedEventArgs e)
+        {
+            var perimeter = new PolyLine(true,
+                NG.Vector.Create2D(
+                    9, -1,
+                    7, -2,
+                    8, -9,
+                    1, -8,
+                    7, -6,
+                    7, -3,
+                    2, -2));
+            var geometry = new VertexGeometryCollection();
+            geometry.Add(perimeter);
+
+            var verts = new VertexCollection(perimeter.Points);
+            var faces = Mesh.EarClippingXY(verts);
+            var mesh = new Mesh(verts, faces);
+
+            RenderMesh(faces, geometry);
+
+            EarClippingCanvas.Geometry = geometry;
         }
     }
 }

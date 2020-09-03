@@ -314,6 +314,21 @@ namespace Nucleus.Geometry
             base.OnCollectionChanged();
         }
 
+        /// <summary>
+        /// Remove vertices from this collection which are within
+        /// tolerance of the preceeding vertex
+        /// </summary>
+        /// <returns></returns>
+        public void RemoveSequentialCoincident()
+        {
+            for (int i = Count - 1; i > 0; i--)
+            {
+                var v1 = this[i];
+                var v0 = this[i - 1];
+                if (v1.Position.ManhattenDistanceTo(v0.Position).IsTiny()) RemoveAt(i);
+            }
+        }
+
         #endregion
     }
 

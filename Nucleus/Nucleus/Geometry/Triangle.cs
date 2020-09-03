@@ -114,6 +114,32 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Test whether a point lies within or on a triangle on the XY plane
+        /// </summary>
+        /// <param name="pt">The point to test</param>
+        /// <param name="t0">The position of the first vertex of the triangle</param>
+        /// <param name="t1">The position of the second vertex of the triangle</param>
+        /// <param name="t2">The position of the third vertex of the triangle</param>
+        /// <returns></returns>
+        public static bool XYContainment(Vector pt, Vector t0, Vector t1, Vector t2)
+        {
+            return XYContainment(pt.X, pt.Y, t0.X, t0.Y, t1.X, t1.Y, t2.X, t2.Y);
+        }
+
+        /// <summary>
+        /// Test whether a point lies within or on a triangle on the XY plane
+        /// </summary>
+        /// <param name="pt">The point to test</param>
+        /// <param name="t0">The position of the first vertex of the triangle</param>
+        /// <param name="t1">The position of the second vertex of the triangle</param>
+        /// <param name="t2">The position of the third vertex of the triangle</param>
+        /// <returns></returns>
+        public static bool XYContainment(Vertex pt, Vertex t0, Vertex t1, Vertex t2)
+        {
+            return XYContainment(pt.X, pt.Y, t0.X, t0.Y, t1.X, t1.Y, t2.X, t2.Y);
+        }
+
+        /// <summary>
         /// Find the Z coordinate of a point on the XY plane projected onto
         /// a 3D triangle
         /// </summary>

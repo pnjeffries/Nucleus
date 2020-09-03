@@ -1052,7 +1052,8 @@ namespace Nucleus.Geometry
             if (Closed && tProjected.Length > 0)
             {
                 int lastDir = 0;
-                Interval result = new Interval(tProjected.First());
+                double tLast = tProjected.First();
+                Interval result = new Interval(tLast);
                 // Grow projection step-by-step, checking for possible loops and
                 // changes in direction
                 for (int i = 1; i < tProjected.Length; i++)
@@ -1060,12 +1061,14 @@ namespace Nucleus.Geometry
                     double t = tProjected[i];
                     if (!result.ContainsOpenEndWrapped(t))
                     {
-                        if (t >= result.End)
+                        if (t > result.End)
                         {
                             if (lastDir > 0) result = result.WithEnd(t);
                             else // Change in direction - check we've not looped!
                             {
-                                Vector midPt = (testPts[i - 1] + testPts[i]) / 2;
+                                Vector refPt0 = other.ClosestPoint(PointAt(t));
+                                Vector refPt1 = other.ClosestPoint(PointAt(tLast));
+                                Vector midPt = (refPt0 + refPt1) / 2;
                                 double tMid = ClosestParameter(midPt);
                                 if (tMid >= result.Start && tMid <= t)
                                 {
@@ -1082,10 +1085,12 @@ namespace Nucleus.Geometry
                         }
                         else if (t < result.Start)
                         {
-                            if (lastDir < 0) result.WithStart(t);
+                            if (lastDir < 0) result = result.WithStart(t);
                             else // Change in direction - check we've not looped!
                             {
-                                Vector midPt = (testPts[i - 1] + testPts[i]) / 2;
+                                Vector refPt0 = other.ClosestPoint(PointAt(t));
+                                Vector refPt1 = other.ClosestPoint(PointAt(tLast));
+                                Vector midPt = (refPt0 + refPt1) / 2;
                                 double tMid = ClosestParameter(midPt);
                                 if (tMid >= t && tMid <= result.End)
                                 {
@@ -1101,6 +1106,7 @@ namespace Nucleus.Geometry
                             }
                         }
                     }
+                    tLast = t;
                 }
                 return result;
             }
@@ -1553,14 +1559,14 @@ namespace Nucleus.Geometry
                 // Offset specified segment:
                 Curve segmentToOffset = Extract(subDomain);
                 Curve offsetSegment = segmentToOffset.Offset(offsetDistance, tidy, copyAttributes);
-                result.Add(offsetSegment, true, true);
+                if (offsetSegment.IsValid) result.Add(offsetSegment, true, true);
                 t = subDomain.End;
             }
             
             if (t < 1)
             {
                 Curve endOfCurve = Extract(new Interval(t, 1));
-                result.Add(endOfCurve, true, true);
+                if (endOfCurve.IsValid) result.Add(endOfCurve, true, true);
             }
             if (Closed) result.Close();
 
@@ -1894,8 +1900,18 @@ namespace Nucleus.Geometry
             }
 
             double tFirst = 1;
-            if (crvInts.Count > 0) tFirst = crvInts.MinDelegateValue(i => i.ParameterA);
-            bool inside = region.ContainsXY(PointAt(tFirst/2)) ^ outside; // Is the curve start inside the region to be trimmed?
+            if (crvInts.Count > 0)
+            {
+                tFirst = crvInts.MinDelegateValue(i => i.ParameterA);
+                if (tFirst == 0)
+                {
+                    // If first intersection is on the start - test the next segment instead.
+                    tFirst = crvInts.ItemWithNext(i => i.ParameterA, 0)?.ParameterA ?? 1;
+                    outside = !outside;
+                }
+            }
+            Vector testPt = PointAt(tFirst / 2);
+            bool inside = region.ContainsXY(testPt) ^ outside; // Is the curve start inside the region to be trimmed?
 
             if (crvInts.Count == 0)
             {
@@ -2414,6 +2430,16 @@ namespace Nucleus.Geometry
         public virtual void Reverse()
         {
             Vertices.Reverse();
+        }
+
+        /// <summary>
+        /// Automatically clean up this curve to remove any invalid or problematic
+        /// geometry
+        /// </summary>
+        /// <returns>True if geometry was removed</returns>
+        public virtual bool Clean()
+        {
+            return false;
         }
 
         protected virtual IFastDuplicatable CurveFastDuplicate()
