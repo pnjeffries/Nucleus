@@ -14,7 +14,7 @@ namespace Nucleus.Base
     /// function to  return a parameter of the requisite type.
     /// </summary>
     [Serializable]
-    public abstract class Parameter : Unique, IFastDuplicatable
+    public abstract class Parameter : Unique, IFastDuplicatable, INamed
     {
         #region Properties
 
@@ -174,7 +174,7 @@ namespace Nucleus.Base
         /// <summary>
         /// The parameter value
         /// </summary>
-        public T Value
+        public virtual T Value
         {
             get { return _Value; }
             set { ChangeProperty(ref _Value, value); }

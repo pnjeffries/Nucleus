@@ -100,6 +100,15 @@ namespace Nucleus.Geometry
         /// Initialise a new vertex collection, containing the specified set of vertices
         /// </summary>
         /// <param name="points"></param>
+        public VertexCollection(params Vertex[] vertices) : this((IEnumerable<Vertex>)vertices)
+        {
+
+        }
+
+        /// <summary>
+        /// Initialise a new vertex collection, containing the specified set of vertices
+        /// </summary>
+        /// <param name="points"></param>
         public VertexCollection(IEnumerable<Vertex> vertices, VertexGeometry owner = null) : this(owner)
         {
             foreach (Vertex v in vertices)
@@ -303,6 +312,21 @@ namespace Nucleus.Geometry
         {
             if (Owner != null) Owner.NotifyGeometryUpdated();
             base.OnCollectionChanged();
+        }
+
+        /// <summary>
+        /// Remove vertices from this collection which are within
+        /// tolerance of the preceeding vertex
+        /// </summary>
+        /// <returns></returns>
+        public void RemoveSequentialCoincident()
+        {
+            for (int i = Count - 1; i > 0; i--)
+            {
+                var v1 = this[i];
+                var v0 = this[i - 1];
+                if (v1.Position.ManhattenDistanceTo(v0.Position).IsTiny()) RemoveAt(i);
+            }
         }
 
         #endregion

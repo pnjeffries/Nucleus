@@ -261,6 +261,17 @@ namespace Nucleus.Model
             else return Vector.Unset;
         }
 
+        /// <summary>
+        /// Get the node which is at the other end of the element to the specified one.
+        /// </summary>
+        /// <param name="node">A node.  Must be either the start or the end node of this element.</param>
+        /// <returns></returns>
+        public Node GetOtherEndNode(Node node)
+        {
+            if (node == StartNode) return EndNode;
+            else return StartNode;
+        }
+
         #endregion
 
     }

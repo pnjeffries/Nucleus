@@ -17,6 +17,19 @@ namespace Nucleus.Base
         #region Properties
 
         /// <summary>
+        /// The parameter value
+        /// </summary>
+        public override int Value 
+        {
+            get { return base.Value; } 
+            set
+            {
+                base.Value = value;
+                NotifyPropertyChanged(nameof(ValueDisplayString));
+            }
+        }
+
+        /// <summary>
         /// Private backing member variable for the Percentage property
         /// </summary>
         private double _Percentage = 0;
@@ -72,9 +85,22 @@ namespace Nucleus.Base
 
         #endregion
 
+        #region Methods
+
         protected override IFastDuplicatable FastDuplicate_Implementation()
         {
             return new IntWithPercentParameter(this);
         }
+
+        public override bool SetValueFrom(Parameter other)
+        {
+            if (other is IntWithPercentParameter pcOther)
+            {
+                Percentage = pcOther.Percentage;
+            }
+            return base.SetValueFrom(other);
+        }
+
+        #endregion
     }
 }

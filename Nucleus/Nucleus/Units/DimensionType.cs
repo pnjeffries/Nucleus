@@ -50,18 +50,101 @@ namespace Nucleus.Units
         Angle = 2,
 
         /// <summary>
+        /// An area measurement.
+        /// </summary>
+        Area = 10,
+
+        /// <summary>
+        /// A volume measurement.
+        /// </summary>
+        Volume = 11,
+
+        /// <summary>
         /// A measurement of force.
         /// Default unit: N
         /// </summary>
         Force = 100,
 
         /// <summary>
-        /// A measurement of moments
+        /// A measurement of moments.
         /// Default unit: Nm
         /// </summary>
-        Moments = 101,
+        Moment = 101,
        
+        /// <summary>
+        /// A measurement of mass.
+        /// Default unit: kg
+        /// </summary>
+        Mass = 200,
+
+        /// <summary>
+        /// A measurement of mass per unit length
+        /// </summary>
+        LinearDensity = 250,
+
+        /// <summary>
+        /// A measurement of mass per unit area
+        /// </summary>
+        AreaDensity = 251,
+
+        /// <summary>
+        /// A measurement of mass per unit volume
+        /// </summary>
+        Density = 252,
+
+        /// <summary>
+        /// A measurement of time.
+        /// </summary>
+        Time = 300,
+
+        /// <summary>
+        /// A measurement of temperature
+        /// </summary>
+        Temperature = 400,
+
+        /// <summary>
+        /// A measurement of currency
+        /// </summary>
+        Currency = 1000,
+
         //TODO: Add more dimension types as and when needed
     }
 
+    /// <summary>
+    /// Extension methods for the DimensionType attribute
+    /// </summary>
+    public static class DimensionTypeExtensions
+    {
+        /// <summary>
+        /// Get the standard SI unit for this dimension type (if one is defined).
+        /// </summary>
+        /// <param name="dimension"></param>
+        /// <returns></returns>
+        public static MeasurementUnit SIUnit(this DimensionType dimension)
+        {
+            switch (dimension)
+            {
+                case DimensionType.Angle: 
+                    return MeasurementUnit.Radians;
+                case DimensionType.Area:
+                    return MeasurementUnit.MetersSquared;
+                case DimensionType.Distance:
+                    return MeasurementUnit.Meters;
+                case DimensionType.Force:
+                    return MeasurementUnit.Newtons;
+                case DimensionType.Mass:
+                    return MeasurementUnit.Kilograms;
+                case DimensionType.Moment:
+                    return MeasurementUnit.NewtonMeters;
+                case DimensionType.Temperature:
+                    return MeasurementUnit.Kelvin;
+                case DimensionType.Time:
+                    return MeasurementUnit.Seconds;
+                case DimensionType.Volume:
+                    return MeasurementUnit.MetersCubed;
+                default:
+                    return null;
+            }
+        }
+    }
 }

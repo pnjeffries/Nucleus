@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nucleus.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -174,5 +175,77 @@ namespace Nucleus.Maths
         }
 
         #endregion
+
+        #region Static Methods
+
+        /// <summary>
+        /// Create a set of intervals between ascending unique values in the specified
+        /// (unordered) list.
+        /// </summary>
+        /// <param name="values">The integer values to construct intervals between</param>
+        /// <param name="overlap">If false, intermediate values will be excluded from the
+        /// intervals before them so that there is no overlap between intervals.</param>
+        /// <param name="allowSingularity">If true, allow intervals with equal start and end values.</param>
+        /// <returns></returns>
+        public static IList<IntInterval> IntervalsBetween(IList<int> values, bool overlap = false, bool allowSingularity = false)
+        {
+            var sorted = new List<int>(values);
+            sorted.Sort();
+            var result = new List<IntInterval>(values.Count - 1);
+            for (int i = 0; i < sorted.Count - 1; i++)
+            {
+                int adjustStart = 0;
+                if (!overlap && i > 0) adjustStart = 1;
+                var interval = new IntInterval(sorted[i] + adjustStart, sorted[i + 1]);
+                if (interval.Size > 0 || (allowSingularity && interval.Size >= 0)) result.Add(interval);
+            }
+            return result;
+        }
+        #endregion
     }
+
+    /// <summary>
+    /// Extension methods for IntIntervals and collections thereof
+    /// </summary>
+    public static class IntIntervalExtensions
+    { 
+        /// <summary>
+        /// Get the total size of all intervals in this collection
+        /// </summary>
+        /// <param name="intervals"></param>
+        /// <returns></returns>
+        public static int TotalSize(this IList<IntInterval> intervals)
+        {
+            return intervals.TotalDelegateValue(i => i.Size);
+        }
+
+        /// <summary>
+        /// Distribute split points as evenly as possible within the specified index
+        /// ranges
+        /// </summary>
+        /// <param name="intervals"></param>
+        /// <param name="splits">The number of split points to be accommodated</param>
+        /// <returns>A list of indices at which the splits should occur</returns>
+        public static IList<int> DistributeSplits(this IList<IntInterval> intervals, int splits)
+        {
+            var result = new List<int>();
+            if (splits <= 0) return result;
+
+            double splitLength = intervals.TotalSize() / (double)splits;
+
+            double nextSplit = splitLength;
+            foreach(var interval in intervals)
+            {
+                while (nextSplit < interval.Size && result.Count < splits)
+                {
+                    int splitPt = interval.Start + (int)Math.Floor(nextSplit);
+                    result.Add(splitPt);
+                    nextSplit += splitLength;
+                }
+                nextSplit -= interval.Size;
+            }
+            return result;
+        }
+    }
+
 }

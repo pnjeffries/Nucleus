@@ -1038,6 +1038,38 @@ namespace Nucleus.UnitTests
         }
 
         [TestMethod]
+        public void Projection_LineOntoPolyCurve_ShouldBePt75to1()
+        {
+            var pc = new PolyCurve(
+                new Line(39.9557590083945, 50, -50, 50),
+                new Line(-50, 50, -50, 12.5),
+                new Line(-50, 12.5, 39.9557590083945, 12.5),
+                new Line(39.9557590083945, 12.5, 39.9557590083945, 50));
+            var l = new Line(39.9557590083945, -41, 39.9557590083945, 50);
+            Interval projection = pc.ProjectionOf(l);
+            Assert.AreEqual(new Interval(0.75, 0), projection);
+            var subCrv = pc.Extract(projection);
+            Assert.AreEqual(37.5, subCrv.Length);
+        }
+
+        [TestMethod]
+        public void Projection_MalformedPolyCurveOntoPolyCurve_ShouldBePt75to1()
+        {
+            var pc = new PolyCurve(
+                new Line(39.9557590083945, 50, -50, 50),
+                new Line(-50, 50, -50, 12.5),
+                new Line(-50, 12.5, 39.9557590083945, 12.5),
+                new Line(39.9557590083945, 12.5, 39.9557590083945, 50));
+            var pc2 = new PolyCurve(
+                new Line(39.9557590083945, -41, 39.9557590083945, -41),
+                new Line(39.9557590083945, -41, 39.9557590083945, 50));
+            Interval projection = pc.ProjectionOf(pc2);
+            Assert.AreEqual(new Interval(0.75, 0), projection);
+            var subCrv = pc.Extract(projection);
+            Assert.AreEqual(37.5, subCrv.Length);
+        }
+
+        [TestMethod]
         public void Projection_LineOntoPolyLineClosed_ShouldMapToWrappingDomain()
         {
             var l1 = new PolyLine(true, Vector.Create2D(5, 0, 10, 0, 10, 10, 0, 10, 0,0));
@@ -1102,6 +1134,31 @@ namespace Nucleus.UnitTests
             Vector pt = rect.PointOffsetInwards(0.1, 1);
             bool inside = rect.EnclosesXY(pt);
             Assert.AreEqual(true, inside);
+        }
+
+        [TestMethod]
+        public void Interpolate_LineLine_MidLine()
+        {
+            var crv0 = new Line(0, 0, 10, 0);
+            var crv2 = new Line(0, 10, 10, 10);
+            var iCrv = crv0.Interpolate(crv2, 0.5);
+            Assert.AreEqual(new Vector(0, 5), iCrv.StartPoint);
+            Assert.AreEqual(new Vector(10, 5), iCrv.EndPoint);
+        }
+
+        [TestMethod]
+        public void Trim_Line_GappyRegion()
+        {
+            var line = new Line(32, -11.3158203225343, 32, 50);
+            var perimeter = new PolyCurve(
+                new Line(50, 50, 49.3447512009852, 50),
+                new Line(49.3447512009852, 49.9999999999998, 49.1356772978403, -11.3637154066063),
+                new Line(49.1356772978403, -11.3637154066084, 50, -11.3158203225343),
+                new Line(50, -11.3158203225343, 50, 50));
+            var region = new PlanarRegion(perimeter);
+
+            var trimmed = line.TrimOutside(region);
+            Assert.AreEqual(0, trimmed.Count);
         }
     }
 }

@@ -1052,7 +1052,8 @@ namespace Nucleus.Geometry
             if (Closed && tProjected.Length > 0)
             {
                 int lastDir = 0;
-                Interval result = new Interval(tProjected.First());
+                double tLast = tProjected.First();
+                Interval result = new Interval(tLast);
                 // Grow projection step-by-step, checking for possible loops and
                 // changes in direction
                 for (int i = 1; i < tProjected.Length; i++)
@@ -1060,12 +1061,14 @@ namespace Nucleus.Geometry
                     double t = tProjected[i];
                     if (!result.ContainsOpenEndWrapped(t))
                     {
-                        if (t >= result.End)
+                        if (t > result.End)
                         {
                             if (lastDir > 0) result = result.WithEnd(t);
                             else // Change in direction - check we've not looped!
                             {
-                                Vector midPt = (testPts[i - 1] + testPts[i]) / 2;
+                                Vector refPt0 = other.ClosestPoint(PointAt(t));
+                                Vector refPt1 = other.ClosestPoint(PointAt(tLast));
+                                Vector midPt = (refPt0 + refPt1) / 2;
                                 double tMid = ClosestParameter(midPt);
                                 if (tMid >= result.Start && tMid <= t)
                                 {
@@ -1082,10 +1085,12 @@ namespace Nucleus.Geometry
                         }
                         else if (t < result.Start)
                         {
-                            if (lastDir < 0) result.WithStart(t);
+                            if (lastDir < 0) result = result.WithStart(t);
                             else // Change in direction - check we've not looped!
                             {
-                                Vector midPt = (testPts[i - 1] + testPts[i]) / 2;
+                                Vector refPt0 = other.ClosestPoint(PointAt(t));
+                                Vector refPt1 = other.ClosestPoint(PointAt(tLast));
+                                Vector midPt = (refPt0 + refPt1) / 2;
                                 double tMid = ClosestParameter(midPt);
                                 if (tMid >= t && tMid <= result.End)
                                 {
@@ -1101,10 +1106,24 @@ namespace Nucleus.Geometry
                             }
                         }
                     }
+                    tLast = t;
                 }
                 return result;
             }
             else return Interval.Enclosing(tProjected);
+        }
+
+        /// <summary>
+        /// Work out which side of this curve a point lies on
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public virtual HandSide Side(Vector point)
+        {
+            var t = ClosestParameter(point);
+            var tangent = TangentAt(t);
+            var pointOn = PointAt(t);
+            return point.SideOf(pointOn, tangent);
         }
 
         /// <summary>
@@ -1540,14 +1559,14 @@ namespace Nucleus.Geometry
                 // Offset specified segment:
                 Curve segmentToOffset = Extract(subDomain);
                 Curve offsetSegment = segmentToOffset.Offset(offsetDistance, tidy, copyAttributes);
-                result.Add(offsetSegment, true, true);
+                if (offsetSegment.IsValid) result.Add(offsetSegment, true, true);
                 t = subDomain.End;
             }
             
             if (t < 1)
             {
                 Curve endOfCurve = Extract(new Interval(t, 1));
-                result.Add(endOfCurve, true, true);
+                if (endOfCurve.IsValid) result.Add(endOfCurve, true, true);
             }
             if (Closed) result.Close();
 
@@ -1823,6 +1842,115 @@ namespace Nucleus.Geometry
         {
             if (curveEnd == Start) return End;
             return Start;
+        }
+
+        /// <summary>
+        /// Trim this curve by removing segments outside of the specified region
+        /// </summary>
+        /// <param name="region">The trimming region</param>
+        /// <returns></returns>
+        public IList<Curve> TrimOutside(PlanarRegion region)
+        {
+            return Trim(region, true);
+        }
+
+        /// <summary>
+        /// Trim this curve by removing segments outside of the specified region on the XY plane
+        /// </summary>
+        /// <param name="region">The trimming region</param>
+        /// <param name="addTo">A list of curves to which the resultant trimmed curves are to be added</param>
+        /// <returns></returns>
+        public virtual bool TrimOutside(PlanarRegion region, IList<Curve> addTo)
+        {
+            return Trim(region, addTo, true);
+        }
+
+        /// <summary>
+        /// Trim this curve by removing segments inside of the specified region
+        /// </summary>
+        /// <param name="region">The trimming region</param>
+        /// <param name="outside">If true, the portions of the curve outside of the region will be trimmed 
+        /// (by default, those inside will be trimmed)</param>
+        /// <returns></returns>
+        public IList<Curve> Trim(PlanarRegion region, bool outside = false)
+        {
+            var result = new List<Curve>();
+            Trim(region, result, outside);
+            return result;
+        }
+
+        /// <summary>
+        /// Trim this curve by removing segments inside of the specified region on the XY plane
+        /// </summary>
+        /// <param name="region">The trimming region</param>
+        /// <param name="addTo">A list of curves to which the resultant trimmed curves are to be added</param>
+        /// <param name="outside">If true, the portions of the curve outside of the region will be trimmed 
+        /// (by default, those inside will be trimmed)</param>
+        /// <returns></returns>
+        public virtual bool Trim(PlanarRegion region, IList<Curve> addTo, bool outside = false)
+        {
+            var crvInts = Intersect.CurveCurveXYIntersections(this, region.Perimeter);
+            if (region.HasVoids)
+            {
+                foreach (var voidCrv in region.Voids)
+                {
+                    var voidInts = Intersect.CurveCurveXYIntersections(this, voidCrv);
+                    crvInts.AddRange(voidInts);
+                }
+            }
+
+            double tFirst = 1;
+            if (crvInts.Count > 0)
+            {
+                tFirst = crvInts.MinDelegateValue(i => i.ParameterA);
+                if (tFirst == 0)
+                {
+                    // If first intersection is on the start - test the next segment instead.
+                    tFirst = crvInts.ItemWithNext(i => i.ParameterA, 0)?.ParameterA ?? 1;
+                    outside = !outside;
+                }
+            }
+            Vector testPt = PointAt(tFirst / 2);
+            bool inside = region.ContainsXY(testPt) ^ outside; // Is the curve start inside the region to be trimmed?
+
+            if (crvInts.Count == 0)
+            {
+                if (!inside)
+                {
+                    addTo.Add(this);
+                    return false;
+                }
+                else return true;
+            }
+
+            crvInts.Sort((i1, i2) => i1.ParameterA.CompareTo(i2.ParameterA));
+            
+            double tStart = 0;
+            for (int i = 0; i < crvInts.Count + 1; i++)
+            {
+                double tEnd = 1;
+                if (i < crvInts.Count)
+                {
+                    tEnd = crvInts[i].ParameterA;
+                }
+                else if (Closed)
+                {
+                    // Loop round to first intersection
+                    tEnd = crvInts[0].ParameterA;
+                }
+                if (!inside && !(i == 0 && Closed))
+                {
+                    var subCrv = Extract(tStart, tEnd);
+                    if (subCrv.IsValid)
+                    {
+                        addTo.Add(subCrv);
+                    }
+                }
+                tStart = tEnd;
+                inside = !inside;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -2304,6 +2432,16 @@ namespace Nucleus.Geometry
             Vertices.Reverse();
         }
 
+        /// <summary>
+        /// Automatically clean up this curve to remove any invalid or problematic
+        /// geometry
+        /// </summary>
+        /// <returns>True if geometry was removed</returns>
+        public virtual bool Clean()
+        {
+            return false;
+        }
+
         protected virtual IFastDuplicatable CurveFastDuplicate()
         {
             return this.Duplicate();
@@ -2682,6 +2820,95 @@ namespace Nucleus.Geometry
             return true;
         }
 
+        /// <summary>
+        /// Create a new curve which is an interpolation between this curve and another
+        /// </summary>
+        /// <param name="towards">The curve to interpolate towards</param>
+        /// <param name="factor">The proportional distance from this curve to
+        /// the other at which the interpolated curve should be created.  From
+        /// 0 to 1.</param>
+        /// <returns></returns>
+        public virtual Curve Interpolate(Curve towards, double factor = 0.5)
+        {
+            var pts = InterpolationPoints(towards, factor);
+            
+            if (pts.Count == 2)
+            {
+                // Line version
+                return new Line(pts[0], pts[1]);
+            }
+
+            // Standard -> polyline
+            var crv =  new PolyLine(pts);
+            if (Closed) crv.Close();
+            return crv;
+        }
+
+        /// <summary>
+        /// Create a set of points describing the vertices of a curve which is a proportional
+        /// interpolation between this curve and another
+        /// </summary>
+        /// <param name="towards">The curve to interpolate towards</param>
+        /// <param name="factor">The proportional distance from this curve to
+        /// the other at which the interpolated curve should be created.  From
+        /// 0 to 1.</param>
+        /// <returns></returns>
+        public virtual IList<Vector> InterpolationPoints(Curve towards, double factor = 0.5)
+        {
+            var sorted = new SortedList<double, Vector>();
+            double tolSqd = Tolerance.DistanceSquared;
+            Vertex lastVertex = null;
+            // Project this curve to the other:
+            foreach (var vertex in Vertices)
+            {
+                if (lastVertex != null && 
+                    lastVertex.Position.DistanceToSquared(vertex.Position) < tolSqd)
+                {
+                    // Ignore vertices identical to last (such as in a polycurve)
+                    continue;
+                }
+
+                var t0 = ParameterAt(vertex);
+                //var t1 = towards.ClosestParameter(vertex.Position);
+                var pt0 = vertex.Position;
+                var pt1 = towards.ClosestPoint(pt0);
+                sorted.Add(t0, pt0.Interpolate(pt1, factor));
+                lastVertex = vertex;
+            }
+            lastVertex = null;
+            // Project other curve to this:
+            foreach (var vertex in towards.Vertices)
+            {
+                if (lastVertex != null &&
+                    lastVertex.Position.DistanceToSquared(vertex.Position) < tolSqd)
+                {
+                    // Ignore vertices identical to last (such as in a polycurve)
+                    continue;
+                }
+
+                var t1 = towards.ParameterAt(vertex);
+                var pt1 = vertex.Position;
+                var t0 = ClosestParameter(pt1);
+                var pt0 = PointAt(t0);
+                sorted.AddSafe(t0, pt0.Interpolate(pt1, factor));
+
+                lastVertex = vertex;
+            }
+            // Only output non-duplicate points:
+            var points = new List<Vector>(sorted.Count);
+            foreach (var iPt in sorted.Values)
+            {
+                if (points.Count == 0 ||
+                    points.Last().DistanceToSquared(iPt) >= tolSqd)
+                {
+                    // Add non-duplicated points
+                    points.Add(iPt);
+                }
+            }
+            return points;
+        }
+
+
         #endregion
     }
 
@@ -3022,6 +3249,26 @@ namespace Nucleus.Geometry
                 }
             }
             return closest;
+        }
+
+        /// <summary>
+        /// Trim all curves in this collection inside (or optionally, outside) the specified region
+        /// </summary>
+        /// <typeparam name="TCurve"></typeparam>
+        /// <param name="curves"></param>
+        /// <param name="region">The trimming region</param>
+        /// <param name="outside">If true, the portions of the curve outside of the region will be trimmed 
+        /// (by default, those inside will be trimmed)</param>
+        /// <returns></returns>
+        public static IList<Curve> TrimAll<TCurve>(this IList<TCurve> curves, PlanarRegion region, bool outside = false)
+            where TCurve : Curve
+        {
+            var result = new List<Curve>();
+            foreach (var crv in curves)
+            {
+                crv.Trim(region, result, outside);
+            }
+            return result;
         }
     }
 }

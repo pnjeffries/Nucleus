@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -42,6 +43,8 @@ namespace Nucleus.Units
 
         #endregion
 
+        #region Constructors
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -50,5 +53,26 @@ namespace Nucleus.Units
         {
             Type = type;
         }
+
+        #endregion
+
+        #region Static Methods
+
+        /// <summary>
+        /// Helper function to get the (first) ActionInput attribute from the specified PropertyInfo
+        /// </summary>
+        /// <param name="pInfo"></param>
+        /// <returns></returns>
+        public static DimensionAttribute ExtractFrom(PropertyInfo pInfo)
+        {
+            object[] actionAtts = pInfo.GetCustomAttributes(typeof(DimensionAttribute), false);
+            if (actionAtts.Count() > 0)
+            {
+                return (DimensionAttribute)actionAtts[0];
+            }
+            return null;
+        }
+
+        #endregion
     }
 }

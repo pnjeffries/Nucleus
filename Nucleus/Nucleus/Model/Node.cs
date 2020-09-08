@@ -234,7 +234,7 @@ namespace Nucleus.Model
         /// <returns></returns>
         public TElement GetConnectedElementOnSide<TElement>(Vector direction, HandSide side,
             bool undeletedOnly = true, Element ignore = null)
-            where TElement : LinearElement
+            where TElement : Element
         {
             return GetConnectedElementOnSide<TElement>(direction, side, undeletedOnly, ignore, out Angle bestAngle);
         }
@@ -252,7 +252,7 @@ namespace Nucleus.Model
         /// <returns></returns>
         public TElement GetConnectedElementOnSide<TElement>(Vector direction, HandSide side,
         bool undeletedOnly, Element ignore, out Angle bestAngle)
-        where TElement : LinearElement
+        where TElement : Element
         {
             bestAngle = 0;
             TElement best = null;
@@ -262,15 +262,22 @@ namespace Nucleus.Model
                     (!undeletedOnly || !v.Element.IsDeleted))
                 {
                     TElement element = (TElement)v.Element;
-                    Vertex v2 = element.Geometry.GetOtherEnd(v);
-                    Angle angle = (v.Position.AngleTo(v2.Position) - direction.Angle).Normalize();
-                    if (best == null ||
-                        (side == HandSide.Left && angle > bestAngle) ||
-                        (side == HandSide.Right && angle < bestAngle))
+                    var geo = element.GetGeometry();
+                    Vertex v2 = null;
+                    if (geo is Curve crv)
                     {
-                        bestAngle = angle;
-                        best = element;
+                        v2 = crv.GetOtherEnd(v);
+
+                        Angle angle = (v.Position.AngleTo(v2.Position) - direction.Angle).Normalize();
+                        if (best == null ||
+                            (side == HandSide.Left && angle > bestAngle) ||
+                            (side == HandSide.Right && angle < bestAngle))
+                        {
+                            bestAngle = angle;
+                            best = element;
+                        }
                     }
+                    // TODO: Other element geometry types?
                 }
             }
             return best;

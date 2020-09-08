@@ -286,6 +286,24 @@ namespace Nucleus.Geometry
         { }
 
         /// <summary>
+        /// Constructor to fit a bounding box around a set of point vectors
+        /// </summary>
+        /// <param name="points"></param>
+        public BoundingBox(params Vector[] points)
+        {
+            Fit(points);
+        }
+
+        /// <summary>
+        /// Constructor to fit a bounding box around a set of point vectors
+        /// </summary>
+        /// <param name="points"></param>
+        public BoundingBox(IEnumerable<Vector> points)
+        {
+            Fit(points);
+        }
+
+        /// <summary>
         /// Constructor to fit a bounding box around a set of points.
         /// </summary>
         /// <param name="points">The points to fit the bounding box around</param>
@@ -319,6 +337,22 @@ namespace Nucleus.Geometry
         public BoundingBox(BoundingBox other)
             :this(other.MinX, other.MaxX, other.MinY, other.MaxY, other.MinZ, other.MaxZ){}
 
+        /// <summary>
+        /// Initialise a bounding box to contain a box-bounded geometry
+        /// </summary>
+        /// <param name="geometry"></param>
+        public BoundingBox(IBoxBoundable geometry)
+            : this(geometry.BoundingBox) { }
+
+        /// <summary>
+        /// Initialise a bounding box to contain a collection of box-bounded geometry
+        /// </summary>
+        /// <param name="geometry"></param>
+        public BoundingBox(IEnumerable<IBoxBoundable> geometry)
+        {
+            Fit(geometry);
+        }
+
         #endregion
 
         #region Methods
@@ -335,6 +369,50 @@ namespace Nucleus.Geometry
             MaxY = point.Y;
             MinZ = point.Z;
             MaxZ = point.Z;
+        }
+
+        /// <summary>
+        /// Fit this bounding box around another
+        /// </summary>
+        /// <param name="box"></param>
+        protected void Fit(BoundingBox box)
+        {
+            MinX = box.MinX;
+            MaxX = box.MaxX;
+            MinY = box.MinY;
+            MaxY = box.MaxY;
+            MinZ = box.MinZ;
+            MaxZ = box.MaxZ;
+        }
+
+        /// <summary>
+        /// Fit this bounding box around a collection of positional
+        /// objects
+        /// </summary>
+        /// <param name="points"></param>
+        protected void Fit(IEnumerable<Vector> points)
+        {
+            bool first = true;
+            foreach (var point in points)
+            {
+                if (first)
+                {
+                    //Initialise to first node:
+                    Vector pt0 = point;
+                    MinX = pt0.X;
+                    MaxX = pt0.X;
+                    MinY = pt0.Y;
+                    MaxY = pt0.Y;
+                    MinZ = pt0.Z;
+                    MaxZ = pt0.Z;
+                    first = false;
+                }
+                else
+                {
+                    //Scale to subsequent nodes:
+                    Include(point);
+                }
+            }
         }
 
         /// <summary>
@@ -428,6 +506,33 @@ namespace Nucleus.Geometry
                     {
                         //Initialise to first element:
                         Fit(shape);
+                        first = false;
+                    }
+                    else
+                    {
+                        //Scale to subsequent elements:
+                        Include(shape);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Fit this bounding box around a collection of elements
+        /// </summary>
+        /// <param name="geometry"></param>
+        public void Fit<TBoxBoundable>(IEnumerable<TBoxBoundable> geometry)
+            where TBoxBoundable : IBoxBoundable
+        {
+            if (geometry != null)
+            {
+                bool first = true;
+                foreach (var shape in geometry)
+                {
+                    if (first)
+                    {
+                        //Initialise to first element:
+                        Fit(shape.BoundingBox);
                         first = false;
                     }
                     else
@@ -543,6 +648,15 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Expand this bounding box to include the specified geometry with its own bounding box
+        /// </summary>
+        /// <param name="geometry"></param>
+        public void Include(IBoxBoundable geometry)
+        {
+            Include(geometry.BoundingBox);
+        }
+
+        /// <summary>
         /// Expand this bounding box to include the specified element
         /// </summary>
         /// <param name="element"></param>
@@ -559,6 +673,36 @@ namespace Nucleus.Geometry
         public void Include(VertexGeometry geometry)
         {
             if (geometry != null) Include(geometry.Vertices);
+        }
+
+        /// <summary>
+        /// Expand this bounding boc to include the specified X-coordinate
+        /// </summary>
+        /// <param name="x"></param>
+        public void IncludeX(double x)
+        {
+            if (x < MinX) MinX = x;
+            else if (x > MaxX) MaxX = x;
+        }
+
+        /// <summary>
+        /// Expand this bounding boc to include the specified Y-coordinate
+        /// </summary>
+        /// <param name="y"></param>
+        public void IncludeY(double y)
+        {
+            if (y < MinY) MinY = y;
+            else if (y > MaxY) MaxY = y;
+        }
+
+        /// <summary>
+        /// Expand this bounding boc to include the specified Z-coordinate
+        /// </summary>
+        /// <param name="z"></param>
+        public void IncludeZ(double z)
+        {
+            if (z < MinZ) MinZ = z;
+            else if (z > MaxZ) MaxZ = z;
         }
 
         /// <summary>
@@ -684,6 +828,20 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Check whether the specified rectangular region overlaps this box on the XY plane.
+        /// </summary>
+        /// <param name="minX"></param>
+        /// <param name="maxX"></param>
+        /// <param name="minY"></param>
+        /// <param name="maxY"></param>
+        /// <returns></returns>
+        public bool OverlapsXY(double minX, double maxX, double minY, double maxY)
+        {
+            return (maxX >= MinX && minX <= MaxX &&
+                maxY >= MinY && minY <= MaxY);
+        }
+
+        /// <summary>
         /// Check whether the specified other bounding box overlaps this one
         /// </summary>
         /// <param name="other"></param>
@@ -691,6 +849,16 @@ namespace Nucleus.Geometry
         public bool Overlaps(BoundingBox other)
         {
             return Overlaps(other.MinX, other.MaxX, other.MinY, other.MaxY, other.MinZ, other.MaxZ);
+        }
+
+        /// <summary>
+        /// Check whether the specified other bounding box overlaps this one, ignoring the Z-axis
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool OverlapsXY(BoundingBox other)
+        {
+            return OverlapsXY(other.MinX, other.MaxX, other.MinY, other.MaxY);
         }
 
         /// <summary>
@@ -731,6 +899,24 @@ namespace Nucleus.Geometry
             MaxY = Mid.Y + (MaxY - Mid.Y) * factor;
             MinZ = Mid.Z + (MinZ - Mid.Z) * factor;
             MaxZ = Mid.Z + (MaxX - Mid.Z) * factor;
+        }
+
+        #endregion
+
+        #region Static Methods
+
+        /// <summary>
+        /// Create a bounding box fit around the specified collection of geometry
+        /// </summary>
+        /// <typeparam name="TBoxBoundable"></typeparam>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        public static BoundingBox CreateBoxAround<TBoxBoundable>(IEnumerable<TBoxBoundable> geometry)
+            where TBoxBoundable : IBoxBoundable
+        {
+            var bBox = new BoundingBox();
+            bBox.Fit(geometry);
+            return bBox;
         }
 
         #endregion

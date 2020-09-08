@@ -148,6 +148,16 @@ namespace Nucleus.Units
         public static readonly MeasurementUnit NorwegianKrone = new MeasurementUnit("Norwegian Kroner", "kr", 1, DimensionType.Currency);
 
         /// <summary>
+        /// Kilograms of CO2 equivalent, a measurement of global warming potential
+        /// </summary>
+        public static readonly MeasurementUnit CarbonEquivalent = new MeasurementUnit("kilograms CO₂ equivalent", "kgCO₂e", 1, DimensionType.Mass);
+
+        /// <summary>
+        /// Kilograms of CO2 equivalent per meters squared, a measurement of global warming potential
+        /// </summary>
+        public static readonly MeasurementUnit CarbonEquivalentPerSqm = new MeasurementUnit("kilograms CO₂ equivalent per m²", "kgCO₂e/m²", 1, DimensionType.AreaDensity);
+
+        /// <summary>
         /// Gets an array of all predefined currency units
         /// </summary>
         public static MeasurementUnit[] CurrencyUnits
@@ -242,14 +252,20 @@ namespace Nucleus.Units
 
         #region Static Methods
 
-        public static bool TryParseLength(string text, out double value, out MeasurementUnit unit)
-        {
-            int length = 0;
-            foreach (var unit in LengthUnits)
-            {
-                text.Normalize
-            }
-        }
+        //public static bool TryParseLength(string text, out double value, out MeasurementUnit unit)
+        //{
+        //    int length = 0;
+        //    foreach (var unit in LengthUnits)
+        //    {
+        // TODO
+        //        text.Normalize
+        //    }
+        //}
+
+        #endregion
+
+        #region Static Methods
+
 
         #endregion
     }

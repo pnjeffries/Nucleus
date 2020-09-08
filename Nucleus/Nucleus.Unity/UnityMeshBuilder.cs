@@ -24,6 +24,12 @@ namespace Nucleus.Unity
         public bool DoubleSided { get; set; } = false;
 
         /// <summary>
+        /// If true, mesh normals will be calculated.  Note that this may cause
+        /// problems 
+        /// </summary>
+        public bool CalculateNormals { get; set; } = false;
+
+        /// <summary>
         /// Temporary vertex collection
         /// </summary>
         private List<Vector3> _Vertices = new List<Vector3>();
@@ -137,7 +143,9 @@ namespace Nucleus.Unity
         {
             Mesh.SetVertices(_Vertices);
             Mesh.SetTriangles(_Triangles, 0);
-            Mesh.RecalculateNormals();
+
+            if (CalculateNormals) Mesh.RecalculateNormals();
+
             return base.Finalize();
         }
 

@@ -204,6 +204,7 @@ namespace Nucleus.Geometry
             {
                 SubCurves.Add(crv);
             }
+            EnsureSegmentConnectivity();
         }
 
         /// <summary>
@@ -828,6 +829,7 @@ namespace Nucleus.Geometry
             }
         }
 
+        /*
         /// <summary>
         /// Interpolate between this polycurve and another.  If this curve's subcurves
         /// have attached OriginalDomainGeometryAttributes then the stored domains may
@@ -839,6 +841,19 @@ namespace Nucleus.Geometry
         {
             throw new NotImplementedException();
         }
+
+
+        /// <summary>
+        /// Interpolate between this curve and another formed as an offset of it
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        public PolyCurve InterpolateWithOffset(PolyCurve offset, double proportion = 0.5)
+        {
+            throw new NotImplementedException();
+        }
+        */
+
 
         private bool IsOffsetCurveFlipped(Curve original, Curve offset)
         {
@@ -899,7 +914,7 @@ namespace Nucleus.Geometry
                 else if (subDomain.Overlaps(crvDom))
                 {
                     Curve subSubCrv = subCrv.Extract(crvDom.ParameterOf(subDomain.Overlap(crvDom)));
-                    if (subSubCrv != null) result.Add(subSubCrv);
+                    if (subSubCrv != null && subSubCrv.IsValid) result.Add(subSubCrv);
                 }
                 segStart = segEnd;
             }
@@ -1578,6 +1593,37 @@ namespace Nucleus.Geometry
             return new PolyCurve(this);
         }
 
+        /// <summary>
+        /// Snap subcurve end vertices together to avoid gaps between segments
+        /// </summary>
+        /// <returns></returns>
+        public void EnsureSegmentConnectivity()
+        {
+            for (int i = 0; i < SubCurves.Count; i++)
+            {
+                var crv0 = SubCurves[i];
+                if (i < SubCurves.Count - 1 || Closed)
+                {
+                    var crv1 = SubCurves.GetWrapped(i + 1);
+                    crv1.Start.Position = crv0.End.Position;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove any invalid subcurves from this polycurve
+        /// </summary>
+        /// <returns></returns>
+        public override bool Clean()
+        {
+            bool result = false;
+            for (int i = SubCurves.Count - 1; i >= 0; i--)
+            {
+                var subCrv = SubCurves[i];
+                if (!subCrv.IsValid) SubCurves.RemoveAt(i);
+            }
+            return result;
+        }
 
         #endregion
 

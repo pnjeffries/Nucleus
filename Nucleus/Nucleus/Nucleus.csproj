@@ -124,8 +124,10 @@
     <Compile Include="Geometry\CurveParameterMapper.cs" />
     <Compile Include="Geometry\Extrusion.cs" />
     <Compile Include="Geometry\HandSide.cs" />
+    <Compile Include="Geometry\IBoxBoundable.cs" />
     <Compile Include="Geometry\MeshCollection.cs" />
     <Compile Include="Geometry\OriginalDomainGeometryAttributes.cs" />
+    <Compile Include="Geometry\PathSurface.cs" />
     <Compile Include="Geometry\Rectangle.cs" />
     <Compile Include="Geometry\Solid.cs" />
     <Compile Include="Geometry\SurfaceCollection.cs" />
@@ -462,6 +464,7 @@
     <Compile Include="Optimisation\IGene.cs" />
     <Compile Include="Optimisation\IGeneticAlgorithmPhenotype.cs" />
     <Compile Include="Optimisation\IOptimisationSolver.cs" />
+    <Compile Include="Optimisation\IOptimisationMove.cs" />
     <Compile Include="Optimisation\OptimisationObjective.cs" />
     <Compile Include="Optimisation\OptimisationSettings.cs" />
     <Compile Include="Optimisation\OptimisationSolverBase.cs" />

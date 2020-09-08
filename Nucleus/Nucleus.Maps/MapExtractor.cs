@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml.Linq;
+using Nucleus.Alerts;
+using System.Globalization;
 //using Nominatim.API.Geocoders;
 //using Nominatim.API.Models;
 
@@ -71,6 +73,55 @@ namespace Nucleus.Maps
         /// </summary>
         public bool ExtrudeBuildings { get; set; } = true;
 
+        /// <summary>
+        /// Get or set whether roads should be imported as surfaces
+        /// </summary>
+        public bool RoadsAsSurfaces { get; set; } = true;
+
+        /// <summary>
+        /// The default width to be used for roads which do not define
+        /// a width or lane count and are not one of the standard road types
+        /// </summary>
+        public double DefaultRoadWidth { get; set; } = 5.5;
+
+        /// <summary>
+        /// The default width to be assumed for each lane in a road.
+        /// Used when number of lanes is specified but the overall road
+        /// width is not.
+        /// </summary>
+        public double DefaultRoadLaneWidth { get; set; } = 3.65;
+
+        private IDictionary<string, double> _RoadWidths = null;
+
+        /// <summary>
+        /// The preset assumed widths for different types of roads,
+        /// stored as a dictionary of width values in m, keyed by
+        /// the value of the 'highway' tag in lower case.
+        /// </summary>
+        public IDictionary<string, double> RoadWidths
+        {
+            get
+            {
+                if (_RoadWidths == null)
+                {
+                    //Defaults:
+                    _RoadWidths = new Dictionary<string, double>();
+                    _RoadWidths.Add("motorway", 22);
+                    _RoadWidths.Add("trunk", 16);
+                    _RoadWidths.Add("primary", 7.3);
+                    _RoadWidths.Add("secondary", 7.3);
+                    _RoadWidths.Add("tertiary", 7.3);
+                    _RoadWidths.Add("unclassified", 5.5);
+                    _RoadWidths.Add("residential", 5.5);
+                }
+                return _RoadWidths;
+            }
+            set
+            {
+                _RoadWidths = value;
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -89,7 +140,7 @@ namespace Nucleus.Maps
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
-        public AnglePair LatitudeAndLongitudeFromAddress(string address)
+        public AnglePair LatitudeAndLongitudeFromAddress(string address, AlertLog log = null)
         {
             // Nominatim requires a contact email address
             string queryString = NominatimAPI + "q=" + address + "&format=xml&email=paul@vitruality.com";
@@ -100,8 +151,13 @@ namespace Nucleus.Maps
             var place = xmlTree.Element("place");
             string lat = place.Attribute("lat").Value;
             string lon = place.Attribute("lon").Value;
-            double latitude = double.Parse(lat);
-            double longitude = double.Parse(lon);
+
+            double latitude;
+            double.TryParse(lat, NumberStyles.Any, CultureInfo.InvariantCulture, out latitude);
+
+            double longitude;
+            double.TryParse(lon, NumberStyles.Any, CultureInfo.InvariantCulture, out longitude);
+
             return AnglePair.FromDegrees(latitude, longitude);
 
 
@@ -122,7 +178,7 @@ namespace Nucleus.Maps
             else
                 throw new Exception("Address '" + address + "' could not be found.");
             */
-            throw new NotImplementedException();
+            
             /*var gls = new GoogleLocationService();
             try
             {
@@ -135,7 +191,6 @@ namespace Nucleus.Maps
                 return Vector.Unset;
             }*/
         }
-
         /// <summary>
         /// Download a map showing a range around the specified latitude 
         /// and longitude and save it to the given file path.
@@ -157,7 +212,7 @@ namespace Nucleus.Maps
         /// <param name="right">The upper-bound longitude</param>
         /// <param name="top">The upper-bound latitude</param>
         /// <param name="saveTo">The filepath to save the map file to</param>
-        public bool DownloadMap(double left, double bottom, double right, double top, FilePath saveTo)
+        public bool DownloadMap(double left, double bottom, double right, double top, FilePath saveTo, AlertLog log = null)
         {
             //Compile the OpenStreetMap API URL:
             string osmAPIGet = BuildGetURL(left, bottom, right, top);
@@ -169,6 +224,7 @@ namespace Nucleus.Maps
                 }
                 catch(Exception ex)
                 {
+                    log?.RaiseAlert("Error downloading map " + ex.Message, AlertLevel.Warning);
                     return false;
                 }
             }
@@ -183,12 +239,20 @@ namespace Nucleus.Maps
         /// <param name="right"></param>
         /// <param name="top"></param>
         /// <returns></returns>
-        public byte[] DownloadMapData(double left, double bottom, double right, double top)
+        public byte[] DownloadMapData(double left, double bottom, double right, double top, AlertLog log = null)
         {
             string osmAPIGet = BuildGetURL(left, bottom, right, top);
             using (var client = new WebClient())
             {
-                return client.DownloadData(osmAPIGet);
+                try
+                {
+                    return client.DownloadData(osmAPIGet);
+                }
+                catch (Exception ex)
+                {
+                    log?.RaiseAlert("Error downloading map data " + ex.Message, AlertLevel.Warning);
+                    return new byte[] { };
+                }
             }
         }
 
@@ -204,8 +268,22 @@ namespace Nucleus.Maps
         {
             //Compile the OpenStreetMap API URL:
             string osmAPIGet = OSMAPI + OSMAPIVersion + "/map?bbox=" +
-                left + "," + bottom + "," + right + "," + top;
+                SanitiseDouble(left) + "," +
+                SanitiseDouble(bottom) + "," +
+                SanitiseDouble(right) + "," +
+                SanitiseDouble(top);
             return osmAPIGet;
+        }
+
+        /// <summary>
+        /// Convert a double to a string such that it is compatible
+        /// with the OpenStreetMap API (i.e. no comma-separated decimals)
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>The double to sanitise</returns>
+        private string SanitiseDouble(double input)
+        {
+            return input.ToString().Replace(',', '.');
         }
 
         /// <summary>
@@ -215,12 +293,13 @@ namespace Nucleus.Maps
         /// <param name="range">The distance around the specified location to download</param>
         /// <param name="layerNames"></param>
         /// <returns></returns>
-        public GeometryLayerTable ReadMap(string address, double range = 0.005, IList<string> layerNames = null)
+        public GeometryLayerTable ReadMap(string address, double range = 0.005, IList<string> layerNames = null,
+            AlertLog log = null)
         {
             /*Vector ll = LatitudeAndLongitudeFromAddress(address);
             if (!ll.IsValid()) return null;*/
             var latLong = LatitudeAndLongitudeFromAddress(address);
-            return ReadMap(latLong, range, layerNames);
+            return ReadMap(latLong, range, layerNames, log);
         }
 
         /// <summary>
@@ -230,9 +309,10 @@ namespace Nucleus.Maps
         /// <param name="range">The range around the specified latitude and longitude to be collected, in degrees</param>
         /// <param name="layerNames"></param>
         /// <returns></returns>
-        public GeometryLayerTable ReadMap(AnglePair latLong, double range = 0.005, IList<string> layerNames = null)
+        public GeometryLayerTable ReadMap(AnglePair latLong, double range = 0.005, IList<string> layerNames = null,
+            AlertLog log = null)
         {
-            return ReadMap(latLong.Elevation.Degrees, latLong.Azimuth.Degrees, range, layerNames);
+            return ReadMap(latLong.Elevation.Degrees, latLong.Azimuth.Degrees, range, layerNames, log);
         }
 
         /// <summary>
@@ -243,15 +323,24 @@ namespace Nucleus.Maps
         /// <param name="range">The range around the specified latitude and longitude to be collected, in degrees</param>
         /// <param name="layerNames"></param>
         /// <returns></returns>
-        public GeometryLayerTable ReadMap(double latitude, double longitude, double range = 0.005, IList<string> layerNames = null)
+        public GeometryLayerTable ReadMap(double latitude, double longitude, double range = 0.005, IList<string> layerNames = null,
+            AlertLog log = null)
         {
             //FilePath osmFile = FilePath.Temp + "TempMap.osm";
             //DownloadMap(latitude, longitude, osmFile, range);
             //return ReadMap(osmFile, latitude, longitude);
             var data = DownloadMapData(longitude - range, latitude - range, longitude + range, latitude + range);
-            using (var stream = new MemoryStream(data))
+            try
             {
-                return ReadMap(stream, AnglePair.FromDegrees(latitude, longitude), layerNames);
+                using (var stream = new MemoryStream(data))
+                {
+                    return ReadMap(stream, AnglePair.FromDegrees(latitude, longitude), layerNames);
+                }
+            }
+            catch (Exception ex)
+            {
+                log?.RaiseAlert("Error reading map " + ex.Message, AlertLevel.Information);
+                return null;
             }
         }
         
@@ -269,6 +358,7 @@ namespace Nucleus.Maps
 
             var nodes = new Dictionary<long, OsmSharp.Node>();
             var ways = new Dictionary<long, OsmSharp.Way>();
+            var roadNetwork = new List<PathSurface>();
 
             if (layerNames == null)
             {
@@ -342,9 +432,7 @@ namespace Nucleus.Maps
                             if (geometry is Curve && way.Tags.ContainsKey("height"))
                             {
                                 string heightTag = way.Tags["height"];
-                                heightTag = heightTag.TrimEnd('m').Trim();
-                                double height;
-                                if (double.TryParse(heightTag, out height))
+                                if (ParseDistance(heightTag, out double height))
                                 {
                                     // TODO: Deal with tags with different units on the end!
                                     geometry = new Extrusion((Curve)geometry, new Vector(0, 0, height));
@@ -354,8 +442,7 @@ namespace Nucleus.Maps
                             {
                                 // Height not supplied - fall back to storeys:
                                 string levelsTag = way.Tags["building:levels"];
-                                double levels;
-                                if (double.TryParse(levelsTag, out levels))
+                                if (double.TryParse(levelsTag, out double levels))
                                 {
                                     geometry = new Extrusion((Curve)geometry, new Vector(0, 0, levels * StoreyHeight + ByStoreysExtraHeight));
                                 }
@@ -366,13 +453,71 @@ namespace Nucleus.Maps
                                 geometry = new Extrusion((Curve)geometry, new Vector(0, 0, DefaultBuildingHeight));
                             }
                         }
+                        if (RoadsAsSurfaces)
+                        {
+                            if (geometry is Curve && way.Tags.ContainsKey("highway"))
+                            {
+                                if (way.Tags.ContainsKey("width"))
+                                {
+                                    var widthTag = way.Tags["width"];
+                                    if (ParseDistance(widthTag, out double width))
+                                    {
+                                        geometry = new PathSurface((Curve)geometry, width);
+                                    }
+                                }
+                                if (geometry is Curve && way.Tags.ContainsKey("lanes"))
+                                {
+                                    var lanesTag = way.Tags["lanes"];
+                                    if (double.TryParse(lanesTag, out double lanes))
+                                    {
+                                        geometry = new PathSurface((Curve)geometry, DefaultRoadLaneWidth * lanes);
+                                    }
+                                }
+                                if (geometry is Curve)
+                                {
+                                    var typeTag = way.Tags["highway"];
+                                    if (RoadWidths.ContainsKey(typeTag))
+                                    {
+                                        double width = RoadWidths[typeTag];
+                                        geometry = new PathSurface((Curve)geometry, width);
+                                    }
+                                }
+                                if (geometry is Curve)
+                                {
+                                    geometry = new PathSurface((Curve)geometry, DefaultRoadWidth);
+                                }
+
+                                // Build network:
+                                if (geometry is PathSurface path) roadNetwork.Add(path);
+                            }
+                        }
                     }
                     var layer = result.GetOrCreate(layerName);
                     layer.Add(geometry);
+
+                    if (roadNetwork.Count > 0)
+                    {
+                        roadNetwork.GenerateNetworkPathNodes(new Model.NodeGenerationParameters(1.0));
+                        roadNetwork.GenerateNetworkPathEdges();
+                    }
                 }
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Parse width and height values from OpenStreetMap tags and return
+        /// them as a double value expressed in m
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        private bool ParseDistance(string value, out double result)
+        {
+            // TODO: Detect and deal with different unit types
+            value = value.TrimEnd('m').Trim();
+            return double.TryParse(value, out result);
         }
 
         /// <summary>
