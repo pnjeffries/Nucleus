@@ -209,6 +209,26 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Get the set of contiguous letter characters from the end of this string up to the
+        /// first space or non-letter character
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string EndingLetters(this string str)
+        {
+            for (int i = str.Length - 1; i >= 0; i--)
+            {
+                if (!char.IsLetter(str[i]))
+                {
+                    if (i == str.Length - 1) return string.Empty;
+
+                    return str.Substring(i + 1);
+                }
+            }
+            return str;
+        }
+
+        /// <summary>
         /// Split this string using the separator characters ' ' and ','.
         /// String literals enclosed by '"' will be kept intact.
         /// </summary>
