@@ -21,6 +21,7 @@
 using Nucleus.Base;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -130,7 +131,7 @@ namespace Nucleus.Extensions
         public static double ToDouble(this string str, double fallbackValue = (0.0/0.0))
         {
             double result;
-            if (double.TryParse(str, out result))
+            if (double.TryParse(str, NumberStyles.Any, CultureInfo.InvariantCulture, out result))
             {
                 return result;
             }
