@@ -151,6 +151,8 @@ namespace Nucleus.Maps
             var place = xmlTree.Element("place");
             string lat = place.Attribute("lat").Value;
             string lon = place.Attribute("lon").Value;
+            var displayName = place.Attribute("display_name").Value;
+            log?.RaiseAlert($"Found data: {displayName}");
 
             double latitude;
             double.TryParse(lat, NumberStyles.Any, CultureInfo.InvariantCulture, out latitude);
