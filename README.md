@@ -3,6 +3,8 @@
 
 .Nucleus is an open-source .NET library intended as a generalisable base framework for the development of custom BIM and structural engineering workflow tools.  It forms the core underlying class system of [Salamander 3](https://www.food4rhino.com/app/salamander-3) and several internal Ramboll software projects.
 
+For more information visit the [Wiki](https://github.com/pnjeffries/Nucleus/wiki).
+
 The library provides the following functionality:
 
 - A set of extensions and general-purpose utility classes useful for any .NET project.
