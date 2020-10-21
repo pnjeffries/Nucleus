@@ -52,6 +52,11 @@ namespace Nucleus.DXF
             return Vector3.Zero;
         }
 
+        private Vector3 ReadOriginFromDXF(DxfDocument document)
+        {
+            return ReadCustomHeaderFromDXF(document, "$EXTMIN");
+        }
+
         /// <summary>
         /// Read a DXF and convert it into native Nucleus geometry types.
         /// </summary>
@@ -61,6 +66,8 @@ namespace Nucleus.DXF
         {
             VertexGeometryCollection result = new VertexGeometryCollection();
 
+            var origin = ReadOriginFromDXF(doc);
+
             double scale = 1.0;
             if (doc.DrawingVariables.InsUnits == netDxf.Units.DrawingUnits.Millimeters) scale = 0.001;
             else if (doc.DrawingVariables.InsUnits == netDxf.Units.DrawingUnits.Centimeters) scale = 0.01;
@@ -69,66 +76,78 @@ namespace Nucleus.DXF
             // Hatches
             foreach (netDxf.Entities.Hatch hatch in doc.Hatches)
             {
+                hatch.TransformBy(Matrix3.Identity, -origin);
                 result.AddRange(FromDXF.Convert(hatch));
             }
 
             // Lines
             foreach (netDxf.Entities.Line line in doc.Lines)
             {
+                line.TransformBy(Matrix3.Identity, -origin);
                 result.Add(FromDXF.Convert(line));
             }
 
             // Polylines
             foreach (netDxf.Entities.LwPolyline pLine in doc.LwPolylines)
             {
+                pLine.TransformBy(Matrix3.Identity, -origin);
                 result.Add(FromDXF.Convert(pLine));
             }
             foreach (netDxf.Entities.Polyline pLine in doc.Polylines)
             {
+                pLine.TransformBy(Matrix3.Identity, -origin);
                 result.Add(FromDXF.Convert(pLine));
             }
 
             // Arcs
             foreach (netDxf.Entities.Arc arc in doc.Arcs)
             {
+                arc.TransformBy(Matrix3.Identity, -origin);
                 result.Add(FromDXF.Convert(arc));
             }
             foreach (netDxf.Entities.Circle circle in doc.Circles)
             {
+                circle.TransformBy(Matrix3.Identity, -origin);
                 result.Add(FromDXF.Convert(circle));
             }
 
             // Splines
             foreach (netDxf.Entities.Spline spline in doc.Splines)
             {
+                spline.TransformBy(Matrix3.Identity, -origin);
                 result.Add(FromDXF.Convert(spline));
             }
 
             // Points
             foreach (netDxf.Entities.Point point in doc.Points)
             {
+                point.TransformBy(Matrix3.Identity, -origin);
                 result.Add(FromDXF.Convert(point));
             }
 
             // Meshes
             foreach (netDxf.Entities.Mesh mesh in doc.Meshes)
             {
+                mesh.TransformBy(Matrix3.Identity, -origin);
                 result.Add(FromDXF.Convert(mesh));
             }
 
             // Polyface meshes
             foreach (var mesh in doc.PolyfaceMeshes)
             {
+                mesh.TransformBy(Matrix3.Identity, -origin);
                 result.Add(FromDXF.Convert(mesh));
             }
 
             // Text
             foreach (netDxf.Entities.Text text in doc.Texts)
             {
+                text.TransformBy(Matrix3.Identity, -origin);
                 result.Add(FromDXF.Convert(text));
             }
             foreach (netDxf.Entities.MText text in doc.MTexts)
             {
+                text.TransformBy(Matrix3.Identity, -origin);
                 result.Add(FromDXF.Convert(text));
             }
 
@@ -140,7 +159,7 @@ namespace Nucleus.DXF
                 // Note: There is some commented-out code in the library to do this:
                 // see: https://netdxf.codeplex.com/SourceControl/latest#netDxf/Entities/Insert.cs
                 // TODO: Review and improve?
-                Vector translation = FromDXF.Convert(insert.Position);
+                Vector translation = FromDXF.Convert(insert.Position - origin);
                 Transform transform = FromDXF.Convert(insert.GetTransformation(netDxf.Units.DrawingUnits.Meters));
 
                 foreach (netDxf.Entities.EntityObject entity in insert.Block.Entities)
