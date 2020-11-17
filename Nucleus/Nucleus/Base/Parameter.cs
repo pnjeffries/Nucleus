@@ -75,6 +75,20 @@ namespace Nucleus.Base
         }
 
         /// <summary>
+        /// Private backing field for the Metadata property
+        /// </summary>
+        private IDictionary<string, string> _Metadata = null;
+
+        /// <summary>
+        /// Get or set the metadata of this parameter.
+        /// </summary>
+        public IDictionary<string, string> Metadata
+        {
+            get { return _Metadata; }
+            set { _Metadata = value; }
+        }
+
+        /// <summary>
         /// Private backing field for the Visible property
         /// </summary>
         private bool _Visible = true;
@@ -273,6 +287,23 @@ namespace Nucleus.Base
         {
             Group = group;
             Description = description;
+        }
+
+        /// <summary>
+        /// Creates a new parameter with the specified name, group,
+        /// initial value and metadata.
+        /// </summary>
+        /// <param name="name">The name of this parameter.</param>
+        /// <param name="group">The group within which this parameter
+        /// should be displayed.</param>
+        /// <param name="value">The initial value of the parameter.</param>
+        /// <param name="metadata">A dictionary containing any extra data related to this parameter.</param>
+        /// <param name="units">The units in which the parameter is expressed.</param>
+        public Parameter(string name, ParameterGroup group, T value, IDictionary<string, string> metadata, MeasurementUnit units = null)
+            : this(name, value, units)
+        {
+            Group = group;
+            Metadata = metadata;
         }
 
         #endregion
