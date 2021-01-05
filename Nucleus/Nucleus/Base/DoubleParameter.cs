@@ -106,6 +106,20 @@ namespace Nucleus.Base
         {
         }
 
+        /// <summary>
+        /// Creates a new parameter with the specified name, group,
+        /// initial value and description.
+        /// </summary>
+        /// <param name="name">The name of this parameter.</param>
+        /// <param name="group">The group within which this parameter
+        /// should be displayed.</param>
+        /// <param name="value">The initial value of the parameter.</param>
+        /// <param name="metadata">A dictionary containing any extra data related to this parameter.</param>
+        /// <param name="units">The units in which the parameter is expressed.</param>
+        public DoubleParameter(string name, ParameterGroup group, double value, IDictionary<string, string> metadata, MeasurementUnit units = null) : base(name, group, value, metadata, units)
+        {
+        }
+
         #endregion
 
         #region Methods
