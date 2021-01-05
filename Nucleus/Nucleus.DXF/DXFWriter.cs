@@ -27,6 +27,8 @@ namespace Nucleus.DXF
         {
             var header = new HeaderVariables();
             header.InsUnits = netDxf.Units.DrawingUnits.Meters;
+            // Use AutoCad2007 or later to avoid Windows encoding issues (AutoCad2007+ uses UTF8)
+            header.AcadVer = DxfVersion.AutoCad2007;
             DxfDocument doc = new DxfDocument(header);
 
             foreach (GeometryLayer layer in geometry)
@@ -36,10 +38,13 @@ namespace Nucleus.DXF
 
                 foreach (VertexGeometry geo in layer)
                 {
-                    foreach (EntityObject entity in ToDXF.Convert(geo))
+                    if (geo.VertexCount > 0)
                     {
-                        entity.Layer = dxfLayer;
-                        doc.AddEntity(entity);
+                        foreach (EntityObject entity in ToDXF.Convert(geo))
+                        {
+                            entity.Layer = dxfLayer;
+                            doc.AddEntity(entity);
+                        }
                     }
                 }
             }
