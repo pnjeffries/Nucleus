@@ -1496,6 +1496,60 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Trim the shortest segment which can be removed from this curve
+        /// while still leaving a valid continuous curve.  This will be the shortest either
+        /// the start or end segment in the case of open curves or the shortest segment in a closed
+        /// curve.
+        /// If the curve has only a single segment, nothing will be removed and the operation will fail.
+        /// </summary>
+        /// <returns>True if a segment was successfully removed.</returns>
+        public override bool TrimShortestSegment()
+        {
+            ExplodeSubPolyCurves();
+
+            if (SubCurves.Count <= 1) return false;
+
+            if (Closed)
+            {
+                // Any segment is fair game:
+                int iShort = SubCurves.IndexOfMin(crv => crv.Length);
+                if (iShort < 0) return false;
+                if (iShort == 0 || iShort == SubCurves.Count - 1)
+                {
+                    SubCurves.RemoveAt(iShort);
+                    return true;
+                }
+                else
+                {
+                    // Need to re-order curves to keep continuity:
+                    var subList = SubCurves.SubListFrom(iShort + 1);
+                    for (int i = SubCurves.Count - 1; i >= iShort; i--)
+                    {
+                        SubCurves.RemoveAt(i);
+                    }
+                    for (int i = subList.Count - 1; i>= 0; i--)
+                    {
+                        SubCurves.Insert(0, subList[i]);
+                    }
+                    return true;
+                }
+            }
+            else
+            {
+                if (SubCurves.First().Length < SubCurves.Last().Length)
+                {
+                    SubCurves.RemoveFirst();
+                    return true;
+                }
+                else
+                {
+                    SubCurves.RemoveLast();
+                    return true;
+                }
+            }
+        }
+
+        /// <summary>
         /// Reduce this polycurve by removing line subcurves where
         /// they can be adequately represented within tolerance by
         /// adjusting an adjoining line curve to replace them.
@@ -1623,6 +1677,28 @@ namespace Nucleus.Geometry
                 if (!subCrv.IsValid) SubCurves.RemoveAt(i);
             }
             return result;
+        }
+
+        /// <summary>
+        /// If this polycurve itself contains any other polycurves as sub-curves,
+        /// remove that polycurve and replace it with its constituent sub-curves.
+        /// </summary>
+        public void ExplodeSubPolyCurves()
+        {
+            for (int i = SubCurves.Count - 1; i >= 0 ; i--)
+            {
+                var crv = SubCurves[i];
+                if (crv is PolyCurve pCrv)
+                {
+                    pCrv.ExplodeSubPolyCurves();
+                    SubCurves.RemoveAt(i);
+                    for (int j = pCrv.SubCurves.Count - 1; j >= 0; j--)
+                    {
+                        SubCurves.Insert(i, pCrv.SubCurves[j]);
+                    }
+                    // This is a bit inefficient.  Maybe clear and replace the original SubCurves collection instead?
+                }
+            }
         }
 
         #endregion

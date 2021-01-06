@@ -110,6 +110,15 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// The axis-aligned bounding box that contains this shape.
+        /// For PlanarRegions the boundingbox is assumed to be that of the perimeter curve.
+        /// </summary>
+        public override BoundingBox BoundingBox
+        {
+            get { return Perimeter?.BoundingBox; }
+        }
+
+        /// <summary>
         /// Is this region valid?
         /// </summary>
         public override bool IsValid

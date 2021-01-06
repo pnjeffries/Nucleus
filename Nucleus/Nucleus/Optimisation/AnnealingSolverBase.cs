@@ -22,6 +22,15 @@ namespace Nucleus.Optimisation
         /// </summary>
         private int _SinceLastBest = 0;
 
+        /// <summary>
+        /// The number of iterations since the last best state was found
+        /// </summary>
+        protected int SinceLastBest
+        {
+            get { return _SinceLastBest; }
+            set { _SinceLastBest = value; }
+        }
+
         #endregion
 
         #region Properties
@@ -175,7 +184,7 @@ namespace Nucleus.Optimisation
             { 
                 // Reset to best value if stuck
                 if (Settings.FailsBeforeReset > 0 &&
-                    _SinceLastBest > Settings.FailsBeforeReset)
+                    SinceLastBest > Settings.FailsBeforeReset)
                 {
                     // Restore best option as current
                     ResetToBest();

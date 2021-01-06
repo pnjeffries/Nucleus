@@ -2044,6 +2044,17 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Extend this curve at the start and end by the specified lengths
+        /// </summary>
+        /// <param name="startExtension">The length to extend the curve by at the start</param>
+        /// <param name="endExtension">The length to extend the curve by at the end</param>
+        /// <returns></returns>
+        public virtual bool ExtendEnds(double startExtension, double endExtension)
+        {
+            return ExtendStart(startExtension) & ExtendEnd(endExtension);
+        }
+
+        /// <summary>
         /// Collapse any segments of this curve which have a length shorter than the
         /// value specified.  The end-points of the curve will be kept the same, but
         /// short polyline segments and polycurve subcurves will be removed and the
@@ -2052,6 +2063,19 @@ namespace Nucleus.Geometry
         /// <param name="minLength">The length below which segments will be removed.</param>
         /// <returns>True if any segments were removed.</returns>
         public virtual bool CollapseShortSegments(double minLength)
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Trim the shortest segment which can be removed from this curve
+        /// while still leaving a valid continuous curve.  This will be the shortest either
+        /// the start or end segment in the case of open curves or the shortest segment in a closed
+        /// curve.
+        /// If the curve has only a single segment, nothing will be removed and the operation will fail.
+        /// </summary>
+        /// <returns>True if a segment was successfully removed.</returns>
+        public virtual bool TrimShortestSegment()
         {
             return false;
         }
@@ -3269,6 +3293,51 @@ namespace Nucleus.Geometry
                 crv.Trim(region, result, outside);
             }
             return result;
+        }
+
+        /// <summary>
+        /// Trim all curves in this collection inside (or optionally, outside) the specified regions
+        /// </summary>
+        /// <typeparam name="TCurve"></typeparam>
+        /// <param name="curves"></param>
+        /// <param name="regions"></param>
+        /// <param name="outside"></param>
+        /// <returns></returns>
+        public static IList<Curve> TrimAll(this IList<Curve> curves, IList<PlanarRegion> regions, bool outside = false)
+        {
+            var result = curves;
+            foreach (var region in regions)
+            {
+                result = result.TrimAll(region, outside);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Generate a SortedList containing the curves in this collection keyed by their length.
+        /// Uses the AddSafe extension method to allow for multiple curves with the same length
+        /// to be accomodated without throwing an exception (though note that there may be slight
+        /// innacuracies in the length keys due to this).
+        /// </summary>
+        /// <typeparam name="TCurve"></typeparam>
+        /// <param name="curves"></param>
+        /// <returns></returns>
+        public static SortedList<double, TCurve> SortedByLength<TCurve>(this IList<TCurve> curves)
+            where TCurve: Curve
+        {
+            return curves.SortedBy<TCurve>(crv => crv.Length);
+        }
+
+        /// <summary>
+        /// Get the longest curve in this collection of curves.
+        /// </summary>
+        /// <typeparam name="TCurve"></typeparam>
+        /// <param name="curves"></param>
+        /// <returns></returns>
+        public static TCurve Longest<TCurve>(this IList<TCurve> curves)
+            where TCurve : Curve
+        {
+            return curves.ItemWithMax(crv => crv.Length);
         }
     }
 }

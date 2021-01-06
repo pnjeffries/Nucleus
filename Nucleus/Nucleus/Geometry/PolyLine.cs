@@ -593,6 +593,85 @@ namespace Nucleus.Geometry
             return result;
         }
 
+        /// <summary>
+        /// Determine and return the spanIndex of the shortest segment in this polyline
+        /// </summary>
+        /// <returns></returns>
+        public int ShortestSegment()
+        {
+            int shortest = 0;
+            double minLength = CalculateSegmentLength(0);
+            for (int i = 1; i < SegmentCount; i++)
+            {
+                double length = CalculateSegmentLength(i);
+                if (length < minLength)
+                {
+                    minLength = length;
+                    shortest = i;
+                }
+            }
+            return shortest;
+        }
+
+        /// <summary>
+        /// Trim the shortest segment which can be removed from this curve
+        /// while still leaving a valid continuous curve.  This will be the shortest either
+        /// the start or end segment in the case of open curves or the shortest segment in a closed
+        /// curve.
+        /// If the curve has only a single segment, nothing will be removed and the operation will fail.
+        /// </summary>
+        /// <returns>True if a segment was successfully removed.</returns>
+        public override bool TrimShortestSegment()
+        {
+            if (Vertices.Count <= 2) return false;
+
+            if (Closed)
+            {
+                int iShort = ShortestSegment();
+                if (iShort == 0)
+                {
+                    Closed = false;
+                    var startVert = Vertices[0];
+                    Vertices.RemoveAt(0);
+                    // Move to end to keep last span:
+                    Vertices.Add(startVert);
+                }
+                else if (iShort == SegmentCount - 1)
+                {
+                    Closed = false;
+                    // If closed, no need to remove a vertex, just toggle off the last span
+                }
+                else
+                {
+                    Closed = false;
+                    // Re-order so that 'broken' end span is at location of shortest segment:
+                    var endVerts = Vertices.SubListFrom(iShort + 1);
+                    for (int i = Vertices.Count - 1; i > iShort ; i--)
+                    {
+                        Vertices.RemoveAt(i);
+                    }
+                    // Move previous end vertices to start:
+                    for (int i = endVerts.Count - 1; i >= 0; i--)
+                    {
+                        Vertices.Insert(0, endVerts[i]);
+                    }
+                }
+            }
+            else // Open curves
+            {
+                if (CalculateSegmentLength(0) < CalculateSegmentLength(SegmentCount - 1))
+                {
+                    Vertices.RemoveFirst();
+                }
+                else
+                {
+                    Vertices.RemoveLast();
+                }
+            }
+
+            return true;
+        }
+
         public override string ToString()
         {
             return "Polyline";

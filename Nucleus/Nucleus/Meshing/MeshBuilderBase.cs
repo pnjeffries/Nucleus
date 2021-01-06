@@ -921,6 +921,20 @@ namespace Nucleus.Meshing
         }
 
         /// <summary>
+        /// Add a set of vertices and faces to the mesh to represent a curve extruded along a curve.
+        /// </summary>
+        /// <param name="curve"></param>
+        /// <param name="path"></param>
+        public void AddExtrudedCurve(Curve curve, Vector path)
+        {
+            if (curve == null) return;
+            Vector[] facetted = curve.Facet(FacetAngle);
+            Vector[] offset = new Vector[facetted.Length];
+            for (int i = 0; i < facetted.Length; i++) offset[i] = facetted[i] + path;
+            FillBetween(facetted, offset, false, curve.Closed);
+        }
+
+        /// <summary>
         /// Add a set of vertices and faces to this mesh representing a cone
         /// </summary>
         /// <param name="tip">The point at the tip of the cone</param>

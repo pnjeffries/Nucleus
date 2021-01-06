@@ -151,6 +151,13 @@ namespace Nucleus.Base
         /// <returns></returns>
         protected abstract IFastDuplicatable FastDuplicate_Implementation();
 
+        /// <summary>
+        /// Manually notify this parameter that its value has been changed in some
+        /// way other than direct replacement (for example, modification of a geometry
+        /// object) and which would not be automatically detected.
+        /// Will raise a PropertyChanged event for the Value property.
+        /// </summary>
+        public abstract void NotifyValueChanged();
 
         #endregion
     }
@@ -334,6 +341,17 @@ namespace Nucleus.Base
         protected override IFastDuplicatable FastDuplicate_Implementation()
         {
             return new Parameter<T>(this);
+        }
+
+        /// <summary>
+        /// Manually notify this parameter that its value has been changed in some
+        /// way other than direct replacement (for example, modification of a geometry
+        /// object) and which would not be automatically detected.
+        /// Will raise a PropertyChanged event for the Value property.
+        /// </summary>
+        public override void NotifyValueChanged()
+        {
+            NotifyPropertyChanged(nameof(Value));
         }
 
         #endregion

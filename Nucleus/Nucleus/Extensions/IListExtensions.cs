@@ -259,7 +259,7 @@ namespace Nucleus.Extensions
 
         /// <summary>
         /// Find the item in this list which returns the minimum value of a property or method
-        /// defined by a delegate
+        /// defined by a delegate function.
         /// </summary>
         /// <typeparam name="TItem">The type of item in the list</typeparam>
         /// <typeparam name="TProperty">The type of the property to be interrogated</typeparam>
@@ -281,6 +281,35 @@ namespace Nucleus.Extensions
                 {
                     max = value;
                     result = item;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Find the index of the item in this list which returns the minimum value of a property or
+        /// method defined by a delegate function.
+        /// </summary>
+        /// <typeparam name="TItem">The type of item in the list</typeparam>
+        /// <typeparam name="TProperty">The type of the property to be interrogated</typeparam>
+        /// <param name="list"></param>
+        /// <param name="propertyDelegate">Delegate function which returns the value
+        /// for each list item.</param>
+        /// <returns></returns>
+        public static int IndexOfMax<TItem, TProperty>(this IList<TItem> list, Func<TItem, TProperty> propertyDelegate)
+            where TProperty : IComparable<TProperty>
+        {
+            if (list.Count == 0) return -1;
+            int result = 0;
+            TProperty max = propertyDelegate.Invoke(list[0]);
+            for (int i = 1; i < list.Count; i++)
+            {
+                TItem item = list[i];
+                TProperty value = propertyDelegate.Invoke(item);
+                if (value.CompareTo(max) == 1)
+                {
+                    max = value;
+                    result = i;
                 }
             }
             return result;
@@ -388,6 +417,35 @@ namespace Nucleus.Extensions
             for (int i = 0; i < list.Count; i++)
             {
                 TItem value = list[i];
+                if (value.CompareTo(min) == -1)
+                {
+                    min = value;
+                    result = i;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Find the index of the item in this list which returns the minimum value of a property or method
+        /// defined by a delegate function.
+        /// </summary>
+        /// <typeparam name="TItem">The type of item in the list</typeparam>
+        /// <typeparam name="TProperty">The type of the property to be interrogated</typeparam>
+        /// <param name="list"></param>
+        /// <param name="propertyDelegate">Delegate function which returns the value
+        /// for each list item.</param>
+        /// <returns></returns>
+        public static int IndexOfMin<TItem, TProperty>(this IList<TItem> list, Func<TItem, TProperty> propertyDelegate)
+            where TProperty : IComparable<TProperty>
+        {
+            if (list.Count == 0) return -1;
+            int result = 0;
+            TProperty min = propertyDelegate.Invoke(list[0]);
+            for (int i = 1; i < list.Count; i++)
+            {
+                TItem item = list[i];
+                TProperty value = propertyDelegate.Invoke(item);
                 if (value.CompareTo(min) == -1)
                 {
                     min = value;
@@ -768,6 +826,45 @@ namespace Nucleus.Extensions
             for (int i = 0; i < items.Count; i++)
             {
                 result.AddSafe(keys[i], items[i]);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Construct a sorted list using the items in this list and obtaining the sorting key via a delegate
+        /// function.
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="items"></param>
+        /// <param name="keyDelegate"></param>
+        /// <returns></returns>
+        public static SortedList<TKey, TValue> SortedBy<TKey, TValue>(this IList<TValue> items, Func<TValue, TKey> keyDelegate)
+        {
+            var result = new SortedList<TKey, TValue>(items.Count);
+            foreach (TValue item in items)
+            {
+                result.Add(keyDelegate.Invoke(item), item);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Construct a sorted list using the items in this list and obtaining the sorting key via a delegate
+        /// function.  This override for doubles uses the AddSafe extension method to enable duplicate keys to
+        /// be dealt with without throwing an exception.
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="items"></param>
+        /// <param name="keyDelegate"></param>
+        /// <returns></returns>
+        public static SortedList<double, TValue> SortedBy<TValue>(this IList<TValue> items, Func<TValue, double> keyDelegate)
+        {
+            var result = new SortedList<double, TValue>(items.Count);
+            foreach (TValue item in items)
+            {
+                result.AddSafe(keyDelegate.Invoke(item), item);
             }
             return result;
         }

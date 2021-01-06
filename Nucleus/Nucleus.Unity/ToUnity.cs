@@ -103,5 +103,18 @@ namespace Nucleus.Unity
             return new U.Ray(Convert(axis.Origin), Convert(axis.Direction));
         }
 
+        /// <summary>
+        /// Convert a .Nucleus plane to a Unity plane
+        /// </summary>
+        /// <param name="plane"></param>
+        /// <returns></returns>
+        public static U.Plane Convert(N.Plane plane)
+        {
+            return new U.Plane(
+                Convert(plane.Origin), 
+                Convert(plane.LocalToGlobal(0, 1)), 
+                Convert(plane.LocalToGlobal(1, 0)));
+        }
+
     }
 }

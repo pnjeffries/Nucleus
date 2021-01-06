@@ -134,7 +134,7 @@ namespace Nucleus.Geometry
         /// The axis-aligned bounding box that contains this shape.
         /// Will be calculated as-needed and cached until invalidated by a geometry update.
         /// </summary>
-        public BoundingBox BoundingBox
+        public virtual BoundingBox BoundingBox
         {
             get
             {
