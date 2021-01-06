@@ -75,7 +75,16 @@ namespace Nucleus.Base
             _Percentage = percentage;
         }
 
+        public IntWithPercentParameter(string name, ParameterGroup group, int value, IDictionary<string, string> metadata, double percentage = 0, MeasurementUnit units = null) : base(name, group, value, metadata, units)
+        {
+            _Percentage = percentage;
+        }
+
         public IntWithPercentParameter(string name, ParameterGroup group, int value, string description, MeasurementUnit units = null) : base(name, group, value, description, units)
+        {
+        }
+
+        public IntWithPercentParameter(string name, ParameterGroup group, int value, IDictionary<string, string> metadata, MeasurementUnit units = null) : base(name, group, value, metadata, units)
         {
         }
 
