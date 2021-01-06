@@ -25,9 +25,24 @@ namespace Nucleus.Rhino
         public static bool Writing { get; set; } = false;
 
         /// <summary>
-        /// Get current active document as default
+        /// Private backing field for the active document
         /// </summary>
-        private static RhinoDoc ActiveRhinoDoc { get; set; } = RhinoDoc.ActiveDoc;
+        private static RhinoDoc _ActiveRhinoDoc = null;
+
+        /// <summary>
+        /// Get current active document. If null will return Rhino.ActiveDoc
+        /// Set is undertaken by UpdateActiveRhinoDoc method
+        /// </summary>
+        public static RhinoDoc ActiveRhinoDoc {
+            get
+            {
+                if(_ActiveRhinoDoc == null)
+                {
+                    _ActiveRhinoDoc = RhinoDoc.ActiveDoc;
+                }
+                return _ActiveRhinoDoc;
+            }
+        }
 
         /// <summary>
         /// Manually override current active document.
@@ -36,7 +51,7 @@ namespace Nucleus.Rhino
         /// <param name="rhinoDocument"></param>
         public static void UpdateActiveRhinoDoc(RhinoDoc rhinoDocument)
         {
-            ActiveRhinoDoc = rhinoDocument;
+            _ActiveRhinoDoc = rhinoDocument;
         }
 
         /// <summary>
