@@ -293,10 +293,12 @@ namespace Nucleus.Rhino
         {
             int layerID = GetLayerID(layer.Name);
             if (layer.Brush != null) SetLayerColour(layerID, layer.Brush.BaseColour);
-            foreach (VertexGeometry vG in layer)
-            {
-                Guid gID = Bake(vG);
-                SetObjectLayer(gID, layerID);
+            if(layer.Count>0){
+                foreach (VertexGeometry vG in layer)
+                {   
+                    Guid gID = Bake(vG);
+                    SetObjectLayer(gID, layerID);
+                }
             }
         }
 
