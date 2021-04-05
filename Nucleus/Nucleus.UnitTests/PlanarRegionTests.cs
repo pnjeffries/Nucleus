@@ -2558,5 +2558,38 @@ namespace Nucleus.UnitTests
             Assert.AreEqual(true, result);
         }
 
+        /// <summary>
+        /// Test to check a doughnut shape void is cutting correctly
+        /// </summary>
+        [TestMethod]
+        public void SquareRegionCentralAreaRemoval()
+        {
+            var regionPLine = new PolyLine(true,
+                Vector.Create2D(0, 0, 20, 0, 20, 20, 0, 20));
+            var region = new PlanarRegion(regionPLine);
+
+            var voidPLine =  new PolyLine(true,
+                Vector.Create2D(5, 5, 15, 5, 15, 15, 5, 15));
+            var voidRegion = new PlanarRegion(voidPLine);
+            var perimeterMappers = new List<CurveParameterMapper>();
+
+            var subRegions = region.Not(voidRegion);
+
+            var numberOfRegions = subRegions.Count;
+            Assert.AreEqual(1, numberOfRegions);
+
+            var hasVoids = subRegions[0].HasVoids;
+            Assert.AreEqual(true, hasVoids);
+
+            var numberOfVoids = subRegions[0].Voids.Count;
+            Assert.AreEqual(1, numberOfVoids);
+
+            var areaOfRegion = subRegions[0].CalculateArea();
+            Assert.AreEqual(300, areaOfRegion);
+
+            var areaOfVoid = subRegions[0].Voids.TotalEnclosedArea();
+            Assert.AreEqual(100, areaOfRegion);
+        }
+
     }
 }

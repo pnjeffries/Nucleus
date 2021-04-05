@@ -125,6 +125,7 @@
     <Compile Include="Geometry\Extrusion.cs" />
     <Compile Include="Geometry\HandSide.cs" />
     <Compile Include="Geometry\IBoxBoundable.cs" />
+    <Compile Include="Geometry\LineCollection.cs" />
     <Compile Include="Geometry\MeshCollection.cs" />
     <Compile Include="Geometry\OriginalDomainGeometryAttributes.cs" />
     <Compile Include="Geometry\PathSurface.cs" />

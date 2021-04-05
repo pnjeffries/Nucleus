@@ -20,9 +20,39 @@ namespace Nucleus.Rhino
     public static class RhinoOutput
     {
         /// <summary>
-        /// Is Salamander currently writing to the Rhino document?
+        /// Is tool currently writing to the Rhino document?
         /// </summary>
         public static bool Writing { get; set; } = false;
+
+        /// <summary>
+        /// Private backing field for the active document
+        /// </summary>
+        private static RhinoDoc _ActiveRhinoDoc = null;
+
+        /// <summary>
+        /// Get current active document. If null will return Rhino.ActiveDoc
+        /// Set is undertaken by UpdateActiveRhinoDoc method
+        /// </summary>
+        public static RhinoDoc ActiveRhinoDoc {
+            get
+            {
+                if(_ActiveRhinoDoc == null)
+                {
+                    _ActiveRhinoDoc = RhinoDoc.ActiveDoc;
+                }
+                return _ActiveRhinoDoc;
+            }
+        }
+
+        /// <summary>
+        /// Manually override current active document.
+        /// Typically default should be used. Only in special circumstances where it does not work.
+        /// </summary>
+        /// <param name="rhinoDocument"></param>
+        public static void UpdateActiveRhinoDoc(RhinoDoc rhinoDocument)
+        {
+            _ActiveRhinoDoc = rhinoDocument;
+        }
 
         /// <summary>
         /// Create the standard layers
@@ -32,6 +62,7 @@ namespace Nucleus.Rhino
 
         }
 
+
         /// <summary>
         /// Add a point to the current Rhino document
         /// </summary>
@@ -39,7 +70,7 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static Guid BakePoint(Point3d point)
         {
-            return RhinoDoc.ActiveDoc.Objects.AddPoint(point);
+            return ActiveRhinoDoc.Objects.AddPoint(point);
         }
 
         /// <summary>
@@ -60,7 +91,7 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static bool ReplacePoint(Guid obj, Point3d point)
         {
-            return RhinoDoc.ActiveDoc.Objects.Replace(obj, point);
+            return ActiveRhinoDoc.Objects.Replace(obj, point);
         }
 
         /// <summary>
@@ -85,7 +116,7 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static Guid BakeCurve(RC.Curve curve)
         {
-            return RhinoDoc.ActiveDoc.Objects.AddCurve(curve);
+            return ActiveRhinoDoc.Objects.AddCurve(curve);
         }
 
         /// <summary>
@@ -108,7 +139,7 @@ namespace Nucleus.Rhino
         {
             bool result = false;
             Writing = true;
-            result = RhinoDoc.ActiveDoc.Objects.Replace(obj, curve);
+            result = ActiveRhinoDoc.Objects.Replace(obj, curve);
             Writing = false;
             return result;
         }
@@ -132,7 +163,7 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static Guid BakeLine(Point3d startPoint, Point3d endPoint)
         {
-            return RhinoDoc.ActiveDoc.Objects.AddLine(startPoint, endPoint);
+            return ActiveRhinoDoc.Objects.AddLine(startPoint, endPoint);
         }
 
         /// <summary>
@@ -156,7 +187,7 @@ namespace Nucleus.Rhino
         {
             bool result = false;
             Writing = true;
-            result = RhinoDoc.ActiveDoc.Objects.Replace(obj, line);
+            result = ActiveRhinoDoc.Objects.Replace(obj, line);
             Writing = false;
             return result;
         }
@@ -192,7 +223,7 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static Guid BakeExtrusion(RC.Extrusion extrusion)
         {
-            return RhinoDoc.ActiveDoc.Objects.AddExtrusion(extrusion);
+            return ActiveRhinoDoc.Objects.AddExtrusion(extrusion);
         }
 
         /// <summary>
@@ -205,7 +236,7 @@ namespace Nucleus.Rhino
         {
             bool result = false;
             Writing = true;
-            result = RhinoDoc.ActiveDoc.Objects.Replace(objID, extrusion);
+            result = ActiveRhinoDoc.Objects.Replace(objID, extrusion);
             Writing = false;
             return result;
         }
@@ -217,7 +248,7 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static Guid BakeMesh(RC.Mesh mesh)
         {
-            return RhinoDoc.ActiveDoc.Objects.AddMesh(mesh);
+            return ActiveRhinoDoc.Objects.AddMesh(mesh);
         }
 
         /// <summary>
@@ -230,7 +261,7 @@ namespace Nucleus.Rhino
         {
             bool result = false;
             Writing = true;
-            result = RhinoDoc.ActiveDoc.Objects.Replace(objID, mesh);
+            result = ActiveRhinoDoc.Objects.Replace(objID, mesh);
             Writing = false;
             return result;
         }
@@ -243,7 +274,7 @@ namespace Nucleus.Rhino
         public static Guid Bake(RC.GeometryBase geometry)
         {
             if (geometry != null)
-                return RhinoDoc.ActiveDoc.Objects.Add(geometry);
+                return ActiveRhinoDoc.Objects.Add(geometry);
             return Guid.Empty;
         }
 
@@ -293,10 +324,14 @@ namespace Nucleus.Rhino
         {
             int layerID = GetLayerID(layer.Name);
             if (layer.Brush != null) SetLayerColour(layerID, layer.Brush.BaseColour);
-            foreach (VertexGeometry vG in layer)
+
+            if (layer.Count > 0)
             {
-                Guid gID = Bake(vG);
-                SetObjectLayer(gID, layerID);
+                foreach (VertexGeometry vG in layer)
+                {
+                    Guid gID = Bake(vG);
+                    SetObjectLayer(gID, layerID);
+                }
             }
         }
 
@@ -313,13 +348,13 @@ namespace Nucleus.Rhino
             if (geometry == null)
                 result = false;
             else if (geometry is RC.Curve)
-                result = RhinoDoc.ActiveDoc.Objects.Replace(objID, (RC.Curve)geometry);
+                result = ActiveRhinoDoc.Objects.Replace(objID, (RC.Curve)geometry);
             else if (geometry is RC.Mesh)
-                result = RhinoDoc.ActiveDoc.Objects.Replace(objID, (RC.Mesh)geometry);
+                result = ActiveRhinoDoc.Objects.Replace(objID, (RC.Mesh)geometry);
             else if (geometry is RC.Brep)
-                result = RhinoDoc.ActiveDoc.Objects.Replace(objID, (RC.Brep)geometry);
+                result = ActiveRhinoDoc.Objects.Replace(objID, (RC.Brep)geometry);
             else if (geometry is RC.Surface)
-                result = RhinoDoc.ActiveDoc.Objects.Replace(objID, (RC.Curve)geometry);
+                result = ActiveRhinoDoc.Objects.Replace(objID, (RC.Curve)geometry);
             Writing = false;
             return result;
         }
@@ -370,7 +405,7 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         private static RhinoObject GetObject(Guid objID)
         {
-            return RhinoDoc.ActiveDoc.Objects.Find(objID);
+            return ActiveRhinoDoc.Objects.Find(objID);
         }
 
         /// <summary>
@@ -387,7 +422,7 @@ namespace Nucleus.Rhino
         /// </summary>
         public static void UnselectAllObjects()
         {
-            RhinoDoc.ActiveDoc.Objects.UnselectAll();
+            ActiveRhinoDoc.Objects.UnselectAll();
         }
 
         /// <summary>
@@ -423,7 +458,7 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static bool LayerVisible(int layerID)
         {
-            var layer = RhinoDoc.ActiveDoc.Layers[layerID];
+            var layer = ActiveRhinoDoc.Layers[layerID];
             return layer.IsVisible;
         }
 
@@ -434,7 +469,7 @@ namespace Nucleus.Rhino
         /// <param name="visibility"></param>
         public static void SetLayerVisible(int layerID, bool visibility)
         {
-            var layer = RhinoDoc.ActiveDoc.Layers[layerID];
+            var layer = ActiveRhinoDoc.Layers[layerID];
             layer.IsVisible = visibility;
             layer.CommitChanges();
         }
@@ -458,7 +493,7 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static bool DeleteObject(Guid objID)
         {
-            return RhinoDoc.ActiveDoc.Objects.Delete(objID, true);
+            return ActiveRhinoDoc.Objects.Delete(objID, true);
         }
 
         /// <summary>
@@ -470,7 +505,7 @@ namespace Nucleus.Rhino
         {
             RhinoObject rObj = GetObject(objID);
             if (rObj == null) return false;
-            return RhinoDoc.ActiveDoc.Objects.Undelete(rObj);
+            return ActiveRhinoDoc.Objects.Undelete(rObj);
         }
 
         /// <summary>
@@ -554,7 +589,7 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static int GetLayerID(string path, bool isReference = false, bool create = true)
         {
-            int result = RhinoDoc.ActiveDoc.Layers.FindByFullPath(path, true);
+            int result = ActiveRhinoDoc.Layers.FindByFullPath(path, true);
             if (result < 0)
             {
                 string[] tokens = path.Split(LAYER_SEPARATOR, StringSplitOptions.RemoveEmptyEntries);
@@ -564,7 +599,7 @@ namespace Nucleus.Rhino
                 {
                     if (!string.IsNullOrEmpty(compositePath)) compositePath += "::";
                     compositePath += token;
-                    result = RhinoDoc.ActiveDoc.Layers.FindByFullPath(compositePath, true);
+                    result = ActiveRhinoDoc.Layers.FindByFullPath(compositePath, true);
                     if (result < 0 && create) //Layer not found
                     {
                         Layer newLayer = new Layer();
@@ -574,13 +609,13 @@ namespace Nucleus.Rhino
                             newLayer.ParentLayerId = parentID;
                         }
                         if (isReference)
-                            result = RhinoDoc.ActiveDoc.Layers.AddReferenceLayer(newLayer);
+                            result = ActiveRhinoDoc.Layers.AddReferenceLayer(newLayer);
                         else
-                            result = RhinoDoc.ActiveDoc.Layers.Add(newLayer);
+                            result = ActiveRhinoDoc.Layers.Add(newLayer);
                     }
                     if (result >= 0)
                     {
-                        Layer thisLayer = RhinoDoc.ActiveDoc.Layers[result];
+                        Layer thisLayer = ActiveRhinoDoc.Layers[result];
                         parentID = thisLayer.Id;
                     }
                 }
@@ -609,7 +644,7 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static bool SetLayerColour(int layerID, Colour colour)
         {
-            var layer = RhinoDoc.ActiveDoc.Layers[layerID];
+            var layer = ActiveRhinoDoc.Layers[layerID];
             layer.Color = ToRC.Convert(colour);
             return layer.CommitChanges();
         }
@@ -622,7 +657,7 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static bool ChangeLayerName(int layerID, string name)
         {
-            var layer = RhinoDoc.ActiveDoc.Layers[layerID];
+            var layer = ActiveRhinoDoc.Layers[layerID];
             layer.Name = name;
             return layer.CommitChanges();
         }
@@ -681,8 +716,8 @@ namespace Nucleus.Rhino
         public static bool ClearLayer(int layerID)
         {
             if (layerID < 0) return false;
-            Layer layer = RhinoDoc.ActiveDoc.Layers[layerID];
-            var objs = RhinoDoc.ActiveDoc.Objects.FindByLayer(layer);
+            Layer layer = ActiveRhinoDoc.Layers[layerID];
+            var objs = ActiveRhinoDoc.Objects.FindByLayer(layer);
             if (objs != null)
                 foreach (var obj in objs) DeleteObject(obj.Id);
             return true;
@@ -696,19 +731,19 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static bool DeleteLayer(int layerID, bool onlyIfEmpty = false)
         {
-            if (layerID >= 0 && layerID < RhinoDoc.ActiveDoc.Layers.Count)
+            if (layerID >= 0 && layerID < ActiveRhinoDoc.Layers.Count)
             {
                 if (onlyIfEmpty)
                 {
-                    Layer layer = RhinoDoc.ActiveDoc.Layers[layerID];
+                    Layer layer = ActiveRhinoDoc.Layers[layerID];
                     if (layer != null)
                     {
-                        RhinoObject[] objects = RhinoDoc.ActiveDoc.Objects.FindByLayer(layer);
+                        RhinoObject[] objects = ActiveRhinoDoc.Objects.FindByLayer(layer);
                         if (objects == null || objects.Count() == 0)
-                            return RhinoDoc.ActiveDoc.Layers.Delete(layerID, true);
+                            return ActiveRhinoDoc.Layers.Delete(layerID, true);
                     }
                 }
-                else return RhinoDoc.ActiveDoc.Layers.Delete(layerID, true);
+                else return ActiveRhinoDoc.Layers.Delete(layerID, true);
             }
             return false;
         }
@@ -730,9 +765,9 @@ namespace Nucleus.Rhino
         /// <returns></returns>
         public static bool DeleteEmptySubLayers(int layerID)
         {
-            if (layerID >= 0 && layerID < RhinoDoc.ActiveDoc.Layers.Count)
+            if (layerID >= 0 && layerID < ActiveRhinoDoc.Layers.Count)
             {
-                Layer layer = RhinoDoc.ActiveDoc.Layers[layerID];
+                Layer layer = ActiveRhinoDoc.Layers[layerID];
                 return DeleteEmptySubLayers(layer);
             }
             return true;
@@ -760,10 +795,10 @@ namespace Nucleus.Rhino
 
                 if (empty)
                 {
-                    RhinoObject[] objects = RhinoDoc.ActiveDoc.Objects.FindByLayer(layer);
+                    RhinoObject[] objects = ActiveRhinoDoc.Objects.FindByLayer(layer);
                     if (objects == null || objects.Count() == 0)
                     {
-                        RhinoDoc.ActiveDoc.Layers.Delete(layer.LayerIndex, true);
+                        ActiveRhinoDoc.Layers.Delete(layer.LayerIndex, true);
                         return true;
                     }
                     else return false;
