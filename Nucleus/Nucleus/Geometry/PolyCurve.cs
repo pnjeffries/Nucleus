@@ -204,6 +204,7 @@ namespace Nucleus.Geometry
             {
                 SubCurves.Add(crv);
             }
+            Clean();
             EnsureSegmentConnectivity();
         }
 

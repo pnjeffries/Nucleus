@@ -26,6 +26,8 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Reflection;
 using Nucleus.Extensions;
+using System.ComponentModel;
+using System.Globalization;
 
 #if !JS
 using System.Xml.Serialization;
@@ -46,6 +48,7 @@ namespace Nucleus.Base
     /// as strings.
     /// </summary>
     [Serializable]
+    [TypeConverter(typeof(FilePathConverter))]
     public struct FilePath
 #if !JS
         : IXmlSerializable
@@ -398,5 +401,32 @@ namespace Nucleus.Base
         }
 
 #endregion
+    }
+
+    /// <summary>
+    /// FilePath to string TypeConverter
+    /// </summary>
+    public class FilePathConverter : TypeConverter
+    {
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        {
+            if (sourceType == typeof(string))
+                return true;
+            return base.CanConvertFrom(context, sourceType);
+        }
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        {
+            if (value is string)
+                return new FilePath((string)value);
+
+            return base.ConvertFrom(context, culture, value);
+        }
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        {
+            if (destinationType == typeof(string))
+                return value.ToString();
+
+            return base.ConvertTo(context, culture, value, destinationType);
+        }
     }
 }

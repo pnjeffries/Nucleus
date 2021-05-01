@@ -41,6 +41,7 @@ namespace Nucleus.Model
         /// <summary>
         /// Private backing field for Model property
         /// </summary>
+        [Copy(CopyBehaviour.MAP)]
         private Model _Model;
 
         /// <summary>

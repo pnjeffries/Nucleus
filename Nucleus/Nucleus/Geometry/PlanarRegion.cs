@@ -255,12 +255,9 @@ namespace Nucleus.Geometry
             if (_Perimeter != null)
             {
                 Plane plane = Plane;
-                if (plane != null)
-                {
-                    double area = _Perimeter.CalculateEnclosedArea(out centroid, _Voids, plane);
-                    centroid = plane.LocalToGlobal(centroid);
-                    return area;
-                }
+                double area = _Perimeter.CalculateEnclosedArea(out centroid, _Voids, plane);
+                if (plane != null) centroid = plane.LocalToGlobal(centroid);
+                return area;
             }
 
             centroid = Vector.Unset;

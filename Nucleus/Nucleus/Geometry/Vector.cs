@@ -76,6 +76,30 @@ namespace Nucleus.Geometry
         /// </summary>
         public static readonly Vector UnitZ = new Vector(0, 0, 1);
 
+        /// <summary>
+        /// Constant value representing a unit vector in a Northerly direction
+        /// in the standard global coordinate system.
+        /// </summary>
+        public static readonly Vector North = new Vector(0, 1, 0);
+
+        /// <summary>
+        /// Constant value representing a unit vector in a Southerly direction
+        /// in the standard global coordinate system.
+        /// </summary>
+        public static readonly Vector South = new Vector(0, -1, 0);
+
+        /// <summary>
+        /// Constant value representing a unit vector in an Easterly direction
+        /// in the standard global coordinate system.
+        /// </summary>
+        public static readonly Vector East = new Vector(1, 0, 0);
+
+        /// <summary>
+        /// Constant value representing a unit vector in a Westerly direction
+        /// in the standard global coordinate system.
+        /// </summary>
+        public static readonly Vector West = new Vector(-1, 0, 0);
+
         #endregion
 
         #region Fields

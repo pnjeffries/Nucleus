@@ -1,6 +1,7 @@
 ﻿using Nucleus.Units;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,7 +57,7 @@ namespace Nucleus.Base
         public MeasurementUnit Units
         {
             get { return _Units; }
-            set { _Units = value; }
+            set { ChangeProperty(ref _Units, value); }
         }
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace Nucleus.Base
         public string Description
         {
             get { return _Description; }
-            set { _Description = value; }
+            set { ChangeProperty(ref _Description, value); }
         }
 
         /// <summary>
@@ -85,7 +86,15 @@ namespace Nucleus.Base
         public IDictionary<string, string> Metadata
         {
             get { return _Metadata; }
-            set { _Metadata = value; }
+            set { ChangeProperty(ref _Metadata, value); }
+        }
+
+        /// <summary>
+        /// Does this parameter have any attached metadata?
+        /// </summary>
+        public bool HasMetadata
+        {
+            get { return (_Metadata != null && _Metadata.Count > 0); }
         }
 
         /// <summary>
@@ -149,6 +158,40 @@ namespace Nucleus.Base
         /// <param name="other"></param>
         /// <returns>True if the value is successfully set, false if not.</returns>
         public abstract bool SetValueFrom(Parameter other);
+
+        /// <summary>
+        /// Does this parameter have attached metadata with the specified key?
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public virtual bool HasMetadataKey(string key)
+        {
+            return HasMetadata && Metadata.ContainsKey(key);
+        }
+
+        /// <summary>
+        /// Retrieve any attached metadata on this parameter under the specified key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public virtual object GetMetadata(string key)
+        {
+            if (!HasMetadata) return null;
+            return Metadata[key];
+        }
+
+        /// <summary>
+        /// Set an item of attached metadata on this parameter.
+        /// If a metadata dictionary has not already been set on this parameter
+        /// a new one will be initialised automatically.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public virtual void SetMetadata(string key, string value)
+        {
+            if (Metadata == null) Metadata = new Dictionary<string, string>();
+            _Metadata[key] = value;
+        }
 
         /// <summary>
         /// FastDuplicate implementation
@@ -331,15 +374,24 @@ namespace Nucleus.Base
                 Value = (T)newValue;
                 return true;
             }
+
             if (newValue is IConvertible)
             {
                 try
                 {
                     Value = (T)Convert.ChangeType(newValue, typeof(T));
+                    return true;
                 }
                 catch
                 {
                 }
+            }
+
+            var conv = TypeDescriptor.GetConverter(typeof(T));
+            if (conv != null && newValue != null && conv.CanConvertFrom(newValue.GetType()))
+            {
+                Value = (T)conv.ConvertFrom(newValue);
+                return true;
             }
 
             return false;

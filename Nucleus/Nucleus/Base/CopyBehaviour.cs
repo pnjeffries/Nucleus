@@ -82,6 +82,6 @@ namespace Nucleus.Base
         /// implement the IDuplicatable interface in order for this
         /// behaviour to be valid.
         /// </summary>
-        MAP_OR_DUPLICATE = 4
+        MAP_OR_DUPLICATE = 5
     }
 }

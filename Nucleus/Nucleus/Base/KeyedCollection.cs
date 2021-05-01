@@ -21,7 +21,7 @@ namespace Nucleus.Base
     [System.Runtime.InteropServices.ComVisible(false)]
     //[DebuggerTypeProxy(typeof(Mscorlib_KeyedCollectionDebugView<,>))]
     [DebuggerDisplay("Count = {Count}")]
-    public abstract class KeyedCollection<TKey, TItem> : Collection<TItem>, IDictionary
+    public abstract class KeyedCollection<TKey, TItem> : Collection<TItem>, IDictionary, IDuplicatable
     {
         #region Fields
 

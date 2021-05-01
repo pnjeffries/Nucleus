@@ -111,12 +111,31 @@ namespace Nucleus.Extensions
                     context.SetSourceObject(obj);
                     obj = context;
                 }
-                else if (token.EndsWith("()")) // Method
+                else if (token.EndsWith("()")) // Parameterless Method
                 {
                     MethodInfo info = type.GetMethod(token.TrimEnd(')', '('), new Type[] { });
                     if (info == null) return null;
                     else
                         obj = info.Invoke(obj, null);
+                }
+                else if (token.EndsWith(")")) // Method with parameters
+                {
+                    string param = null;
+                    token = token.TrimEnd(')');
+                    int paramStart = token.LastIndexOf('(');
+                    if (paramStart >= 0)
+                    {
+                        param = token.Substring(paramStart + 1);
+                        token = token.Substring(0, paramStart);
+                    }
+                    MethodInfo info = type.GetMethod(token, new Type[] { param.GetType() });
+                    if (info == null)
+                    {
+                        info = type.GetMethod(token);
+                    }
+                    if (info == null) return null;
+                    else
+                        obj = info.Invoke(obj, new object[] { param });
                 }
                 else // Property...
                 {

@@ -10,7 +10,7 @@ namespace Nucleus.Base
     /// <summary>
     /// A named grouping of parameters.
     /// Parameters can be tagged with a group in order
-    /// to define their 
+    /// to define their catagorisation and to be used in the UI
     /// </summary>
     [Serializable]
     public class ParameterGroup : Named, IComparable, IComparable<ParameterGroup>
@@ -104,6 +104,17 @@ namespace Nucleus.Base
             if (obj is ParameterGroup)
                 return CompareTo((ParameterGroup)obj);
             else return 0;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is ParameterGroup other) return other.Name == Name;
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
         }
 
         #endregion

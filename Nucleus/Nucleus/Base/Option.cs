@@ -37,7 +37,7 @@ namespace Nucleus.Base
         /// <summary>
         /// Private backing member variable for the Design property
         /// </summary>
-        [Copy(CopyBehaviour.MAP_OR_DUPLICATE)]
+        [Copy(CopyBehaviour.DUPLICATE)]
         private TDesign _Design;
 
         /// <summary>

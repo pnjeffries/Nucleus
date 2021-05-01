@@ -437,6 +437,14 @@ namespace Nucleus.Model
             return Family;
         }
 
+        /// <summary>
+        /// Dettach all nodes from this element
+        /// </summary>
+        public virtual void DettachNodes()
+        {
+            Geometry?.DettachNodes();
+        }
+
         #endregion
 
     }
@@ -466,6 +474,22 @@ namespace Nucleus.Model
                 result += element.Geometry.Length;
             }
             return result;
+        }
+
+        /// <summary>
+        /// Dettach all nodes from the elements in this collection
+        /// </summary>
+        /// <typeparam name="TList"></typeparam>
+        /// <typeparam name="TElement"></typeparam>
+        /// <typeparam name="TFamily"></typeparam>
+        /// <param name="list"></param>
+        public static void DettachNodes<TList, TElement, TShape, TFamily>(this TList list)
+            where TList : IList<TElement>
+            where TElement : Element<TShape, TFamily>
+            where TFamily : Family
+            where TShape : VertexGeometry
+        {
+            foreach (var element in list) element.DettachNodes();
         }
     }
 }

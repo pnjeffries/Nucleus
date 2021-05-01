@@ -221,23 +221,60 @@ namespace Nucleus.Maths
 
         /// <summary>
         /// Constructor creating an interval surrounding the specified set
-        /// of values.  The maximum and minimum will be automatically determined
+        /// of values.  The maximum and minimum will be automatically determined.
+        /// If the list is empty the interval will have NaN limits.
         /// </summary>
         /// <param name="list"></param>
         public Interval(IList<double> list)
         {
-            double min = list[0];
-            double max = list[1];
-            for (int i = 0; i < list.Count; i++)
+            if (list.Count == 0)
             {
-                double val = list[i];
-                if (val < min) min = val;
-                if (val > max) max = val;
+                Start = double.NaN;
+                End = double.NaN;
             }
-            Start = min;
-            End = max;
+            else
+            {
+                double min = list[0];
+                double max = list[1];
+                for (int i = 0; i < list.Count; i++)
+                {
+                    double val = list[i];
+                    if (val < min) min = val;
+                    if (val > max) max = val;
+                }
+                Start = min;
+                End = max;
+            }
         }
 
+        /// <summary>
+        /// Initialise an interval surrounding the specified set of value intervals.
+        /// The maximum and minimum will be automatically determined.
+        /// If the list is empty the interval will have NaN limits.
+        /// </summary>
+        /// <param name="list"></param>
+        public Interval(IList<Interval> list)
+        {
+            if (list.Count > 0)
+            {
+                double min = list[0].Start;
+                double max = list[0].Start;
+                foreach (var intvl in list)
+                {
+                    if (intvl.Start < min) min = intvl.Start;
+                    if (intvl.End < min) min = intvl.End;
+                    if (intvl.Start > max) max = intvl.Start;
+                    if (intvl.End > max) max = intvl.End;
+                }
+                Start = min;
+                End = max;
+            }
+            else
+            {
+                Start = double.NaN;
+                End = double.NaN;
+            }
+        }
         #endregion
 
         #region Methods

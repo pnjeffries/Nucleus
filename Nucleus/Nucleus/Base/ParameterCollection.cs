@@ -180,6 +180,25 @@ namespace Nucleus.Base
             else return default(TValue);
         }
 
+        /// <summary>
+        /// Copy the values from equivalent parameters in another parameter collection
+        /// </summary>
+        /// <param name="other"></param>
+        public virtual void CopyValuesFrom(ParameterCollection other)
+        {
+            foreach (var otherParam in other)
+            {
+                if (this.Contains(otherParam.Name))
+                {
+                    var thisParam = this[otherParam.Name];
+                    if (thisParam.ValueType.IsAssignableFrom(otherParam.ValueType))
+                    {
+                        thisParam.SetValueFrom(otherParam);
+                    }
+                }
+            }
+        }
+
         #endregion
     }
 }

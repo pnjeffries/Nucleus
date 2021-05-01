@@ -48,6 +48,17 @@ namespace Nucleus.Base
     }
 
     /// <summary>
+    /// Interface for object types which require some form of cleanup after a Duplicate operation
+    /// </summary>
+    public interface IPostDuplication
+    {
+        /// <summary>
+        /// Clean-up function to be run after this object has been duplicated.
+        /// </summary>
+        void PostDuplicationOperations();
+    }
+
+    /// <summary>
     /// Extension methods for the IDuplicatable interface
     /// </summary>
     public static class IDuplicatableExtensions
@@ -81,13 +92,19 @@ namespace Nucleus.Base
         /// </summary>
         /// <param name="objectMap">The map of original objects to duplicated objects.</param>
         /// <returns>A duplicated copy of this object</returns>
-        public static T Duplicate<T>(this T obj, ref Dictionary<object, object> objectMap, CopyBehaviour itemsBehaviour = CopyBehaviour.COPY) 
-            where T : IDuplicatable
+        private static T DuplicateObject<T>(T obj, ref Dictionary<object, object> objectMap, CopyBehaviour itemsBehaviour = CopyBehaviour.COPY)
         {
+            if (obj == null) return obj;
+
+            Type type = obj.GetType();
             T clone;
-            if (obj.GetType().HasParameterlessConstructor())
+            if (type.IsArray)
             {
-                clone = (T)Activator.CreateInstance(obj.GetType(), true); //Create a blank instance of the relevant type
+                clone = (T)(object)Array.CreateInstance(type.GetElementType(), ((Array)((object)obj)).Length);
+            }
+            else if (type.HasParameterlessConstructor())
+            {
+                clone = (T)Activator.CreateInstance(type, true); //Create a blank instance of the relevant type
             }
             else
             {
@@ -105,37 +122,88 @@ namespace Nucleus.Base
             }
 
             if (objectMap == null) objectMap = new Dictionary<object, object>();
-            objectMap[obj] = clone; //Store the original-clone relationship in the map
+            objectMap[KeyFor(obj)] = clone; //Store the original-clone relationship in the map
             clone.CopyFieldsFrom(obj, ref objectMap);
 
             if (obj.GetType().IsCollection() && itemsBehaviour != CopyBehaviour.DO_NOT_COPY)
             {
                 ICollection source = (ICollection)obj;
                 ICollection target = (ICollection)clone;
+                int index = 0;
                 foreach (object item in source)
                 {
                     CopyBehaviour behaviour = itemsBehaviour;
                     CopyBehaviour subItemsBehaviour = itemsBehaviour;
-                    if (item != null && item is IDuplicatable)
+                    if (item != null)
                     {
-                        CopyAttribute cAtt = item.GetType().GetCustomAttribute<CopyAttribute>();
-                        if (cAtt != null)
+                        if (item.GetType().IsDefined(typeof(CopyAttribute)))
                         {
+                            CopyAttribute cAtt = item.GetType().GetCustomAttribute<CopyAttribute>();
                             behaviour = cAtt.Behaviour;
                             if (cAtt is CollectionCopyAttribute)
                                 subItemsBehaviour = ((CollectionCopyAttribute)cAtt).ItemsBehaviour;
                         }
                     }
-                    object value = ValueToAssign(item, ref behaviour, subItemsBehaviour, ref objectMap);
-                    if (target is IList)
+                    if (target is IDictionary dictionary && IsKeyValuePair(item))
                     {
-                        ((IList)target).Add(value);
+                        // Special case for dictionaries
+                        var valueType = item.GetType();
+                        object itemKey = valueType.GetProperty("Key").GetValue(item, null);
+                        object itemValue = valueType.GetProperty("Value").GetValue(item, null);
+                        CopyBehaviour keyBehaviour = behaviour;
+                        object newKey = ValueToAssign(itemKey, ref keyBehaviour, subItemsBehaviour, ref objectMap);
+                        object newValue = ValueToAssign(itemValue, ref behaviour, subItemsBehaviour, ref objectMap);
+                        dictionary.Add(newKey, newValue);
+                    }
+                    else
+                    {
+                        object value = ValueToAssign(item, ref behaviour, subItemsBehaviour, ref objectMap);
+                        if (target is IList list)
+                        {
+                            if (list.IsFixedSize)
+                            {
+                                list[index] = value;
+                            }
+                            else list.Add(value);
+                        }
                     }
                     // TODO: Other types of collections?
+                    index++;
                 }
             }
 
+            if (clone is IPostDuplication pDClone)
+            {
+                pDClone.PostDuplicationOperations();
+            }
+
             return clone;
+        }
+
+        /// <summary>
+        /// Test whether the specifed object is a KeyValuePair
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        private static bool IsKeyValuePair(Object obj)
+        {
+            // This seems silly but is also the only way to do it without reflection...
+            return string.Compare(obj.GetType().Name.ToString(), "KeyValuePair`2") == 0;
+        }
+
+
+        /// <summary>
+        /// Produce a duplicated copy of this object.
+        /// Family references will be copied, save for those which
+        /// are intended to be unique to this object, which will themselves
+        /// be duplicated.
+        /// </summary>
+        /// <param name="objectMap">The map of original objects to duplicated objects.</param>
+        /// <returns>A duplicated copy of this object</returns>
+        public static T Duplicate<T>(this T obj, ref Dictionary<object, object> objectMap, CopyBehaviour itemsBehaviour = CopyBehaviour.COPY) 
+            where T : IDuplicatable
+        {
+            return DuplicateObject(obj, ref objectMap, itemsBehaviour);
         }
 
     /// <summary>
@@ -179,6 +247,15 @@ namespace Nucleus.Base
             target.CopyFieldsFrom(source, ref objectMap);
         }
 
+        private static CopyAttribute CopyAttributeForField(FieldInfo sourceField)
+        {
+            CopyAttribute copyAtt = sourceField.GetAttribute<CopyAttribute>();
+            // If copy attribute is not set on the field, we will try it on the type:
+            if (copyAtt == null) copyAtt = sourceField.FieldType.GetCustomAttribute<CopyAttribute>();
+
+            return copyAtt;
+        }
+
         /// <summary>
         /// Populate the fields of this object by copying them from equivalent fields on 
         /// another object.  The fields to be copied must share names and types in order to
@@ -206,9 +283,7 @@ namespace Nucleus.Base
                     // Have found a matching property - check for copy behaviour attributes:
                     // Currently this is done on the source field.  Might it also be safer to check the target
                     // field as well, for at least certain values?
-                    CopyAttribute copyAtt = sourceField.GetAttribute<CopyAttribute>();
-                    // If copy attribute is not set on the field, we will try it on the type:
-                    if (copyAtt == null) copyAtt = sourceField.FieldType.GetCustomAttribute<CopyAttribute>();
+                    CopyAttribute copyAtt = CopyAttributeForField(sourceField);
 
                     CopyBehaviour behaviour = CopyBehaviour.COPY;
                     CopyBehaviour itemsBehaviour = CopyBehaviour.COPY;
@@ -250,10 +325,11 @@ namespace Nucleus.Base
                             behaviour == CopyBehaviour.MAP_OR_COPY ||
                             behaviour == CopyBehaviour.MAP_OR_DUPLICATE)
             {
+                var key = KeyFor(value);
                 //Attempt to map:
-                if (objectMap != null && value != null && objectMap.ContainsKey(value))
+                if (objectMap != null && value != null && objectMap.ContainsKey(key))
                 {
-                    value = objectMap[value];
+                    value = objectMap[key];
                 }
                 //Fallback behaviours on mapping fail:
                 else if (behaviour == CopyBehaviour.MAP_OR_COPY) behaviour = CopyBehaviour.COPY;
@@ -268,9 +344,24 @@ namespace Nucleus.Base
                     IDuplicatable dupObj = value as IDuplicatable;
                     value = dupObj.Duplicate(ref objectMap, itemsBehaviour);
                 }
-                else behaviour = CopyBehaviour.COPY;
+                else if (value != null && !(value is string) && !value.GetType().IsValueType)
+                {
+                    value = DuplicateObject(value, ref objectMap, itemsBehaviour);
+                }
             }
             return value;
+        }
+
+        /// <summary>
+        /// Get the key to be used to identify the specified object in an duplication object map.
+        /// May be the object itself.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        private static object KeyFor(object obj)
+        {
+            if (obj is IUnique unique) return unique.GUID;
+            else return obj;
         }
         
     }

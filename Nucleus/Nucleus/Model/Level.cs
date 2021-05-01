@@ -165,6 +165,17 @@ namespace Nucleus.Model
             return result;
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is Level level) return Z == level.Z;
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Z.GetHashCode();
+        }
+
         #endregion
     }
 }
