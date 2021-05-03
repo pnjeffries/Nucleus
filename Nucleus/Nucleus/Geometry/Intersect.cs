@@ -1129,6 +1129,18 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find the included regions of a Y-axis aligned scanline within a polygon on the XY plane.
+        /// </summary>
+        /// <param name="rayX"></param>
+        /// <param name="polygon"></param>
+        /// <returns></returns>
+        public static IList<Interval> YRayPolygonXYInclusion(double rayX, IList<Vector> polygon)
+        {
+            // TODO: Test whether an odd number of intersections are recieved?
+            return Interval.CreateAlternating(0, YRayPolygonXYIntersections(rayX, polygon));
+        }
+
+        /// <summary>
         /// Find the intersections of a X-axis aligned scanline with the edges of a polygon on the XY plane.
         /// </summary>
         /// <param name="rayY"></param>
@@ -1148,6 +1160,25 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find the intersections of a Y-axis aligned scanline with the edges of a polygon on the XY plane.
+        /// </summary>
+        /// <param name="rayX"></param>
+        /// <param name="polygon"></param>
+        /// <returns></returns>
+        public static IList<double> YRayPolygonXYIntersections(double rayX, IList<Vector> polygon)
+        {
+            var sorted = new SortedSet<double>();
+            for (int i = 0; i < polygon.Count; i++)
+            {
+                Vector segStart = polygon[i];
+                Vector segEnd = polygon.GetWrapped(i);
+                double y = YRayLineSegmentXYIntersection(rayX, ref segStart, ref segEnd);
+                if (double.IsNaN(y)) sorted.Add(y);
+            }
+            return sorted.ToList();
+        }
+
+        /// <summary>
         /// Determine the x-coordinate of the intersection between an infinite ray parallel to the X-axis at a specified
         /// y-coordinate and a finite line segment.
         /// </summary>
@@ -1161,6 +1192,22 @@ namespace Nucleus.Geometry
             if (rayY <= segStart.Y && rayY <= segEnd.Y) return double.NaN; //Ray is below the line
             // Ray falls within bounds of line, so determine intersection:
             return segStart.X + (segEnd.X - segStart.X) * (rayY - segStart.Y) / (segEnd.Y - segStart.Y);
+        }
+
+        /// <summary>
+        /// Determine the y-coordinate of the intersection between an infinite ray parallel to the Y-axis at a specified
+        /// x-coordinate and a finite line segment.
+        /// </summary>
+        /// <param name="rayX"></param>
+        /// <param name="segStart"></param>
+        /// <param name="segEnd"></param>
+        /// <returns>The y-coordinate of the ray-line intersection, if any.  Returns NaN if no such intersection exists.</returns>
+        public static double YRayLineSegmentXYIntersection(double rayX, ref Vector segStart, ref Vector segEnd)
+        {
+            if (rayX > segStart.X && rayX > segEnd.X) return double.NaN; //Ray is above the line
+            if (rayX <= segStart.X && rayX <= segEnd.X) return double.NaN; //Ray is below the line
+            // Ray falls within bounds of line, so determine intersection:
+            return segStart.Y + (segEnd.Y - segStart.Y) * (rayX - segStart.X) / (segEnd.X - segStart.X);
         }
 
         /// <summary>
