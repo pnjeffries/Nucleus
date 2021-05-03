@@ -870,6 +870,18 @@ namespace Nucleus.Maths
 
         /// <summary>
         /// Create intervals between alternating pairs in the specified set of parameters.
+        /// For example, if the set of input values is 1,2,3,4
+        /// this function would return [1;2],[3;4].
+        /// </summary>
+        /// <param name="values">The values to create intervals between.</param>
+        /// <returns></returns>
+        public static IList<Interval> CreateAlternating(IList<double> values)
+        {
+            return CreateAlternating(0, values);
+        }
+
+        /// <summary>
+        /// Create intervals between alternating pairs in the specified set of parameters.
         /// For example, if the set of input values is 1,2,3,4 (and the start offset is 0)
         /// this function would return [1;2],[3;4].
         /// </summary>
