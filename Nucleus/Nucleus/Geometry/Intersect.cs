@@ -1117,6 +1117,52 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find the included regions of a X-axis aligned scanline within a polygon on the XY plane which has void regions
+        /// within it.
+        /// </summary>
+        /// <param name="rayY"></param>
+        /// <param name="polygon"></param>
+        /// <param name="voidPolygons"></param>
+        /// <returns></returns>
+        public static IList<Interval> XRayPolygonXYInclusion(double rayY, IList<Vector> polygon, IList<IList<Vector>> voidPolygons)
+        {
+            var polyInclusion = XRayPolygonXYInclusion(rayY, polygon);
+            if (voidPolygons != null)
+            {
+                foreach (var voidPolygon in voidPolygons)
+                {
+                    var voidInclusion = XRayPolygonXYInclusion(rayY, voidPolygon);
+                    // Remove void intervals from poly ones:
+                    polyInclusion = polyInclusion.Not(voidInclusion);
+                }
+            }
+            return polyInclusion;
+        }
+
+        /// <summary>
+        /// Find the included regions of a Y-axis aligned scanline within a polygon on the XY plane which has void regions
+        /// within it.
+        /// </summary>
+        /// <param name="rayX"></param>
+        /// <param name="polygon"></param>
+        /// <param name="voidPolygons"></param>
+        /// <returns></returns>
+        public static IList<Interval> YRayPolygonXYInclusion(double rayX, IList<Vector> polygon, IList<IList<Vector>> voidPolygons)
+        {
+            var polyInclusion = YRayPolygonXYInclusion(rayX, polygon);
+            if (voidPolygons != null)
+            {
+                foreach (var voidPolygon in voidPolygons)
+                {
+                    var voidInclusion = YRayPolygonXYInclusion(rayX, voidPolygon);
+                    // Remove void intervals from poly ones:
+                    polyInclusion = polyInclusion.Not(voidInclusion);
+                }
+            }
+            return polyInclusion;
+        }
+
+        /// <summary>
         /// Find the included regions of a X-axis aligned scanline within a polygon on the XY plane.
         /// </summary>
         /// <param name="rayY"></param>

@@ -266,6 +266,18 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Decrement this number by the smallest step that will produce a differentiable
+        /// floating point number lesser than this one
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static double PreviousValidValue(this double value)
+        {
+            long bits = BitConverter.DoubleToInt64Bits(value);
+            return BitConverter.Int64BitsToDouble(bits - 1);
+        }
+
+        /// <summary>
         /// Interpolate between this value and another
         /// </summary>
         /// <param name="value"></param>

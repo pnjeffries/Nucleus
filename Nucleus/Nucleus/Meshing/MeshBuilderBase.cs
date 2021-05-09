@@ -67,6 +67,19 @@ namespace Nucleus.Meshing
         public abstract int AddVertex(Vector pt);
 
         /// <summary>
+        /// Add a new vertex to the mesh
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <returns>The new vertex index</returns>
+        /// <remarks>The returned vertex indices should be sequential</remarks>
+        public int AddVertex(double x, double y, double z)
+        {
+            return AddVertex(new Vector(x, y, z));
+        }
+
+        /// <summary>
         /// Add a new vertex to the mesh.
         /// This operation will set the VertexIndex property of the vertex.
         /// </summary>
@@ -1321,6 +1334,199 @@ namespace Nucleus.Meshing
                 }
                 lastRow = newRow;
             }
+        }
+
+        /// <summary>
+        /// Add a meshed polygon (with optional voids) based on a grid on the XY plane
+        /// </summary>
+        /// <param name="polygon">The polygon to mesh</param>
+        /// <param name="voidPolygons">Internal void polygons to be excluded from the mesh</param>
+        /// <param name="maxFaceSize">A target minimum face size</param>
+        public void AddGridMeshXYPolgon(IList<Vector> polygon, IList<IList<Vector>> voidPolygons, double maxFaceSize = 1)
+        {
+            var bBox = new BoundingBox(polygon);
+            int xCells = (int)Math.Ceiling(bBox.SizeX / maxFaceSize);
+            int yCells = (int)Math.Ceiling(bBox.SizeY / maxFaceSize);
+            Vector gridSize = new Vector(bBox.SizeX / xCells, bBox.SizeY / yCells);
+            AddGridMeshXYPolgon(polygon, voidPolygons, bBox.Min, gridSize, xCells + 1, yCells + 1);
+        }
+
+        /// <summary>
+        /// Add a meshed polygon (with optional voids) based on a grid on the XY plane
+        /// </summary>
+        /// <param name="polygon">The polygon to mesh</param>
+        /// <param name="voidPolygons">Internal void polygons to be excluded from the mesh</param>
+        /// <param name="gridOrigin">The origin point of the grid</param>
+        /// <param name="gridSize">The size of each grid cell</param>
+        /// <param name="gridX">The number of grid axes aligned with the X-axis</param>
+        /// <param name="gridY">The number of grid axes aligned with the Y-axis</param>
+        public void AddGridMeshXYPolgon(IList<Vector> polygon, IList<IList<Vector>> voidPolygons, Vector gridOrigin, Vector gridSize, int gridX, int gridY)
+        {
+            // Vertex index records - these are stored offset by 1 so that 0 is the default/blank
+            var rowVertices = new List<SortedList<double, int>>(gridY);
+            var columnVertices = new List<SortedList<double, int>>(gridX);
+            var intVertices = InitialiseInternalVerticesGrid(gridY, gridX);
+
+            // Create row vertices:
+            for (int i = 0; i < gridY; i++)
+            {
+                rowVertices.Add(CreateGridMeshRow(i, gridOrigin, gridSize, polygon, voidPolygons, gridX, intVertices));
+            }
+
+            // Create column vertices:
+            for (int j = 0; j < gridX; j++)
+            {
+                columnVertices.Add(CreateGridMeshColumn(j, gridOrigin, gridSize, polygon, voidPolygons));
+            }
+
+            // Build mesh faces:
+            for (int i = 1; i < gridY; i++)
+            {
+                for (int j = 1; j < gridX; j++)
+                {
+                    GenerateGridCellMeshFaces(i, j, rowVertices, columnVertices, intVertices, gridOrigin, gridSize);
+                }
+            }
+        }
+
+        private void GenerateGridCellMeshFaces(int i, int j, IList<SortedList<double, int>> rowVertices, IList<SortedList<double, int>> columnVertices, int[,] intVertices,
+            Vector gridOrigin, Vector gridSize)
+        {
+            // Determine cell bounds:
+            double x0 = gridOrigin.X + gridSize.X * (j - 1);
+            double x1 = x0 + gridSize.X;
+            double y0 = gridOrigin.Y + gridSize.Y * (i - 1);
+            double y1 = y0 + gridSize.Y;
+
+            var verts = new List<int>();
+
+            // Top Left Corner:
+            AddGridCornerVertexIfValid(i, j - 1, intVertices, verts);
+            // Top:
+            var topRow = rowVertices[i];
+            AddGridCellSideVertices(topRow, x0.PreviousValidValue(), x1, verts);
+            // Top Right Corner:
+            AddGridCornerVertexIfValid(i, j, intVertices, verts);
+            // Right:
+            var rightCol = columnVertices[j];
+            AddGridCellSideVerticesReverse(rightCol, y1.NextValidValue(), y0, verts);
+            // Bottom Right Corner:
+            AddGridCornerVertexIfValid(i - 1, j, intVertices, verts);
+            // Bottom:
+            var bottomRow = rowVertices[i - 1];
+            AddGridCellSideVerticesReverse(bottomRow, x1.NextValidValue(), x0, verts);
+            // Bottom Left Corner:
+            AddGridCornerVertexIfValid(i - 1, j - 1, intVertices, verts);
+            // Left:
+            var leftCol = columnVertices[j - 1];
+            AddGridCellSideVertices(leftCol, y0.PreviousValidValue(), y1, verts);
+
+            //Add Faces:
+            this.AddGridCellFaces(verts);
+        }
+
+        private void AddGridCellFaces(IList<int> verts)
+        {
+            int i = 0;
+            while (verts.Count > i + 4)
+            {
+                AddFace(verts[0], verts[i + 1], verts[i + 2], verts[i + 3]);
+                i += 2;
+            }
+            while (verts.Count > i + 3)
+            {
+                AddFace(verts[0], verts[i + 1], verts[i + 2]);
+                i += 1;
+            }
+        }
+
+        private void AddGridCornerVertexIfValid(int i, int j, int[,] intVertices, IList<int> verts)
+        {
+            int vert = intVertices[i, j] - 1;
+            if (vert >= 0) verts.Add(vert);
+        }
+
+        private void AddGridCellSideVertices(SortedList<double, int> sideVerts, double t, double tMax, IList<int> verts)
+        {
+            int nextVert = sideVerts.NextAfter(t, out t) - 1;
+            while (nextVert >= 0 && t <= tMax)
+            {
+                verts.Add(nextVert);
+                nextVert = sideVerts.NextAfter(t, out t) - 1;
+            }
+        }
+
+        private void AddGridCellSideVerticesReverse(SortedList<double, int> sideVerts, double t, double tMin, IList<int> verts)
+        {
+            int nextVert = sideVerts.LastBefore(t, out t) - 1;
+            while (nextVert >= 0 && t >= tMin)
+            {
+                verts.Add(nextVert);
+                nextVert = sideVerts.LastBefore(t, out t) - 1;
+            }
+        }
+
+        private int[,] InitialiseInternalVerticesGrid(int gridY, int gridX)
+        {
+            var intVertices = new int[gridY, gridX];
+            /*for (int i = 0; i < gridY; i++)
+            {
+                for (int j = 0; j < gridX; j++) intVertices[i, j] = -1;
+            }*/
+            return intVertices;
+        }
+
+        private SortedList<double, int> CreateGridMeshRow(int i, Vector gridOrigin, Vector gridSize, IList<Vector> polygon, IList<IList<Vector>> voidPolygons, int gridX, int[,] intVertices)
+        {
+            double y = gridOrigin.Y + i * gridSize.Y;
+            double z = gridOrigin.Z;
+            var includes = Intersect.XRayPolygonXYInclusion(y, polygon, voidPolygons);
+
+            var vertices = new SortedList<double, int>();
+
+            foreach (var interval in includes)
+            {
+                if (interval.Size.Abs() < Tolerance.Distance) continue;
+
+                // Add end points:
+                vertices.Add(interval.Start, AddVertex(interval.Start, y, z) + 1);
+                vertices.Add(interval.End, AddVertex(interval.End, y, z) + 1);
+
+                int jStart = (int)Math.Floor((interval.Start - gridOrigin.X) / gridSize.X) + 1;
+                int jEnd = (int)Math.Ceiling((interval.End - gridOrigin.X) / gridSize.X) - 1;
+                jStart = Math.Max(jStart, 0);
+                jEnd = Math.Min(jEnd, gridX - 1);
+
+                // Add interior points
+                for (int j = jStart; j <= jEnd; j++)
+                {
+                    double x = gridOrigin.X + j * gridSize.X;
+                    int newVert = AddVertex(x, y, z);
+                    intVertices[i, j] = newVert + 1;
+                }
+            }
+
+            return vertices;
+        }
+
+        private SortedList<double, int> CreateGridMeshColumn(int j, Vector gridOrigin, Vector gridSize, IList<Vector> polygon, IList<IList<Vector>> voidPolygons)
+        {
+            double x = gridOrigin.X + j * gridSize.X;
+            double z = gridOrigin.Z;
+            var includes = Intersect.YRayPolygonXYInclusion(x, polygon, voidPolygons);
+
+            var vertices = new SortedList<double, int>();
+
+            foreach (var interval in includes)
+            {
+                if (interval.Size.Abs() < Tolerance.Distance) continue;
+
+                // Add end points:
+                vertices.Add(interval.Start, AddVertex(x, interval.Start, z) + 1);
+                vertices.Add(interval.End, AddVertex(x, interval.End, z) + 1);
+            }
+
+            return vertices;
         }
 
         /// <summary>

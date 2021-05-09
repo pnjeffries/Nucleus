@@ -201,7 +201,6 @@ namespace Nucleus.Extensions
         public static TValue LastBefore<TKey, TValue>(this SortedList<TKey, TValue> list,
             TKey key, out TKey lastKey, bool wrap = false)
             where TKey : IComparable
-            where TValue : class
         {
             for(int i = list.Count -1; i >= 0; i--)
             {
@@ -219,7 +218,7 @@ namespace Nucleus.Extensions
                 return kvp.Value;
             }
             lastKey = default(TKey);
-            return null;
+            return default(TValue);
         }
 
         /// <summary>
