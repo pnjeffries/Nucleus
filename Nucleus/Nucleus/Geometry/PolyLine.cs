@@ -584,7 +584,7 @@ namespace Nucleus.Geometry
             }
             if (result)
             {
-                for (int i = Vertices.Count ; i > removeTo; i--)
+                for (int i = Vertices.Count - 1; i > removeTo; i--)
                 {
                     //Remove vertices after
                     if (Vertices.Count > 0) Vertices.RemoveAt(Vertices.Count - 1);
