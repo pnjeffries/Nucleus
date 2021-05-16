@@ -261,8 +261,8 @@ namespace Nucleus.Extensions
         /// <returns></returns>
         public static double NextValidValue(this double value)
         {
-            long bits = BitConverter.DoubleToInt64Bits(value);
-            return BitConverter.Int64BitsToDouble(bits + 1);
+            long bits = BitConverter.DoubleToInt64Bits(value.Abs());
+            return BitConverter.Int64BitsToDouble(bits + 1) * value.Sign();
         }
 
         /// <summary>
@@ -273,7 +273,8 @@ namespace Nucleus.Extensions
         /// <returns></returns>
         public static double PreviousValidValue(this double value)
         {
-            long bits = BitConverter.DoubleToInt64Bits(value);
+            long bits = BitConverter.DoubleToInt64Bits(value.Abs());
+            if (value <= 0) return -BitConverter.Int64BitsToDouble(bits + 1);
             return BitConverter.Int64BitsToDouble(bits - 1);
         }
 

@@ -1198,9 +1198,9 @@ namespace Nucleus.Geometry
             for (int i = 0; i < polygon.Count; i++)
             {
                 Vector segStart = polygon[i];
-                Vector segEnd = polygon.GetWrapped(i);
+                Vector segEnd = polygon.GetWrapped(i + 1);
                 double x = XRayLineSegmentXYIntersection(rayY, ref segStart, ref segEnd);
-                if (double.IsNaN(x)) sorted.Add(x);
+                if (!double.IsNaN(x)) sorted.Add(x);
             }
             return sorted.ToList();
         }
@@ -1217,9 +1217,9 @@ namespace Nucleus.Geometry
             for (int i = 0; i < polygon.Count; i++)
             {
                 Vector segStart = polygon[i];
-                Vector segEnd = polygon.GetWrapped(i);
+                Vector segEnd = polygon.GetWrapped(i + 1);
                 double y = YRayLineSegmentXYIntersection(rayX, ref segStart, ref segEnd);
-                if (double.IsNaN(y)) sorted.Add(y);
+                if (!double.IsNaN(y)) sorted.Add(y);
             }
             return sorted.ToList();
         }
@@ -1234,8 +1234,9 @@ namespace Nucleus.Geometry
         /// <returns>The x-coordinate of the ray-line intersection, if any.  Returns NaN if no such intersection exists.</returns>
         public static double XRayLineSegmentXYIntersection(double rayY, ref Vector segStart, ref Vector segEnd)
         {
-            if (rayY > segStart.Y && rayY > segEnd.Y) return double.NaN; //Ray is above the line
-            if (rayY <= segStart.Y && rayY <= segEnd.Y) return double.NaN; //Ray is below the line
+            if (rayY > segStart.Y && rayY >= segEnd.Y) return double.NaN; //Ray is above the line
+            if (rayY < segStart.Y && rayY <= segEnd.Y) return double.NaN; //Ray is below the line
+            if (rayY == segStart.Y && rayY == segEnd.Y) return segStart.X; //Ray is on the line
             // Ray falls within bounds of line, so determine intersection:
             return segStart.X + (segEnd.X - segStart.X) * (rayY - segStart.Y) / (segEnd.Y - segStart.Y);
         }
@@ -1250,8 +1251,9 @@ namespace Nucleus.Geometry
         /// <returns>The y-coordinate of the ray-line intersection, if any.  Returns NaN if no such intersection exists.</returns>
         public static double YRayLineSegmentXYIntersection(double rayX, ref Vector segStart, ref Vector segEnd)
         {
-            if (rayX > segStart.X && rayX > segEnd.X) return double.NaN; //Ray is above the line
-            if (rayX <= segStart.X && rayX <= segEnd.X) return double.NaN; //Ray is below the line
+            if (rayX > segStart.X && rayX >= segEnd.X) return double.NaN; //Ray is above the line
+            if (rayX < segStart.X && rayX <= segEnd.X) return double.NaN; //Ray is below the line
+            if (rayX == segStart.X && rayX == segEnd.X) return segStart.Y; //Ray is on the line
             // Ray falls within bounds of line, so determine intersection:
             return segStart.Y + (segEnd.Y - segStart.Y) * (rayX - segStart.X) / (segEnd.X - segStart.X);
         }

@@ -1428,14 +1428,14 @@ namespace Nucleus.Meshing
         private void AddGridCellFaces(IList<int> verts)
         {
             int i = 0;
-            while (verts.Count > i + 4)
+            while (verts.Count >= i + 4)
             {
-                AddFace(verts[0], verts[i + 1], verts[i + 2], verts[i + 3]);
+                AddFace(verts[i + 3], verts[i + 2], verts[i + 1], verts[0]);
                 i += 2;
             }
-            while (verts.Count > i + 3)
+            while (verts.Count >= i + 3)
             {
-                AddFace(verts[0], verts[i + 1], verts[i + 2]);
+                AddFace(verts[i + 2], verts[i + 1], verts[0]);
                 i += 1;
             }
         }

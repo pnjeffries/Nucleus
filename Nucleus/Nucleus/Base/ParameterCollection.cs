@@ -170,6 +170,20 @@ namespace Nucleus.Base
         /// <returns></returns>
         public virtual TValue GetParameterValue<TValue>(string key)
         {
+            return GetParameterValue<TValue>(key, default(TValue));
+        }
+
+        /// <summary>
+        /// Get the value of the parameter with the specified key name and holding a value of
+        /// the specified type, if it exists.  Otherwise will return the default value of the
+        /// value type.
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="notFoundValue"></param>
+        /// <returns></returns>
+        public virtual TValue GetParameterValue<TValue>(string key, TValue notFoundValue)
+        {
             var parameter = GetParameter<Parameter>(key);
 
             if (parameter == null) return default(TValue);
@@ -177,7 +191,7 @@ namespace Nucleus.Base
             var result = parameter.GetValue();
 
             if (result is TValue) return (TValue)result;
-            else return default(TValue);
+            else return notFoundValue;
         }
 
         /// <summary>

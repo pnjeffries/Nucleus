@@ -777,6 +777,7 @@ namespace Nucleus.Maths
                 bool wrapped = false; // Have we wrapped around the domain yet?
 
                 int cutterCount = 0;
+                int outCount = 0;
                 while (true)
                 {
                     if (cutterCount > subtractors.Count) return;
@@ -815,7 +816,10 @@ namespace Nucleus.Maths
                         else if (tNext < t) wrapped = true;
 
                         if (tNext != t)
+                        {
                             outList.Add(new Interval(t, tNext));
+                            outCount++;
+                        }
                         else
                             tNext = t.NextValidValue(); //Nudge it forward!  Bit hacky...
                         t = tNext;
@@ -824,7 +828,7 @@ namespace Nucleus.Maths
                     // Check end conditions:
                     if (interval.IsIncreasing && (t >= interval.End || wrapped)) return;
                     if (interval.IsDecreasing && (t >= interval.End && wrapped)) return;
-                    if (outList.Count > subtractors.Count) return;
+                    if (outCount > subtractors.Count) return;
                 }
             }
             else
