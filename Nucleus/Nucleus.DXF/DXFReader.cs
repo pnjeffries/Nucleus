@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using netDxf.Header;
+using Nucleus.Extensions;
 
 namespace Nucleus.DXF
 {
@@ -16,6 +17,24 @@ namespace Nucleus.DXF
     /// </summary>
     public class DXFReader
     {
+        #region Properties
+
+        /// <summary>
+        /// Private backing member variable for the UseUserOrigin property
+        /// </summary>
+        private bool _UseUserOrigin = false;
+
+        /// <summary>
+        /// If true, geometry will be imported centered on the user coordinate system 
+        /// origin point rather than the global origin.
+        /// </summary>
+        public bool UseUserOrigin
+        {
+            get { return _UseUserOrigin; }
+            set { _UseUserOrigin = value; }
+        }
+
+        #endregion
 
         /// <summary>
         /// Read a DXF and convert it into native Nucleus geometry types.
@@ -39,6 +58,7 @@ namespace Nucleus.DXF
             return ReadDXF(doc);
         }
 
+        /*
         /// <summary>
         /// Attempt to read a Vector3 stored in a custom header in the DXF.
         /// </summary>
@@ -47,26 +67,30 @@ namespace Nucleus.DXF
         {
             HeaderVariable result;
             if (document.DrawingVariables.TryGetCustomVariable(headerKey, out result))
-                return (Vector3)result.Value;
+            {
+                Vector3 origin = (Vector3)result.Value;
+                return origin;
+            }
 
             return Vector3.Zero;
-        }
+        }*/
 
         private Vector3 ReadOriginFromDXF(DxfDocument document)
         {
-            return ReadCustomHeaderFromDXF(document, "$EXTMIN");
+            return document.DrawingVariables.UcsOrg;
+                //ReadCustomHeaderFromDXF(document, "$EXTMIN");
         }
 
         /// <summary>
         /// Read a DXF and convert it into native Nucleus geometry types.
         /// </summary>
         /// <param name="doc">The document to read from</param>
-        /// <returns></returns>
         public VertexGeometryCollection ReadDXF(DxfDocument doc)
         {
             VertexGeometryCollection result = new VertexGeometryCollection();
 
-            var origin = ReadOriginFromDXF(doc);
+            var origin = Vector3.Zero;
+            if (UseUserOrigin) origin = ReadOriginFromDXF(doc);
 
             double scale = 1.0;
             if (doc.DrawingVariables.InsUnits == netDxf.Units.DrawingUnits.Millimeters) scale = 0.001;

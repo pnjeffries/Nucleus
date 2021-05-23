@@ -406,6 +406,7 @@ namespace Nucleus.Base
     /// <summary>
     /// FilePath to string TypeConverter
     /// </summary>
+    [Serializable]
     public class FilePathConverter : TypeConverter
     {
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)

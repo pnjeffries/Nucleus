@@ -2546,7 +2546,7 @@ namespace Nucleus.UnitTests
         [TestMethod]
         public void ContainsXY_PointInside_ShouldBeTrue()
         {
-            var pLine = new PolyLine(
+            var pLine = new PolyLine(true,
                 new Vector(-58.0235137939453, 60.5225067138672, 0),
                 new Vector(58.9555130004883, 63.0466690063477, 0),
                 new Vector(54.3530426025391, -57.5168228149414, 0),
@@ -2584,11 +2584,11 @@ namespace Nucleus.UnitTests
             var numberOfVoids = subRegions[0].Voids.Count;
             Assert.AreEqual(1, numberOfVoids);
 
-            var areaOfRegion = subRegions[0].CalculateArea();
+            var areaOfRegion = subRegions[0].CalculateArea().Abs();
             Assert.AreEqual(300, areaOfRegion);
 
             var areaOfVoid = subRegions[0].Voids.TotalEnclosedArea();
-            Assert.AreEqual(100, areaOfRegion);
+            Assert.AreEqual(100, areaOfVoid);
         }
 
     }
