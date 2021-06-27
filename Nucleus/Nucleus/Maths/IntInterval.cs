@@ -1,5 +1,6 @@
 ﻿using Nucleus.Extensions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,7 @@ namespace Nucleus.Maths
     /// A numeric interval between two integers
     /// </summary>
     [Serializable]
-    public struct IntInterval
+    public struct IntInterval : IEnumerable<int>
     {
         #region Fields
 
@@ -174,6 +175,17 @@ namespace Nucleus.Maths
             else return "[" + Start.ToString() + ";" + End.ToString() + "]";
         }
 
+        public IEnumerator<int> GetEnumerator()
+        {
+            return new IntIntervalEnumerator(this);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return new IntIntervalEnumerator(this);
+        }
+
+
         #endregion
 
         #region Static Methods
@@ -201,8 +213,66 @@ namespace Nucleus.Maths
             }
             return result;
         }
+
+        #endregion
+
+        #region Classes
+
+        /// <summary>
+        /// An enumerator for the IntInterval type
+        /// </summary>
+        [Serializable]
+        public class IntIntervalEnumerator : IEnumerator<int>
+        {
+            private IntInterval _Interval;
+
+            private int _Current;
+
+            public int Current => _Current;
+
+            object IEnumerator.Current => _Current;
+
+            public IntIntervalEnumerator(IntInterval interval)
+            {
+                _Interval = interval;
+                Reset();
+            }
+
+            public void Dispose()
+            {
+
+            }
+
+            public bool MoveNext()
+            {
+                if (_Interval.IsIncreasing)
+                {
+                    _Current++;
+                    return (_Current <= _Interval.End);
+                }
+                else
+                {
+                    _Current--;
+                    return (_Current >= _Interval.End);
+                }
+            }
+
+            public void Reset()
+            {
+                if (_Interval.IsIncreasing)
+                {
+                    _Current = _Interval.Start - 1;
+                }
+                else
+                {
+                    _Current = _Interval.Start + 1;
+                }
+            }
+        }
+
         #endregion
     }
+
 
     /// <summary>
     /// Extension methods for IntIntervals and collections thereof

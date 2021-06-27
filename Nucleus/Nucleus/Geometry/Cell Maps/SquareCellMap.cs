@@ -1,4 +1,5 @@
 ﻿using Nucleus.Extensions;
+using Nucleus.Maths;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -151,9 +152,30 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="cellIndex"></param>
         /// <returns></returns>
-        public object GetCell(int cellIndex)
+        object ICellMap.GetCell(int cellIndex)
+        {
+            return this.GetCell(cellIndex);
+        }
+
+        /// <summary>
+        /// Get the cell object at the specified index
+        /// </summary>
+        /// <param name="cellIndex"></param>
+        /// <returns></returns>
+        public T GetCell(int cellIndex)
         {
             return this[cellIndex];
+        }
+
+        /// <summary>
+        /// Get the cell object at the specified column and row indices
+        /// </summary>
+        /// <param name="columnIndex"></param>
+        /// <param name="rowIndex"></param>
+        /// <returns></returns>
+        public T GetCell(int columnIndex, int rowIndex)
+        {
+            return GetCell(IndexAt(columnIndex, rowIndex));
         }
 
         /// <summary>
@@ -195,7 +217,7 @@ namespace Nucleus.Geometry
         /// <returns></returns>
         public int IndexAt(double x, double y)
         {
-            return IndexAt((int)((x - _Origin.X) / CellSize), (int)((y - _Origin.Y) / CellSize));
+            return IndexAt(ColumnIndexAt(x), ColumnIndexAt(y));
         }
 
         /// <summary>
@@ -210,6 +232,62 @@ namespace Nucleus.Geometry
             if (columnIndex >= 0 && rowIndex >= 0 && columnIndex < SizeX && rowIndex < SizeY)
                 return columnIndex + rowIndex * SizeX;
             else return -1;
+        }
+
+        /// <summary>
+        /// Get the row and column indices at the specified location
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="columnIndex"></param>
+        /// <param name="rowIndex"></param>
+        public void IndicesAt(Vector location, out int columnIndex, out int rowIndex)
+        {
+            IndicesAt(location.X, location.Y, out columnIndex, out rowIndex);
+        }
+
+        /// <summary>
+        /// Get the row and column indices at the specified x and y coordinates
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="columnIndex"></param>
+        /// <param name="rowIndex"></param>
+        public void IndicesAt(double x, double y, out int columnIndex, out int rowIndex)
+        {
+            columnIndex = ColumnIndexAt(x);
+            rowIndex = RowIndexAt(y);
+        }
+
+        /// <summary>
+        /// Get the row and column indices covered by the specified bounding box
+        /// </summary>
+        /// <param name="box"></param>
+        /// <param name="columnRange"></param>
+        /// <param name="rowRange"></param>
+        public void IndicesWithin(BoundingBox box, out IntInterval columnRange, out IntInterval rowRange)
+        {
+            columnRange = new IntInterval(ColumnIndexAt(box.MinX), ColumnIndexAt(box.MaxX));
+            rowRange = new IntInterval(RowIndexAt(box.MinY), RowIndexAt(box.MaxY));
+        }
+
+        /// <summary>
+        /// Get the column index at the specified x coordinate
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public int ColumnIndexAt(double x)
+        {
+            return (int)((x - _Origin.X) / CellSize);
+        }
+
+        /// <summary>
+        /// Get the row index at the specified y-coordinate
+        /// </summary>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public int RowIndexAt(double y)
+        {
+            return (int)((y - _Origin.Y) / CellSize);
         }
 
         /// <summary>
@@ -386,9 +464,9 @@ namespace Nucleus.Geometry
 
         public ICellMap<E> SpawnNewGrid<E>()
         {
-            return new SquareCellMap<E>(SizeX, SizeY, CellSize);
+            return new SquareCellMap<E>(Origin, SizeX, SizeY, CellSize);
         }
-        
+
         #endregion
     }
 }

@@ -314,6 +314,23 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Project the specified point onto this mesh along the global
+        /// z-axis, returning all z-coordinates 
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public IList<double> ProjectPoint(Vector point)
+        {
+            var result = new List<double>();
+            foreach (MeshFace face in this)
+            {
+                double z = face.ProjectPoint(point);
+                if (!double.IsNaN(z)) result.Add(z);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Extract all edges from the faces in this collection.
         /// This may include duplicates where edges are shared between
         /// faces.

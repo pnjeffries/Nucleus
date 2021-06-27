@@ -2558,6 +2558,48 @@ namespace Nucleus.UnitTests
             Assert.AreEqual(true, result);
         }
 
+        [TestMethod]
+        public void InternalVoidOverlap_ShouldCombineVoids()
+        {
+            var regionPLine = new PolyLine(true,
+               Vector.Create2D(0, 0, 20, 0, 20, 20, 0, 20));
+            var region = new PlanarRegion(regionPLine);
+
+            var voidCrv = new PolyLine(true,
+                Vector.Create2D(5, 5, 12, 5, 12, 12, 5, 12));
+            region.Voids.Add(voidCrv);
+
+            var cutterCrv = new PolyLine(true,
+                Vector.Create2D(8, 8, 15, 8, 15, 15, 8, 15));
+            var cutter = new PlanarRegion(cutterCrv);
+
+            var result = region.Not(cutter);
+
+            double area = result.CalculateTotalArea();
+            Assert.AreEqual(318, area);
+        }
+
+        [TestMethod]
+        public void InternalVoidAbutting_ShouldCombineVoids()
+        {
+            var regionPLine = new PolyLine(true,
+               Vector.Create2D(0, 0, 20, 0, 20, 20, 0, 20));
+            var region = new PlanarRegion(regionPLine);
+
+            var voidCrv = new PolyLine(true,
+                Vector.Create2D(5, 5, 10, 5, 10, 15, 5, 15));
+            region.Voids.Add(voidCrv);
+
+            var cutterCrv = new PolyLine(true,
+                Vector.Create2D(10, 5, 15, 5, 15, 15, 10, 15));
+            var cutter = new PlanarRegion(cutterCrv);
+
+            var result = region.Not(cutter);
+
+            double area = result.CalculateTotalArea();
+            Assert.AreEqual(300, area);
+        }
+
         /// <summary>
         /// Test to check a doughnut shape void is cutting correctly
         /// </summary>

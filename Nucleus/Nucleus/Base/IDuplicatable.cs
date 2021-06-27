@@ -249,11 +249,7 @@ namespace Nucleus.Base
 
         private static CopyAttribute CopyAttributeForField(FieldInfo sourceField)
         {
-            CopyAttribute copyAtt = sourceField.GetAttribute<CopyAttribute>();
-            // If copy attribute is not set on the field, we will try it on the type:
-            if (copyAtt == null) copyAtt = sourceField.FieldType.GetCustomAttribute<CopyAttribute>();
-
-            return copyAtt;
+            return CopyAttribute.GetFor(sourceField);
         }
 
         /// <summary>

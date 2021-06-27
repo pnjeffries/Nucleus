@@ -91,6 +91,8 @@ namespace Nucleus.Geometry
         /// <summary>
         /// Private backing field for Plane property
         /// </summary>
+        [NonSerialized]
+        [Copy(CopyBehaviour.DO_NOT_COPY)]
         private Plane _Plane;
 
         /// <summary>
@@ -103,7 +105,7 @@ namespace Nucleus.Geometry
             {
                 if (_Plane == null && Perimeter != null)
                 {
-                    _Plane = Perimeter.Plane();
+                    _Plane = Perimeter.Plane(double.MaxValue);
                 }
                 return _Plane;
             }
@@ -516,7 +518,7 @@ namespace Nucleus.Geometry
                     }
                     else
                     {
-                        newPerimeter.Add(segment);
+                        newPerimeter.Add(segment, false, true);
                     }
 
                     currentInt.ProcessCounter--;

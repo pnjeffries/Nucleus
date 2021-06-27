@@ -19,18 +19,18 @@ namespace Nucleus.Geometry
         int CellCount { get; }
 
         /// <summary>
-        /// Does a cell exist at the specified index?
-        /// </summary>
-        /// <param name="cellIndex"></param>
-        /// <returns></returns>
-        bool Exists(int cellIndex);
-
-        /// <summary>
         /// Get the cell object at the specified index
         /// </summary>
         /// <param name="cellIndex"></param>
         /// <returns></returns>
         object GetCell(int cellIndex);
+
+        /// <summary>
+        /// Does a cell exist at the specified index?
+        /// </summary>
+        /// <param name="cellIndex"></param>
+        /// <returns></returns>
+        bool Exists(int cellIndex);
 
         /// <summary>
         /// Get the index of the cell at the specified location
@@ -118,6 +118,13 @@ namespace Nucleus.Geometry
         /// <param name="cellIndex">The 1-dimensional cell index</param>
         /// <returns></returns>
         T this[int cellIndex] { get; set; }
+
+        /// <summary>
+        /// Get the cell object at the specified index
+        /// </summary>
+        /// <param name="cellIndex"></param>
+        /// <returns></returns>
+        T GetCell(int cellIndex);
     }
 
     /// <summary>
@@ -233,19 +240,21 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Set a cell in this map.  This will back-register the map and index
-        /// with the cell itself.
+        /// Set a cell in this map.  If the cell is of an IMapCell type this 
+        /// will back-register the map and index with the cell itself.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="map"></param>
         /// <param name="index"></param>
         /// <param name="cell"></param>
         public static void SetCell<T>(this ICellMap<T> map, int index, T cell)
-            where T:IMapCell
         {
             map[index] = cell;
-            cell.Index = index;
-            cell.Map = map;
+            if (cell is IMapCell mCell)
+            {
+                mCell.Index = index;
+                mCell.Map = map;
+            }
         }
 
         /// <summary>
@@ -263,12 +272,12 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Populate this map with cells
+        /// Populate this map with cells 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="map"></param>
         public static void InitialiseCells<T>(this ICellMap<T> map)
-            where T:IMapCell, new() 
+            where T:new() 
         {
             for (int i = 0; i < map.CellCount; i++)
             {

@@ -93,6 +93,14 @@ namespace Nucleus.Geometry
             }
         }
 
+        /// <summary>
+        /// Calculate and return the bounding box of this face
+        /// </summary>
+        public BoundingBox BoundingBox
+        {
+            get { return new BoundingBox(this); }
+        }
+
         #endregion
 
         #region Constructors

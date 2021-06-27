@@ -143,6 +143,11 @@ namespace Nucleus.Geometry
         public Vector MidPoint { get { return new Vector(MidX, MidY, MidZ); } }
 
         /// <summary>
+        /// The the mid-point of the top face of the box
+        /// </summary>
+        public Vector TopMidPoint { get { return new Vector(MidX, MidY, MaxZ); } }
+
+        /// <summary>
         /// The size of this box in the x-axis
         /// </summary>
         public double SizeX { get { return MaxX - MinX; } }

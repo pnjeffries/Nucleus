@@ -674,7 +674,7 @@ namespace Nucleus.Maths
 
 #endregion
 
-#region Operators
+        #region Operators
 
         /// <summary>
         /// Addition operator
