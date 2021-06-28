@@ -594,7 +594,7 @@ namespace Nucleus.Geometry
                 for (int j = i + 3; j < i + verts.Count; j++)
                 {
                     Vertex vT = verts.GetWrapped(j);
-                    if (Triangle.XYContainment(vT,v0,v1,v2))
+                    if (Triangle.XYContainment(vT,v0,v1,v2, false))
                     {
                         isEar = false;
                         break;
