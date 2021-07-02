@@ -196,6 +196,7 @@
     <Compile Include="Meshing\HalfEdgeVertex.cs" />
     <Compile Include="Meshing\MeshDivisionEdge.cs" />
     <Compile Include="Meshing\MeshDivisionEdgeCollection.cs" />
+    <Compile Include="Meshing\MeshingGrid.cs" />
     <Compile Include="Model\AnalysisCase.cs" />
     <Compile Include="Model\AnalysisCaseCollection.cs" />
     <Compile Include="Model\AnalysisTask.cs" />
@@ -554,6 +555,11 @@
     <Compile Include="Units\DimensionAttribute.cs" />
     <Compile Include="Units\DimensionType.cs" />
     <Compile Include="Units\MeasurementUnit.cs" />
+    <Compile Include="Viscous\IFlowConnector.cs" />
+    <Compile Include="Viscous\IFlowInput.cs" />
+    <Compile Include="Viscous\IFlowLink.cs" />
+    <Compile Include="Viscous\IFlowNode.cs" />
+    <Compile Include="Viscous\IFlowOutput.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FreeBuild.licenseheader" />

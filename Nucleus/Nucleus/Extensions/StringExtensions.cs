@@ -862,6 +862,5 @@ namespace Nucleus.Extensions
             if (encoding == null) File.WriteAllText(filePath, str);
             else File.WriteAllText(filePath, str, encoding);
         }
-
     }
 }
