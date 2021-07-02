@@ -389,13 +389,7 @@ namespace Nucleus.Geometry
         /// <returns></returns>
         public IList<double> ProjectPoint(Vector point)
         {
-            var result = new List<double>();
-            foreach (MeshFace face in Faces)
-            {
-                double z = face.ProjectPoint(point);
-                if (!double.IsNaN(z)) result.Add(z);
-            }
-            return result;
+            return Faces.ProjectPoint(point);
         }
 
         /// <summary>

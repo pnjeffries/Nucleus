@@ -641,14 +641,17 @@ namespace Nucleus.Geometry
         /// Is the specified point within the angle range of this arc's sector?
         /// </summary>
         /// <param name="point"></param>
+        /// <param name="excludeEnd">If true, points which lie on the exact end of the arc will be excluded</param>
         /// <returns></returns>
-        public bool IsInAngleRange(Vector point)
+        public bool IsInAngleRange(Vector point, bool excludeEnd = false)
         {
             Angle angle = Circle.Azimuth(point);
             Angle toStart = Circle.Azimuth(Vertices.First().Position);
             Angle radMeasure = RadianMeasure;
             Angle toPointFromStart = (angle - toStart).ToSign(radMeasure.Sign());
-            if (toPointFromStart.Abs() <= radMeasure.Abs()) return true;
+            if (excludeEnd ?
+                toPointFromStart.Abs() < radMeasure.Abs() :
+                toPointFromStart.Abs() <= radMeasure.Abs()) return true;
             else return false;
         }
 

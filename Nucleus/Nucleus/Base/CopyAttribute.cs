@@ -18,9 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Nucleus.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -58,6 +60,37 @@ namespace Nucleus.Base
         public CopyAttribute(CopyBehaviour behaviour)
         {
             Behaviour = behaviour;
+        }
+
+        #endregion
+
+        #region Static Fields
+
+        /// <summary>
+        /// Cached attributes for fields
+        /// </summary>
+        private static IDictionary<FieldInfo, CopyAttribute> _FieldCache = new Dictionary<FieldInfo, CopyAttribute>();
+
+        #endregion
+
+        #region Static Methods
+
+        /// <summary>
+        /// Get the copy attribute for the specified field.  This is cached to speed up retrieval
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        public static CopyAttribute GetFor(FieldInfo field)
+        {
+            if (_FieldCache.ContainsKey(field)) return _FieldCache[field];
+
+            CopyAttribute copyAtt = field.GetAttribute<CopyAttribute>();
+            // If copy attribute is not set on the field, we will try it on the type:
+            if (copyAtt == null) copyAtt = field.FieldType.GetCustomAttribute<CopyAttribute>();
+
+            _FieldCache[field] = copyAtt;
+
+            return copyAtt;
         }
 
         #endregion

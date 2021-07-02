@@ -143,6 +143,11 @@ namespace Nucleus.Geometry
         public Vector MidPoint { get { return new Vector(MidX, MidY, MidZ); } }
 
         /// <summary>
+        /// The the mid-point of the top face of the box
+        /// </summary>
+        public Vector TopMidPoint { get { return new Vector(MidX, MidY, MaxZ); } }
+
+        /// <summary>
         /// The size of this box in the x-axis
         /// </summary>
         public double SizeX { get { return MaxX - MinX; } }
@@ -899,6 +904,71 @@ namespace Nucleus.Geometry
             MaxY = Mid.Y + (MaxY - Mid.Y) * factor;
             MinZ = Mid.Z + (MinZ - Mid.Z) * factor;
             MaxZ = Mid.Z + (MaxX - Mid.Z) * factor;
+        }
+
+        /// <summary>
+        /// Return the shortest distance between this bounding box and another on the X axis
+        /// </summary>
+        /// <param name="other">The second bounding box to measure the distance to.</param>
+        /// <returns>The shortest absolute axis distance from this box to the other.
+        /// If the two bounding boxes overlap on that axis will return 0.</returns>
+        public double XAxisDistanceTo(BoundingBox other)
+        {
+            if (other.MaxX < MinX) return MinX - other.MaxX;
+            if (other.MinX > MaxX) return other.MinX - MaxX;
+            return 0;
+        }
+
+        /// <summary>
+        /// Return the shortest distance between this bounding box and another on the Y axis
+        /// </summary>
+        /// <param name="other">The second bounding box to measure the distance to.</param>
+        /// <returns>The shortest absolute axis distance from this box to the other.
+        /// If the two bounding boxes overlap on that axis will return 0.</returns>
+        public double YAxisDistanceTo(BoundingBox other)
+        {
+            if (other.MaxY < MinY) return MinY - other.MaxY;
+            if (other.MinY > MaxY) return other.MinY - MaxY;
+            return 0;
+        }
+
+        /// <summary>
+        /// Return the shortest distance between this bounding box and another on the Z axis
+        /// </summary>
+        /// <param name="other">The second bounding box to measure the distance to.</param>
+        /// <returns>The shortest absolute axis distance from this box to the other.
+        /// If the two bounding boxes overlap on that axis will return 0.</returns>
+        public double ZAxisDistanceTo(BoundingBox other)
+        {
+            if (other.MaxZ < MinZ) return MinZ - other.MaxZ;
+            if (other.MinZ > MaxZ) return other.MinZ - MaxZ;
+            return 0;
+        }
+
+        /// <summary>
+        /// Return the shortest distance between this bounding box and another
+        /// on either the X or Y axes
+        /// </summary>
+        /// <param name="other">The second bounding box to measure the distance to.</param>
+        /// <returns>The shortest absolute axis distance from this box to the other.
+        /// If the two bounding boxes overlap on that axis will return 0.</returns>
+        public double ShortestXYAxisDistanceTo(BoundingBox other)
+        {
+            return Math.Min(
+                XAxisDistanceTo(other), YAxisDistanceTo(other));
+        }
+
+        /// <summary>
+        /// Return the shortest distance between this bounding box and another
+        /// on either the X, Y or Z axes
+        /// </summary>
+        /// <param name="other">The second bounding box to measure the distance to.</param>
+        /// <returns>The shortest absolute axis distance from this box to the other.
+        /// If the two bounding boxes overlap on that axis will return 0.</returns>
+        public double ShortestAxisDistanceTo(BoundingBox other)
+        {
+            return Math.Min(
+                ShortestXYAxisDistanceTo(other), ZAxisDistanceTo(other));
         }
 
         #endregion

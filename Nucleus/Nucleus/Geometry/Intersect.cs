@@ -204,6 +204,35 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find the intersection point, if one exists, for two lines onn the XY plane.
+        /// The intersections must lie within the bounds of the lines, optionally excluding
+        /// those which lie on the exact end of each line to avoid double-counting intersections
+        /// at the joins between curve segments.
+        /// </summary>
+        /// <param name="lineA"></param>
+        /// <param name="lineB"></param>
+        /// <param name="endExclusiveA"></param>
+        /// <param name="endExclusiveB"></param>
+        /// <param name="t0"></param>
+        /// <param name="t1"></param>
+        /// <returns></returns>
+        public static Vector LineLineXY(Line lineA, Line lineB, bool endExclusiveA, bool endExclusiveB, ref double t0, ref double t1)
+        {
+            Vector pt0 = lineA.StartPoint;
+            Vector v0 = lineA.EndPoint - pt0;
+            Vector pt1 = lineB.StartPoint;
+            Vector v1 = lineB.EndPoint - pt1;
+            Vector result = LineLineXY(pt0, v0, pt1, v1, ref t0, ref t1);
+            if (result.IsValid() && t0 >= 0 && t1 >= 0 &&
+                (endExclusiveA ? t0 < 1 : t0 <= 1) &&
+                (endExclusiveB ? t1 < 1 : t1 <= 1))
+                {
+                return result;
+            }
+            else return Vector.Unset;
+        }
+
+        /// <summary>
         /// Find the intersection points, if any exist, for an infinite line and a circle on the XY plane,
         /// given as an array of doubles representing multiplication factors which should be applied to the
         /// line direction vector.  There may be one, two or zero intersection points.
@@ -319,26 +348,33 @@ namespace Nucleus.Geometry
         /// <param name="arc">The arc</param>
         /// <param name="lineBounds">The range on the line, as a proportion of the line length, where intersections
         /// will be valid.  0 will represent the start of the line and 1 its end.</param>
+        /// <param name="excludeLineEnd">If true, intersections that lie on the eact end of the line bounds will be ignored.</param>
+        /// <param name="excludeArcEnd">If true, intersections that lie on the exact end of the arc will be ignored.</param>
         /// <returns></returns>
-        public static Vector[] LineArcXY(Vector lineOrigin, Vector lineVect, Arc arc, Interval lineBounds)
+        public static Vector[] LineArcXY(Vector lineOrigin, Vector lineVect, Arc arc, Interval lineBounds,
+            bool excludeLineEnd = false, bool excludeArcEnd = false)
         {
             bool lineBounded = lineBounds.IsValid;
             double[] ts = LineCircleXY(lineOrigin, lineVect, arc.Circle.Origin, arc.Circle.Radius);
             
             // Sort out which intersections exist and (optionally) are within bounds:
-            bool t0Valid = ts.Length > 0 && (!lineBounded || (ts[0] >= lineBounds.Min && ts[0] <= lineBounds.Max));
-            bool t1Valid = ts.Length > 1 && (!lineBounded || (ts[1] >= lineBounds.Min && ts[1] <= lineBounds.Max));
+            bool t0Valid = ts.Length > 0 && 
+                (!lineBounded || (ts[0] >= lineBounds.Min && 
+                (excludeLineEnd ? ts[0] < lineBounds.Max: ts[0] <= lineBounds.Max)));
+            bool t1Valid = ts.Length > 1 && 
+                (!lineBounded || (ts[1] >= lineBounds.Min && 
+                (excludeLineEnd ? ts[1] < lineBounds.Max : ts[1] <= lineBounds.Max)));
             Vector pt0 = Vector.Unset;
             Vector pt1 = Vector.Unset;
             if (t0Valid)
             {
                 pt0 = lineOrigin + lineVect * ts[0];
-                if (!arc.IsInAngleRange(pt0)) t0Valid = false;
+                if (!arc.IsInAngleRange(pt0, excludeArcEnd)) t0Valid = false;
             }
             if (t1Valid)
             {
                 pt1 = lineOrigin + lineVect * ts[1];
-                if (!arc.IsInAngleRange(pt1)) t1Valid = false;
+                if (!arc.IsInAngleRange(pt1, excludeArcEnd)) t1Valid = false;
             }
 
             if (t0Valid)
@@ -369,10 +405,13 @@ namespace Nucleus.Geometry
         /// <param name="arc">The arc</param>
         /// <param name="lineBounds">The range on the line, as a proportion of the line length, where intersections
         /// will be valid.  0 will represent the start of the line and 1 its end.</param>
+        /// <param name="excludeLineEnd">If true, intersections that lie on the eact end of the line bounds will be ignored.</param>
+        /// <param name="excludeArcEnd">If true, intersections that lie on the exact end of the arc will be ignored.</param>
         /// <returns></returns>
-        public static Vector[] LineArcXY(Line line, Arc arc, Interval lineBounds)
+        public static Vector[] LineArcXY(Line line, Arc arc, Interval lineBounds, 
+            bool excludeLineEnd = false, bool excludeArcEnd = false)
         {
-            return LineArcXY(line.StartPoint, line.EndPoint - line.StartPoint, arc, lineBounds);
+            return LineArcXY(line.StartPoint, line.EndPoint - line.StartPoint, arc, lineBounds, excludeLineEnd, excludeArcEnd);
         }
 
         /// <summary>
@@ -390,12 +429,14 @@ namespace Nucleus.Geometry
         /// should be added.</param>
         /// <param name="remapLine">The subdomain into which curve parameters on the first curve will be remapped.</param>
         /// <param name="remapArc">The subdomain into which curve parameters on the second curve will be remapped.</param>
+        /// <param name="excludeLineEnd">If true, intersections that lie on the eact end of the line bounds will be ignored.</param>
+        /// <param name="excludeArcEnd">If true, intersections that lie on the exact end of the arc will be ignored.</param>
         /// <returns></returns>
         public static IList<Vector> LineArcXY(Line line, Arc arc, Interval lineBounds, IList<Vector> result,
-            IList<double> tLine, IList<double> tArc, Interval remapLine, Interval remapArc)
+            IList<double> tLine, IList<double> tArc, Interval remapLine, Interval remapArc, bool excludeLineEnd, bool excludeArcEnd)
         {
             if (result == null) result = new List<Vector>();
-            Vector[] lAXY = LineArcXY(line, arc, lineBounds);
+            Vector[] lAXY = LineArcXY(line, arc, lineBounds, excludeLineEnd, excludeArcEnd);
             foreach (Vector pt in lAXY)
             {
                 tLine.Add(remapLine.ValueAt(line.ClosestParameter(pt)));
@@ -599,7 +640,7 @@ namespace Nucleus.Geometry
         /// <returns>An array of intersection points, which may contain 0, 1 or 2 points.</returns>
         public static Vector[] ArcArcXY(Arc arc0, Arc arc1)
         {
-            return ArcArcXY(arc0, arc1, Interval.Unit);
+            return ArcArcXY(arc0, arc1);
         }
 
         /// <summary>
@@ -609,15 +650,17 @@ namespace Nucleus.Geometry
         /// </summary>
         /// <param name="arc0">The first arc on the XY plane</param>
         /// <param name="arc1">The second arc on the XY plane</param>
+        /// <param name="excludeEnd0">If true, intersections at the exact end of crv0 will be ignored.</param>
+        /// <param name="excludeEnd1">If true, intersections at the exact end of crv1 will be ignored.</param>
         /// <returns>An array of intersection points, which may contain 0, 1 or 2 points.</returns>
-        public static Vector[] ArcArcXY(Arc arc0, Arc arc1, Interval firstArcBounds)
+        public static Vector[] ArcArcXY(Arc arc0, Arc arc1, bool excludeEnd0 = false, bool excludeEnd1 = false)
         {
             Vector[] v = CircleCircleXY(arc0.Circle, arc1.Circle);
 
             // Check that the points found lie on both of the arcs:
 
-            bool v0Valid = (v.Length > 0 && arc0.IsInAngleRange(v[0], firstArcBounds) && arc1.IsInAngleRange(v[0]));
-            bool v1Valid = (v.Length > 1 && arc0.IsInAngleRange(v[1], firstArcBounds) && arc1.IsInAngleRange(v[1]));
+            bool v0Valid = (v.Length > 0 && arc0.IsInAngleRange(v[0], excludeEnd0) && arc1.IsInAngleRange(v[0], excludeEnd1));
+            bool v1Valid = (v.Length > 1 && arc0.IsInAngleRange(v[1], excludeEnd0) && arc1.IsInAngleRange(v[1], excludeEnd1));
 
             if (v0Valid)
             {
@@ -677,21 +720,26 @@ namespace Nucleus.Geometry
 
             // Currenly no tolerence - this may result in intersections exactly on points 
             // between segments being double-counted?  But otherwise might cause intersections to be missed...
-            double endStartTolerance = 0;
+            double endStartTolerance = 1 - (1.0).PreviousValidValue();
 
             if (result == null) result = new List<Vector>();
 
             var segments0 = crv0.ToSimpleCurves();
             var segments1 = crv1.ToSimpleCurves();
 
+            bool closed0 = crv0.Closed;
+            bool closed1 = crv1.Closed;
+
             // Perform pairwise intersection checking of curve segments
             for (int i = 0; i < segments0.Count; i++)
             {
                 ISimpleCurve seg0 = segments0[i];
+                bool excludeEnd0 = closed0 || i < segments0.Count - 1;
                 for (int j = 0; j < segments1.Count; j++)
                 {
                     ISimpleCurve seg1 = segments1[j];
-                    CurveCurveXY(seg0, seg1, result, tCrv0, tCrv1, crv0.SpanDomain(i), crv1.SpanDomain(j), endStartTolerance);
+                    bool excludeEnd1 = closed1 || j < segments1.Count - 1;
+                    CurveCurveXY(seg0, seg1, result, tCrv0, tCrv1, crv0.SpanDomain(i), crv1.SpanDomain(j), excludeEnd0, excludeEnd1);
                 }
             }
 
@@ -709,14 +757,13 @@ namespace Nucleus.Geometry
         /// should be added.</param>
         /// <param name="tCrv1">The list of curve parameters to which intersection parameters on the second curve
         /// should be added.</param>
-        /// <param name="endStartTolerance">The tolerance distance from the end of the first curve 
-        /// within which intersections with the second will be ignored.  Enables self-intersection checks without
-        /// false positives from matching curve ends.</param>
+        /// <param name="excludeEnd0">If true, intersections at the exact end of crv0 will be ignored.</param>
+        /// <param name="excludeEnd1">If true, intersections at the exact end of crv1 will be ignored.</param>
         /// <returns>An array of intersection points, which may contain 0, 1 or 2 points.</returns>
         public static IList<Vector> CurveCurveXY(ISimpleCurve crv0, ISimpleCurve crv1, IList<Vector> result,
-            IList<double> tCrv0, IList<double> tCrv1, double endStartTolerance = 0)
+            IList<double> tCrv0, IList<double> tCrv1, bool excludeEnd0, bool excludeEnd1)
         {
-            return CurveCurveXY(crv0, crv1, result, tCrv0, tCrv1, new Interval(0, 1), new Interval(0, 1), endStartTolerance);
+            return CurveCurveXY(crv0, crv1, result, tCrv0, tCrv1, new Interval(0, 1), new Interval(0, 1), excludeEnd0, excludeEnd1);
         }
 
         /// <summary>
@@ -732,12 +779,11 @@ namespace Nucleus.Geometry
         /// should be added.</param>
         /// <param name="remap0">The subdomain into which curve parameters on the first curve will be remapped.</param>
         /// <param name="remap1">The subdomain into which curve parameters on the second curve will be remapped.</param>
-        /// <param name="endStartTolerance">The tolerance distance from the end of the first curve 
-        /// within which intersections with the second will be ignored.  Enables self-intersection checks without
-        /// false positives from matching curve ends.</param>
+        /// <param name="excludeEnd0">If true, intersections at the exact end of crv0 will be ignored.</param>
+        /// <param name="excludeEnd1">If true, intersections at the exact end of crv1 will be ignored.</param>
         /// <returns>An array of intersection points, which may contain 0, 1 or 2 points.</returns>
         public static IList<Vector> CurveCurveXY(ISimpleCurve crv0, ISimpleCurve crv1, IList<Vector> result,
-            IList<double> tCrv0, IList<double> tCrv1, Interval remap0, Interval remap1, double endStartTolerance = 0)
+            IList<double> tCrv0, IList<double> tCrv1, Interval remap0, Interval remap1, bool excludeEnd0, bool excludeEnd1)
         {
             if (result == null) result = new List<Vector>();
             if (crv0 is Line)
@@ -745,7 +791,7 @@ namespace Nucleus.Geometry
                 if (crv1 is Line)
                 {
                     double t0 = 0, t1 = 0;
-                    Vector pt = LineLineXY((Line)crv0, (Line)crv1, new Interval(0, 1 - endStartTolerance), ref t0, ref t1);
+                    Vector pt = LineLineXY((Line)crv0, (Line)crv1, excludeEnd0, excludeEnd1, ref t0, ref t1);
                     if (pt.IsValid())
                     {
                         tCrv0.Add(remap0.ValueAt(t0));
@@ -756,17 +802,17 @@ namespace Nucleus.Geometry
                 }
                 else if (crv1 is Arc)
                 {
-                    return LineArcXY((Line)crv0, (Arc)crv1, new Interval(0, 1 - endStartTolerance),
-                        result, tCrv0, tCrv1, remap0, remap1);
+                    return LineArcXY((Line)crv0, (Arc)crv1, new Interval(0, 1),
+                        result, tCrv0, tCrv1, remap0, remap1, excludeEnd0, excludeEnd1);
                 }
             }
             else if (crv0 is Arc)
             {
-                if (crv1 is Line) return LineArcXY((Line)crv1, (Arc)crv0, new Interval(endStartTolerance, 1),
-                    result, tCrv1, tCrv0, remap1, remap0);
+                if (crv1 is Line) return LineArcXY((Line)crv1, (Arc)crv0, new Interval(0, 1),
+                    result, tCrv1, tCrv0, remap1, remap0, excludeEnd1, excludeEnd0);
                 else if (crv1 is Arc)
                 {
-                    var intPts = ArcArcXY((Arc)crv0, (Arc)crv1, new Interval(0, 1 - endStartTolerance));
+                    var intPts = ArcArcXY((Arc)crv0, (Arc)crv1, excludeEnd0, excludeEnd1);
                     foreach (Vector pt in intPts)
                     {
                         tCrv0.Add(remap0.ValueAt(crv0.ClosestParameter(pt)));
@@ -807,7 +853,7 @@ namespace Nucleus.Geometry
             else if (crv0 is Arc)
             {
                 if (crv1 is Line) return LineArcXY((Line)crv1, (Arc)crv0, new Interval(endStartTolerance, 1));
-                else if (crv1 is Arc) return ArcArcXY((Arc)crv0, (Arc)crv1, new Interval(0, 1 - endStartTolerance));
+                else if (crv1 is Arc) return ArcArcXY((Arc)crv0, (Arc)crv1, endStartTolerance > 0, endStartTolerance > 0);//new Interval(0, 1 - endStartTolerance));
             }
             throw new NotImplementedException("Intersection between curve types '" + crv0.GetType().Name +
                 "' and '" + crv1.GetType().Name + "' cannot be resolved.");

@@ -2546,7 +2546,7 @@ namespace Nucleus.UnitTests
         [TestMethod]
         public void ContainsXY_PointInside_ShouldBeTrue()
         {
-            var pLine = new PolyLine(
+            var pLine = new PolyLine(true,
                 new Vector(-58.0235137939453, 60.5225067138672, 0),
                 new Vector(58.9555130004883, 63.0466690063477, 0),
                 new Vector(54.3530426025391, -57.5168228149414, 0),
@@ -2556,6 +2556,48 @@ namespace Nucleus.UnitTests
             var testPt = new Vector(-42, -50, 0);
             var result = region.ContainsXY(testPt);
             Assert.AreEqual(true, result);
+        }
+
+        [TestMethod]
+        public void InternalVoidOverlap_ShouldCombineVoids()
+        {
+            var regionPLine = new PolyLine(true,
+               Vector.Create2D(0, 0, 20, 0, 20, 20, 0, 20));
+            var region = new PlanarRegion(regionPLine);
+
+            var voidCrv = new PolyLine(true,
+                Vector.Create2D(5, 5, 12, 5, 12, 12, 5, 12));
+            region.Voids.Add(voidCrv);
+
+            var cutterCrv = new PolyLine(true,
+                Vector.Create2D(8, 8, 15, 8, 15, 15, 8, 15));
+            var cutter = new PlanarRegion(cutterCrv);
+
+            var result = region.Not(cutter);
+
+            double area = result.CalculateTotalArea();
+            Assert.AreEqual(318, area);
+        }
+
+        [TestMethod]
+        public void InternalVoidAbutting_ShouldCombineVoids()
+        {
+            var regionPLine = new PolyLine(true,
+               Vector.Create2D(0, 0, 20, 0, 20, 20, 0, 20));
+            var region = new PlanarRegion(regionPLine);
+
+            var voidCrv = new PolyLine(true,
+                Vector.Create2D(5, 5, 10, 5, 10, 15, 5, 15));
+            region.Voids.Add(voidCrv);
+
+            var cutterCrv = new PolyLine(true,
+                Vector.Create2D(10, 5, 15, 5, 15, 15, 10, 15));
+            var cutter = new PlanarRegion(cutterCrv);
+
+            var result = region.Not(cutter);
+
+            double area = result.CalculateTotalArea();
+            Assert.AreEqual(300, area);
         }
 
         /// <summary>
@@ -2584,11 +2626,11 @@ namespace Nucleus.UnitTests
             var numberOfVoids = subRegions[0].Voids.Count;
             Assert.AreEqual(1, numberOfVoids);
 
-            var areaOfRegion = subRegions[0].CalculateArea();
+            var areaOfRegion = subRegions[0].CalculateArea().Abs();
             Assert.AreEqual(300, areaOfRegion);
 
             var areaOfVoid = subRegions[0].Voids.TotalEnclosedArea();
-            Assert.AreEqual(100, areaOfRegion);
+            Assert.AreEqual(100, areaOfVoid);
         }
 
     }

@@ -111,6 +111,13 @@ namespace Nucleus.IO
                 // but stuff saved in Standard or Core could be later...
                 assemblyName.Version = new Version(4,0,0,0);
             }
+            else if (assemblyName.Name == "mscorlib")
+            {
+                // Same as above, but in reverse...
+                // Try this...
+                assemblyName.Name = "System.Collections";
+                assemblyName.Version = new Version(4, 0, 0, 0);
+            }
             return Assembly.Load(assemblyName);
         }
 

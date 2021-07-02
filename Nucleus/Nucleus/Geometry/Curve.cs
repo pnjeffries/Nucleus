@@ -1352,6 +1352,10 @@ namespace Nucleus.Geometry
                 result += MathsHelper.AreaUnder(start.X, start.Y, end.X, end.Y, ref centroid);
             }
             centroid /= result;
+            //if (onPlane != null)
+            //{
+            //    centroid = onPlane.LocalToGlobal(centroid);
+            //}
             return result;
         }
 
@@ -3137,8 +3141,8 @@ namespace Nucleus.Geometry
                     {
                         var pCrv = new PolyCurve(current);
                         result.Add(pCrv);
-                        current.Clear();
                     }
+                    current.Clear();
                 }
                 current.Add(crv);
             }

@@ -489,6 +489,7 @@
     <Compile Include="Rendering\Animator.cs" />
     <Compile Include="Rendering\ASCIIStyle.cs" />
     <Compile Include="Rendering\AvatarStyle.cs" />
+    <Compile Include="Rendering\DashStyle.cs" />
     <Compile Include="Rendering\Colour.cs" />
     <Compile Include="Rendering\ColourBrush.cs" />
     <Compile Include="Rendering\ColourCollection.cs" />
@@ -498,6 +499,7 @@
     <Compile Include="Maths\Interpolation.cs" />
     <Compile Include="Rendering\ITextureLoader.cs" />
     <Compile Include="Rendering\ColourGradient.cs" />
+    <Compile Include="Rendering\LineBrush.cs" />
     <Compile Include="Rendering\PrefabStyle.cs" />
     <Compile Include="Rendering\SFXSupervisor.cs" />
     <Compile Include="Rendering\SFXTrigger.cs" />

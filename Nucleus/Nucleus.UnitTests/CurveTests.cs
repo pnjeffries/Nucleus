@@ -669,7 +669,7 @@ namespace Nucleus.UnitTests
             var pCrv = pLine.ToPolyCurve();
             int reduced = pCrv.ReduceInside(2);
 
-            Assert.AreEqual(91, reduced);
+            Assert.AreEqual(90, reduced);
         }
 
         [TestMethod]

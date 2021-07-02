@@ -56,6 +56,7 @@
     <Compile Include="IListExtensionsTests.cs" />
     <Compile Include="IntersectionTests.cs" />
     <Compile Include="IntervalTests.cs" />
+    <Compile Include="IntIntervalTests.cs" />
     <Compile Include="LogTests.cs" />
     <Compile Include="MathsTests.cs" />
     <Compile Include="CurveTests.cs" />
