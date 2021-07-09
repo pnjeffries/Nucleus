@@ -104,13 +104,21 @@ namespace Nucleus.Geometry
         /// <param name="y1">The y coordinate of the second vertex of the triangle</param>
         /// <param name="x2">The x coordinate of the third vertex of the triangle</param>
         /// <param name="y2">The y coordinate of the first vertex of the triangle</param>
+        /// <param name="edgePointsAreInside">If true, treat points on the triangle edge as being contained within the triangle.</param>
         /// <returns></returns>
         public static bool XYContainment(double xP, double yP,
-            double x0, double y0, double x1, double y1, double x2, double y2)
+            double x0, double y0, double x1, double y1, double x2, double y2, bool edgePointsAreInside = true)
         {
             double s, t;
             BarycentricCoordinates(xP, yP, x0, y0, x1, y1, x2, y2, out s, out t);
-            return s >= 0 && t >= 0 && (1 - s - t) >= 0;
+            if (edgePointsAreInside)
+            {
+                return s >= 0 && t >= 0 && (1 - s - t) >= 0;
+            }
+            else
+            {
+                return s > 0 && t > 0 && (1 - s - t) > 0;
+            }
         }
 
         /// <summary>
@@ -120,10 +128,11 @@ namespace Nucleus.Geometry
         /// <param name="t0">The position of the first vertex of the triangle</param>
         /// <param name="t1">The position of the second vertex of the triangle</param>
         /// <param name="t2">The position of the third vertex of the triangle</param>
+        /// <param name="edgePointsAreInside">If true, treat points on the triangle edge as being contained within the triangle.</param>
         /// <returns></returns>
-        public static bool XYContainment(Vector pt, Vector t0, Vector t1, Vector t2)
+        public static bool XYContainment(Vector pt, Vector t0, Vector t1, Vector t2, bool edgePointsAreInside = true)
         {
-            return XYContainment(pt.X, pt.Y, t0.X, t0.Y, t1.X, t1.Y, t2.X, t2.Y);
+            return XYContainment(pt.X, pt.Y, t0.X, t0.Y, t1.X, t1.Y, t2.X, t2.Y, edgePointsAreInside);
         }
 
         /// <summary>
@@ -133,10 +142,11 @@ namespace Nucleus.Geometry
         /// <param name="t0">The position of the first vertex of the triangle</param>
         /// <param name="t1">The position of the second vertex of the triangle</param>
         /// <param name="t2">The position of the third vertex of the triangle</param>
+        /// <param name="edgePointsAreInside">If true, treat points on the triangle edge as being contained within the triangle.</param>
         /// <returns></returns>
-        public static bool XYContainment(Vertex pt, Vertex t0, Vertex t1, Vertex t2)
+        public static bool XYContainment(Vertex pt, Vertex t0, Vertex t1, Vertex t2, bool edgePointsAreInside = true)
         {
-            return XYContainment(pt.X, pt.Y, t0.X, t0.Y, t1.X, t1.Y, t2.X, t2.Y);
+            return XYContainment(pt.X, pt.Y, t0.X, t0.Y, t1.X, t1.Y, t2.X, t2.Y, edgePointsAreInside);
         }
 
         /// <summary>
