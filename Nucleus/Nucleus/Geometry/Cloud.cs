@@ -119,6 +119,37 @@ namespace Nucleus.Geometry
             return "Point Cloud";
         }
 
+        /// <summary>
+        /// Clear all vertices in this cloud.
+        /// </summary>
+        public void Clear()
+        {
+            _Vertices.Clear();
+        }
+
+        /// <summary>
+        /// Replace all vertices in this cloud with a new set of vertices.
+        /// </summary>
+        /// <param name="newVertices"></param>
+        public void SetVertices(IList<Vertex> newVertices)
+        {
+            Clear();
+            foreach (var vertex in newVertices)
+            {
+                Add(vertex);
+            }
+        }
+
+        /// <summary>
+        /// Replace all points in this cloud with a new set of points.
+        /// </summary>
+        /// <param name="newPoints"></param>
+        public void SetPoints(IList<Vector> newPoints)
+        {
+            List<Vertex> newVertices = newPoints.Select(p => new Vertex(p)).ToList();
+            SetVertices(newVertices);
+        }
+
         #endregion
 
     }
