@@ -187,6 +187,22 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Add a new point to end of the polyline the provided it is not within
+        /// tolerance of the current end of the curve.
+        /// </summary>
+        /// <param name="pt">The point</param>
+        /// <param name="tolerance">The distance tolerance.  If the new point list within this
+        /// distance from the previous added point, it will not be added.</param>
+        /// <returns></returns>
+        public Vertex Add(Vector pt, double tolerance)
+        {
+            if (tolerance > 0 && Vertices.Count > 0 && Vertices.Last().DistanceToSquared(pt) < tolerance * tolerance)
+                return null;
+
+            return Add(pt);
+        }
+
+        /// <summary>
         /// Set the positions and number of the vertices in this polyline to the
         /// specified set of positions
         /// </summary>
@@ -670,6 +686,67 @@ namespace Nucleus.Geometry
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Calculate the anglular change of direction at the specified vertex
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public Angle VertexAngle(int index)
+        {
+            if (!Closed && (index == 0 || index == VertexCount - 1)) return 0;
+
+            Vertex v0 = Vertices.GetWrapped(index - 1);
+            Vertex v1 = Vertices.GetWrapped(index);
+            Vertex v2 = Vertices.GetWrapped(index + 1);
+
+            Vector tan01 = v1.Position - v0.Position;
+            Vector tan12 = v2.Position - v1.Position;
+
+            return tan01.AngleBetween(tan12);
+        }
+
+        /// <summary>
+        /// Generate a new PolyLine based on this one but with added bevelled corners.
+        /// </summary>
+        /// <param name="bevelSize">The dimension of the bevel</param>
+        /// <param name="tolerance">Only vertices with a turn angle greater than this will be bevelled</param>
+        /// <returns></returns>
+        public PolyLine Bevel(double bevelSize, Angle tolerance)
+        {
+            var result = new PolyLine(Closed);
+
+            for (int i = 0; i < VertexCount; i++)
+            {
+                if (VertexAngle(i).Abs() > tolerance)
+                {
+                    Vertex v0 = Vertices.GetWrapped(i - 1);
+                    Vertex v1 = Vertices.GetWrapped(i);
+                    Vertex v2 = Vertices.GetWrapped(i + 1);
+
+                    Vector tan01 = v1.Position - v0.Position;
+                    Vector tan12 = v2.Position - v1.Position;
+
+                    double length01 = tan01.Magnitude();
+                    double length12 = tan12.Magnitude();
+
+                    double offset01 = bevelSize / 2, offset12 = offset01;
+
+                    // Limit bevel offsets:
+                    if (offset01 > length01 / 3) offset01 = length01 / 3;
+                    if (offset12 > length12 / 3) offset12 = length12 / 3;
+
+                    result.Add(v1.Position - tan01 * (offset01 / length01));
+                    result.Add(v1.Position + tan12 * (offset12 / length12));
+                }
+                else
+                {
+                    result.Add(Vertices[i].Position);
+                }
+            }
+
+            return result;
         }
 
         public override string ToString()

@@ -15,6 +15,8 @@ namespace Nucleus.Game
     public class MapStage : GameStage
     {
 
+        #region Properties
+
         /// <summary>
         /// Private backing member variable for the Elements property
         /// </summary>
@@ -51,5 +53,32 @@ namespace Nucleus.Game
             }
         }
 
+        private CurveCollection _Borders = null;
+
+        /// <summary>
+        /// Curves representing the border between walkable and solid space
+        /// </summary>
+        public CurveCollection Borders
+        {
+            get { return _Borders; }
+            set { ChangeProperty(ref _Borders, value); }
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Add an element residing in the specified cell
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="cellIndex"></param>
+        public void AddElement(GameElement element, int cellIndex)
+        {
+            Map[cellIndex].PlaceInCell(element);
+            Elements.Add(element);
+        }
+
+        #endregion
     }
 }

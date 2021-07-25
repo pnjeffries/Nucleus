@@ -14,6 +14,30 @@ namespace Nucleus.Game
     [Serializable]
     public class BumpAttackAbility : Ability
     {
+        private double _BaseDamage = 1;
+
+        /// <summary>
+        /// The base damage of bump attacks
+        /// </summary>
+        public double BaseDamage { get { return _BaseDamage; } set { _BaseDamage = value; } }
+
+        private double _BaseKnockback = 1;
+
+        /// <summary>
+        /// The base knockback of bump attacks
+        /// </summary>
+        public double BaseKnockback { get { return _BaseKnockback; } set { _BaseDamage = value; } }
+
+
+        public BumpAttackAbility() { }
+
+        public BumpAttackAbility(double damage, double knockback)
+        {
+            _BaseDamage = damage;
+            _BaseKnockback = knockback;
+        }
+
+
         protected override void GenerateActions(TurnContext context, AvailableActions addTo)
         {
             // Bump attack:
@@ -25,13 +49,13 @@ namespace Nucleus.Game
                 foreach (var cell in adjacent)
                 {
                     Vector direction = cell.Position - mD.MapCell.Position;
-                    Element target = context.Element.GetData<MapCellCollider>()?.Blocker(cell);
+                    Element target = cell.Contents.FirstWithDataComponent<Faction>();//context.Element.GetData<MapCellCollider>()?.Blocker(cell);
                     if (target != null)
                     {
                         if (context.Element?.GetData<Faction>()?.IsEnemy(target?.GetData<Faction>()) ?? false)
                         {
                             // Only allow bump attacks on elements of an opposing faction?
-                            addTo.Actions.Add(new BumpAttackAction(target, cell, direction));
+                            addTo.Actions.Add(new BumpAttackAction(target, cell, direction, BaseDamage, BaseKnockback));
                         }
                     }
                 }

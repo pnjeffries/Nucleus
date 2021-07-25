@@ -16,14 +16,17 @@ namespace Nucleus.Game
     {
         #region Constructor
 
-        public BumpAttackAction(Element target, MapCell cell, Vector direction)
+        public BumpAttackAction(Element target, MapCell cell, Vector direction, double damage = 1, double knockback = 1)
         {
             Target = target;
             Trigger = new ActionCellInputTrigger(cell.Index, InputFunction.Move);
            
             Effects.Add(new SFXImpactEffect());
-            Effects.Add(new DamageEffect(1));
-            Effects.Add(new KnockbackEffect(direction, 2));
+            Effects.Add(new DamageEffect(damage));
+            if (knockback > 0)
+            {
+                Effects.Add(new KnockbackEffect(direction, knockback));
+            }
             SelfEffects.Add(new ActorOrientationEffect(direction));
         }
 

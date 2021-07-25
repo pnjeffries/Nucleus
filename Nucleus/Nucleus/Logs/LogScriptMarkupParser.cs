@@ -44,12 +44,12 @@ namespace Nucleus.Logs
         /// <summary>
         /// The character which depicts the start of a set of function arguments
         /// </summary>
-        public const char ARGUMENT_OPEN = '[';
+        public const char ARGUMENT_OPEN = '(';
 
         /// <summary>
         /// The character which depicts the end of a set of function arguments
         /// </summary>
-        public const char ARGUMENT_CLOSE = ']';
+        public const char ARGUMENT_CLOSE = ')';
 
         /// <summary>
         /// The character which separates 
@@ -91,6 +91,36 @@ namespace Nucleus.Logs
         {
             get { return _Subjects; }
             set { _Subjects = value; }
+        }
+
+        /// <summary>
+        /// Private backer for Author
+        /// </summary>
+        private object _Author = null;
+
+        /// <summary>
+        /// The subject object which is also the author of the statement (if any).
+        /// Used to determine when first-person perspective should be used.
+        /// </summary>
+        public object Author
+        {
+            get { return _Author; }
+            set { _Author = value; }
+        }
+
+        /// <summary>
+        /// Private backer for Reader
+        /// </summary>
+        private object _Reader = null;
+
+        /// <summary>
+        /// The subject object which is the intended audience of the statement (if any).
+        /// Used to determine when second-person perspective should be used
+        /// </summary>
+        public object Reader
+        {
+            get { return _Reader; }
+            set { _Reader = value; }
         }
 
         /// <summary>
@@ -219,7 +249,8 @@ namespace Nucleus.Logs
                 // In the first pass, tags with arguments will be processed:
                 if (argumentBit != null)
                 {
-                    arguments = argumentBit.Split(ARGUMENT_SEPARATOR);
+
+                    arguments = argumentBit.TokeniseOutsideBrackets(ARGUMENT_SEPARATOR, FUNCTION_OPEN, FUNCTION_CLOSE).ToArray();
                     Type[] types = new Type[arguments.Length];
                     for (int i = 0; i < arguments.Length; i++)
                     {
@@ -241,6 +272,18 @@ namespace Nucleus.Logs
             }
 
             return markup;
+        }
+
+        /// <summary>
+        /// Determine the grammatical person of the specified subject
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <returns></returns>
+        private GrammaticalPerson PersonOf(object subject)
+        {
+            if (subject == Author) return GrammaticalPerson.First;
+            else if (subject == Reader) return GrammaticalPerson.Second;
+            else return GrammaticalPerson.Third;
         }
 
         #endregion
@@ -388,6 +431,46 @@ namespace Nucleus.Logs
             catch { }
 
             return neutral;
+        }
+
+        /// <summary>
+        /// Select a variation based on the grammatical person of a subject
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <param name="third"></param>
+        /// <returns></returns>
+        public string PERSON(string index, string first, string second, string third)
+        {
+            try
+            {
+                int i = int.Parse(index);
+                GrammaticalPerson person = GrammaticalPerson.Third;
+                if (i >= 0 && i < Subjects.Length)
+                {
+                    object subject = Subjects[i];
+                    person = PersonOf(subject);
+                }
+                if (person == GrammaticalPerson.First) return first;
+                else if (person == GrammaticalPerson.Second) return second;
+            }
+            catch { }
+
+            return third;
+        }
+
+        /// <summary>
+        /// Select a variation based on the grammatical person of a subject where the
+        /// first and second person variations are the same
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="firstOrSecond"></param>
+        /// <param name="third"></param>
+        /// <returns></returns>
+        public string PERSON(string index, string firstOrSecond, string third)
+        {
+            return PERSON(index, firstOrSecond, firstOrSecond, third);
         }
 
         #endregion

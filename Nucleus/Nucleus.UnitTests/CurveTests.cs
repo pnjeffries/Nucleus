@@ -1160,5 +1160,27 @@ namespace Nucleus.UnitTests
             var trimmed = line.TrimOutside(region);
             Assert.AreEqual(0, trimmed.Count);
         }
+
+        [TestMethod]
+        public void PolyLine_Bevel()
+        {
+            var pLine = new PolyLine(true,
+                Vector.Create2D(0, 0, 1, 0, 1, 1, 0, 1));
+
+            pLine = pLine.Bevel(0.1, Angle.FromDegrees(10));
+
+            Assert.AreEqual(8, pLine.VertexCount);
+        }
+
+        [TestMethod]
+        public void PolyLine_Rectangle_Bevel()
+        {
+            var pLine = new PolyLine(true,
+                Vector.Create2D(0, 1, 1, 1, 2, 1, 2,0, 1, 0, 0, 0));
+
+            pLine = pLine.Bevel(1, Angle.FromDegrees(10));
+
+            Assert.AreEqual(8, pLine.VertexCount);
+        }
     }
 }

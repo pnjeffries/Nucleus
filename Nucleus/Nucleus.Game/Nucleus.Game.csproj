@@ -14,7 +14,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -55,6 +55,7 @@
     <Compile Include="Actions\IActionsOverride.cs" />
     <Compile Include="Actions\MoveCellAction.cs" />
     <Compile Include="Actions\MultiCellTargetingAction.cs" />
+    <Compile Include="Actions\OpenDoorAction.cs" />
     <Compile Include="Actions\PickUpAction.cs" />
     <Compile Include="Actions\WindUpAction.cs" />
     <Compile Include="Actions\TargetedAction.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Artitecture\RoomCollection.cs" />
     <Compile Include="Artitecture\RoomTemplateCollection.cs" />
     <Compile Include="Artitecture\RoomType.cs" />
+    <Compile Include="Artitecture\WeightedTable.cs" />
     <Compile Include="Cards\Card.cs" />
     <Compile Include="Cards\PlayingCard.cs" />
     <Compile Include="Cards\PlayingCardRank.cs" />
@@ -73,8 +75,10 @@
     <Compile Include="Components\Abilities\Ability.cs" />
     <Compile Include="Components\Abilities\BumpAttackAbility.cs" />
     <Compile Include="Components\Abilities\DirectionalItemUseAbility.cs" />
+    <Compile Include="Components\Abilities\OpenDoorAbility.cs" />
     <Compile Include="Components\DamageVulnerabilities.cs" />
     <Compile Include="Components\DisableActions.cs" />
+    <Compile Include="Components\Door.cs" />
     <Compile Include="Components\EquipmentSlot.cs" />
     <Compile Include="Components\EquipmentSlotCollection.cs" />
     <Compile Include="Components\EquippableItem.cs" />
@@ -86,6 +90,7 @@
     <Compile Include="Components\IEndOfTurn.cs" />
     <Compile Include="Components\Inertia.cs" />
     <Compile Include="Components\Inventory.cs" />
+    <Compile Include="Components\IOutOfTurnMove.cs" />
     <Compile Include="Components\IStartOfTurn.cs" />
     <Compile Include="Components\ItemActions.cs" />
     <Compile Include="Components\MapAwareness.cs" />
@@ -111,6 +116,7 @@
     <Compile Include="Effects\EffectContext.cs" />
     <Compile Include="Effects\ExitStageEffect.cs" />
     <Compile Include="Effects\KnockbackEffect.cs" />
+    <Compile Include="Effects\OpenDoorEffect.cs" />
     <Compile Include="Effects\PickUpItemEffect.cs" />
     <Compile Include="Effects\SFXEffect.cs" />
     <Compile Include="Effects\SFXImpactEffect.cs" />
@@ -119,8 +125,11 @@
     <Compile Include="InputFunction.cs" />
     <Compile Include="InputManager.cs" />
     <Compile Include="Artitecture\RoomTemplate.cs" />
+    <Compile Include="Logs\ActionLog.cs" />
+    <Compile Include="Logs\ActionLogMessage.cs" />
     <Compile Include="SFXKeywords.cs" />
     <Compile Include="Stages\StageCollection.cs" />
+    <Compile Include="Stages\StageTemplate.cs" />
     <Compile Include="States\GameSaveFile.cs" />
     <Compile Include="States\MapState.cs" />
     <Compile Include="States\RLState.cs" />

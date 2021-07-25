@@ -56,6 +56,7 @@ namespace Nucleus.Game.Effects
                     var bgstate = (BasicGameState<MapStage>)context.State;
                     if (bgstate.Elements.Remove(context.Target))
                     {
+                        context.Target.GetData<MapAwareness>()?.StageChanged(Exit.TravelTo);
                         Exit.TravelTo.Elements.Add(context.Target);
                         Exit.TravelTo.Map[Exit.CellIndex].PlaceInCell(context.Target);
                         if (context.Target == bgstate.Controlled)
@@ -63,6 +64,7 @@ namespace Nucleus.Game.Effects
                             // Change the current stage
                             bgstate.Stage = Exit.TravelTo;
                         }
+                        context.ElementMovedOutOfTurn(context.Target, Exit.TravelTo);
                     }
                     return true;
                 }

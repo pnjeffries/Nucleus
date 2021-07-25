@@ -46,6 +46,19 @@ namespace Nucleus.Game
             set { _Power = value; }
         }
 
+        private IEffect _ImpactEffect = new DamageEffect(1);
+
+        /// <summary>
+        /// The effect (if any) which will be applied should the knockback be stopped by the target
+        /// hitting a blocking object.  This effect will be applied to both the target and the object
+        /// they have collided with.
+        /// </summary>
+        public IEffect ImpactEffect
+        {
+            get { return _ImpactEffect; }
+            set { _ImpactEffect = value; }
+        }
+
         #endregion
 
         #region Constructor
@@ -92,8 +105,26 @@ namespace Nucleus.Game
                             newCell.PlaceInCell(mover);
                             moved = true;
                         }
+                        else
+                        {
+                            context.SFX.Trigger(SFXKeywords.Knock, mD.Position + Direction * 0.5, Direction);
+                            if (ImpactEffect != null && newCell != null)
+                            {
+                                var blocker = mover.GetData<MapCellCollider>().Blocker(newCell);
+                                // Apply to target:
+                                ImpactEffect.Apply(log, context);
+                                // Apply to blocker:
+                                ImpactEffect.Apply(log, context.CloneWithTarget(blocker));
+                            }
+                        }
                     }
                 }
+
+                if (moved)
+                {
+                    context.ElementMovedOutOfTurn(mover);
+                }
+
                 if (moved && context.State is RLState)
                 {
                     var rlState = (RLState)context.State;

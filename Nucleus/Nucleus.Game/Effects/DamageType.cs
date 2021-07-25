@@ -1,4 +1,4 @@
-﻿using Nucleus.Base;
+﻿ using Nucleus.Base;
 using Nucleus.Model;
 using System;
 using System.Collections.Generic;

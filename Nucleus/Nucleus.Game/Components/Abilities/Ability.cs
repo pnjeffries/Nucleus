@@ -36,5 +36,6 @@ namespace Nucleus.Game
         {
             return context.Element.HasData<DisableActions>();
         }
+
     }
 }

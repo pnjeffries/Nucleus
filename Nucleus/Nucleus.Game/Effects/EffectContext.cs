@@ -1,4 +1,5 @@
-﻿using Nucleus.Geometry;
+﻿using Nucleus.Game.Components;
+using Nucleus.Geometry;
 using Nucleus.Model;
 using Nucleus.Rendering;
 using System;
@@ -51,6 +52,11 @@ namespace Nucleus.Game
         /// </summary>
         public ICellMap<MapCell> Map { get { return ((MapStage)Stage).Map; } }
 
+        /// <summary>
+        /// The random number generator to be used to resolve stochastic effects
+        /// </summary>
+        public Random RNG { get; set; }
+
         /*
         /// <summary>
         /// Private backing member variable for the ToBeRemoved property
@@ -84,12 +90,13 @@ namespace Nucleus.Game
 
         public EffectContext() { }
 
-        public EffectContext(Element actor, Element target, GameState state, GameStage stage)
+        public EffectContext(Element actor, Element target, GameState state, GameStage stage, Random rng)
         {
             Actor = actor;
             Target = target;
             Stage = stage;
             State = state;
+            RNG = rng;
         }
 
         public EffectContext(Element actor, Element target, RLState state)
@@ -98,6 +105,7 @@ namespace Nucleus.Game
             Target = target;
             State = state;
             Stage = state.Stage;
+            RNG = state.RNG;
         }
 
         public EffectContext(Element actor, Element target, RLState state, Vector direction) : this(actor, target, state)
@@ -105,11 +113,12 @@ namespace Nucleus.Game
             Direction = direction;
         }
 
-        public EffectContext(Element actor, GameState state, GameStage stage)
+        public EffectContext(Element actor, GameState state, GameStage stage, Random rng)
         {
             Actor = actor;
             Stage = stage;
             State = state;
+            RNG = rng;
         }
 
         public EffectContext(Element actor, RLState state)
@@ -117,6 +126,7 @@ namespace Nucleus.Game
             Actor = actor;
             State = state;
             Stage = state.Stage;
+            RNG = state.RNG;
         }
 
         public EffectContext(Element actor, RLState state, Vector direction) : this(actor, state)
@@ -124,19 +134,48 @@ namespace Nucleus.Game
             Direction = direction;
         }
 
+        public EffectContext(EffectContext other)
+        {
+            Actor = other.Actor;
+            Direction = other.Direction;
+            RNG = other.RNG;
+            Stage = other.Stage;
+            State = other.State;
+            Target = other.Target;
+        }
+
         #endregion
 
         #region Methods
 
-        ///// <summary>
-        ///// Remove the specified element from the state Elements collection.
-        ///// Note that the removal will not take place 
-        ///// </summary>
-        ///// <param name="element"></param>
-        //public void RemoveElementFromState(Element element)
-        //{
+        /// <summary>
+        /// Create a clone of this EffectContext but with the target element replaced with another
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public EffectContext CloneWithTarget(Element target)
+        {
+            var result = new EffectContext(this);
+            result.Target = target;
+            return result;
+        }
 
-        //}
+        public void ElementMovedOutOfTurn(Element element)
+        {
+            ElementMovedOutOfTurn(element, Stage as MapStage);
+        }
+
+        public void ElementMovedOutOfTurn(Element element, MapStage newStage)
+        {
+            var turnContext = new TurnContext(State, newStage, element, RNG);
+            foreach (var component in element.Data)
+            {
+                if (component is IOutOfTurnMove outMove)
+                {
+                    outMove.OutOfTurnMove(turnContext);
+                }
+            }
+        }
 
         #endregion
     }

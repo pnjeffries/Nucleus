@@ -1,4 +1,5 @@
-﻿using Nucleus.Geometry;
+﻿using Nucleus.Base;
+using Nucleus.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,6 +60,26 @@ namespace Nucleus.Extensions
         }
 
         /// <summary>
+        /// Returns a random cardinal direction
+        /// </summary>
+        /// <param name="rng"></param>
+        /// <returns></returns>
+        public static CompassDirection NextDirection(this Random rng)
+        {
+            return (CompassDirection)rng.Next(4);
+        }
+
+        /// <summary>
+        /// Return a random gender
+        /// </summary>
+        /// <param name="rng"></param>
+        /// <returns></returns>
+        public static Gender NextGender(this Random rng)
+        {
+            return rng.NextBoolean() ? Gender.Masculine : Gender.Feminine;
+        }
+
+        /// <summary>
         /// Generate a random point within the specified bounding box
         /// </summary>
         /// <param name="rng"></param>
@@ -82,6 +103,16 @@ namespace Nucleus.Extensions
         {
             // TODO: square distance to give more even distribution?
             return origin + new Geometry.Vector(rng.NextAngle()) * rng.NextDouble(range);
+        }
+
+        /// <summary>
+        /// Generate a random boolean value
+        /// </summary>
+        /// <param name="rng"></param>
+        /// <returns></returns>
+        public static bool NextBoolean(this Random rng)
+        {
+            return rng.NextDouble() > 0.5;
         }
 
     }

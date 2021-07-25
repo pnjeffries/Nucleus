@@ -33,6 +33,7 @@ namespace Nucleus.Logs
         /// Some log types do not support italics and setting this property will do nothing.
         /// </summary>
         bool IsItalicised { get; set; }
+
     }
 
     /// <summary>
@@ -79,6 +80,48 @@ namespace Nucleus.Logs
             where TLog : ILog
         {
             var parser = new LogScriptMarkupParser(log, subjects, rng);
+            parser.WriteToLog(markup);
+            return log;
+        }
+
+        /// <summary>
+        /// Write text to the log from a string of text containing markup.
+        /// Returns a reference to this log to enable chaining.
+        /// </summary>
+        /// <typeparam name="TLog"></typeparam>
+        /// <param name="log"></param>
+        /// <param name="reader"></param>
+        /// <param name="markup"></param>
+        /// <param name="rng"></param>
+        /// <param name="subjects"></param>
+        /// <returns></returns>
+        public static TLog WriteMarkup<TLog>(this TLog log, string markup, object reader, Random rng, params object[] subjects)
+            where TLog : ILog
+        {
+            var parser = new LogScriptMarkupParser(log, subjects, rng);
+            parser.Reader = reader;
+            parser.WriteToLog(markup);
+            return log;
+        }
+
+        /// <summary>
+        /// Write text to the log from a string of text containing markup.
+        /// Returns a reference to this log to enable chaining.
+        /// </summary>
+        /// <typeparam name="TLog"></typeparam>
+        /// <param name="log"></param>
+        /// <param name="author"></param>
+        /// <param name="reader"></param>
+        /// <param name="markup"></param>
+        /// <param name="rng"></param>
+        /// <param name="subjects"></param>
+        /// <returns></returns>
+        public static TLog WriteMarkup<TLog>(this TLog log, string markup, object author, object reader, Random rng, params object[] subjects)
+            where TLog : ILog
+        {
+            var parser = new LogScriptMarkupParser(log, subjects, rng);
+            parser.Author = author;
+            parser.Reader = reader;
             parser.WriteToLog(markup);
             return log;
         }

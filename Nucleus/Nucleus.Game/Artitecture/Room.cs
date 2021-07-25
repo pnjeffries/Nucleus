@@ -11,6 +11,7 @@ namespace Nucleus.Game
     /// <summary>
     /// Class to hold information about a room in a game level
     /// </summary>
+    [Serializable]
     public class Room : Unique
     {
         #region Properties

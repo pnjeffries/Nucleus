@@ -71,7 +71,7 @@ namespace Nucleus.Game
                 hP.Value -= damage;
 
                 // Kill the target (if applicable)
-                if (hP.Value <= 0)
+                if (!context.Target.IsDeleted && hP.Value <= 0)
                 {
                     Vector position = context.Target.GetData<MapData>()?.Position ?? Vector.Unset;
                     context.SFX.Trigger(SFXKeywords.Bang, position);
@@ -82,11 +82,23 @@ namespace Nucleus.Game
                         // Drop held items!
                         equipped.DropAll(context.Target, context);
                     }
-                    context.Target.Delete();     
+                    context.Target.Delete();
+                    WriteDeathToLog(log, context);
                 }
                 return true;
             }
             else return false;
+        }
+
+        private void WriteDeathToLog(IActionLog log, EffectContext context)
+        {
+            string key = "Death_" + context.Target?.Name;
+            if (!log.HasScriptFor(key))
+            {
+                // Fallback generic death message
+                key = "Death";
+            }
+            log.WriteScripted(key, context.Actor, context.Target);
         }
 
         #endregion

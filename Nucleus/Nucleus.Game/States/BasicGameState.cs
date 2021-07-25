@@ -43,12 +43,11 @@ namespace Nucleus.Game
         /// <summary>
         /// The current stage
         /// </summary>
-        public TStage Stage
+        public virtual TStage Stage
         {
             get { return _Stage; }
             set
             {
-                _Stage = value;
                 ChangeProperty(ref _Stage, value);
                 NotifyPropertyChanged("Elements");
             }
@@ -58,6 +57,16 @@ namespace Nucleus.Game
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Change the current stage.  This may be overridden to provide
+        /// more specific logic on how stages should be changed.
+        /// </summary>
+        /// <param name="newStage"></param>
+        public virtual void ChangeStage(TStage newStage)
+        {
+            Stage = newStage;
+        }
 
         #endregion
     }

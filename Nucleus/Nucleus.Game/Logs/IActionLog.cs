@@ -11,7 +11,7 @@ namespace Nucleus.Logs
     /// <summary>
     /// An interface for log objects which report on actions
     /// </summary>
-    public interface IActionLog : ILog
+    public interface IActionLog : IScriptedLog
     {
     }
 }

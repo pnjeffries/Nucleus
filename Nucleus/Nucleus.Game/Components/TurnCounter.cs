@@ -31,6 +31,20 @@ namespace Nucleus.Game
             set { _CountDown = value; }
         }
 
+        /// <summary>
+        /// Private backer for speed
+        /// </summary>
+        private double _Speed = 1;
+
+        /// <summary>
+        /// The relative speed of action of the element
+        /// </summary>
+        public double Speed
+        {
+            get { return _Speed; }
+            set { _Speed = value; }
+        }
+
         #endregion
 
         #region Constructors
@@ -40,6 +54,15 @@ namespace Nucleus.Game
         public TurnCounter(int countDown)
         {
             _CountDown = countDown;
+        }
+
+        #endregion
+
+        #region Methods
+
+        public void ResetCountdown(int value)
+        {
+            CountDown = (int)(value / Speed);
         }
 
         #endregion

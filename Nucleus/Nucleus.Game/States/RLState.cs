@@ -1,4 +1,5 @@
 ﻿using Nucleus.Base;
+using Nucleus.Game.Logs;
 using Nucleus.Geometry;
 using Nucleus.Logs;
 using Nucleus.Model;
@@ -44,14 +45,19 @@ namespace Nucleus.Game
         /// <summary>
         /// Private backing member variable for the Log property
         /// </summary>
+        [NonSerialized]
         private IActionLog _Log = null;
 
         /// <summary>
         /// The logger which stores and displays messages to the user.  May be null, in which case no messages will be displayed.
         /// </summary>
-        public IActionLog Log
+        public virtual IActionLog Log
         {
-            get { return _Log; }
+            get 
+            {
+                if (_Log == null) _Log = new ActionLog(GameEngine.Instance.LanguagePack, null, Controlled);
+                return _Log; 
+            }
             set
             {
                 _Log = value;
@@ -67,12 +73,17 @@ namespace Nucleus.Game
         /// <summary>
         /// The time delay to be used between the end of the player turn and the start of AI movement
         /// </summary>
-        private double _AITurnDelay = 0.15;
+        private double _AITurnDelay = 0.2;
 
         /// <summary>
         /// Time remaining before AI turns can begin
         /// </summary>
         private double _AITurnCountDown = 0;
+
+        /// <summary>
+        /// The time that the last update started
+        /// </summary>
+        private DateTime _LastUpdateStart; 
 
         #endregion
 
@@ -91,13 +102,29 @@ namespace Nucleus.Game
         public override void StartUp()
         {
             base.StartUp();
+            RandomiseTurnOrder();
             EndTurnOf(Controlled);
+        }
+
+        /// <summary>
+        /// Randomise the turn order of all non-player turn-based elements
+        /// </summary>
+        private void RandomiseTurnOrder()
+        {
+            foreach (var element in Elements)
+            {
+                if (element != Controlled && element.HasData<TurnCounter>())
+                {
+                    element.GetData<TurnCounter>().CountDown = RNG.Next(1000);
+                }
+            }
         }
 
         public override void Update(UpdateInfo info)
         {
             base.Update(info);
-            if (_AITurnCountDown > 0)
+            _LastUpdateStart = DateTime.UtcNow;
+            if (Active != Controlled)
             {
                 _AITurnCountDown -= info.TimeStep;
                 if (_AITurnCountDown <= 0)
@@ -192,6 +219,7 @@ namespace Nucleus.Game
         /// </summary>
         public void EndTurnOf(Element element)
         {
+            if (element == null) return;
             var context = new TurnContext(this, Stage, element, RNG);
             for (int i = 0; i < element.Data.Count; i++)
             {
@@ -210,8 +238,15 @@ namespace Nucleus.Game
             // Clean up to end the turn
             CleanUpDeleted();
 
+            Active = null;
+
             if (!Controlled.IsDeleted && Controlled != element) //Pause after player's turn
-                NextTurn();
+            {
+                // Only do the next turn if there is no AI delay and the FPS is not dropping much below 60.
+                // It's not clear if this is entirely working correctly under WebGL...
+                if (_AITurnCountDown <= 0 && DateTime.UtcNow <= _LastUpdateStart + TimeSpan.FromSeconds(1.0/30))
+                    NextTurn();
+            }
             else
                 DelayAITurn(); //Reset the countdown
         }
@@ -257,7 +292,7 @@ namespace Nucleus.Game
 
             if (next != null)
             {
-                next.GetData<TurnCounter>().CountDown += 1000;
+                next.GetData<TurnCounter>().ResetCountdown(1000);
                 StartTurnOf(next);
             }
         }

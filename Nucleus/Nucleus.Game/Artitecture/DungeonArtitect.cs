@@ -15,16 +15,21 @@ namespace Nucleus.Game
     /// </summary>
     public class DungeonArtitect
     {
-        #region Fields
+        #region Properties
 
         /// <summary>
         /// Random number generator
         /// </summary>
         private Random _RNG = new Random();
 
-        #endregion
-
-        #region Properties
+        /// <summary>
+        /// Get or set the random number generator
+        /// </summary>
+        public Random RNG
+        {
+            get { return _RNG; }
+            set { _RNG = value; }
+        }
 
         /// <summary>
         /// The blueprint that the generator will work on
@@ -62,6 +67,19 @@ namespace Nucleus.Game
         public IList<SquareCellMap<CellGenerationType>> Snapshots { get; set; } = null;
 
         /// <summary>
+        /// Should snapshots be recorded at each generation stage?
+        /// </summary>
+        public bool RecordSnapshots
+        {
+            get { return Snapshots != null; }
+            set 
+            {
+                if (value) Snapshots = new List<SquareCellMap<CellGenerationType>>();
+                else Snapshots = null;
+            }
+        }
+
+        /// <summary>
         /// The number of rooms typically found between the entry and exit
         /// </summary>
         public int PathToExit { get; set; } = 8;
@@ -69,7 +87,7 @@ namespace Nucleus.Game
         /// <summary>
         /// If set to true, parallel corridors will be detected and prevented
         /// </summary>
-        public bool PreventParallelCorridors { get; set; } = false;
+        public bool PreventParallelCorridors { get; set; } = true;
 
         #endregion
 
@@ -84,15 +102,22 @@ namespace Nucleus.Game
         /// <param name="jSize"></param>
         public DungeonArtitect(int iSize, int jSize)
         {
-            _Blueprint = new SquareCellMap<BlueprintCell>(iSize, jSize);
-            for (int i = 0; i < iSize; i++)
-                for (int j = 0; j < jSize; j++)
-                    _Blueprint[i, j] = new BlueprintCell();
+            ClearBlueprint(iSize, jSize);
         }
 
         #endregion
 
         #region Methods
+
+        public void ClearBlueprint(int iSize, int jSize)
+        {
+            ExitPlaced = false;
+            Rooms.Clear();
+            _Blueprint = new SquareCellMap<BlueprintCell>(iSize, jSize);
+            for (int i = 0; i < iSize; i++)
+                for (int j = 0; j < jSize; j++)
+                    _Blueprint[i, j] = new BlueprintCell();
+        }
 
         /// <summary>
         /// Take a snapshot of the current state of the blueprint and add it to the snapshots collection
@@ -113,6 +138,30 @@ namespace Nucleus.Game
         /// <summary>
         /// Generate a dungeon map
         /// </summary>
+        /// <param name="startRoom">The room to start with</param>
+        /// <returns></returns>
+        public bool Generate(RoomTemplate startRoom)
+        {
+            CompassDirection startDirection = RNG.NextDirection();
+            return Generate(startRoom, startDirection);
+        }
+
+        /// <summary>
+        /// Generate a dungeon map
+        /// </summary>
+        /// <param name="startRoom">The room to start with</param>
+        /// <param name="startDirection">The initial direction</param>
+        /// <returns></returns>
+        public bool Generate(RoomTemplate startRoom, CompassDirection startDirection)
+        {
+            int iStart = 1 + RNG.Next(Blueprint.SizeX - 2);
+            int jStart = 1 + RNG.Next(Blueprint.SizeY - 2);
+            return Generate(iStart, jStart, startRoom, startDirection);
+        }
+
+        /// <summary>
+        /// Generate a dungeon map
+        /// </summary>
         /// <param name="iStart"></param>
         /// <param name="jStart"></param>
         /// <param name="startRoom">The room to start with</param>
@@ -120,8 +169,67 @@ namespace Nucleus.Game
         /// <returns></returns>
         public bool Generate(int iStart, int jStart, RoomTemplate startRoom, CompassDirection startDirection)
         {
-            //TODO: Generate negative space
+            // Generate negative space
+            // GenerateNegativeSpace();
+            // Recursively grow
             return RecursiveGrowth(iStart, jStart, startRoom, startDirection, false, null);
+        }
+
+        protected void GenerateNegativeSpace()
+        {
+
+            int blockRadius = 15;
+            bool mirrorX = RNG.NextBoolean();
+            bool mirrorY = RNG.NextBoolean();
+            int tries = 2;
+            while (tries > 0)
+            {
+                int iO = 0;
+                int jO = 0;
+                if (RNG.NextBoolean())
+                {
+                    //NORTH OR SOUTH:
+                    jO = RNG.Next(2) * (Blueprint.SizeY - 1);
+                    iO = RNG.Next(Blueprint.SizeX);
+                }
+                else
+                {
+                    jO = RNG.Next(Blueprint.SizeY);
+                    iO = RNG.Next(2) * (Blueprint.SizeX - 1);
+                }
+                int iMin = iO - RNG.Next(blockRadius);
+                int iMax = iO + RNG.Next(blockRadius);
+                int jMin = jO - RNG.Next(blockRadius);
+                int jMax = jO + RNG.Next(blockRadius);
+
+                SetBlock(iMin, iMax, jMin, jMax, CellGenerationType.Wall);
+
+                if (mirrorX || mirrorY)
+                {
+                    if (mirrorX)
+                    {
+                        int iMinT = iMin;
+                        iMin = Blueprint.SizeX- 1 - iMax;
+                        iMax = Blueprint.SizeX - 1 - iMinT;
+                    }
+
+                    if (mirrorX && mirrorY && RNG.NextBoolean()) //Four-way symmetry
+                        SetBlock(iMin, iMax, jMin, jMax, CellGenerationType.Wall);
+
+                    if (mirrorY)
+                    {
+                        int jMinT = jMin;
+                        jMin = Blueprint.SizeY - 1 - jMax;
+                        jMax = Blueprint.SizeY - 1 - jMinT;
+                    }
+                    SetBlock(iMin, iMax, jMin, jMax, CellGenerationType.Wall);
+                }
+
+                tries -= 1;
+                //int untouchedCount = CountCells(0, grid().sizeX() - 1, 0, grid().sizeY() - 1, CellGenerationType.UNTOUCHED);
+                //if (untouchedCount < 1000) tries = 0;
+            }
+
         }
 
         /// <summary>
@@ -151,11 +259,11 @@ namespace Nucleus.Game
         {
             if (direction == CompassDirection.North || direction == CompassDirection.South)
             {
-                return AreAllType(i, i + width, j, j, CellGenerationType.Wall);
+                return AreAllType(i, i + width - 1, j, j, CellGenerationType.Wall);
             }
             else
             {
-                return AreAllType(i, i, j, j + width, CellGenerationType.Wall);
+                return AreAllType(i, i, j, j + width - 1, CellGenerationType.Wall);
             }
         }
 
@@ -221,6 +329,41 @@ namespace Nucleus.Game
         {
             return CheckAvailability(rect.XMin, rect.XMax, rect.YMin, rect.YMax);
         }
+
+        /// <summary>
+        /// Return the first room encountered within the specified bounds
+        /// </summary>
+        /// <param name="bounds"></param>
+        /// <returns></returns>
+        private Room CheckRoom(IntRectangle bounds)
+        {
+            return CheckRoom(bounds.XMin, bounds.XMax, bounds.YMin, bounds.YMax);
+        }
+
+        /// <summary>
+        /// Return the first room encountered within the specified bounds
+        /// </summary>
+        /// <param name="iMin"></param>
+        /// <param name="iMax"></param>
+        /// <param name="jMin"></param>
+        /// <param name="jMax"></param>
+        /// <returns></returns>
+        private Room CheckRoom(int iMin, int iMax, int jMin, int jMax)
+        {
+            for (int i = iMin; i <= iMax; i++)
+            {
+                for (int j = jMin; j <= jMax; j++)
+                {
+                    var cell = _Blueprint[i, j];
+                    if (cell != null && cell.Room != null)
+                    {
+                        return cell.Room;
+                    }
+                }
+            }
+            return null;
+        }
+
 
         /// <summary>
         /// Count up the number of cells belonging to each room in the specified zone
@@ -327,8 +470,8 @@ namespace Nucleus.Game
             {
                 type = RoomType.Exit;
             }
-            else if //((!ExitPlaced && _RNG.NextDouble() * _RNG.NextDouble() * _RNG.NextDouble() < currentRoom.CorridorChance) ||
-                (_RNG.NextDouble() < currentRoom.CorridorChance)
+            else if ((!ExitPlaced && _RNG.NextDouble() < currentRoom.CorridorChance) ||
+                (_RNG.NextDouble() < currentRoom.CorridorChance))
             {
                 type = RoomType.Circulation;
             }
@@ -352,6 +495,10 @@ namespace Nucleus.Game
                     cell.Room = null;
                     cell.GenerationType = CellGenerationType.Untouched;
                 }
+                else if (cell.GenerationType == CellGenerationType.Door)
+                {
+                    cell.GenerationType = CellGenerationType.Wall;
+                }
             }
         }
      
@@ -373,6 +520,7 @@ namespace Nucleus.Game
                     DeleteCell(i, j, room);
                 }
             }
+            TakeSnapshot();
         }
         
 
@@ -420,6 +568,26 @@ namespace Nucleus.Game
             }
             Rooms.Add(newRoom);
             return newRoom;
+        }
+
+        /// <summary>
+        /// Set a rectangular block of cells to the specified values
+        /// </summary>
+        /// <param name="iMin"></param>
+        /// <param name="iMax"></param>
+        /// <param name="jMin"></param>
+        /// <param name="jMax"></param>
+        /// <param name="genType"></param>
+        /// <param name="room"></param>
+        protected void SetBlock(int iMin, int iMax, int jMin, int jMax, CellGenerationType genType, Room room = null)
+        {
+            for (int i = iMin; i <= iMax; i++)
+            {
+                for (int j = jMin; j <= jMax; j++)
+                {
+                    SetCell(i, j, genType, room);
+                }
+            }
         }
 
         /// <summary>
@@ -485,6 +653,7 @@ namespace Nucleus.Game
 
             //Create starting tiles in front of doorway:
             bounds.Move(direction, 1);
+
             if (direction == CompassDirection.North || direction == CompassDirection.South)
                 bounds.Grow(CompassDirection.East, doorSize - 1);
             else
@@ -492,6 +661,13 @@ namespace Nucleus.Game
 
             if (CheckAvailability(bounds))
             {
+                // Initial check:
+                if (bounds.XSize + 1 >= dimensions.Max) iFrozen = true;
+                if (bounds.XSize + 1 > dimensions.Min && bounds.YSize + 1 == dimensions.Min) jFrozen = true;
+
+                if (bounds.YSize + 1 >= dimensions.Max) jFrozen = true;
+                if (bounds.YSize + 1 > dimensions.Min && bounds.XSize + 1 == dimensions.Min) iFrozen = true;
+
                 // Grow outwards, checking availability:
                 CompassDirection growDirection = direction;
                 int persistance = 5; //Failures before abort
@@ -519,7 +695,7 @@ namespace Nucleus.Game
                 }
 
                 if (template.RoomType == RoomType.Circulation && 
-                    (!PreventParallelCorridors || IsParallelToCorridor(bounds)))
+                    (PreventParallelCorridors && IsParallelToCorridor(bounds)))
                     return false; //Abort parallel corridors
 
                 if ((bounds.XSize + 1 >= template.Dimension1.Min && bounds.YSize + 1 >= template.Dimension2.Min ||
@@ -532,6 +708,8 @@ namespace Nucleus.Game
 
                     // Create room:
                     Room newRoom = GenerateRoom(bounds, template);
+
+                    if (parent != null) ConnectRooms(parent, newRoom);
 
                     //Take snapshot:
                     TakeSnapshot();
@@ -574,6 +752,16 @@ namespace Nucleus.Game
                             //Select door position for this try:
                             bounds.RandomPointOnEdge(doorDirection, _RNG, newDoorWidth - 1, ref iNewDoor, ref jNewDoor);
 
+                            if (template.RoomType == RoomType.Circulation && result == false && doorDirection != direction.Reverse() && doorDirection != direction)
+                            {
+                                //For circulation, first try to get as far away as possible from the entry point
+                                if (iDoor < bounds.XMin) iNewDoor = bounds.XMax;
+                                else if (iDoor > bounds.XMax) iNewDoor = bounds.XMin;
+
+                                if (jDoor < bounds.YMin) jNewDoor = bounds.YMax;
+                                else if (jDoor > bounds.YMax) jNewDoor = bounds.YMin;
+                            }
+
                             if (RecursiveGrowth(iNewDoor, jNewDoor, nextRoom, doorDirection, true, newRoom)) result = true;
                         }
                         tries -= 1;
@@ -590,12 +778,30 @@ namespace Nucleus.Game
                 if (createDoor && AreAllType(bounds,CellGenerationType.Void) &&
                     AvailableForDoorway(iDoor,jDoor, direction, template.EntryWidth))
                 {
-                    // TODO: Check room connections
-                    GenerateDoorway(iDoor, jDoor, direction, template.EntryWidth);    
+                    Room otherRoom = CheckRoom(bounds);
+                    if ((otherRoom == null ||
+                        otherRoom.Template.MaxConnections < 0 ||
+                        otherRoom.Template.MaxConnections > otherRoom.Connections.Count) &&
+                        !otherRoom.IsConnectedTo(parent,2))
+                    {
+                        if (result == false && !otherRoom.IsConnectedTo(parent, 4)) result = true;
+                        // TODO: Check room connections
+                        GenerateDoorway(iDoor, jDoor, direction, template.EntryWidth);
+                        if (parent != null)
+                        {
+                            ConnectRooms(parent, otherRoom);
+                        }
+                    }
                 }
             }
                        
             return result;
+        }
+
+        private void ConnectRooms(Room roomA, Room roomB)
+        {
+            if (!roomA.Connections.Contains(roomB.GUID)) roomA.Connections.Add(roomB);
+            if (!roomB.Connections.Contains(roomA.GUID)) roomB.Connections.Add(roomA);
         }
 
         #endregion

@@ -1,4 +1,5 @@
 ﻿using Nucleus.Base;
+using Nucleus.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,6 +23,12 @@ namespace Nucleus.Logs
         /// placed at the start of a line.
         /// </summary>
         public const string ENTRY_START = "~~~";
+
+        /// <summary>
+        /// The sequence of characters which indicates that the rest of the line 
+        /// is a comment and should be ignored.
+        /// </summary>
+        public const string COMMENT = "//";
 
         #endregion
 
@@ -63,6 +70,31 @@ namespace Nucleus.Logs
         }
 
         /// <summary>
+        /// Load the script from a resource file via a loader
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="resources"></param>
+        /// <returns></returns>
+        public bool LoadFrom(FilePath filePath, IResourceLoader resources)
+        {
+            var text = resources.LoadString(filePath);
+            if (text == null) return false;
+            Load(text);
+            return true;
+        }
+
+        /// <summary>
+        /// Load the script directly from a text string
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public void Load(string text)
+        {
+            var reader = new StringReader(text);
+            Load(reader);
+        }
+
+        /// <summary>
         /// Load the script via a text reader.
         /// </summary>
         /// <param name="reader"></param>
@@ -75,7 +107,11 @@ namespace Nucleus.Logs
             {
                 if (!string.IsNullOrWhiteSpace(line))
                 {
-                    if (line.StartsWith(ENTRY_START))
+                    if (line.StartsWith(COMMENT))
+                    {
+                        // Comment - do not process
+                    }
+                    else if (line.StartsWith(ENTRY_START))
                     {
                         // New entry record
                         string key = line.Substring(ENTRY_START.Length);
@@ -92,6 +128,18 @@ namespace Nucleus.Logs
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Get the default unprocessed text record for the entry under 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public string GetText(string key)
+        {
+            var entry = Entries[key.ToUpper()];
+            if (entry == null) return key;
+            return entry.Variations.First(); //TODO: apply markup?
         }
         #endregion
     }

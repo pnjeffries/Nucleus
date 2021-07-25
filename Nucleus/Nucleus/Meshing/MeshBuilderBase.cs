@@ -1316,16 +1316,32 @@ namespace Nucleus.Meshing
         /// in the mesh in the second ('v') axis</param>
         /// <param name="uCount">The number of vertices in the first ('u') direction.</param>
         /// <param name="vCount">The number of vertices in the second ('v') direction.</param>
-        public void AddQuadGridMesh(Vector origin, Vector uAxis, Vector vAxis, int uCount, int vCount)
+        /// <param name="edgeExtension">The distance by which the edge quads should be extended out to produce
+        /// an enlarged 'frame' around the grid.</param>
+        public void AddQuadGridMesh(Vector origin, Vector uAxis, Vector vAxis, int uCount, int vCount, double edgeExtension = 0)
         {
             int[] lastRow = null;
             for (int j = 0; j < vCount; j++)
             {
+                double vOffset = 0;
+                if (j == 0)
+                {
+                    vOffset = -edgeExtension;
+                }
+                else if (j == vCount - 1)
+                {
+                    vOffset = edgeExtension;
+                }
+
                 int[] newRow = new int[uCount];
                 for (int i = 0; i < uCount; i++)
                 {
+                    double uOffset = 0;
+                    if (i == 0) uOffset = -edgeExtension;
+                    else if (i == uCount - 1) uOffset = edgeExtension;
+
                     // Create vertex:
-                    newRow[i] = AddVertex(origin + (i * uAxis) + (j * vAxis));
+                    newRow[i] = AddVertex(origin + ((i + uOffset) * uAxis) + ((j + vOffset) * vAxis));
                     if (i > 0 && j > 0)
                     {
                         // Create face:

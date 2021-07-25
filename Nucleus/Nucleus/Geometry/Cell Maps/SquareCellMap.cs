@@ -143,16 +143,41 @@ namespace Nucleus.Geometry
             _Origin = origin;
         }
 
-        #endregion
-
-        #region Methods
+        /// <summary>
+        /// Initialise a new square cell map of the specified size with the specified set of initial values
+        /// </summary>
+        /// <param name="origin"></param>
+        /// <param name="sizeX"></param>
+        /// <param name="sizeY"></param>
+        /// <param name="values"></param>
+        public SquareCellMap(Vector origin, int sizeX, int sizeY, params T[] values) : this(sizeX, sizeY)
+        {
+            for (int i = 0; i < values.Length; i++)
+            {
+                this.SetCell(i, values[i]);
+            }
+        }
 
         /// <summary>
-        /// Get the cell object at the specified index
+        /// Initialise a new square cell map of the specified size with the specified set of initial values
         /// </summary>
-        /// <param name="cellIndex"></param>
-        /// <returns></returns>
-        object ICellMap.GetCell(int cellIndex)
+        /// <param name="sizeX"></param>
+        /// <param name="sizeY"></param>
+        /// <param name="values"></param>
+        public SquareCellMap(int sizeX, int sizeY, params T[] values) : this(new Vector(), sizeX, sizeY, values)
+        {
+        }
+
+            #endregion
+
+            #region Methods
+
+            /// <summary>
+            /// Get the cell object at the specified index
+            /// </summary>
+            /// <param name="cellIndex"></param>
+            /// <returns></returns>
+            object ICellMap.GetCell(int cellIndex)
         {
             return this.GetCell(cellIndex);
         }
@@ -337,14 +362,14 @@ namespace Nucleus.Geometry
 
             switch (adjacencyIndex)
             {
-                case 0:
-                    return IndexAt(i + 1, j);
-                case 1:
-                    return IndexAt(i, j - 1);
-                case 2:
-                    return IndexAt(i - 1, j);
-                case 3:
+                case 0: // North
                     return IndexAt(i, j + 1);
+                case 1: // East
+                    return IndexAt(i + 1, j);
+                case 2: // South
+                    return IndexAt(i, j - 1);
+                case 3: //West
+                    return IndexAt(i - 1, j);
             }
 
             return -1;
@@ -375,7 +400,7 @@ namespace Nucleus.Geometry
         /// <returns></returns>
         public Vector CellPosition(int cellIndex)
         {
-            return new Vector( ColumnIndex(cellIndex) + 0.5 * CellSize + Origin.X, RowIndex(cellIndex) + 0.5 * CellSize + Origin.Y);
+            return new Vector( (ColumnIndex(cellIndex) + 0.5) * CellSize + Origin.X, (RowIndex(cellIndex) + 0.5) * CellSize + Origin.Y);
         }
 
         /// <summary>
@@ -397,17 +422,18 @@ namespace Nucleus.Geometry
         /// <returns></returns>
         public Vector CellVertex(int cellIndex, int vertexIndex)
         {
-            Vector cP = CellPosition(cellIndex);
-            switch(vertexIndex)
+            double x0 = ColumnIndex(cellIndex) * CellSize + Origin.X;
+            double y0 = RowIndex(cellIndex) * CellSize + Origin.Y;
+            switch (vertexIndex)
             {
                 case 0:
-                    return cP + new Vector(CellSize / 2, CellSize / 2);
+                    return new Vector(x0, y0 + CellSize);
                 case 1:
-                    return cP + new Vector(-CellSize / 2, CellSize / 2);
+                    return new Vector(x0 + CellSize, y0 + CellSize);
                 case 2:
-                    return cP + new Vector(-CellSize / 2, -CellSize / 2);
+                    return new Vector(x0 + CellSize, y0);
                 case 3:
-                    return cP + new Vector(CellSize / 2, -CellSize / 2);
+                    return new Vector(x0, y0);
             }
             return Vector.Unset;
         }

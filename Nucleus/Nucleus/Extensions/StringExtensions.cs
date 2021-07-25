@@ -229,6 +229,35 @@ namespace Nucleus.Extensions
             return str;
         }
 
+        public static IList<string> TokeniseOutsideBrackets(this string str, char separator = ',', char openBracket = '(', char closeBracket = ')')
+        {
+            var result = new List<string>();
+
+            int iStart = 0;
+            int bracketLevel = 0;
+            for (int i = 0; i < str.Length; i++)
+            {
+                char c = str[i];
+
+                if (c == openBracket) bracketLevel++;
+                else if (bracketLevel > 0 && c == closeBracket)
+                {
+                    bracketLevel--;
+                }
+                
+                if ((c == separator && bracketLevel == 0) || i == str.Length - 1)
+                {
+                    int length = i - iStart + 1;
+                   if (c == separator) length--; //Exclude separator
+                    var subString = str.Substring(iStart, length);
+                    result.Add(subString);
+                    iStart = i + 1;
+                }
+                
+            }
+            return result;
+        }
+
         /// <summary>
         /// Split this string using the separator characters ' ' and ','.
         /// String literals enclosed by '"' will be kept intact.
@@ -591,7 +620,7 @@ namespace Nucleus.Extensions
 
         /// <summary>
         /// Get the chunk of text that starts from the specified index and proceeds
-        /// up to the next found instance of the specified character
+        /// up to the next found instance of the specified character(s)
         /// </summary>
         /// <param name="str"></param>
         /// <param name="index">The start index of the chunk.  This will be updated to the
@@ -606,7 +635,7 @@ namespace Nucleus.Extensions
 
         /// <summary>
         /// Get the chunk of text that starts from the specified index and proceeds
-        /// up to the next found instance of the specified character
+        /// up to the next found instance of the specified character(s)
         /// </summary>
         /// <param name="str"></param>
         /// <param name="terminator">The found character which terminates this chunk</param>

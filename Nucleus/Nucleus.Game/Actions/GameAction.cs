@@ -107,12 +107,24 @@ namespace Nucleus.Game
 
             if (Attempt(log, context))
             {
+                WriteLog(log, context);
                 // Apply effects:
                 ApplyEffects(log, context);
                 ApplySelfEffects(log, context);
                 return true;
             }
             return false;
+        }
+
+        protected virtual void WriteLog(IActionLog log, EffectContext context)
+        {
+            if (log == null) return;
+            string key = this.GetType().Name;
+            if (log.HasScriptFor(key))
+            {
+                log.WriteLine();
+                log.WriteScripted(key, context.Actor, context.Target);
+            }
         }
 
         /// <summary>

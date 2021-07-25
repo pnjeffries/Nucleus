@@ -27,6 +27,11 @@ namespace Nucleus.Game
         public static string Dust = "Dust";
 
         /// <summary>
+        /// The effect of one object knocking against another
+        /// </summary>
+        public static string Knock = "Knock";
+
+        /// <summary>
         /// A melee-weapon slash effect
         /// </summary>
         public static string Slash = "Slash";

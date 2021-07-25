@@ -180,5 +180,28 @@ namespace Nucleus.Extensions
                 list[i] += addThis;
             }
         }
+
+        /// <summary>
+        /// Raise this integer to a specified power.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="power">The exponent to raise this number to.</param>
+        /// <remarks>Based on fast methodology from: 
+        /// https://stackoverflow.com/questions/383587/how-do-you-do-integer-exponentiation-in-c</remarks>
+        /// <returns></returns>
+        public static int Power(this int value, uint power)
+        {
+            return (int)Math.Pow(value, power);
+
+            int result = 1;
+            while (power != 0)
+            {
+                if ((power & 1) == 1)
+                    result *= value;
+                value *= value;
+                power >>= 1;
+            }
+            return result;
+        }
     }
 }
