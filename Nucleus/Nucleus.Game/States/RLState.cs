@@ -179,7 +179,7 @@ namespace Nucleus.Game
         /// <param name="element"></param>
         public void StartTurnOf(Element element)
         {
-            var context = new TurnContext(this, Stage, element, RNG);
+            var context = new TurnContext(this, Stage, element, RNG, Log);
             Active = element;
             for (int i = 0; i < element.Data.Count; i++)
             {
@@ -220,7 +220,7 @@ namespace Nucleus.Game
         public void EndTurnOf(Element element)
         {
             if (element == null) return;
-            var context = new TurnContext(this, Stage, element, RNG);
+            var context = new TurnContext(this, Stage, element, RNG, Log);
             for (int i = 0; i < element.Data.Count; i++)
             {
                 IElementDataComponent dC = element.Data[i];

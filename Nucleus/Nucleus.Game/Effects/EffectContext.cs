@@ -165,9 +165,9 @@ namespace Nucleus.Game
             ElementMovedOutOfTurn(element, Stage as MapStage);
         }
 
-        public void ElementMovedOutOfTurn(Element element, MapStage newStage)
+        public void ElementMovedOutOfTurn(Element element, MapStage newStage) //TODO: pass in log?
         {
-            var turnContext = new TurnContext(State, newStage, element, RNG);
+            var turnContext = new TurnContext(State, newStage, element, RNG, null);
             foreach (var component in element.Data)
             {
                 if (component is IOutOfTurnMove outMove)
@@ -175,6 +175,32 @@ namespace Nucleus.Game
                     outMove.OutOfTurnMove(turnContext);
                 }
             }
+        }
+
+
+        /// <summary>
+        /// Is the player aware of the status of the specified element?
+        /// </summary>
+        public bool IsPlayerAwareOf(Element element)
+        {
+            var bState = State as MapState;
+            if (bState != null)
+            {
+                // Is the element the player themselves?
+                if (element == bState.Controlled) return true;
+
+                // Check if element is item in player inventory
+                if (element.HasData<PickUp>())
+                {
+                    var inventory = bState.Controlled.GetData<Inventory>();
+                    if (inventory != null && inventory.ContainsItem(element)) return true;
+                }
+
+                // Check if the player can see it
+                var awareness = bState.Controlled.GetData<MapAwareness>();
+                return awareness.AwareOf(element, true);
+            }
+            return false;
         }
 
         #endregion

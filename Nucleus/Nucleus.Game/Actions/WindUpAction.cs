@@ -21,13 +21,20 @@ namespace Nucleus.Game
 
         #region Constructor
 
-        public WindUpAction(ActionFactory actionFactory)
+
+        public WindUpAction(ActionFactory actionFactory) : base()
         {
             SelfEffects.Add(new DisableEffect());
             SelfEffects.Add(new AddAbilityEffect(new DirectionalItemUseAbility(actionFactory)));
         }
 
-        public WindUpAction(ActionFactory actionFactory, InputFunction input) : this(actionFactory)
+        public WindUpAction(string name, ActionFactory actionFactory) : base(name)
+        {
+            SelfEffects.Add(new DisableEffect());
+            SelfEffects.Add(new AddAbilityEffect(new DirectionalItemUseAbility(actionFactory)));
+        }
+
+        public WindUpAction(string name, ActionFactory actionFactory, InputFunction input) : this(name, actionFactory)
         {
             Trigger = new ActionInputTrigger(input);
         }
@@ -51,9 +58,9 @@ namespace Nucleus.Game
                 // Distance calculation:
                 double manDist = mDS.Position.DistanceTo(mDT.Position);
                 // Works for sword slash, but need more detail for other things:
-                if (manDist < 2) //TEMP
+                if (manDist < 2.5) //TEMP
                 {
-                    return 1.5;// 0.5 + context.RNG.NextDouble() * 1;
+                    return context.RNG.NextDouble() * 2;
                 }
             }
             return -0.5;

@@ -12,7 +12,7 @@ namespace Nucleus.Game
     /// <summary>
     /// Interface for an effect which is to be applied to an element
     /// </summary>
-    public interface IEffect : IUnique
+    public interface IEffect : IUnique, IDuplicatable
     {
         /// <summary>
         /// Has the effect been spent?

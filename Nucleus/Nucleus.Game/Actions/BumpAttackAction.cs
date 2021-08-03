@@ -20,14 +20,12 @@ namespace Nucleus.Game
         {
             Target = target;
             Trigger = new ActionCellInputTrigger(cell.Index, InputFunction.Move);
-           
-            Effects.Add(new SFXImpactEffect());
-            Effects.Add(new DamageEffect(damage));
-            if (knockback > 0)
-            {
-                Effects.Add(new KnockbackEffect(direction, knockback));
-            }
+
             SelfEffects.Add(new ActorOrientationEffect(direction));
+            Effects.Add(new SFXImpactEffect());
+            Effects.Add(new KnockbackEffect(direction, knockback));
+            Effects.Add(new DamageEffect(damage));
+            
         }
 
         #endregion

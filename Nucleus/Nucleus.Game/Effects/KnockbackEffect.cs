@@ -14,7 +14,7 @@ namespace Nucleus.Game
     /// involuntarily).  Resistance to knockback is determined by the Inertia component.
     /// </summary>
     [Serializable]
-    public class KnockbackEffect : BasicEffect
+    public class KnockbackEffect : BasicEffect, IDirectionalEffect
     {
         #region Properties
 
@@ -75,7 +75,7 @@ namespace Nucleus.Game
 
         public override bool Apply(IActionLog log, EffectContext context)
         {
-            int n = (int)Power; //TODO: Account for target mass?
+            int n = (int)Power;
 
             Element mover = context.Target;
             if (mover.IsDeleted || (mover.GetData<Inertia>()?.Fixed ?? false))
@@ -83,6 +83,12 @@ namespace Nucleus.Game
 
             if (mover != null)
             {
+                var weight = mover.GetData<ElementWeight>();
+                if (weight != null)
+                {
+                    // Modify according to mass
+                    n += weight.KnockbackModifier;
+                }
                 bool moved = false;
                 for (int i = 0; i < n; i++)
                 {
@@ -110,12 +116,19 @@ namespace Nucleus.Game
                             context.SFX.Trigger(SFXKeywords.Knock, mD.Position + Direction * 0.5, Direction);
                             if (ImpactEffect != null && newCell != null)
                             {
-                                var blocker = mover.GetData<MapCellCollider>().Blocker(newCell);
-                                // Apply to target:
-                                ImpactEffect.Apply(log, context);
-                                // Apply to blocker:
-                                ImpactEffect.Apply(log, context.CloneWithTarget(blocker));
+                                var blocker = mover.GetData<MapCellCollider>()?.Blocker(newCell);
+
+                                if (blocker != null)
+                                {
+                                    WriteLog(log, context, blocker);
+
+                                    // Apply to target:
+                                    ImpactEffect.Apply(log, context);
+                                    // Apply to blocker:
+                                    ImpactEffect.Apply(log, context.CloneWithTarget(blocker));
+                                }
                             }
+                            i = n; //Finish
                         }
                     }
                 }
@@ -134,6 +147,19 @@ namespace Nucleus.Game
 
             }
             return false;
+        }
+
+        protected virtual void WriteLog(IActionLog log, EffectContext context, Element blocker)
+        {
+            if (log == null) return;
+            string key = "Knockback_Impact";
+            if (log.HasScriptFor(key))
+            {
+                if (context.IsPlayerAwareOf(blocker) || context.IsPlayerAwareOf(context.Target))
+                {
+                    log.WriteScripted(context, key, context.Actor, context.Target, blocker);
+                }
+            }
         }
 
         #endregion

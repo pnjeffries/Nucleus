@@ -120,10 +120,13 @@ namespace Nucleus.Game
         {
             if (log == null) return;
             string key = this.GetType().Name;
-            if (log.HasScriptFor(key))
+            if (Name != null && log.HasScriptFor(Name)) key = Name;
+            else if (!log.HasScriptFor(key)) return;
+
+            if (context.IsPlayerAwareOf(context.Actor) || context.IsPlayerAwareOf(context.Target))
             {
                 log.WriteLine();
-                log.WriteScripted(key, context.Actor, context.Target);
+                log.WriteScripted(context, key, context.Actor, context.Target);
             }
         }
 

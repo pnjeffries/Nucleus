@@ -32,6 +32,11 @@ namespace Nucleus.Game
         public static string Knock = "Knock";
 
         /// <summary>
+        /// The effect when a door is opened
+        /// </summary>
+        public static string Open = "Open";
+
+        /// <summary>
         /// A melee-weapon slash effect
         /// </summary>
         public static string Slash = "Slash";

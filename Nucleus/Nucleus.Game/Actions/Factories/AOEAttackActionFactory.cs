@@ -47,6 +47,16 @@ namespace Nucleus.Game
             set { _SourceSFX = value; }
         }
 
+        private IList<IEffect> _Effects = null;
+
+        /// <summary>
+        /// The blueprint effects which will be applied by the 
+        /// </summary>
+        public IList<IEffect> Effects
+        {
+            get { return _Effects; }
+            set { _Effects = value; }
+        }
 
         #endregion
 
@@ -60,7 +70,7 @@ namespace Nucleus.Game
         /// </summary>
         public AOEAttackActionFactory(params Vector[] offsets)
         {
-            Offsets = offsets;
+            _Offsets = offsets;
         }
 
         /// <summary>
@@ -70,7 +80,12 @@ namespace Nucleus.Game
         public AOEAttackActionFactory(string sourceSFX, params Vector[] offsets)
             : this(offsets)
         {
-            SourceSFX = sourceSFX;
+            _SourceSFX = sourceSFX;
+        }
+
+        public AOEAttackActionFactory(IList<IEffect> effects, string sourceSFX, params Vector[] offsets) : this(sourceSFX, offsets)
+        {
+            _Effects = effects;
         }
 
         /// <summary>
@@ -94,6 +109,18 @@ namespace Nucleus.Game
             SourceSFX = sourceSFX;
         }
 
+
+        /// <summary>
+        /// Creates an AOEAttackAction factory to create an attack pattern
+        /// with the specified list of alternating X and Y offset components.
+        /// </summary>
+        /// <param name="offsetComponents"></param>
+        public AOEAttackActionFactory(IList<IEffect> effects, string sourceSFX, params double[] offsetComponents)
+            : this(sourceSFX, offsetComponents)
+        {
+            _Effects = effects;
+        }
+
         #endregion
 
         #region Methods
@@ -102,7 +129,7 @@ namespace Nucleus.Game
         {
             var pattern = Offsets.Rotate(direction.Angle).Move(position);
             var cells = context.Stage.Map.CellsAt(pattern);
-            return new AOEAttackAction(cells, triggerCell, direction, SourceSFX);
+            return new AOEAttackAction(cells, triggerCell, direction, Effects, SourceSFX);
         }
 
         #endregion

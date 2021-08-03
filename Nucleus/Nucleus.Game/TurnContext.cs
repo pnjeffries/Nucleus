@@ -1,4 +1,5 @@
-﻿using Nucleus.Model;
+﻿using Nucleus.Logs;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,18 +37,24 @@ namespace Nucleus.Game
         /// </summary>
         public Random RNG { get; set; } = new Random();
 
+        /// <summary>
+        /// The log to be used to record textual output
+        /// </summary>
+        public IActionLog Log { get; set; }
+
         #endregion
 
         #region Constructors
 
         public TurnContext() { }
 
-        public TurnContext(GameState state, MapStage stage, Element element, Random rng)
+        public TurnContext(GameState state, MapStage stage, Element element, Random rng, IActionLog log)
         {
             State = state;
             Stage = stage;
             Element = element;
             RNG = rng;
+            Log = log;
         }
 
         #endregion

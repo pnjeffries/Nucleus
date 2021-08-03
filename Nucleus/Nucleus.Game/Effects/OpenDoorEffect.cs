@@ -21,7 +21,10 @@ namespace Nucleus.Game.Effects
 
             if (door == null) return false;
 
-            door.TryToOpen(context);
+            if (door.TryToOpen(context))
+            {
+                context.SFX.Trigger(SFXKeywords.Open, context.Target.GetNominalPosition());
+            }
 
             return true;
         }

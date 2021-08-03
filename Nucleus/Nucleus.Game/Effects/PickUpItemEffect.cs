@@ -26,16 +26,19 @@ namespace Nucleus.Game
                 MapData mD = context.Target.GetData<MapData>();
                 if (mD?.MapCell != null)
                 {
-                    // TEMP?
-                    // Add to equipped:
-                    Equipped equipped = context.Actor?.GetData<Equipped>();
-                    if (equipped != null && equipped.Equip(context.Target))
+                    // Add to inventory:
+                    Inventory inventory = context.Actor?.GetData<Inventory>();
+                    if (inventory != null && inventory.AddItem(context.Target))
                     {
                         mD.MapCell.RemoveFromCell(context.Target);
                         context.State.Elements.Remove(context.Target);
+                        mD.MapCell = null;
+                        context.Target.Data.RemoveData<MapData>();
                     }
-
-                    // TODO: Add to inventory as well as/instead?
+                    else
+                    {
+                        log.WriteScripted(context, "PickUp_Fail", context.Actor, context.Target);
+                    }  
                 }
             }
             return false;

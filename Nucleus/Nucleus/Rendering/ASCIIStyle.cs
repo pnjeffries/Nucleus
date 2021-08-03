@@ -43,7 +43,7 @@ namespace Nucleus.Rendering
 
         public ASCIIStyle(string symbol)
         {
-            Symbol = symbol;
+            _Symbol = symbol;
         }
 
         #endregion

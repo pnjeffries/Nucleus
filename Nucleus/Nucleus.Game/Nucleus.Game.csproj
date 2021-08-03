@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\ActionCellInputTrigger.cs" />
+    <Compile Include="Actions\UseItemAction.cs" />
     <Compile Include="Actions\ExitStageAction.cs" />
     <Compile Include="Actions\Factories\ActionFactory.cs" />
     <Compile Include="Actions\ActionInputTrigger.cs" />
@@ -76,13 +77,15 @@
     <Compile Include="Components\Abilities\BumpAttackAbility.cs" />
     <Compile Include="Components\Abilities\DirectionalItemUseAbility.cs" />
     <Compile Include="Components\Abilities\OpenDoorAbility.cs" />
+    <Compile Include="Components\ConsumableItem.cs" />
     <Compile Include="Components\DamageVulnerabilities.cs" />
     <Compile Include="Components\DisableActions.cs" />
     <Compile Include="Components\Door.cs" />
+    <Compile Include="Components\ElementWeight.cs" />
     <Compile Include="Components\EquipmentSlot.cs" />
+    <Compile Include="Components\ItemSlot.cs" />
     <Compile Include="Components\EquipmentSlotCollection.cs" />
     <Compile Include="Components\EquippableItem.cs" />
-    <Compile Include="Components\Equipped.cs" />
     <Compile Include="Components\Abilities\ExitStageAbility.cs" />
     <Compile Include="Components\HitPoints.cs" />
     <Compile Include="Components\AvailableActions.cs" />
@@ -93,6 +96,7 @@
     <Compile Include="Components\IOutOfTurnMove.cs" />
     <Compile Include="Components\IStartOfTurn.cs" />
     <Compile Include="Components\ItemActions.cs" />
+    <Compile Include="Components\ItemSlotCollection.cs" />
     <Compile Include="Components\MapAwareness.cs" />
     <Compile Include="Components\Memorable.cs" />
     <Compile Include="Components\Abilities\MoveCellAbility.cs" />
@@ -101,6 +105,7 @@
     <Compile Include="Components\Abilities\PickUpAbility.cs" />
     <Compile Include="Components\Abilities\TemporaryAbility.cs" />
     <Compile Include="Components\StageExit.cs" />
+    <Compile Include="Components\Status.cs" />
     <Compile Include="Components\TemporaryStatus.cs" />
     <Compile Include="Components\TurnCounter.cs" />
     <Compile Include="Components\Abilities\UseItemAbility.cs" />
@@ -110,16 +115,21 @@
     <Compile Include="Effects\AddAbilityEffect.cs" />
     <Compile Include="Effects\AnimationEffect.cs" />
     <Compile Include="Effects\BasicEffect.cs" />
+    <Compile Include="Effects\ConsumeEffect.cs" />
     <Compile Include="Effects\DamageEffect.cs" />
     <Compile Include="Effects\DamageType.cs" />
     <Compile Include="Effects\DisableEffect.cs" />
     <Compile Include="Effects\EffectContext.cs" />
     <Compile Include="Effects\ExitStageEffect.cs" />
+    <Compile Include="Effects\HealEffect.cs" />
+    <Compile Include="Effects\IDirectionalEffect.cs" />
     <Compile Include="Effects\KnockbackEffect.cs" />
     <Compile Include="Effects\OpenDoorEffect.cs" />
     <Compile Include="Effects\PickUpItemEffect.cs" />
     <Compile Include="Effects\SFXEffect.cs" />
     <Compile Include="Effects\SFXImpactEffect.cs" />
+    <Compile Include="Effects\StatusEffects\IStatusEffect.cs" />
+    <Compile Include="Effects\StatusEffects\StatusEffectCollection.cs" />
     <Compile Include="Faction.cs" />
     <Compile Include="GameElement.cs" />
     <Compile Include="InputFunction.cs" />
@@ -156,5 +166,6 @@
       <Name>Nucleus</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

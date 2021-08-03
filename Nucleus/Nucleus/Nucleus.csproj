@@ -137,6 +137,7 @@
     <Compile Include="IO\IResourceLoader.cs" />
     <Compile Include="Logs\GrammaticalPerson.cs" />
     <Compile Include="Logs\IScriptedLog.cs" />
+    <Compile Include="Logs\LogDescription.cs" />
     <Compile Include="Logs\LogScriptMarkupParser.cs" />
     <Compile Include="Logs\ICalculationLog.cs" />
     <Compile Include="Analysis\ICalculationScenario.cs" />

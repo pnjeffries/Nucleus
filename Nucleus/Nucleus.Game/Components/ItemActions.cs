@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Nucleus.Game
 { 
     /// <summary>
-    /// A data component for use on items which 
+    /// A data component for use on items which may be used via an action
     /// </summary>
     [Serializable]
     public class ItemActions : IElementDataComponent

@@ -1,5 +1,6 @@
 ﻿using Nucleus.Base;
 using Nucleus.Extensions;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,13 +22,13 @@ namespace Nucleus.Logs
         /// The character which depicts the start of 
         /// a formatting markup expression
         /// </summary>
-        public const char MARKUP_OPEN = '<';
+        public const char MARKUP_OPEN = '£';
 
         /// <summary>
         /// The character which depicts the end of 
         /// a formatting markup expression
         /// </summary>
-        public const char MARKUP_CLOSE = '>';
+        public const char MARKUP_CLOSE = '$';
 
         /// <summary>
         /// The character which depicts the start of
@@ -382,7 +383,16 @@ namespace Nucleus.Logs
             {
                 int i = int.Parse(index);
                 var obj = Subjects[i];
-                return obj.ToString();
+                string name = obj.ToString();
+                if (obj is Element el)
+                {
+                    var lD = el.GetData<LogDescription>();
+                    if (lD != null)
+                    {
+                        return lD.SubjectPrefix + name + lD.SubjectSuffix;
+                    }
+                }
+                return name;
             }
             catch { }
             return ERROR; //TODO: Review - fallback to ""?

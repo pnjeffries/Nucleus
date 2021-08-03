@@ -125,6 +125,31 @@ namespace Nucleus.Game
             return FieldOfView?[cellIndex] ?? 0;
         }
 
+        /// <summary>
+        /// Is the owner of this component aware of the specified element?
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="includeAdjacent">If true, the element will be considered visible if any adjacent
+        /// cell is visible</param>
+        /// <returns></returns>
+        public bool AwareOf(Element element, bool includeAdjacent = false)
+        {
+            // Hmmm... this may require adjustment later on...
+            if (FieldOfView == null) return false;
+            int cellIndex = FieldOfView.IndexAt(element.GetNominalPosition());
+            if (FieldOfView[cellIndex] >= Visible) return true;
+            else if (includeAdjacent)
+            {
+                int maxAdjacent = FieldOfView.AdjacencyCount(cellIndex);
+                for (int i = 0; i < maxAdjacent; i++)
+                {
+                    int adjacentIndex = FieldOfView.AdjacentCellIndex(cellIndex, i);
+                    if (FieldOfView.Exists(adjacentIndex) && FieldOfView[adjacentIndex] >= MapAwareness.Visible) return true;
+                }
+            }
+            return false;
+        }
+
         public void OutOfTurnMove(TurnContext context)
         {
             UpdateFOV(context);

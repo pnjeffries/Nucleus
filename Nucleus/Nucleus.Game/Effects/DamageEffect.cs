@@ -76,11 +76,11 @@ namespace Nucleus.Game
                     Vector position = context.Target.GetData<MapData>()?.Position ?? Vector.Unset;
                     context.SFX.Trigger(SFXKeywords.Bang, position);
                     // Destroy!
-                    Equipped equipped = context.Target.GetData<Equipped>();
-                    if (equipped != null)
+                    Inventory inventory = context.Target.GetData<Inventory>();
+                    if (inventory != null)
                     {
                         // Drop held items!
-                        equipped.DropAll(context.Target, context);
+                        inventory.DropAll(context.Target, context);
                     }
                     context.Target.Delete();
                     WriteDeathToLog(log, context);
@@ -98,7 +98,7 @@ namespace Nucleus.Game
                 // Fallback generic death message
                 key = "Death";
             }
-            log.WriteScripted(key, context.Actor, context.Target);
+            log.WriteScripted(context, key, context.Actor, context.Target);
         }
 
         #endregion
