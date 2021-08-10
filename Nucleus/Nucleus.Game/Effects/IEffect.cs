@@ -15,13 +15,6 @@ namespace Nucleus.Game
     public interface IEffect : IUnique, IDuplicatable
     {
         /// <summary>
-        /// Has the effect been spent?
-        /// This should return true when the effect has been fully applied
-        /// and shoul dno longer be executed any further.
-        /// </summary>
-        bool Spent { get; }
-
-        /// <summary>
         /// Attempt to apply this effect to an element
         /// </summary>
         /// <param name="target">The target element</param>
@@ -50,19 +43,7 @@ namespace Nucleus.Game
     public static class IEffectExtensions
     {
         /// <summary>
-        /// Remove all spent effects from this collection
-        /// </summary>
-        /// <param name="list"></param>
-        public static void RemoveSpent(this IList<IEffect> list)
-        {
-            for (int i = list.Count - 1; i >= 0; i--)
-            {
-                if (list[i].Spent) list.RemoveAt(i);
-            }
-        }
-
-        /// <summary>
-        /// Apply all unspent effects in this collection to the target object
+        /// Apply all effects in this collection to the target object
         /// </summary>
         /// <typeparam name="TTarget"></typeparam>
         /// <param name="list"></param>
@@ -72,7 +53,7 @@ namespace Nucleus.Game
         {
             foreach (var effect in list)
             {
-                if (!effect.Spent) effect.Apply(log);
+                effect.Apply(log);
             }
         }
     }

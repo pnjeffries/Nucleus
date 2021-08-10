@@ -19,29 +19,15 @@ namespace Nucleus.Game
         /// <summary>
         /// Private backing member variable for the Damage property
         /// </summary>
-        private double _Damage = 1;
+        private Damage _Damage = new Damage(1);
 
         /// <summary>
         /// The value of the damage to be inflicted
         /// </summary>
-        public double Damage
+        public Damage Damage
         {
             get { return _Damage; }
             set { _Damage = value; }
-        }
-
-        /// <summary>
-        /// Private backing member variable for the DamageType property
-        /// </summary>
-        private DamageType _DamageType = DamageType.Base;
-
-        /// <summary>
-        /// The type of the damage
-        /// </summary>
-        public DamageType DamageType
-        {
-            get { return _DamageType; }
-            set { _DamageType = value; }
         }
 
 
@@ -51,7 +37,12 @@ namespace Nucleus.Game
 
         public DamageEffect(double damage)
         {
-            Damage = damage;
+            _Damage = new Damage(damage);
+        }
+
+        public DamageEffect(double damage, DamageType damageType)
+        {
+            _Damage = new Damage(damage, damageType);
         }
 
         #endregion
@@ -65,7 +56,7 @@ namespace Nucleus.Game
             if (hP != null)
             {
                 // Calculate damage (taking account of target resistances/vulnerabilities)
-                double damage = Damage * DamageType.MultiplierFor(context.Target);
+                double damage = Damage.Value * Damage.DamageType.MultiplierFor(context.Target);
                 
                 // Apply damage
                 hP.Value -= damage;

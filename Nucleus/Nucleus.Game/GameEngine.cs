@@ -111,6 +111,14 @@ namespace Nucleus.Game
         }
 
         /// <summary>
+        /// Reset the game engine back to it's initial state
+        /// </summary>
+        public virtual void Reset()
+        {
+            StartUp();
+        }
+
+        /// <summary>
         /// Called every frame update
         /// </summary>
         public virtual void Update()

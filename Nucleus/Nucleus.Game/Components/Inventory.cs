@@ -42,6 +42,27 @@ namespace Nucleus.Game
             get { return _Equipped; }
         }
 
+        /// <summary>
+        /// Get a list of all the unique items currently eqipped in
+        /// an equipment slot.
+        /// Generated as-needed.
+        /// </summary>
+        public ElementCollection EquippedItems
+        {
+            get
+            {
+                var result = new ElementCollection();
+                foreach (var slot in _Equipped)
+                {
+                    if (slot.Item != null && !result.Contains(slot.Item.GUID))
+                    {
+                        result.Add(slot.Item);
+                    }
+                }
+                return result;
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -100,7 +121,22 @@ namespace Nucleus.Game
         /// <returns></returns>
         public bool DropAll(Element dropper, EffectContext context)
         {
+            Equipped.RemoveAllItems();
+            NotifyPropertyChanged(nameof(EquippedItems));
             return Slots.DropAll(dropper, context);
+        }
+
+        /// <summary>
+        /// Drop a specifiec item held in this inventory
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="dropper"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public bool DropItem(Element item, Element dropper, EffectContext context)
+        {
+            if (Equipped.RemoveItem(item)) NotifyPropertyChanged(nameof(EquippedItems));
+            return Slots.DropItem(item, dropper, context);
         }
 
         /// <summary>
@@ -111,6 +147,7 @@ namespace Nucleus.Game
         public bool RemoveItem(Element item)
         {
             Equipped.RemoveItem(item);
+            NotifyPropertyChanged(nameof(EquippedItems));
             return Slots.RemoveItem(item);
         }
 
@@ -132,10 +169,11 @@ namespace Nucleus.Game
         /// <returns></returns>
         public bool Equip(Element equipment)
         {
-            ItemSlot slot = Equipped.GetFirstAvailableFor(equipment);
+            ItemSlot slot = Equipped.GetFirstAvailableFor(equipment, true);
             if (slot != null)
             {
                 slot.Item = equipment;
+                NotifyPropertyChanged(nameof(EquippedItems));
                 return true;
             }
             return false;

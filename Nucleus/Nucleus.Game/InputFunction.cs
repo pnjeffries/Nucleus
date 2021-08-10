@@ -23,6 +23,11 @@ namespace Nucleus.Game
         Undefined = 0,
 
         /// <summary>
+        /// Abort/escape
+        /// </summary>
+        Abort = 100,
+
+        /// <summary>
         /// Movement (in any direction)
         /// </summary>
         Move = 1000,
@@ -66,6 +71,11 @@ namespace Nucleus.Game
         /// Pick up an item
         /// </summary>
         PickUp = 4000,
+
+        /// <summary>
+        /// Drop an item
+        /// </summary>
+        Drop = 5000,
 
         /// <summary>
         /// Use special ability 1

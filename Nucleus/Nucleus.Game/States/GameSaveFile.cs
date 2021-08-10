@@ -27,7 +27,7 @@ namespace Nucleus.Game
         #region Static Methods
 
         /// <summary>
-        /// Load a ModelDocument from a file stored in binary format
+        /// Load a GameSaveFile from a file stored in binary format
         /// </summary>
         /// <param name="filePath">The path of the file to be loaded.</param>
         /// <returns>The loaded document, if a document could indeed be loaded.

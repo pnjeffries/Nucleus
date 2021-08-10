@@ -43,12 +43,20 @@ namespace Nucleus.Game.Effects
 
         public override bool Apply(IActionLog log, EffectContext context)
         {
+            Status status = context?.Target?.GetData<Status>();
+            if (status != null)
+            {
+                // Cure poison
+                status.ClearEffects<Poisoned>();
+            }
             HitPoints hP = context?.Target?.GetData<HitPoints>();
             if (hP != null)
             {
+                // Heal up
+                context.SFX.Trigger(SFXKeywords.Heal, context.Target.GetNominalPosition());
                 double healing = Healing;
-
                 hP.Value += healing;
+
                 return true;
             }
             else return false;

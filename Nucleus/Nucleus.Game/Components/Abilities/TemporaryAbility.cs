@@ -10,16 +10,21 @@ namespace Nucleus.Game
     /// Base class for temporary abilities that are removed 
     /// </summary>
     [Serializable]
-    public abstract class TemporaryAbility : Ability
+    public abstract class TemporaryAbility : Ability, IStartOfTurn
     {
         protected override bool IsDisabled(TurnContext context)
         {
             return false; //TODO: Make disableable by status debuffs?
         }
 
-        public override void StartOfTurn(TurnContext context)
+        public void StartOfTurn(TurnContext context)
         {
-            base.StartOfTurn(context);
+            Delete();
+        }
+
+        public override void PopulateActions(TurnContext context)
+        {
+            base.PopulateActions(context);
             Delete();
         }
     }

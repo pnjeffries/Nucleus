@@ -1,4 +1,5 @@
-﻿using Nucleus.Geometry;
+﻿using Nucleus.Base;
+using Nucleus.Geometry;
 using Nucleus.Model;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace Nucleus.Game
     {
         #region Constructor
 
-        public BumpAttackAction(Element target, MapCell cell, Vector direction, double damage = 1, double knockback = 1)
+        public BumpAttackAction(Element target, MapCell cell, Vector direction, double damage = 1, double knockback = 1, IList<IEffect> otherEffects = null)
         {
             Target = target;
             Trigger = new ActionCellInputTrigger(cell.Index, InputFunction.Move);
@@ -25,7 +26,34 @@ namespace Nucleus.Game
             Effects.Add(new SFXImpactEffect());
             Effects.Add(new KnockbackEffect(direction, knockback));
             Effects.Add(new DamageEffect(damage));
-            
+            if (otherEffects != null)
+            {
+                foreach (var effect in otherEffects)
+                {
+                    var newEffect = effect.Duplicate();
+                    if (newEffect is IDirectionalEffect dEffect) dEffect.Direction = direction;
+                    Effects.Add(newEffect);
+                }
+            }  
+        }
+
+        public BumpAttackAction(Element target, MapCell cell, Vector direction, IList<IEffect> effects = null)
+        {
+            Target = target;
+            Trigger = new ActionCellInputTrigger(cell.Index, InputFunction.Move);
+
+            SelfEffects.Add(new ActorOrientationEffect(direction));
+            Effects.Add(new SFXImpactEffect());
+            if (effects != null)
+            {
+                foreach (var effect in effects)
+                {
+                    var newEffect = effect.Duplicate();
+                    if (newEffect is IDirectionalEffect dEffect) dEffect.Direction = direction;
+                    Effects.Add(newEffect);
+                }
+            }
+
         }
 
         #endregion

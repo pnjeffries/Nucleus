@@ -21,6 +21,11 @@ namespace Nucleus.Game
         /// </summary>
         public static readonly DamageType Base = new DamageType("Base");
 
+        /// <summary>
+        /// The poison damage type
+        /// </summary>
+        public static readonly DamageType Poison = new DamageType("Poison");
+        
         #endregion
 
         #region Constructors

@@ -54,33 +54,66 @@ namespace Nucleus.Game
                     if (CanTarget(element))
                     {
                         context.Target = element;
+                        WriteTargetLog(log, context);
                         base.ApplyEffects(log, context);
                     }
                 }
             }
         }
 
+        protected virtual void WriteTargetLog(IActionLog log, EffectContext context)
+        {
+            string postfix = "_Target";
+            if (log == null) return;
+            string key = this.GetType().Name + postfix;
+            if (Name != null && log.HasScriptFor(Name + postfix)) key = Name + postfix;
+            else if (!log.HasScriptFor(key)) return;
+
+            log.WriteScripted(context, key, context.Actor, context.Target);
+        }
+
         public override double AIScore(TurnContext context, ActionSelectionAI weights)
         {
             double result = 0;
+            var awareness = context.Element?.GetData<MapAwareness>();
+
+            // TEMP:
+            var target = ((RLState)context.State).Controlled;
+            // Ignore if the actor can't see the target
+            if (awareness != null && awareness.AwareOf(target) == false) target = null;
+
             foreach (MapCell cell in Target)
             {
+                
                 // Create a copy so that modifications to cell contents
                 // don't screw up the enumeration:
                 var elements = cell.Contents.ToList();
 
                 foreach (var element in elements)
                 {
-                    if (context.Element?.GetData<Faction>()?.IsEnemy(element?.GetData<Faction>()) ?? false)
+                    // Ignore if the actor can't see the element
+                    if (awareness != null && awareness.AwareOf(element) == false) continue;
+
+                    var faction = element?.GetData<Faction>();
+                    if (faction?.IsEnemy(element?.GetData<Faction>()) ?? false)
                     {
                         result += 10;
                     }
-                    if (context.Element?.GetData<Faction>()?.IsAlly(element?.GetData<Faction>()) ?? false)
+                    if (faction?.IsAlly(element?.GetData<Faction>()) ?? false)
                     {
-                        result -= context.RNG.NextDouble();
+                        result -= 10 * context.RNG.NextDouble();
                     }
                 }
+
+                // Tiebreaker:
+                if (target != null)
+                {
+                    double dist = cell.Position.DistanceToSquared(target.GetNominalPosition());
+                    if (dist == 0) result += 1;
+                    else result += 0.1 / dist;
+                }
             }
+
             return result;
         }
 

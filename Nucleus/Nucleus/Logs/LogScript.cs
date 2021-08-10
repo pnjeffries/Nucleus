@@ -131,16 +131,19 @@ namespace Nucleus.Logs
         }
 
         /// <summary>
-        /// Get the default unprocessed text record for the entry under 
+        /// Get the default unprocessed text record for the entry under the
+        /// specified key.  If no record is found the key itself will be returned.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
         public string GetText(string key)
         {
-            var entry = Entries[key.ToUpper()];
+            if (!Entries.ContainsKey(key)) return key;
+            var entry = Entries[key];
             if (entry == null) return key;
             return entry.Variations.First(); //TODO: apply markup?
         }
+
         #endregion
     }
 }

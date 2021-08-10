@@ -28,6 +28,18 @@ namespace Nucleus.Game
         /// </summary>
         public double BaseKnockback { get { return _BaseKnockback; } set { _BaseDamage = value; } }
 
+        private IList<IEffect> _OtherEffects = null;
+
+        /// <summary>
+        /// Other effects to be applied to the target (besides standard damage and knockback)
+        /// </summary>
+        public IList<IEffect> OtherEffects
+        {
+            get { return _OtherEffects; }
+            set { _OtherEffects = value; }
+        }
+
+
 
         public BumpAttackAbility() { }
 
@@ -37,9 +49,28 @@ namespace Nucleus.Game
             _BaseKnockback = knockback;
         }
 
+        public BumpAttackAbility(double damage, double knockback, params IEffect[] otherEffects)
+            : this(damage, knockback)
+        {
+            _OtherEffects = new EffectCollection();
+            foreach (var effect in otherEffects)
+            {
+                _OtherEffects.Add(effect);
+            }
+        }
+
 
         protected override void GenerateActions(TurnContext context, AvailableActions addTo)
         {
+            // Get equipped weapon
+            Element weapon = null;
+            var inventory = context.Element?.GetData<Inventory>();
+            if (inventory != null)
+            {
+                weapon = inventory.EquippedItems.FirstWithDataComponent<QuickAttack>();
+            }
+            QuickAttack attack = weapon?.GetData<QuickAttack>();
+
             // Bump attack:
             MapData mD = context.Element?.GetData<MapData>();
             if (mD != null && mD.MapCell != null)
@@ -55,7 +86,16 @@ namespace Nucleus.Game
                         if (context.Element?.GetData<Faction>()?.IsEnemy(target?.GetData<Faction>()) ?? false)
                         {
                             // Only allow bump attacks on elements of an opposing faction?
-                            addTo.Actions.Add(new BumpAttackAction(target, cell, direction, BaseDamage, BaseKnockback));
+                            if (attack != null)
+                            {
+                                // Weapon quick attack
+                                addTo.Actions.Add(new BumpAttackAction(target, cell, direction, attack.Effects));
+                            }
+                            else
+                            {
+                                // Bare-handed attack using base damage
+                                addTo.Actions.Add(new BumpAttackAction(target, cell, direction, BaseDamage, BaseKnockback, OtherEffects));
+                            }
                         }
                     }
                 }

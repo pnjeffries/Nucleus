@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Game.Actions
 {
+    /// <summary>
+    /// Use an item
+    /// </summary>
     [Serializable]
     public class UseItemAction : ElementTargetingAction
     {

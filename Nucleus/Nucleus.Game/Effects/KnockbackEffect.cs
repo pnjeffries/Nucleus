@@ -63,7 +63,22 @@ namespace Nucleus.Game
 
         #region Constructor
 
-        public KnockbackEffect(Vector direction, double power = 2)
+        /// <summary>
+        /// Directionless constructor.
+        /// Should be used for templates only.
+        /// </summary>
+        /// <param name="power"></param>
+        public KnockbackEffect(double power = 1) : this (Vector.UnitX, power)
+        {
+
+        }
+
+        /// <summary>
+        /// Directional constructor
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <param name="power"></param>
+        public KnockbackEffect(Vector direction, double power = 1)
         {
             Direction = direction;
             Power = power;

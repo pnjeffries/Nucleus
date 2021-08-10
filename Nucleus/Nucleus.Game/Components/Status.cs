@@ -24,6 +24,23 @@ namespace Nucleus.Game
             get { return _Effects; }
         }
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public Status()
+        {
+
+        }
+
+        /// <summary>
+        /// Initial status effects constructor
+        /// </summary>
+        /// <param name="effects"></param>
+        public Status(params IStatusEffect[] effects)
+        {
+            foreach (var effect in effects) Effects.Add(effect);
+        }
+
         public void EndOfTurn(TurnContext context)
         {
             // At the end of the turn, apply all status effects
@@ -32,6 +49,80 @@ namespace Nucleus.Game
             {
                 effect.Apply(context.Log, effectContext);
             }
+
+            // Remove spent effects
+            for (int i = Effects.Count - 1; i >= 0; i--)
+            {
+                var effect = Effects[i];
+                // Decrease lifespan
+                if (!double.IsNaN(effect.TimeRemaining))
+                {
+                    effect.TimeRemaining -= 1;
+                    if (effect.TimeRemaining <= 0)
+                    {
+                        Effects.RemoveAt(i);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Apply a new status effect to the parent element
+        /// </summary>
+        /// <param name="statusEffect"></param>
+        public void AddEffect(IStatusEffect statusEffect)
+        {
+            var existing = GetEffect(statusEffect.GetType());
+            if (existing == null)
+            {
+                Effects.Add(statusEffect);
+            }
+            else
+            {
+                // TODO: different behaviour for different things?
+                existing.TimeRemaining += statusEffect.TimeRemaining;
+            }
+        }
+
+        /// <summary>
+        /// Clear all effects of the specified type from the status
+        /// </summary>
+        /// <typeparam name="TEffect"></typeparam>
+        /// <returns>True if any effects were successfully removed</returns>
+        public bool ClearEffects<TEffect>()
+            where TEffect : IStatusEffect
+        {
+            bool result = false;
+            // Remove spent effects
+            for (int i = Effects.Count - 1; i >= 0; i--)
+            {
+                var effect = Effects[i];
+                // TODO: Decrease count?
+                if (effect is TEffect)
+                {
+                    Effects.RemoveAt(i);
+                    result = true;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Get the first status effect of the specified type currently
+        /// applied to this component
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public IStatusEffect GetEffect(Type type)
+        {
+            foreach (var effect in Effects)
+            {
+                if (type.IsAssignableFrom(effect.GetType()))
+                {
+                    return effect;
+                }
+            }
+            return null;
         }
     }
 }

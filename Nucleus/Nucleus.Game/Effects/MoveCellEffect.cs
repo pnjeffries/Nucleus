@@ -57,12 +57,27 @@ namespace Nucleus.Game
                     if (newCell != null && (mover.GetData<MapCellCollider>()?.CanEnter(newCell) ?? true))
                     {
                         newCell.PlaceInCell(mover);
+                        if (context.IsPlayerControlled(mover))
+                        {
+                            WriteFeetItems(log, context, newCell);
+                        }
                         return true;
                     }
                 }
 
             }
             return false;
+        }
+
+        private void WriteFeetItems(IActionLog log, EffectContext context, MapCell cell)
+        {
+            var items = cell.Contents.AllWithDataComponent<PickUp>();
+            if (items.Count > 0)
+            {
+                log.WriteLine();
+                log.WriteScripted(context, nameof(MoveCellEffect) + "_Item", context.Target, items.First());
+                // TODO: Multiple items
+            }
         }
 
         #endregion

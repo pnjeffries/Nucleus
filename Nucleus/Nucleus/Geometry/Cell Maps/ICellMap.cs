@@ -546,5 +546,35 @@ namespace Nucleus.Geometry
             }
             return result;
         }
+
+        /// <summary>
+        /// Keep moving through the grid in the specified direction until a cell is found which
+        /// satisfies the specified condition
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="map"></param>
+        /// <param name="direction"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="condition"></param>
+        /// <param name="maxRange">The maximum number of cells which may be visited before terminating</param>
+        /// <param name="returnLast">If the condition is not met before the max range or the end of the map is found, return the last cell visited</param>
+        /// <returns></returns>
+        public static int FirstCellInDirectionWhere<T>(this ICellMap map, int startIndex, Vector direction, Func<T, bool> condition, int maxRange = int.MaxValue, bool returnLast = false)
+        {
+            if (!map.Exists(startIndex)) return returnLast ? startIndex : -1;
+
+            int index = startIndex;
+            for (int i = 0; i < maxRange; i++)
+            {
+                int nextIndex = map.AdjacentCellIndex(index, direction);
+                if (!map.Exists(nextIndex)) return returnLast ? index : -1;
+                object cell = map.GetCell(nextIndex);
+                if (cell is T tCell && condition.Invoke(tCell)) return nextIndex;
+
+                index = nextIndex;
+            }
+
+            return returnLast ? index : -1;
+        }
     }
 }

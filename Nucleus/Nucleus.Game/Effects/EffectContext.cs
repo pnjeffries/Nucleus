@@ -184,7 +184,7 @@ namespace Nucleus.Game
         public bool IsPlayerAwareOf(Element element)
         {
             var bState = State as MapState;
-            if (bState != null)
+            if (bState != null && element != null)
             {
                 // Is the element the player themselves?
                 if (element == bState.Controlled) return true;
@@ -199,6 +199,22 @@ namespace Nucleus.Game
                 // Check if the player can see it
                 var awareness = bState.Controlled.GetData<MapAwareness>();
                 return awareness.AwareOf(element, true);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Is the specified element player-controlled?
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public bool IsPlayerControlled(Element element)
+        {
+            var bState = State as MapState;
+            if (bState != null && element != null)
+            {
+                // Is the element the player themselves?
+                if (element == bState.Controlled) return true;
             }
             return false;
         }

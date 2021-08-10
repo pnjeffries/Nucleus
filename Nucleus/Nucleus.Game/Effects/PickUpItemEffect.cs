@@ -30,6 +30,8 @@ namespace Nucleus.Game
                     Inventory inventory = context.Actor?.GetData<Inventory>();
                     if (inventory != null && inventory.AddItem(context.Target))
                     {
+                        context.SFX.Trigger(SFXKeywords.Grab, context.Target.GetNominalPosition());
+
                         mD.MapCell.RemoveFromCell(context.Target);
                         context.State.Elements.Remove(context.Target);
                         mD.MapCell = null;

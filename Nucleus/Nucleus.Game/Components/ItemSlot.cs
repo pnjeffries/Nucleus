@@ -129,14 +129,17 @@ namespace Nucleus.Game
         /// <summary>
         /// Get the first equipment slot that is not currently occupied
         /// </summary>
-        /// <param name="item"></param>
+        /// <param name="slots"></param>
+        /// <param name="item">he item</param>
+        /// <param name="replaceCurrent">If false, the slot will not be considered available if an item is
+        /// already held there.</param>
         /// <returns></returns>
-        public static TSlot GetFirstAvailableFor<TSlot>(this IList<TSlot> slots, Element item)
+        public static TSlot GetFirstAvailableFor<TSlot>(this IList<TSlot> slots, Element item, bool replaceCurrent = false)
             where TSlot : ItemSlot
         {
             foreach (var slot in slots)
             {
-                if (slot.Item == null && slot.CanHold(item)) return slot;
+                if ((replaceCurrent || slot.Item == null) && slot.CanHold(item)) return slot;
             }
             return null;
         }
@@ -159,6 +162,30 @@ namespace Nucleus.Game
         }
 
         /// <summary>
+        /// Drop a specific item
+        /// </summary>
+        /// <typeparam name="TSlot"></typeparam>
+        /// <param name="slots"></param>
+        /// <param name="item"></param>
+        /// <param name="dropper"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public static bool DropItem<TSlot>(this IList<TSlot> slots, Element item, Element dropper, EffectContext context)
+            where TSlot: ItemSlot
+        {
+            bool dropped = false;
+            foreach (var slot in slots)
+            {
+                if (slot.Item == item)
+                {
+                    if (!dropped && slot.DropItem(dropper, context)) dropped = true;
+                    else slot.Item = null;
+                }
+            }
+            return dropped;
+        }
+
+        /// <summary>
         /// Remove the specified item from any slot which contains it in this collection
         /// </summary>
         /// <typeparam name="TSlot"></typeparam>
@@ -178,6 +205,15 @@ namespace Nucleus.Game
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Clear items from all slots in this collection
+        /// </summary>
+        public static void RemoveAllItems<TSlot>(this IList<TSlot> slots)
+            where TSlot:ItemSlot
+        {
+            foreach (var slot in slots) slot.Item = null;
         }
 
         /// <summary>

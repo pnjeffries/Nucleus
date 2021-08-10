@@ -34,9 +34,21 @@ namespace Nucleus.Game
             SelfEffects.Add(new AddAbilityEffect(new DirectionalItemUseAbility(actionFactory)));
         }
 
+        public WindUpAction(string name, ActionFactory actionFactory, params IEffect[] selfEffects) : this(name, actionFactory)
+        {
+            foreach (var selfEffect in selfEffects)
+                SelfEffects.Add(selfEffect);
+        }
+
         public WindUpAction(string name, ActionFactory actionFactory, InputFunction input) : this(name, actionFactory)
         {
             Trigger = new ActionInputTrigger(input);
+        }
+
+        public WindUpAction(string name, ActionFactory actionFactory, InputFunction input, params IEffect[] selfEffects) : this(name, actionFactory, input)
+        {
+            foreach (var selfEffect in selfEffects)
+                SelfEffects.Add(selfEffect);
         }
 
         #endregion

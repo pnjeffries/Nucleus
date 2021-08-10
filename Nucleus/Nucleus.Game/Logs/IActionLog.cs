@@ -35,7 +35,6 @@ namespace Nucleus.Logs
         {
             bool known = false;
 
-            // Disabled temporarily
             for (int i = 0; i < subjects.Length; i++)
             {
                 if (subjects[i] is Element el)
@@ -43,6 +42,7 @@ namespace Nucleus.Logs
                     if (context.IsPlayerAwareOf(el)) known = true;
                     else
                     {
+                        // Disabled temporarily - was not working well for items and calling things 'a something'...
                         //subjects[i] = new GameElement("something");
                     }
                 }

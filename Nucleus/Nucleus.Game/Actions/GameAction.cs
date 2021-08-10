@@ -59,6 +59,16 @@ namespace Nucleus.Game
             get { return _SelfEffects; }
         }
 
+        /// <summary>
+        /// The timestep necessary to execute this action.
+        /// In a turn based game, this is the proportion
+        /// of a turn this action takes.
+        /// </summary>
+        public virtual double ExecutionTime
+        {
+            get { return 1; }
+        }
+
         #endregion
 
         #region Constructors

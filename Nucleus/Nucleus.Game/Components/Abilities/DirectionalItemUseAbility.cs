@@ -1,4 +1,5 @@
 ﻿using Nucleus.Geometry;
+using Nucleus.Logs;
 using Nucleus.Model;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,8 @@ namespace Nucleus.Game
 
         protected override void GenerateActions(TurnContext context, AvailableActions addTo)
         {
+            context.Log?.WriteLine();
+            context.Log?.WriteScripted("DirectionalItem_Hint");
             if (ActionFactory != null) ActionFactory.GenerateActions(context, addTo);
             //TODO: Always allow cancelling?
         }

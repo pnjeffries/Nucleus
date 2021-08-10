@@ -41,7 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\AbortAction.cs" />
     <Compile Include="Actions\ActionCellInputTrigger.cs" />
+    <Compile Include="Actions\DropItemAction.cs" />
+    <Compile Include="Actions\Factories\RangedAOEAttackActionFactory.cs" />
+    <Compile Include="Actions\PrepareToDropItemAction.cs" />
     <Compile Include="Actions\UseItemAction.cs" />
     <Compile Include="Actions\ExitStageAction.cs" />
     <Compile Include="Actions\Factories\ActionFactory.cs" />
@@ -76,6 +80,9 @@
     <Compile Include="Components\Abilities\Ability.cs" />
     <Compile Include="Components\Abilities\BumpAttackAbility.cs" />
     <Compile Include="Components\Abilities\DirectionalItemUseAbility.cs" />
+    <Compile Include="Components\Abilities\DropAbility.cs" />
+    <Compile Include="Components\Abilities\SlotItemDropAbility.cs" />
+    <Compile Include="Components\Abilities\IAbility.cs" />
     <Compile Include="Components\Abilities\OpenDoorAbility.cs" />
     <Compile Include="Components\ConsumableItem.cs" />
     <Compile Include="Components\DamageVulnerabilities.cs" />
@@ -104,6 +111,7 @@
     <Compile Include="Components\PickUp.cs" />
     <Compile Include="Components\Abilities\PickUpAbility.cs" />
     <Compile Include="Components\Abilities\TemporaryAbility.cs" />
+    <Compile Include="Components\QuickAttack.cs" />
     <Compile Include="Components\StageExit.cs" />
     <Compile Include="Components\Status.cs" />
     <Compile Include="Components\TemporaryStatus.cs" />
@@ -114,12 +122,15 @@
     <Compile Include="Effects\ActorOrientationEffect.cs" />
     <Compile Include="Effects\AddAbilityEffect.cs" />
     <Compile Include="Effects\AnimationEffect.cs" />
+    <Compile Include="Effects\ApplyStatusEffect.cs" />
     <Compile Include="Effects\BasicEffect.cs" />
     <Compile Include="Effects\ConsumeEffect.cs" />
     <Compile Include="Effects\DamageEffect.cs" />
     <Compile Include="Effects\DamageType.cs" />
     <Compile Include="Effects\DisableEffect.cs" />
+    <Compile Include="Effects\DropItemEffect.cs" />
     <Compile Include="Effects\EffectContext.cs" />
+    <Compile Include="Effects\EquipItemEffect.cs" />
     <Compile Include="Effects\ExitStageEffect.cs" />
     <Compile Include="Effects\HealEffect.cs" />
     <Compile Include="Effects\IDirectionalEffect.cs" />
@@ -129,6 +140,7 @@
     <Compile Include="Effects\SFXEffect.cs" />
     <Compile Include="Effects\SFXImpactEffect.cs" />
     <Compile Include="Effects\StatusEffects\IStatusEffect.cs" />
+    <Compile Include="Effects\StatusEffects\Poisoned.cs" />
     <Compile Include="Effects\StatusEffects\StatusEffectCollection.cs" />
     <Compile Include="Faction.cs" />
     <Compile Include="GameElement.cs" />
@@ -157,6 +169,10 @@
     <Compile Include="Effects\MoveCellEffect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="States\RLStateSaveFile.cs" />
+    <Compile Include="Stats\Damage.cs" />
+    <Compile Include="Stats\IModifier.cs" />
+    <Compile Include="Stats\Knockback.cs" />
+    <Compile Include="Stats\Stat.cs" />
     <Compile Include="TurnContext.cs" />
     <Compile Include="UpdateInfo.cs" />
   </ItemGroup>

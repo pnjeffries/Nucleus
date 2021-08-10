@@ -14,5 +14,6 @@ namespace Nucleus.Game
     [Serializable]
     public class EquipmentSlotCollection : UniquesCollection<EquipmentSlot>
     {
+       
     }
 }

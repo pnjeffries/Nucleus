@@ -145,7 +145,12 @@ namespace Nucleus.Game
         {
             base.InputRelease(input, direction);
             Element controlled = Controlled;
-            if (controlled != null && controlled == Active)
+            if (controlled == null || controlled.IsDeleted)
+            {
+                // Player is dead...
+                GameEngine.Instance.Reset();
+            }
+            else if (controlled == Active)
             {
                 var aA = controlled.GetData<AvailableActions>();
 
@@ -164,13 +169,29 @@ namespace Nucleus.Game
 
                 // Haven't found a targeted action; fallback to:
                 if (action == null) action = aA.ActionForInput(input);
+
                 if (action != null)
                 {
                     action.Enact(Log, new EffectContext(controlled, this, direction));
-                    EndTurnOf(controlled);
+                    if (action.ExecutionTime > 0) EndTurnOf(controlled);
+                    // TODO: Allow 'bonus actions'
+                    else
+                    {
+                        aA.RefreshActions(CreateTurnContext(controlled));
+                    }
                 }
 
             }
+        }
+
+        /// <summary>
+        /// Create a new TurnContext parameter set for the specified element's turn
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        private TurnContext CreateTurnContext(Element element)
+        {
+            return new TurnContext(this, Stage, element, RNG, Log);
         }
 
         /// <summary>
@@ -179,7 +200,7 @@ namespace Nucleus.Game
         /// <param name="element"></param>
         public void StartTurnOf(Element element)
         {
-            var context = new TurnContext(this, Stage, element, RNG, Log);
+            var context = CreateTurnContext(element);
             Active = element;
             for (int i = 0; i < element.Data.Count; i++)
             {
@@ -242,7 +263,7 @@ namespace Nucleus.Game
 
             if (!Controlled.IsDeleted && Controlled != element) //Pause after player's turn
             {
-                // Only do the next turn if there is no AI delay and the FPS is not dropping much below 60.
+                // Only do the next turn if there is no AI delay and the FPS is not dropping much below 30.
                 // It's not clear if this is entirely working correctly under WebGL...
                 if (_AITurnCountDown <= 0 && DateTime.UtcNow <= _LastUpdateStart + TimeSpan.FromSeconds(1.0/30))
                     NextTurn();
