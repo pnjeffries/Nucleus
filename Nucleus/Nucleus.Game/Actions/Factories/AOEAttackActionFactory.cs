@@ -50,12 +50,23 @@ namespace Nucleus.Game
         private IList<IEffect> _Effects = null;
 
         /// <summary>
-        /// The blueprint effects which will be applied by the 
+        /// The blueprint effects which will be applied by actions
         /// </summary>
         public IList<IEffect> Effects
         {
             get { return _Effects; }
             set { _Effects = value; }
+        }
+
+        private IList<IEffect> _SelfEffects = null;
+
+        /// <summary>
+        /// The blueprint effects which will be applied by actions
+        /// </summary>
+        public IList<IEffect> SelfEffects
+        {
+            get { return _SelfEffects; }
+            set { _SelfEffects = value; }
         }
 
         #endregion
@@ -115,10 +126,24 @@ namespace Nucleus.Game
         /// with the specified list of alternating X and Y offset components.
         /// </summary>
         /// <param name="offsetComponents"></param>
-        public AOEAttackActionFactory(IList<IEffect> effects, string sourceSFX, params double[] offsetComponents)
+        public AOEAttackActionFactory(IList<IEffect> effects, string actionName, string sourceSFX, params double[] offsetComponents)
             : this(sourceSFX, offsetComponents)
         {
+            ActionName = actionName;
             _Effects = effects;
+        }
+
+        /// <summary>
+        /// Creates an AOEAttackAction factory to create an attack pattern
+        /// with the specified list of alternating X and Y offset components.
+        /// </summary>
+        /// <param name="offsetComponents"></param>
+        public AOEAttackActionFactory(IList<IEffect> effects, IList<IEffect> selfEffects, string actionName, string sourceSFX, params double[] offsetComponents)
+            : this(effects, actionName, sourceSFX, offsetComponents)
+        {
+            ActionName = actionName;
+            _Effects = effects;
+            _SelfEffects = selfEffects;
         }
 
         #endregion
@@ -127,9 +152,14 @@ namespace Nucleus.Game
 
         protected override GameAction ActionForDirection(Vector position, Vector direction, MapCell triggerCell, TurnContext context)
         {
+            var cells = TargetableCells(position, direction, context);
+            return new AOEAttackAction(cells, triggerCell, direction, Effects, SelfEffects, SourceSFX);
+        }
+
+        public override IList<MapCell> TargetableCells(Vector position, Vector direction, TurnContext context)
+        {
             var pattern = Offsets.Rotate(direction.Angle).Move(position);
-            var cells = context.Stage.Map.CellsAt(pattern);
-            return new AOEAttackAction(cells, triggerCell, direction, Effects, SourceSFX);
+            return context.Stage.Map.CellsAt(pattern);
         }
 
         #endregion

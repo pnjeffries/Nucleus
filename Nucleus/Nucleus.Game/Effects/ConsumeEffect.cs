@@ -1,5 +1,6 @@
 ﻿using Nucleus.Game.Components;
 using Nucleus.Logs;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,37 @@ namespace Nucleus.Game.Effects
     [Serializable]
     public class ConsumeEffect : BasicEffect
     {
+        private Element _TargetOverride = null;
+
+        /// <summary>
+        /// The item to be consumed.
+        /// If null, the contextual target will be used instead.
+        /// </summary>
+        public Element TargetOverride
+        {
+            get { return _TargetOverride; }
+            set { _TargetOverride = value; }
+        }
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public ConsumeEffect() { }
+
+        /// <summary>
+        /// Target item constructor
+        /// </summary>
+        /// <param name="targetItem">The item to be consumed</param>
+        public ConsumeEffect(Element targetItem) 
+        {
+            _TargetOverride = targetItem;
+        }
+
         public override bool Apply(IActionLog log, EffectContext context)
         {
-            ConsumableItem cItem = context.Target.GetData<ConsumableItem>();
+            var target = TargetOverride;
+            if (target == null) target = context.Target;
+            ConsumableItem cItem = target.GetData<ConsumableItem>();
             if (cItem == null) return false;
 
             cItem.Uses -= 1;
@@ -26,24 +55,24 @@ namespace Nucleus.Game.Effects
                 Inventory inventory = context.Actor?.GetData<Inventory>();
                 if (inventory != null)
                 {
-                    inventory.RemoveItem(context.Target);
+                    inventory.RemoveItem(target);
                 }
-                WriteConsumptionToLog(log, context);
-                context.Target.Delete();
+                WriteConsumptionToLog(log, target, context);
+                target.Delete();
             }
 
             return true;
         }
 
-        private void WriteConsumptionToLog(IActionLog log, EffectContext context)
+        private void WriteConsumptionToLog(IActionLog log, Element target, EffectContext context)
         {
-            string key = "Consumed_" + context.Target?.Name;
+            string key = "Consumed_" + target?.Name;
             if (!log.HasScriptFor(key))
             {
                 // Fallback generic death message
                 key = "Consumed";
             }
-            log.WriteScripted(context, key, context.Actor, context.Target);
+            log.WriteScripted(context, key, context.Actor, target);
         }
     }
 }

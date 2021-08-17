@@ -31,9 +31,31 @@ namespace Nucleus.Game
                     Vector position = mD.MapCell.Position;
                     Vector direction = cell.Position -position;
                     GameAction action = ActionForDirection(position, direction, cell, context);
-                    if (action != null) addTo.Actions.Add(action);
+                    if (action != null)
+                    {
+                        if (ActionName != null) action.Name = ActionName;
+                        addTo.Actions.Add(action);
+                    }
                 }
             }
+        }
+
+        public override IList<MapCell> TargetableCells(TurnContext context)
+        {
+            var result = new List<MapCell>();
+            MapData mD = context.Element?.GetData<MapData>();
+            if (mD != null && mD.MapCell != null)
+            {
+                IList<MapCell> adjacent = context.Stage?.Map?.AdjacentCells(mD.MapCell.Index);
+                foreach (var cell in adjacent)
+                {
+                    Vector position = mD.MapCell.Position;
+                    Vector direction = cell.Position - position;
+                    var cells = TargetableCells(position, direction, context);
+                    result.AddRange(cells);
+                }
+            }
+            return result;
         }
 
         /// <summary>

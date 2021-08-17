@@ -1,4 +1,5 @@
-﻿using Nucleus.Game.Effects;
+﻿using Nucleus.Extensions;
+using Nucleus.Game.Effects;
 using Nucleus.Geometry;
 using Nucleus.Model;
 using System;
@@ -15,12 +16,8 @@ namespace Nucleus.Game
     /// </summary>
     public class WindUpAction : GameAction
     {
-        #region Properties
-
-        #endregion
 
         #region Constructor
-
 
         public WindUpAction(ActionFactory actionFactory) : base()
         {
@@ -55,22 +52,33 @@ namespace Nucleus.Game
 
         #region Methods
 
+        private IList<MapCell> GetTargetableCells(TurnContext context)
+        {
+            var aAE = SelfEffects.FirstOfType<AddAbilityEffect>();
+            if (aAE == null) return null;
+
+            if (aAE.Ability is DirectionalItemUseAbility dIUA)
+            {
+                return dIUA.ActionFactory?.TargetableCells(context);
+            }
+            return null;
+        }
+
         public override double AIScore(TurnContext context, ActionSelectionAI weights)
         {
             Element self = context.Element;
             var mDS = self?.GetData<MapData>();
             var mA = self.GetData<MapAwareness>();
 
+            var cells = GetTargetableCells(context);
+
             // TEMP:
             Element target = ((RLState)context.State).Controlled;
             var mDT = target?.GetData<MapData>();
 
-            if (mDT != null && !target.IsDeleted && mA.AwarenessOfCell(mDT.MapCell.Index) > 0)
+            if (mDT?.MapCell != null && !target.IsDeleted && mA.AwarenessOfCell(mDT.MapCell.Index) >= MapAwareness.Visible)
             {
-                // Distance calculation:
-                double manDist = mDS.Position.DistanceTo(mDT.Position);
-                // Works for sword slash, but need more detail for other things:
-                if (manDist < 2.5) //TEMP
+                if (cells.Contains(mDT.MapCell) || cells.ContainsAny(mDT.MapCell.AdjacentCells()))
                 {
                     return context.RNG.NextDouble() * 2;
                 }

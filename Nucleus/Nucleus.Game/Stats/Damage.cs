@@ -56,9 +56,32 @@ namespace Nucleus.Game
 
         #endregion
 
+        #region Methods
+
+        /// <summary>
+        /// Create a copy of this damage with the specified new value
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public Damage WithValue(double value)
+        {
+            return new Damage(value, DamageType);
+        }
+
+        #endregion
+
         #region Operators
 
-
+        /// <summary>
+        /// Multiplication operator
+        /// </summary>
+        /// <param name="d"></param>
+        /// <param name="scalar"></param>
+        /// <returns></returns>
+        public static Damage operator * (Damage d, double scalar)
+        {
+            return d.WithValue(d.Value * scalar);
+        }
 
         #endregion
     }

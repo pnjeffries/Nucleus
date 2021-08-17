@@ -1,4 +1,5 @@
 ﻿using Nucleus.Base;
+using Nucleus.Game.Effects.StatusEffects;
 using Nucleus.Model;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace Nucleus.Game
     /// Element status effects
     /// </summary>
     [Serializable]
-    public class Status : Unique, IElementDataComponent, IEndOfTurn
+    public class Status : Unique, IElementDataComponent, IEndOfTurn, IDefense, IStartOfTurn
     {
         private StatusEffectCollection _Effects = new StatusEffectCollection();
 
@@ -41,15 +42,8 @@ namespace Nucleus.Game
             foreach (var effect in effects) Effects.Add(effect);
         }
 
-        public void EndOfTurn(TurnContext context)
+        public void StartOfTurn(TurnContext context)
         {
-            // At the end of the turn, apply all status effects
-            var effectContext = new EffectContext(context.Element, context.Element, context.State, context.Stage, context.RNG);
-            foreach (var effect in Effects)
-            {
-                effect.Apply(context.Log, effectContext);
-            }
-
             // Remove spent effects
             for (int i = Effects.Count - 1; i >= 0; i--)
             {
@@ -63,6 +57,16 @@ namespace Nucleus.Game
                         Effects.RemoveAt(i);
                     }
                 }
+            }
+        }
+
+        public void EndOfTurn(TurnContext context)
+        {
+            // At the end of the turn, apply all status effects
+            var effectContext = new EffectContext(context.Element, context.Element, context.State, context.Stage, context.RNG);
+            foreach (var effect in Effects)
+            {
+                effect.Apply(context.Log, effectContext);
             }
         }
 
@@ -123,6 +127,19 @@ namespace Nucleus.Game
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Adjust the specified damage value based on this defense
+        /// </summary>
+        /// <returns></returns>
+        public Damage Defend(Damage damage)
+        {
+            foreach (var status in Effects)
+            {
+                if (status is IDefense defense) damage = defense.Defend(damage);
+            }
+            return damage;
         }
     }
 }

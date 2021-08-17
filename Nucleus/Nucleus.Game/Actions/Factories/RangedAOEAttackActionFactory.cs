@@ -35,15 +35,21 @@ namespace Nucleus.Game
 
         #region Constructors
 
-        public RangedAOEAttackActionFactory(IList<IEffect> effects, string sourceSFX, params double[] offsetComponents) : base(effects, sourceSFX, offsetComponents)
+        public RangedAOEAttackActionFactory(IList<IEffect> effects, string actionName, string sourceSFX, params double[] offsetComponents) : base(effects, actionName, sourceSFX, offsetComponents)
         {
 
         }
 
-        public RangedAOEAttackActionFactory(double range, IList<IEffect> effects, string sourceSFX, params double[] offsetComponents) : base(effects, sourceSFX, offsetComponents)
+        public RangedAOEAttackActionFactory(double range, IList<IEffect> effects, string actionName, string sourceSFX, params double[] offsetComponents) : base(effects, actionName, sourceSFX, offsetComponents)
         {
             _Range = range;
         }
+
+        public RangedAOEAttackActionFactory(double range, IList<IEffect> effects, IList<IEffect> selfEffects, string actionName, string sourceSFX, params double[] offsetComponents) : base(effects, selfEffects, actionName, sourceSFX, offsetComponents)
+        {
+            _Range = range;
+        }
+
 
         #endregion
 
@@ -54,11 +60,11 @@ namespace Nucleus.Game
             return !_ProjectileCollider.CanEnter(cell);
         }
 
-        protected override GameAction ActionForDirection(Vector position, Vector direction, MapCell triggerCell, TurnContext context)
+        public override IList<MapCell> TargetableCells(Vector position, Vector direction, TurnContext context)
         {
             var cell = context.Stage.Map.CellAt(position)?.FirstCellInDirectionWhere(direction, ProjectileHit, (int)_Range, true);
             if (cell != null) position = cell.Position; //Update position to impact point
-            return base.ActionForDirection(position, direction, triggerCell, context);
+            return base.TargetableCells(position, direction, context);
         }
 
         #endregion

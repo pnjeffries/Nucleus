@@ -95,8 +95,7 @@ namespace Nucleus.Logs
         /// <param name="subjects"></param>
         public void WriteScripted(string key, params object[] subjects)
         {
-            var entry = Script.Entries[key];
-            if (entry == null)
+            if (!Script.Entries.TryGetValue(key, out LogScriptEntry entry))
             {
                 WriteText("KEY '" + key + "' NOT FOUND!");
             }

@@ -1007,5 +1007,35 @@ namespace Nucleus.Extensions
             list.RemoveAt(index);
             return result;
         }
+
+        /// <summary>
+        /// Does this collection contain any of the specified values?
+        /// </summary>
+        /// <param name="col"></param>
+        /// <param name="anyOf"></param>
+        /// <returns></returns>
+        public static bool ContainsAny(this IList col, IEnumerable anyOf)
+        {
+            foreach (var item in anyOf)
+            {
+                if (col.Contains(item)) return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Does this collection contain any of the specified values?
+        /// </summary>
+        /// <param name="col"></param>
+        /// <param name="anyOf"></param>
+        /// <returns></returns>
+        public static bool ContainsAny<T>(this IList<T> col, IEnumerable<T> anyOf)
+        {
+            foreach (var item in anyOf)
+            {
+                if (col.Contains(item)) return true;
+            }
+            return false;
+        }
     }
 }

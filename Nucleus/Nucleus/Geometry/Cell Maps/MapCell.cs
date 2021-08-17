@@ -146,6 +146,19 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Get all cells adjacent to this one.
+        /// </summary>
+        /// <typeparam name="TMapCell"></typeparam>
+        /// <param name="cell"></param>
+        /// <returns></returns>
+        public static IList<TMapCell> AdjacentCells<TMapCell>(this TMapCell cell)
+            where TMapCell : MapCell
+        {
+            if (cell == null) return null;
+            else return ((ICellMap<TMapCell>)cell.Map).AdjacentCells(cell.Index);
+        }
+
+        /// <summary>
         /// Travels through the map in the specified direction until a cell meeting the specified condition
         /// is encountered (or the limits are reached)
         /// </summary>

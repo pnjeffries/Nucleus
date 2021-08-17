@@ -76,6 +76,8 @@ namespace Nucleus.Game
         {
             double result = 0;
             var awareness = context.Element?.GetData<MapAwareness>();
+            var faction = context.Element?.GetData<Faction>();
+            if (faction == null) return 0;
 
             // TEMP:
             var target = ((RLState)context.State).Controlled;
@@ -84,7 +86,6 @@ namespace Nucleus.Game
 
             foreach (MapCell cell in Target)
             {
-                
                 // Create a copy so that modifications to cell contents
                 // don't screw up the enumeration:
                 var elements = cell.Contents.ToList();
@@ -92,9 +93,8 @@ namespace Nucleus.Game
                 foreach (var element in elements)
                 {
                     // Ignore if the actor can't see the element
-                    if (awareness != null && awareness.AwareOf(element) == false) continue;
+                    if (awareness != null && !awareness.AwareOf(element)) continue;
 
-                    var faction = element?.GetData<Faction>();
                     if (faction?.IsEnemy(element?.GetData<Faction>()) ?? false)
                     {
                         result += 10;

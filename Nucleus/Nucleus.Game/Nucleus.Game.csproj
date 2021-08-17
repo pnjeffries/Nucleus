@@ -72,6 +72,7 @@
     <Compile Include="Artitecture\RoomCollection.cs" />
     <Compile Include="Artitecture\RoomTemplateCollection.cs" />
     <Compile Include="Artitecture\RoomType.cs" />
+    <Compile Include="Artitecture\StageStyle.cs" />
     <Compile Include="Artitecture\WeightedTable.cs" />
     <Compile Include="Cards\Card.cs" />
     <Compile Include="Cards\PlayingCard.cs" />
@@ -139,8 +140,11 @@
     <Compile Include="Effects\PickUpItemEffect.cs" />
     <Compile Include="Effects\SFXEffect.cs" />
     <Compile Include="Effects\SFXImpactEffect.cs" />
+    <Compile Include="Effects\StatusEffects\IDefense.cs" />
     <Compile Include="Effects\StatusEffects\IStatusEffect.cs" />
     <Compile Include="Effects\StatusEffects\Poisoned.cs" />
+    <Compile Include="Effects\StatusEffects\Shielded.cs" />
+    <Compile Include="Effects\StatusEffects\StatusEffect.cs" />
     <Compile Include="Effects\StatusEffects\StatusEffectCollection.cs" />
     <Compile Include="Faction.cs" />
     <Compile Include="GameElement.cs" />

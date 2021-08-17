@@ -85,6 +85,12 @@ namespace Nucleus.Game
         public int PathToExit { get; set; } = 8;
 
         /// <summary>
+        /// The minimum number of rooms on a route between two others
+        /// before which a new connection will be considered
+        /// </summary>
+        public int MinLoopSize { get; set; } = 4;
+
+        /// <summary>
         /// If set to true, parallel corridors will be detected and prevented
         /// </summary>
         public bool PreventParallelCorridors { get; set; } = true;
@@ -103,6 +109,19 @@ namespace Nucleus.Game
         public DungeonArtitect(int iSize, int jSize)
         {
             ClearBlueprint(iSize, jSize);
+        }
+
+        /// <summary>
+        /// Creates a new dungeon artitect to work within the specified bounds
+        /// using the specified style
+        /// </summary>
+        /// <param name="iSize"></param>
+        /// <param name="jSize"></param>
+        /// <param name="style"></param>
+        public DungeonArtitect(int iSize, int jSize, StageStyle style) : this(iSize,jSize)
+        {
+            Templates.AddRange(style.Templates);
+            MinLoopSize = style.MinLoopSize;
         }
 
         #endregion
@@ -784,7 +803,7 @@ namespace Nucleus.Game
                         otherRoom.Template.MaxConnections > otherRoom.Connections.Count) &&
                         !otherRoom.IsConnectedTo(parent,2))
                     {
-                        if (result == false && !otherRoom.IsConnectedTo(parent, 4)) result = true;
+                        if (result == false && !otherRoom.IsConnectedTo(parent, MinLoopSize)) result = true;
                         // TODO: Check room connections
                         GenerateDoorway(iDoor, jDoor, direction, template.EntryWidth);
                         if (parent != null)

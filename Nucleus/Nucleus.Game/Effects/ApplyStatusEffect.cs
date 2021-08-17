@@ -42,7 +42,11 @@ namespace Nucleus.Game.Effects
         private void WriteStatusChangeToLog(IActionLog log, EffectContext context)
         {
             string key = "ApplyStatusEffect_" + StatusEffect?.GetType().Name;
-            log.WriteScripted(context, key, context.Actor, context.Target);
+            if (log.HasScriptFor(key) && context.IsPlayerAwareOf(context.Target))
+            {
+                log.WriteLine();
+                log.WriteScripted(context, key, context.Actor, context.Target);
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nucleus.Game.Effects.StatusEffects;
 using Nucleus.Geometry;
 using Nucleus.Logs;
 
@@ -55,9 +56,18 @@ namespace Nucleus.Game
             HitPoints hP = context?.Target?.GetData<HitPoints>();
             if (hP != null)
             {
-                // Calculate damage (taking account of target resistances/vulnerabilities)
-                double damage = Damage.Value * Damage.DamageType.MultiplierFor(context.Target);
-                
+                var damage = Damage;
+
+                foreach (var component in context.Target.Data)
+                {
+                    if (component is IDefense defense)
+                    {
+                        damage = defense.Defend(damage);
+                    }
+                }
+
+                if (damage <= 0) return true;
+
                 // Apply damage
                 hP.Value -= damage;
 

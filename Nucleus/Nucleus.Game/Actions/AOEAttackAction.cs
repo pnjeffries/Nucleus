@@ -28,7 +28,7 @@ namespace Nucleus.Game
                 SelfEffects.Add(new SFXEffect(sfxKeyword, true, direction));
         }
 
-        public AOEAttackAction(IList<MapCell> targets, MapCell triggerCell, Vector direction, IList<IEffect> effects,
+        public AOEAttackAction(IList<MapCell> targets, MapCell triggerCell, Vector direction, IList<IEffect> effects, IList<IEffect> selfEffects,
             string sfxKeyword = null)
         {
             Target = targets;
@@ -43,6 +43,16 @@ namespace Nucleus.Game
             SelfEffects.Add(new ActorOrientationEffect(direction));
             if (sfxKeyword != null)
                 SelfEffects.Add(new SFXEffect(sfxKeyword, true, direction));
+
+            if (selfEffects != null)
+            {
+                foreach (var effect in selfEffects)
+                {
+                    var copyEffect = effect.Duplicate();
+                    if (copyEffect is IDirectionalEffect dirEffect) dirEffect.Direction = direction;
+                    SelfEffects.Add(copyEffect);
+                }
+            }
         }
 
         public override bool Enact(IActionLog log, EffectContext context)
