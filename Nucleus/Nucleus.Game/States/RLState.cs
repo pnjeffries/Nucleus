@@ -265,7 +265,7 @@ namespace Nucleus.Game
             {
                 // Only do the next turn if there is no AI delay and the FPS is not dropping much below 30.
                 // It's not clear if this is entirely working correctly under WebGL...
-                if (_AITurnCountDown <= 0 && DateTime.UtcNow <= _LastUpdateStart + TimeSpan.FromSeconds(1.0/30))
+                if (_AITurnCountDown <= 0 && DateTime.UtcNow <= _LastUpdateStart + TimeSpan.FromSeconds(1.0/45))
                     NextTurn();
             }
             else

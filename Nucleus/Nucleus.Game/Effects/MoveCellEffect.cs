@@ -1,4 +1,5 @@
-﻿using Nucleus.Geometry;
+﻿using Nucleus.Base;
+using Nucleus.Geometry;
 using Nucleus.Logs;
 using Nucleus.Model;
 using System;
@@ -12,7 +13,7 @@ namespace Nucleus.Game
     /// <summary>
     /// An effect which will move an element to a specific cell
     /// </summary>
-    public class MoveCellEffect : BasicEffect
+    public class MoveCellEffect : BasicEffect, IFastDuplicatable
     {
         #region Properties
 
@@ -38,6 +39,8 @@ namespace Nucleus.Game
         {
             _MoveTo = moveTo;
         }
+
+        public MoveCellEffect(MoveCellEffect other) : this(other.MoveTo) { }
 
         #endregion
 
@@ -78,6 +81,11 @@ namespace Nucleus.Game
                 log.WriteScripted(context, nameof(MoveCellEffect) + "_Item", context.Target, items.First());
                 // TODO: Multiple items
             }
+        }
+
+        IFastDuplicatable IFastDuplicatable.FastDuplicate_Internal()
+        {
+            return new MoveCellEffect(this);
         }
 
         #endregion

@@ -23,5 +23,10 @@ namespace Nucleus.Game
         {
             Effects.Add(new DropItemEffect());
         }
+
+        public DropItemAction(Element item, ActionInputTrigger trigger) : this(item)
+        {
+            Trigger = trigger;
+        }
     }
 }

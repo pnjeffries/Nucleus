@@ -12,7 +12,7 @@ namespace Nucleus.Game
     /// of a game in a fairly general way
     /// </summary>
     [Serializable]
-    public abstract class BasicGameState<TStage> : GameState
+    public abstract class BasicGameState<TStage> : ModalState
         where TStage : GameStage
     {
         #region Properties

@@ -58,5 +58,25 @@ namespace Nucleus.Game
         }
 
         #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Is the specified element player-controlled?
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public bool IsPlayerControlled(Element element)
+        {
+            var bState = State as MapState;
+            if (bState != null && element != null)
+            {
+                // Is the element the player themselves?
+                if (element == bState.Controlled) return true;
+            }
+            return false;
+        }
+
+        #endregion
     }
 }

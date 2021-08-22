@@ -1,4 +1,5 @@
-﻿using Nucleus.Logs;
+﻿using Nucleus.Base;
+using Nucleus.Logs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Nucleus.Game.Effects
     /// An effect which heals an actor
     /// </summary>
     [Serializable]
-    public class HealEffect : BasicEffect
+    public class HealEffect : BasicEffect, IFastDuplicatable
     {
         #region Properties
 
@@ -37,6 +38,8 @@ namespace Nucleus.Game.Effects
             Healing = healing;
         }
 
+        public HealEffect(HealEffect other) : this(other.Healing) { }
+
         #endregion
 
         #region Methods
@@ -60,6 +63,11 @@ namespace Nucleus.Game.Effects
                 return true;
             }
             else return false;
+        }
+
+        IFastDuplicatable IFastDuplicatable.FastDuplicate_Internal()
+        {
+            return new HealEffect(this);
         }
 
         #endregion

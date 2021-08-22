@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nucleus.Base;
 using Nucleus.Logs;
 
 namespace Nucleus.Game.Effects
@@ -11,7 +12,7 @@ namespace Nucleus.Game.Effects
     /// Effect which will move the actor through the
     /// specified stage exit
     /// </summary>
-    public class ExitStageEffect : BasicEffect
+    public class ExitStageEffect : BasicEffect, IFastDuplicatable
     {
         #region Properties
 
@@ -43,6 +44,8 @@ namespace Nucleus.Game.Effects
             _Exit = exit;
         }
 
+        public ExitStageEffect(ExitStageEffect effect) : this(effect.Exit) { }
+
         #endregion
 
         #region Methods
@@ -70,6 +73,11 @@ namespace Nucleus.Game.Effects
                 }
             }
             return false;
+        }
+
+        public IFastDuplicatable FastDuplicate_Internal()
+        {
+            return new ExitStageEffect(this);
         }
 
         #endregion

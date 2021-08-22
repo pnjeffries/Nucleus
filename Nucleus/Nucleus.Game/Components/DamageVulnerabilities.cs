@@ -1,4 +1,5 @@
 ﻿using Nucleus.Game.Effects.StatusEffects;
+using Nucleus.Logs;
 using Nucleus.Model;
 using System;
 using System.Collections.Generic;
@@ -97,7 +98,7 @@ namespace Nucleus.Game
         /// Adjust the specified damage value based on this defense
         /// </summary>
         /// <returns></returns>
-        public Damage Defend(Damage damage)
+        public Damage Defend(Damage damage, IActionLog log, EffectContext context)
         {
             return damage * VulnerabilityTo(damage.DamageType);
         }

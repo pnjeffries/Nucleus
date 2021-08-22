@@ -1,4 +1,5 @@
-﻿using Nucleus.Geometry;
+﻿using Nucleus.Base;
+using Nucleus.Geometry;
 using Nucleus.Logs;
 using Nucleus.Model;
 using System;
@@ -14,7 +15,7 @@ namespace Nucleus.Game
     /// involuntarily).  Resistance to knockback is determined by the Inertia component.
     /// </summary>
     [Serializable]
-    public class KnockbackEffect : BasicEffect, IDirectionalEffect
+    public class KnockbackEffect : BasicEffect, IDirectionalEffect, IFastDuplicatable
     {
         #region Properties
 
@@ -82,6 +83,17 @@ namespace Nucleus.Game
         {
             Direction = direction;
             Power = power;
+        }
+
+        /// <summary>
+        /// Duplication constructor
+        /// </summary>
+        /// <param name="other"></param>
+        public KnockbackEffect(KnockbackEffect other)
+        {
+            Direction = other.Direction;
+            Power = other.Power;
+            ImpactEffect = other.ImpactEffect; //Duplicate?
         }
 
         #endregion
@@ -175,6 +187,11 @@ namespace Nucleus.Game
                     log.WriteScripted(context, key, context.Actor, context.Target, blocker);
                 }
             }
+        }
+
+        IFastDuplicatable IFastDuplicatable.FastDuplicate_Internal()
+        {
+            return new KnockbackEffect(this);
         }
 
         #endregion

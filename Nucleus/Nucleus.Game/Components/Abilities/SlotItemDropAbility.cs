@@ -25,7 +25,8 @@ namespace Nucleus.Game
             context.Log?.WriteLine();
             context.Log?.WriteScripted("DropItemSlot_Hint");
             ExtractItemActions(inventory.Slots, addTo);
-            var abortAction = new AbortAction();
+
+                var abortAction = new AbortAction();
             abortAction.Trigger = new ActionInputTrigger(InputFunction.Abort);
             addTo.Actions.Add(abortAction);
         }

@@ -1,18 +1,17 @@
-﻿using System;
+﻿using Nucleus.Base;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Game.Effects
+namespace Nucleus.Modals
 {
     /// <summary>
-    /// An effect which triggers a predefined animation
-    /// of the target entity
+    /// A collection of modal windows
     /// </summary>
     [Serializable]
-    public class AnimationEffect
+    public class ModalWindowCollection : UniquesCollection<ModalWindow>
     {
-
     }
 }

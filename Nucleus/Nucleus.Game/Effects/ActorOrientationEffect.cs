@@ -1,4 +1,5 @@
-﻿using Nucleus.Geometry;
+﻿using Nucleus.Base;
+using Nucleus.Geometry;
 using Nucleus.Logs;
 using Nucleus.Model;
 using System;
@@ -9,7 +10,11 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Game
 {
-    public class ActorOrientationEffect : BasicEffect
+    /// <summary>
+    /// Effect which changes the actor's orientation
+    /// </summary>
+    [Serializable]
+    public class ActorOrientationEffect : BasicEffect, IFastDuplicatable
     {
         #region Properties
 
@@ -56,6 +61,15 @@ namespace Nucleus.Game
             OrientTo = direction.Angle;
         }
 
+        /// <summary>
+        /// Duplication constructor
+        /// </summary>
+        /// <param name="other"></param>
+        public ActorOrientationEffect(ActorOrientationEffect other)
+        {
+            OrientTo = other.OrientTo;
+        }
+
         #endregion
 
         #region Methods
@@ -65,6 +79,11 @@ namespace Nucleus.Game
             context.Actor.Orientation = OrientTo;
             //TODO: Make optional whether is applied to the actor or target?
             return true;
+        }
+
+        IFastDuplicatable IFastDuplicatable.FastDuplicate_Internal()
+        {
+            return new ActorOrientationEffect(this);
         }
 
         #endregion

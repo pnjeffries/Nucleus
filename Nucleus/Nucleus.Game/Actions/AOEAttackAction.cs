@@ -36,7 +36,7 @@ namespace Nucleus.Game
 
             foreach(var effect in effects)
             {
-                var copyEffect = effect.Duplicate();
+                var copyEffect = DuplicateEffect(effect);
                 if (copyEffect is IDirectionalEffect dirEffect) dirEffect.Direction = direction;
                 Effects.Add(copyEffect);
             }
@@ -48,7 +48,7 @@ namespace Nucleus.Game
             {
                 foreach (var effect in selfEffects)
                 {
-                    var copyEffect = effect.Duplicate();
+                    var copyEffect = DuplicateEffect(effect);
                     if (copyEffect is IDirectionalEffect dirEffect) dirEffect.Direction = direction;
                     SelfEffects.Add(copyEffect);
                 }
@@ -58,6 +58,12 @@ namespace Nucleus.Game
         public override bool Enact(IActionLog log, EffectContext context)
         {
             return base.Enact(log, context);
+        }
+
+        private IEffect DuplicateEffect(IEffect effect)
+        {
+            if (effect is IFastDuplicatable fastDup) return fastDup.FastDuplicate() as IEffect;
+            else return effect.Duplicate();
         }
 
         #endregion

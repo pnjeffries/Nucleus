@@ -1,4 +1,5 @@
-﻿using Nucleus.Game.Components;
+﻿using Nucleus.Base;
+using Nucleus.Game.Components;
 using Nucleus.Logs;
 using Nucleus.Model;
 using System;
@@ -13,7 +14,7 @@ namespace Nucleus.Game.Effects
     /// Consume a use of a consumable item, and remove it if spent
     /// </summary>
     [Serializable]
-    public class ConsumeEffect : BasicEffect
+    public class ConsumeEffect : BasicEffect, IFastDuplicatable
     {
         private Element _TargetOverride = null;
 
@@ -39,6 +40,15 @@ namespace Nucleus.Game.Effects
         public ConsumeEffect(Element targetItem) 
         {
             _TargetOverride = targetItem;
+        }
+
+        /// <summary>
+        /// Duplication constructor
+        /// </summary>
+        /// <param name="other"></param>
+        public ConsumeEffect(ConsumeEffect other) : this(other.TargetOverride)
+        {
+
         }
 
         public override bool Apply(IActionLog log, EffectContext context)
@@ -73,6 +83,11 @@ namespace Nucleus.Game.Effects
                 key = "Consumed";
             }
             log.WriteScripted(context, key, context.Actor, target);
+        }
+
+        IFastDuplicatable IFastDuplicatable.FastDuplicate_Internal()
+        {
+            return new ConsumeEffect(this);
         }
     }
 }

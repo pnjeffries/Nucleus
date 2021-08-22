@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nucleus.Base;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace Nucleus.Game
     /// Damage stat
     /// </summary>
     [Serializable]
-    public class Damage : Stat
+    public class Damage : Stat, IFastDuplicatable
     {
         #region Properties
 
@@ -54,6 +55,15 @@ namespace Nucleus.Game
             _DamageType = damageType;
         }
 
+        /// <summary>
+        /// Duplication constructor
+        /// </summary>
+        /// <param name="other"></param>
+        public Damage(Damage other) : this(other.Value, other.DamageType)
+        {
+
+        }
+
         #endregion
 
         #region Methods
@@ -66,6 +76,11 @@ namespace Nucleus.Game
         public Damage WithValue(double value)
         {
             return new Damage(value, DamageType);
+        }
+
+        IFastDuplicatable IFastDuplicatable.FastDuplicate_Internal()
+        {
+            return new Damage(this);
         }
 
         #endregion

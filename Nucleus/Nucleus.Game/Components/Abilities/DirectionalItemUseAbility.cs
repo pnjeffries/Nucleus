@@ -42,8 +42,11 @@ namespace Nucleus.Game
 
         protected override void GenerateActions(TurnContext context, AvailableActions addTo)
         {
-            context.Log?.WriteLine();
-            context.Log?.WriteScripted("DirectionalItem_Hint");
+            if (context.IsPlayerControlled(context.Element))
+            {
+                context.Log?.WriteLine();
+                context.Log?.WriteScripted("DirectionalItem_Hint");
+            }
             if (ActionFactory != null) ActionFactory.GenerateActions(context, addTo);
             //TODO: Always allow cancelling?
         }

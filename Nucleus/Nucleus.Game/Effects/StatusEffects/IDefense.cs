@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nucleus.Logs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,6 @@ namespace Nucleus.Game.Effects.StatusEffects
         /// Adjust the specified damage value based on this defense
         /// </summary>
         /// <returns></returns>
-        Damage Defend(Damage damage);
+        Damage Defend(Damage damage, IActionLog log, EffectContext context);
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nucleus.Base;
 using Nucleus.Geometry;
 using Nucleus.Logs;
 
@@ -12,7 +13,7 @@ namespace Nucleus.Game
     /// Trigger an SFX
     /// </summary>
     [Serializable]
-    public class SFXEffect : BasicEffect
+    public class SFXEffect : BasicEffect, IFastDuplicatable
     {
         #region Properties
 
@@ -131,6 +132,18 @@ namespace Nucleus.Game
             Direction = direction;
         }
 
+        /// <summary>
+        /// Duplication constructor
+        /// </summary>
+        /// <param name="other"></param>
+        public SFXEffect(SFXEffect other)
+        {
+            _KeyWord = other.KeyWord;
+            _Position = other.Position;
+            _Direction = other.Direction;
+            _UseTargetPosition = other.UseTargetPosition;
+        }
+
         #endregion
 
         #region Methods
@@ -143,6 +156,11 @@ namespace Nucleus.Game
             }
             else context.SFX.Trigger(KeyWord, Position, Direction);
             return true;
+        }
+
+        IFastDuplicatable IFastDuplicatable.FastDuplicate_Internal()
+        {
+            return new SFXEffect(this);
         }
 
         #endregion

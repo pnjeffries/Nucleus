@@ -144,6 +144,32 @@ namespace Nucleus.Logs
             return entry.Variations.First(); //TODO: apply markup?
         }
 
+        /// <summary>
+        /// Get the processed text record for the entry under the
+        /// specified key.  If no record is found the key itself will be returned.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public string GetText(string key, Random rng, params object[] subjects)
+        {
+            if (!HasEntryFor(key)) return key;
+            var entry = Entries[key];
+            if (entry == null) return key;
+            var log = new StringLog();
+            entry.PrintToLog(log, rng, subjects);
+            return log.ToString();
+        }
+
+        /// <summary>
+        /// Does this script have a pre-defined entry for the specified key?
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public bool HasEntryFor(string key)
+        {
+            return Entries.ContainsKey(key);
+        }
+
         #endregion
     }
 }

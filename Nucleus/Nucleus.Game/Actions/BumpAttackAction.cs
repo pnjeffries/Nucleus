@@ -30,7 +30,7 @@ namespace Nucleus.Game
             {
                 foreach (var effect in otherEffects)
                 {
-                    var newEffect = effect.Duplicate();
+                    var newEffect = DuplicateEffect(effect);
                     if (newEffect is IDirectionalEffect dEffect) dEffect.Direction = direction;
                     Effects.Add(newEffect);
                 }
@@ -48,7 +48,7 @@ namespace Nucleus.Game
             {
                 foreach (var effect in effects)
                 {
-                    var newEffect = effect.Duplicate();
+                    var newEffect = DuplicateEffect(effect);
                     if (newEffect is IDirectionalEffect dEffect) dEffect.Direction = direction;
                     Effects.Add(newEffect);
                 }
@@ -63,6 +63,12 @@ namespace Nucleus.Game
         public override double AIScore(TurnContext context, ActionSelectionAI weights)
         {
             return 2.0;
+        }
+
+        private IEffect DuplicateEffect(IEffect effect)
+        {
+            if (effect is IFastDuplicatable fastDup) return fastDup.FastDuplicate() as IEffect;
+            else return effect.Duplicate();
         }
 
         #endregion

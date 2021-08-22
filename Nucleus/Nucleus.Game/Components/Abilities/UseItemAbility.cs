@@ -20,6 +20,18 @@ namespace Nucleus.Game
 
             Inventory inventory = actor?.GetData<Inventory>();
             if (inventory != null) ExtractItemActions(inventory.Slots, addTo);
+
+            // Use selected item
+            if (inventory.Selected?.Item != null)
+            {
+                var iA = inventory.Selected.Item.GetData<ItemActions>();
+                if (iA?.Prototype != null)
+                {
+                    var action = iA.Prototype.Duplicate();
+                    action.Trigger = new ActionInputTrigger(InputFunction.UseSelected);
+                    addTo.Actions.Add(action);
+                }
+            }
         }
 
         private void ExtractItemActions<TSlot>(IList<TSlot> slots, AvailableActions addTo)

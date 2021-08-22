@@ -63,6 +63,18 @@ namespace Nucleus.Game
             }
         }
 
+        [NonSerialized]
+        private ItemSlot _Selected = null;
+
+        /// <summary>
+        /// The currently selected item slot
+        /// </summary>
+        public ItemSlot Selected
+        {
+            get { return _Selected; }
+            set { ChangeProperty(ref _Selected, value); }
+        }
+
         #endregion
 
         #region Constructors
@@ -187,6 +199,36 @@ namespace Nucleus.Game
         public bool IsEquipped(Element equipment)
         {
             return Equipped.ContainsItem(equipment);
+        }
+
+        /// <summary>
+        /// Select the next item slot after the currently selected one
+        /// </summary>
+        public void SelectNext()
+        {
+            if (Selected == null) Selected = Slots.FirstOrDefault();
+            else if (Slots.Count > 0)
+            {
+                int i = Slots.IndexOf(Selected) + 1;
+                if (i >= Slots.Count) i = 0;
+                var slot = Slots[i];
+                Selected = slot;
+            }
+        }
+
+        /// <summary>
+        /// Select the previous item slot before the currently selected one
+        /// </summary>
+        public void SelectPrevious()
+        {
+            if (Selected == null) Selected = Slots.LastOrDefault();
+            else if (Slots.Count > 0)
+            {
+                int i = Slots.IndexOf(Selected) - 1;
+                if (i < 0) i = Slots.Count - 1;
+                var slot = Slots[i];
+                Selected = slot;
+            }
         }
 
         #endregion

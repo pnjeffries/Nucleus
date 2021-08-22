@@ -18,7 +18,13 @@ namespace Nucleus.Game
             action.Trigger = new ActionInputTrigger(InputFunction.Drop);
             addTo.Actions.Add(action);
 
-            //TODO: Add drop selected action
+            // Selected item drop:
+            var inventory = context.Element?.GetData<Inventory>();
+            if (inventory?.Selected?.Item != null)
+            {
+                addTo.Actions.Add(
+                    new DropItemAction(inventory.Selected.Item, new ActionInputTrigger(InputFunction.DropSelected)));
+            }
         }
     }
 }

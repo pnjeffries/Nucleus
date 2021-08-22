@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nucleus.Base;
 using Nucleus.Game.Effects.StatusEffects;
 using Nucleus.Geometry;
 using Nucleus.Logs;
@@ -13,7 +14,7 @@ namespace Nucleus.Game
     /// An effect which reduces element hitpoints
     /// </summary>
     [Serializable]
-    public class DamageEffect : BasicEffect
+    public class DamageEffect : BasicEffect, IFastDuplicatable
     {
         #region Properties
 
@@ -46,6 +47,13 @@ namespace Nucleus.Game
             _Damage = new Damage(damage, damageType);
         }
 
+        public DamageEffect(Damage damage)
+        {
+            _Damage = damage;
+        }
+
+        public DamageEffect(DamageEffect other) : this(other.Damage.FastDuplicate()) { }
+
         #endregion
 
         #region Methods
@@ -62,7 +70,7 @@ namespace Nucleus.Game
                 {
                     if (component is IDefense defense)
                     {
-                        damage = defense.Defend(damage);
+                        damage = defense.Defend(damage, log, context);
                     }
                 }
 
@@ -100,6 +108,11 @@ namespace Nucleus.Game
                 key = "Death";
             }
             log.WriteScripted(context, key, context.Actor, context.Target);
+        }
+
+        public IFastDuplicatable FastDuplicate_Internal()
+        {
+            return new DamageEffect(this);
         }
 
         #endregion

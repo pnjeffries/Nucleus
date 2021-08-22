@@ -1,4 +1,5 @@
-﻿using Nucleus.Logs;
+﻿using Nucleus.Base;
+using Nucleus.Logs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Nucleus.Game.Effects
     /// Effect which drops an item
     /// </summary>
     [Serializable]
-    public class DropItemEffect : BasicEffect
+    public class DropItemEffect : BasicEffect, IFastDuplicatable
     {
         public override bool Apply(IActionLog log, EffectContext context)
         {
@@ -21,6 +22,11 @@ namespace Nucleus.Game.Effects
             if (inventory == null) return false;
 
             return inventory.DropItem(context.Target, context.Actor, context);
+        }
+
+        public IFastDuplicatable FastDuplicate_Internal()
+        {
+            return new DropItemEffect();
         }
     }
 }

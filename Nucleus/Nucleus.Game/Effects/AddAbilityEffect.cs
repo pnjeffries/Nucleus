@@ -12,7 +12,7 @@ namespace Nucleus.Game.Effects
     /// An effect which adds an ability to an 
     /// </summary>
     [Serializable]
-    public class AddAbilityEffect : BasicEffect
+    public class AddAbilityEffect : BasicEffect, IFastDuplicatable
     {
         #region Properties
 
@@ -39,6 +39,11 @@ namespace Nucleus.Game.Effects
             Ability = ability;
         }
 
+        public AddAbilityEffect(AddAbilityEffect other) : this(other.Ability)
+        {
+
+        }
+
         #endregion
 
         #region Methods
@@ -52,6 +57,11 @@ namespace Nucleus.Game.Effects
                 context.Target.Data.Add(Ability.Duplicate());
             }
             return false;
+        }
+
+        IFastDuplicatable IFastDuplicatable.FastDuplicate_Internal()
+        {
+            return new AddAbilityEffect(this);
         }
 
         #endregion
