@@ -11,7 +11,7 @@ namespace Nucleus.Game
     /// <summary>
     /// Base class for actions which may target multiple map cells
     /// </summary>
-    public abstract class MultiCellTargetingAction : TargetedAction<IList<MapCell>>
+    public abstract class MultiCellTargetingAction : TargetedAction<IList<GameMapCell>>
     {
         #region Constructors
 
@@ -31,7 +31,7 @@ namespace Nucleus.Game
         {
         }
 
-        public MultiCellTargetingAction(string name, IList<MapCell> target, params IEffect[] effects) : base(name, target, effects)
+        public MultiCellTargetingAction(string name, IList<GameMapCell> target, params IEffect[] effects) : base(name, target, effects)
         {
         }
 
@@ -39,7 +39,7 @@ namespace Nucleus.Game
 
         #region Methods
 
-        protected override void ApplyEffects(IActionLog log, EffectContext context)
+        protected override void ApplyEffects(IActionLog log, EffectContext context, bool allowCrit = true)
         {
             // Apply to all viable elements in all targeted cells
 
@@ -54,8 +54,9 @@ namespace Nucleus.Game
                     if (CanTarget(element))
                     {
                         context.Target = element;
+                        context.Critical = RollToCrit(context);
                         WriteTargetLog(log, context);
-                        base.ApplyEffects(log, context);
+                        base.ApplyEffects(log, context, false);
                     }
                 }
             }
@@ -67,7 +68,12 @@ namespace Nucleus.Game
             if (log == null) return;
             string key = this.GetType().Name + postfix;
             if (Name != null && log.HasScriptFor(Name + postfix)) key = Name + postfix;
-            else if (!log.HasScriptFor(key)) return;
+            if (context.Critical)
+            {
+                string critpost = "_Crit";
+                if (log.HasScriptFor(key + critpost)) key += critpost;
+            }
+            if (!log.HasScriptFor(key)) return;
 
             log.WriteScripted(context, key, context.Actor, context.Target);
         }

@@ -1,5 +1,4 @@
-﻿using Nucleus.Game.Effects.StatusEffects;
-using Nucleus.Logs;
+﻿using Nucleus.Logs;
 using Nucleus.Model;
 using System;
 using System.Collections.Generic;

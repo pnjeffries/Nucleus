@@ -37,6 +37,15 @@ namespace Nucleus.Game
         }
 
         /// <summary>
+        /// Is any modal open?
+        /// </summary>
+        public bool IsModalOpen
+        {
+            get { return _Modals.Count > 0; }
+        }
+
+
+        /// <summary>
         /// Open a new modal window.  This will become the new active modal.
         /// </summary>
         /// <param name="modal"></param>

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nucleus.Base;
-using Nucleus.Game.Effects.StatusEffects;
 using Nucleus.Geometry;
 using Nucleus.Logs;
 
@@ -66,6 +65,8 @@ namespace Nucleus.Game
             {
                 var damage = Damage;
 
+                if (context.Critical) damage = damage.WithValue(damage.Value + 1); //Temp?
+
                 foreach (var component in context.Target.Data)
                 {
                     if (component is IDefense defense)
@@ -78,6 +79,10 @@ namespace Nucleus.Game
 
                 // Apply damage
                 hP.Value -= damage;
+
+                // End target's combo (if applicable)
+                var status = context.Target.GetData<Status>();
+                if (status != null) status.ClearEffects<Combo>();
 
                 // Kill the target (if applicable)
                 if (!context.Target.IsDeleted && hP.Value <= 0)

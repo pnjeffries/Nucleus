@@ -22,6 +22,11 @@ namespace Nucleus.Game
         public static string Bash = "Bash";
 
         /// <summary>
+        /// A 'bash' effect when a critical hit is performed
+        /// </summary>
+        public static string CritBash = "CritBash";
+
+        /// <summary>
         /// A dusty 'footprint' effect
         /// </summary>
         public static string Dust = "Dust";

@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Game
 {
+    /// <summary>
+    /// Poisoned status effect.
+    /// Does damage over time.
+    /// </summary>
+    [Serializable]
     public class Poisoned : DamageEffect, IStatusEffect
     {
         private double _TimeRemaining = 5;
@@ -23,9 +28,16 @@ namespace Nucleus.Game
             set { ChangeProperty(ref _TimeRemaining, value); }
         }
 
+        public string Description => GetType().Name;
+
         public Poisoned() : base(1, DamageType.Poison)
         {
 
+        }
+
+        public void Merge(IStatusEffect other)
+        {
+            TimeRemaining += other.TimeRemaining;
         }
     }
 }

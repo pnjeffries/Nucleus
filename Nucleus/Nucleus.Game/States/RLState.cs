@@ -143,7 +143,12 @@ namespace Nucleus.Game
         /// if applicable.</param>
         public override void InputRelease(InputFunction input, Vector direction)
         {
+            bool blocked = IsModalOpen || DebugModeOn; //Modals block other input
+
             base.InputRelease(input, direction);
+
+            if (blocked) return;
+
             Element controlled = Controlled;
             if (controlled == null || controlled.IsDeleted)
             {
@@ -313,7 +318,7 @@ namespace Nucleus.Game
 
             if (next != null)
             {
-                next.GetData<TurnCounter>().ResetCountdown(1000);
+                next.GetData<TurnCounter>().ResetCountdown(next, 1000);
                 StartTurnOf(next);
             }
         }
@@ -349,6 +354,19 @@ namespace Nucleus.Game
             var saveFile = new RLStateSaveFile();
             saveFile.State = this;
             return saveFile.SaveAs(filePath);
+        }
+
+        public override void RunDebugCommand(string command)
+        {
+            //try
+            //{
+                base.RunDebugCommand(command);
+            /*}
+            catch (Exception ex)
+            {
+                Log.WriteLine();
+                Log.WriteLine("ERROR: " + ex.Message);
+            }*/
         }
 
         #endregion

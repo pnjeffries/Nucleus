@@ -28,7 +28,9 @@ namespace Nucleus.Game
                     Vector sfxPos = mD.Position;
                     Vector actorPos = context.Actor?.GetData<MapData>()?.Position ?? Vector.Unset;
                     if (actorPos.IsValid()) sfxPos = sfxPos.MoveTowards(actorPos, 0.3);
-                    context.SFX.Trigger(SFXKeywords.Bash, sfxPos);
+                    var sfxKey = SFXKeywords.Bash;
+                    if (context.Critical) sfxKey = SFXKeywords.CritBash;
+                    context.SFX.Trigger(sfxKey, sfxPos);
 
                     return true;
                 }

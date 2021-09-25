@@ -1,4 +1,4 @@
-﻿using Nucleus.Game.Effects.StatusEffects;
+﻿using Nucleus.Base;
 using Nucleus.Logs;
 using System;
 using System.Collections.Generic;
@@ -12,10 +12,10 @@ namespace Nucleus.Game
     /// Status effect applied when a character is being shielded from harm
     /// </summary>
     [Serializable]
-    public class Shielded : StatusEffect, IDefense
+    public class Shielded : StatusEffect, IDefense, IFastDuplicatable
     {
 
-        public Shielded() : base(1) { }
+        public Shielded() : base(0) { }
 
         /// <summary>
         /// Adjust the specified damage value based on this defense
@@ -39,6 +39,11 @@ namespace Nucleus.Game
         public override bool Apply(IActionLog log, EffectContext context)
         {
             return false;
+        }
+
+        IFastDuplicatable IFastDuplicatable.FastDuplicate_Internal()
+        {
+            return new Shielded();
         }
     }
 }

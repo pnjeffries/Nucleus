@@ -156,7 +156,7 @@ namespace Nucleus.Game
             return new AOEAttackAction(cells, triggerCell, direction, Effects, SelfEffects, SourceSFX);
         }
 
-        public override IList<MapCell> TargetableCells(Vector position, Vector direction, TurnContext context)
+        public override IList<GameMapCell> TargetableCells(Vector position, Vector direction, TurnContext context)
         {
             var pattern = Offsets.Rotate(direction.Angle).Move(position);
             return context.Stage.Map.CellsAt(pattern);

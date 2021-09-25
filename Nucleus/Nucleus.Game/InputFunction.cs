@@ -146,6 +146,11 @@ namespace Nucleus.Game
         /// Use the selected menu item
         /// </summary>
         UseSelected = 30000,
+
+        /// <summary>
+        /// Toggle debug mode
+        /// </summary>
+        Debug = 9999999
     }
 
     /// <summary>

@@ -44,12 +44,22 @@ namespace Nucleus.Game
                     var iA = slot.Item.GetData<ItemActions>();
                     if (iA?.Prototype != null)
                     {
-                        var action = iA.Prototype.Duplicate();
-                        action.Trigger = new ActionInputTrigger(slot.HotKey);
-                        addTo.Actions.Add(action);
+                        var action = DuplicatePrototype(iA);
+                        if (action != null)
+                        {
+                            action.Trigger = new ActionInputTrigger(slot.HotKey);
+                            addTo.Actions.Add(action);
+                        }
                     }
                 }
             }
+        }
+
+        private GameAction DuplicatePrototype(ItemActions iA)
+        {
+            if (iA?.Prototype == null) return null;
+            if (iA.Prototype is IFastDuplicatable fastDup) return fastDup.FastDuplicate() as GameAction;
+            return iA.Prototype.Duplicate();
         }
     }
 }

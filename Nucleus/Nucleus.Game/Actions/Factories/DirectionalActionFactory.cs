@@ -25,7 +25,7 @@ namespace Nucleus.Game
             MapData mD = context.Element?.GetData<MapData>();
             if (mD != null && mD.MapCell != null)
             {
-                IList<MapCell> adjacent = context.Stage?.Map?.AdjacentCells(mD.MapCell.Index);
+                var adjacent = context.Stage?.Map?.AdjacentCells(mD.MapCell.Index);
                 foreach (var cell in adjacent)
                 {
                     Vector position = mD.MapCell.Position;
@@ -40,13 +40,13 @@ namespace Nucleus.Game
             }
         }
 
-        public override IList<MapCell> TargetableCells(TurnContext context)
+        public override IList<GameMapCell> TargetableCells(TurnContext context)
         {
-            var result = new List<MapCell>();
+            var result = new List<GameMapCell>();
             MapData mD = context.Element?.GetData<MapData>();
             if (mD != null && mD.MapCell != null)
             {
-                IList<MapCell> adjacent = context.Stage?.Map?.AdjacentCells(mD.MapCell.Index);
+                var adjacent = context.Stage?.Map?.AdjacentCells(mD.MapCell.Index);
                 foreach (var cell in adjacent)
                 {
                     Vector position = mD.MapCell.Position;

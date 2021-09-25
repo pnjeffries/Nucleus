@@ -1,5 +1,6 @@
 ﻿using Nucleus.Base;
 using Nucleus.Logs;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,22 +31,28 @@ namespace Nucleus.Game.Effects
 
         public override bool Apply(IActionLog log, EffectContext context)
         {
-            var status = context.Target?.GetData<Status>();
+            var target = context.Target;
+            return ApplyStatus(log, context, target);
+        }
+
+        protected virtual bool ApplyStatus(IActionLog log, EffectContext context, Element target)
+        {
+            var status = target?.GetData<Status>();
             if (status == null) return false;
             if (StatusEffect == null) return false;
 
             status.AddEffect(StatusEffect.Duplicate());
-            WriteStatusChangeToLog(log, context);
+            WriteStatusChangeToLog(log, context, target);
             return true;
         }
-
-        private void WriteStatusChangeToLog(IActionLog log, EffectContext context)
+        
+        private void WriteStatusChangeToLog(IActionLog log, EffectContext context, Element target)
         {
             string key = "ApplyStatusEffect_" + StatusEffect?.GetType().Name;
-            if (log.HasScriptFor(key) && context.IsPlayerAwareOf(context.Target))
+            if (log.HasScriptFor(key) && context.IsPlayerAwareOf(target))
             {
                 log.WriteLine();
-                log.WriteScripted(context, key, context.Actor, context.Target);
+                log.WriteScripted(context, key, context.Actor, target);
             }
         }
     }

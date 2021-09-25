@@ -95,6 +95,11 @@ namespace Nucleus.Game
         /// </summary>
         public bool PreventParallelCorridors { get; set; } = true;
 
+        /// <summary>
+        /// The highest security level created so far
+        /// </summary>
+        private int SecurityLevelCount { get; set; } = 0;
+
         #endregion
 
         #region Constructors
@@ -452,7 +457,7 @@ namespace Nucleus.Game
         /// <param name="template"></param>
         /// <param name="template2"></param>
         /// <param name="floorLevel"></param>
-        protected void GenerateDoorway(int i, int j, CompassDirection direction, int width)
+        protected void GenerateDoorway(int i, int j, CompassDirection direction, int width, Room room, CellGenerationType doorType = CellGenerationType.Door)
         {
             for (int n = -1; n < width + 1; n++)
             {
@@ -466,11 +471,11 @@ namespace Nucleus.Game
 
                 if (n < 0 || n > width)
                 {
-                    SetCell(i, j, CellGenerationType.WallCorner);
+                    SetCell(i, j, CellGenerationType.WallCorner, room);
                 }
                 else
                 {
-                    SetCell(i, j, CellGenerationType.Door);
+                    SetCell(i, j, doorType, room);
                 }
             }
         }
@@ -722,11 +727,22 @@ namespace Nucleus.Game
                 {
                     // Reached target size - create room
 
-                    // Create doorway:
-                    if (createDoor) GenerateDoorway(iDoor, jDoor, direction, doorSize);
+                    // Determine lock status:
+                    bool locked = (template.LockChance > 0 && RNG.NextDouble() < template.LockChance);
 
                     // Create room:
                     Room newRoom = GenerateRoom(bounds, template);
+
+                    // Create doorway:
+                    if (createDoor) GenerateDoorway(iDoor, jDoor, direction, doorSize, newRoom, locked ? CellGenerationType.LockedDoor : CellGenerationType.Door);
+
+                    if (parent == null) newRoom.SecurityLevel = 0;
+                    else if (locked)
+                    {
+                        SecurityLevelCount++;
+                        newRoom.SecurityLevel = SecurityLevelCount;
+                    }
+                    else newRoom.SecurityLevel = parent.SecurityLevel;
 
                     if (parent != null) ConnectRooms(parent, newRoom);
 
@@ -803,9 +819,10 @@ namespace Nucleus.Game
                         otherRoom.Template.MaxConnections > otherRoom.Connections.Count) &&
                         !otherRoom.IsConnectedTo(parent,2))
                     {
-                        if (result == false && !otherRoom.IsConnectedTo(parent, MinLoopSize)) result = true;
+                        if (result == false && otherRoom.SecurityLevel == parent.SecurityLevel &&
+                            !otherRoom.IsConnectedTo(parent, MinLoopSize)) result = true;
                         // TODO: Check room connections
-                        GenerateDoorway(iDoor, jDoor, direction, template.EntryWidth);
+                        GenerateDoorway(iDoor, jDoor, direction, template.EntryWidth, otherRoom);
                         if (parent != null)
                         {
                             ConnectRooms(parent, otherRoom);

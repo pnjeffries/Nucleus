@@ -40,7 +40,7 @@ namespace Nucleus.Game
 
         #region Methods
 
-        protected override void ApplyEffects(IActionLog log, EffectContext context)
+        protected override void ApplyEffects(IActionLog log, EffectContext context, bool allowCrit = true)
         {
             if (Target != null)
             {
@@ -51,7 +51,7 @@ namespace Nucleus.Game
                     if (CanTarget(element))
                     {
                         context.Target = element;
-                        base.ApplyEffects(log, context);
+                        base.ApplyEffects(log, context, allowCrit);
                     }
                 }
             }

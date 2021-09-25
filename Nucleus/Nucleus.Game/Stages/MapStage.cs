@@ -38,12 +38,12 @@ namespace Nucleus.Game
         /// <summary>
         /// Private backing member variable for the Map property
         /// </summary>
-        private ICellMap<MapCell> _Map;
+        private ICellMap<GameMapCell> _Map;
 
         /// <summary>
         /// The spatial map of the stage
         /// </summary>
-        public ICellMap<MapCell> Map
+        public ICellMap<GameMapCell> Map
         {
             get { return _Map; }
             set

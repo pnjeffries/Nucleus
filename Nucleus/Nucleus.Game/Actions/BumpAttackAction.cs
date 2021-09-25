@@ -1,4 +1,5 @@
 ﻿using Nucleus.Base;
+using Nucleus.Game.Effects;
 using Nucleus.Geometry;
 using Nucleus.Model;
 using System;
@@ -23,6 +24,7 @@ namespace Nucleus.Game
             Trigger = new ActionCellInputTrigger(cell.Index, InputFunction.Move);
 
             SelfEffects.Add(new ActorOrientationEffect(direction));
+            SelfEffects.Add(new ApplyStatusEffect(new Combo()));
             Effects.Add(new SFXImpactEffect());
             Effects.Add(new KnockbackEffect(direction, knockback));
             Effects.Add(new DamageEffect(damage));
@@ -43,6 +45,7 @@ namespace Nucleus.Game
             Trigger = new ActionCellInputTrigger(cell.Index, InputFunction.Move);
 
             SelfEffects.Add(new ActorOrientationEffect(direction));
+            SelfEffects.Add(new ApplyStatusEffect(new Combo()));
             Effects.Add(new SFXImpactEffect());
             if (effects != null)
             {

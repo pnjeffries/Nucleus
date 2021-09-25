@@ -198,6 +198,28 @@ namespace Nucleus.Model
         }
 
         /// <summary>
+        /// Get the last element in this collection with an attached data component
+        /// of the specified type.
+        /// </summary>
+        /// <typeparam name="TDataComponent">The type of attached data component.</typeparam>
+        /// <param name="ignore">Ignore this element in the collection, even if it has the
+        /// relevant component.</param>
+        /// <returns></returns>
+        public TElement LastWithDataComponent<TDataComponent>(TElement ignore = null)
+            where TDataComponent : class, IElementDataComponent
+        {
+            for (int i = Count - 1; i >= 0; i--)
+            {
+                TElement el = this[i];
+                if (el != ignore && el.HasData<TDataComponent>())
+                {
+                    return el;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Get all elements in this collection with an attached data component
         /// of the specified type.
         /// </summary>

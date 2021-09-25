@@ -79,7 +79,7 @@ namespace Nucleus.Game.Effects
             string key = "Consumed_" + target?.Name;
             if (!log.HasScriptFor(key))
             {
-                // Fallback generic death message
+                // Fallback generic message
                 key = "Consumed";
             }
             log.WriteScripted(context, key, context.Actor, target);

@@ -60,7 +60,7 @@ namespace Nucleus.Game
             return !_ProjectileCollider.CanEnter(cell);
         }
 
-        public override IList<MapCell> TargetableCells(Vector position, Vector direction, TurnContext context)
+        public override IList<GameMapCell> TargetableCells(Vector position, Vector direction, TurnContext context)
         {
             var cell = context.Stage.Map.CellAt(position)?.FirstCellInDirectionWhere(direction, ProjectileHit, (int)_Range, true);
             if (cell != null) position = cell.Position; //Update position to impact point

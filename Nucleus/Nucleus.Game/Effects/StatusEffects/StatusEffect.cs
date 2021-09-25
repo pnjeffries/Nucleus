@@ -28,6 +28,11 @@ namespace Nucleus.Game
         }
 
         /// <summary>
+        /// The description of this status effect
+        /// </summary>
+        public string Description => GetType().Name;
+
+        /// <summary>
         /// Default constructor
         /// </summary>
         public StatusEffect() { }
@@ -39,6 +44,11 @@ namespace Nucleus.Game
         public StatusEffect(double duration)
         {
             _TimeRemaining = duration;
+        }
+
+        public virtual void Merge(IStatusEffect other)
+        {
+            TimeRemaining += other.TimeRemaining;
         }
     }
 }

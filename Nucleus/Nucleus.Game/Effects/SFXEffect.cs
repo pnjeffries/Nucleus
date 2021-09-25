@@ -82,10 +82,7 @@ namespace Nucleus.Game
         /// Trigger a special effect with the specified keyword
         /// </summary>
         /// <param name="keyword"></param>
-        public SFXEffect(string keyword)
-        {
-            KeyWord = keyword;
-        }
+        public SFXEffect(string keyword) : this(keyword, true) { }
 
         /// <summary>
         /// Trigger a special effect with the specified keyword at the specified position
@@ -115,8 +112,9 @@ namespace Nucleus.Game
         /// </summary>
         /// <param name="keyword"></param>
         /// <param name="useTargetPosition"></param>
-        public SFXEffect(string keyword, bool useTargetPosition) : this(keyword)
+        public SFXEffect(string keyword, bool useTargetPosition)
         {
+            KeyWord = keyword;
             UseTargetPosition = useTargetPosition;
         }
 

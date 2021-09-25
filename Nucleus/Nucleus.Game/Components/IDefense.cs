@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Game.Effects.StatusEffects
+namespace Nucleus.Game
 {
     /// <summary>
-    /// Interface for status effects, items etc. that
+    /// Interface for components, status effects, items etc. that
     /// defend against damage
     /// </summary>
     public interface IDefense

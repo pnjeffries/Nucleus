@@ -90,7 +90,7 @@ namespace Nucleus.Game
                 var mD = context.Element.GetData<MapData>();
                 if (mD != null)
                 {
-                    map.FieldOfView<int, MapCell>(mD.Position, VisualRange,
+                    map.FieldOfView<int, GameMapCell>(mD.Position, VisualRange,
                         x => IsTransparent(x, context.Element), fov, Visible);
                     FieldOfView = fov;
                 }

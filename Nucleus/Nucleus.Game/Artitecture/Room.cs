@@ -57,6 +57,16 @@ namespace Nucleus.Game
             get { return _Connections; }
         }
 
+        private int _SecurityLevel = 0;
+
+        /// <summary>
+        /// The level of security of this room
+        /// </summary>
+        public int SecurityLevel
+        {
+            get { return _SecurityLevel; }
+            set { _SecurityLevel = value; }
+        }
 
         #endregion
 

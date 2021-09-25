@@ -1,4 +1,6 @@
 ﻿using Nucleus.Base;
+using Nucleus.Game.Components;
+using Nucleus.Geometry;
 using Nucleus.Model;
 using System;
 using System.Collections.Generic;
@@ -75,6 +77,27 @@ namespace Nucleus.Game
             set { ChangeProperty(ref _Selected, value); }
         }
 
+        private ResourceCollection _Resources = new ResourceCollection();
+
+        /// <summary>
+        /// The resources within this inventory.  These are stackable items such 
+        /// as money and ammunition which do not take up an inventory slot.
+        /// </summary>
+        public ResourceCollection Resources
+        {
+            get { return _Resources; }
+        }
+
+        private ElementCollection _Keys = new ElementCollection();
+
+        /// <summary>
+        /// The collection of key items held within this inventory.
+        /// </summary>
+        public ElementCollection Keys
+        {
+            get { return _Keys; }
+        }
+        
         #endregion
 
         #region Constructors
@@ -90,7 +113,7 @@ namespace Nucleus.Game
         /// otherwise it will be used as a standard inventory slot
         /// </summary>
         /// <param name="slots"></param>
-        public Inventory(params ItemSlot[] slots)
+        public Inventory(params IInventoryContainer[] slots)
         {
             foreach (var slot in slots)
             {
@@ -98,7 +121,11 @@ namespace Nucleus.Game
                 {
                     Equipped.Add(eSlot);
                 }
-                else Slots.Add(slot);
+                else if (slot is ItemSlot iSlot) Slots.Add(iSlot);
+                else if (slot is Resource resource)
+                {
+                    Resources.AddResourceQuantity(resource);
+                }
             }
         }
 
@@ -116,6 +143,22 @@ namespace Nucleus.Game
         /// <returns></returns>
         public bool AddItem(Element item)
         {
+            // If a key:
+            var key = item.GetData<Key>();
+            if (key != null)
+            {
+                Keys.Add(item);
+                return true;
+                // Could keys also be other things?
+            }
+            // If a resource:
+            var rPU = item.GetData<ResourcePickUp>();
+            if (rPU != null)
+            {
+                Resources.AddResourceQuantity(rPU.Resource);
+                return true;
+            }
+            // If not:
             ItemSlot slot = Slots.GetFirstAvailableFor(item);
             if (slot != null)
             {
@@ -126,7 +169,7 @@ namespace Nucleus.Game
         }
 
         /// <summary>
-        /// Drop all items in this
+        /// Drop all items and resourrces in this inventory
         /// </summary>
         /// <param name="dropper"></param>
         /// <param name="context"></param>
@@ -135,11 +178,14 @@ namespace Nucleus.Game
         {
             Equipped.RemoveAllItems();
             NotifyPropertyChanged(nameof(EquippedItems));
-            return Slots.DropAll(dropper, context);
+            bool result = Slots.DropAll(dropper, context);
+            Resources.DropAll(dropper, context);
+            DropAllKeys(dropper, context);
+            return result;
         }
 
         /// <summary>
-        /// Drop a specifiec item held in this inventory
+        /// Drop a specified item held in this inventory
         /// </summary>
         /// <param name="item"></param>
         /// <param name="dropper"></param>
@@ -149,6 +195,67 @@ namespace Nucleus.Game
         {
             if (Equipped.RemoveItem(item)) NotifyPropertyChanged(nameof(EquippedItems));
             return Slots.DropItem(item, dropper, context);
+        }
+
+        /// <summary>
+        /// Drop a quantity of a specified resource
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="dropper"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public bool DropResource(Resource resource, Element dropper, EffectContext context)
+        {
+            return Resources.DropResource(resource, dropper, context) != null;
+        }
+
+        /// <summary>
+        /// Drop all keys held in this inventory
+        /// </summary>
+        /// <param name="dropper"></param>
+        /// <param name="context"></param>
+        public void DropAllKeys(Element dropper, EffectContext context)
+        {
+            for (int i = Keys.Count - 1; i >= 0; i--)
+            {
+                var key = Keys[i];
+                DropKey(key, dropper, context);
+            }
+        }
+
+        /// <summary>
+        /// Drop the specified key item.
+        /// </summary>
+        /// <param name="dropper">The element dropping the item</param>
+        /// <param name="context">The current context</param>
+        /// <returns></returns>
+        private bool DropKey(Element key, Element dropper, EffectContext context)
+        {
+            if (key != null)
+            {
+                if (key.HasData<PickUp>() && context.State is MapState) //TODO: Work for other states?
+                {
+                    MapData mD = dropper.GetData<MapData>();
+                    if (mD.MapCell != null)
+                    {
+                        mD.MapCell.PlaceInCell(key);
+                    }
+                    context.State.Elements.Add(key);
+                }
+                Keys.Remove(key);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Remove the specified amount of a resource from this inventory (if possible)
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <returns></returns>
+        public bool RemoveResource(Resource resource)
+        {
+            return Resources.ReduceResourceQuantity(resource.ResourceType, resource.Quantity);
         }
 
         /// <summary>
@@ -229,6 +336,22 @@ namespace Nucleus.Game
                 var slot = Slots[i];
                 Selected = slot;
             }
+        }
+
+        /// <summary>
+        /// Get the key from this inventory with the specified keyCode,
+        /// if one is currently held.  Else will return null.
+        /// </summary>
+        /// <param name="keyCode"></param>
+        /// <returns></returns>
+        public Element GetKey(string keyCode)
+        {
+            foreach (var item in Keys)
+            {
+                var key = item.GetData<Key>();
+                if (key != null && key.KeyCode == keyCode) return item;
+            }
+            return null;
         }
 
         #endregion

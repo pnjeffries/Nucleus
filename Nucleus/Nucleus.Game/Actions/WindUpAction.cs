@@ -14,7 +14,7 @@ namespace Nucleus.Game
     /// Action whereby a game element spends a turn preparing to use an
     /// item or ability
     /// </summary>
-    public class WindUpAction : GameAction
+    public class WindUpAction : ResourceAction
     {
 
         #region Constructor
@@ -26,6 +26,12 @@ namespace Nucleus.Game
         }
 
         public WindUpAction(string name, ActionFactory actionFactory) : base(name)
+        {
+            SelfEffects.Add(new DisableEffect());
+            SelfEffects.Add(new AddAbilityEffect(new DirectionalItemUseAbility(actionFactory)));
+        }
+
+        public WindUpAction(string name, Resource resourceRequired, ActionFactory actionFactory) : base(name, resourceRequired)
         {
             SelfEffects.Add(new DisableEffect());
             SelfEffects.Add(new AddAbilityEffect(new DirectionalItemUseAbility(actionFactory)));
@@ -52,7 +58,7 @@ namespace Nucleus.Game
 
         #region Methods
 
-        private IList<MapCell> GetTargetableCells(TurnContext context)
+        private IList<GameMapCell> GetTargetableCells(TurnContext context)
         {
             var aAE = SelfEffects.FirstOfType<AddAbilityEffect>();
             if (aAE == null) return null;
@@ -67,6 +73,9 @@ namespace Nucleus.Game
         public override double AIScore(TurnContext context, ActionSelectionAI weights)
         {
             Element self = context.Element;
+
+            if (!HasRequiredResources(self)) return -0.5;
+
             var mDS = self?.GetData<MapData>();
             var mA = self.GetData<MapAwareness>();
 

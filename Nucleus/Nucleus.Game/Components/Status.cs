@@ -1,5 +1,4 @@
 ﻿using Nucleus.Base;
-using Nucleus.Game.Effects.StatusEffects;
 using Nucleus.Logs;
 using Nucleus.Model;
 using System;
@@ -14,7 +13,8 @@ namespace Nucleus.Game
     /// Element status effects
     /// </summary>
     [Serializable]
-    public class Status : Unique, IElementDataComponent, IEndOfTurn, IDefense, IStartOfTurn
+    public class Status : Unique, IElementDataComponent, IStartOfTurn, IEndOfTurn, IDefense, 
+        ICritChanceModifier, IKnockbackModifier, ISpeedModifier
     {
         private StatusEffectCollection _Effects = new StatusEffectCollection();
 
@@ -53,7 +53,7 @@ namespace Nucleus.Game
                 if (!double.IsNaN(effect.TimeRemaining))
                 {
                     effect.TimeRemaining -= 1;
-                    if (effect.TimeRemaining <= 0)
+                    if (effect.TimeRemaining < 0)
                     {
                         Effects.RemoveAt(i);
                     }
@@ -65,9 +65,9 @@ namespace Nucleus.Game
         {
             // At the end of the turn, apply all status effects
             var effectContext = new EffectContext(context.Element, context.Element, context.State, context.Stage, context.RNG);
-            foreach (var effect in Effects)
+            for (int i = 0; i < Effects.Count; i++)
             {
-                effect.Apply(context.Log, effectContext);
+                Effects[i].Apply(context.Log, effectContext);
             }
         }
 
@@ -84,8 +84,8 @@ namespace Nucleus.Game
             }
             else
             {
-                // TODO: different behaviour for different things?
-                existing.TimeRemaining += statusEffect.TimeRemaining;
+                // Merge two effects of the same type together
+                existing.Merge(statusEffect);
             }
         }
 
@@ -105,7 +105,8 @@ namespace Nucleus.Game
                 // TODO: Decrease count?
                 if (effect is TEffect)
                 {
-                    Effects.RemoveAt(i);
+                    //Effects.RemoveAt(i);
+                    effect.TimeRemaining = 0;
                     result = true;
                 }
             }
@@ -131,6 +132,23 @@ namespace Nucleus.Game
         }
 
         /// <summary>
+        /// Get the first status effect of the specified type currently
+        /// applied to this component
+        /// </summary>
+        /// <returns></returns>
+        public IStatusEffect GetEffect<TStatus>()
+        {
+            foreach (var effect in Effects)
+            {
+                if (effect is TStatus)
+                {
+                    return effect;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Adjust the specified damage value based on this defense
         /// </summary>
         /// <returns></returns>
@@ -141,6 +159,40 @@ namespace Nucleus.Game
                 if (status is IDefense defense) damage = defense.Defend(damage, log, context);
             }
             return damage;
+        }
+
+        /// <summary>
+        /// Adjust a critical 
+        /// </summary>
+        /// <param name="critChance"></param>
+        /// <param name="log"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public double ModifyCritChance(double critChance, IActionLog log, EffectContext context)
+        {
+            foreach (var status in Effects)
+            {
+                if (status is ICritChanceModifier defense) critChance = defense.ModifyCritChance(critChance, log, context);
+            }
+            return critChance;
+        }
+
+        public int ModifyKnockback(int knockback, IActionLog log, EffectContext context)
+        {
+            foreach (var status in Effects)
+            {
+                if (status is IKnockbackModifier kMod) knockback = kMod.ModifyKnockback(knockback, log, context);
+            }
+            return knockback;
+        }
+
+        public double ModifySpeed(double speed)
+        {
+            foreach (var status in Effects)
+            {
+                if (status is ISpeedModifier sMod) speed = sMod.ModifySpeed(speed);
+            }
+            return speed;
         }
     }
 }

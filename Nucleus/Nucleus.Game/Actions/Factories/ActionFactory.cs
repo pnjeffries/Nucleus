@@ -40,13 +40,13 @@ namespace Nucleus.Game
         /// factory can produce from the specified position and in the specified direction.
         /// </summary>
         /// <returns></returns>
-        public abstract IList<MapCell> TargetableCells(Vector position, Vector direction, TurnContext context);
+        public abstract IList<GameMapCell> TargetableCells(Vector position, Vector direction, TurnContext context);
 
         /// <summary>
         /// Generate a list of the cells (if any) which may be targetted by the actions this
         /// factory can produce.
         /// </summary>
         /// <returns></returns>
-        public abstract IList<MapCell> TargetableCells(TurnContext context);
+        public abstract IList<GameMapCell> TargetableCells(TurnContext context);
     }
 }

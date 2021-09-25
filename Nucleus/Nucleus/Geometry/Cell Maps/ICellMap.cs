@@ -231,6 +231,29 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Retrieve a list of all cells adjacent to the one with the specified index
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="map"></param>
+        /// <param name="cellIndex"></param>
+        /// <returns></returns>
+        public static IList<T> AdjacentCells<T>(this ICellMap map, int cellIndex)
+        {
+            int aC = map.AdjacencyCount(cellIndex);
+            var result = new List<T>(aC);
+            for (int i = 0; i < aC; i++)
+            {
+                int iA = map.AdjacentCellIndex(cellIndex, i);
+                if (map.Exists(iA))
+                {
+                    var cell = map.GetCell(iA);
+                    if (cell != null && cell is T cellT) result.Add(cellT);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Get the polyline representing the border of the cell with the specified index
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -545,6 +568,21 @@ namespace Nucleus.Geometry
                 if (condition.Invoke(value)) result.Add(i);
             }
             return result;
+        }
+
+        /// <summary>
+        /// Return a random cell index from this map which meets the specified conditions
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="map"></param>
+        /// <param name="condition"></param>
+        /// <param name="rng"></param>
+        /// <returns></returns>
+        public static int RandomIndexWhere<T>(this ICellMap<T> map, Func<T, bool> condition, Random rng)
+        {
+            var indices = map.IndicesWhere(condition);
+            if (indices.Count == 0) return -1;
+            return indices[rng.Next(indices.Count)];
         }
 
         /// <summary>

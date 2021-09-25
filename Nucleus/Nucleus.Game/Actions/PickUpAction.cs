@@ -1,4 +1,5 @@
-﻿using Nucleus.Model;
+﻿using Nucleus.Game.Effects;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,7 @@ namespace Nucleus.Game
             Trigger = new ActionInputTrigger(InputFunction.PickUp);
             Target = target;
             Effects.Add(new PickUpItemEffect());
+            Effects.Add(new ShowItemInfoEffect(target));
         }
 
         #endregion

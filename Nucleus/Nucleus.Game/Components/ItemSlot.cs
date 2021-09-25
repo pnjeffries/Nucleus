@@ -1,4 +1,5 @@
 ﻿using Nucleus.Base;
+using Nucleus.Game.Components;
 using Nucleus.Geometry;
 using Nucleus.Model;
 using System;
@@ -13,7 +14,7 @@ namespace Nucleus.Game
     /// A slot which can hold an inventory item
     /// </summary>
     [Serializable]
-    public class ItemSlot : Named
+    public class ItemSlot : Named, IInventoryContainer
     {
         #region Properties
 

@@ -50,12 +50,17 @@ namespace Nucleus.Game
         /// <summary>
         /// Get the map (retrieved from current stage)
         /// </summary>
-        public ICellMap<MapCell> Map { get { return ((MapStage)Stage).Map; } }
+        public ICellMap<GameMapCell> Map { get { return ((MapStage)Stage).Map; } }
 
         /// <summary>
         /// The random number generator to be used to resolve stochastic effects
         /// </summary>
         public Random RNG { get; set; }
+
+        /// <summary>
+        /// Is this effect part of a critical success?
+        /// </summary>
+        public bool Critical { get; set; } = false;
 
         /*
         /// <summary>

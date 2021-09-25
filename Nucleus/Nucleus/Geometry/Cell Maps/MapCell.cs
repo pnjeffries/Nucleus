@@ -155,7 +155,7 @@ namespace Nucleus.Geometry
             where TMapCell : MapCell
         {
             if (cell == null) return null;
-            else return ((ICellMap<TMapCell>)cell.Map).AdjacentCells(cell.Index);
+            else return cell.Map.AdjacentCells<TMapCell>(cell.Index);
         }
 
         /// <summary>

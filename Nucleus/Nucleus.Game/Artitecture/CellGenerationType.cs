@@ -15,7 +15,8 @@ namespace Nucleus.Game
         Void,
         Wall,
         WallCorner,
-        Door
+        Door,
+        LockedDoor
     }
 
     public static class CellGenerationTypeExtensions

@@ -22,7 +22,7 @@ namespace Nucleus.Game
             if (mD != null && mD.MapCell != null)
             {
                 // Are there any pickable-uppable items in this cell?
-                Element item = mD.MapCell.Contents.FirstWithDataComponent<PickUp>(context.Element);
+                Element item = mD.MapCell.Contents.LastWithDataComponent<PickUp>(context.Element);
                 if (item != null)
                 {
                     addTo.Actions.Add(new PickUpAction(item));

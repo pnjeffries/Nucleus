@@ -1,4 +1,5 @@
 ﻿using Nucleus.Base;
+using Nucleus.Game.Debug;
 using Nucleus.Geometry;
 using Nucleus.Model;
 using System;
@@ -21,6 +22,29 @@ namespace Nucleus.Game
         /// The collection of currently active game elements
         /// </summary>
         public abstract ElementCollection Elements { get; }
+
+        /// <summary>
+        /// Private backing field for DebugModeOn
+        /// </summary>
+        private bool _DebugModeOn = false;
+
+        /// <summary>
+        /// Is debug mode currently active?  Debug mode enables extra developer functionality
+        /// to aid with testing and debugging
+        /// </summary>
+        public bool DebugModeOn
+        {
+            get { return _DebugModeOn; }
+            set { ChangeProperty(ref _DebugModeOn, value); }
+        }
+
+        /// <summary>
+        /// Get the current library of debug commands
+        /// </summary>
+        protected virtual DebugCommandLibrary DebugCommands
+        {
+            get { return new DebugCommandLibrary(); }
+        }
 
         #endregion
 
@@ -61,7 +85,16 @@ namespace Nucleus.Game
         /// if applicable.</param>
         public virtual void InputRelease(InputFunction input, Vector direction)
         {
+            if (input == InputFunction.Debug) DebugModeOn = !DebugModeOn; //Toggle debug mode
+        }
 
+        /// <summary>
+        /// Run a debug command
+        /// </summary>
+        /// <param name="command"></param>
+        public virtual void RunDebugCommand(string command)
+        {
+            DebugCommands.RunCommand(command);
         }
 
         #endregion

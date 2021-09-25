@@ -20,7 +20,7 @@ namespace Nucleus.Game.Components.Abilities
             MapData mD = context.Element?.GetData<MapData>();
             if (mD != null && mD.MapCell != null)
             {
-                IList<MapCell> adjacent = context.Stage?.Map?.AdjacentCells(mD.MapCell.Index);
+                var adjacent = context.Stage?.Map?.AdjacentCells(mD.MapCell.Index);
                 foreach (var cell in adjacent)
                 {
                     Vector direction = cell.Position - mD.MapCell.Position;

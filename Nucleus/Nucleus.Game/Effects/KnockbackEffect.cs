@@ -104,6 +104,13 @@ namespace Nucleus.Game
         {
             int n = (int)Power;
 
+            if (context.Critical) n += 1; // Critical hit
+
+            foreach (var component in context.Actor.Data)
+            {
+                if (component is IKnockbackModifier kMod) n = kMod.ModifyKnockback(n, log, context);
+            }
+
             Element mover = context.Target;
             if (mover.IsDeleted || (mover.GetData<Inertia>()?.Fixed ?? false))
                 return false; // Target is immovable or deleted

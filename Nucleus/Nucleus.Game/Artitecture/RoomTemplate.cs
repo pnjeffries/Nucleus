@@ -12,7 +12,7 @@ namespace Nucleus.Game
     /// A template which is used to generate a room
     /// </summary>
     [Serializable]
-    public class RoomTemplate : Unique
+    public class RoomTemplate : Named
     {
         #region Properties
 
@@ -199,6 +199,20 @@ namespace Nucleus.Game
             }
         }
 
+        private double _LockChance = 0;
+
+        /// <summary>
+        /// The chance that, if a door is generated, it will be locked
+        /// </summary>
+        public double LockChance
+        {
+            get { return _LockChance; }
+            set
+            {
+                ChangeProperty(ref _LockChance, value);
+            }
+        }
+
         // TODO:
         // SpawnChance
         // Features
@@ -217,7 +231,8 @@ namespace Nucleus.Game
 
         public RoomTemplate() { }
 
-        public RoomTemplate(RoomType roomType, int dim1Min, int dim1Max, int dim2Min, int dim2Max)
+        public RoomTemplate(string name, RoomType roomType, int dim1Min, int dim1Max, int dim2Min, int dim2Max)
+            : base(name)
         {
             RoomType = roomType;
             Dimension1 = new IntInterval(dim1Min, dim1Max);

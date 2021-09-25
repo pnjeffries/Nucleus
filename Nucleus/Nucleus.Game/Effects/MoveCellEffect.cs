@@ -53,6 +53,7 @@ namespace Nucleus.Game
             {
                 //Move element:
                 MapData mD = mover.GetData<MapData>();
+                var oldCell = mD.MapCell;
                 if (mD != null && mD.MapCell != null)
                 {
                     context.SFX.Trigger(SFXKeywords.Dust, mD.Position);
@@ -62,7 +63,14 @@ namespace Nucleus.Game
                         newCell.PlaceInCell(mover);
                         if (context.IsPlayerControlled(mover))
                         {
-                            WriteFeetItems(log, context, newCell);
+                            if (!WriteFeetItems(log, context, newCell))
+                            {
+                                if (oldCell != null && oldCell is GameMapCell oC && newCell is GameMapCell nC
+                                    && oC.Room != nC.Room && context.RNG.NextDouble() < 0.5)
+                                {
+                                    WriteRoomAtmosphere(log, context, nC);
+                                }
+                            }
                         }
                         return true;
                     }
@@ -72,15 +80,29 @@ namespace Nucleus.Game
             return false;
         }
 
-        private void WriteFeetItems(IActionLog log, EffectContext context, MapCell cell)
+        private bool WriteFeetItems(IActionLog log, EffectContext context, MapCell cell)
         {
             var items = cell.Contents.AllWithDataComponent<PickUp>();
             if (items.Count > 0)
             {
                 log.WriteLine();
-                log.WriteScripted(context, nameof(MoveCellEffect) + "_Item", context.Target, items.First());
+                log.WriteScripted(context, nameof(MoveCellEffect) + "_Item", context.Target, items.Last());
                 // TODO: Multiple items
+                return true;
             }
+            return false;
+        }
+
+        private bool WriteRoomAtmosphere(IActionLog log, EffectContext context, GameMapCell cell)
+        {
+            string key = cell.Room?.Template?.Name + "_Atmosphere";
+            if (log.HasScriptFor(key))
+            {
+                log.WriteLine();
+                log.WriteScripted(context, key, context.Target, cell.Room);
+                return true;
+            }
+            return false;
         }
 
         IFastDuplicatable IFastDuplicatable.FastDuplicate_Internal()

@@ -140,6 +140,16 @@ namespace Nucleus.Game
             }
         }
 
+        protected virtual void WriteCritToLog(IActionLog log, EffectContext context)
+        {
+            if (log == null) return;
+            string key = this.GetType().Name + "_Crit";
+            if (Name != null && log.HasScriptFor(Name + "_Crit")) key = Name + "_Crit";
+            else if (!log.HasScriptFor(key)) return;
+
+            log.WriteScripted(context, key, context.Actor, context.Target);
+        }
+
         /// <summary>
         /// Populate the context data before attempting to execute the action
         /// </summary>
@@ -150,15 +160,52 @@ namespace Nucleus.Game
         }
 
         /// <summary>
+        /// Test whether this set of effects from this action should be
+        /// treated as a critical success.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        protected virtual bool RollToCrit(EffectContext context)
+        {
+            var critter = context.Actor?.GetData<CritHitter>();
+            if (critter == null) return false;
+            return critter.RollToCrit(context);
+        }
+
+        /// <summary>
         /// Apply the effects of the action to the target
         /// </summary>
         /// <param name="log"></param>
         /// <param name="context"></param>
-        protected virtual void ApplyEffects(IActionLog log, EffectContext context)
+        protected virtual void ApplyEffects(IActionLog log, EffectContext context, bool allowCrit = true)
         {
+            if (allowCrit)
+            {
+                // Roll for critical hit:
+                context.Critical = RollToCrit(context);
+                if (context.Critical)
+                {
+                    WriteCritToLog(log, context);
+                }
+            }
             foreach (var effect in Effects)
             {
                 effect.Apply(log, context);
+            }
+            // Additional effects:
+            foreach (var data in context.Actor.Data)
+            {
+                if (data is IAddActionEffect iAAE)
+                {
+                    var extraEffects = iAAE.AdditionalEffectsFor(this, log, context);
+                    if (extraEffects != null)
+                    {
+                        foreach (var effect in extraEffects)
+                        {
+                            effect.Apply(log, context);
+                        }
+                    }
+                }
             }
         }
 
@@ -171,6 +218,7 @@ namespace Nucleus.Game
         protected virtual void ApplySelfEffects(IActionLog log, EffectContext context)
         {
             context.Target = context.Actor;
+            context.Critical = false; // Cannot crit oneself
             foreach (var effect in SelfEffects)
             {
                 effect.Apply(log, context);

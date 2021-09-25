@@ -1,7 +1,9 @@
 ﻿using Nucleus.Base;
 using Nucleus.Extensions;
+using Nucleus.Game.Components;
 using Nucleus.Logs;
 using Nucleus.Modals;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,25 +18,57 @@ namespace Nucleus.Game.Effects
     [Serializable]
     public class ShowItemInfoEffect : BasicEffect, IFastDuplicatable
     {
+        private Element _Item = null;
+
+        /// <summary>
+        /// The item to show info for.  If left null the selected item from the
+        /// actor's inventory will be displayed instead.
+        /// </summary>
+        public Element Item
+        {
+            get { return _Item; }
+            set { _Item = value; }
+        }
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public ShowItemInfoEffect() { }
+
+        /// <summary>
+        /// Item constructor
+        /// </summary>
+        /// <param name="item"></param>
+        public ShowItemInfoEffect(Element item)
+        {
+            _Item = item;
+        }
 
         /// <summary>
         /// Duplication constructor
         /// </summary>
         /// <param name="other"></param>
-        public ShowItemInfoEffect(ShowItemInfoEffect other) { }
+        public ShowItemInfoEffect(ShowItemInfoEffect other) : this(other.Item) { }
 
         public override bool Apply(IActionLog log, EffectContext context)
         {
             // Create modal:
             if (!(context.State is ModalState mState)) return false;
 
-            var item = context.Actor?.GetData<Inventory>()?.Selected?.Item;
+            var item = Item;
+            if (item == null) item = context.Actor?.GetData<Inventory>()?.Selected?.Item;
             if (item == null) return false;
 
             var script = GameEngine.Instance.LanguagePack;
 
-            var modal = new ModalWindow(item.Name.CapitaliseFirst());
+            string title = item.Name.CapitaliseFirst();
+            var resPickUp = item.GetData<ResourcePickUp>();
+            if (resPickUp != null)
+            {
+                title += " (x" + resPickUp.Resource.Quantity + ")";
+            }
+
+            var modal = new ModalWindow(title);
 
             // Item keywords:
             string keywords = null;
@@ -45,10 +79,19 @@ namespace Nucleus.Game.Effects
                 {
                     var keyword = script.GetText(componentKey);
                     if (keywords == null) keywords = keyword;
-                    else keywords += " " + keyword;
+                    else keywords += ", " + keyword;
                 }
             }
             if (keywords != null) modal.Contents.Add(new Keywords(keywords));
+
+            // Consumable uses:
+            if (item.HasData<ConsumableItem>())
+            {
+                var consumable = item.GetData<ConsumableItem>();
+                var usesText = script.GetText("Consumable_Uses", context.RNG, consumable.Uses);
+                if (usesText != null) modal.Contents.Add(new Paragraph(usesText));
+                modal.Contents.Add(new Paragraph(" "));
+            }
 
             // Item description:
             var descriptionKey = item.Name + "_Description";

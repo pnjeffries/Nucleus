@@ -17,5 +17,16 @@ namespace Nucleus.Game
         /// will apply indefinitely.
         /// </summary>
         double TimeRemaining { get; set; }
+
+        /// <summary>
+        /// The description string for the status effect (usually the effect's name)
+        /// </summary>
+        string Description { get; }
+
+        /// <summary>
+        /// Merge another status effect into this one
+        /// </summary>
+        /// <param name="other"></param>
+        void Merge(IStatusEffect other);
     }
 }

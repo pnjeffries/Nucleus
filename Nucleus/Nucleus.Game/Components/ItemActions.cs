@@ -38,7 +38,6 @@ namespace Nucleus.Game
         /// </summary>
         public ItemActions()
         {
-            //Prototype = new WindUpAction();
         }
 
         /// <summary>

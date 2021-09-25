@@ -1,4 +1,5 @@
-﻿using Nucleus.Model;
+﻿using Nucleus.Extensions;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +38,7 @@ namespace Nucleus.Game
         private double _Speed = 1;
 
         /// <summary>
-        /// The relative speed of action of the element
+        /// The relative base speed of action of the element
         /// </summary>
         public double Speed
         {
@@ -60,9 +61,30 @@ namespace Nucleus.Game
 
         #region Methods
 
-        public void ResetCountdown(int value)
+        /// <summary>
+        /// Reset the turn countdown to the specified value, adjusted for
+        /// the given element's speed.
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="value"></param>
+        public void ResetCountdown(Element element, int value)
         {
-            CountDown = (int)(value / Speed);
+            var speed = AdjustedSpeed(element);
+            if (speed == 0) CountDown = int.MaxValue; //No int infinity!
+            else CountDown = (int)(value / speed);
+        }
+
+        private double AdjustedSpeed(Element element)
+        {
+            double result = Speed;
+            foreach (var data in element.Data)
+            {
+                if (data is ISpeedModifier speedMod)
+                {
+                    result = speedMod.ModifySpeed(result);
+                }
+            }
+            return result;
         }
 
         #endregion
