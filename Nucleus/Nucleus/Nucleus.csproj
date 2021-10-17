@@ -196,7 +196,6 @@
     <Compile Include="Meshing\HalfEdgeVertex.cs" />
     <Compile Include="Meshing\MeshDivisionEdge.cs" />
     <Compile Include="Meshing\MeshDivisionEdgeCollection.cs" />
-    <Compile Include="Meshing\MeshingGrid.cs" />
     <Compile Include="Model\AnalysisCase.cs" />
     <Compile Include="Model\AnalysisCaseCollection.cs" />
     <Compile Include="Model\AnalysisTask.cs" />

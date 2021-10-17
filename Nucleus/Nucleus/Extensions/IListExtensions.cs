@@ -477,8 +477,8 @@ namespace Nucleus.Extensions
             {
                 TItem item = list[i];
                 TProperty value = propertyDelegate.Invoke(item);
-                if (value.CompareTo(after) == 1 &&
-                    (result == -1 || value.CompareTo(min) == -1))
+                if (value.CompareTo(after) > 0 &&
+                    (result < 0|| value.CompareTo(min) < 0))
                 {
                     min = value;
                     result = i;
@@ -497,9 +497,11 @@ namespace Nucleus.Extensions
         /// <param name="propertyDelegate">Delegate function which returns the value
         /// for each list item.</param>
         /// <param name="after">The value for which the subsequent value in order is being sought</param>
+        /// <param name="wrap">If true and no greater value can be found, the function will 'wrap' and return
+        /// the item with the lowest value of the specified property instead.</param>
         /// <returns></returns>
         public static TItem ItemWithNext<TItem, TProperty>(this IList<TItem> list, 
-            Func<TItem, TProperty> propertyDelegate, TProperty after)
+            Func<TItem, TProperty> propertyDelegate, TProperty after, bool wrap = false)
             where TProperty : IComparable<TProperty>
             where TItem : class
         {
@@ -509,12 +511,16 @@ namespace Nucleus.Extensions
             {
                 TItem item = list[i];
                 TProperty value = propertyDelegate.Invoke(item);
-                if (value.CompareTo(after) == 1 && 
-                    (result == null ||value.CompareTo(min) == -1))
+                if (value.CompareTo(after) > 0 && 
+                    (result == null ||value.CompareTo(min) < 0))
                 {
                     min = value;
                     result = item;
                 }
+            }
+            if (wrap && result == null)
+            {
+                result = list.ItemWithMin(propertyDelegate);
             }
             return result;
         }
@@ -541,8 +547,8 @@ namespace Nucleus.Extensions
             {
                 TItem item = list[i];
                 TProperty value = propertyDelegate.Invoke(item);
-                if (value.CompareTo(before) == -1 &&
-                    (result == -1 || value.CompareTo(max) == 1))
+                if (value.CompareTo(before) < 0 &&
+                    (result < 0 || value.CompareTo(max) > 0))
                 {
                     max = value;
                     result = i;
@@ -603,9 +609,11 @@ namespace Nucleus.Extensions
         /// <param name="propertyDelegate">Delegate function which returns the value
         /// for each list item.</param>
         /// <param name="before">The value for which the subsequent value in order is being sought</param>
+        /// <param name="wrap">If true and no lesser value can be found, the function will 'wrap' and return
+        /// the item with the highest value of the specified property instead.</param>
         /// <returns></returns>
         public static TItem ItemWithPrevious<TItem, TProperty>(this IList<TItem> list,
-            Func<TItem, TProperty> propertyDelegate, TProperty before)
+            Func<TItem, TProperty> propertyDelegate, TProperty before, bool wrap = false)
             where TProperty : IComparable<TProperty>
             where TItem : class
         {
@@ -615,12 +623,16 @@ namespace Nucleus.Extensions
             {
                 TItem item = list[i];
                 TProperty value = propertyDelegate.Invoke(item);
-                if (value.CompareTo(before) == -1 && 
-                    (result == null || value.CompareTo(max) == 1))
+                if (value.CompareTo(before) < 0 && 
+                    (result == null || value.CompareTo(max) > 0))
                 {
                     max = value;
                     result = item;
                 }
+            }
+            if (wrap && result == null)
+            {
+                result = list.ItemWithMax(propertyDelegate);
             }
             return result;
         }
