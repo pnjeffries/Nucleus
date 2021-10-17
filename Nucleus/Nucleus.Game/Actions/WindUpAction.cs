@@ -1,4 +1,5 @@
-﻿using Nucleus.Game.Effects;
+﻿using Nucleus.Extensions;
+using Nucleus.Game.Effects;
 using Nucleus.Geometry;
 using Nucleus.Model;
 using System;
@@ -13,47 +14,82 @@ namespace Nucleus.Game
     /// Action whereby a game element spends a turn preparing to use an
     /// item or ability
     /// </summary>
-    public class WindUpAction : GameAction
+    public class WindUpAction : ResourceAction
     {
-        #region Properties
-
-        #endregion
 
         #region Constructor
 
-        public WindUpAction(ActionFactory actionFactory)
+        public WindUpAction(ActionFactory actionFactory) : base()
         {
             SelfEffects.Add(new DisableEffect());
             SelfEffects.Add(new AddAbilityEffect(new DirectionalItemUseAbility(actionFactory)));
         }
 
-        public WindUpAction(ActionFactory actionFactory, InputFunction input) : this(actionFactory)
+        public WindUpAction(string name, ActionFactory actionFactory) : base(name)
+        {
+            SelfEffects.Add(new DisableEffect());
+            SelfEffects.Add(new AddAbilityEffect(new DirectionalItemUseAbility(actionFactory)));
+        }
+
+        public WindUpAction(string name, Resource resourceRequired, ActionFactory actionFactory) : base(name, resourceRequired)
+        {
+            SelfEffects.Add(new DisableEffect());
+            SelfEffects.Add(new AddAbilityEffect(new DirectionalItemUseAbility(actionFactory)));
+        }
+
+        public WindUpAction(string name, ActionFactory actionFactory, params IEffect[] selfEffects) : this(name, actionFactory)
+        {
+            foreach (var selfEffect in selfEffects)
+                SelfEffects.Add(selfEffect);
+        }
+
+        public WindUpAction(string name, ActionFactory actionFactory, InputFunction input) : this(name, actionFactory)
         {
             Trigger = new ActionInputTrigger(input);
+        }
+
+        public WindUpAction(string name, ActionFactory actionFactory, InputFunction input, params IEffect[] selfEffects) : this(name, actionFactory, input)
+        {
+            foreach (var selfEffect in selfEffects)
+                SelfEffects.Add(selfEffect);
         }
 
         #endregion
 
         #region Methods
 
+        private IList<GameMapCell> GetTargetableCells(TurnContext context)
+        {
+            var aAE = SelfEffects.FirstOfType<AddAbilityEffect>();
+            if (aAE == null) return null;
+
+            if (aAE.Ability is DirectionalItemUseAbility dIUA)
+            {
+                return dIUA.ActionFactory?.TargetableCells(context);
+            }
+            return null;
+        }
+
         public override double AIScore(TurnContext context, ActionSelectionAI weights)
         {
             Element self = context.Element;
+
+            if (!HasRequiredResources(self)) return -0.5;
+
             var mDS = self?.GetData<MapData>();
             var mA = self.GetData<MapAwareness>();
+
+            var cells = GetTargetableCells(context);
 
             // TEMP:
             Element target = ((RLState)context.State).Controlled;
             var mDT = target?.GetData<MapData>();
 
-            if (mDT != null && !target.IsDeleted && mA.AwarenessOfCell(mDT.MapCell.Index) > 0)
+            if (mDT?.MapCell != null && !target.IsDeleted && mA.AwarenessOfCell(mDT.MapCell.Index) >= MapAwareness.Visible)
             {
-                // Distance calculation:
-                double manDist = mDS.Position.DistanceTo(mDT.Position);
-                // Works for sword slash, but need more detail for other things:
-                if (manDist < 2) //TEMP
+                if (cells.Contains(mDT.MapCell) || cells.ContainsAny(mDT.MapCell.AdjacentCells()))
                 {
-                    return 1.5;// 0.5 + context.RNG.NextDouble() * 1;
+                    return context.RNG.NextDouble() * 2;
                 }
             }
             return -0.5;

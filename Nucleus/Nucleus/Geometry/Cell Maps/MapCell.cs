@@ -145,5 +145,34 @@ namespace Nucleus.Geometry
             return cell?.Map.GetCell(cell.Map.AdjacentCellIndex(cell.Index, direction)) as TMapCell;
         }
 
+        /// <summary>
+        /// Get all cells adjacent to this one.
+        /// </summary>
+        /// <typeparam name="TMapCell"></typeparam>
+        /// <param name="cell"></param>
+        /// <returns></returns>
+        public static IList<TMapCell> AdjacentCells<TMapCell>(this TMapCell cell)
+            where TMapCell : MapCell
+        {
+            if (cell == null) return null;
+            else return cell.Map.AdjacentCells<TMapCell>(cell.Index);
+        }
+
+        /// <summary>
+        /// Travels through the map in the specified direction until a cell meeting the specified condition
+        /// is encountered (or the limits are reached)
+        /// </summary>
+        /// <typeparam name="TMapCell"></typeparam>
+        /// <param name="cell"></param>
+        /// <param name="direction"></param>
+        /// <param name="condition"></param>
+        /// <param name="maxRange">The maximum number of cells which may be visited before terminating</param>
+        /// <param name="returnLast">If the condition is not met before the max range or the end of the map is found, return the last cell visited</param>
+        /// <returns></returns>
+        public static TMapCell FirstCellInDirectionWhere<TMapCell>(this TMapCell cell, Vector direction, Func<TMapCell, bool> condition, int maxRange = int.MaxValue, bool returnLast = false)
+            where TMapCell : MapCell
+        {
+            return cell?.Map.GetCell(cell.Map.FirstCellInDirectionWhere(cell.Index, direction, condition, maxRange, returnLast)) as TMapCell;
+        }
     }
 }

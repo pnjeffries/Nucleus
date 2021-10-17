@@ -1,4 +1,6 @@
 ﻿using Nucleus.Base;
+using Nucleus.IO;
+using Nucleus.Logs;
 using Nucleus.Rendering;
 using System;
 using System.Collections.Generic;
@@ -30,6 +32,11 @@ namespace Nucleus.Game
         /// The instance of the game engine
         /// </summary>
         public static GameEngine Instance { get { return _Instance; } }
+
+        /// <summary>
+        /// The current language pack used to define text
+        /// </summary>
+        public LogScript LanguagePack { get; } = new LogScript();
 
         /// <summary>
         /// The sub-manager which handles user input
@@ -72,6 +79,17 @@ namespace Nucleus.Game
             get { return _Module; }
             private set { ChangeProperty(ref _Module, value, "Module"); }
         }
+
+        private IResourceLoader _Resources = null;
+
+        /// <summary>
+        /// The resource loader
+        /// </summary>
+        public IResourceLoader Resources
+        {
+            get { return _Resources; }
+            set { ChangeProperty(ref _Resources, value); }
+        }
         
         #endregion
 
@@ -79,15 +97,25 @@ namespace Nucleus.Game
 
         /// <summary>
         /// Perform engine initialisation.
-        /// This should be done after a module has been loaded.
+        /// This should be done after a module has been loaded and a resource loader supplied.
         /// </summary>
         public virtual void StartUp()
         {
+            Module?.Initialise();
+
             State = Module?.StartingState();
 
             _LastUpdate = DateTime.UtcNow;
 
             State?.StartUp();
+        }
+
+        /// <summary>
+        /// Reset the game engine back to it's initial state
+        /// </summary>
+        public virtual void Reset()
+        {
+            StartUp();
         }
 
         /// <summary>

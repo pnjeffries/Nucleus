@@ -23,7 +23,7 @@ namespace Nucleus.Game
             MapData mD = self?.GetData<MapData>();
             if (mD != null && mD.MapCell != null)
             {
-                IList<MapCell> adjacent = context.Stage?.Map?.AdjacentCells(mD.MapCell.Index);
+                var adjacent = context.Stage?.Map?.AdjacentCells(mD.MapCell.Index);
                 //TODO: Diagonal?
                 foreach (var cell in adjacent)
                 {

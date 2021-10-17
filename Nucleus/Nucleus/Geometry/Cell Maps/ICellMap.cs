@@ -1,4 +1,5 @@
 ﻿using Nucleus.Base;
+using Nucleus.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -133,6 +134,19 @@ namespace Nucleus.Geometry
     public static class ICellMapExtensions
     {
         /// <summary>
+        /// Set all cells in this map back to the default value
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="map"></param>
+        public static void Clear<T>(this ICellMap<T> map)
+        {
+            for (int i = 0; i < map.CellCount; i++)
+            {
+                map[i] = default(T);
+            }
+        }
+
+        /// <summary>
         /// Get the item in the cell at the specified location
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -212,6 +226,29 @@ namespace Nucleus.Geometry
             {
                 int iA = map.AdjacentCellIndex(cellIndex, i);
                 if (map.Exists(iA)) result.Add(map[iA]);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Retrieve a list of all cells adjacent to the one with the specified index
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="map"></param>
+        /// <param name="cellIndex"></param>
+        /// <returns></returns>
+        public static IList<T> AdjacentCells<T>(this ICellMap map, int cellIndex)
+        {
+            int aC = map.AdjacencyCount(cellIndex);
+            var result = new List<T>(aC);
+            for (int i = 0; i < aC; i++)
+            {
+                int iA = map.AdjacentCellIndex(cellIndex, i);
+                if (map.Exists(iA))
+                {
+                    var cell = map.GetCell(iA);
+                    if (cell != null && cell is T cellT) result.Add(cellT);
+                }
             }
             return result;
         }
@@ -419,6 +456,163 @@ namespace Nucleus.Geometry
                 }
             }
             return changed;
+        }
+
+        /// <summary>
+        /// Generate a set of contour polylines which separate the areas of the map which
+        /// meet a certain condition from those which do not.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="map"></param>
+        /// <param name="condition">The condition which will return true for the cells to have
+        /// a contour constructed around them.</param>
+        /// <returns></returns>
+        public static IList<PolyLine> Contour<T>(this ICellMap<T> map, Func<T,bool> condition)
+        {
+            var result = new List<PolyLine>();
+
+            var processed = new int[map.CellCount];
+
+            for (int i = 0; i < map.CellCount; i++)
+            {
+                var adjacency = (uint)map.AdjacencyCount(i);
+                int completeFlag = 2.Power(adjacency);
+                if (processed[i] >= completeFlag) continue;
+
+                T value = map.GetCell(i);
+
+                if (condition.Invoke(value))
+                {
+                    // Condition satisfied
+                    var active = new PolyLine(true);
+                    int adjacentIndex = 0;
+                    bool carryOn = true;
+                    int cellIndex = i;
+                    while (carryOn)
+                    {
+                        int sideFlag = 2.Power((uint)adjacentIndex);
+                        if ((processed[cellIndex] & sideFlag) == 0)
+                        {
+                            processed[cellIndex] += sideFlag;
+                            int cellIndexAdjacent = map.AdjacentCellIndex(cellIndex, adjacentIndex);
+                            if (map.Exists(cellIndexAdjacent) && condition.Invoke(map.GetCell(cellIndexAdjacent)))
+                            {
+                                //Add point to polygon:
+                                var vertex =  map.CellVertex(cellIndex, adjacentIndex);
+                                if (vertex.IsValid()) active.Add(vertex, Tolerance.Distance);
+
+                                //Move onto next cell
+                                cellIndex = cellIndexAdjacent;
+
+                                adjacentIndex -= 1;
+                                if (adjacentIndex < 0)
+                                {
+                                    adjacentIndex = map.AdjacencyCount(cellIndex) - 1;
+                                }
+                            }
+                            else
+                            {
+                                //Add point to polygon:
+                                Vector vertex = map.CellVertex(cellIndex, adjacentIndex);
+                                if (vertex.IsValid()) active.Add(vertex, Tolerance.Distance);
+
+                                //Move round:
+                                adjacentIndex++;
+                            }
+                        }
+                        else
+                        {
+                            adjacentIndex++;
+                            if (processed[cellIndex] == completeFlag) carryOn = false;
+                        }
+
+                        if (adjacentIndex >= map.AdjacencyCount(cellIndex))
+                        {
+                            adjacentIndex = 0;
+                        }
+
+                        if (cellIndex == i && adjacentIndex == 0)
+                        {
+                            processed[cellIndex] = completeFlag;
+                            carryOn = false;
+                        }
+                    }
+
+                    if (active.VertexCount > 2)
+                    {
+                        result.Add(active);
+                    }
+                }
+                else
+                {
+                    processed[i] = completeFlag;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Return a list of indices where the specified condition delegate returns true
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="map"></param>
+        /// <param name="condition"></param>
+        /// <returns></returns>
+        public static IList<int> IndicesWhere<T>(this ICellMap<T> map, Func<T,bool> condition)
+        {
+            var result = new List<int>();
+            for (int i = 0; i < map.CellCount; i++)
+            {
+                T value = map.GetCell(i);
+                if (condition.Invoke(value)) result.Add(i);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Return a random cell index from this map which meets the specified conditions
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="map"></param>
+        /// <param name="condition"></param>
+        /// <param name="rng"></param>
+        /// <returns></returns>
+        public static int RandomIndexWhere<T>(this ICellMap<T> map, Func<T, bool> condition, Random rng)
+        {
+            var indices = map.IndicesWhere(condition);
+            if (indices.Count == 0) return -1;
+            return indices[rng.Next(indices.Count)];
+        }
+
+        /// <summary>
+        /// Keep moving through the grid in the specified direction until a cell is found which
+        /// satisfies the specified condition
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="map"></param>
+        /// <param name="direction"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="condition"></param>
+        /// <param name="maxRange">The maximum number of cells which may be visited before terminating</param>
+        /// <param name="returnLast">If the condition is not met before the max range or the end of the map is found, return the last cell visited</param>
+        /// <returns></returns>
+        public static int FirstCellInDirectionWhere<T>(this ICellMap map, int startIndex, Vector direction, Func<T, bool> condition, int maxRange = int.MaxValue, bool returnLast = false)
+        {
+            if (!map.Exists(startIndex)) return returnLast ? startIndex : -1;
+
+            int index = startIndex;
+            for (int i = 0; i < maxRange; i++)
+            {
+                int nextIndex = map.AdjacentCellIndex(index, direction);
+                if (!map.Exists(nextIndex)) return returnLast ? index : -1;
+                object cell = map.GetCell(nextIndex);
+                if (cell is T tCell && condition.Invoke(tCell)) return nextIndex;
+
+                index = nextIndex;
+            }
+
+            return returnLast ? index : -1;
         }
     }
 }

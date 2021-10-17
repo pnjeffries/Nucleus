@@ -1,4 +1,6 @@
-﻿using Nucleus.Geometry;
+﻿using Nucleus.Base;
+using Nucleus.Game.Effects;
+using Nucleus.Geometry;
 using Nucleus.Model;
 using System;
 using System.Collections.Generic;
@@ -16,15 +18,45 @@ namespace Nucleus.Game
     {
         #region Constructor
 
-        public BumpAttackAction(Element target, MapCell cell, Vector direction)
+        public BumpAttackAction(Element target, MapCell cell, Vector direction, double damage = 1, double knockback = 1, IList<IEffect> otherEffects = null)
         {
             Target = target;
             Trigger = new ActionCellInputTrigger(cell.Index, InputFunction.Move);
-           
-            Effects.Add(new SFXImpactEffect());
-            Effects.Add(new DamageEffect(1));
-            Effects.Add(new KnockbackEffect(direction, 2));
+
             SelfEffects.Add(new ActorOrientationEffect(direction));
+            SelfEffects.Add(new ApplyStatusEffect(new Combo()));
+            Effects.Add(new SFXImpactEffect());
+            Effects.Add(new KnockbackEffect(direction, knockback));
+            Effects.Add(new DamageEffect(damage));
+            if (otherEffects != null)
+            {
+                foreach (var effect in otherEffects)
+                {
+                    var newEffect = DuplicateEffect(effect);
+                    if (newEffect is IDirectionalEffect dEffect) dEffect.Direction = direction;
+                    Effects.Add(newEffect);
+                }
+            }  
+        }
+
+        public BumpAttackAction(Element target, MapCell cell, Vector direction, IList<IEffect> effects = null)
+        {
+            Target = target;
+            Trigger = new ActionCellInputTrigger(cell.Index, InputFunction.Move);
+
+            SelfEffects.Add(new ActorOrientationEffect(direction));
+            SelfEffects.Add(new ApplyStatusEffect(new Combo()));
+            Effects.Add(new SFXImpactEffect());
+            if (effects != null)
+            {
+                foreach (var effect in effects)
+                {
+                    var newEffect = DuplicateEffect(effect);
+                    if (newEffect is IDirectionalEffect dEffect) dEffect.Direction = direction;
+                    Effects.Add(newEffect);
+                }
+            }
+
         }
 
         #endregion
@@ -34,6 +66,12 @@ namespace Nucleus.Game
         public override double AIScore(TurnContext context, ActionSelectionAI weights)
         {
             return 2.0;
+        }
+
+        private IEffect DuplicateEffect(IEffect effect)
+        {
+            if (effect is IFastDuplicatable fastDup) return fastDup.FastDuplicate() as IEffect;
+            else return effect.Duplicate();
         }
 
         #endregion

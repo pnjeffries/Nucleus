@@ -1,4 +1,5 @@
-﻿using Nucleus.Geometry;
+﻿using Nucleus.Base;
+using Nucleus.Geometry;
 using Nucleus.Logs;
 using Nucleus.Model;
 using System;
@@ -13,7 +14,7 @@ namespace Nucleus.Game
     /// A SFX effect that produces an effect at a point on the target
     /// </summary>
     [Serializable]
-    public class SFXImpactEffect : BasicEffect
+    public class SFXImpactEffect : BasicEffect, IFastDuplicatable
     {
         public override bool Apply(IActionLog log, EffectContext context)
         {
@@ -27,12 +28,19 @@ namespace Nucleus.Game
                     Vector sfxPos = mD.Position;
                     Vector actorPos = context.Actor?.GetData<MapData>()?.Position ?? Vector.Unset;
                     if (actorPos.IsValid()) sfxPos = sfxPos.MoveTowards(actorPos, 0.3);
-                    context.SFX.Trigger(SFXKeywords.Bash, sfxPos);
+                    var sfxKey = SFXKeywords.Bash;
+                    if (context.Critical) sfxKey = SFXKeywords.CritBash;
+                    context.SFX.Trigger(sfxKey, sfxPos);
 
                     return true;
                 }
             }
             return false;
+        }
+
+        public IFastDuplicatable FastDuplicate_Internal()
+        {
+            return new SFXImpactEffect();
         }
     }
 }

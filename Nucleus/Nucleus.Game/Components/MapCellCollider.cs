@@ -36,6 +36,40 @@ namespace Nucleus.Game
             }
         }
 
+        private Func<Element, bool> _BlockingCheck = el => el.GetData<MapCellCollider>()?.Solid ?? false;
+
+        /// <summary>
+        /// Get the condition used to check whether another element blocks this entity's
+        /// movement.  (By default this just checks if the object is solid)
+        /// </summary>
+        public Func<Element, bool> BlockingCheck
+        {
+            get { return _BlockingCheck; }
+            set { _BlockingCheck = value; }
+        }
+
+        #endregion
+
+        #region
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public MapCellCollider()
+        {
+
+        }
+
+        public MapCellCollider(bool solid)
+        {
+            Solid = solid;
+        }
+
+        public MapCellCollider(bool solid, Func<Element, bool> blockingCheck) : this(solid)
+        {
+            _BlockingCheck = blockingCheck;
+        }
+
         #endregion
 
         #region Methods
@@ -62,8 +96,7 @@ namespace Nucleus.Game
             if (!Solid) return null; //Can pass through!
             foreach (Element el in cell.Contents)
             {
-                MapCellCollider other = el.GetData<MapCellCollider>();
-                if (other != null && other.Solid) return el; // Blockage!
+                if (BlockingCheck.Invoke(el)) return el; // Blockage!
             }
             return null; // No blockage!
         }

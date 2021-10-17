@@ -68,6 +68,7 @@ namespace Nucleus.Extensions
             return true;
         }
 
+
         /// <summary>
         /// Extract all of the objects of a specified type into a separate collection
         /// </summary>

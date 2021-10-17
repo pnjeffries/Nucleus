@@ -1,4 +1,5 @@
-﻿using Nucleus.Model;
+﻿using Nucleus.Logs;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,18 +37,44 @@ namespace Nucleus.Game
         /// </summary>
         public Random RNG { get; set; } = new Random();
 
+        /// <summary>
+        /// The log to be used to record textual output
+        /// </summary>
+        public IActionLog Log { get; set; }
+
         #endregion
 
         #region Constructors
 
         public TurnContext() { }
 
-        public TurnContext(GameState state, MapStage stage, Element element, Random rng)
+        public TurnContext(GameState state, MapStage stage, Element element, Random rng, IActionLog log)
         {
             State = state;
             Stage = stage;
             Element = element;
             RNG = rng;
+            Log = log;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Is the specified element player-controlled?
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public bool IsPlayerControlled(Element element)
+        {
+            var bState = State as MapState;
+            if (bState != null && element != null)
+            {
+                // Is the element the player themselves?
+                if (element == bState.Controlled) return true;
+            }
+            return false;
         }
 
         #endregion

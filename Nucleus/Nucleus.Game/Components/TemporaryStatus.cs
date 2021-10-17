@@ -21,7 +21,7 @@ namespace Nucleus.Game
         /// <summary>
         /// Private backing member variable for the LifeSpan property
         /// </summary>
-        private int _LifeSpan = 0;
+        private int _LifeSpan = 1;
 
         /// <summary>
         /// The number of turns remaining until this status effect should end.
@@ -43,21 +43,16 @@ namespace Nucleus.Game
 
         public void EndOfTurn(TurnContext context)
         {
-            LifeSpan -= 1;
-            if (LifeSpan < 0)
-            {
-                EndStatus(context);
-                Delete();
-            }
+            ReduceLifespan();
         }
 
-        /// <summary>
-        /// End the status effect, performing any necessary clearup
-        /// </summary>
-        /// <param name="context"></param>
-        public virtual void EndStatus(TurnContext context)
+        public void ReduceLifespan(int amount = 1)
         {
-
+            LifeSpan -= amount;
+            if (LifeSpan <= 0)
+            {
+                Delete();
+            }
         }
 
         #endregion

@@ -22,9 +22,34 @@ namespace Nucleus.Game
         public static string Bash = "Bash";
 
         /// <summary>
+        /// A 'bash' effect when a critical hit is performed
+        /// </summary>
+        public static string CritBash = "CritBash";
+
+        /// <summary>
         /// A dusty 'footprint' effect
         /// </summary>
         public static string Dust = "Dust";
+
+        /// <summary>
+        /// An item pickup effect
+        /// </summary>
+        public static string Grab = "Grab";
+
+        /// <summary>
+        /// A healing buff effect
+        /// </summary>
+        public static string Heal = "Heal";
+
+        /// <summary>
+        /// The effect of one object knocking against another
+        /// </summary>
+        public static string Knock = "Knock";
+
+        /// <summary>
+        /// The effect when a door is opened
+        /// </summary>
+        public static string Open = "Open";
 
         /// <summary>
         /// A melee-weapon slash effect

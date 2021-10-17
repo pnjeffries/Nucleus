@@ -1,4 +1,5 @@
-﻿using Nucleus.Model;
+﻿using Nucleus.Logs;
+using Nucleus.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +9,11 @@ using System.Threading.Tasks;
 namespace Nucleus.Game
 {
     /// <summary>
-    /// Data component to store the vulnerabilities of elements to different
+    /// Data component to store the vulnerabilities and resistances of elements to different
     /// forms of damage.
     /// </summary>
     [Serializable]
-    public class DamageVulnerabilities : IElementDataComponent
+    public class DamageVulnerabilities : IElementDataComponent, IDefense
     {
         #region Properties
 
@@ -90,6 +91,15 @@ namespace Nucleus.Game
         public void Add(DamageType damageType, double vulnerability)
         {
             Vulnerabilities.Add(damageType, vulnerability);
+        }
+
+        /// <summary>
+        /// Adjust the specified damage value based on this defense
+        /// </summary>
+        /// <returns></returns>
+        public Damage Defend(Damage damage, IActionLog log, EffectContext context)
+        {
+            return damage * VulnerabilityTo(damage.DamageType);
         }
 
         #endregion

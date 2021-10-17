@@ -11,7 +11,7 @@ namespace Nucleus.Game
     /// A class to hold data about a stage or level in a game.
     /// </summary>
     [Serializable]
-    public class GameStage : Unique
+    public class GameStage : Named
     {
 
     }

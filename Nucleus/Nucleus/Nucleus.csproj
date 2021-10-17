@@ -15,7 +15,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -134,7 +134,10 @@
     <Compile Include="Geometry\SurfaceCollection.cs" />
     <Compile Include="Geometry\Triangle.cs" />
     <Compile Include="IO\DocumentDeserializationOptions.cs" />
+    <Compile Include="IO\IResourceLoader.cs" />
     <Compile Include="Logs\GrammaticalPerson.cs" />
+    <Compile Include="Logs\IScriptedLog.cs" />
+    <Compile Include="Logs\LogDescription.cs" />
     <Compile Include="Logs\LogScriptMarkupParser.cs" />
     <Compile Include="Logs\ICalculationLog.cs" />
     <Compile Include="Analysis\ICalculationScenario.cs" />
@@ -183,6 +186,7 @@
     <Compile Include="Analysis\SimpleBeamAnalysis.cs" />
     <Compile Include="Logs\LogScript.cs" />
     <Compile Include="Logs\LogScriptEntry.cs" />
+    <Compile Include="Logs\ScriptedLog.cs" />
     <Compile Include="Logs\StringLog.cs" />
     <Compile Include="Maths\Fresnel.cs" />
     <Compile Include="Maths\INamedDataSetCollection.cs" />

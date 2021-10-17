@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nucleus.Base;
 using Nucleus.Geometry;
 using Nucleus.Logs;
 
@@ -12,36 +13,22 @@ namespace Nucleus.Game
     /// An effect which reduces element hitpoints
     /// </summary>
     [Serializable]
-    public class DamageEffect : BasicEffect
+    public class DamageEffect : BasicEffect, IFastDuplicatable
     {
         #region Properties
 
         /// <summary>
         /// Private backing member variable for the Damage property
         /// </summary>
-        private double _Damage = 1;
+        private Damage _Damage = new Damage(1);
 
         /// <summary>
         /// The value of the damage to be inflicted
         /// </summary>
-        public double Damage
+        public Damage Damage
         {
             get { return _Damage; }
             set { _Damage = value; }
-        }
-
-        /// <summary>
-        /// Private backing member variable for the DamageType property
-        /// </summary>
-        private DamageType _DamageType = DamageType.Base;
-
-        /// <summary>
-        /// The type of the damage
-        /// </summary>
-        public DamageType DamageType
-        {
-            get { return _DamageType; }
-            set { _DamageType = value; }
         }
 
 
@@ -51,8 +38,20 @@ namespace Nucleus.Game
 
         public DamageEffect(double damage)
         {
-            Damage = damage;
+            _Damage = new Damage(damage);
         }
+
+        public DamageEffect(double damage, DamageType damageType)
+        {
+            _Damage = new Damage(damage, damageType);
+        }
+
+        public DamageEffect(Damage damage)
+        {
+            _Damage = damage;
+        }
+
+        public DamageEffect(DamageEffect other) : this(other.Damage.FastDuplicate()) { }
 
         #endregion
 
@@ -64,29 +63,61 @@ namespace Nucleus.Game
             HitPoints hP = context?.Target?.GetData<HitPoints>();
             if (hP != null)
             {
-                // Calculate damage (taking account of target resistances/vulnerabilities)
-                double damage = Damage * DamageType.MultiplierFor(context.Target);
-                
+                var damage = Damage;
+
+                if (context.Critical) damage = damage.WithValue(damage.Value + 1); //Temp?
+
+                foreach (var component in context.Target.Data)
+                {
+                    if (component is IDefense defense)
+                    {
+                        damage = defense.Defend(damage, log, context);
+                    }
+                }
+
+                if (damage <= 0) return true;
+
                 // Apply damage
                 hP.Value -= damage;
 
+                // End target's combo (if applicable)
+                var status = context.Target.GetData<Status>();
+                if (status != null) status.ClearEffects<Combo>();
+
                 // Kill the target (if applicable)
-                if (hP.Value <= 0)
+                if (!context.Target.IsDeleted && hP.Value <= 0)
                 {
                     Vector position = context.Target.GetData<MapData>()?.Position ?? Vector.Unset;
                     context.SFX.Trigger(SFXKeywords.Bang, position);
                     // Destroy!
-                    Equipped equipped = context.Target.GetData<Equipped>();
-                    if (equipped != null)
+                    Inventory inventory = context.Target.GetData<Inventory>();
+                    if (inventory != null)
                     {
                         // Drop held items!
-                        equipped.DropAll(context.Target, context);
+                        inventory.DropAll(context.Target, context);
                     }
-                    context.Target.Delete();     
+                    context.Target.Delete();
+                    WriteDeathToLog(log, context);
                 }
                 return true;
             }
             else return false;
+        }
+
+        private void WriteDeathToLog(IActionLog log, EffectContext context)
+        {
+            string key = "Death_" + context.Target?.Name;
+            if (!log.HasScriptFor(key))
+            {
+                // Fallback generic death message
+                key = "Death";
+            }
+            log.WriteScripted(context, key, context.Actor, context.Target);
+        }
+
+        public IFastDuplicatable FastDuplicate_Internal()
+        {
+            return new DamageEffect(this);
         }
 
         #endregion

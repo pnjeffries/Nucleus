@@ -1,4 +1,5 @@
 ﻿using Nucleus.Base;
+using Nucleus.Game.Components.Abilities;
 using Nucleus.Geometry;
 using Nucleus.Model;
 using System;
@@ -16,7 +17,7 @@ namespace Nucleus.Game
     /// </summary>
     [Serializable]
     public class AvailableActions : NotifyPropertyChangedBase, 
-        IElementDataComponent, IEndOfTurn
+        IElementDataComponent, IEndOfTurn, IStartOfTurn
     {
         #region Properties
 
@@ -30,6 +31,24 @@ namespace Nucleus.Game
         #endregion
 
         #region Methods
+
+        public void StartOfTurn(TurnContext context)
+        {
+            RefreshActions(context);
+        }
+
+        public void RefreshActions(TurnContext context)
+        {
+            Actions.Clear();
+            if (context.Element == null) return;
+            foreach (var data in context.Element.Data)
+            {
+                if (data is IAbility ability && !ability.IsDeleted)
+                {
+                    ability.PopulateActions(context);
+                }
+            }
+        }
 
         public void EndOfTurn(TurnContext context)
         {

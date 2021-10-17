@@ -16,7 +16,7 @@ namespace Nucleus.Game
         /// <summary>
         /// Select an action from the specified collection
         /// </summary>
-        /// <param name="element"></param>
+        /// <param name="context"></param>
         /// <param name="actions"></param>
         /// <returns></returns>
         public GameAction SelectAction(TurnContext context, GameActionCollection actions)

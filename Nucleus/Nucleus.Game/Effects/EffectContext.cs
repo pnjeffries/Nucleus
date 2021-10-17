@@ -1,4 +1,5 @@
-﻿using Nucleus.Geometry;
+﻿using Nucleus.Game.Components;
+using Nucleus.Geometry;
 using Nucleus.Model;
 using Nucleus.Rendering;
 using System;
@@ -49,7 +50,17 @@ namespace Nucleus.Game
         /// <summary>
         /// Get the map (retrieved from current stage)
         /// </summary>
-        public ICellMap<MapCell> Map { get { return ((MapStage)Stage).Map; } }
+        public ICellMap<GameMapCell> Map { get { return ((MapStage)Stage).Map; } }
+
+        /// <summary>
+        /// The random number generator to be used to resolve stochastic effects
+        /// </summary>
+        public Random RNG { get; set; }
+
+        /// <summary>
+        /// Is this effect part of a critical success?
+        /// </summary>
+        public bool Critical { get; set; } = false;
 
         /*
         /// <summary>
@@ -84,12 +95,13 @@ namespace Nucleus.Game
 
         public EffectContext() { }
 
-        public EffectContext(Element actor, Element target, GameState state, GameStage stage)
+        public EffectContext(Element actor, Element target, GameState state, GameStage stage, Random rng)
         {
             Actor = actor;
             Target = target;
             Stage = stage;
             State = state;
+            RNG = rng;
         }
 
         public EffectContext(Element actor, Element target, RLState state)
@@ -98,6 +110,7 @@ namespace Nucleus.Game
             Target = target;
             State = state;
             Stage = state.Stage;
+            RNG = state.RNG;
         }
 
         public EffectContext(Element actor, Element target, RLState state, Vector direction) : this(actor, target, state)
@@ -105,11 +118,12 @@ namespace Nucleus.Game
             Direction = direction;
         }
 
-        public EffectContext(Element actor, GameState state, GameStage stage)
+        public EffectContext(Element actor, GameState state, GameStage stage, Random rng)
         {
             Actor = actor;
             Stage = stage;
             State = state;
+            RNG = rng;
         }
 
         public EffectContext(Element actor, RLState state)
@@ -117,6 +131,7 @@ namespace Nucleus.Game
             Actor = actor;
             State = state;
             Stage = state.Stage;
+            RNG = state.RNG;
         }
 
         public EffectContext(Element actor, RLState state, Vector direction) : this(actor, state)
@@ -124,19 +139,90 @@ namespace Nucleus.Game
             Direction = direction;
         }
 
+        public EffectContext(EffectContext other)
+        {
+            Actor = other.Actor;
+            Direction = other.Direction;
+            RNG = other.RNG;
+            Stage = other.Stage;
+            State = other.State;
+            Target = other.Target;
+        }
+
         #endregion
 
         #region Methods
 
-        ///// <summary>
-        ///// Remove the specified element from the state Elements collection.
-        ///// Note that the removal will not take place 
-        ///// </summary>
-        ///// <param name="element"></param>
-        //public void RemoveElementFromState(Element element)
-        //{
+        /// <summary>
+        /// Create a clone of this EffectContext but with the target element replaced with another
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public EffectContext CloneWithTarget(Element target)
+        {
+            var result = new EffectContext(this);
+            result.Target = target;
+            return result;
+        }
 
-        //}
+        public void ElementMovedOutOfTurn(Element element)
+        {
+            ElementMovedOutOfTurn(element, Stage as MapStage);
+        }
+
+        public void ElementMovedOutOfTurn(Element element, MapStage newStage) //TODO: pass in log?
+        {
+            var turnContext = new TurnContext(State, newStage, element, RNG, null);
+            foreach (var component in element.Data)
+            {
+                if (component is IOutOfTurnMove outMove)
+                {
+                    outMove.OutOfTurnMove(turnContext);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Is the player aware of the status of the specified element?
+        /// </summary>
+        public bool IsPlayerAwareOf(Element element)
+        {
+            var bState = State as MapState;
+            if (bState != null && element != null)
+            {
+                // Is the element the player themselves?
+                if (element == bState.Controlled) return true;
+
+                // Check if element is item in player inventory
+                if (element.HasData<PickUp>())
+                {
+                    var inventory = bState.Controlled.GetData<Inventory>();
+                    if (inventory != null && inventory.ContainsItem(element)) return true;
+                }
+
+                // Check if the player can see it
+                var awareness = bState.Controlled.GetData<MapAwareness>();
+                return awareness.AwareOf(element, true);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Is the specified element player-controlled?
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public bool IsPlayerControlled(Element element)
+        {
+            var bState = State as MapState;
+            if (bState != null && element != null)
+            {
+                // Is the element the player themselves?
+                if (element == bState.Controlled) return true;
+            }
+            return false;
+        }
 
         #endregion
     }

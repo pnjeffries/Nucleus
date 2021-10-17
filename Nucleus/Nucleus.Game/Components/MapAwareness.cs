@@ -1,4 +1,5 @@
 ﻿using Nucleus.Base;
+using Nucleus.Game.Components;
 using Nucleus.Geometry;
 using Nucleus.Model;
 using System;
@@ -12,8 +13,22 @@ namespace Nucleus.Game
     /// <summary>
     /// Data component to store element field of view within a Cell Map
     /// </summary>
-    public class MapAwareness : Unique, IElementDataComponent, IEndOfTurn
+    public class MapAwareness : Unique, IElementDataComponent, IEndOfTurn, IOutOfTurnMove
     {
+        #region Constants
+
+        /// <summary>
+        /// The value used to indicate that a cell is directly visible
+        /// </summary>
+        public const int Visible = 10;
+
+        /// <summary>
+        /// The value used to indicate that a cell is remembered
+        /// </summary>
+        public const int Remembered = 3;
+
+        #endregion
+
         #region Properties
 
         private ICellMap<int> _FieldOfView;
@@ -59,7 +74,7 @@ namespace Nucleus.Game
 
         #region Methods
 
-        public void EndOfTurn(TurnContext context)
+        private void UpdateFOV(TurnContext context)
         {
             if (context.Element != null)
             {
@@ -69,17 +84,22 @@ namespace Nucleus.Game
                 {
                     for (int i = 0; i < FieldOfView.CellCount; i++)
                     {
-                        if (FieldOfView[i] > 0) fov[i] = 5;
+                        if (FieldOfView[i] > 0) fov[i] = Remembered;
                     }
                 }
                 var mD = context.Element.GetData<MapData>();
                 if (mD != null)
                 {
-                    map.FieldOfView<int, MapCell>(mD.Position, VisualRange,
-                        x => IsTransparent(x, context.Element), fov, 10);
+                    map.FieldOfView<int, GameMapCell>(mD.Position, VisualRange,
+                        x => IsTransparent(x, context.Element), fov, Visible);
                     FieldOfView = fov;
                 }
             }
+        }
+
+        public void EndOfTurn(TurnContext context)
+        {
+            UpdateFOV(context);
         }
 
         private bool IsTransparent(MapCell cell, Element element)
@@ -103,6 +123,46 @@ namespace Nucleus.Game
         public int AwarenessOfCell(int cellIndex)
         {
             return FieldOfView?[cellIndex] ?? 0;
+        }
+
+        /// <summary>
+        /// Is the owner of this component aware of the specified element?
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="includeAdjacent">If true, the element will be considered visible if any adjacent
+        /// cell is visible</param>
+        /// <returns></returns>
+        public bool AwareOf(Element element, bool includeAdjacent = false)
+        {
+            // Hmmm... this may require adjustment later on...
+            if (FieldOfView == null) return false;
+            int cellIndex = FieldOfView.IndexAt(element.GetNominalPosition());
+            if (FieldOfView[cellIndex] >= Visible) return true;
+            else if (includeAdjacent)
+            {
+                int maxAdjacent = FieldOfView.AdjacencyCount(cellIndex);
+                for (int i = 0; i < maxAdjacent; i++)
+                {
+                    int adjacentIndex = FieldOfView.AdjacentCellIndex(cellIndex, i);
+                    if (FieldOfView.Exists(adjacentIndex) && FieldOfView[adjacentIndex] >= MapAwareness.Visible) return true;
+                }
+            }
+            return false;
+        }
+
+        public void OutOfTurnMove(TurnContext context)
+        {
+            UpdateFOV(context);
+        }
+
+        /// <summary>
+        /// Called when the stage is changed
+        /// </summary>
+        /// <param name="stage"></param>
+        public void StageChanged(GameStage stage)
+        {
+            FieldOfView = null;
+            //TODO: Store previous fovs in case we allow returning to previous levels?
         }
 
         #endregion

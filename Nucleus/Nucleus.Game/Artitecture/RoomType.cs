@@ -11,9 +11,9 @@ namespace Nucleus.Game
     /// </summary>
     public enum RoomType
     {
-        Room,
-        Circulation,
-        Entry,
-        Exit
+        Room = 0,
+        Circulation = 10,
+        Entry = 20,
+        Exit = 30
     }
 }

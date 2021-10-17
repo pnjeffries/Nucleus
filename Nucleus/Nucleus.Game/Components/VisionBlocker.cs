@@ -13,6 +13,18 @@ namespace Nucleus.Game
     /// </summary>
     public class VisionBlocker : Unique, IElementDataComponent
     {
+        private bool _Opaque = true;
+
+        /// <summary>
+        /// Is this vision blocker currently blocking vision?
+        /// </summary>
+        public bool Opaque
+        {
+            get { return _Opaque; }
+            set { ChangeProperty(ref _Opaque, value); }
+        }
+
+
         /// <summary>
         /// Does this block LOS to the specified element
         /// </summary>
@@ -20,7 +32,7 @@ namespace Nucleus.Game
         /// <returns></returns>
         public bool IsTransparent(Element toElement)
         {
-            return false;
+            return !Opaque;
         }
     }
 }

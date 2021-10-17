@@ -23,6 +23,11 @@ namespace Nucleus.Game
         Undefined = 0,
 
         /// <summary>
+        /// Abort/escape
+        /// </summary>
+        Abort = 100,
+
+        /// <summary>
         /// Movement (in any direction)
         /// </summary>
         Move = 1000,
@@ -68,6 +73,16 @@ namespace Nucleus.Game
         PickUp = 4000,
 
         /// <summary>
+        /// Drop an item
+        /// </summary>
+        Drop = 5000,
+
+        /// <summary>
+        /// Drop the currently selected item
+        /// </summary>
+        DropSelected = 6000,
+
+        /// <summary>
         /// Use special ability 1
         /// </summary>
         Ability_1 = 11000,
@@ -111,6 +126,31 @@ namespace Nucleus.Game
         /// Use special ability 9
         /// </summary>
         Ability_9 = 19000,
+
+        /// <summary>
+        /// Select next menu item
+        /// </summary>
+        SelectNext = 25000,
+
+        /// <summary>
+        /// Select previous menu item
+        /// </summary>
+        SelectPrevious = 26000,
+
+        /// <summary>
+        /// Show information about an item or option
+        /// </summary>
+        ShowInfo = 27000,
+
+        /// <summary>
+        /// Use the selected menu item
+        /// </summary>
+        UseSelected = 30000,
+
+        /// <summary>
+        /// Toggle debug mode
+        /// </summary>
+        Debug = 9999999
     }
 
     /// <summary>

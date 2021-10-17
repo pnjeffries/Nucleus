@@ -1,4 +1,5 @@
-﻿using Nucleus.Geometry;
+﻿using Nucleus.Base;
+using Nucleus.Geometry;
 using Nucleus.Logs;
 using Nucleus.Model;
 using System;
@@ -14,7 +15,7 @@ namespace Nucleus.Game
     /// involuntarily).  Resistance to knockback is determined by the Inertia component.
     /// </summary>
     [Serializable]
-    public class KnockbackEffect : BasicEffect
+    public class KnockbackEffect : BasicEffect, IDirectionalEffect, IFastDuplicatable
     {
         #region Properties
 
@@ -46,14 +47,53 @@ namespace Nucleus.Game
             set { _Power = value; }
         }
 
+        private IEffect _ImpactEffect = new DamageEffect(1);
+
+        /// <summary>
+        /// The effect (if any) which will be applied should the knockback be stopped by the target
+        /// hitting a blocking object.  This effect will be applied to both the target and the object
+        /// they have collided with.
+        /// </summary>
+        public IEffect ImpactEffect
+        {
+            get { return _ImpactEffect; }
+            set { _ImpactEffect = value; }
+        }
+
         #endregion
 
         #region Constructor
 
-        public KnockbackEffect(Vector direction, double power = 2)
+        /// <summary>
+        /// Directionless constructor.
+        /// Should be used for templates only.
+        /// </summary>
+        /// <param name="power"></param>
+        public KnockbackEffect(double power = 1) : this (Vector.UnitX, power)
+        {
+
+        }
+
+        /// <summary>
+        /// Directional constructor
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <param name="power"></param>
+        public KnockbackEffect(Vector direction, double power = 1)
         {
             Direction = direction;
             Power = power;
+        }
+
+        /// <summary>
+        /// Duplication constructor
+        /// </summary>
+        /// <param name="other"></param>
+        public KnockbackEffect(KnockbackEffect other)
+        {
+            Direction = other.Direction;
+            Power = other.Power;
+            ImpactEffect = other.ImpactEffect; //Duplicate?
         }
 
         #endregion
@@ -62,7 +102,14 @@ namespace Nucleus.Game
 
         public override bool Apply(IActionLog log, EffectContext context)
         {
-            int n = (int)Power; //TODO: Account for target mass?
+            int n = (int)Power;
+
+            if (context.Critical) n += 1; // Critical hit
+
+            foreach (var component in context.Actor.Data)
+            {
+                if (component is IKnockbackModifier kMod) n = kMod.ModifyKnockback(n, log, context);
+            }
 
             Element mover = context.Target;
             if (mover.IsDeleted || (mover.GetData<Inertia>()?.Fixed ?? false))
@@ -70,6 +117,12 @@ namespace Nucleus.Game
 
             if (mover != null)
             {
+                var weight = mover.GetData<ElementWeight>();
+                if (weight != null)
+                {
+                    // Modify according to mass
+                    n += weight.KnockbackModifier;
+                }
                 bool moved = false;
                 for (int i = 0; i < n; i++)
                 {
@@ -92,8 +145,33 @@ namespace Nucleus.Game
                             newCell.PlaceInCell(mover);
                             moved = true;
                         }
+                        else
+                        {
+                            context.SFX.Trigger(SFXKeywords.Knock, mD.Position + Direction * 0.5, Direction);
+                            if (ImpactEffect != null && newCell != null)
+                            {
+                                var blocker = mover.GetData<MapCellCollider>()?.Blocker(newCell);
+
+                                if (blocker != null)
+                                {
+                                    WriteLog(log, context, blocker);
+
+                                    // Apply to target:
+                                    ImpactEffect.Apply(log, context);
+                                    // Apply to blocker:
+                                    ImpactEffect.Apply(log, context.CloneWithTarget(blocker));
+                                }
+                            }
+                            i = n; //Finish
+                        }
                     }
                 }
+
+                if (moved)
+                {
+                    context.ElementMovedOutOfTurn(mover);
+                }
+
                 if (moved && context.State is RLState)
                 {
                     var rlState = (RLState)context.State;
@@ -103,6 +181,24 @@ namespace Nucleus.Game
 
             }
             return false;
+        }
+
+        protected virtual void WriteLog(IActionLog log, EffectContext context, Element blocker)
+        {
+            if (log == null) return;
+            string key = "Knockback_Impact";
+            if (log.HasScriptFor(key))
+            {
+                if (context.IsPlayerAwareOf(blocker) || context.IsPlayerAwareOf(context.Target))
+                {
+                    log.WriteScripted(context, key, context.Actor, context.Target, blocker);
+                }
+            }
+        }
+
+        IFastDuplicatable IFastDuplicatable.FastDuplicate_Internal()
+        {
+            return new KnockbackEffect(this);
         }
 
         #endregion

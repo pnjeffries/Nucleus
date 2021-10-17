@@ -24,6 +24,11 @@ namespace Nucleus.Game
         {
         }
 
+        public GameElement(string name, params IElementDataComponent[] data) : this(name)
+        {
+            SetData(data);
+        }
+
         #endregion
 
         #region Methods
