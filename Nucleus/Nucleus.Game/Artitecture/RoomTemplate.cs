@@ -213,9 +213,23 @@ namespace Nucleus.Game
             }
         }
 
+        /// <summary>
+        /// Private backing field for the Features property
+        /// </summary>
+        private FeatureSetOutCollection _Features;
+
+        /// <summary>
+        /// The features which should be generated within this type of room
+        /// </summary>
+        public FeatureSetOutCollection Features
+        {
+            get { return _Features; }
+            set { ChangeProperty(ref _Features, value); }
+        }
+        
+
         // TODO:
         // SpawnChance
-        // Features
         // ExitPlacement
         // ExtremeExit
         // StandardCellTemplate

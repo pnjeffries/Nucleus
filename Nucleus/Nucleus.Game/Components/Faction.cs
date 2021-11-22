@@ -14,6 +14,30 @@ namespace Nucleus.Game
     [Serializable]
     public class Faction : Named, IElementDataComponent
     {
+        #region constants
+
+        /// <summary>
+        /// The score at or below which another faction is considered an enemy
+        /// </summary>
+        public const double EnemyScore = -100;
+
+        /// <summary>
+        /// The score at or above which another faction is considered a friend
+        /// </summary>
+        public const double AllyScore = 100;
+
+        #endregion
+
+        private IDictionary<string, double> _Relationships = new Dictionary<string, double>();
+
+        /// <summary>
+        /// The relationship scores for other factions in relation to this one
+        /// </summary>
+        public IDictionary<string, double> Relationships
+        {
+            get { return _Relationships; }
+        }
+
         #region Constructors
 
         /// <summary>
@@ -30,9 +54,20 @@ namespace Nucleus.Game
             Name = name;
         }
 
+        /// <summary>
+        /// Initialise a faction with a name and a list of enemy names
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="enemyNames"></param>
+        public Faction(string name, params string[] enemyNames) : this(name)
+        {
+            foreach (var enemyName in enemyNames) Relationships[enemyName] = EnemyScore*2;
+        }
+
         #endregion
 
-        #region Method
+
+        #region Methods
 
         /// <summary>
         /// Is this faction an enemy of the specified other faction?
@@ -42,7 +77,7 @@ namespace Nucleus.Game
         public bool IsEnemy(Faction other)
         {
             // Currently, all factions are all enemies of each other:
-            return other != null && other != this;
+            return other != null && other != this && GetRelationshipScore(other) <= EnemyScore;
         }
 
         /// <summary>
@@ -53,7 +88,28 @@ namespace Nucleus.Game
         public bool IsAlly(Faction other)
         {
             // Currently, all factions are only allies of themselves:
-            return other == this;
+            return other == this || GetRelationshipScore(other) >= AllyScore;
+        }
+
+        /// <summary>
+        /// Get the relationship score for another faction
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public double GetRelationshipScore(Faction other)
+        {
+            if (!Relationships.ContainsKey(other.Name)) return 0;
+            return Relationships[other.Name];
+        }
+
+        /// <summary>
+        /// Set the relationship score for another faction
+        /// </summary>
+        /// <param name="other"></param>
+        /// <param name="score"></param>
+        public void SetRelationShipScore(Faction other, double score)
+        {
+            Relationships[other.Name] = score;
         }
 
         #endregion

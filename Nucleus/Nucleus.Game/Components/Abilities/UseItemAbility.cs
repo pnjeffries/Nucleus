@@ -14,6 +14,12 @@ namespace Nucleus.Game
     [Serializable]
     public class UseItemAbility : Ability
     {
+        private GameAction DuplicatePrototype(GameAction prototype)
+        {
+            if (prototype is IFastDuplicatable fastDup) return (GameAction)fastDup.FastDuplicate();
+            else return prototype.Duplicate();
+        }
+
         protected override void GenerateActions(TurnContext context, AvailableActions addTo)
         {
             Element actor = context.Element;
@@ -27,7 +33,7 @@ namespace Nucleus.Game
                 var iA = inventory.Selected.Item.GetData<ItemActions>();
                 if (iA?.Prototype != null)
                 {
-                    var action = iA.Prototype.Duplicate();
+                    var action = DuplicatePrototype(iA.Prototype);
                     action.Trigger = new ActionInputTrigger(InputFunction.UseSelected);
                     addTo.Actions.Add(action);
                 }

@@ -177,6 +177,7 @@ namespace Nucleus.Game
 
                 if (action != null)
                 {
+                    aA.LastAction = action;
                     action.Enact(Log, new EffectContext(controlled, this, direction));
                     if (action.ExecutionTime > 0) EndTurnOf(controlled);
                     // TODO: Allow 'bonus actions'

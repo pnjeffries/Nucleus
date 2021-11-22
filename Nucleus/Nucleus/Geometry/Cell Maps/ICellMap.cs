@@ -254,6 +254,49 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Count the number of contigurous adjacent cells which satisfy the specified condition
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T2"></typeparam>
+        /// <param name="map"></param>
+        /// <param name="cellIndex"></param>
+        /// <param name="condition"></param>
+        /// <returns></returns>
+        public static int CountContiguousAdjacentCellsWhere<T, T2>(this ICellMap<T> map, int cellIndex, Func<T2, bool> condition)
+            where T : T2
+        {
+            int aC = map.AdjacencyCount(cellIndex);
+            int firstCount = -1;
+            int currentCount = 0;
+            int maxCount = 0;
+            for (int i = 0; i < aC; i++)
+            {
+                int iA = map.AdjacentCellIndex(cellIndex, i);
+                if (map.Exists(iA))
+                {
+                    var cell = map.GetCell(iA);
+                    bool pass = condition.Invoke(cell);
+                    if (pass)
+                    {
+                        currentCount++;
+                        if (currentCount > maxCount) maxCount = currentCount;
+                    }
+                    else
+                    {
+                        if (firstCount < 0) firstCount = currentCount;
+                        currentCount = 0;
+                    }
+                }
+                else
+                {
+                    if (firstCount < 0) firstCount = currentCount;
+                    currentCount = 0;
+                }
+            }
+            return Math.Max(firstCount + currentCount, maxCount);
+        }
+
+        /// <summary>
         /// Get the polyline representing the border of the cell with the specified index
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -566,6 +609,41 @@ namespace Nucleus.Geometry
             {
                 T value = map.GetCell(i);
                 if (condition.Invoke(value)) result.Add(i);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Return a list of cell values where the specified condition delegate returns true
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="map"></param>
+        /// <param name="condition"></param>
+        /// <returns></returns>
+        public static IList<T> CellsWhere<T>(this ICellMap<T> map, Func<T, bool> condition)
+        {
+            var result = new List<T>();
+            for (int i = 0; i < map.CellCount; i++)
+            {
+                T value = map.GetCell(i);
+                if (condition.Invoke(value)) result.Add(value);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Return a list of cell values which correspond to cells in the specified bitmask which
+        /// are set to true.
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="bitMask">A map of boolean values where true values indicate cells to be retrieved</param>
+        /// <returns></returns>
+        public static IList<T> GetCells<T>(this ICellMap<T> map, ICellMap<bool> bitMask)
+        {
+            var result = new List<T>();
+            for (int i = 0; i < map.CellCount; i++)
+            {
+                if (bitMask.Exists(i) && bitMask[i]) result.Add(map.GetCell(i));
             }
             return result;
         }

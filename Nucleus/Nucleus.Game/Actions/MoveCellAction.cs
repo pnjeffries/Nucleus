@@ -30,6 +30,16 @@ namespace Nucleus.Game
             get { return _CellIndex; }
         }
 
+        private Vector _Direction;
+
+        /// <summary>
+        /// The direction of movement
+        /// </summary>
+        public Vector Direction
+        {
+            get { return _Direction; }
+        }
+
 
         #endregion
 
@@ -39,6 +49,8 @@ namespace Nucleus.Game
         {
             Target = actor;
             _CellIndex = cell.Index;
+            Vector actorPos = actor.GetNominalPosition();
+            _Direction = cell.Position - actorPos;
             Trigger = new ActionCellInputTrigger(cell.Index, InputFunction.Move);
             SelfEffects.Add(new ActorOrientationEffect(actor, cell));
             SelfEffects.Add(new MoveCellEffect(cell.Index));

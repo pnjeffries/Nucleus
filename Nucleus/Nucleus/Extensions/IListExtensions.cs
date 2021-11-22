@@ -724,8 +724,25 @@ namespace Nucleus.Extensions
         /// <returns></returns>
         public static TItem GetRandom<TItem>(this IList<TItem> list, Random rng)
         {
+            if (list.Count == 0) return default(TItem);
             int i = rng.Next(0, list.Count);
             return list[i];
+        }
+
+        /// <summary>
+        /// Remove and return a random item in this list
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="rng"></param>
+        /// <returns></returns>
+        public static TItem PopRandom<TItem>(this IList<TItem> list, Random rng)
+        {
+            if (list.Count == 0) return default(TItem);
+            int i = rng.Next(0, list.Count);
+            var item = list[i];
+            list.RemoveAt(i);
+            return item;
         }
 
         /// <summary>

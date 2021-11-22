@@ -15,7 +15,7 @@ namespace Nucleus.Game
     [Serializable]
     public class Poisoned : DamageEffect, IStatusEffect
     {
-        private double _TimeRemaining = 5;
+        private double _TimeRemaining = 15;
 
         /// <summary>
         /// The time remaining for this status effect.
@@ -28,6 +28,10 @@ namespace Nucleus.Game
             set { ChangeProperty(ref _TimeRemaining, value); }
         }
 
+        private int _DamegeDelay = 3;
+
+        private int _DamageCountDown = 3;
+
         public string Description => GetType().Name;
 
         public Poisoned() : base(1, DamageType.Poison)
@@ -38,6 +42,17 @@ namespace Nucleus.Game
         public void Merge(IStatusEffect other)
         {
             TimeRemaining += other.TimeRemaining;
+        }
+
+        public override bool Apply(IActionLog log, EffectContext context)
+        {
+            _DamageCountDown -= 1;
+            if (_DamageCountDown <= 0)
+            {
+                _DamageCountDown = _DamegeDelay;
+                return base.Apply(log, context);
+            }
+            return false;
         }
     }
 }

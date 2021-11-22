@@ -9,7 +9,11 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Game
 {
-    public class DirectionalItemUseAbility : TemporaryAbility
+    /// <summary>
+    /// Ability which allows for actions to be used in a specific direction
+    /// </summary>
+    [Serializable]
+    public class DirectionalActionAbility : TemporaryAbility
     {
         #region Properties
 
@@ -31,7 +35,7 @@ namespace Nucleus.Game
 
         #region Constructor
 
-        public DirectionalItemUseAbility(ActionFactory actionFactory)
+        public DirectionalActionAbility(ActionFactory actionFactory)
         {
             ActionFactory = actionFactory;
         }

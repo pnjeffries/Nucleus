@@ -493,6 +493,22 @@ namespace Nucleus.Geometry
             return new SquareCellMap<E>(Origin, SizeX, SizeY, CellSize);
         }
 
+        /// <summary>
+        /// Set all values inside the specified 2D bounds to the specified value
+        /// </summary>
+        /// <param name="bounds"></param>
+        /// <param name="value"></param>
+        public void SetValuesInside(IntRectangle bounds, T value)
+        {
+            for (int i = bounds.XMin; i <= bounds.XMax; i++)
+            {
+                for (int j = bounds.YMin; j <= bounds.YMax; j++)
+                {
+                    if (Exists(i, j)) this[i, j] = value;
+                }
+            }
+        }
+
         #endregion
     }
 }

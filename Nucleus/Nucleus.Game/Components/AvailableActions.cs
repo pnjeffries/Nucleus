@@ -28,6 +28,23 @@ namespace Nucleus.Game
         /// </summary>
         public GameActionCollection Actions { get { return _Actions; } }
 
+        private GameAction _LastAction = null;
+
+        /// <summary>
+        /// The last action performed by this actor
+        /// </summary>
+        public GameAction LastAction 
+        {
+            get
+            {
+                return _LastAction;
+            } 
+            set
+            {
+                ChangeProperty(ref _LastAction, value);
+            }
+        }
+
         #endregion
 
         #region Methods

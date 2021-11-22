@@ -96,6 +96,13 @@ namespace Nucleus.Game
         public bool PreventParallelCorridors { get; set; } = true;
 
         /// <summary>
+        /// The maximum number of rooms which may be generated.
+        /// If this number is reached before the exit has been placed, the exit will be added.
+        /// If set to zero, there is no limit on the number of rooms.
+        /// </summary>
+        public int MaxRoomCount { get; set; } = 0;
+
+        /// <summary>
         /// The highest security level created so far
         /// </summary>
         private int SecurityLevelCount { get; set; } = 0;
@@ -127,6 +134,7 @@ namespace Nucleus.Game
         {
             Templates.AddRange(style.Templates);
             MinLoopSize = style.MinLoopSize;
+            MaxRoomCount = style.MaxRoomCount;
         }
 
         #endregion
@@ -490,7 +498,7 @@ namespace Nucleus.Game
             //return Templates.GetRandom(_RNG);
             //TODO: Make work OK!
             RoomType type = RoomType.Room;
-            if (Rooms.Count > PathToExit && !ExitPlaced)
+            if (!ExitPlaced && (Rooms.Count > PathToExit) || (MaxRoomCount > 0 && Rooms.Count >= MaxRoomCount - 1))
             {
                 type = RoomType.Exit;
             }
@@ -504,7 +512,7 @@ namespace Nucleus.Game
 
         
         /// <summary>
-        /// 'Delete' a cell in the blueprint by returning it to 
+        /// 'Delete' a cell in the blueprint by returning it to untouched or wall state
         /// </summary>
         /// <param name="i"></param>
         /// <param name="j"></param>
@@ -517,9 +525,16 @@ namespace Nucleus.Game
                 if (cell.Room == room)
                 {
                     cell.Room = null;
-                    cell.GenerationType = CellGenerationType.Untouched;
+                    if (cell.GenerationType == CellGenerationType.Door || cell.GenerationType == CellGenerationType.LockedDoor)
+                    {
+                        cell.GenerationType = CellGenerationType.Wall;
+                    }
+                    else
+                    {
+                        cell.GenerationType = CellGenerationType.Untouched;
+                    }
                 }
-                else if (cell.GenerationType == CellGenerationType.Door)
+                else if (cell.GenerationType == CellGenerationType.Door || cell.GenerationType == CellGenerationType.LockedDoor)
                 {
                     cell.GenerationType = CellGenerationType.Wall;
                 }
@@ -559,9 +574,9 @@ namespace Nucleus.Game
         /// <param name="floorLevel"></param>
         /// <param name="slopeDirection"></param>
         /// <returns></returns>
-        protected Room GenerateRoom(IntRectangle bounds, RoomTemplate template)
+        protected Room GenerateRoom(IntRectangle bounds, RoomTemplate template, CompassDirection direction)
         {
-            return GenerateRoom(bounds.XMin, bounds.XMax, bounds.YMin, bounds.YMax, template);
+            return GenerateRoom(bounds.XMin, bounds.XMax, bounds.YMin, bounds.YMax, template, direction);
         }
 
         /// <summary>
@@ -575,9 +590,9 @@ namespace Nucleus.Game
         /// <param name="floorLevel"></param>
         /// <param name="slopeDirection"></param>
         /// <returns></returns>
-        protected Room GenerateRoom(int iMin, int iMax, int jMin, int jMax, RoomTemplate template)
+        protected Room GenerateRoom(int iMin, int iMax, int jMin, int jMax, RoomTemplate template, CompassDirection direction)
         {
-            Room newRoom = new Room(template, new IntRectangle(iMin, iMax,jMin, jMax));
+            Room newRoom = new Room(template, new IntRectangle(iMin, iMax, jMin, jMax)) { Direction = direction };
             for (int i = iMin - 1; i <= iMax + 1; i++)
             {
                 for (int j = jMin - 1; j <= jMax + 1; j++)
@@ -731,7 +746,7 @@ namespace Nucleus.Game
                     bool locked = (template.LockChance > 0 && RNG.NextDouble() < template.LockChance);
 
                     // Create room:
-                    Room newRoom = GenerateRoom(bounds, template);
+                    Room newRoom = GenerateRoom(bounds, template, direction);
 
                     // Create doorway:
                     if (createDoor) GenerateDoorway(iDoor, jDoor, direction, doorSize, newRoom, locked ? CellGenerationType.LockedDoor : CellGenerationType.Door);
@@ -761,7 +776,7 @@ namespace Nucleus.Game
                     int iNewDoor = 0;
                     int jNewDoor = 0;
                     bool symmetryLock = true;
-                    while (tries > 0 &&
+                    while (tries > 0 && (MaxRoomCount == 0 || Rooms.Count < MaxRoomCount) &&
                             (template.MaxConnections < 0 ||
                                     newRoom.Connections.Count < template.MaxConnections))
                     {

@@ -70,6 +70,8 @@
     <Compile Include="Artitecture\BlueprintCell.cs" />
     <Compile Include="Artitecture\CellGenerationType.cs" />
     <Compile Include="Artitecture\ExitPlacement.cs" />
+    <Compile Include="Artitecture\FeatureSetOut.cs" />
+    <Compile Include="Artitecture\FeatureSetOutCollection.cs" />
     <Compile Include="Artitecture\Room.cs" />
     <Compile Include="Artitecture\RoomCollection.cs" />
     <Compile Include="Artitecture\GameMapCell.cs" />
@@ -85,11 +87,12 @@
     <Compile Include="Components\Abilities\Ability.cs" />
     <Compile Include="Components\Abilities\BumpAttackAbility.cs" />
     <Compile Include="Components\Abilities\ChangeSelectedItemAbility.cs" />
-    <Compile Include="Components\Abilities\DirectionalItemUseAbility.cs" />
+    <Compile Include="Components\Abilities\DirectionalActionAbility.cs" />
     <Compile Include="Components\Abilities\DropAbility.cs" />
     <Compile Include="Components\Abilities\SlotItemDropAbility.cs" />
     <Compile Include="Components\Abilities\IAbility.cs" />
     <Compile Include="Components\Abilities\OpenDoorAbility.cs" />
+    <Compile Include="Components\Abilities\WindUpAbility.cs" />
     <Compile Include="Components\ConsumableItem.cs" />
     <Compile Include="Components\CritHitter.cs" />
     <Compile Include="Components\DamageVulnerabilities.cs" />
@@ -121,11 +124,13 @@
     <Compile Include="Components\Memorable.cs" />
     <Compile Include="Components\Abilities\MoveCellAbility.cs" />
     <Compile Include="Components\ActionSelectionAI.cs" />
+    <Compile Include="Components\Outlined.cs" />
     <Compile Include="Components\PickUp.cs" />
     <Compile Include="Components\Abilities\PickUpAbility.cs" />
     <Compile Include="Components\Abilities\TemporaryAbility.cs" />
     <Compile Include="Components\QuickAttack.cs" />
     <Compile Include="Effects\ApplyActorStatusEffect.cs" />
+    <Compile Include="Effects\StatusEffects\Aflame.cs" />
     <Compile Include="Effects\StatusEffects\Combo.cs" />
     <Compile Include="Effects\StatusEffects\Evoking.cs" />
     <Compile Include="Effects\StatusEffects\Quickened.cs" />

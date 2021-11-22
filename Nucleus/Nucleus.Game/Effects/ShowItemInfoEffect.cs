@@ -131,7 +131,7 @@ namespace Nucleus.Game.Effects
                 {
                     // Dig down to get charged attack effects:
                     var aAE = wUA.SelfEffects.FirstOfType<AddAbilityEffect>();
-                    if (aAE.Ability is DirectionalItemUseAbility dIUA && dIUA.ActionFactory is AOEAttackActionFactory aoeFactory)
+                    if (aAE.Ability is DirectionalActionAbility dIUA && dIUA.ActionFactory is AOEAttackActionFactory aoeFactory)
                     {
                         var effectsDescription = GenerateEffectsDescription(aoeFactory.Effects, script, context);
                         if (effectsDescription != null) modal.Contents.Add(new Paragraph(effectsDescription));

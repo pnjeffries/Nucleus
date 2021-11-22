@@ -174,5 +174,22 @@ namespace Nucleus.Geometry
         {
             return cell?.Map.GetCell(cell.Map.FirstCellInDirectionWhere(cell.Index, direction, condition, maxRange, returnLast)) as TMapCell;
         }
+
+        /// <summary>
+        /// Does this cell contain any elements with attached data of the specified type?
+        /// </summary>
+        /// <typeparam name="TData"></typeparam>
+        /// <typeparam name="TMapCell"></typeparam>
+        /// <param name="cell"></param>
+        /// <returns></returns>
+        public static bool HasContentsWithData<TData, TMapCell>(this TMapCell cell)
+            where TMapCell : MapCell
+            where TData: class, IElementDataComponent
+        {
+            foreach (var element in cell.Contents)
+                if (element.HasData<TData>()) return true;
+
+            return false;
+        }
     }
 }

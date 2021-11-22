@@ -75,5 +75,38 @@ namespace Nucleus.Model
             }
             return result.ToList();
         }
+
+        /// <summary>
+        /// Does this data owner have any attached data of the given generic type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="owner"></param>
+        /// <returns></returns>
+        public static bool HasAttachedDataType<T>(this IDataOwner owner)
+        {
+            var attached = owner.AllAttachedDataComponents();
+            foreach (var data in attached)
+            {
+                if (data is T) return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Does any of the objects in this collection have an attached of the specified type
+        /// </summary>
+        /// <typeparam name="TData"></typeparam>
+        /// <typeparam name="TDataOwner"></typeparam>
+        /// <param name="owners"></param>
+        /// <returns></returns>
+        public static bool ContainsAttachedData<TData, TDataOwner>(this IEnumerable<TDataOwner> owners)
+            where TDataOwner : IDataOwner
+        {
+            foreach (var owner in owners)
+            {
+                if (owner.HasAttachedDataType<TData>()) return true;
+            }
+            return false;
+        }
     }
 }

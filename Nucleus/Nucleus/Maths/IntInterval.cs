@@ -12,7 +12,7 @@ namespace Nucleus.Maths
     /// A numeric interval between two integers
     /// </summary>
     [Serializable]
-    public struct IntInterval : IEnumerable<int>
+    public struct IntInterval : IEnumerable<int>, IInterval
     {
         #region Fields
 

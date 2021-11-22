@@ -22,19 +22,19 @@ namespace Nucleus.Game
         public WindUpAction(ActionFactory actionFactory) : base()
         {
             SelfEffects.Add(new DisableEffect());
-            SelfEffects.Add(new AddAbilityEffect(new DirectionalItemUseAbility(actionFactory)));
+            SelfEffects.Add(new AddAbilityEffect(new DirectionalActionAbility(actionFactory)));
         }
 
         public WindUpAction(string name, ActionFactory actionFactory) : base(name)
         {
             SelfEffects.Add(new DisableEffect());
-            SelfEffects.Add(new AddAbilityEffect(new DirectionalItemUseAbility(actionFactory)));
+            SelfEffects.Add(new AddAbilityEffect(new DirectionalActionAbility(actionFactory)));
         }
 
         public WindUpAction(string name, Resource resourceRequired, ActionFactory actionFactory) : base(name, resourceRequired)
         {
             SelfEffects.Add(new DisableEffect());
-            SelfEffects.Add(new AddAbilityEffect(new DirectionalItemUseAbility(actionFactory)));
+            SelfEffects.Add(new AddAbilityEffect(new DirectionalActionAbility(actionFactory)));
         }
 
         public WindUpAction(string name, ActionFactory actionFactory, params IEffect[] selfEffects) : this(name, actionFactory)
@@ -63,7 +63,7 @@ namespace Nucleus.Game
             var aAE = SelfEffects.FirstOfType<AddAbilityEffect>();
             if (aAE == null) return null;
 
-            if (aAE.Ability is DirectionalItemUseAbility dIUA)
+            if (aAE.Ability is DirectionalActionAbility dIUA)
             {
                 return dIUA.ActionFactory?.TargetableCells(context);
             }
@@ -87,9 +87,21 @@ namespace Nucleus.Game
 
             if (mDT?.MapCell != null && !target.IsDeleted && mA.AwarenessOfCell(mDT.MapCell.Index) >= MapAwareness.Visible)
             {
-                if (cells.Contains(mDT.MapCell) || cells.ContainsAny(mDT.MapCell.AdjacentCells()))
+                // Predict next move:
+                var aAT = target?.GetData<AvailableActions>();
+                MapCell predictedCell = null;
+                if (aAT?.LastAction != null && aAT.LastAction is MoveCellAction mCA)
+                {
+                    predictedCell = mDT.MapCell.AdjacentCellInDirection(mCA.Direction);
+                }
+
+                if (cells.Contains(mDT.MapCell) || (predictedCell != null && cells.Contains(predictedCell)))
                 {
                     return context.RNG.NextDouble() * 2;
+                }
+                else if (cells.ContainsAny(mDT.MapCell.AdjacentCells()))
+                {
+                    return context.RNG.NextDouble() * 1.5;
                 }
             }
             return -0.5;

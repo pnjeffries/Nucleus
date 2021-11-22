@@ -22,6 +22,11 @@ namespace Nucleus.Game
         public static readonly DamageType Base = new DamageType("Base");
 
         /// <summary>
+        /// Fire damage type
+        /// </summary>
+        public static readonly DamageType Fire = new DamageType("Fire");
+
+        /// <summary>
         /// The poison damage type
         /// </summary>
         public static readonly DamageType Poison = new DamageType("Poison");

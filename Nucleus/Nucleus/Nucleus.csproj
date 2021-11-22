@@ -113,6 +113,13 @@
     <Compile Include="Extensions\RandomExtensions.cs" />
     <Compile Include="Geometry\AngleIntervals.cs" />
     <Compile Include="Geometry\AnglePair.cs" />
+    <Compile Include="Geometry\Cell Maps\AdjacencyCellMask.cs" />
+    <Compile Include="Geometry\Cell Maps\CellMask.cs" />
+    <Compile Include="Geometry\Cell Maps\CellMaskCollection.cs" />
+    <Compile Include="Geometry\Cell Maps\CellFilterMask.cs" />
+    <Compile Include="Geometry\Cell Maps\ConditionalCellMask.cs" />
+    <Compile Include="Geometry\Cell Maps\IndexCellMask.cs" />
+    <Compile Include="Geometry\Cell Maps\InvertCellMask.cs" />
     <Compile Include="Geometry\Cell Maps\MapData.cs" />
     <Compile Include="Geometry\Cell Maps\CellObscurance.cs" />
     <Compile Include="Geometry\Cell Maps\PartialCellObscurance.cs" />
@@ -189,6 +196,7 @@
     <Compile Include="Logs\ScriptedLog.cs" />
     <Compile Include="Logs\StringLog.cs" />
     <Compile Include="Maths\Fresnel.cs" />
+    <Compile Include="Maths\IInterval.cs" />
     <Compile Include="Maths\INamedDataSetCollection.cs" />
     <Compile Include="Maths\IntInterval.cs" />
     <Compile Include="Maths\NamedDataSet.cs" />

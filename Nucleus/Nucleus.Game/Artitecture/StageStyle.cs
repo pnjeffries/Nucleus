@@ -29,6 +29,12 @@ namespace Nucleus.Game
         public int MinLoopSize { get; set; } = 4;
 
         /// <summary>
+        /// The maximum number of rooms in the stage.
+        /// 0 = not capped.
+        /// </summary>
+        public int MaxRoomCount { get; set; } = 0;
+
+        /// <summary>
         /// Default constructor
         /// </summary>
         public StageStyle() { }

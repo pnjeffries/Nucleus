@@ -68,6 +68,20 @@ namespace Nucleus.Game
             set { _SecurityLevel = value; }
         }
 
+        private CompassDirection _Direction;
+
+        /// <summary>
+        /// The primary direction in which the room is laid out - the
+        /// direction in which you will be facing if you enter the room
+        /// through its main entrance.
+        /// </summary>
+        public CompassDirection Direction
+        {
+            get { return _Direction; }
+            set { _Direction = value; }
+        }
+
+
         #endregion
 
         #region Constructors

@@ -36,7 +36,8 @@ namespace Nucleus.Maths
     [Serializable]
     public struct Interval :
         IEquatable<Interval>,
-        IComparable<Interval>
+        IComparable<Interval>,
+        IInterval
     {
         #region Constants
 
