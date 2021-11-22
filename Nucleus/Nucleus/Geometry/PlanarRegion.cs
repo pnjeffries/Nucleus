@@ -708,6 +708,48 @@ namespace Nucleus.Geometry
             return result;
         }
 
+        private void CalculateVoidIntersections(Vector splitDir, Vector leftPt, Vector rightPt, 
+            double splitWidth, Dictionary<Guid, IList<CurveLineIntersection>> voidInts,
+            CurveCollection freeVoids, 
+            IList<CurveLineIntersection> leftInts, IList<CurveLineIntersection> rightInts)
+        {
+            int processesPerInt = 1;
+            if (splitWidth == 0) processesPerInt = 2;
+
+            // Find intersection points on voids:
+            foreach (var voidCrv in Voids)
+            {
+                var thisVoidInts = new List<CurveLineIntersection>();
+                voidInts[voidCrv.GUID] = thisVoidInts;
+
+                // Left side:
+                var leftVoidInts = Intersect.CurveLineXYIntersections(voidCrv, leftPt, splitDir);
+                foreach (var vI in leftVoidInts)
+                {
+                    vI.ProcessCounter = processesPerInt;
+                    leftInts.Add(vI);
+                    thisVoidInts.Add(vI);
+                }
+
+                IList<CurveLineIntersection> rightVoidInts;
+                // Shortcut: If the split has no width, left and right intersections will be the same
+                if (splitWidth == 0) rightVoidInts = leftVoidInts;
+                else rightVoidInts = Intersect.CurveLineXYIntersections(voidCrv, rightPt, splitDir);
+                foreach (var vI in rightVoidInts)
+                {
+                    vI.ProcessCounter = processesPerInt;
+                    rightInts.Add(vI);
+                    thisVoidInts.Add(vI);
+                }
+
+                if (leftVoidInts.Count <= 1 && rightVoidInts.Count <= 1)
+                {
+                    // Void is wholly to one side or the other...
+                    freeVoids.Add(voidCrv);
+                }
+            }
+        }
+
         /// <summary>
         /// Split this region into two (or more) sub-regions along a straight line
         /// </summary>
@@ -760,35 +802,14 @@ namespace Nucleus.Geometry
                 return result;
             }
 
+            // Storage dictionary for void intersections
+            var voidInts = new Dictionary<Guid, IList<CurveLineIntersection>>();
+
             // Voids which do not intersect but will need to be placed:
             CurveCollection freeVoids = new CurveCollection();
-            // Find intersection points on voids:
-            foreach (var voidCrv in Voids)
-            {
-                // Left side:
-                var leftVoidInts = Intersect.CurveLineXYIntersections(voidCrv, leftPt, splitDir);
-                foreach (var vI in leftVoidInts)
-                {
-                    vI.ProcessCounter = processesPerInt;
-                    leftInts.Add(vI);
-                }
 
-                IList<CurveLineIntersection> rightVoidInts;
-                // Shortcut: If the split has no width, left and right intersections will be the same
-                if (splitWidth == 0) rightVoidInts = leftVoidInts;
-                else rightVoidInts = Intersect.CurveLineXYIntersections(voidCrv, rightPt, splitDir);
-                foreach (var vI in rightVoidInts)
-                {
-                    vI.ProcessCounter = processesPerInt;
-                    rightInts.Add(vI);
-                }
-
-                if (leftVoidInts.Count <= 1 && rightVoidInts.Count <= 1)
-                {
-                    // Void is wholly to one side or the other...
-                    freeVoids.Add(voidCrv);
-                }
-            }
+            // Calculate intersections with voids
+            CalculateVoidIntersections(splitDir, leftPt, rightPt, splitWidth, voidInts, freeVoids, leftInts, rightInts);
 
             // Tag left and right intersections
             foreach (var lI in leftInts) lI.Side = HandSide.Left;
@@ -796,7 +817,6 @@ namespace Nucleus.Geometry
 
             HandSide startSide = SideOfSplit(Perimeter.StartPoint, leftPt, rightPt, offsetDir);
             // Determine direction of travel along cutting lines:
-            //int rightDir = RightCutterDirectionOfTravel(rightInts, leftInts);
             int rightDir = RightCutterDirectionOfTravel(perimeterInts, rightInts, leftInts, offsetDir, startSide, splitWidth != 0);
 
             if (rightDir == 0) return result; // Indeterminate direction of travel - abort!
@@ -824,6 +844,7 @@ namespace Nucleus.Geometry
             {
                 CurveLineIntersection nextInt;
                 HandSide side = HandSide.Undefined;
+                bool voidReverse = false; //Boolean indicating whether, for voids, the curve to be extracted should be inverted
 
                 if (currentInt == null) break;
 
@@ -835,7 +856,7 @@ namespace Nucleus.Geometry
                         nextInt = leftInts.ItemWithPrevious(cLI => cLI.LineParameter, currentInt.LineParameter);
                     else
                         nextInt = leftInts.ItemWithNext(cLI => cLI.LineParameter, currentInt.LineParameter);
-
+                    //TODO: Move along void curve instead when appropriate
                 }
                 else if (travelSide == HandSide.Right)
                 {
@@ -845,7 +866,7 @@ namespace Nucleus.Geometry
                     else
                         nextInt = rightInts.ItemWithPrevious(cLI => cLI.LineParameter, currentInt.LineParameter);
                 }
-                else
+                else if (currentInt.Curve == Perimeter)
                 {
                     // Travel to next intersection on perimeter
                     nextInt = perimeterInts.ItemWithNext(cLI => cLI.CurveParameter, currentInt.CurveParameter);
@@ -853,25 +874,51 @@ namespace Nucleus.Geometry
                     if (nextInt == null) nextInt = endInt;
                     else nextStartInts.Add(nextInt);
                 }
+                else //Must be a void
+                {
+                    // Travel to next intersection on void
+                    var thisVoidInts = voidInts[currentInt.Curve.GUID];
+                    nextInt = thisVoidInts.ItemWithNext(cLI => cLI.CurveParameter, currentInt.CurveParameter, true);
+                    var prevInt = thisVoidInts.ItemWithPrevious(cLI => cLI.CurveParameter, currentInt.CurveParameter, true);
+                    if (nextInt == null || (nextInt.Side != currentInt.Side && splitWidth != 0))
+                    {
+                        nextInt = prevInt;
+                        voidReverse = true;
+                    }
+                    else if (prevInt != null && (splitWidth != 0 ||prevInt.Side == currentInt.Side))
+                    {
+                        // Both are intersections on the same side, need to check points either side
+                        var tangent = currentInt.Curve.TangentAt(currentInt.CurveParameter);
+                        var dot = tangent.Dot(offsetDir);
+                        if ((dot > 0 && startSide == HandSide.Left) ||
+                            (dot < 0 && startSide == HandSide.Right))
+                        {
+                            nextInt = prevInt;
+                            voidReverse = true;
+                        }
+                    }
+                    if (nextInt != null) nextStartInts.Add(nextInt);
+                }
 
                 if (nextInt != null && currentInt.Curve == nextInt.Curve &&  // Check both ints on same curve
-                    (travelSide == HandSide.Undefined || currentInt.Curve != Perimeter)
+                    travelSide == HandSide.Undefined
                     && (currentInt.ProcessCounter > 0 || nextInt.ProcessCounter > 0))
                 {
                     Curve curve = nextInt.Curve;
                     Interval subDomain = new Interval(currentInt.CurveParameter, nextInt.CurveParameter);
+                    if (voidReverse) subDomain = subDomain.Invert();
                     Vector crvPt = curve.PointAt(curve.ParameterAtMid(subDomain));
                     side = SideOfSplit(crvPt, leftPt, rightPt, offsetDir);
                     if (side != HandSide.Undefined)
                     {
-                        bool reverse = false;
+                        bool reverse = voidReverse;
                         // TODO: Adjust void curve direction
                         if (curve != Perimeter)
                         {
                             if (side != lastSide)
                             {
-                                subDomain = subDomain.Invert();
-                                reverse = true;
+                                //subDomain = subDomain.Invert();
+                                //reverse = !reverse;
                             }
                             side = lastSide;
                         }
@@ -879,6 +926,7 @@ namespace Nucleus.Geometry
                         {
                             lastSide = side;
                         }
+                        startSide = side;
 
                         // Add perimeter to outputs
                         Curve subCrv = curve.Extract(subDomain);
@@ -936,6 +984,10 @@ namespace Nucleus.Geometry
                     nextInt = nextStartInts.FirstOrDefault();
                     nextStartInts.RemoveFirst();
                     startInt = nextInt;
+                    if (startInt != null)
+                    {
+                        startSide = startInt.Side; //TODO: Zero-width cutters - test side?
+                    }
 
                     if (newPerimeter != null && !newPerimeter.Closed)
                     {
@@ -953,7 +1005,7 @@ namespace Nucleus.Geometry
                     if (nextInt != null) nextInt.ProcessCounter -= 1;
 
                     if (travelSide != HandSide.Undefined &&
-                    (nextInt == null || nextInt.Curve == Perimeter))
+                    (nextInt == null || nextInt.Curve == Perimeter || nextInt.Curve != Perimeter))
                     {
                         travelSide = HandSide.Undefined;
                     }
@@ -969,11 +1021,13 @@ namespace Nucleus.Geometry
                     {
                         travelSide = nextInt.Side;
                     }
+                    // TODO: Indicate void direction here?
                 }
 
                 //if (currentInt != null) currentInt.ProcessCounter -= 1;
                 currentInt = nextInt;
             }
+
             // Check last perimeter is closed:
             if (newPerimeter != null && !newPerimeter.Closed)
             {

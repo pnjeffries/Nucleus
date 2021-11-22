@@ -239,6 +239,44 @@ namespace Nucleus.UnitTests
         }
 
         [TestMethod]
+        public void Split_CShapeVoid_ShouldSplitInThree()
+        {
+            var pLine = new PolyLine(true,
+                Vector.Create2D(0, 0, 10, 0, 10, 10, 0, 10));
+            var region = new PlanarRegion(pLine);
+
+            var cVoid = new PolyLine(true,
+                Vector.Create2D(1, 1, 9, 1, 9, 2, 2, 2, 2, 8, 9, 8, 9, 9, 1, 9));
+
+            region.Voids.Add(cVoid);
+
+            var subRegions = region.SplitByLineXY(new Vector(5, 5), new Vector(0, 1), 1);
+            Assert.AreEqual(3, subRegions.Count);
+            double area = subRegions.CalculateTotalArea();
+            Assert.AreEqual(70, area);
+        }
+
+        [TestMethod]
+        public void Not_CShapeVoid_ShouldSplitInThree()
+        {
+            var pLine = new PolyLine(true,
+                Vector.Create2D(0, 0, 10, 0, 10, 10, 0, 10));
+            var region = new PlanarRegion(pLine);
+
+            var cVoid = new PolyLine(true,
+                Vector.Create2D(1, 1, 9, 1, 9, 2, 2, 2, 2, 8, 9, 8, 9, 9, 1, 9));
+
+            region.Voids.Add(cVoid);
+
+            var cutLine = new PolyLine(true,
+                Vector.Create2D(4.5, -1, 5.5, -1, 5.5, 11, 4.5, 11));
+            var cutter = new PlanarRegion(cutLine);
+
+            var subRegions = region.Not(cutter);
+            Assert.AreEqual(3, subRegions.Count);
+        }
+
+        [TestMethod]
         public void ComplexBoundary_ShouldSplitIn2()
         {
             var pLine = new PolyLine(true,

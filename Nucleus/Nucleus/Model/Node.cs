@@ -300,6 +300,53 @@ namespace Nucleus.Model
         }
 
         /// <summary>
+        /// Get the angle between the specified curve and the closest connection
+        /// on the specified side on the XY plane.
+        /// </summary>
+        /// <param name="relativeTo"></param>
+        /// <param name="side"></param>
+        /// <returns></returns>
+        public Angle CurveConnectionAngleXYOnSide(Curve relativeTo, HandSide side)
+        {
+            Vector dir = DirectionAwayFromNodeOf(relativeTo).Reverse().XY();
+            // Flip side depending on whether this is start or end node
+            if (this == relativeTo.Start.Node) side = side.Flip();
+
+            Curve bestCrv = null;
+            Angle best = 0;
+            var geometry = GetConnectedGeometry();
+            foreach (var vg in geometry)
+            {
+                if (vg != relativeTo && vg is Curve crv)
+                {
+                    Vector dir2 = DirectionAwayFromNodeOf(crv).XY();
+                    Angle between = dir.RotationAngleXY(dir2);
+                    if (bestCrv == null ||
+                        (side == HandSide.Left && between > best) ||
+                        (side == HandSide.Right && between < best))
+                    {
+                        bestCrv = crv;
+                        best = between;
+                    }
+                }
+            }
+
+            return best;
+        }
+
+        /// <summary>
+        /// Get a direction vector describing the direction moving away from this node
+        /// along the specified curve.
+        /// </summary>
+        /// <param name="connectedCurve">A curve, which must be connected to this node.</param>
+        /// <returns></returns>
+        public Vector DirectionAwayFromNodeOf(Curve connectedCurve)
+        {
+            if (connectedCurve.Start.Node == this) return connectedCurve.TangentAt(0);
+            else return connectedCurve.TangentAt(1).Reverse();
+        }
+
+        /// <summary>
         /// Get the number of elements connected to this node
         /// </summary>
         /// <param name="undeletedOnly">If true, only elements not marked as deleted will

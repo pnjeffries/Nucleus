@@ -638,6 +638,22 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find all discrete points on this curve where a perpendicular line may be drawn from
+        /// the curve to the specified test point.  Note that for arcs only a singular point is considered
+        /// even if the entire arc is perpendicular.
+        /// </summary>
+        /// <param name="toPoint">The test point to which perpendicular lines might be drawn</param>
+        /// <returns></returns>
+        public override IList<double> PerpendicularParameters(Vector toPoint)
+        {
+            var result = new List<double>();
+            Angle angle = Circle.Azimuth(toPoint);
+            double t = ClosestArcParameter(angle);
+            if (t >= 0 && t <= 1) result.Add(t);
+            return result;
+        }
+
+        /// <summary>
         /// Is the specified point within the angle range of this arc's sector?
         /// </summary>
         /// <param name="point"></param>

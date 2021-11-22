@@ -921,6 +921,29 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find all discrete points on this curve where a perpendicular line may be drawn from
+        /// the curve to the specified test point.
+        /// </summary>
+        /// <param name="toPoint">The test point to which perpendicular lines might be drawn</param>
+        /// <returns></returns>
+        public virtual IList<double> PerpendicularParameters(Vector toPoint)
+        {
+            var result = new List<double>();
+            for (int i = 0; i < SegmentCount; i++)
+            {
+                Vector start = SegmentStart(i).Position;
+                Vector end = SegmentEnd(i).Position;
+                double t = Line.PerpendicularParameter(start, end, toPoint);
+                if (t >= 0 && t <= 1)
+                {
+                    var tAdj = ((double)i) / SegmentCount + t * 1.0 / SegmentCount;
+                    result.Add(tAdj);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Find the closest point on this curve to a test ray, expressed as a
         /// parameter value from 0-1.  This may be a position on the curve or it may
         /// be the start (0) or end (1) of the curve depending on the relative location
@@ -3342,6 +3365,20 @@ namespace Nucleus.Geometry
             where TCurve : Curve
         {
             return curves.ItemWithMax(crv => crv.Length);
+        }
+
+        /// <summary>
+        /// Get the total length of all curves in this collection
+        /// </summary>
+        /// <typeparam name="TCurve"></typeparam>
+        /// <param name="curves"></param>
+        /// <returns></returns>
+        public static double TotalLength<TCurve>(this IList<TCurve> curves)
+            where TCurve : Curve
+        {
+            double length = 0;
+            foreach (var crv in curves) length += crv.Length;
+            return length;
         }
     }
 }

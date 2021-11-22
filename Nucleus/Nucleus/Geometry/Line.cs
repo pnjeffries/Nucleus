@@ -494,7 +494,7 @@ namespace Nucleus.Geometry
 
         /// <summary>
         /// Find the closest point on a line segment specified by start and end points to
-        /// a test point.
+        /// a test point, expressed as a parameter from 0-1.
         /// </summary>
         /// <param name="startPt">The start point of the line</param>
         /// <param name="endPt">The end point of the line</param>
@@ -507,6 +507,22 @@ namespace Nucleus.Geometry
             if (t < 0) return 0;
             else if (t > 1.0) return 1;
             else return t;
+        }
+
+        /// <summary>
+        /// Find the point on a line specified by start and end positions from which a perpendicular
+        /// line may be drawn to the specified test point, expressed as a parameter where the region
+        /// 0-1 lies on the line segment between the start and end points.  If the returned parameter is
+        /// outside this range then there is no such parameter on the line segment itself.
+        /// </summary>
+        /// <param name="startPt">The start point of the line</param>
+        /// <param name="endPt">The end point of the line</param>
+        /// <param name="testPt">The point to which a perpendicular line may be drawn</param>
+        /// <returns></returns>
+        public static double PerpendicularParameter(Vector startPt, Vector endPt, Vector testPt)
+        {
+            Vector direction = endPt - startPt;
+            return Axis.ClosestParameter(startPt, direction, testPt);
         }
 
         #endregion

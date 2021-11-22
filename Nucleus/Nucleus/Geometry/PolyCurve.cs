@@ -304,6 +304,30 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Find all discrete points on this curve where a perpendicular line may be drawn from
+        /// the curve to the specified test point.
+        /// </summary>
+        /// <param name="toPoint">The test point to which perpendicular lines might be drawn</param>
+        /// <returns></returns>
+        public override IList<double> PerpendicularParameters(Vector toPoint)
+        {
+            var result = new List<double>();
+            int segs = 0;
+            int segCount = SegmentCount;
+            foreach (Curve subCrv in SubCurves)
+            {
+                var ts = subCrv.PerpendicularParameters(toPoint);
+                foreach (var t in ts)
+                {
+                    var tAdj = (segs + (t * subCrv.SegmentCount)) / segCount;
+                    result.Add(tAdj);
+                }
+                segs += subCrv.SegmentCount;
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Get the curve parameter at the specified vertex
         /// </summary>
         /// <param name="vertex">The vertex.  Must be a defining vertex of this curve.</param>
