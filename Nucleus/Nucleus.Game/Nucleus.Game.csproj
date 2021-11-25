@@ -147,7 +147,7 @@
     <Compile Include="Components\Abilities\UseItemAbility.cs" />
     <Compile Include="Components\VisionBlocker.cs" />
     <Compile Include="Components\Abilities\WaitAbility.cs" />
-    <Compile Include="Debug\DebugCommandLibrary.cs" />
+    <Compile Include="Debugging\DebugCommandLibrary.cs" />
     <Compile Include="Effects\ActorOrientationEffect.cs" />
     <Compile Include="Effects\AddAbilityEffect.cs" />
     <Compile Include="Effects\ApplyStatusEffect.cs" />
