@@ -27,7 +27,8 @@ namespace Nucleus.Game
         public override bool CanHold(Element item)
         {
             // TODO: Some equipment slots only hold certain types of item?
-            if (item.HasData<EquippableItem>()) return true;
+            var equippable = item.GetData<EquippableItem>();
+            if (equippable != null && equippable.SlotKey == null || equippable.SlotKey == Name) return true;
             else return false;
         }
     }

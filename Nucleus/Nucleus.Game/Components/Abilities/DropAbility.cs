@@ -12,7 +12,7 @@ namespace Nucleus.Game
     [Serializable]
     public class DropAbility : Ability
     {
-        protected override void GenerateActions(TurnContext context, AvailableActions addTo)
+        public override void GenerateActions(TurnContext context, AvailableActions addTo)
         {
             var action = new PrepareToDropItemAction();
             action.Trigger = new ActionInputTrigger(InputFunction.Drop);

@@ -87,12 +87,14 @@
     <Compile Include="Components\Abilities\Ability.cs" />
     <Compile Include="Components\Abilities\BumpAttackAbility.cs" />
     <Compile Include="Components\Abilities\ChangeSelectedItemAbility.cs" />
+    <Compile Include="Components\Abilities\ConditionalAbility.cs" />
     <Compile Include="Components\Abilities\DirectionalActionAbility.cs" />
     <Compile Include="Components\Abilities\DropAbility.cs" />
     <Compile Include="Components\Abilities\SlotItemDropAbility.cs" />
     <Compile Include="Components\Abilities\IAbility.cs" />
     <Compile Include="Components\Abilities\OpenDoorAbility.cs" />
     <Compile Include="Components\Abilities\WindUpAbility.cs" />
+    <Compile Include="Components\Armour.cs" />
     <Compile Include="Components\ConsumableItem.cs" />
     <Compile Include="Components\CritHitter.cs" />
     <Compile Include="Components\DamageVulnerabilities.cs" />
@@ -105,6 +107,8 @@
     <Compile Include="Components\IInventoryContainer.cs" />
     <Compile Include="Components\IKnockbackModifier.cs" />
     <Compile Include="Components\ISpeedModifier.cs" />
+    <Compile Include="Components\IStealthModifier.cs" />
+    <Compile Include="Components\ISubModifiers.cs" />
     <Compile Include="Components\ItemSlot.cs" />
     <Compile Include="Components\EquipmentSlotCollection.cs" />
     <Compile Include="Components\EquippableItem.cs" />
@@ -128,7 +132,12 @@
     <Compile Include="Components\PickUp.cs" />
     <Compile Include="Components\Abilities\PickUpAbility.cs" />
     <Compile Include="Components\Abilities\TemporaryAbility.cs" />
+    <Compile Include="Components\ProficiencyCollection.cs" />
+    <Compile Include="Components\Proficiency.cs" />
     <Compile Include="Components\QuickAttack.cs" />
+    <Compile Include="Components\TargetAIRecord.cs" />
+    <Compile Include="Components\TargetAIRecordCollection.cs" />
+    <Compile Include="Components\TargetingAI.cs" />
     <Compile Include="Effects\ApplyActorStatusEffect.cs" />
     <Compile Include="Effects\StatusEffects\Aflame.cs" />
     <Compile Include="Effects\StatusEffects\Combo.cs" />

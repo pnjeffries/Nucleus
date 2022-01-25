@@ -12,6 +12,11 @@ namespace Nucleus.Game
     public static class SFXKeywords
     {
         /// <summary>
+        /// An '!' alert effect
+        /// </summary>
+        public static string Alert = "Alert";
+
+        /// <summary>
         /// A 'bang' explosion effect
         /// </summary>
         public static string Bang = "Bang";

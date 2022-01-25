@@ -32,10 +32,7 @@ namespace Nucleus.Game
         public double CombinedCritChance(EffectContext context)
         {
             var chance = BaseChance;
-            foreach (var component in context.Actor.Data)
-            {
-                if (component is ICritChanceModifier critMod) chance = critMod.ModifyCritChance(chance, null, context);
-            }
+            chance = context.Actor.Data.ApplyModifiers<double, ICritChanceModifier>(chance, (value, iModifier) => iModifier.ModifyCritChance(value, null, context));
             return chance;
         }
 

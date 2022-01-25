@@ -80,6 +80,19 @@ namespace Nucleus.Rendering
             return result;
         }
 
+        /// <summary>
+        /// Trigger a special effect
+        /// </summary>
+        /// <param name="keyword">The keyword denoting the effect to trigger</param>
+        /// <param name="context">The data context to be used to bind effect properties to</param>
+        /// <returns></returns>
+        public SFXTrigger Trigger(string keyword, object context)
+        {
+            var result = new SFXTrigger(keyword, context);
+            _Triggers.Add(result);
+            return result;
+        }
+
         #endregion
     }
 }

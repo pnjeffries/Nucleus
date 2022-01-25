@@ -106,10 +106,7 @@ namespace Nucleus.Game
 
             if (context.Critical) n += 1; // Critical hit
 
-            foreach (var component in context.Actor.Data)
-            {
-                if (component is IKnockbackModifier kMod) n = kMod.ModifyKnockback(n, log, context);
-            }
+            n = context.Actor.Data.ApplyModifiers<int, IKnockbackModifier>(n, (value, iModifier) => iModifier.ModifyKnockback(value, log, context));
 
             Element mover = context.Target;
             if (mover.IsDeleted || (mover.GetData<Inertia>()?.Fixed ?? false))

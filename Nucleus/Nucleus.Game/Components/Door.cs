@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Game.Components
+namespace Nucleus.Game
 {
     /// <summary>
     /// A data component which marks an element as a door which may be opened or closed

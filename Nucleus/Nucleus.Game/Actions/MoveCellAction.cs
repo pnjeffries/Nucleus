@@ -65,19 +65,38 @@ namespace Nucleus.Game
             Element self = context.Element;
             var mDS = self?.GetData<MapData>();
             var mA = self.GetData<MapAwareness>();
-            
-            // TEMP:
-            Element target = ((RLState)context.State).Controlled;
+            var targetAI = self.GetData<TargetingAI>();
+            Element target = targetAI?.PrimaryTarget?.Target;
             var mDT = target?.GetData<MapData>();
 
-            if (mDT != null && !target.IsDeleted && mA.AwarenessOfCell(mDT.MapCell.Index) > 0)
+            if (mDT != null && !target.IsDeleted)
             {
-                // Manhatten distance calculation:
                 Vector newPos = context.Stage.Map.CellPosition(_CellIndex);
-                return mDS.Position.ManhattenDistanceTo(mDT.Position)
-                    - newPos.ManhattenDistanceTo(mDT.Position) + 0.05;
+
+                Vector targetPos;
+                if (mA.AwarenessOfCell(mDT.MapCell.Index) >= MapAwareness.Visible)
+                {
+                    targetPos = mDT.Position;
+                }
+                else
+                {
+                    targetPos = targetAI.PrimaryTarget.LastKnownPosition;
+                    if (targetPos.IsValid() && newPos.DistanceToSquared(targetPos) < 0.5)
+                    {
+                        // Reached the target position - clear the record
+                        targetAI.PrimaryTarget.LastKnownPosition = Vector.Unset;
+                        // TODO: Switch target?
+                    }
+                }
+                // Manhatten distance calculation:
+                if (targetPos.IsValid())
+                {
+                    return mDS.Position.DistanceTo(targetPos)
+                        - newPos.DistanceTo(targetPos) + 0.5;
+                }
             }
-            else return context.RNG.NextDouble();
+            
+            return context.RNG.NextDouble();
 
             // TODO: Employ influence maps
         }

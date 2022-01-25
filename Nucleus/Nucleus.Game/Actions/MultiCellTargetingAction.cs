@@ -13,6 +13,17 @@ namespace Nucleus.Game
     /// </summary>
     public abstract class MultiCellTargetingAction : TargetedAction<IList<GameMapCell>>
     {
+        private bool _AffectSelf = false;
+
+        /// <summary>
+        /// Should this action affect the actor itself if it lies within one of the targeted cells?
+        /// </summary>
+        public bool AffectSelf
+        {
+            get { return _AffectSelf; }
+            set { _AffectSelf = value; }
+        }
+
         #region Constructors
 
         public MultiCellTargetingAction()
@@ -51,7 +62,7 @@ namespace Nucleus.Game
 
                 foreach (var element in elements)
                 {
-                    if (CanTarget(element))
+                    if (CanTarget(element) && (AffectSelf || element != context.Actor))
                     {
                         context.Target = element;
                         context.Critical = RollToCrit(context);
@@ -86,7 +97,9 @@ namespace Nucleus.Game
             if (faction == null) return 0;
 
             // TEMP:
-            var target = ((RLState)context.State).Controlled;
+            var targetAI = context.Element.GetData<TargetingAI>();
+            if (targetAI == null) return 10; //Hack for traps
+            var target = targetAI?.PrimaryTarget?.Target;
             // Ignore if the actor can't see the target
             if (awareness != null && awareness.AwareOf(target) == false) target = null;
 
@@ -105,9 +118,9 @@ namespace Nucleus.Game
                     {
                         result += 10;
                     }
-                    if (faction?.IsAlly(element?.GetData<Faction>()) ?? false)
+                    if (faction?.IsAlly(element?.GetData<Faction>()) ?? false && element.HasData<HitPoints>())
                     {
-                        result -= 10 * context.RNG.NextDouble();
+                        //result -= 1 * context.RNG.NextDouble();
                     }
                 }
 

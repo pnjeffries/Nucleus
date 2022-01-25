@@ -67,13 +67,8 @@ namespace Nucleus.Game
 
                 if (context.Critical) damage = damage.WithValue(damage.Value + 1); //Temp?
 
-                foreach (var component in context.Target.Data)
-                {
-                    if (component is IDefense defense)
-                    {
-                        damage = defense.Defend(damage, log, context);
-                    }
-                }
+                // Apply damage modifiers
+                damage = context.Target.Data.ApplyModifiers<Damage, IDefense>(damage, (value, i) => i.Defend(value, log, context));
 
                 if (damage <= 0) return true;
 

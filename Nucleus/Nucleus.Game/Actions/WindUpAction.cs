@@ -82,26 +82,33 @@ namespace Nucleus.Game
             var cells = GetTargetableCells(context);
 
             // TEMP:
-            Element target = ((RLState)context.State).Controlled;
-            var mDT = target?.GetData<MapData>();
+            var targetAI = self.GetData<TargetingAI>();
+            if (targetAI == null) return 1;
 
-            if (mDT?.MapCell != null && !target.IsDeleted && mA.AwarenessOfCell(mDT.MapCell.Index) >= MapAwareness.Visible)
+            foreach (var targetRec in targetAI.Targets)
             {
-                // Predict next move:
-                var aAT = target?.GetData<AvailableActions>();
-                MapCell predictedCell = null;
-                if (aAT?.LastAction != null && aAT.LastAction is MoveCellAction mCA)
-                {
-                    predictedCell = mDT.MapCell.AdjacentCellInDirection(mCA.Direction);
-                }
+                if (targetRec.Aggro < 1) continue;
+                Element target = targetRec.Target;
+                var mDT = target?.GetData<MapData>();
 
-                if (cells.Contains(mDT.MapCell) || (predictedCell != null && cells.Contains(predictedCell)))
+                if (mDT?.MapCell != null && !target.IsDeleted && mA.AwarenessOfCell(mDT.MapCell.Index) >= MapAwareness.Visible)
                 {
-                    return context.RNG.NextDouble() * 2;
-                }
-                else if (cells.ContainsAny(mDT.MapCell.AdjacentCells()))
-                {
-                    return context.RNG.NextDouble() * 1.5;
+                    // Predict next move:
+                    var aAT = target?.GetData<AvailableActions>();
+                    MapCell predictedCell = null;
+                    if (aAT?.LastAction != null && aAT.LastAction is MoveCellAction mCA)
+                    {
+                        predictedCell = mDT.MapCell.AdjacentCellInDirection(mCA.Direction);
+                    }
+
+                    if (cells.Contains(mDT.MapCell) || (predictedCell != null && cells.Contains(predictedCell)))
+                    {
+                        return context.RNG.NextDouble() * 2;
+                    }
+                    else if (cells.ContainsAny(mDT.MapCell.AdjacentCells()))
+                    {
+                        return context.RNG.NextDouble() * 1.5;
+                    }
                 }
             }
             return -0.5;

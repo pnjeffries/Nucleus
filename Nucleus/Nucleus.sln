@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.Shapefile", "Nucleu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.DebuggerVisualiser", "Nucleus.DebuggerVisualiser\Nucleus.DebuggerVisualiser.csproj", "{7151AF72-C31E-4106-B289-5F1B81D59269}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.Assimp", "Nucleus.Assimp\Nucleus.Assimp.csproj", "{E82BB1C4-CA9C-4D79-886B-FD63E0896B69}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -165,6 +167,10 @@ Global
 		{7151AF72-C31E-4106-B289-5F1B81D59269}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7151AF72-C31E-4106-B289-5F1B81D59269}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7151AF72-C31E-4106-B289-5F1B81D59269}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E82BB1C4-CA9C-4D79-886B-FD63E0896B69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E82BB1C4-CA9C-4D79-886B-FD63E0896B69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E82BB1C4-CA9C-4D79-886B-FD63E0896B69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E82BB1C4-CA9C-4D79-886B-FD63E0896B69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

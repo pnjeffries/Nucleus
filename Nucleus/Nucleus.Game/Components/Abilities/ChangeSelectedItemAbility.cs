@@ -13,7 +13,7 @@ namespace Nucleus.Game
     [Serializable]
     public class ChangeSelectedItemAbility : Ability
     {
-        protected override void GenerateActions(TurnContext context, AvailableActions addTo)
+        public override void GenerateActions(TurnContext context, AvailableActions addTo)
         {
             addTo.Actions.Add(new ChangeSelectedItemAction(new SelectPreviousItemEffect(), new ActionInputTrigger(InputFunction.SelectPrevious)));
             addTo.Actions.Add(new ChangeSelectedItemAction(new SelectNextItemEffect(), new ActionInputTrigger(InputFunction.SelectNext)));

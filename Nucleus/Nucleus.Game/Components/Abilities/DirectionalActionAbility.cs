@@ -44,7 +44,7 @@ namespace Nucleus.Game
 
         #region Methods
 
-        protected override void GenerateActions(TurnContext context, AvailableActions addTo)
+        public override void GenerateActions(TurnContext context, AvailableActions addTo)
         {
             if (context.IsPlayerControlled(context.Element))
             {

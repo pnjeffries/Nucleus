@@ -25,6 +25,15 @@ namespace Nucleus.Game
             get { return _Effects; }
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="effects"></param>
+        public Evoking(params IEffect[] effects)
+        {
+            foreach (var effect in effects) _Effects.Add(effect);
+        }
+
         public IList<IEffect> AdditionalEffectsFor(GameAction action, IActionLog log, EffectContext context)
         {
             if (action is BumpAttackAction)

@@ -16,7 +16,7 @@ namespace Nucleus.Game
     [Serializable]
     public class MoveCellAbility : Ability
     {
-        protected override void GenerateActions(TurnContext context, AvailableActions addTo)
+        public override void GenerateActions(TurnContext context, AvailableActions addTo)
         {
             // Movement:
             Element self = context.Element;

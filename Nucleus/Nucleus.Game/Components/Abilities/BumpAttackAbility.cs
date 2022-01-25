@@ -14,19 +14,19 @@ namespace Nucleus.Game
     [Serializable]
     public class BumpAttackAbility : Ability
     {
-        private double _BaseDamage = 1;
+        private Damage _BaseDamage = new Damage(1, DamageType.Blunt);
 
         /// <summary>
         /// The base damage of bump attacks
         /// </summary>
-        public double BaseDamage { get { return _BaseDamage; } set { _BaseDamage = value; } }
+        public Damage BaseDamage { get { return _BaseDamage; } set { _BaseDamage = value; } }
 
         private double _BaseKnockback = 1;
 
         /// <summary>
         /// The base knockback of bump attacks
         /// </summary>
-        public double BaseKnockback { get { return _BaseKnockback; } set { _BaseDamage = value; } }
+        public double BaseKnockback { get { return _BaseKnockback; } set { _BaseKnockback = value; } }
 
         private IList<IEffect> _OtherEffects = null;
 
@@ -45,7 +45,13 @@ namespace Nucleus.Game
 
         public BumpAttackAbility(double damage, double knockback)
         {
-            _BaseDamage = damage;
+            _BaseDamage = new Damage(damage, DamageType.Blunt);
+            _BaseKnockback = knockback;
+        }
+
+        public BumpAttackAbility(double damage, DamageType damageType, double knockback)
+        {
+            _BaseDamage = new Damage(damage, damageType);
             _BaseKnockback = knockback;
         }
 
@@ -59,8 +65,18 @@ namespace Nucleus.Game
             }
         }
 
+        public BumpAttackAbility(double damage, DamageType damageType, double knockback, params IEffect[] otherEffects)
+            : this(damage, damageType, knockback)
+        {
+            _OtherEffects = new EffectCollection();
+            foreach (var effect in otherEffects)
+            {
+                _OtherEffects.Add(effect);
+            }
+        }
 
-        protected override void GenerateActions(TurnContext context, AvailableActions addTo)
+
+        public override void GenerateActions(TurnContext context, AvailableActions addTo)
         {
             // Get equipped weapon
             Element weapon = null;
@@ -80,7 +96,7 @@ namespace Nucleus.Game
                 foreach (var cell in adjacent)
                 {
                     Vector direction = cell.Position - mD.MapCell.Position;
-                    Element target = cell.Contents.FirstWithDataComponent<Faction>();//context.Element.GetData<MapCellCollider>()?.Blocker(cell);
+                    Element target = cell.Contents.FirstWithDataComponents<Faction, HitPoints>();//context.Element.GetData<MapCellCollider>()?.Blocker(cell);
                     if (target != null)
                     {
                         if (context.Element?.GetData<Faction>()?.IsEnemy(target?.GetData<Faction>()) ?? false)

@@ -16,7 +16,7 @@ namespace Nucleus.Game
     {
         #region Methods
 
-        protected override void GenerateActions(TurnContext context, AvailableActions addTo)
+        public override void GenerateActions(TurnContext context, AvailableActions addTo)
         {
             MapData mD = context.Element?.GetData<MapData>();
             if (mD != null && mD.MapCell != null)

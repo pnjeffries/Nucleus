@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.Game.Components.Abilities
+namespace Nucleus.Game
 {
     /// <summary>
     /// Ability that has a wind-up phase
@@ -38,7 +38,7 @@ namespace Nucleus.Game.Components.Abilities
             else return Prototype.Duplicate();
         }
 
-        protected override void GenerateActions(TurnContext context, AvailableActions addTo)
+        public override void GenerateActions(TurnContext context, AvailableActions addTo)
         {
             if (Prototype != null)
             {

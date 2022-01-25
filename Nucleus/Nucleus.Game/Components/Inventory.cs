@@ -14,7 +14,7 @@ namespace Nucleus.Game
     /// The inventory of an element
     /// </summary>
     [Serializable]
-    public class Inventory : Unique, IElementDataComponent
+    public class Inventory : Unique, IElementDataComponent, ISubModifiers
     {
         #region Properties
 
@@ -352,6 +352,23 @@ namespace Nucleus.Game
                 if (key != null && key.KeyCode == keyCode) return item;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Apply value modifiers
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TInterface"></typeparam>
+        /// <param name="value"></param>
+        /// <param name="function"></param>
+        /// <returns></returns>
+        public T ApplyModifiers<T, TInterface>(T value, Func<T, TInterface, T> function)
+        {
+            foreach (var item in EquippedItems)
+            {
+                value = item.Data.ApplyModifiers(value, function);
+            }
+            return value;
         }
 
         #endregion

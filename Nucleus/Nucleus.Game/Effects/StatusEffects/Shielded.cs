@@ -23,7 +23,7 @@ namespace Nucleus.Game
         /// <returns></returns>
         public Damage Defend(Damage damage, IActionLog log, EffectContext context)
         {
-            if (damage.DamageType == DamageType.Base) //TODO: Other types
+            if (damage.DamageType == DamageType.Base || damage.DamageType == DamageType.Blunt || damage.DamageType == DamageType.Sharp) //TODO: Other types
             {
                 WriteBlockToLog(log, context);
                 return damage.WithValue(0);

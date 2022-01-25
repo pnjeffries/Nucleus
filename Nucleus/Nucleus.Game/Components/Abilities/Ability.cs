@@ -32,7 +32,7 @@ namespace Nucleus.Game
             }
         }
 
-        protected abstract void GenerateActions(TurnContext context, AvailableActions addTo);
+        public abstract void GenerateActions(TurnContext context, AvailableActions addTo);
 
         /// <summary>
         /// Is this ability currently disabled by a status effect?

@@ -1,5 +1,6 @@
 ﻿using Nucleus.Logs;
 using Nucleus.Model;
+using Nucleus.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +42,11 @@ namespace Nucleus.Game
         /// The log to be used to record textual output
         /// </summary>
         public IActionLog Log { get; set; }
+
+        /// <summary>
+        /// The object used to trigger special effects in the front-end
+        /// </summary>
+        public SFXSupervisor SFX { get { return GameEngine.Instance.SFX; } }
 
         #endregion
 

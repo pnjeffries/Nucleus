@@ -98,7 +98,7 @@ namespace Nucleus.Game
         /// <returns></returns>
         public double GetRelationshipScore(Faction other)
         {
-            if (!Relationships.ContainsKey(other.Name)) return 0;
+            if (other == null || !Relationships.ContainsKey(other.Name)) return 0;
             return Relationships[other.Name];
         }
 

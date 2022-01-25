@@ -65,7 +65,17 @@ namespace Nucleus.Game
 
         public override double AIScore(TurnContext context, ActionSelectionAI weights)
         {
-            return 2.0;
+            var targetAI = context.Element.GetData<TargetingAI>();
+            if (targetAI != null)
+            {
+                if (targetAI.Targets.Contains(Target.GUID))
+                {
+                    var record = targetAI.Targets[Target.GUID];
+                    if (record.Aggro >= 1) return 1.0 + record.Aggro;
+                }
+                return -1; //Don't attack innocent bystanders!
+            }
+            else return 2.0;
         }
 
         private IEffect DuplicateEffect(IEffect effect)

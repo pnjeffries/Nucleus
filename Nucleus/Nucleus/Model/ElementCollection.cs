@@ -198,6 +198,51 @@ namespace Nucleus.Model
         }
 
         /// <summary>
+        /// Get the first element in this collection with an attached data components
+        /// of the specified types.
+        /// </summary>
+        /// <typeparam name="TDataComponent">The type of attached data component.</typeparam>
+        /// <typeparam name="TDataComponent2">The second type of attached data component.</typeparam>
+        /// <param name="ignore">Ignore this element in the collection, even if it has the
+        /// relevant component.</param>
+        /// <returns></returns>
+        public TElement FirstWithDataComponents<TDataComponent, TDataComponent2>(TElement ignore = null)
+            where TDataComponent : class, IElementDataComponent
+        {
+            foreach (TElement el in this)
+            {
+                if (el != ignore && el.HasData<TDataComponent>() && el.HasAttachedDataType<TDataComponent2>())
+                {
+                    return el;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Get the first element in this collection with an attached data components
+        /// of the specified types.
+        /// </summary>
+        /// <typeparam name="TDataComponent">The type of attached data component.</typeparam>
+        /// <typeparam name="TDataComponent2">The second type of attached data component.</typeparam>
+        /// <typeparam name="TDataComponent3">The third type of attached data component.</typeparam>
+        /// <param name="ignore">Ignore this element in the collection, even if it has the
+        /// relevant component.</param>
+        /// <returns></returns>
+        public TElement FirstWithDataComponents<TDataComponent, TDataComponent2, TDataComponent3>(TElement ignore = null)
+            where TDataComponent : class, IElementDataComponent
+        {
+            foreach (TElement el in this)
+            {
+                if (el != ignore && el.HasData<TDataComponent>() && el.HasAttachedDataType<TDataComponent2>() && el.HasAttachedDataType<TDataComponent3>())
+                {
+                    return el;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Get the last element in this collection with an attached data component
         /// of the specified type.
         /// </summary>

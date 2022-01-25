@@ -20,7 +20,7 @@ namespace Nucleus.Game
             else return prototype.Duplicate();
         }
 
-        protected override void GenerateActions(TurnContext context, AvailableActions addTo)
+        public override void GenerateActions(TurnContext context, AvailableActions addTo)
         {
             Element actor = context.Element;
 

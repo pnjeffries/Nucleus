@@ -57,6 +57,20 @@ namespace Nucleus.Rendering
             set { _Direction = value; }
         }
 
+        /// <summary>
+        /// Private backing member variable for the Context property
+        /// </summary>
+        private object _Context = null;
+
+        /// <summary>
+        /// The data context to be used to bind effect properties to
+        /// </summary>
+        public object Context
+        {
+            get { return _Context; }
+            set { _Context = value; }
+        }
+
         #endregion
 
         #region Constructors
@@ -89,6 +103,16 @@ namespace Nucleus.Rendering
         public SFXTrigger(string keyword, Vector position, Vector direction) : this(keyword, position)
         {
             Direction = direction;
+        }
+
+        /// <summary>
+        /// Creates an SFX trigger for the specified keyword and data context
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="context"></param>
+        public SFXTrigger(string keyword, object context) : this(keyword)
+        {
+            _Context = context;
         }
 
         #endregion

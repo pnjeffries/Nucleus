@@ -77,13 +77,8 @@ namespace Nucleus.Game
         private double AdjustedSpeed(Element element)
         {
             double result = Speed;
-            foreach (var data in element.Data)
-            {
-                if (data is ISpeedModifier speedMod)
-                {
-                    result = speedMod.ModifySpeed(result);
-                }
-            }
+            result = element.Data.ApplyModifiers<double, ISpeedModifier>(result, (value, iModifier) => iModifier.ModifySpeed(value));
+
             return result;
         }
 

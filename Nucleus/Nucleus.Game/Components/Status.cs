@@ -13,8 +13,7 @@ namespace Nucleus.Game
     /// Element status effects
     /// </summary>
     [Serializable]
-    public class Status : Unique, IElementDataComponent, IStartOfTurn, IEndOfTurn, IDefense, 
-        ICritChanceModifier, IKnockbackModifier, ISpeedModifier
+    public class Status : Unique, IElementDataComponent, IStartOfTurn, IEndOfTurn, ISubModifiers
     {
         private StatusEffectCollection _Effects = new StatusEffectCollection();
 
@@ -148,51 +147,60 @@ namespace Nucleus.Game
             return null;
         }
 
-        /// <summary>
-        /// Adjust the specified damage value based on this defense
-        /// </summary>
-        /// <returns></returns>
-        public Damage Defend(Damage damage, IActionLog log, EffectContext context)
-        {
-            foreach (var status in Effects)
-            {
-                if (status is IDefense defense) damage = defense.Defend(damage, log, context);
-            }
-            return damage;
-        }
+        ///// <summary>
+        ///// Adjust the specified damage value based on this defense
+        ///// </summary>
+        ///// <returns></returns>
+        //public Damage Defend(Damage damage, IActionLog log, EffectContext context)
+        //{
+        //    foreach (var status in Effects)
+        //    {
+        //        if (status is IDefense defense) damage = defense.Defend(damage, log, context);
+        //    }
+        //    return damage;
+        //}
 
-        /// <summary>
-        /// Adjust a critical 
-        /// </summary>
-        /// <param name="critChance"></param>
-        /// <param name="log"></param>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        public double ModifyCritChance(double critChance, IActionLog log, EffectContext context)
-        {
-            foreach (var status in Effects)
-            {
-                if (status is ICritChanceModifier defense) critChance = defense.ModifyCritChance(critChance, log, context);
-            }
-            return critChance;
-        }
+        ///// <summary>
+        ///// Adjust a critical 
+        ///// </summary>
+        ///// <param name="critChance"></param>
+        ///// <param name="log"></param>
+        ///// <param name="context"></param>
+        ///// <returns></returns>
+        //public double ModifyCritChance(double critChance, IActionLog log, EffectContext context)
+        //{
+        //    foreach (var status in Effects)
+        //    {
+        //        if (status is ICritChanceModifier defense) critChance = defense.ModifyCritChance(critChance, log, context);
+        //    }
+        //    return critChance;
+        //}
 
-        public int ModifyKnockback(int knockback, IActionLog log, EffectContext context)
-        {
-            foreach (var status in Effects)
-            {
-                if (status is IKnockbackModifier kMod) knockback = kMod.ModifyKnockback(knockback, log, context);
-            }
-            return knockback;
-        }
+        //public int ModifyKnockback(int knockback, IActionLog log, EffectContext context)
+        //{
+        //    foreach (var status in Effects)
+        //    {
+        //        if (status is IKnockbackModifier kMod) knockback = kMod.ModifyKnockback(knockback, log, context);
+        //    }
+        //    return knockback;
+        //}
 
-        public double ModifySpeed(double speed)
+        //public double ModifySpeed(double speed)
+        //{
+        //    foreach (var status in Effects)
+        //    {
+        //        if (status is ISpeedModifier sMod) speed = sMod.ModifySpeed(speed);
+        //    }
+        //    return speed;
+        //}
+
+        public T ApplyModifiers<T, TInterface>(T value, Func<T, TInterface, T> function)
         {
             foreach (var status in Effects)
             {
-                if (status is ISpeedModifier sMod) speed = sMod.ModifySpeed(speed);
+                if (status is TInterface iStatus) value = function.Invoke(value, iStatus);
             }
-            return speed;
+            return value;
         }
     }
 }

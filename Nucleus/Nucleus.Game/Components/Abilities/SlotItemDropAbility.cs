@@ -15,7 +15,7 @@ namespace Nucleus.Game
     [Serializable]
     public class SlotItemDropAbility : TemporaryAbility
     {
-        protected override void GenerateActions(TurnContext context, AvailableActions addTo)
+        public override void GenerateActions(TurnContext context, AvailableActions addTo)
         {
             Element actor = context.Element;
 
