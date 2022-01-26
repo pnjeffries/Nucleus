@@ -40,7 +40,7 @@ namespace Nucleus.Geometry
     /// specific position </typeparam>
     [Serializable]
     [Copy(CopyBehaviour.DUPLICATE)]
-    public abstract class VertexGeometry : Unique, IOwned<Element>, IBoxBoundable
+    public abstract class VertexGeometry : Unique, IOwned<Element>, IBoxBoundable, IPhased
     {
         #region Events
 
@@ -121,7 +121,7 @@ namespace Nucleus.Geometry
         public GeometryAttributes Attributes
         {
             get { return _Attributes; }
-            set { _Attributes = value;  NotifyPropertyChanged("Attributes"); }
+            set { ChangeProperty(ref _Attributes, value); }
         }
 
         /// <summary>
@@ -140,6 +140,19 @@ namespace Nucleus.Geometry
             {
                 if (_BoundingBox == null) _BoundingBox = GenerateBoundingBox();
                 return _BoundingBox;
+            }
+        }
+
+        /// <summary>
+        /// The development phases which this geometry should be included in.
+        /// A value of -1 in the phase list indicates the list is unset.
+        /// </summary>
+        public IList<int> Phases
+        {
+            get
+            {
+                if (Attributes == null) Attributes = new GeometryAttributes();
+                return Attributes.Phases;
             }
         }
 
@@ -300,6 +313,51 @@ namespace Nucleus.Geometry
         public HandSide SideOf(Vector lineOrigin, Vector lineDir, double tolerance = 0)
         {
             return Vertices.SideOf(lineOrigin, lineDir, tolerance);
+        }
+
+        /// <summary>
+        /// Add this geometry to a given development phase by tagging it with the phase number.
+        /// </summary>
+        /// <param name="phase"></param>
+        /// <returns>True if the list of phases for this block was changed</returns>
+        public bool AddToPhase(int phase)
+        {
+            if (Attributes == null) Attributes = new GeometryAttributes();
+            if (!Attributes.Phases.Contains(phase))
+            {
+                Attributes.Phases.Add(phase);
+                NotifyPropertyChanged(nameof(Phases));
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Remove this geometry from a given development phase by deleting the phase number tag on this geometry.
+        /// </summary>
+        /// <param name="phase"></param>
+        /// <returns>True if the list of phases for this block was changed</returns>
+        public bool RemoveFromPhase(int phase)
+        {
+            if (Attributes != null && Attributes.Phases.Remove(phase))
+            {
+                NotifyPropertyChanged(nameof(Phases));
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Set this geometry to be included in multiple phases by tagging it with a list of phase numbers.
+        /// </summary>
+        /// <param name="phases"></param>
+        /// <returns>True if the list of phases for this block was changed</returns>
+        public bool SetPhases(params int[] phases)
+        {
+            if (Attributes == null) Attributes = new GeometryAttributes();
+            Attributes.Phases = phases.ToList();
+            NotifyPropertyChanged(nameof(Phases));
+            return true;
         }
 
         #endregion

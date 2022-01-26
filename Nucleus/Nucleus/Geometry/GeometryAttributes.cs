@@ -20,6 +20,7 @@
 
 using Nucleus.Rendering;
 using System;
+using System.Collections.Generic;
 
 namespace Nucleus.Geometry
 {
@@ -73,6 +74,25 @@ namespace Nucleus.Geometry
         {
             get { return _Interactive; }
             set { ChangeProperty(ref _Interactive, value, "Interactive"); }
+        }
+
+        /// <summary>
+        /// Private backing field for Phases property
+        /// </summary>
+        private IList<int> _Phases;
+
+        /// <summary>
+        /// The development phases which this geometry should be included in.
+        /// A value of -1 in the phase list indicates the list is unset.
+        /// </summary>
+        public IList<int> Phases
+        {
+            get
+            {
+                if (_Phases == null) _Phases = new List<int>() { -1 };
+                return _Phases;
+            }
+            set { ChangeProperty(ref _Phases, value); }
         }
  
         #endregion

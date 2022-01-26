@@ -273,6 +273,7 @@
     <Compile Include="Model\IMaterialDataComponent.cs" />
     <Compile Include="Model\IModelObjectSet.cs" />
     <Compile Include="Model\IModelObjectTable.cs" />
+    <Compile Include="Model\IPhased.cs" />
     <Compile Include="Model\IsoMaterial.cs" />
     <Compile Include="Model\IDataOwner.cs" />
     <Compile Include="Model\IVertexDataComponent.cs" />
