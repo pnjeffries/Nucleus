@@ -321,12 +321,20 @@ namespace Nucleus.Meshing
                 t3 = cSystem.LocalToGlobal(t3);
             }
 
-            if (baseWidth != 0 && baseWidth != 0) AddFace(b0, b1, b2, b3); // Bottom
+            if (baseWidth != 0 && baseDepth != 0) AddFace(b0, b1, b2, b3); // Bottom
             if (topWidth != 0 && topDepth != 0) AddFace(t3, t2, t1, t0); // Top
-            AddFace(t1, t2, b2, b1); // Front
-            AddFace(t2, t3, b3, b2); // Left
-            AddFace(t3, t0, b0, b3); // Back
-            AddFace(t0, t1, b1, b0); // Right
+
+            if (topWidth == 0) AddFace(t1, b2, b1); // Front
+            else AddFace(t1, t2, b2, b1); // Front
+
+            if (topDepth == 0) AddFace(t2, b3, b2); // Left
+            else AddFace(t2, t3, b3, b2); // Left
+
+            if (topWidth == 0) AddFace(t3, b0, b3); // Back
+            else AddFace(t3, t0, b0, b3); // Back
+
+            if (topDepth == 0) AddFace(t0, b1, b0); // Right
+            else AddFace(t0, t1, b1, b0); // Right
         }
 
         /// <summary>
