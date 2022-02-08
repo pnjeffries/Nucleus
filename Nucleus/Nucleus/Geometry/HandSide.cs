@@ -40,7 +40,8 @@ namespace Nucleus.Geometry
         public static HandSide Flip(this HandSide side)
         {
             if (side == HandSide.Left) return HandSide.Right;
-            else return HandSide.Left;
+            else if (side == HandSide.Right) return HandSide.Left;
+            else return HandSide.Undefined;
         }
 
         /// <summary>

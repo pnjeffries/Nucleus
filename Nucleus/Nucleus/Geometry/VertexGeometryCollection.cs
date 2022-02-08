@@ -48,6 +48,18 @@ namespace Nucleus.Geometry
         #region Methods
 
         /// <summary>
+        /// Move all geometry along the specified translation vector
+        /// </summary>
+        /// <param name="translation"></param>
+        public void MoveAll(Vector translation)
+        {
+            foreach (var shape in this)
+            {
+                shape.Move(translation);
+            }
+        }
+
+        /// <summary>
         /// Get a collection containing all of the vertices belonging to the geometry in this collection
         /// </summary>
         /// <returns></returns>
