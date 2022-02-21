@@ -1586,6 +1586,7 @@ namespace Nucleus.Geometry
                 // Offset specified segment:
                 Curve segmentToOffset = Extract(subDomain);
                 Curve offsetSegment = segmentToOffset.Offset(offsetDistance, tidy, copyAttributes);
+                offsetSegment.Clean();
                 if (offsetSegment.IsValid) result.Add(offsetSegment, true, true);
                 t = subDomain.End;
             }

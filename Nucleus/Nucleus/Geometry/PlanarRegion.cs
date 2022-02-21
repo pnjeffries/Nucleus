@@ -354,7 +354,7 @@ namespace Nucleus.Geometry
         /// <param name="cutter"></param>
         /// <returns></returns>
         /// <remarks>Vaguely similar to the Greiner–Hormann algorithm.</remarks>
-        public IList<PlanarRegion> Not(PlanarRegion cutter)
+        public IList<PlanarRegion> Not(PlanarRegion cutter, IList<CurveParameterMapper> perimeterMappers = null)
         {
             var result = new List<PlanarRegion>();
 
@@ -427,6 +427,7 @@ namespace Nucleus.Geometry
             IList<CurveCurveIntersection> nextStartInts = new List<CurveCurveIntersection>();
             PolyCurve newPerimeter = null;
             PlanarRegion newRegion = null;
+            CurveParameterMapper newMapper = null;
             Curve travelOn = Perimeter;
             CurveCurveIntersection currentInt;
 
@@ -447,6 +448,13 @@ namespace Nucleus.Geometry
 
                     if (cutterData.IncludeFirst)
                         newRegion.Voids.Add(cutter.Perimeter.Duplicate());
+
+                    if (perimeterMappers != null)
+                    {
+                        var mapper = new CurveParameterMapper(Perimeter, newRegion.Perimeter);
+                        mapper.AddSpanDomain(new Interval(0, 1));
+                        perimeterMappers.Add(mapper);
+                    }
 
                     result.Add(newRegion);
                     return result;
@@ -515,10 +523,21 @@ namespace Nucleus.Geometry
                         newPerimeter = new PolyCurve(segment);
                         newRegion = new PlanarRegion(newPerimeter);
                         result.Add(newRegion);
+                        if (perimeterMappers != null)
+                        {
+                            newMapper = new CurveParameterMapper(Perimeter, newPerimeter);
+                            perimeterMappers.Add(newMapper);
+                            if (travelOn == Perimeter) newMapper.AddSpanDomains(travelOn.SpanDomains(new Interval(t0,t1)));
+                        }
                     }
                     else
                     {
                         newPerimeter.Add(segment, false, true);
+                        if (newMapper != null)
+                        {
+                            if (travelOn == Perimeter) newMapper.AddSpanDomains(travelOn.SpanDomains(new Interval(t0, t1)));
+                            else newMapper.AddNullSpanDomains(travelOn.SpanDomains(new Interval(t0,t1)));
+                        }
                     }
 
                     currentInt.ProcessCounter--;

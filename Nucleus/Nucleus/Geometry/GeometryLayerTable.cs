@@ -83,6 +83,19 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Get the number of geometry objects contained on all layers of this table
+        /// </summary>
+        public int ObjectCount
+        {
+            get 
+            {
+                int result = 0;
+                foreach (var layer in this) result += layer.Count;
+                return result;
+            }
+        }
+
+        /// <summary>
         /// Private backing field for VertexTree property
         /// </summary>
         [NonSerialized]
@@ -100,6 +113,10 @@ namespace Nucleus.Geometry
                 return _VertexTree;
             }
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Remove any instances of the geometry with the specified
@@ -127,10 +144,6 @@ namespace Nucleus.Geometry
         {
             return RemoveGeometry(geometry.GUID);
         }
-
-        #endregion
-
-        #region Methods
 
         protected override string GetKeyForItem(GeometryLayer item)
         {
@@ -300,6 +313,18 @@ namespace Nucleus.Geometry
             foreach (GeometryLayer layer in this)
             {
                 layer.RationalisePolycurves();
+            }
+        }
+
+        /// <summary>
+        /// Move all geometry in this layer table along the specified translation vector
+        /// </summary>
+        /// <param name="translation"></param>
+        public void MoveAll(Vector translation)
+        {
+            foreach (var layer in this)
+            {
+                layer.MoveAll(translation);
             }
         }
 

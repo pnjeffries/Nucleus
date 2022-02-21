@@ -101,6 +101,7 @@
     <Compile Include="Base\ParameterGroup.cs" />
     <Compile Include="Base\ParameterGroupCollection.cs" />
     <Compile Include="Base\RangedDoubleParameter.cs" />
+    <Compile Include="Base\RangedIntParameter.cs" />
     <Compile Include="Base\StringParameter.cs" />
     <Compile Include="DDTree\NDTree.cs" />
     <Compile Include="DDTree\NDTreeNode.cs" />
