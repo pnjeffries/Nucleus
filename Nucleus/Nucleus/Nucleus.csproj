@@ -118,6 +118,7 @@
     <Compile Include="Geometry\Cell Maps\CellMaskCollection.cs" />
     <Compile Include="Geometry\Cell Maps\CellFilterMask.cs" />
     <Compile Include="Geometry\Cell Maps\ConditionalCellMask.cs" />
+    <Compile Include="Geometry\Cell Maps\HexGridOrientation.cs" />
     <Compile Include="Geometry\Cell Maps\IndexCellMask.cs" />
     <Compile Include="Geometry\Cell Maps\InvertCellMask.cs" />
     <Compile Include="Geometry\Cell Maps\MapData.cs" />

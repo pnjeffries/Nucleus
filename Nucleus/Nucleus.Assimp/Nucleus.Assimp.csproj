@@ -47,8 +47,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssimpReader.cs" />
+    <Compile Include="AssimpWriter.cs" />
     <Compile Include="FromAssimp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ToAssimp.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nucleus\Nucleus.csproj">

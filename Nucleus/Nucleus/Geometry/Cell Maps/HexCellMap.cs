@@ -20,6 +20,16 @@ namespace Nucleus.Geometry
 
         #region Properties
 
+        private HexGridOrientation _Orientation = HexGridOrientation.VerticalColumns;
+
+        /// <summary>
+        /// Get the orientation of this hex-grid
+        /// </summary>
+        public HexGridOrientation Orientation
+        {
+            get { return _Orientation; }
+        }
+
         /// <summary>
         /// Get the number of cells in this map
         /// </summary>
@@ -211,6 +221,12 @@ namespace Nucleus.Geometry
         public override Vector CellVertex(int cellIndex, int vertexIndex)
         {
             Vector cP = CellPosition(cellIndex);
+            double degAng = 60 * vertexIndex;
+            if (Orientation == HexGridOrientation.HorizontalRows) degAng -= 30;
+            Angle angle = Angle.FromDegrees(degAng);
+            double size = _CellSize; // TODO: distance from centre to point
+            //return new Vector(center.x + size * cos(angle_rad),  center.y + size * sin(angle_rad))
+
             // TODO
             throw new NotImplementedException();
             /*switch (vertexIndex)
