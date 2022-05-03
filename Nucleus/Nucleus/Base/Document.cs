@@ -128,6 +128,68 @@ namespace Nucleus.Base
         }
 
         /// <summary>
+        /// Serialize this document and output the result as a byte array.
+        /// </summary>
+        /// <returns>A byte array of serialized data.</returns>
+        public virtual byte[] SerializeToByteArray()
+        {
+#if !JS
+            try
+            {
+                using (var stream = new MemoryStream())
+                {
+                    IFormatter formatter = new BinaryFormatter();
+                    formatter.Serialize(stream, this);
+
+                    stream.Position = 0;
+                    byte[] result = stream.ToArray();
+
+                    stream.Flush();
+                    stream.Close();
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new SerializationException("An error was encountered while attempting to serialize the document.", ex);
+            }
+#endif
+            return null;
+        }
+
+        /// <summary>
+        /// Serialize this document and output the result as a string.
+        /// </summary>
+        /// <returns>A string of serialized data.</returns>
+        public virtual string SerializeToString()
+        {
+#if !JS
+            try
+            {
+                using (var stream = new MemoryStream())
+                {
+                    var formatter = new UniqueFormatter();
+                    formatter.Serialize(stream, this);
+
+                    stream.Position = 0;
+                    var reader = new StreamReader(stream);
+                    string result = reader.ReadToEnd();
+
+                    reader.Dispose();
+                    stream.Flush();
+                    stream.Close();
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new SerializationException("An error was encountered while attempting to serialize the document.", ex);
+            }
+#endif
+            return null;
+        }
+
+        /// <summary>
         /// Save this document to the specified location
         /// in text format via the specified customisable text serialiser
         /// </summary>
