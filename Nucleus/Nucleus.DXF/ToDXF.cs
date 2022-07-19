@@ -1,4 +1,5 @@
-﻿using Nucleus.Geometry;
+﻿using Nucleus.Extensions;
+using Nucleus.Geometry;
 using Nucleus.Rendering;
 using netDxf;
 using netDxf.Tables;
@@ -272,8 +273,9 @@ namespace Nucleus.DXF
         /// Convert a .Nucleus mesh into a netDXF equivalent
         /// </summary>
         /// <param name="mesh"></param>
+        /// <param name="nonZeroIndex">true, if this converts to a mesh based on non-zero indexed faces</param>
         /// <returns></returns>
-        public static nDE.Mesh Convert(Mesh mesh)
+        public static nDE.Mesh Convert(Mesh mesh, bool nonZeroIndex = true)
         {
             mesh.Vertices.AssignVertexIndices(0);
             var vertices = new List<Vector3>(mesh.VertexCount);
@@ -284,7 +286,9 @@ namespace Nucleus.DXF
             var faces = new List<int[]>(mesh.FaceCount);
             foreach (var face in mesh.Faces)
             {
-                faces.Add(face.ToIndexArray());
+                var indices = face.ToIndexArray();
+                if(nonZeroIndex)indices.AddToAll(1);
+                faces.Add(indices);
             }
             var result = new nDE.Mesh(vertices, faces);
             return result;
