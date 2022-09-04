@@ -414,6 +414,16 @@ namespace Nucleus.Rendering
                 (byte)(B + (towards.B - B) * factor));
         }
 
+        /// <summary>
+        /// Get the same shade, but with a modified alpha (transparency) value
+        /// </summary>
+        /// <param name="alpha"></param>
+        /// <returns></returns>
+        public Colour WithAlpha(byte alpha)
+        {
+            return new Colour(alpha, R, G, B);
+        }
+
         #endregion
 
         #region Static Methods

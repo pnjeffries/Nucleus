@@ -13,6 +13,15 @@ namespace Nucleus.Game
     [Serializable]
     public class GameStage : Named
     {
+        private StageStyle _Style = null;
 
+        /// <summary>
+        /// The style data, if any, associated with this stage
+        /// </summary>
+        public StageStyle Style
+        {
+            get { return _Style; }
+            set { ChangeProperty(ref _Style, value); }
+        }
     }
 }

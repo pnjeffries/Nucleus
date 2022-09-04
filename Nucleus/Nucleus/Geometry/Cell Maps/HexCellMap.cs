@@ -6,9 +6,22 @@ using System.Threading.Tasks;
 
 namespace Nucleus.Geometry
 {
+    /// <summary>
+    /// A map composed of interlocked hexagonal cells
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     [Serializable]
     public class HexCellMap<T> : RegularCellMap<T>
     {
+        #region Constants
+
+        /// <summary>
+        /// Cached value of √3
+        /// </summary>
+        private static readonly double _ROOT3 = Math.Sqrt(3);
+
+        #endregion
+
         #region Fields
 
         /// <summary>
@@ -20,14 +33,14 @@ namespace Nucleus.Geometry
 
         #region Properties
 
-        private HexGridOrientation _Orientation = HexGridOrientation.VerticalColumns;
+        private HexGridLayout _Layout = HexGridLayout.EvenColumns;
 
         /// <summary>
         /// Get the orientation of this hex-grid
         /// </summary>
-        public HexGridOrientation Orientation
+        public HexGridLayout Layout
         {
-            get { return _Orientation; }
+            get { return _Layout; }
         }
 
         /// <summary>
@@ -75,16 +88,46 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
-        /// Private backing field for CellSize property
+        /// Private backing field for CellRadius property
         /// </summary>
-        private double _CellSize = 1.0;
+        private double _CellRadius = 0.5;
 
         /// <summary>
-        /// The horizontal and vertical offset between cell centres
+        /// The distance from the centre of each cell to each one of its vertices
         /// </summary>
-        public double CellSize
+        public double CellRadius
         {
-            get { return _CellSize; }
+            get { return _CellRadius;  }
+        }
+
+        /// <summary>
+        /// Get the overall horizontal distance between cell centres
+        /// </summary>
+        public double CellSpacingX
+        {
+            get
+            {
+                if (Layout.HasAlignedColumns())
+                {
+                    return 2 * CellRadius;
+                }
+                else return _ROOT3 * CellRadius;
+            }
+        }
+
+        /// <summary>
+        /// Get the overall vertical distance between cell centres
+        /// </summary>
+        public double CellSpacingY
+        {
+            get
+            {
+                if (Layout.HasAlignedColumns())
+                {
+                    return _ROOT3 * CellRadius;
+                }
+                else return 2 * CellRadius;
+            }
         }
 
         /// <summary>
@@ -222,25 +265,10 @@ namespace Nucleus.Geometry
         {
             Vector cP = CellPosition(cellIndex);
             double degAng = 60 * vertexIndex;
-            if (Orientation == HexGridOrientation.HorizontalRows) degAng -= 30;
+            if (Layout.HasAlignedRows()) degAng -= 30;
             Angle angle = Angle.FromDegrees(degAng);
-            double size = _CellSize; // TODO: distance from centre to point
-            //return new Vector(center.x + size * cos(angle_rad),  center.y + size * sin(angle_rad))
-
-            // TODO
-            throw new NotImplementedException();
-            /*switch (vertexIndex)
-            {
-                case 0:
-                    return cP + new Vector(CellSize / 2, CellSize / 2);
-                case 1:
-                    return cP + new Vector(-CellSize / 2, CellSize / 2);
-                case 2:
-                    return cP + new Vector(-CellSize / 2, -CellSize / 2);
-                case 3:
-                    return cP + new Vector(CellSize / 2, -CellSize / 2);
-            }*/
-            return Vector.Unset;
+            double size = CellRadius;
+            return cP + new Vector(angle) * size;
         }
 
 

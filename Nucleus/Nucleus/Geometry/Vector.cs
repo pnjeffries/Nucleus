@@ -197,6 +197,22 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// X, Y coordinate constructor - vector will be nitialised to (x,y,0)
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <remarks>Necessary to avoid confusion with Angle constructor types</remarks>
+        public Vector(int x, int y) : this((double)x, (double)y) { }
+
+        /// <summary>
+        /// X, Y coordinate constructor - vector will be nitialised to (x,y,0)
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <remarks>Necessary to avoid confusion with Angle constructor types</remarks>
+        public Vector(float x, float y) : this((double)x, (double)y) { }
+
+        /// <summary>
         /// X, Y, Z coordinate constructor - vector will be initialised to (x,y,z)
         /// </summary>
         /// <param name="x">The x coordinate</param>
@@ -246,7 +262,7 @@ namespace Nucleus.Geometry
         /// <param name="angles">The azimuth-elevation angle pair</param>
         public Vector(AnglePair angles) : this(angles.Azimuth, angles.Elevation) { }
 
-        /*
+        
         /// <summary>
         /// Angle constructor.
         /// Create a new vector on the XY plane pointing in the specified
@@ -259,10 +275,9 @@ namespace Nucleus.Geometry
         public Vector(Angle angle, double magnitude)
         {
             X = Math.Cos(angle) * magnitude;
-            Y = Math.Cos(angle) * magnitude;
+            Y = Math.Sin(angle) * magnitude;
             Z = 0;
         }
-        */
 
         /// <summary>
         /// Validity constructor.
