@@ -236,7 +236,25 @@ namespace Nucleus.Geometry
             return FromXAndZ(origin, xAxis, Vector.UnitZ);
         }
 
-        #endregion
-
+        /// <summary>
+        /// Constructor creating a plane defined by an origin point and a z-axis vector.
+        /// The X- and Y-axes will be generated perpendicular to the z-axis and with the y-axis orientated
+        /// as closely as possible to the global y-axis (unless the specified z-axis already lies in that axis,
+        /// in which case it will be aligned as closely as possible to the global z).  Note that this is different
+        /// from the standard constructor where X is dominant.
+        /// </summary>
+        /// <param name="origin">The origin point of the plane</param>
+        /// <param name="normal">The coordinate system z-axis
+        /// Should be a unit vector if consistent scaling is required.</param>
+        public static Plane FromNormalYDominant(Vector origin, Vector normal)
+        {
+            var z = normal;
+            var x = (z.IsXOnly() ? z.Cross(Vector.UnitZ) : z.Cross(-Vector.UnitY)).Unitize();
+            var y = x.Cross(-z);
+            return new Plane(origin, x, y, z);
+        }
     }
+
+    #endregion
+
 }

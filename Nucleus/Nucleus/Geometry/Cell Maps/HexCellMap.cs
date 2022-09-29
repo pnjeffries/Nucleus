@@ -20,6 +20,7 @@ namespace Nucleus.Geometry
 
         #region Properties
 
+        /*
         private HexGridOrientation _Orientation = HexGridOrientation.VerticalColumns;
 
         /// <summary>
@@ -29,6 +30,7 @@ namespace Nucleus.Geometry
         {
             get { return _Orientation; }
         }
+        */
 
         /// <summary>
         /// Get the number of cells in this map
@@ -222,7 +224,7 @@ namespace Nucleus.Geometry
         {
             Vector cP = CellPosition(cellIndex);
             double degAng = 60 * vertexIndex;
-            if (Orientation == HexGridOrientation.HorizontalRows) degAng -= 30;
+            //if (Orientation == HexGridOrientation.HorizontalRows) degAng -= 30;
             Angle angle = Angle.FromDegrees(degAng);
             double size = _CellSize; // TODO: distance from centre to point
             //return new Vector(center.x + size * cos(angle_rad),  center.y + size * sin(angle_rad))

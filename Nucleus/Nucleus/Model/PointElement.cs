@@ -57,6 +57,16 @@ namespace Nucleus.Model
             Orientation = vector.Angle;
         }
 
+        /// <summary>
+        /// Calculate the volume of this element, or of a specified material within this element
+        /// </summary>
+        /// <param name="material"></param>
+        /// <returns></returns>
+        public override double CalculateVolume(Material material = null)
+        {
+            return Family?.GetVolume(material) ?? 0;
+        }
+
         #endregion
     }
 }

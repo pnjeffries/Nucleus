@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Nucleus.Assimp.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,8 +34,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AssimpNet, Version=4.1.0.0, Culture=neutral, PublicKeyToken=0d51b391f59f42a6, processorArchitecture=MSIL">
-      <HintPath>..\packages\AssimpNet.4.1.0\lib\net40\AssimpNet.dll</HintPath>
+    <Reference Include="AssimpNet, Version=5.0.0.0, Culture=neutral, PublicKeyToken=0d51b391f59f42a6, processorArchitecture=MSIL">
+      <HintPath>..\..\..\SiteSolve.Core\packages\AssimpNet.5.0.0-beta1\lib\net40\AssimpNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -68,5 +69,7 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\AssimpNet.4.1.0\build\AssimpNet.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AssimpNet.4.1.0\build\AssimpNet.targets'))" />
+    <Error Condition="!Exists('..\..\..\SiteSolve.Core\packages\AssimpNet.5.0.0-beta1\build\AssimpNet.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\SiteSolve.Core\packages\AssimpNet.5.0.0-beta1\build\AssimpNet.targets'))" />
   </Target>
+  <Import Project="..\..\..\SiteSolve.Core\packages\AssimpNet.5.0.0-beta1\build\AssimpNet.targets" Condition="Exists('..\..\..\SiteSolve.Core\packages\AssimpNet.5.0.0-beta1\build\AssimpNet.targets')" />
 </Project>

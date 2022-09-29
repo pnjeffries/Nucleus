@@ -241,15 +241,16 @@ namespace Nucleus.DXF
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static Curve Convert(nDE.HatchBoundaryPath path)
+        public static Curve Convert(nDE.HatchBoundaryPath path, Plane plane = null)
         {
             PolyCurve result = new PolyCurve();
             foreach (nDE.HatchBoundaryPath.Edge edge in path.Edges)
             {
                 VertexGeometry edgeRep = Convert(edge.ConvertTo());
-                if (edgeRep != null && edgeRep is Curve)
+                if (edgeRep != null && edgeRep is Curve edgeCrv)
                 {
-                    result.Add((Curve)edgeRep);
+                    if (plane != null) plane.VerticesLocalToGlobal(edgeCrv);
+                    result.Add(edgeCrv);
                 }
             }
             if (result.IsPolyline()) return result.ToPolyLine();
@@ -263,10 +264,12 @@ namespace Nucleus.DXF
         /// <returns></returns>
         public static PlanarRegion[] Convert(nDE.Hatch hatch)
         {
+            Plane plane = null;
+            if (!hatch.Normal.Equals(new Vector3(0, 0, 1))) plane = Plane.FromNormalYDominant(new Vector(), Convert(hatch.Normal));
             PlanarRegion[] result = new PlanarRegion[hatch.BoundaryPaths.Count];
             for (int i = 0; i < hatch.BoundaryPaths.Count; i++)
             {
-                result[i] = new PlanarRegion(Convert(hatch.BoundaryPaths[i]), ExtractAttributes(hatch));
+                result[i] = new PlanarRegion(Convert(hatch.BoundaryPaths[i], plane), ExtractAttributes(hatch));
             }
             return result;
         }
@@ -317,7 +320,7 @@ namespace Nucleus.DXF
             }
             return result;
         }
-
+6j
         /// <summary>
         /// Convert a netDXF entity to a Nucleus geometry object
         /// </summary>

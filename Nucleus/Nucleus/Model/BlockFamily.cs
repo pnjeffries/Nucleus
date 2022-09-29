@@ -34,5 +34,10 @@ namespace Nucleus.Model
             //TODO!
             return null;
         }
+
+        public double GetVolume(Material material = null)
+        {
+            return 0;
+        }
     }
 }

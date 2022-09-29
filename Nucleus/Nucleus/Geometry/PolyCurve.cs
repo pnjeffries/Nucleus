@@ -969,13 +969,16 @@ namespace Nucleus.Geometry
             var pts = new List<Vector>();
             bool closed = Closed;
             pts.Add(StartPoint);
-            for (int i = 0; i < SubCurves.Count - 1; i++)
+            for (int i = 0; i < SubCurves.Count; i++)
             {
                 Curve crv = SubCurves[i];
                 var vertices = crv.Vertices;
                 for (int j = 1; j < vertices.Count; j++)
                 {
-                    pts.Add(vertices[j].Position);
+                    if (!closed || j < vertices.Count - 1 || i < SubCurves.Count)
+                    {
+                        pts.Add(vertices[j].Position);
+                    }
                 }
             }
 

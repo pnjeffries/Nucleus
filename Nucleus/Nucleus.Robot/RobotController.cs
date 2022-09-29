@@ -332,6 +332,10 @@ namespace Nucleus.Robot
                     // Orientation
                     element.Orientation = Angle.FromDegrees(bar.Gamma);
 
+                    // Material
+                    // TODO
+                    // bar.GetLabelName(IRobotLabelType.I_LT_MATERIAL);
+
                     // Section
                     if (bar.HasLabel(IRobotLabelType.I_LT_BAR_SECTION) != 0)
                     {
@@ -2468,6 +2472,32 @@ namespace Nucleus.Robot
             else if (dataType == SectionDataType.I_YY) return data.GetValue(IRobotBarSectionDataValue.I_BSDV_IY);
             else if (dataType == SectionDataType.I_ZZ) return data.GetValue(IRobotBarSectionDataValue.I_BSDV_IZ);
             return null;
+        }
+
+        #endregion
+
+        #region Extract Quantity Survey Data
+
+        /// <summary>
+        /// Extract the material quantity survey in the form of a dictionary of material names to volumes
+        /// </summary>
+        /// <returns></returns>
+        public IDictionary<string, double> GetMaterialQuantitySurvey()
+        {
+            var result = new Dictionary<string, double>();
+            var qS = Robot.Project.Structure.QuantitySurvey.Materials;
+            for (int i = 1; i <= qS.Count; i++)
+            {
+                string name = qS.GetName(i);
+                double quantity = qS.GetVolume(IRobotObjectType.I_OT_OBJECT, i);
+                // Iterate through all object types for this material - NOT NEEDED
+                /*foreach (var type in Enum.GetValues(typeof(IRobotObjectType)).Cast<IRobotObjectType>())
+                {
+                    quantity += qS.GetVolume(type, i);
+                }*/
+                result.Add(name, quantity);
+            }
+            return result;
         }
 
         #endregion

@@ -226,6 +226,37 @@ namespace Nucleus.Geometry
         }
 
         /// <summary>
+        /// Convert the specified geometry's vertices defined in the local coordinate system
+        /// into global coordinates.
+        /// Note that this will only transform the vertices - some geometry types may need additional modification
+        /// to fully transform them from one coordinate system into another.
+        /// </summary>
+        /// <param name="geometry"></param>
+        public void VerticesLocalToGlobal(VertexGeometry geometry)
+        {
+            foreach (var v in geometry.Vertices)
+            {
+                v.Position = LocalToGlobal(v.Position);
+            }
+        }
+
+        /// <summary>
+        /// Convert the specified geometry's vertices defined in the global coordinate system
+        /// into local coordinates.
+        /// Note that this will only transform the vertices - some geometry types may need additional modification
+        /// to fully transform them from one coordinate system into another.
+        /// </summary>
+        /// <param name="geometry"></param>
+        public void VerticesGlobalToLocal(VertexGeometry geometry)
+        {
+            foreach (var v in geometry.Vertices)
+            {
+                v.Position = GlobalToLocal(v.Position);
+            }
+        }
+
+
+        /// <summary>
         /// Get the axis vector relevant to the specified local axis
         /// </summary>
         /// <param name="direction"></param>

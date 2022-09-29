@@ -84,6 +84,26 @@ namespace Nucleus.Model
             Name = name;
         }
 
+        // <summary>
+        /// Initialise a new Panel Family with the specified name, thickness and material
+        /// </summary>
+        /// <param name="thickness"></param>
+        /// <param name="material"></param>
+        public BuildUpFamily(string name, double thickness, Material material) : this(thickness, material)
+        {
+            Name = name;
+        }
+
+        /// <summary>
+        /// Initialise a new Panel Family with the specified thickness and material
+        /// </summary>
+        /// <param name="thickness"></param>
+        /// <param name="material"></param>
+        public BuildUpFamily(double thickness, Material material) : this()
+        {
+            Layers.Add(new BuildUpLayer(thickness, material));
+        }
+
         #endregion
 
         #region Methods
@@ -107,6 +127,23 @@ namespace Nucleus.Model
                 return Layers.First()?.Material;
             else
                 return null;
+        }
+
+        /// <summary>
+        /// Get the overall thickness of the build-up or of any layers with the specified material within this build-up
+        /// </summary>
+        /// <param name="material">The material to filter by.  If this is null then all layers will be counted regardless of material.</param>
+        /// <returns></returns>
+        public double GetThickness(Material material = null)
+        {
+            double result = 0;
+
+            foreach (var layer in Layers)
+            {
+                if (material == null || layer.Material == material) result += layer.Thickness;
+            }
+
+            return result;
         }
 
         #endregion
