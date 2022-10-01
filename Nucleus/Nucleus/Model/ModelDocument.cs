@@ -143,9 +143,9 @@ namespace Nucleus.Model
         /// <param name="filePath">The path of the file to be loaded.</param>
         /// <returns>The loaded document, if a document could indeed be loaded.
         /// Else, null.</returns>
-        public static ModelDocument Load(FilePath filePath)
+        public static ModelDocument Load(FilePath filePath, DocumentSaveFileType type = DocumentSaveFileType.Binary)
         {
-            return Load<ModelDocument>(filePath);
+            return Load<ModelDocument>(filePath, type);
         }
 
         #endregion

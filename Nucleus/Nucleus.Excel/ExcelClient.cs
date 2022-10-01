@@ -178,6 +178,15 @@ namespace Nucleus.Excel
         }
 
         /// <summary>
+        /// Check whether the current workbook read-only
+        /// </summary>
+        /// <returns></returns>
+        public bool IsWorkbookReadOnly()
+        {
+            return ExcelApp.ActiveWorkbook.ReadOnly;
+        }
+
+        /// <summary>
         /// Save a workbook to the specified file path
         /// </summary>
         /// <param name="filePath">Optional.  The filepath to save the workbook to.

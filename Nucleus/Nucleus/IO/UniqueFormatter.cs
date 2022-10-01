@@ -578,8 +578,11 @@ namespace Nucleus.IO
                         if (j < format.Fields.Count())
                         {
                             FieldInfo fI = format.Fields[j];
-                            object value = String2Object(chunk, fI.FieldType);
-                            fI.SetValue(target, value);
+                            if (fI != null)
+                            {
+                                object value = String2Object(chunk, fI.FieldType);
+                                fI.SetValue(target, value);
+                            }
                         }
                         else if (target is IDictionary && currentKey != null) //Dictionary value
                         {

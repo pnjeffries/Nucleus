@@ -420,6 +420,7 @@ namespace Nucleus.Maths
         public double ParameterOf(double value)
         {
             double size = Size;
+            if (size == 0) return 0;
             return (value - Start) / size;
             //return size != 0 ? (value - Start) / size : double.NaN;
         }

@@ -217,7 +217,7 @@ namespace Nucleus.Base
                 newItems.Add(item);
             }
             _SuppressNotifyCollectionChanged = false;
-            var args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, items);
+            var args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, newItems);
             NotifyCollectionChangedMultiItem(args);
         }
 
@@ -372,7 +372,7 @@ namespace Nucleus.Base
         /// <returns></returns>
         private static bool IsCollectionView(object obj)
         {
-            if (obj is INotifyCollectionChanged) return true; //TODO: Get more specific
+            if (obj is INotifyCollectionChanged && obj is INotifyPropertyChanged) return true; //TODO: Get more specific
             return false;
         }
 

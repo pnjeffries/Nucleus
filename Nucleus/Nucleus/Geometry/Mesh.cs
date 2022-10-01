@@ -418,8 +418,8 @@ namespace Nucleus.Geometry
                                      FileAccess.Write, FileShare.None))
             {
                 ToOBJ(stream);
-                stream.Flush();
-                stream.Close();
+               // stream.Flush();
+                //stream.Close();
             }
         }
 
@@ -452,7 +452,7 @@ namespace Nucleus.Geometry
                 writer.Write(" ");
                 writer.Write(v.Z);
                 writer.WriteLine();
-                v.Number = i;
+                v.Number = i + 1;
             }
             writer.WriteLine();
             writer.WriteLine("# Faces");
@@ -464,6 +464,7 @@ namespace Nucleus.Geometry
                     writer.Write(" ");
                     writer.Write(v.Number);
                 }
+                writer.WriteLine();
             }
             writer.Flush();
         }
@@ -527,7 +528,7 @@ namespace Nucleus.Geometry
                                 int vi = subTokens[0].ToInteger(-1);
                                 if (vi >= 0 && vi + offset < Vertices.Count)
                                 {
-                                    face.Add(Vertices[vi]);
+                                    face.Add(Vertices[vi - 1]);
                                 }
                             }
                         }

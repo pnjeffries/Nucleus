@@ -272,6 +272,16 @@ namespace Nucleus.Model
         /// <param name="vector"></param>
         public abstract void OrientateToVector(Vector vector);
 
+        /// <summary>
+        /// Get the total volume of the element or of a specified material contained within this element
+        /// </summary>
+        /// <param name="material"></param>
+        /// <returns></returns>
+        public virtual double CalculateVolume(Material material = null)
+        {
+            return 0;
+        }
+
         #endregion
 
     }

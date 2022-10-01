@@ -201,10 +201,17 @@ namespace Nucleus.WPF
                 {
                     //Extend range to include any axis label presets:
                     if (YAxisLabels != null)
-                        yRange = yRange.Union(YAxisLabels.KeyRange());
+                    {
+                        var keyRange = YAxisLabels.KeyRange();
+                        if (keyRange.IsValid) yRange = yRange.Union(keyRange);
+                    }
 
                     if (XAxisLabels != null)
-                        xRange = xRange.Union(XAxisLabels.KeyRange());
+                    {
+                        var keyRange = XAxisLabels.KeyRange();
+                        if (keyRange.IsValid)
+                            xRange = xRange.Union(keyRange);
+                    }
 
 
                     // Draw grid:

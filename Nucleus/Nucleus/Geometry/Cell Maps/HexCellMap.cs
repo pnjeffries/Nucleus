@@ -33,6 +33,7 @@ namespace Nucleus.Geometry
 
         #region Properties
 
+
         private HexGridLayout _Layout = HexGridLayout.EvenColumns;
 
         /// <summary>
@@ -265,7 +266,9 @@ namespace Nucleus.Geometry
         {
             Vector cP = CellPosition(cellIndex);
             double degAng = 60 * vertexIndex;
+
             if (Layout.HasAlignedRows()) degAng -= 30;
+
             Angle angle = Angle.FromDegrees(degAng);
             double size = CellRadius;
             return cP + new Vector(angle) * size;

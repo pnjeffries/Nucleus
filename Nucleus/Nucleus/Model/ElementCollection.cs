@@ -286,6 +286,21 @@ namespace Nucleus.Model
             return result;
         }
 
+        /// <summary>
+        /// Calculate the total volume of the specified material found in this collection of elements
+        /// </summary>
+        /// <param name="material"></param>
+        /// <returns></returns>
+        public double TotalVolume(Material material = null)
+        {
+            double result = 0;
+            foreach (var element in this)
+            {
+                result += element.CalculateVolume(material);
+            }
+            return result;
+        }
+
         #endregion
     }
 

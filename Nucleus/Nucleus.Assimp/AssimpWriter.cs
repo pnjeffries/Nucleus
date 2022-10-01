@@ -20,10 +20,16 @@ namespace Nucleus.Assimp
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="geometry"></param>
-        public void WriteFBX(FilePath filePath, GeometryLayerTable geometry, bool binary = false)
+        public bool WriteFBX(FilePath filePath, GeometryLayerTable geometry, bool binary = false)
         {
             var formatID = binary ? "fbx":"fbxa";
-            WriteFile(filePath, geometry, formatID);
+            
+            /*var exporter = new AssimpContext();
+            var supportedFormats = exporter.GetSupportedExportFormats();
+            var format = supportedFormats.Where(f => f.FileExtension == "fbx");
+            formatID = format.First().FormatId;*/
+
+            return WriteFile(filePath, geometry, formatID);
         }
 
         /// <summary>
@@ -32,11 +38,11 @@ namespace Nucleus.Assimp
         /// <param name="filePath"></param>
         /// <param name="geometry"></param>
         /// <param name="formatID"></param>
-        public void WriteFile(FilePath filePath, GeometryLayerTable geometry, string formatID)
+        public bool WriteFile(FilePath filePath, GeometryLayerTable geometry, string formatID)
         {
             var exporter = new AssimpContext();
             var scene = ToAssimp.Convert(geometry);
-            exporter.ExportFile(scene, filePath, formatID);
+            return exporter.ExportFile(scene, filePath, formatID);
         }
     }
 }

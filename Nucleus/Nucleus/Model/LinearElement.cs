@@ -231,7 +231,7 @@ namespace Nucleus.Model
         /// If no material is specified, the total solid volume of the element will be returned.
         /// </summary>
         /// <param name="material"></param>
-        public double CalculateVolume(Material material = null)
+        public override double CalculateVolume(Material material = null)
         {
             if (Family == null || Geometry == null) return 0;
             else return Family.GetArea(material) * Geometry.Length;

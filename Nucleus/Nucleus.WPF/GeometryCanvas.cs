@@ -1,5 +1,6 @@
 ﻿using Nucleus.Geometry;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -157,12 +158,31 @@ namespace Nucleus.WPF
         {
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
             {
-                foreach (VertexGeometry shape in e.NewItems)
+                foreach (var obj in e.NewItems)
                 {
-                    AddContents(shape);
+                    AddContents(obj);
                 }
             }
             else RefreshContents();
+        }
+
+        /// <summary>
+        /// Add contents to the canvas, recursively running through collections
+        /// </summary>
+        /// <param name="obj"></param>
+        private void AddContents(object obj)
+        {
+            if (obj is VertexGeometry shape)
+            {
+                AddContents(shape);
+            }
+            else if (obj is IEnumerable list)
+            {
+                foreach (var subObj in list)
+                {
+                    AddContents(subObj);
+                }
+            }
         }
 
         /// <summary>

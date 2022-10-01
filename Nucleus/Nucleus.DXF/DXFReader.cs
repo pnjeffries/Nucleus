@@ -163,6 +163,8 @@ namespace Nucleus.DXF
                 result.Add(FromDXF.Convert(mesh));
             }
 
+            doc.Solids
+
             // Text
             foreach (netDxf.Entities.Text text in doc.Texts)
             {

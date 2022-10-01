@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nucleus.Extensions;
 using Nucleus.Geometry;
 
 namespace Nucleus.Model
@@ -93,6 +94,21 @@ namespace Nucleus.Model
             if (Geometry != null)
                 return Geometry.Vertices.AveragePoint();
             else return Vector.Unset;
+        }
+
+        /// <summary>
+        /// Calculate the volume of this element or of a particular material within this element
+        /// </summary>
+        /// <param name="material"></param>
+        /// <returns></returns>
+        public override double CalculateVolume(Material material = null)
+        {
+            if (Family == null || Geometry == null)
+            {
+                return 0;
+            }
+
+            return Family.GetThickness(material) * Geometry.CalculateArea().Abs();
         }
 
         #endregion
