@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30011.22
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus", "Nucleus\Nucleus.csproj", "{7635522C-178F-4DB5-9106-FF8DFD4B833B}"
 EndProject
@@ -56,6 +56,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.DebuggerVisualiser", "Nucleus.DebuggerVisualiser\Nucleus.DebuggerVisualiser.csproj", "{7151AF72-C31E-4106-B289-5F1B81D59269}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.Assimp", "Nucleus.Assimp\Nucleus.Assimp.csproj", "{E82BB1C4-CA9C-4D79-886B-FD63E0896B69}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.OpenXML", "Nucleus.OpenXML\Nucleus.OpenXML.csproj", "{76DB229D-8544-44E9-B25A-9AA5C1F37213}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -171,6 +173,10 @@ Global
 		{E82BB1C4-CA9C-4D79-886B-FD63E0896B69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E82BB1C4-CA9C-4D79-886B-FD63E0896B69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E82BB1C4-CA9C-4D79-886B-FD63E0896B69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76DB229D-8544-44E9-B25A-9AA5C1F37213}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76DB229D-8544-44E9-B25A-9AA5C1F37213}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76DB229D-8544-44E9-B25A-9AA5C1F37213}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76DB229D-8544-44E9-B25A-9AA5C1F37213}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
