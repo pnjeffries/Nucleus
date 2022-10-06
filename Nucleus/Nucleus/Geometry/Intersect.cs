@@ -605,14 +605,15 @@ namespace Nucleus.Geometry
                 return new Vector[] { pt0.Interpolate(pt1, 0.5) };
             else // Two intersections
             {
-                Vector midPt = pt0.Interpolate(pt1, 0.5);
                 double dist = distSqd.Root();
                 double a = (r0.Squared() - r1.Squared() + distSqd) / (2 * dist);
                 double b = (r0 * r0 - a * a).Root();
+                Vector aDir = new Vector(dX, dY) / dist * a;
+                Vector bDir = new Vector(dY, -dX) / dist * b;
                 return new Vector[]
                 {
-                    new Vector(midPt.X + b * dY/dist, midPt.Y - b * dX/dist),
-                    new Vector(midPt.X - b * dY/dist, midPt.Y + b * dX/dist)
+                    pt0 + aDir + bDir,
+                    pt0 + aDir - bDir
                 };
             }
         }
