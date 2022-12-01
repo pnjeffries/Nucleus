@@ -2167,6 +2167,20 @@ namespace Nucleus.Geometry
         public IList<Curve> SelfIntersectionXYLoopsAlignedWith(Curve alignedWith)
         {
             var loops = SelfIntersectionXYLoops();
+            foreach (var loop in loops)
+            {
+                if (alignedWith.IsClockwiseXY() == loop.IsClockwiseXY() && alignedWith.Closed && !loop.Closed)
+                {
+                    if (loop is PolyLine polyline)
+                    {
+                        polyline.Close();
+                    }
+                    else if (loop is PolyCurve polycurve)
+                    {
+                        polycurve.Close();
+                    }
+                }
+            }
             loops.RemoveInvertedCurvesXY(alignedWith);
             return loops;
         }
