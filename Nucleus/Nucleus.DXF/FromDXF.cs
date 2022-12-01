@@ -291,7 +291,7 @@ namespace Nucleus.DXF
             for (int i = 0; i < mesh.Faces.Count; i++)
             {
                 var indices = mesh.Faces[i];
-                indices.AddToAll(-1); // Make zero-indexed
+                if (indices.Min() == 1) indices.AddToAll(-1); // Make zero-indexed
                 result.AddFace(indices);
             }
             return result;
@@ -315,12 +315,12 @@ namespace Nucleus.DXF
             {
                 var face = mesh.Faces[i];
                 var indices = face.VertexIndexes.ToInts();
-                indices.AddToAll(-1); // Make zero-indexed
+                if (indices.Min() == 1) indices.AddToAll(-1); // Make zero-indexed
                 result.AddFace(indices);
             }
             return result;
         }
-6j
+
         /// <summary>
         /// Convert a netDXF entity to a Nucleus geometry object
         /// </summary>
