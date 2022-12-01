@@ -477,7 +477,7 @@ namespace Nucleus.Geometry
                 result += subArea;
                 centroid += subCentroid * subArea;
             }
-            centroid /= result;
+            if (result != 0) centroid /= result;
             return result;
         }
 
