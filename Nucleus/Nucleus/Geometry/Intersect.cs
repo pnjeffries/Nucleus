@@ -1322,13 +1322,19 @@ namespace Nucleus.Geometry
                 if (segEnd.X < rayStart.X) return false; // Segment to the left!
                 // Ray start falls within segment bounds - need to do additional check on whether
                 // ray start is to the right or left
-                else if (((segStart.Y > rayStart.Y && segEnd.Y < rayStart.Y)
-                || (segStart.Y < rayStart.Y && segEnd.Y >= rayStart.Y)))
+                else if (segStart.Y == rayStart.Y && segEnd.Y == rayStart.Y)
+                {
+                    onLine = true;
+                    return true;
+                }
+                else if ((segStart.Y >= rayStart.Y && segEnd.Y <= rayStart.Y)
+                    || (segStart.Y <= rayStart.Y && segEnd.Y >= rayStart.Y))
                 {
                     double dist = segStart.X + (segEnd.X - segStart.X) * ((rayStart.Y - segStart.Y) / (segEnd.Y - segStart.Y)) - rayStart.X;
+                    if (dist.IsTiny()) dist = 0;
                     if (dist >= 0)
                     {
-                        //if (dist == 0) onLine = true;
+                        if (dist == 0) onLine = true;
                         return true;
                     }
                 }
@@ -1336,23 +1342,29 @@ namespace Nucleus.Geometry
             }
             else if (segEnd.X < rayStart.X) //Ray start falls within segment bounds
             {
-                if (((segStart.Y > rayStart.Y && segEnd.Y < rayStart.Y)
-                || (segStart.Y < rayStart.Y && segEnd.Y >= rayStart.Y)))
+                if (segStart.Y == rayStart.Y && segEnd.Y == rayStart.Y)
+                {
+                    onLine = true;
+                    return true;
+                }
+                else if ((segStart.Y >= rayStart.Y && segEnd.Y <= rayStart.Y)
+                    || (segStart.Y <= rayStart.Y && segEnd.Y >= rayStart.Y))
                 {
                     double dist = segStart.X + (segEnd.X - segStart.X) * ((rayStart.Y - segStart.Y) / (segEnd.Y - segStart.Y)) - rayStart.X;
+                    if (dist.IsTiny()) dist = 0;
                     if (dist >= 0)
                     {
-                        //if (dist == 0) onLine = true;
+                        if (dist == 0) onLine = true;
                         return true;
                     }
                 }
                 return false;
             }
             //Segment is to the right of ray start
-            else if ((segStart.Y > rayStart.Y && segEnd.Y < rayStart.Y)
-                || (segStart.Y <= rayStart.Y && segEnd.Y > rayStart.Y))
+            else if ((segStart.Y >= rayStart.Y && segEnd.Y <= rayStart.Y)
+                || (segStart.Y <= rayStart.Y && segEnd.Y >= rayStart.Y))
             {
-                //if (segStart.X == rayStart.X && segEnd.X == rayStart.X) onLine = true;
+                if (segStart.X == rayStart.X && segEnd.X == rayStart.X) onLine = true;
                 return true;
             }
             else return false;

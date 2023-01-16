@@ -1900,28 +1900,30 @@ namespace Nucleus.Geometry
         /// Check for containment of a point within a polygon with these vertices on the XY plane
         /// </summary>
         /// <param name="point">The point to test for containment</param>
+        /// <param name="onEdgeIsInside">If true, a point located exactly on 
+        /// the edge of the polygon will be treated as being contained.</param>
         /// <returns>True if the point is inside (or on) the polygon, else false.</returns>
         /// <remarks>This is a copy of the IPosition list extension method of the same name.
         /// Changes made to one must be manually adapted to the other.</remarks>
-        public static bool PolygonContainmentXY(this IList<Vector> polygon, Vector point)
+        public static bool PolygonContainmentXY(this IList<Vector> polygon, Vector point, bool onEdgeIsInside = true)
         {
             if (polygon.Count > 2)
             {
                 int count = 0;
                 Vector lastPoint = polygon[0];
-                bool onLine = false;
+                bool onEdge = false;
                 for (int i = 1; i < polygon.Count; i++)
                 {
                     Vector nextPoint = polygon[i];
-                    if (Intersect.XRayLineSegmentXYCheck(ref point, ref lastPoint, ref nextPoint, out onLine))
+                    if (Intersect.XRayLineSegmentXYCheck(ref point, ref lastPoint, ref nextPoint, out onEdge))
                         count++;
-                    if (onLine) return true; //TODO: Review
+                    if (onEdge) return onEdgeIsInside;
                     lastPoint = nextPoint;
                 }
                 Vector startPoint = polygon[0];
-                if (Intersect.XRayLineSegmentXYCheck(ref point, ref lastPoint, ref startPoint, out onLine))
+                if (Intersect.XRayLineSegmentXYCheck(ref point, ref lastPoint, ref startPoint, out onEdge))
                     count++;
-                if (onLine) return true; //TODO: Review
+                if (onEdge) return onEdgeIsInside;
                 return count.IsOdd();
             }
             else return false;
