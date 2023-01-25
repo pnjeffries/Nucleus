@@ -98,8 +98,10 @@ namespace Nucleus.Geometry
         /// Check for containment of a point within a polygon with these vertices on the XY plane
         /// </summary>
         /// <param name="point">The point to test for containment</param>
+        /// <param name="onEdgeIsInside">If true, a point located exactly on 
+        /// the edge of the polygon will be treated as a being contained.</param>
         /// <returns>True if the point is inside (or on) the polygon, else false.</returns>
-        public static bool PolygonContainmentXY<T>(this IList<T> polygon, Vector point) where T:IPosition
+        public static bool PolygonContainmentXY<T>(this IList<T> polygon, Vector point, bool onEdgeIsInside = true) where T:IPosition
         {
             if (polygon.Count > 2)
             {
@@ -111,13 +113,13 @@ namespace Nucleus.Geometry
                     Vector nextPoint = polygon[i].Position;
                     if (Intersect.XRayLineSegmentXYCheck(ref point, ref lastPoint, ref nextPoint, out onLine))
                         count++;
-                    if (onLine) return true; //TODO: Review
+                    if (onLine) return onEdgeIsInside;
                     lastPoint = nextPoint;
                 }
                 Vector startPoint = polygon[0].Position;
                 if (Intersect.XRayLineSegmentXYCheck(ref point, ref lastPoint, ref startPoint, out onLine))
                     count++;
-                if (onLine) return true; //TODO: Review
+                if (onLine) return onEdgeIsInside;
                 return count.IsOdd();
             }
             else return false;
